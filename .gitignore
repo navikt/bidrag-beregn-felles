@@ -1,0 +1,15 @@
+# log files
+*.log
+
+# IntelliJ and maven
+**/*.iml
+.idea/*
+**/target
+/.idea/*
+
+.classpath
+.project
+.settings/
+.vscode/
+.DS_Store
+*.class

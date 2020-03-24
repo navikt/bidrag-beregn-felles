@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="cc6ce795-d5ff-4f61-959f-fca23744b1c9" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../../.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/Bidragsevneberegning.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/BidragsevneberegningImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/grunnlag/BidragsevneberegningGrunnlag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/resultat/BidragsevneBeregningResultat.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/BidragsevnePeriode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/BidragsevnePeriodeImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/PeriodeUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/Periodiserer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/grunnlag/AntallBarnIEgetHusholdPeriode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/grunnlag/BidragsevnePeriodeGrunnlag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/grunnlag/BostatusPeriode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/grunnlag/InntektPeriode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/grunnlag/Periode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/grunnlag/PeriodisertGrunnlag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/grunnlag/SjablonPeriode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/grunnlag/SjablonPeriodeVerdi.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/resultat/BidragsevnePeriodeResultat.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/resultat/PeriodeResultat.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/grunnlag/BidragsevneberegningGrunnlagTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/resultat/BidragsevneBeregningResultatTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/resultat/BidragsevneberegningTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/BidragsevnePeriodeTest.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="ProjectId" id="1ZZFXzN0U2ImTWwahJF61u0RBcG" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="autoscrollToSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/.." />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="cc6ce795-d5ff-4f61-959f-fca23744b1c9" name="Default Changelist" comment="" />
+      <created>1585038752500</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1585038752500</updated>
+      <workItem from="1585038753894" duration="160000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="635" y="217" key="FileChooserDialogImpl" timestamp="1585038766809">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state x="635" y="217" key="FileChooserDialogImpl/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585038766809" />
+  </component>
+</project>

@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="3a0eeba3-aa4a-48cd-ad0c-c85c5cf42a7c" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/Bidragsevneberegning.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/BidragsevneberegningImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/grunnlag/BidragsevneberegningGrunnlag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/resultat/BidragsevneBeregningResultat.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/BidragsevnePeriode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/BidragsevnePeriodeImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/PeriodeUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/Periodiserer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/grunnlag/AntallBarnIEgetHusholdPeriode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/grunnlag/BidragsevnePeriodeGrunnlag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/grunnlag/BostatusPeriode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/grunnlag/InntektPeriode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/grunnlag/Periode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/grunnlag/PeriodisertGrunnlag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/grunnlag/SjablonPeriode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/grunnlag/SjablonPeriodeVerdi.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/resultat/BidragsevnePeriodeResultat.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/resultat/PeriodeResultat.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/grunnlag/BidragsevneberegningGrunnlagTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/resultat/BidragsevneBeregningResultatTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/resultat/BidragsevneberegningTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/BidragsevnePeriodeTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../x.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../x.idea/bidrag-beregn-felles.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../x.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../x.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../x.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../x.idea/vcs.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JUnit5 Test Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="importAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="1ZFugwZrZVTQZNoTBrERdYbJasD" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="autoscrollToSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit5" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5" value="" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="no.nav.bidrag.beregn.bidragsevne.periode" />
+    </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+  </component>
+  <component name="RunManager" selected="JUnit.BidragsevnePeriodeTest.lagGrunnlag">
+    <configuration name="BidragsevnePeriodeTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="bidrag-beregn-bidragsevne" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="no.nav.bidrag.beregn.bidragsevne.periode.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="no.nav.bidrag.beregn.bidragsevne.periode" />
+      <option name="MAIN_CLASS_NAME" value="no.nav.bidrag.beregn.bidragsevne.periode.BidragsevnePeriodeTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BidragsevnePeriodeTest.lagGrunnlag" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="bidrag-beregn-bidragsevne" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="no.nav.bidrag.beregn.bidragsevne.periode.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="no.nav.bidrag.beregn.bidragsevne.periode" />
+      <option name="MAIN_CLASS_NAME" value="no.nav.bidrag.beregn.bidragsevne.periode.BidragsevnePeriodeTest" />
+      <option name="METHOD_NAME" value="lagGrunnlag" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BidragsevneberegningTest.beregn" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="bidrag-beregn-bidragsevne" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="no.nav.bidrag.beregn.bidragsevne.beregning.resultat.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="no.nav.bidrag.beregn.bidragsevne.beregning.resultat" />
+      <option name="MAIN_CLASS_NAME" value="no.nav.bidrag.beregn.bidragsevne.beregning.resultat.BidragsevneberegningTest" />
+      <option name="METHOD_NAME" value="beregn" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.BidragsevnePeriodeTest.lagGrunnlag" />
+        <item itemvalue="JUnit.BidragsevnePeriodeTest" />
+        <item itemvalue="JUnit.BidragsevneberegningTest.beregn" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3a0eeba3-aa4a-48cd-ad0c-c85c5cf42a7c" name="Default Changelist" comment="" />
+      <created>1584447277551</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1584447277551</updated>
+      <workItem from="1584447279184" duration="1082000" />
+      <workItem from="1584449724115" duration="9227000" />
+      <workItem from="1584522745796" duration="15130000" />
+      <workItem from="1585038464788" duration="250000" />
+      <workItem from="1585038770269" duration="140000" />
+      <workItem from="1585039148384" duration="531000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="447" y="120" key="#Inspections" timestamp="1584959778185">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state x="447" y="120" key="#Inspections/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1584959778185" />
+    <state x="660" y="178" key="#com.intellij.ide.util.MemberChooser" timestamp="1584697014269">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state x="660" y="178" key="#com.intellij.ide.util.MemberChooser/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1584697014269" />
+    <state x="501" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1584698117198">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state x="501" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1584698117198" />
+    <state x="635" y="217" key="FileChooserDialogImpl" timestamp="1585038776711">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state x="635" y="217" key="FileChooserDialogImpl/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585038776711" />
+    <state width="1664" height="242" key="GridCell.Tab.0.bottom" timestamp="1584966897442">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state width="1664" height="242" key="GridCell.Tab.0.bottom/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1584966897442" />
+    <state width="1664" height="242" key="GridCell.Tab.0.center" timestamp="1584966897442">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state width="1664" height="242" key="GridCell.Tab.0.center/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1584966897442" />
+    <state width="1664" height="242" key="GridCell.Tab.0.left" timestamp="1584966897442">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state width="1664" height="242" key="GridCell.Tab.0.left/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1584966897442" />
+    <state width="1664" height="242" key="GridCell.Tab.0.right" timestamp="1584966897442">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state width="1664" height="242" key="GridCell.Tab.0.right/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1584966897442" />
+    <state x="599" y="180" width="849" height="559" key="com.intellij.testIntegration.createTest.CreateTestDialog" timestamp="1584450402316">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state x="599" y="180" width="849" height="559" key="com.intellij.testIntegration.createTest.CreateTestDialog/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1584450402316" />
+  </component>
+</project>
