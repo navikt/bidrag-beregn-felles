@@ -10,5 +10,9 @@ public interface Bidragsevneberegning {
 
     Double beregnSkattetrinnBelop(BidragsevneberegningGrunnlag bidragsevneBeregningGrunnlag);
 
+    static Bidragsevneberegning getInstance(){
+        return new BidragsevneberegningImpl();
+    }
+
 
 }

@@ -63,7 +63,7 @@ class BidragsevnePeriodeTest {
     bostatusPeriode.add(new BostatusPeriode(
         new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-12-31")), Boolean.TRUE));
 
-    grunnlag.setBostatusPeriode(bostatusPeriode);
+    grunnlag.setBostatusPeriodeListe(bostatusPeriode);
 
   }
 
@@ -77,7 +77,7 @@ class BidragsevnePeriodeTest {
     antallBarnIEgetHusholdPeriode.add(new AntallBarnIEgetHusholdPeriode(
         new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-12-31")), 2));
 
-    grunnlag.setAntallBarnIEgetHusholdPeriode(antallBarnIEgetHusholdPeriode);
+    grunnlag.setAntallBarnIEgetHusholdPeriodeListe(antallBarnIEgetHusholdPeriode);
 
   }
 

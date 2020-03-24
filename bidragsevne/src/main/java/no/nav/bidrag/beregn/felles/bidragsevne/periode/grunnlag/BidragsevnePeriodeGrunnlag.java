@@ -10,8 +10,8 @@ public class BidragsevnePeriodeGrunnlag {
     private LocalDate beregnDatoTil;
     private List<SjablonPeriode> sjablonPeriodeListe;
     private List<InntektPeriode> inntektPeriodeListe;
-    private List<BostatusPeriode> bostatusPeriode;
-    private List<AntallBarnIEgetHusholdPeriode> antallBarnIEgetHusholdPeriode;
+    private List<BostatusPeriode> bostatusPeriodeListe;
+    private List<AntallBarnIEgetHusholdPeriode> antallBarnIEgetHusholdPeriodeListe;
 
     public LocalDate getBeregnDatoFra() {
         return beregnDatoFra;
@@ -47,21 +47,21 @@ public class BidragsevnePeriodeGrunnlag {
         this.inntektPeriodeListe = inntektPeriodeListe;
     }
 
-    public List<BostatusPeriode> getBostatusPeriode() {
-        return bostatusPeriode;
+    public List<BostatusPeriode> getBostatusPeriodeListe() {
+        return bostatusPeriodeListe;
     }
 
-    public void setBostatusPeriode(
-        List<BostatusPeriode> bostatusPeriode) {
-        this.bostatusPeriode = bostatusPeriode;
+    public void setBostatusPeriodeListe(
+        List<BostatusPeriode> bostatusPeriodeListe) {
+        this.bostatusPeriodeListe = bostatusPeriodeListe;
     }
 
-    public List<AntallBarnIEgetHusholdPeriode> getAntallBarnIEgetHusholdPeriode() {
-        return antallBarnIEgetHusholdPeriode;
+    public List<AntallBarnIEgetHusholdPeriode> getAntallBarnIEgetHusholdPeriodeListe() {
+        return antallBarnIEgetHusholdPeriodeListe;
     }
 
-    public void setAntallBarnIEgetHusholdPeriode(
-        List<AntallBarnIEgetHusholdPeriode> antallBarnIEgetHusholdPeriode) {
-        this.antallBarnIEgetHusholdPeriode = antallBarnIEgetHusholdPeriode;
+    public void setAntallBarnIEgetHusholdPeriodeListe(
+        List<AntallBarnIEgetHusholdPeriode> antallBarnIEgetHusholdPeriodeListe) {
+        this.antallBarnIEgetHusholdPeriodeListe = antallBarnIEgetHusholdPeriodeListe;
     }
 }
