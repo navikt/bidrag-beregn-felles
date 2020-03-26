@@ -1,6 +1,7 @@
-package no.nav.bidrag.beregn.felles.bidragsevne.beregning.grunnlag;
+package no.nav.bidrag.beregn.felles.bidragsevne;
 
 import java.time.LocalDate;
+import no.nav.bidrag.beregn.felles.bidragsevne.beregning.grunnlag.BidragsevneberegningGrunnlag;
 import no.nav.bidrag.beregn.felles.bidragsevne.periode.grunnlag.Periode;
 import no.nav.bidrag.beregn.felles.bidragsevne.periode.grunnlag.SjablonPeriode;
 import org.junit.jupiter.api.Assertions;
@@ -19,7 +20,7 @@ class BidragsevneberegningGrunnlagTest {
 
         BidragsevneberegningGrunnlag bidragsevneberegningGrunnlag = new BidragsevneberegningGrunnlag();
 
-        bidragsevneberegningGrunnlag.setInntekt(Double.valueOf(1000000));
+        bidragsevneberegningGrunnlag.setInntektBelop(Double.valueOf(1000000));
 
         ArrayList<SjablonPeriode> sjabloner = new ArrayList<>();
         //Sjablonverdier pr 2019-12-31

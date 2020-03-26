@@ -4,12 +4,12 @@ public class InntektPeriode implements PeriodisertGrunnlag {
 
     private final Periode datoFraTil;
     private final Integer skatteklasse;
-    private final Double belop;
+    private final Double inntektBelop;
 
-    public InntektPeriode(Periode datoFraTil, Integer skatteklasse, Double belop) {
+    public InntektPeriode(Periode datoFraTil, Integer skatteklasse, Double inntektBelop) {
         this.datoFraTil = datoFraTil;
         this.skatteklasse = skatteklasse;
-        this.belop = belop;
+        this.inntektBelop = inntektBelop;
     }
 
     public Periode getDatoFraTil() {
@@ -18,7 +18,7 @@ public class InntektPeriode implements PeriodisertGrunnlag {
 
     public Integer getSkatteklasse() { return skatteklasse; }
 
-    public Double getBelop() {
-        return belop;
+    public Double getInntektBelop() {
+        return inntektBelop;
     }
 }

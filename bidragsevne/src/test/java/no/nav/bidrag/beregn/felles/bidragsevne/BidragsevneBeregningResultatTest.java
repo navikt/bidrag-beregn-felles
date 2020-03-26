@@ -1,5 +1,6 @@
-package no.nav.bidrag.beregn.felles.bidragsevne.beregning.resultat;
+package no.nav.bidrag.beregn.felles.bidragsevne;
 
+import no.nav.bidrag.beregn.felles.bidragsevne.beregning.resultat.BidragsevneBeregningResultat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;

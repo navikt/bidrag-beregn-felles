@@ -2,21 +2,32 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3a0eeba3-aa4a-48cd-ad0c-c85c5cf42a7c" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__junit_junit_4_12.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_hamcrest_hamcrest_core_1_3.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_junit_jupiter_junit_jupiter_5_6_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_junit_jupiter_junit_jupiter_api_5_6_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_junit_jupiter_junit_jupiter_engine_5_6_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_junit_jupiter_junit_jupiter_params_5_6_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_junit_platform_junit_platform_commons_1_6_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_junit_platform_junit_platform_engine_1_6_1.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/Bidragsevneberegning.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/Bidragsevneberegning.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/BidragsevneberegningImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/BidragsevneberegningImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/grunnlag/BidragsevneberegningGrunnlag.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/grunnlag/BidragsevneberegningGrunnlag.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/BidragsevnePeriodeImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/BidragsevnePeriodeImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/grunnlag/BidragsevnePeriodeGrunnlag.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/grunnlag/BidragsevnePeriodeGrunnlag.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/BidragsevnePeriodeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/BidragsevnePeriodeTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/grunnlag/InntektPeriode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/grunnlag/InntektPeriode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/grunnlag/BidragsevneberegningGrunnlagTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/BidragsevneberegningGrunnlagTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/resultat/BidragsevneBeregningResultatTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/BidragsevneBeregningResultatTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/resultat/BidragsevneberegningTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/BidragsevneberegningTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/BidragsevnePeriodeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/BidragsevnePeriodeTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CoverageViewManager">
+    <option name="myElementSize" value="223" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -61,108 +72,108 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode" />
   </component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.RecentsKey">
       <recent name="no.nav.bidrag.beregn.bidragsevne.periode" />
     </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="no.nav.bidrag.beregn.felles.bidragsevne" />
+    </key>
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.BidragsevneBeregningResultatTest.getEvne">
+  <component name="RunManager" selected="JUnit.BidragsevnePeriodeTest.lagGrunnlagTest">
     <configuration name="BidragsevneBeregningResultatTest.getEvne" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="bidrag-beregn-felles-bidragsevne" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="no.nav.bidrag.beregn.felles.bidragsevne.beregning.resultat.*" />
+          <option name="PATTERN" value="no.nav.bidrag.beregn.felles.bidragsevne.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="no.nav.bidrag.beregn.felles.bidragsevne.beregning.resultat" />
-      <option name="MAIN_CLASS_NAME" value="no.nav.bidrag.beregn.felles.bidragsevne.beregning.resultat.BidragsevneBeregningResultatTest" />
+      <option name="PACKAGE_NAME" value="no.nav.bidrag.beregn.felles.bidragsevne" />
+      <option name="MAIN_CLASS_NAME" value="no.nav.bidrag.beregn.felles.bidragsevne.BidragsevneBeregningResultatTest" />
       <option name="METHOD_NAME" value="getEvne" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="BidragsevnePeriodeTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="bidrag-beregn-bidragsevne" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="no.nav.bidrag.beregn.bidragsevne.periode.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="no.nav.bidrag.beregn.bidragsevne.periode" />
-      <option name="MAIN_CLASS_NAME" value="no.nav.bidrag.beregn.bidragsevne.periode.BidragsevnePeriodeTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="BidragsevnePeriodeTest.lagGrunnlag" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="no.nav.bidrag.beregn.bidragsevne.periode.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="no.nav.bidrag.beregn.felles.bidragsevne.periode" />
-      <option name="MAIN_CLASS_NAME" value="no.nav.bidrag.beregn.felles.bidragsevne.periode.BidragsevnePeriodeTest" />
-      <option name="METHOD_NAME" value="lagGrunnlag" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="PARAMETERS" value="" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="BidragsevneberegningGrunnlagTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="BidragsevnePeriodeTest.lagGrunnlagTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="bidrag-beregn-felles-bidragsevne" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="no.nav.bidrag.beregn.felles.bidragsevne.beregning.grunnlag.*" />
+          <option name="PATTERN" value="no.nav.bidrag.beregn.felles.bidragsevne.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="no.nav.bidrag.beregn.felles.bidragsevne.beregning.grunnlag" />
-      <option name="MAIN_CLASS_NAME" value="no.nav.bidrag.beregn.felles.bidragsevne.beregning.grunnlag.BidragsevneberegningGrunnlagTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="BidragsevneberegningGrunnlagTest.hentSjablon" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="bidrag-beregn-felles-bidragsevne" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="no.nav.bidrag.beregn.felles.bidragsevne.beregning.grunnlag.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="no.nav.bidrag.beregn.felles.bidragsevne.beregning.grunnlag" />
-      <option name="MAIN_CLASS_NAME" value="no.nav.bidrag.beregn.felles.bidragsevne.beregning.grunnlag.BidragsevneberegningGrunnlagTest" />
-      <option name="METHOD_NAME" value="hentSjablon" />
+      <option name="PACKAGE_NAME" value="no.nav.bidrag.beregn.felles.bidragsevne" />
+      <option name="MAIN_CLASS_NAME" value="no.nav.bidrag.beregn.felles.bidragsevne.BidragsevnePeriodeTest" />
+      <option name="METHOD_NAME" value="lagGrunnlagTest" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <list>
-      <item itemvalue="JUnit.BidragsevnePeriodeTest" />
-      <item itemvalue="JUnit.BidragsevnePeriodeTest.lagGrunnlag" />
-      <item itemvalue="JUnit.BidragsevneberegningGrunnlagTest" />
-      <item itemvalue="JUnit.BidragsevneberegningGrunnlagTest.hentSjablon" />
-      <item itemvalue="JUnit.BidragsevneBeregningResultatTest.getEvne" />
-    </list>
+    <configuration name="BidragsevneberegningTest.beregn" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="bidrag-beregn-felles-bidragsevne" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="no.nav.bidrag.beregn.felles.bidragsevne.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="no.nav.bidrag.beregn.felles.bidragsevne" />
+      <option name="MAIN_CLASS_NAME" value="no.nav.bidrag.beregn.felles.bidragsevne.BidragsevneberegningTest" />
+      <option name="METHOD_NAME" value="beregn" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BidragsevneberegningTest.beregnMinstefradrag" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="bidrag-beregn-felles-bidragsevne" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="no.nav.bidrag.beregn.felles.bidragsevne.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="no.nav.bidrag.beregn.felles.bidragsevne" />
+      <option name="MAIN_CLASS_NAME" value="no.nav.bidrag.beregn.felles.bidragsevne.BidragsevneberegningTest" />
+      <option name="METHOD_NAME" value="beregnMinstefradrag" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BidragsevneberegningTest.beregnSkattetrinnBelop" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="bidrag-beregn-felles-bidragsevne" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="no.nav.bidrag.beregn.felles.bidragsevne.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="no.nav.bidrag.beregn.felles.bidragsevne" />
+      <option name="MAIN_CLASS_NAME" value="no.nav.bidrag.beregn.felles.bidragsevne.BidragsevneberegningTest" />
+      <option name="METHOD_NAME" value="beregnSkattetrinnBelop" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.BidragsevnePeriodeTest.lagGrunnlagTest" />
+        <item itemvalue="JUnit.BidragsevneberegningTest.beregn" />
+        <item itemvalue="JUnit.BidragsevneberegningTest.beregnSkattetrinnBelop" />
+        <item itemvalue="JUnit.BidragsevneberegningTest.beregnMinstefradrag" />
         <item itemvalue="JUnit.BidragsevneBeregningResultatTest.getEvne" />
-        <item itemvalue="JUnit.BidragsevneberegningGrunnlagTest.hentSjablon" />
-        <item itemvalue="JUnit.BidragsevneberegningGrunnlagTest" />
-        <item itemvalue="JUnit.BidragsevnePeriodeTest.lagGrunnlag" />
-        <item itemvalue="JUnit.BidragsevnePeriodeTest" />
       </list>
     </recent_temporary>
   </component>
@@ -195,7 +206,7 @@
       <workItem from="1585038770269" duration="140000" />
       <workItem from="1585039148384" duration="802000" />
       <workItem from="1585039964130" duration="4580000" />
-      <workItem from="1585058064964" duration="2549000" />
+      <workItem from="1585058064964" duration="30154000" />
     </task>
     <servers />
   </component>
@@ -206,42 +217,87 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="627" y="6" key="#BidragsevnePeriodeTest.lagGrunnlag" timestamp="1585143350592">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state x="627" y="6" key="#BidragsevnePeriodeTest.lagGrunnlag/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585143350592" />
     <state x="447" y="120" key="#Inspections" timestamp="1584959778185">
       <screen x="0" y="0" width="1707" height="920" />
     </state>
     <state x="447" y="120" key="#Inspections/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1584959778185" />
-    <state x="310" y="117" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1585040336317">
+    <state x="310" y="117" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1585146014691">
       <screen x="0" y="0" width="1707" height="920" />
     </state>
-    <state x="310" y="117" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585040336317" />
-    <state x="660" y="178" key="#com.intellij.ide.util.MemberChooser" timestamp="1584697014269">
+    <state x="310" y="117" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585146014691" />
+    <state x="660" y="178" key="#com.intellij.ide.util.MemberChooser" timestamp="1585155792229">
       <screen x="0" y="0" width="1707" height="920" />
     </state>
-    <state x="660" y="178" key="#com.intellij.ide.util.MemberChooser/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1584697014269" />
-    <state x="501" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1584698117198">
+    <state x="660" y="178" key="#com.intellij.ide.util.MemberChooser/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585155792229" />
+    <state x="593" y="321" width="656" height="286" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1585144779361">
       <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state x="593" y="321" width="656" height="286" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585144779361" />
+    <state x="4850" y="261" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1585232365797">
+      <screen x="3840" y="261" width="3440" height="1440" />
     </state>
     <state x="501" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1584698117198" />
-    <state x="635" y="217" key="FileChooserDialogImpl" timestamp="1585038776711">
+    <state x="4850" y="261" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585232365797" />
+    <state x="610" y="165" key="#xdebugger.evaluate" timestamp="1585153724093">
       <screen x="0" y="0" width="1707" height="920" />
     </state>
-    <state x="635" y="217" key="FileChooserDialogImpl/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585038776711" />
-    <state width="1664" height="242" key="GridCell.Tab.0.bottom" timestamp="1585046184688">
+    <state x="610" y="165" key="#xdebugger.evaluate/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585153724093" />
+    <state width="760" height="810" key="DebuggerActiveHint" timestamp="1585227453171">
+      <screen x="3840" y="261" width="3440" height="1440" />
+    </state>
+    <state width="760" height="810" key="DebuggerActiveHint/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585227453171" />
+    <state x="635" y="217" width="678" height="486" key="FileChooserDialogImpl" timestamp="1585144737130">
       <screen x="0" y="0" width="1707" height="920" />
     </state>
-    <state width="1664" height="242" key="GridCell.Tab.0.bottom/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585046184688" />
-    <state width="1664" height="242" key="GridCell.Tab.0.center" timestamp="1585046184688">
-      <screen x="0" y="0" width="1707" height="920" />
+    <state x="635" y="217" width="678" height="486" key="FileChooserDialogImpl/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585144737130" />
+    <state width="1937" height="250" key="GridCell.Tab.0.bottom" timestamp="1585225618109">
+      <screen x="3840" y="261" width="3440" height="1440" />
     </state>
-    <state width="1664" height="242" key="GridCell.Tab.0.center/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585046184688" />
-    <state width="1664" height="242" key="GridCell.Tab.0.left" timestamp="1585046184688">
-      <screen x="0" y="0" width="1707" height="920" />
+    <state width="1664" height="233" key="GridCell.Tab.0.bottom/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585155478646" />
+    <state width="1937" height="250" key="GridCell.Tab.0.bottom/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585225618109" />
+    <state width="1937" height="250" key="GridCell.Tab.0.center" timestamp="1585225618109">
+      <screen x="3840" y="261" width="3440" height="1440" />
     </state>
-    <state width="1664" height="242" key="GridCell.Tab.0.left/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585046184688" />
-    <state width="1664" height="242" key="GridCell.Tab.0.right" timestamp="1585046184688">
-      <screen x="0" y="0" width="1707" height="920" />
+    <state width="1664" height="233" key="GridCell.Tab.0.center/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585155478645" />
+    <state width="1937" height="250" key="GridCell.Tab.0.center/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585225618109" />
+    <state width="1937" height="250" key="GridCell.Tab.0.left" timestamp="1585225618109">
+      <screen x="3840" y="261" width="3440" height="1440" />
     </state>
-    <state width="1664" height="242" key="GridCell.Tab.0.right/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585046184688" />
+    <state width="1664" height="233" key="GridCell.Tab.0.left/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585155478645" />
+    <state width="1937" height="250" key="GridCell.Tab.0.left/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585225618109" />
+    <state width="1937" height="250" key="GridCell.Tab.0.right" timestamp="1585225618109">
+      <screen x="3840" y="261" width="3440" height="1440" />
+    </state>
+    <state width="1664" height="233" key="GridCell.Tab.0.right/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585155478646" />
+    <state width="1937" height="250" key="GridCell.Tab.0.right/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585225618109" />
+    <state width="1937" height="250" key="GridCell.Tab.1.bottom" timestamp="1585225618929">
+      <screen x="3840" y="261" width="3440" height="1440" />
+    </state>
+    <state width="1664" height="233" key="GridCell.Tab.1.bottom/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585155479430" />
+    <state width="1937" height="250" key="GridCell.Tab.1.bottom/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585225618929" />
+    <state width="1937" height="250" key="GridCell.Tab.1.center" timestamp="1585225618929">
+      <screen x="3840" y="261" width="3440" height="1440" />
+    </state>
+    <state width="1664" height="233" key="GridCell.Tab.1.center/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585155479429" />
+    <state width="1937" height="250" key="GridCell.Tab.1.center/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585225618929" />
+    <state width="1937" height="250" key="GridCell.Tab.1.left" timestamp="1585225618929">
+      <screen x="3840" y="261" width="3440" height="1440" />
+    </state>
+    <state width="1664" height="233" key="GridCell.Tab.1.left/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585155479429" />
+    <state width="1937" height="250" key="GridCell.Tab.1.left/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585225618929" />
+    <state width="1937" height="250" key="GridCell.Tab.1.right" timestamp="1585225618929">
+      <screen x="3840" y="261" width="3440" height="1440" />
+    </state>
+    <state width="1664" height="233" key="GridCell.Tab.1.right/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585155479429" />
+    <state width="1937" height="250" key="GridCell.Tab.1.right/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585225618929" />
+    <state x="4368" y="303" width="998" height="1031" key="SettingsEditor" timestamp="1585209201570">
+      <screen x="3840" y="261" width="3440" height="1440" />
+    </state>
+    <state x="4368" y="303" width="998" height="1031" key="SettingsEditor/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585209201570" />
     <state x="599" y="180" width="849" height="559" key="com.intellij.testIntegration.createTest.CreateTestDialog" timestamp="1584450402316">
       <screen x="0" y="0" width="1707" height="920" />
     </state>
@@ -251,11 +307,29 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/grunnlag/BidragsevneberegningGrunnlagTest.java</url>
-          <line>13</line>
-          <option name="timeStamp" value="1" />
+          <url>file://$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/Periodiserer.java</url>
+          <line>77</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/BidragsevnePeriodeImpl.java</url>
+          <line>51</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/Periodiserer.java</url>
+          <line>64</line>
+          <properties class="no.nav.bidrag.beregn.felles.bidragsevne.periode.Periodiserer" method="finnPerioder">
+            <option name="EMULATED" value="true" />
+          </properties>
+          <option name="timeStamp" value="19" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/bidragsevne$BidragsevnePeriodeTest_lagGrunnlag.ic" NAME="BidragsevnePeriodeTest.lagGrunnlag Coverage Results" MODIFIED="1585144449848" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>no.nav.bidrag.beregn.felles.bidragsevne.periode.*</FILTER>
+    </SUITE>
   </component>
 </project>

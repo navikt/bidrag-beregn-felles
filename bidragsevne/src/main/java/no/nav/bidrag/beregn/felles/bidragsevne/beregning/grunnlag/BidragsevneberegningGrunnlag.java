@@ -7,21 +7,44 @@ public class BidragsevneberegningGrunnlag {
     public BidragsevneberegningGrunnlag() {
     }
 
-    private Double inntekt;
+    private Double inntektBelop;
+    private Integer skatteklasse;
+    private Boolean borAlene ;
     private Integer antallEgneBarnIHusstand;
     private ArrayList<SjablonPeriode> sjabloner;
-    public BidragsevneberegningGrunnlag(Double inntekt, Boolean borAlene, Integer antallEgneBarnIHusstand, ArrayList<SjablonPeriode> sjabloner) {
-        this.inntekt = inntekt;
+
+    public BidragsevneberegningGrunnlag(Double inntektBelop, Integer skatteklasse,
+        Boolean borAlene, Integer antallEgneBarnIHusstand,
+        ArrayList<SjablonPeriode> sjabloner) {
+        this.inntektBelop = inntektBelop;
+        this.skatteklasse = skatteklasse;
+        this.borAlene = borAlene;
         this.antallEgneBarnIHusstand = antallEgneBarnIHusstand;
         this.sjabloner = sjabloner;
     }
 
-    public Double getInntekt() {
-        return inntekt;
+    public Double getInntektBelop() {
+        return inntektBelop;
     }
 
-    public void setInntekt(Double inntekt) {
-        this.inntekt = inntekt;
+    public void setInntektBelop(Double inntektBelop) {
+        this.inntektBelop = inntektBelop;
+    }
+
+    public Integer getSkatteklasse() {
+        return skatteklasse;
+    }
+
+    public void setSkatteklasse(Integer skatteklasse) {
+        this.skatteklasse = skatteklasse;
+    }
+
+    public Boolean getBorAlene() {
+        return borAlene;
+    }
+
+    public void setBorAlene(Boolean borAlene) {
+        this.borAlene = borAlene;
     }
 
     public Integer getAntallEgneBarnIHusstand() {

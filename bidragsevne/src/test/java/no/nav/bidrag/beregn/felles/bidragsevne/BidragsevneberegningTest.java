@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.felles.bidragsevne.beregning.resultat;
+package no.nav.bidrag.beregn.felles.bidragsevne;
 
 import java.time.LocalDate;
 import no.nav.bidrag.beregn.felles.bidragsevne.beregning.BidragsevneberegningImpl;
@@ -21,18 +21,26 @@ class BidragsevneberegningTest {
     BidragsevneberegningGrunnlag bidragsevneberegningGrunnlag = new BidragsevneberegningGrunnlag();
     ArrayList<SjablonPeriode> sjabloner = new ArrayList<>();
     //Sjablonverdier pr 2019-12-31
+
+    sjabloner.add(new SjablonPeriode(
+        new Periode(LocalDate.parse("2013-01-01"), LocalDate.parse("9999-12-31")),
+        "fordelSkatteklasse2", Double.valueOf(0), null));
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "minstefradragProsentsats", Double.valueOf(0.31), null));
+        "satsTrygdeavgift", Double.valueOf(0.082), null));
+    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
+        "belopUnderholdEgneBarnIHusstand", Double.valueOf(3487), null));
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
         "minstefradragBelop", Double.valueOf(85050), null));
+    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
+        "minstefradragProsentsats", Double.valueOf(0.31), null));
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
         "personfradragKlasse1", Double.valueOf(56550), null));
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
         "personfradragKlasse2", Double.valueOf(56550), null));
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "skattesats", Double.valueOf(0.22), null));
+        "fordelSarfradrag", Double.valueOf(0), null));
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "satsTrygdeavgift", Double.valueOf(0.082), null));
+        "skattesats", Double.valueOf(0.22), null));
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
         "skattetrinn1", Double.valueOf(174500), Double.valueOf((0.019))));
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
@@ -49,27 +57,30 @@ class BidragsevneberegningTest {
         "belopBoutgiftGs", Double.valueOf(5875), null));  //GS
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
         "belopUnderholdEgetGs", Double.valueOf(7557), null)); //GS
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "belopUnderholdEgneBarnIHusstand", Double.valueOf(3487), null));
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "fordelSarfradrag", Double.valueOf(0), null));
+
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
         "fordelSkatteklasse2", Double.valueOf(0), null));
 
     bidragsevneberegningGrunnlag.setSjabloner(sjabloner);
     BidragsevneberegningImpl bidragsevneberegning = new BidragsevneberegningImpl();
 
-    bidragsevneberegningGrunnlag.setInntekt(Double.valueOf(1000000));
+    bidragsevneberegningGrunnlag.setInntektBelop(Double.valueOf(1000000));
+    bidragsevneberegningGrunnlag.setSkatteklasse(Integer.valueOf(1));
+    bidragsevneberegningGrunnlag.setBorAlene(true);
     bidragsevneberegningGrunnlag.setAntallEgneBarnIHusstand(1);
     assertEquals(Double.valueOf(33050),
         bidragsevneberegning.beregn(bidragsevneberegningGrunnlag).getEvne());
 
-    bidragsevneberegningGrunnlag.setInntekt(Double.valueOf(520000));
+    bidragsevneberegningGrunnlag.setInntektBelop(Double.valueOf(520000));
+    bidragsevneberegningGrunnlag.setSkatteklasse(Integer.valueOf(1));
+    bidragsevneberegningGrunnlag.setBorAlene(true);
     bidragsevneberegningGrunnlag.setAntallEgneBarnIHusstand(1);
     assertEquals(Double.valueOf(9767),
         bidragsevneberegning.beregn(bidragsevneberegningGrunnlag).getEvne());
 
-    bidragsevneberegningGrunnlag.setInntekt(Double.valueOf(666000));
+    bidragsevneberegningGrunnlag.setInntektBelop(Double.valueOf(666000));
+    bidragsevneberegningGrunnlag.setSkatteklasse(Integer.valueOf(1));
+    bidragsevneberegningGrunnlag.setBorAlene(true);
     bidragsevneberegningGrunnlag.setAntallEgneBarnIHusstand(3);
     assertEquals(Double.valueOf(10410),
         bidragsevneberegning.beregn(bidragsevneberegningGrunnlag).getEvne());
@@ -115,12 +126,12 @@ class BidragsevneberegningTest {
     bidragsevneberegningGrunnlag.setSjabloner(sjabloner);
     BidragsevneberegningImpl bidragsevneberegning = new BidragsevneberegningImpl();
 
-    bidragsevneberegningGrunnlag.setInntekt(Double.valueOf(200000));
+    bidragsevneberegningGrunnlag.setInntektBelop(Double.valueOf(200000));
     System.out.println(bidragsevneberegning.beregnMinstefradrag(bidragsevneberegningGrunnlag));
     assertTrue((bidragsevneberegning.beregnMinstefradrag(bidragsevneberegningGrunnlag))
         .equals(Double.valueOf(62000)));
 
-    bidragsevneberegningGrunnlag.setInntekt(Double.valueOf(1000000));
+    bidragsevneberegningGrunnlag.setInntektBelop(Double.valueOf(1000000));
     System.out.println(bidragsevneberegning.beregnMinstefradrag(bidragsevneberegningGrunnlag));
     assertTrue((bidragsevneberegning.beregnMinstefradrag(bidragsevneberegningGrunnlag))
         .equals(Double.valueOf(85050)));
@@ -143,7 +154,7 @@ class BidragsevneberegningTest {
         "skattetrinn3", Double.valueOf(617500), Double.valueOf((0.132))));
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
         "skattetrinn4", Double.valueOf(964800), Double.valueOf((0.162))));
-    bidragsevneberegningGrunnlag.setInntekt(Double.valueOf(666000));
+    bidragsevneberegningGrunnlag.setInntektBelop(Double.valueOf(666000));
 
     bidragsevneberegningGrunnlag.setSjabloner(sjabloner);
     BidragsevneberegningImpl bidragsevneberegning = new BidragsevneberegningImpl();
@@ -152,12 +163,12 @@ class BidragsevneberegningTest {
     assertTrue((bidragsevneberegning.beregnSkattetrinnBelop(bidragsevneberegningGrunnlag))
         .equals(Double.valueOf(1352+15618+6402+0)));
 
-    bidragsevneberegningGrunnlag.setInntekt(Double.valueOf(174600));
+    bidragsevneberegningGrunnlag.setInntektBelop(Double.valueOf(174600));
 
     assertTrue((bidragsevneberegning.beregnSkattetrinnBelop(bidragsevneberegningGrunnlag))
         .equals(Double.valueOf(2)));
 
-    bidragsevneberegningGrunnlag.setInntekt(Double.valueOf(250000));
+    bidragsevneberegningGrunnlag.setInntektBelop(Double.valueOf(250000));
 
     assertTrue((bidragsevneberegning.beregnSkattetrinnBelop(bidragsevneberegningGrunnlag))
         .equals(Double.valueOf(1352+183)));
