@@ -2,6 +2,8 @@ package no.nav.bidrag.beregn.felles.bidragsevne.periode.grunnlag;
 
 import java.time.LocalDate;
 import java.util.List;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.AntallBarnIEgetHusholdPeriode;
+import no.nav.bidrag.beregn.felles.bidragsevne.core.*;
 
 public class BidragsevnePeriodeGrunnlag {
     public BidragsevnePeriodeGrunnlag() {

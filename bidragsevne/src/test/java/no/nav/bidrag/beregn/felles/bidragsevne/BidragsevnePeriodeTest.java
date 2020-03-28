@@ -7,11 +7,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import no.nav.bidrag.beregn.felles.bidragsevne.periode.BidragsevnePeriode;
-import no.nav.bidrag.beregn.felles.bidragsevne.periode.grunnlag.AntallBarnIEgetHusholdPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.periode.grunnlag.BidragsevnePeriodeGrunnlag;
 import no.nav.bidrag.beregn.felles.bidragsevne.periode.grunnlag.BostatusPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.periode.grunnlag.InntektPeriode;
-import no.nav.bidrag.beregn.felles.bidragsevne.periode.grunnlag.Periode;
+import no.nav.bidrag.beregn.felles.bidragsevne.periode.Periode;
 import no.nav.bidrag.beregn.felles.bidragsevne.periode.grunnlag.SjablonPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.periode.resultat.BidragsevnePeriodeResultat;
 import org.junit.jupiter.api.DisplayName;
@@ -220,7 +219,7 @@ class BidragsevnePeriodeTest {
         Comparator.comparing(pR -> pR.getDatoFraTil().getDatoFra()))
         .forEach(sortedPR -> System.out
             .println("Dato fra: " + sortedPR.getDatoFraTil().getDatoFra() + "; " + "Dato til: " + sortedPR.getDatoFraTil().getDatoTil()
-                + "; " + "Beløp: " + sortedPR.getBidragsevneBeregningResultat().getEvne()));
+                + "; " + "Beløp: " + sortedPR.getResultatBeregning().getEvne()));
   }
 
 

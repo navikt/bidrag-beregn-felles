@@ -1,12 +1,11 @@
 package no.nav.bidrag.beregn.felles.bidragsevne.beregning;
 
 import no.nav.bidrag.beregn.felles.bidragsevne.beregning.grunnlag.BidragsevneberegningGrunnlag;
-import no.nav.bidrag.beregn.felles.bidragsevne.beregning.resultat.BidragsevneBeregningResultat;
 
 public class BidragsevneberegningImpl implements Bidragsevneberegning {
 
   @Override
-  public BidragsevneBeregningResultat beregn(BidragsevneberegningGrunnlag bidragsevneberegningGrunnlag) {
+  public ResultatBeregning beregn(BidragsevneberegningGrunnlag bidragsevneberegningGrunnlag) {
 
     Double minstefradrag = beregnMinstefradrag(bidragsevneberegningGrunnlag);
 
@@ -89,7 +88,7 @@ public class BidragsevneberegningImpl implements Bidragsevneberegning {
     Double maanedligBidragsevne = Double.valueOf(Math.round(forelopigBidragsevne / 12));
     System.out.println("Endelig beregnet bidragsevne: " + maanedligBidragsevne);
 
-    return new BidragsevneBeregningResultat(maanedligBidragsevne);
+    return new ResultatBeregning(maanedligBidragsevne);
 
   }
 

@@ -8,8 +8,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import no.nav.bidrag.beregn.felles.bidragsevne.periode.grunnlag.Periode;
-import no.nav.bidrag.beregn.felles.bidragsevne.periode.grunnlag.PeriodisertGrunnlag;
 
 public class Periodiserer {
 

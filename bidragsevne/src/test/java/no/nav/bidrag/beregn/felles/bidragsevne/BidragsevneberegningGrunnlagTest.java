@@ -2,7 +2,7 @@ package no.nav.bidrag.beregn.felles.bidragsevne;
 
 import java.time.LocalDate;
 import no.nav.bidrag.beregn.felles.bidragsevne.beregning.grunnlag.BidragsevneberegningGrunnlag;
-import no.nav.bidrag.beregn.felles.bidragsevne.periode.grunnlag.Periode;
+import no.nav.bidrag.beregn.felles.bidragsevne.periode.Periode;
 import no.nav.bidrag.beregn.felles.bidragsevne.periode.grunnlag.SjablonPeriode;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

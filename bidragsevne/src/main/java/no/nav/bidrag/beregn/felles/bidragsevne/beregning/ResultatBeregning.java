@@ -1,10 +1,9 @@
-package no.nav.bidrag.beregn.felles.bidragsevne.beregning.resultat;
+package no.nav.bidrag.beregn.felles.bidragsevne.beregning;
 
-public class BidragsevneBeregningResultat {
+public class ResultatBeregning {
     private Double evne;
 
-    public BidragsevneBeregningResultat(Double evne) {
-
+    public ResultatBeregning(Double evne) {
         this.evne = evne;
     }
 
@@ -16,7 +15,7 @@ public class BidragsevneBeregningResultat {
         this.evne = evne;
     }
 
-    public boolean kanMergesMed(BidragsevneBeregningResultat bidragsevneresultatforrige) {
+    public boolean kanMergesMed(ResultatBeregning bidragsevneresultatforrige) {
         return (this.getEvne().equals(bidragsevneresultatforrige.getEvne()));
     }
 }

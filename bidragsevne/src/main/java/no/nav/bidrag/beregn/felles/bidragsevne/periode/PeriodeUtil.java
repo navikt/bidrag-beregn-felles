@@ -3,7 +3,6 @@ package no.nav.bidrag.beregn.felles.bidragsevne.periode;
 import static java.time.temporal.TemporalAdjusters.firstDayOfNextMonth;
 
 import java.time.LocalDate;
-import no.nav.bidrag.beregn.felles.bidragsevne.periode.grunnlag.Periode;
 
 public class PeriodeUtil {
 

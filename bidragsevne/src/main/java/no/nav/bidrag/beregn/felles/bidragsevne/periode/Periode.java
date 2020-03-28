@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.felles.bidragsevne.periode.grunnlag;
+package no.nav.bidrag.beregn.felles.bidragsevne.periode;
 
 import java.time.LocalDate;
 

@@ -1,12 +1,12 @@
 package no.nav.bidrag.beregn.felles.bidragsevne;
 
-import no.nav.bidrag.beregn.felles.bidragsevne.beregning.resultat.BidragsevneBeregningResultat;
+import no.nav.bidrag.beregn.felles.bidragsevne.beregning.ResultatBeregning;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("beregning.BidragsevneresultatTest")
-class BidragsevneBeregningResultatTest {
+class ResultatBeregningTest {
 
     @Test
     void getEvne() {
@@ -14,14 +14,14 @@ class BidragsevneBeregningResultatTest {
 
     @Test
     void testResultatKanMerges() {
-        Boolean resultatKanMerges = new BidragsevneBeregningResultat(Double.valueOf(100))
-                .kanMergesMed(new BidragsevneBeregningResultat(Double.valueOf(100)));
+        Boolean resultatKanMerges = new ResultatBeregning(Double.valueOf(100))
+                .kanMergesMed(new ResultatBeregning(Double.valueOf(100)));
         assertThat(resultatKanMerges).isTrue();
     }
     @Test
     void testResultatKanIkkeMerges() {
-        Boolean resultatKanMerges = new BidragsevneBeregningResultat(Double.valueOf(100))
-                .kanMergesMed(new BidragsevneBeregningResultat(Double.valueOf(99)));
+        Boolean resultatKanMerges = new ResultatBeregning(Double.valueOf(100))
+                .kanMergesMed(new ResultatBeregning(Double.valueOf(99)));
         assertThat(resultatKanMerges).isFalse();
     }
 }

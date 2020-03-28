@@ -1,6 +1,9 @@
 package no.nav.bidrag.beregn.felles.bidragsevne.periode.grunnlag;
 
-public class SjablonPeriode implements PeriodisertGrunnlag{
+import no.nav.bidrag.beregn.felles.bidragsevne.periode.Periode;
+import no.nav.bidrag.beregn.felles.bidragsevne.periode.PeriodisertGrunnlag;
+
+public class SjablonPeriode implements PeriodisertGrunnlag {
 
     private final Periode datoFraTil;
     private final String sjablonnavn;
