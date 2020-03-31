@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 import no.nav.bidrag.beregn.felles.bidragsevne.beregning.Bidragsevneberegning;
 import no.nav.bidrag.beregn.felles.bidragsevne.beregning.ResultatBeregning;
-import no.nav.bidrag.beregn.felles.bidragsevne.periode.grunnlag.BidragsevnePeriodeGrunnlag;
-import no.nav.bidrag.beregn.felles.bidragsevne.periode.grunnlag.BostatusPeriode;
-import no.nav.bidrag.beregn.felles.bidragsevne.periode.grunnlag.InntektPeriode;
-import no.nav.bidrag.beregn.felles.bidragsevne.periode.grunnlag.SjablonPeriode;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneGrunnlagAlt;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneResultat;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.BostatusPeriode;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.InntektPeriode;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.ResultatPeriode;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.SjablonPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.periode.resultat.BidragsevnePeriodeResultat;
 import no.nav.bidrag.beregn.felles.bidragsevne.periode.resultat.PeriodeResultat;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.AntallBarnIEgetHusholdPeriode;
@@ -20,35 +22,36 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
 
   private Bidragsevneberegning bidragsevneberegning = Bidragsevneberegning.getInstance();
 
-  public BidragsevnePeriodeResultat beregnPerioder(BidragsevnePeriodeGrunnlag bidragsevnePeriodeGrunnlag) {
+  public BeregnBidragsevneResultat beregnPerioder(
+      BeregnBidragsevneGrunnlagAlt beregnBidragsevneGrunnlagAlt) {
 
-    var periodeResultatListe = new ArrayList<PeriodeResultat>();
+    var resultatPeriodeListe = new ArrayList<ResultatPeriode>();
 
-    var justertSjablonPeriodeListe = bidragsevnePeriodeGrunnlag.getSjablonPeriodeListe().stream()
+    var justertSjablonPeriodeListe = beregnBidragsevneGrunnlagAlt.getSjablonPeriodeListe().stream()
         .map(sP -> new SjablonPeriode(PeriodeUtil.justerPeriode(sP.getDatoFraTil()), sP.getSjablonnavn(),
             sP.getSjablonVerdi1(), sP.getSjablonVerdi2())).collect(toCollection(ArrayList::new));
 
-    var justertInntektPeriodeListe = bidragsevnePeriodeGrunnlag.getInntektPeriodeListe().stream()
+    var justertInntektPeriodeListe = beregnBidragsevneGrunnlagAlt.getInntektPeriodeListe().stream()
         .map(iP -> new InntektPeriode(PeriodeUtil.justerPeriode(iP.getDatoFraTil()), iP.getSkatteklasse(),
             iP.getInntektBelop())).collect(toCollection(ArrayList::new));
 
-    var justertBostatusPeriodeListe = bidragsevnePeriodeGrunnlag.getBostatusPeriodeListe().stream()
+    var justertBostatusPeriodeListe = beregnBidragsevneGrunnlagAlt.getBostatusPeriodeListe().stream()
         .map(bP -> new BostatusPeriode(PeriodeUtil.justerPeriode(bP.getDatoFraTil()), bP.getBorAlene()))
             .collect(toCollection(ArrayList::new));
 
-    var justertAntallBarnIEgetHusholdPeriodeListe = bidragsevnePeriodeGrunnlag.getAntallBarnIEgetHusholdPeriodeListe().stream()
+    var justertAntallBarnIEgetHusholdPeriodeListe = beregnBidragsevneGrunnlagAlt.getAntallBarnIEgetHusholdPeriodeListe().stream()
         .map(aP -> new AntallBarnIEgetHusholdPeriode(PeriodeUtil.justerPeriode(aP.getDatoFraTil()), aP.getAntallBarn()))
         .collect(toCollection(ArrayList::new));
 
 
     // Bygger opp liste over perioder
     List<Periode> perioder = new Periodiserer()
-        .addBruddpunkt(bidragsevnePeriodeGrunnlag.getBeregnDatoFra()) //For å sikre bruddpunkt på start-beregning-fra-dato
+        .addBruddpunkt(beregnBidragsevneGrunnlagAlt.getBeregnDatoFra()) //For å sikre bruddpunkt på start-beregning-fra-dato
         .addBruddpunkter(justertSjablonPeriodeListe)
         .addBruddpunkter(justertInntektPeriodeListe)
         .addBruddpunkter(justertBostatusPeriodeListe)
         .addBruddpunkter(justertAntallBarnIEgetHusholdPeriodeListe)
-        .finnPerioder(bidragsevnePeriodeGrunnlag.getBeregnDatoFra(), bidragsevnePeriodeGrunnlag.getBeregnDatoTil());
+        .finnPerioder(beregnBidragsevneGrunnlagAlt.getBeregnDatoFra(), beregnBidragsevneGrunnlagAlt.getBeregnDatoTil());
 
     // Løper gjennom periodene og finner matchende verdi for hver kategori. Kaller beregningsmodulen for hver beregningsperiode
 
@@ -75,46 +78,46 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
     }
 
     //Slår sammen perioder med samme resultat
-    return mergePerioder(periodeResultatListe);
+    return mergePerioder(resultatPeriodeListe);
 
   }
 
 
   // Slår sammen perioder hvis Beløp, ResultatKode og ResultatBeskrivelse er like i tilgrensende perioder
-  private BidragsevnePeriodeResultat mergePerioder(ArrayList<PeriodeResultat> periodeResultatListe) {
-    var filtrertPeriodeResultatListe = new ArrayList<PeriodeResultat>();
-    var periodeResultatForrige = new PeriodeResultat(new Periode(LocalDate.MIN, LocalDate.MAX),
+  private BeregnBidragsevneResultat mergePerioder(ArrayList<ResultatPeriode> resultatPeriodeListe) {
+    var filtrertPeriodeResultatListe = new ArrayList<ResultatPeriode>();
+    var resultatPeriodeForrige = new ResultatPeriode(new Periode(LocalDate.MIN, LocalDate.MAX),
         new ResultatBeregning(Double.valueOf(0.0)));
-    var datoFra = periodeResultatListe.get(0).getDatoFraTil().getDatoFra();
+    var datoFra = resultatPeriodeListe.get(0).getResultatDatoFraTil().getDatoFra();
     var mergePerioder = false;
     int count = 0;
 
-    for (PeriodeResultat periodeResultat : periodeResultatListe) {
+    for (ResultatPeriode resultatPeriode : resultatPeriodeListe) {
       count++;
 
-      if (periodeResultat.getResultatBeregning().kanMergesMed(periodeResultatForrige.getResultatBeregning())) {
+      if (resultatPeriode.getResultatBeregning().kanMergesMed(resultatPeriodeForrige.getResultatBeregning())) {
         mergePerioder = true;
       } else {
         if (mergePerioder) {
-          periodeResultatForrige.getDatoFraTil().setDatoFra(datoFra);
+          resultatPeriodeForrige.getResultatDatoFraTil().setDatoFra(datoFra);
           mergePerioder = false;
         }
         if (count > 1) {
-          filtrertPeriodeResultatListe.add(periodeResultatForrige);
+          filtrertPeriodeResultatListe.add(resultatPeriodeForrige);
         }
-        datoFra = periodeResultat.getDatoFraTil().getDatoFra();
+        datoFra = resultatPeriode.getResultatDatoFraTil().getDatoFra();
       }
 
-      periodeResultatForrige = periodeResultat;
+      resultatPeriodeForrige = resultatPeriode;
     }
 
     if (count > 0) {
       if (mergePerioder) {
-        periodeResultatForrige.getDatoFraTil().setDatoFra(datoFra);
+        resultatPeriodeForrige.getResultatDatoFraTil().setDatoFra(datoFra);
       }
-      filtrertPeriodeResultatListe.add(periodeResultatForrige);
+      filtrertPeriodeResultatListe.add(resultatPeriodeForrige);
     }
 
-    return new BidragsevnePeriodeResultat(filtrertPeriodeResultatListe);
+    return new BeregnBidragsevneResultat(filtrertPeriodeResultatListe);
   }
 }

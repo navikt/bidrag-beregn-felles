@@ -2,9 +2,10 @@ package no.nav.bidrag.beregn.felles.bidragsevne;
 
 import java.time.LocalDate;
 import no.nav.bidrag.beregn.felles.bidragsevne.beregning.BidragsevneberegningImpl;
-import no.nav.bidrag.beregn.felles.bidragsevne.beregning.grunnlag.BidragsevneberegningGrunnlag;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneGrunnlagAlt;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneGrunnlagPeriodisert;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.SjablonPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.periode.Periode;
-import no.nav.bidrag.beregn.felles.bidragsevne.periode.grunnlag.SjablonPeriode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +19,7 @@ class BidragsevneberegningTest {
   @Test
   void beregn() {
 
-    BidragsevneberegningGrunnlag bidragsevneberegningGrunnlag = new BidragsevneberegningGrunnlag();
+    BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert = new BeregnBidragsevneGrunnlagPeriodisert();
     ArrayList<SjablonPeriode> sjabloner = new ArrayList<>();
     //Sjablonverdier pr 2019-12-31
 
@@ -61,36 +62,36 @@ class BidragsevneberegningTest {
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
         "fordelSkatteklasse2", Double.valueOf(0), null));
 
-    bidragsevneberegningGrunnlag.setSjabloner(sjabloner);
+    beregnBidragsevneGrunnlagPeriodisert.setSjablonPeriodeListe(sjabloner);
     BidragsevneberegningImpl bidragsevneberegning = new BidragsevneberegningImpl();
 
-    bidragsevneberegningGrunnlag.setInntektBelop(Double.valueOf(1000000));
-    bidragsevneberegningGrunnlag.setSkatteklasse(Integer.valueOf(1));
-    bidragsevneberegningGrunnlag.setBorAlene(true);
-    bidragsevneberegningGrunnlag.setAntallEgneBarnIHusstand(1);
+    beregnBidragsevneGrunnlagPeriodisert.setInntektBelop(Double.valueOf(1000000));
+    beregnBidragsevneGrunnlagPeriodisert.setSkatteklasse(Integer.valueOf(1));
+    beregnBidragsevneGrunnlagPeriodisert.setBorAlene(true);
+    beregnBidragsevneGrunnlagPeriodisert.setAntallEgneBarnIHusstand(1);
     assertEquals(Double.valueOf(33050),
-        bidragsevneberegning.beregn(bidragsevneberegningGrunnlag).getEvne());
+        bidragsevneberegning.beregn(beregnBidragsevneGrunnlagPeriodisert).getEvne());
 
-    bidragsevneberegningGrunnlag.setInntektBelop(Double.valueOf(520000));
-    bidragsevneberegningGrunnlag.setSkatteklasse(Integer.valueOf(1));
-    bidragsevneberegningGrunnlag.setBorAlene(true);
-    bidragsevneberegningGrunnlag.setAntallEgneBarnIHusstand(1);
+    beregnBidragsevneGrunnlagPeriodisert.setInntektBelop(Double.valueOf(520000));
+    beregnBidragsevneGrunnlagPeriodisert.setSkatteklasse(Integer.valueOf(1));
+    beregnBidragsevneGrunnlagPeriodisert.setBorAlene(true);
+    beregnBidragsevneGrunnlagPeriodisert.setAntallEgneBarnIHusstand(1);
     assertEquals(Double.valueOf(9767),
-        bidragsevneberegning.beregn(bidragsevneberegningGrunnlag).getEvne());
+        bidragsevneberegning.beregn(beregnBidragsevneGrunnlagPeriodisert).getEvne());
 
-    bidragsevneberegningGrunnlag.setInntektBelop(Double.valueOf(666000));
-    bidragsevneberegningGrunnlag.setSkatteklasse(Integer.valueOf(1));
-    bidragsevneberegningGrunnlag.setBorAlene(true);
-    bidragsevneberegningGrunnlag.setAntallEgneBarnIHusstand(3);
+    beregnBidragsevneGrunnlagPeriodisert.setInntektBelop(Double.valueOf(666000));
+    beregnBidragsevneGrunnlagPeriodisert.setSkatteklasse(Integer.valueOf(1));
+    beregnBidragsevneGrunnlagPeriodisert.setBorAlene(true);
+    beregnBidragsevneGrunnlagPeriodisert.setAntallEgneBarnIHusstand(3);
     assertEquals(Double.valueOf(10410),
-        bidragsevneberegning.beregn(bidragsevneberegningGrunnlag).getEvne());
+        bidragsevneberegning.beregn(beregnBidragsevneGrunnlagPeriodisert).getEvne());
 
   }
 
   @Test
   void beregnMinstefradrag() {
 
-    BidragsevneberegningGrunnlag bidragsevneberegningGrunnlag = new BidragsevneberegningGrunnlag();
+    BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert = new BeregnBidragsevneGrunnlagPeriodisert();
 
     ArrayList<SjablonPeriode> sjabloner = new ArrayList<>();
     //Sjablonverdier pr 2019-12-31
@@ -123,17 +124,17 @@ class BidragsevneberegningTest {
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
         "fordelSkatteklasse2", Double.valueOf(0), null)); //EN
 
-    bidragsevneberegningGrunnlag.setSjabloner(sjabloner);
+    beregnBidragsevneGrunnlagPeriodisert.setSjablonPeriodeListe(sjabloner);
     BidragsevneberegningImpl bidragsevneberegning = new BidragsevneberegningImpl();
 
-    bidragsevneberegningGrunnlag.setInntektBelop(Double.valueOf(200000));
-    System.out.println(bidragsevneberegning.beregnMinstefradrag(bidragsevneberegningGrunnlag));
-    assertTrue((bidragsevneberegning.beregnMinstefradrag(bidragsevneberegningGrunnlag))
+    beregnBidragsevneGrunnlagPeriodisert.setInntektBelop(Double.valueOf(200000));
+    System.out.println(bidragsevneberegning.beregnMinstefradrag(beregnBidragsevneGrunnlagPeriodisert));
+    assertTrue((bidragsevneberegning.beregnMinstefradrag(beregnBidragsevneGrunnlagPeriodisert))
         .equals(Double.valueOf(62000)));
 
-    bidragsevneberegningGrunnlag.setInntektBelop(Double.valueOf(1000000));
-    System.out.println(bidragsevneberegning.beregnMinstefradrag(bidragsevneberegningGrunnlag));
-    assertTrue((bidragsevneberegning.beregnMinstefradrag(bidragsevneberegningGrunnlag))
+    beregnBidragsevneGrunnlagPeriodisert.setInntektBelop(Double.valueOf(1000000));
+    System.out.println(bidragsevneberegning.beregnMinstefradrag(beregnBidragsevneGrunnlagPeriodisert));
+    assertTrue((bidragsevneberegning.beregnMinstefradrag(beregnBidragsevneGrunnlagPeriodisert))
         .equals(Double.valueOf(85050)));
 
     //assertTrue(bidragsevneberegning.beregnMinstefradrag(bidragsevneberegningGrunnlag).compareTo(Double.valueOf(62000)) = 0);
@@ -142,7 +143,7 @@ class BidragsevneberegningTest {
 
   @Test
   void beregnSkattetrinnBelop() {
-    BidragsevneberegningGrunnlag bidragsevneberegningGrunnlag = new BidragsevneberegningGrunnlag();
+    BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert = new BeregnBidragsevneGrunnlagPeriodisert();
 
     ArrayList<SjablonPeriode> sjabloner = new ArrayList<>();
     //Sjablonverdier pr 2019-12-31
@@ -154,23 +155,23 @@ class BidragsevneberegningTest {
         "skattetrinn3", Double.valueOf(617500), Double.valueOf((0.132))));
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
         "skattetrinn4", Double.valueOf(964800), Double.valueOf((0.162))));
-    bidragsevneberegningGrunnlag.setInntektBelop(Double.valueOf(666000));
+    beregnBidragsevneGrunnlagPeriodisert.setInntektBelop(Double.valueOf(666000));
 
-    bidragsevneberegningGrunnlag.setSjabloner(sjabloner);
+    beregnBidragsevneGrunnlagPeriodisert.setSjablonPeriodeListe(sjabloner);
     BidragsevneberegningImpl bidragsevneberegning = new BidragsevneberegningImpl();
-    //System.out.println(bidragsevneberegning.beregnSkattetrinnBelop(bidragsevneberegningGrunnlag));
+    //System.out.println(bidragsevneberegning.beregnSkattetrinnBelop(beregnBidragsevneGrunnlagPeriodisert));
 
-    assertTrue((bidragsevneberegning.beregnSkattetrinnBelop(bidragsevneberegningGrunnlag))
+    assertTrue((bidragsevneberegning.beregnSkattetrinnBelop(beregnBidragsevneGrunnlagPeriodisert))
         .equals(Double.valueOf(1352+15618+6402+0)));
 
-    bidragsevneberegningGrunnlag.setInntektBelop(Double.valueOf(174600));
+    beregnBidragsevneGrunnlagPeriodisert.setInntektBelop(Double.valueOf(174600));
 
-    assertTrue((bidragsevneberegning.beregnSkattetrinnBelop(bidragsevneberegningGrunnlag))
+    assertTrue((bidragsevneberegning.beregnSkattetrinnBelop(beregnBidragsevneGrunnlagPeriodisert))
         .equals(Double.valueOf(2)));
 
-    bidragsevneberegningGrunnlag.setInntektBelop(Double.valueOf(250000));
+    beregnBidragsevneGrunnlagPeriodisert.setInntektBelop(Double.valueOf(250000));
 
-    assertTrue((bidragsevneberegning.beregnSkattetrinnBelop(bidragsevneberegningGrunnlag))
+    assertTrue((bidragsevneberegning.beregnSkattetrinnBelop(beregnBidragsevneGrunnlagPeriodisert))
         .equals(Double.valueOf(1352+183)));
   }
 }

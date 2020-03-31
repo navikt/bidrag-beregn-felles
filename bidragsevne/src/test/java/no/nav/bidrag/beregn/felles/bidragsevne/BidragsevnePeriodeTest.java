@@ -6,12 +6,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.AntallBarnIEgetHusholdPeriode;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneGrunnlagAlt;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneResultat;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.BostatusPeriode;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.InntektPeriode;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.SjablonPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.periode.BidragsevnePeriode;
-import no.nav.bidrag.beregn.felles.bidragsevne.periode.grunnlag.BidragsevnePeriodeGrunnlag;
-import no.nav.bidrag.beregn.felles.bidragsevne.periode.grunnlag.BostatusPeriode;
-import no.nav.bidrag.beregn.felles.bidragsevne.periode.grunnlag.InntektPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.periode.Periode;
-import no.nav.bidrag.beregn.felles.bidragsevne.periode.grunnlag.SjablonPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.periode.resultat.BidragsevnePeriodeResultat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,19 +21,23 @@ import org.junit.jupiter.api.Test;
 
 @DisplayName("BidragsevneperiodeTest")
 class BidragsevnePeriodeTest {
-  private BidragsevnePeriodeGrunnlag bidragsevnePeriodeGrunnlag = new BidragsevnePeriodeGrunnlag();
+  private BeregnBidragsevneGrunnlagAlt beregnBidragsevneGrunnlagAlt;
   private BidragsevnePeriode bidragsevnePeriode = BidragsevnePeriode.getInstance();
 
   @Test
   void lagGrunnlagTest() {
     System.out.println("Starter test");
-    bidragsevnePeriodeGrunnlag.setBeregnDatoFra(LocalDate.parse("2017-01-01"));
-    bidragsevnePeriodeGrunnlag.setBeregnDatoTil(LocalDate.parse("2019-08-01"));
-    lagInntektGrunnlag();
+    var beregnDatoFra = LocalDate.parse("2017-01-01");
+    var beregnDatoTil = LocalDate.parse("2019-08-01");
+//    lagInntektGrunnlag();
     lagBostatusGrunnlag();
     lagAntallBarnIEgetHusholdGrunnlag();
     lagSjablongGrunnlag();
-    var resultat = bidragsevnePeriode.beregnPerioder(bidragsevnePeriodeGrunnlag);
+
+    beregnBidragsevneGrunnlagAlt = new BeregnBidragsevneGrunnlagAlt(beregnDatoFra, beregnDatoTil,
+        lagSjablongGrunnlag(), lagInntektGrunnlag(), lagBostatusGrunnlag(), lagAntallBarnIEgetHusholdGrunnlag());
+
+    var resultat = bidragsevnePeriode.beregnPerioder(beregnBidragsevneGrunnlagAlt);
     assertThat(resultat).isNotNull();
 
     printGrunnlagResultat(resultat);
@@ -39,7 +45,7 @@ class BidragsevnePeriodeTest {
 
   }
 
-  private void lagInntektGrunnlag(){
+  private List<InntektPeriode> lagInntektGrunnlag(){
     var inntektPeriode = new ArrayList<InntektPeriode>();
 
     inntektPeriode.add(new InntektPeriode(
@@ -52,11 +58,13 @@ class BidragsevnePeriodeTest {
         new Periode(LocalDate.parse("2016-01-01"), LocalDate.parse("2019-12-31")),
         1, Double.valueOf(444000)));
 
-    bidragsevnePeriodeGrunnlag.setInntektPeriodeListe(inntektPeriode);
+    return inntektPeriode;
+
+//    beregnBidragsevneGrunnlag.setInntektPeriodeListe(inntektPeriode);
 
   }
 
-  private void lagBostatusGrunnlag(){
+  private List<BostatusPeriode> lagBostatusGrunnlag(){
 
     var bostatusPeriode = new ArrayList<BostatusPeriode>();
 
@@ -66,11 +74,13 @@ class BidragsevnePeriodeTest {
     bostatusPeriode.add(new BostatusPeriode(
         new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-12-31")), Boolean.TRUE));
 
-    bidragsevnePeriodeGrunnlag.setBostatusPeriodeListe(bostatusPeriode);
+    return bostatusPeriode;
+
+//    beregnBidragsevneGrunnlag.setBostatusPeriodeListe(bostatusPeriode);
 
   }
 
-  private void lagAntallBarnIEgetHusholdGrunnlag(){
+  private List<AntallBarnIEgetHusholdPeriode> lagAntallBarnIEgetHusholdGrunnlag(){
 
     var antallBarnIEgetHusholdPeriode = new ArrayList<AntallBarnIEgetHusholdPeriode>();
 
@@ -80,12 +90,14 @@ class BidragsevnePeriodeTest {
     antallBarnIEgetHusholdPeriode.add(new AntallBarnIEgetHusholdPeriode(
         new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-12-31")), 2));
 
-    bidragsevnePeriodeGrunnlag.setAntallBarnIEgetHusholdPeriodeListe(antallBarnIEgetHusholdPeriode);
+    return antallBarnIEgetHusholdPeriode;
+
+//    beregnBidragsevneGrunnlag.setAntallBarnIEgetHusholdPeriodeListe(antallBarnIEgetHusholdPeriode);
 
   }
 
 
-  private void lagSjablongGrunnlag() {
+  private List<SjablonPeriode> lagSjablongGrunnlag() {
 
     var sjablonPeriode = new ArrayList<SjablonPeriode>();
     sjablonPeriode.add(new SjablonPeriode(
@@ -208,17 +220,20 @@ class BidragsevnePeriodeTest {
         new Periode(LocalDate.parse("2019-07-01"), LocalDate.parse("9999-12-31")),
         "belopUnderholdEgetGs", Double.valueOf(7557), null));
 
-    bidragsevnePeriodeGrunnlag.setSjablonPeriodeListe(sjablonPeriode);
+    return sjablonPeriode;
+
+//    beregnBidragsevneGrunnlag.setSjablonPeriodeListe(sjablonPeriode);
 
 
   }
 
 
-  private void printGrunnlagResultat(BidragsevnePeriodeResultat resultat) {
-    resultat.getPeriodeResultatListe().stream().sorted(
-        Comparator.comparing(pR -> pR.getDatoFraTil().getDatoFra()))
+  private void printGrunnlagResultat(BeregnBidragsevneResultat beregnBidragsevneResultat) {
+    beregnBidragsevneResultat.getResultatPeriodeListe().stream().sorted(
+        Comparator.comparing(pR -> pR.getResultatDatoFraTil().getDatoFra()))
         .forEach(sortedPR -> System.out
-            .println("Dato fra: " + sortedPR.getDatoFraTil().getDatoFra() + "; " + "Dato til: " + sortedPR.getDatoFraTil().getDatoTil()
+            .println("Dato fra: " + sortedPR.getResultatDatoFraTil().getDatoFra() + "; " + "Dato til: "
+                + sortedPR.getResultatDatoFraTil().getDatoTil()
                 + "; " + "Beløp: " + sortedPR.getResultatBeregning().getEvne()));
   }
 

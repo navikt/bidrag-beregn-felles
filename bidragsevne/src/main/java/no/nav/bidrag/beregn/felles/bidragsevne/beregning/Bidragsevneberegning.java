@@ -1,13 +1,16 @@
 package no.nav.bidrag.beregn.felles.bidragsevne.beregning;
 
-import no.nav.bidrag.beregn.felles.bidragsevne.beregning.grunnlag.BidragsevneberegningGrunnlag;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneGrunnlagPeriodisert;
 
 public interface Bidragsevneberegning {
-    ResultatBeregning beregn(BidragsevneberegningGrunnlag bidragsevneBeregningGrunnlag);
+    ResultatBeregning beregn(
+        BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert);
 
-    Double beregnMinstefradrag(BidragsevneberegningGrunnlag bidragsevneBeregningGrunnlag);
+    Double beregnMinstefradrag(
+        BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert);
 
-    Double beregnSkattetrinnBelop(BidragsevneberegningGrunnlag bidragsevneBeregningGrunnlag);
+    Double beregnSkattetrinnBelop(
+        BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert);
 
     static Bidragsevneberegning getInstance(){
         return new BidragsevneberegningImpl();
