@@ -19,9 +19,6 @@ class BidragsevneberegningGrunnlagTest {
     @Test
     void hentSjablon() {
 
-        BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert = new BeregnBidragsevneGrunnlagPeriodisert();
-
-        beregnBidragsevneGrunnlagPeriodisert.setInntektBelop(Double.valueOf(1000000));
 
         ArrayList<SjablonPeriode> sjabloner = new ArrayList<>();
         //Sjablonverdier pr 2019-12-31
@@ -52,15 +49,24 @@ class BidragsevneberegningGrunnlagTest {
         sjabloner.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06")),
             "fordelSarfradrag", Double.valueOf(12977), null)); //EN
 
-        beregnBidragsevneGrunnlagPeriodisert.setSjablonPeriodeListe(sjabloner);
+        BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert
+            = new BeregnBidragsevneGrunnlagPeriodisert(Double.valueOf(1000000), 1, Boolean.TRUE, 1, sjabloner);
 
         Assertions
-            .assertTrue(beregnBidragsevneGrunnlagPeriodisert.hentSjablon("skattesats").getSjablonVerdi1().equals(Double.valueOf(0.22)));
+            .assertTrue(
+                beregnBidragsevneGrunnlagPeriodisert.hentSjablon("skattesats").getSjablonVerdi1()
+                    .equals(Double.valueOf(0.22)));
         Assertions
-            .assertTrue(beregnBidragsevneGrunnlagPeriodisert.hentSjablon("skattetrinn1").getSjablonVerdi1().equals(Double.valueOf(174500)));
+            .assertTrue(
+                beregnBidragsevneGrunnlagPeriodisert.hentSjablon("skattetrinn1").getSjablonVerdi1()
+                    .equals(Double.valueOf(174500)));
         Assertions
-            .assertTrue(beregnBidragsevneGrunnlagPeriodisert.hentSjablon("skattetrinn1").getSjablonVerdi2().equals(Double.valueOf(0.019)));
+            .assertTrue(
+                beregnBidragsevneGrunnlagPeriodisert.hentSjablon("skattetrinn1").getSjablonVerdi2()
+                    .equals(Double.valueOf(0.019)));
         //System.out.println(beregnBidragsevneGrunnlagPeriodisert.hentSjablon("skattesats").getVerdi1());
+
+
 
     }
 }

@@ -41,25 +41,6 @@ public class Periodiserer {
     return this;
   }
 
-  // Genererer brudd når søknadsbarnet passerer 11 år og 18 år
-  // 0 og 11 år justeres til den første inneværende måned, 18 år justeres til den første neste måned
-//  Periodiserer addBruddpunkter(LocalDate fodselDato, LocalDate beregnDatoFra, LocalDate beregnDatoTil) {
-//
-//    var barn11AarDato = fodselDato.plusYears(11).with(firstDayOfMonth());
-//    var barn18AarDato = fodselDato.plusYears(18).with(firstDayOfNextMonth());
-//    var barn11AarIPerioden = barn11AarDato.isAfter(beregnDatoFra.minusDays(1)) && barn11AarDato.isBefore(beregnDatoTil.plusDays(1));
-//    var barn18AarIPerioden = barn18AarDato.isAfter(beregnDatoFra.minusDays(1)) && barn18AarDato.isBefore(beregnDatoTil.plusDays(1));
-//
-//    if (barn11AarIPerioden) {
-//      addBruddpunkt(barn11AarDato);
-//    }
-//
-//    if (barn18AarIPerioden) {
-//      addBruddpunkt(barn18AarDato);
-//    }
-//    return this;
-//  }
-
   public List<Periode> finnPerioder(LocalDate beregnDatoFra, LocalDate beregnDatoTil) {
     var sortertBruddpunktListe = bruddpunkter.stream().filter((dato) -> dato.isAfter(beregnDatoFra.minusDays(1)))
         .filter((dato) -> dato.isBefore(beregnDatoTil.plusDays(1))).sorted().collect(toList());
@@ -79,6 +60,4 @@ public class Periodiserer {
     }
     return perioder;
   }
-
-
 }

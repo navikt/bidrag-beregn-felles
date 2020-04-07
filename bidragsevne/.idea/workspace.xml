@@ -3,15 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="3a0eeba3-aa4a-48cd-ad0c-c85c5cf42a7c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/Bidragsevneberegning.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/Bidragsevneberegning.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/BidragsevneberegningImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/BidragsevneberegningImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/grunnlag/BidragsevneberegningGrunnlag.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/BidragsevnePeriode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/BidragsevnePeriode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/BidragsevnePeriodeImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/BidragsevnePeriodeImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/grunnlag/BidragsevnePeriodeGrunnlag.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/grunnlag/BostatusPeriode.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/grunnlag/InntektPeriode.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/grunnlag/SjablonPeriode.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/Periodiserer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/Periodiserer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/grunnlag/SjablonPeriodeVerdi.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/resultat/BidragsevnePeriodeResultat.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/resultat/PeriodeResultat.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/no/nav/bidrag/beregn/felles/bidragsevne/bo/corebo.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/no/nav/bidrag/beregn/felles/bidragsevne/bo/corebo.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/BidragsevnePeriodeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/BidragsevnePeriodeTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/BidragsevneberegningGrunnlagTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/BidragsevneberegningGrunnlagTest.java" afterDir="false" />
@@ -85,12 +83,12 @@
       <recent name="C:\Users\R153961\Dev\bidrag-beregn-felles\bidragsevne\src\main\kotlin\no\nav\bidrag\beregn\felles\bidragsevne" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="JUnit.BidragsevnePeriodeTest.lagGrunnlagTest">
     <configuration name="BidragsevnePeriodeTest.lagGrunnlagTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="bidrag-beregn-felles-bidragsevne" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="no.nav.bidrag.beregn.felles.bidragsevne.periode.*" />
+          <option name="PATTERN" value="no.nav.bidrag.beregn.felles.bidragsevne.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -106,7 +104,7 @@
       <module name="bidrag-beregn-felles-bidragsevne" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="no.nav.bidrag.beregn.felles.bidragsevne.periode.*" />
+          <option name="PATTERN" value="no.nav.bidrag.beregn.felles.bidragsevne.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -150,18 +148,17 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ResultatBeregningTest.getEvne" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="ResultatBeregningTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="bidrag-beregn-felles-bidragsevne" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="no.nav.bidrag.beregn.felles.bidragsevne.periode.*" />
+          <option name="PATTERN" value="no.nav.bidrag.beregn.felles.bidragsevne.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="no.nav.bidrag.beregn.felles.bidragsevne" />
       <option name="MAIN_CLASS_NAME" value="no.nav.bidrag.beregn.felles.bidragsevne.ResultatBeregningTest" />
-      <option name="METHOD_NAME" value="getEvne" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -169,10 +166,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.BidragsevnePeriodeTest.lagGrunnlagTest" />
-        <item itemvalue="JUnit.BidragsevneberegningTest.beregn" />
         <item itemvalue="JUnit.BidragsevneberegningTest.beregnSkattetrinnBelop" />
         <item itemvalue="JUnit.BidragsevneberegningTest.beregnMinstefradrag" />
-        <item itemvalue="JUnit.ResultatBeregningTest.getEvne" />
+        <item itemvalue="JUnit.BidragsevneberegningTest.beregn" />
+        <item itemvalue="JUnit.ResultatBeregningTest" />
       </list>
     </recent_temporary>
   </component>
@@ -206,7 +203,9 @@
       <workItem from="1585039148384" duration="802000" />
       <workItem from="1585039964130" duration="4580000" />
       <workItem from="1585058064964" duration="51875000" />
-      <workItem from="1585634323562" duration="14396000" />
+      <workItem from="1585634323562" duration="58123000" />
+      <workItem from="1586246677795" duration="598000" />
+      <workItem from="1586261981841" duration="2234000" />
     </task>
     <servers />
   </component>
@@ -229,11 +228,15 @@
       <screen x="0" y="0" width="1707" height="920" />
     </state>
     <state x="310" y="117" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585146014691" />
-    <state x="4673" y="540" width="887" height="579" key="#com.intellij.ide.util.MemberChooser" timestamp="1585665342272">
+    <state x="3947" y="361" width="1781" height="1246" key="#com.intellij.execution.junit2.states.ComparisonFailureState$DiffDialog" timestamp="1585734815443">
+      <screen x="3840" y="261" width="3440" height="1440" />
+    </state>
+    <state x="3947" y="361" width="1781" height="1246" key="#com.intellij.execution.junit2.states.ComparisonFailureState$DiffDialog/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585734815443" />
+    <state x="4673" y="540" width="887" height="579" key="#com.intellij.ide.util.MemberChooser" timestamp="1585814078882">
       <screen x="3840" y="261" width="3440" height="1440" />
     </state>
     <state x="660" y="178" key="#com.intellij.ide.util.MemberChooser/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585155792229" />
-    <state x="4673" y="540" width="887" height="579" key="#com.intellij.ide.util.MemberChooser/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585665342272" />
+    <state x="4673" y="540" width="887" height="579" key="#com.intellij.ide.util.MemberChooser/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585814078882" />
     <state x="5035" y="763" width="494" height="288" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1585576207224">
       <screen x="3840" y="261" width="3440" height="1440" />
     </state>
@@ -248,58 +251,63 @@
       <screen x="3840" y="261" width="3440" height="1440" />
     </state>
     <state x="4544" y="732" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585663080877" />
-    <state x="610" y="165" key="#xdebugger.evaluate" timestamp="1585153724093">
-      <screen x="0" y="0" width="1707" height="920" />
-    </state>
-    <state x="610" y="165" key="#xdebugger.evaluate/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585153724093" />
-    <state width="760" height="810" key="DebuggerActiveHint" timestamp="1585235708885">
+    <state x="4152" y="309" width="1546" height="1286" key="#xdebugger.evaluate" timestamp="1586179350576">
       <screen x="3840" y="261" width="3440" height="1440" />
     </state>
-    <state width="760" height="810" key="DebuggerActiveHint/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585235708885" />
+    <state x="610" y="165" key="#xdebugger.evaluate/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585153724093" />
+    <state x="4152" y="309" width="1546" height="1286" key="#xdebugger.evaluate/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1586179350576" />
+    <state width="1385" height="810" key="DebuggerActiveHint" timestamp="1586164850807">
+      <screen x="3840" y="261" width="3440" height="1440" />
+    </state>
+    <state width="1385" height="810" key="DebuggerActiveHint/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1586164850807" />
     <state x="635" y="217" width="678" height="486" key="FileChooserDialogImpl" timestamp="1585144737130">
       <screen x="0" y="0" width="1707" height="920" />
     </state>
     <state x="635" y="217" width="678" height="486" key="FileChooserDialogImpl/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585144737130" />
-    <state width="1869" height="250" key="GridCell.Tab.0.bottom" timestamp="1585324152917">
-      <screen x="3840" y="261" width="3440" height="1440" />
+    <state width="1877" height="336" key="GridCell.Tab.0.bottom" timestamp="1586269075685">
+      <screen x="-1920" y="956" width="1920" height="1200" />
     </state>
+    <state width="1877" height="336" key="GridCell.Tab.0.bottom/0.0.1707.920/-1920.956.1920.1200@-1920.956.1920.1200" timestamp="1586269075685" />
     <state width="1664" height="233" key="GridCell.Tab.0.bottom/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585155478646" />
-    <state width="1869" height="250" key="GridCell.Tab.0.bottom/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585324152917" />
-    <state width="1869" height="250" key="GridCell.Tab.0.center" timestamp="1585324152917">
-      <screen x="3840" y="261" width="3440" height="1440" />
+    <state width="1999" height="243" key="GridCell.Tab.0.bottom/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1586179466807" />
+    <state width="1877" height="336" key="GridCell.Tab.0.center" timestamp="1586269075685">
+      <screen x="-1920" y="956" width="1920" height="1200" />
     </state>
+    <state width="1877" height="336" key="GridCell.Tab.0.center/0.0.1707.920/-1920.956.1920.1200@-1920.956.1920.1200" timestamp="1586269075685" />
     <state width="1664" height="233" key="GridCell.Tab.0.center/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585155478645" />
-    <state width="1869" height="250" key="GridCell.Tab.0.center/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585324152917" />
-    <state width="1869" height="250" key="GridCell.Tab.0.left" timestamp="1585324152917">
-      <screen x="3840" y="261" width="3440" height="1440" />
+    <state width="1999" height="243" key="GridCell.Tab.0.center/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1586179466807" />
+    <state width="1877" height="336" key="GridCell.Tab.0.left" timestamp="1586269075685">
+      <screen x="-1920" y="956" width="1920" height="1200" />
     </state>
+    <state width="1877" height="336" key="GridCell.Tab.0.left/0.0.1707.920/-1920.956.1920.1200@-1920.956.1920.1200" timestamp="1586269075685" />
     <state width="1664" height="233" key="GridCell.Tab.0.left/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585155478645" />
-    <state width="1869" height="250" key="GridCell.Tab.0.left/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585324152917" />
-    <state width="1869" height="250" key="GridCell.Tab.0.right" timestamp="1585324152917">
-      <screen x="3840" y="261" width="3440" height="1440" />
+    <state width="1999" height="243" key="GridCell.Tab.0.left/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1586179466806" />
+    <state width="1877" height="336" key="GridCell.Tab.0.right" timestamp="1586269075685">
+      <screen x="-1920" y="956" width="1920" height="1200" />
     </state>
+    <state width="1877" height="336" key="GridCell.Tab.0.right/0.0.1707.920/-1920.956.1920.1200@-1920.956.1920.1200" timestamp="1586269075685" />
     <state width="1664" height="233" key="GridCell.Tab.0.right/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585155478646" />
-    <state width="1869" height="250" key="GridCell.Tab.0.right/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585324152917" />
-    <state width="1869" height="250" key="GridCell.Tab.1.bottom" timestamp="1585324152918">
+    <state width="1999" height="243" key="GridCell.Tab.0.right/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1586179466807" />
+    <state width="1999" height="243" key="GridCell.Tab.1.bottom" timestamp="1586179466808">
       <screen x="3840" y="261" width="3440" height="1440" />
     </state>
     <state width="1664" height="233" key="GridCell.Tab.1.bottom/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585155479430" />
-    <state width="1869" height="250" key="GridCell.Tab.1.bottom/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585324152918" />
-    <state width="1869" height="250" key="GridCell.Tab.1.center" timestamp="1585324152918">
+    <state width="1999" height="243" key="GridCell.Tab.1.bottom/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1586179466808" />
+    <state width="1999" height="243" key="GridCell.Tab.1.center" timestamp="1586179466807">
       <screen x="3840" y="261" width="3440" height="1440" />
     </state>
     <state width="1664" height="233" key="GridCell.Tab.1.center/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585155479429" />
-    <state width="1869" height="250" key="GridCell.Tab.1.center/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585324152918" />
-    <state width="1869" height="250" key="GridCell.Tab.1.left" timestamp="1585324152917">
+    <state width="1999" height="243" key="GridCell.Tab.1.center/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1586179466807" />
+    <state width="1999" height="243" key="GridCell.Tab.1.left" timestamp="1586179466807">
       <screen x="3840" y="261" width="3440" height="1440" />
     </state>
     <state width="1664" height="233" key="GridCell.Tab.1.left/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585155479429" />
-    <state width="1869" height="250" key="GridCell.Tab.1.left/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585324152917" />
-    <state width="1869" height="250" key="GridCell.Tab.1.right" timestamp="1585324152918">
+    <state width="1999" height="243" key="GridCell.Tab.1.left/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1586179466807" />
+    <state width="1999" height="243" key="GridCell.Tab.1.right" timestamp="1586179466807">
       <screen x="3840" y="261" width="3440" height="1440" />
     </state>
     <state width="1664" height="233" key="GridCell.Tab.1.right/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585155479429" />
-    <state width="1869" height="250" key="GridCell.Tab.1.right/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585324152918" />
+    <state width="1999" height="243" key="GridCell.Tab.1.right/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1586179466807" />
     <state x="4344" y="640" key="Maven.ArtifactSearchDialog" timestamp="1585324179258">
       <screen x="3840" y="261" width="3440" height="1440" />
     </state>
@@ -316,6 +324,25 @@
       <screen x="0" y="0" width="1707" height="920" />
     </state>
     <state x="599" y="180" width="849" height="559" key="com.intellij.testIntegration.createTest.CreateTestDialog/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1584450402316" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/src/main/kotlin/no/nav/bidrag/beregn/felles/bidragsevne/bo/corebo.kt</url>
+          <line>78</line>
+          <properties>
+            <option name="lambda-ordinal" value="-1" />
+          </properties>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/BidragsevneberegningGrunnlagTest.java</url>
+          <line>56</line>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/bidragsevne$BidragsevnePeriodeTest_lagGrunnlag.ic" NAME="BidragsevnePeriodeTest.lagGrunnlag Coverage Results" MODIFIED="1585144449848" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">

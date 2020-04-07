@@ -5,16 +5,16 @@ import static java.util.stream.Collectors.toCollection;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import no.nav.bidrag.beregn.felles.bidragsevne.beregning.Bidragsevneberegning;
 import no.nav.bidrag.beregn.felles.bidragsevne.beregning.ResultatBeregning;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneGrunnlagAlt;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneGrunnlagPeriodisert;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneResultat;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.BostatusPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.InntektPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.ResultatPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.SjablonPeriode;
-import no.nav.bidrag.beregn.felles.bidragsevne.periode.resultat.BidragsevnePeriodeResultat;
-import no.nav.bidrag.beregn.felles.bidragsevne.periode.resultat.PeriodeResultat;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.AntallBarnIEgetHusholdPeriode;
 
 
@@ -56,8 +56,6 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
     // Løper gjennom periodene og finner matchende verdi for hver kategori. Kaller beregningsmodulen for hver beregningsperiode
 
     for (Periode beregningsperiode : perioder) {
-      var sjabloner = justertSjablonPeriodeListe.stream()
-          .filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode)).findAny().orElse(null);
 
       var inntektBelop = justertInntektPeriodeListe.stream()
           .filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode)).map(InntektPeriode::getInntektBelop).findFirst().orElse(null);
@@ -71,10 +69,11 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
       var antallBarnIEgetHushold = justertAntallBarnIEgetHusholdPeriodeListe.stream()
           .filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode)).map(AntallBarnIEgetHusholdPeriode::getAntallBarn).findFirst().orElse(null);
 
+      var sjablonliste = justertSjablonPeriodeListe.stream()
+          .filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode)).collect(toCollection(ArrayList::new));
 
-
-//      periodeResultatListe.add(new PeriodeResultat(beregningsperiode, bidragsevneberegning
-//          .beregn(new BidragsevneberegningGrunnlag(inntektBelop, skatteklasse, borAlene, antallBarnIEgetHushold, sjabloner))));
+      resultatPeriodeListe.add(new ResultatPeriode(beregningsperiode, bidragsevneberegning
+          .beregn(new BeregnBidragsevneGrunnlagPeriodisert(inntektBelop, skatteklasse, borAlene, antallBarnIEgetHushold, sjablonliste))));
     }
 
     //Slår sammen perioder med samme resultat
@@ -83,7 +82,7 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
   }
 
 
-  // Slår sammen perioder hvis Beløp, ResultatKode og ResultatBeskrivelse er like i tilgrensende perioder
+  // Slår sammen perioder hvis beregnet bidragsevne er lik i tilgrensende perioder
   private BeregnBidragsevneResultat mergePerioder(ArrayList<ResultatPeriode> resultatPeriodeListe) {
     var filtrertPeriodeResultatListe = new ArrayList<ResultatPeriode>();
     var resultatPeriodeForrige = new ResultatPeriode(new Periode(LocalDate.MIN, LocalDate.MAX),

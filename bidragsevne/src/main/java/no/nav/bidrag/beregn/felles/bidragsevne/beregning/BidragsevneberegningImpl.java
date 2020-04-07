@@ -25,14 +25,18 @@ public class BidragsevneberegningImpl implements Bidragsevneberegning {
 
     // Trekker fra skatt
     Double forelopigBidragsevne = beregnBidragsevneGrunnlagPeriodisert.getInntektBelop() - (inntektMinusFradrag
-        * beregnBidragsevneGrunnlagPeriodisert.hentSjablon("skattesats").getSjablonVerdi1());
-    System.out.println("Foreløpig evne etter fratrekk av ordinær skatt: " + forelopigBidragsevne);
+        * beregnBidragsevneGrunnlagPeriodisert.hentSjablon("skattesats").getSjablonVerdi1()/100);
+    System.out.println("Foreløpig evne etter fratrekk av ordinær skatt: " + forelopigBidragsevne + " " + (Double.valueOf(Math.round(forelopigBidragsevne/12))));
 
     // Trekker fra trygdeavgift
+    System.out.println("Trygdeavgift: " + (Double.valueOf(Math.round(beregnBidragsevneGrunnlagPeriodisert.getInntektBelop()
+        * (beregnBidragsevneGrunnlagPeriodisert.hentSjablon("satsTrygdeavgift").
+        getSjablonVerdi1()/100)))));
+
     forelopigBidragsevne =
         (forelopigBidragsevne - (beregnBidragsevneGrunnlagPeriodisert.getInntektBelop()
-            * beregnBidragsevneGrunnlagPeriodisert.hentSjablon("satsTrygdeavgift").
-            getSjablonVerdi1()));
+            * (beregnBidragsevneGrunnlagPeriodisert.hentSjablon("satsTrygdeavgift").
+            getSjablonVerdi1()/100)));
     System.out.println("Foreløpig evne etter fratrekk av trygdeavgift: " + forelopigBidragsevne);
 
     // Trekker fra trinnvis skatt
@@ -98,7 +102,7 @@ public class BidragsevneberegningImpl implements Bidragsevneberegning {
       BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert) {
     Double minstefradrag = beregnBidragsevneGrunnlagPeriodisert
         .getInntektBelop() * (beregnBidragsevneGrunnlagPeriodisert
-        .hentSjablon("minstefradragProsentsats").getSjablonVerdi1());
+        .hentSjablon("minstefradragProsentsats").getSjablonVerdi1()/100);
     if (minstefradrag.compareTo(
             beregnBidragsevneGrunnlagPeriodisert.hentSjablon("minstefradragBelop").getSjablonVerdi1())
         > 0) {
@@ -133,10 +137,10 @@ public class BidragsevneberegningImpl implements Bidragsevneberegning {
     if (beregnBidragsevneGrunnlagPeriodisert.getInntektBelop() > belopSkattetrinn1) {
       if (beregnBidragsevneGrunnlagPeriodisert.getInntektBelop() < belopSkattetrinn2) {
         samletSkattetrinnbelop = Math.round(
-            (beregnBidragsevneGrunnlagPeriodisert.getInntektBelop() - belopSkattetrinn1) * satsSkattetrinn1);
+            (beregnBidragsevneGrunnlagPeriodisert.getInntektBelop() - belopSkattetrinn1) * (satsSkattetrinn1/100));
       } else {
         samletSkattetrinnbelop = Math
-            .round((belopSkattetrinn2 - belopSkattetrinn1) * satsSkattetrinn1);
+            .round((belopSkattetrinn2 - belopSkattetrinn1) * (satsSkattetrinn1/100));
       }
     }
 //        System.out.println("Samlet skattetrinnbeløp1: " + Math.round(samletSkattetrinnbelop));
@@ -144,10 +148,10 @@ public class BidragsevneberegningImpl implements Bidragsevneberegning {
     if (beregnBidragsevneGrunnlagPeriodisert.getInntektBelop() > belopSkattetrinn2) {
       if (beregnBidragsevneGrunnlagPeriodisert.getInntektBelop() < belopSkattetrinn3) {
         samletSkattetrinnbelop = Math.round(samletSkattetrinnbelop + (
-            (beregnBidragsevneGrunnlagPeriodisert.getInntektBelop() - belopSkattetrinn2) * satsSkattetrinn2));
+            (beregnBidragsevneGrunnlagPeriodisert.getInntektBelop() - belopSkattetrinn2) * (satsSkattetrinn2/100)));
       } else {
         samletSkattetrinnbelop = Math.round(
-            samletSkattetrinnbelop + ((belopSkattetrinn3 - belopSkattetrinn2) * satsSkattetrinn2));
+            samletSkattetrinnbelop + ((belopSkattetrinn3 - belopSkattetrinn2) * (satsSkattetrinn2/100)));
       }
     }
 //        System.out.println("Samlet skattetrinnbeløp2: " + samletSkattetrinnbelop);
@@ -155,10 +159,10 @@ public class BidragsevneberegningImpl implements Bidragsevneberegning {
     if (beregnBidragsevneGrunnlagPeriodisert.getInntektBelop() > belopSkattetrinn3) {
       if (beregnBidragsevneGrunnlagPeriodisert.getInntektBelop() < belopSkattetrinn4) {
         samletSkattetrinnbelop = Math.round(samletSkattetrinnbelop + (
-            (beregnBidragsevneGrunnlagPeriodisert.getInntektBelop() - belopSkattetrinn3) * satsSkattetrinn3));
+            (beregnBidragsevneGrunnlagPeriodisert.getInntektBelop() - belopSkattetrinn3) * (satsSkattetrinn3/100)));
       } else {
         samletSkattetrinnbelop = Math.round(
-            samletSkattetrinnbelop + ((belopSkattetrinn4 - belopSkattetrinn3) * satsSkattetrinn3));
+            samletSkattetrinnbelop + ((belopSkattetrinn4 - belopSkattetrinn3) * (satsSkattetrinn3/100)));
       }
     }
 //        System.out.println("Samlet skattetrinnbeløp3: " + samletSkattetrinnbelop);
@@ -166,7 +170,7 @@ public class BidragsevneberegningImpl implements Bidragsevneberegning {
     if (beregnBidragsevneGrunnlagPeriodisert.getInntektBelop() > belopSkattetrinn4) {
       samletSkattetrinnbelop = Math.round(
           samletSkattetrinnbelop + ((beregnBidragsevneGrunnlagPeriodisert.getInntektBelop() - belopSkattetrinn4)
-              * satsSkattetrinn4));
+              * (satsSkattetrinn4/100)));
     }
     System.out.println("Totalt skattetrinnbeløp: " + samletSkattetrinnbelop);
 

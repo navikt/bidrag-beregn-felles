@@ -9,20 +9,20 @@ import java.util.function.Predicate
 
 // Grunnlag periode
 data class BeregnBidragsevneGrunnlagAlt(
-    var beregnDatoFra: LocalDate,
-    var beregnDatoTil: LocalDate,
-    var sjablonPeriodeListe: List<SjablonPeriode>,
-    var inntektPeriodeListe: List<InntektPeriode>,
-    var bostatusPeriodeListe: List<BostatusPeriode>,
-    var antallBarnIEgetHusholdPeriodeListe: List<AntallBarnIEgetHusholdPeriode>
+    val beregnDatoFra: LocalDate,
+    val beregnDatoTil: LocalDate,
+    val sjablonPeriodeListe: List<SjablonPeriode>,
+    val inntektPeriodeListe: List<InntektPeriode>,
+    val bostatusPeriodeListe: List<BostatusPeriode>,
+    val antallBarnIEgetHusholdPeriodeListe: List<AntallBarnIEgetHusholdPeriode>
 )
 
 data class SjablonPeriode(
-    val sjablonPeriodeDatoFraTil: Periode,
-    val sjablonnavn: String,
-    val sjablonVerdi1: Double,
+    val sjablonPeriodeDatoFraTil: Periode?,
+    val sjablonnavn: String?,
+    val sjablonVerdi1: Double?,
     val sjablonVerdi2: Double? ) : PeriodisertGrunnlag {
-  override fun getDatoFraTil(): Periode {
+  override fun getDatoFraTil(): Periode? {
     return sjablonPeriodeDatoFraTil
   }
 }
@@ -51,17 +51,7 @@ data class AntallBarnIEgetHusholdPeriode(
   override fun getDatoFraTil(): Periode {
     return antallBarnIEgetHusholdPeriodeDatoFraTil
   }
-
 }
-
-//data class SjablonPeriodeVerdi(
-//    val sjablonDatoFraTil: Periode,
-//    val sjablonVerdi1: Double,
-//    val sjablonVerdi2: Double) : PeriodisertGrunnlag {
-//  override fun getDatoFraTil(): Periode {
-//    return sjablonDatoFraTil
-//  }
-//}
 
 
 // Resultat periode
@@ -75,19 +65,18 @@ data class ResultatPeriode(
 )
 
 
+data class SjablonPeriodeVerdi(
+    val sjablonnavn: String,
+    val sjablonVerdi: Int)
+
 // Grunnlag beregning
 data class BeregnBidragsevneGrunnlagPeriodisert(
-    var inntektBelop: Double,
-    var skatteklasse: Int,
-    var borAlene: Boolean,
-    var antallEgneBarnIHusstand: Int,
-    var sjablonPeriodeListe: List<SjablonPeriode>) {
-  fun hentSjablon(sjablonnavn: String?): SjablonPeriode? {
-    return sjablonPeriodeListe.stream()
-        .filter(Predicate { (sjablonnavn) -> sjablonnavn == sjablonnavn })
-        .findAny()
-        .orElse(null)
-  }
+    val inntektBelop: Double,
+    val skatteklasse: Int,
+    val borAlene: Boolean,
+    val antallEgneBarnIHusstand: Int,
+    val sjablonPeriodeListe: List<SjablonPeriode>) {
+  fun hentSjablon(sjablonnavn: String?): SjablonPeriode? = sjablonPeriodeListe.first() { it.sjablonnavn == sjablonnavn }
 }
 
 
