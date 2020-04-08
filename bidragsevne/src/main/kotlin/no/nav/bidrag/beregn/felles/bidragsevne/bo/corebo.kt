@@ -14,7 +14,8 @@ data class BeregnBidragsevneGrunnlagAlt(
     val sjablonPeriodeListe: List<SjablonPeriode>,
     val inntektPeriodeListe: List<InntektPeriode>,
     val bostatusPeriodeListe: List<BostatusPeriode>,
-    val antallBarnIEgetHusholdPeriodeListe: List<AntallBarnIEgetHusholdPeriode>
+    val antallBarnIEgetHusholdPeriodeListe: List<AntallBarnIEgetHusholdPeriode>,
+    val saerfradragPeriodeListe: List<SaerfradragPeriode>
 )
 
 data class SjablonPeriode(
@@ -53,6 +54,16 @@ data class AntallBarnIEgetHusholdPeriode(
   }
 }
 
+data class SaerfradragPeriode(
+    val saerfradragPeriodeDatoFraTil: Periode,
+    val saerfradrag: Boolean,
+    val halvtSaerfradrag: Boolean) : PeriodisertGrunnlag {
+  override fun getDatoFraTil(): Periode {
+    return saerfradragPeriodeDatoFraTil
+  }
+}
+
+
 
 // Resultat periode
 data class BeregnBidragsevneResultat(
@@ -75,6 +86,8 @@ data class BeregnBidragsevneGrunnlagPeriodisert(
     val skatteklasse: Int,
     val borAlene: Boolean,
     val antallEgneBarnIHusstand: Int,
+    val saerfradrag: Boolean,
+    val halvtSaerfradrag: Boolean,
     val sjablonPeriodeListe: List<SjablonPeriode>) {
   fun hentSjablon(sjablonnavn: String?): SjablonPeriode? = sjablonPeriodeListe.first() { it.sjablonnavn == sjablonnavn }
 }

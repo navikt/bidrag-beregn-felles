@@ -14,6 +14,7 @@ import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneResultat;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.BostatusPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.InntektPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.ResultatPeriode;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.SaerfradragPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.SjablonPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.AntallBarnIEgetHusholdPeriode;
 
@@ -43,6 +44,10 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
         .map(aP -> new AntallBarnIEgetHusholdPeriode(PeriodeUtil.justerPeriode(aP.getDatoFraTil()), aP.getAntallBarn()))
         .collect(toCollection(ArrayList::new));
 
+    var justertSaerfradragPeriodeListe = beregnBidragsevneGrunnlagAlt.getSaerfradragPeriodeListe().stream()
+        .map(aP -> new SaerfradragPeriode(PeriodeUtil.justerPeriode(aP.getDatoFraTil()), aP.getSaerfradrag(), aP.getHalvtSaerfradrag()))
+        .collect(toCollection(ArrayList::new));
+
 
     // Bygger opp liste over perioder
     List<Periode> perioder = new Periodiserer()
@@ -51,6 +56,7 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
         .addBruddpunkter(justertInntektPeriodeListe)
         .addBruddpunkter(justertBostatusPeriodeListe)
         .addBruddpunkter(justertAntallBarnIEgetHusholdPeriodeListe)
+        .addBruddpunkter(justertSaerfradragPeriodeListe)
         .finnPerioder(beregnBidragsevneGrunnlagAlt.getBeregnDatoFra(), beregnBidragsevneGrunnlagAlt.getBeregnDatoTil());
 
     // Løper gjennom periodene og finner matchende verdi for hver kategori. Kaller beregningsmodulen for hver beregningsperiode
@@ -69,11 +75,17 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
       var antallBarnIEgetHushold = justertAntallBarnIEgetHusholdPeriodeListe.stream()
           .filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode)).map(AntallBarnIEgetHusholdPeriode::getAntallBarn).findFirst().orElse(null);
 
+      var saerfradrag = justertSaerfradragPeriodeListe.stream()
+          .filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode)).map(SaerfradragPeriode::getSaerfradrag).findFirst().orElse(null);
+
+      var halvtSaerfradrag = justertSaerfradragPeriodeListe.stream()
+          .filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode)).map(SaerfradragPeriode::getHalvtSaerfradrag).findFirst().orElse(null);
+
       var sjablonliste = justertSjablonPeriodeListe.stream()
           .filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode)).collect(toCollection(ArrayList::new));
 
       resultatPeriodeListe.add(new ResultatPeriode(beregningsperiode, bidragsevneberegning
-          .beregn(new BeregnBidragsevneGrunnlagPeriodisert(inntektBelop, skatteklasse, borAlene, antallBarnIEgetHushold, sjablonliste))));
+          .beregn(new BeregnBidragsevneGrunnlagPeriodisert(inntektBelop, skatteklasse, borAlene, antallBarnIEgetHushold, saerfradrag, halvtSaerfradrag, sjablonliste))));
     }
 
     //Slår sammen perioder med samme resultat

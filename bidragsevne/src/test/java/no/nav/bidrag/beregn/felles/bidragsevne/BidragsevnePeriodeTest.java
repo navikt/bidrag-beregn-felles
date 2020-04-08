@@ -12,6 +12,7 @@ import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneGrunnlagAlt;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneResultat;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.BostatusPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.InntektPeriode;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.SaerfradragPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.SjablonPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.periode.BidragsevnePeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.periode.Periode;
@@ -29,13 +30,9 @@ class BidragsevnePeriodeTest {
     System.out.println("Starter test");
     var beregnDatoFra = LocalDate.parse("2018-07-01");
     var beregnDatoTil = LocalDate.parse("2019-08-01");
-//    lagInntektGrunnlag();
-//    lagBostatusGrunnlag();
-//    lagAntallBarnIEgetHusholdGrunnlag();
-//    lagSjablongGrunnlag();
 
     beregnBidragsevneGrunnlagAlt = new BeregnBidragsevneGrunnlagAlt(beregnDatoFra, beregnDatoTil,
-        lagSjablongGrunnlag(), lagInntektGrunnlag(), lagBostatusGrunnlag(), lagAntallBarnIEgetHusholdGrunnlag());
+        lagSjablongGrunnlag(), lagInntektGrunnlag(), lagBostatusGrunnlag(), lagAntallBarnIEgetHusholdGrunnlag(), lagSaerfradragGrunnlag());
 
     var resultat = bidragsevnePeriode.beregnPerioder(beregnBidragsevneGrunnlagAlt);
     assertThat(resultat).isNotNull();
@@ -47,7 +44,11 @@ class BidragsevnePeriodeTest {
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2018-07-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2019-01-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getEvne()).isEqualTo(Double.valueOf(3749))
+        () -> assertThat(resultat.getResultatPeriodeListe().get(0).getResultatBeregning().getEvne()).isEqualTo(Double.valueOf(3749)),
+
+        () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2019-01-01")),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2019-07-01")),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getEvne()).isEqualTo(Double.valueOf(3749))
 
         );
 
@@ -68,8 +69,11 @@ class BidragsevnePeriodeTest {
         new Periode(LocalDate.parse("2004-01-01"), LocalDate.parse("2015-12-31")),
         1, Double.valueOf(555000)));
     inntektPeriodeListe.add(new InntektPeriode(
-        new Periode(LocalDate.parse("2016-01-01"), LocalDate.parse("2019-12-31")),
+        new Periode(LocalDate.parse("2016-01-01"), LocalDate.parse("2019-01-01")),
         1, Double.valueOf(444000)));
+    inntektPeriodeListe.add(new InntektPeriode(
+        new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-12-31")),
+        1, Double.valueOf(666000)));
 
     return inntektPeriodeListe;
 
@@ -109,6 +113,19 @@ class BidragsevnePeriodeTest {
 
   }
 
+  private List<SaerfradragPeriode> lagSaerfradragGrunnlag(){
+
+    var saerfradragPeriodeListe = new ArrayList<SaerfradragPeriode>();
+
+    saerfradragPeriodeListe.add(new SaerfradragPeriode(
+        new Periode(LocalDate.parse("2001-01-01"), LocalDate.parse("2016-12-31")),Boolean.TRUE, Boolean.FALSE));
+
+    saerfradragPeriodeListe.add(new SaerfradragPeriode(
+        new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-12-31")), Boolean.TRUE, Boolean.FALSE));
+
+    return saerfradragPeriodeListe;
+
+  }
 
   private List<SjablonPeriode> lagSjablongGrunnlag() {
 

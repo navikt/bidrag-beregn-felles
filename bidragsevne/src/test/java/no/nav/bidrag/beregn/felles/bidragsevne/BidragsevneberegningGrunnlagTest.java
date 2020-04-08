@@ -50,7 +50,7 @@ class BidragsevneberegningGrunnlagTest {
             "fordelSarfradrag", Double.valueOf(12977), null)); //EN
 
         BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert
-            = new BeregnBidragsevneGrunnlagPeriodisert(Double.valueOf(1000000), 1, Boolean.TRUE, 1, sjabloner);
+            = new BeregnBidragsevneGrunnlagPeriodisert(Double.valueOf(1000000), 1, Boolean.TRUE, 1, Boolean.TRUE, Boolean.FALSE, sjabloner);
 
         Assertions
             .assertTrue(

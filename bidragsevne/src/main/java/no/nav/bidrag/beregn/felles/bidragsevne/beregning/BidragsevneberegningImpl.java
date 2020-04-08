@@ -79,10 +79,18 @@ public class BidragsevneberegningImpl implements Bidragsevneberegning {
     System.out.println("Foreløpig evne etter fratrekk av underhold for egne barn i egen husstand: "
         + forelopigBidragsevne);
 
-    // Legger til fordel særfradrag
-    forelopigBidragsevne += beregnBidragsevneGrunnlagPeriodisert.hentSjablon("fordelSarfradrag").
-        getSjablonVerdi1();
-    System.out.println("Foreløpig evne etter tillegg for særfradrag: " + forelopigBidragsevne);
+    // Sjekker om og kalkulerer eventuell fordel særfradrag
+    if (beregnBidragsevneGrunnlagPeriodisert.getSaerfradrag()) {
+      forelopigBidragsevne += beregnBidragsevneGrunnlagPeriodisert.hentSjablon("fordelSarfradrag").
+          getSjablonVerdi1();
+      System.out.println("Foreløpig evne etter tillegg for særfradrag: " + forelopigBidragsevne);
+    } else {
+      if(beregnBidragsevneGrunnlagPeriodisert.getHalvtSaerfradrag()) {
+        forelopigBidragsevne += (beregnBidragsevneGrunnlagPeriodisert.hentSjablon("fordelSarfradrag").
+            getSjablonVerdi1()/2);
+        System.out.println("Foreløpig evne etter tillegg for halvt særfradrag: " + forelopigBidragsevne);
+      }
+    }
 
     // Legger til fordel skatteklasse2
     forelopigBidragsevne += beregnBidragsevneGrunnlagPeriodisert.hentSjablon("fordelSkatteklasse2").

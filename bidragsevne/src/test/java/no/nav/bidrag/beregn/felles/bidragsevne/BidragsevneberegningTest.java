@@ -63,17 +63,17 @@ class BidragsevneberegningTest {
     BidragsevneberegningImpl bidragsevneberegning = new BidragsevneberegningImpl();
 
     BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert
-        = new BeregnBidragsevneGrunnlagPeriodisert(Double.valueOf(1000000), 1, Boolean.TRUE, 1, sjabloner);
+        = new BeregnBidragsevneGrunnlagPeriodisert(Double.valueOf(1000000), 1, Boolean.TRUE, 1, Boolean.TRUE, Boolean.FALSE, sjabloner);
     assertEquals(Double.valueOf(33050),
         bidragsevneberegning.beregn(beregnBidragsevneGrunnlagPeriodisert).getEvne());
 
     BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert2
-        = new BeregnBidragsevneGrunnlagPeriodisert(Double.valueOf(520000), 1, Boolean.TRUE, 1, sjabloner);
+        = new BeregnBidragsevneGrunnlagPeriodisert(Double.valueOf(520000), 1, Boolean.TRUE, 1, Boolean.TRUE, Boolean.FALSE, sjabloner);
     assertEquals(Double.valueOf(9767),
         bidragsevneberegning.beregn(beregnBidragsevneGrunnlagPeriodisert2).getEvne());
 
     BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert3
-        = new BeregnBidragsevneGrunnlagPeriodisert(Double.valueOf(666000), 1, Boolean.TRUE, 3, sjabloner);
+        = new BeregnBidragsevneGrunnlagPeriodisert(Double.valueOf(666000), 1, Boolean.TRUE, 3,Boolean.TRUE, Boolean.FALSE, sjabloner);
     assertEquals(Double.valueOf(10410),
         bidragsevneberegning.beregn(beregnBidragsevneGrunnlagPeriodisert3).getEvne());
 
@@ -117,13 +117,13 @@ class BidragsevneberegningTest {
     BidragsevneberegningImpl bidragsevneberegning = new BidragsevneberegningImpl();
 
     BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert
-        = new BeregnBidragsevneGrunnlagPeriodisert(Double.valueOf(200000), 1, Boolean.TRUE, 1, sjabloner);
+        = new BeregnBidragsevneGrunnlagPeriodisert(Double.valueOf(200000), 1, Boolean.TRUE, 1, Boolean.TRUE, Boolean.FALSE, sjabloner);
     System.out.println(bidragsevneberegning.beregnMinstefradrag(beregnBidragsevneGrunnlagPeriodisert));
     assertTrue((bidragsevneberegning.beregnMinstefradrag(beregnBidragsevneGrunnlagPeriodisert))
         .equals(Double.valueOf(62000)));
 
     BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert2
-        = new BeregnBidragsevneGrunnlagPeriodisert(Double.valueOf(1000000), 1, Boolean.TRUE, 1, sjabloner);
+        = new BeregnBidragsevneGrunnlagPeriodisert(Double.valueOf(1000000), 1, Boolean.TRUE, 1, Boolean.TRUE, Boolean.FALSE, sjabloner);
     System.out.println(bidragsevneberegning.beregnMinstefradrag(beregnBidragsevneGrunnlagPeriodisert2));
     assertTrue((bidragsevneberegning.beregnMinstefradrag(beregnBidragsevneGrunnlagPeriodisert2))
         .equals(Double.valueOf(85050)));
@@ -148,18 +148,18 @@ class BidragsevneberegningTest {
     BidragsevneberegningImpl bidragsevneberegning = new BidragsevneberegningImpl();
 
     BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert
-        = new BeregnBidragsevneGrunnlagPeriodisert(Double.valueOf(666000), 1, Boolean.TRUE, 1, sjabloner);
+        = new BeregnBidragsevneGrunnlagPeriodisert(Double.valueOf(666000), 1, Boolean.TRUE, 1, Boolean.TRUE, Boolean.FALSE, sjabloner);
     //System.out.println(bidragsevneberegning.beregnSkattetrinnBelop(beregnBidragsevneGrunnlagPeriodisert));
     assertTrue((bidragsevneberegning.beregnSkattetrinnBelop(beregnBidragsevneGrunnlagPeriodisert))
         .equals(Double.valueOf(1352+15618+6402+0)));
 
     BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert2
-        = new BeregnBidragsevneGrunnlagPeriodisert(Double.valueOf(174600), 1, Boolean.TRUE, 1, sjabloner);
+        = new BeregnBidragsevneGrunnlagPeriodisert(Double.valueOf(174600), 1, Boolean.TRUE, 1, Boolean.TRUE, Boolean.FALSE, sjabloner);
     assertTrue((bidragsevneberegning.beregnSkattetrinnBelop(beregnBidragsevneGrunnlagPeriodisert2))
         .equals(Double.valueOf(2)));
 
     BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert3
-        = new BeregnBidragsevneGrunnlagPeriodisert(Double.valueOf(250000), 1, Boolean.TRUE, 1, sjabloner);
+        = new BeregnBidragsevneGrunnlagPeriodisert(Double.valueOf(250000), 1, Boolean.TRUE, 1, Boolean.TRUE, Boolean.FALSE, sjabloner);
     assertTrue((bidragsevneberegning.beregnSkattetrinnBelop(beregnBidragsevneGrunnlagPeriodisert3))
         .equals(Double.valueOf(1352+183)));
   }
