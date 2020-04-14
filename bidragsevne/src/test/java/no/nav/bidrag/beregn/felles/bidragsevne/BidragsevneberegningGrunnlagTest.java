@@ -3,6 +3,8 @@ package no.nav.bidrag.beregn.felles.bidragsevne;
 import java.time.LocalDate;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneGrunnlagAlt;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneGrunnlagPeriodisert;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.BostatusKode;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.SaerfradragKode;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.SjablonPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.periode.Periode;
 import org.junit.jupiter.api.Assertions;
@@ -50,7 +52,7 @@ class BidragsevneberegningGrunnlagTest {
             "fordelSarfradrag", Double.valueOf(12977), null)); //EN
 
         BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert
-            = new BeregnBidragsevneGrunnlagPeriodisert(Double.valueOf(1000000), 1, Boolean.TRUE, 1, Boolean.TRUE, Boolean.FALSE, sjabloner);
+            = new BeregnBidragsevneGrunnlagPeriodisert(Double.valueOf(1000000), 1, BostatusKode.ALENE, 1, SaerfradragKode.HELT, sjabloner);
 
         Assertions
             .assertTrue(

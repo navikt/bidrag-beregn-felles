@@ -40,7 +40,7 @@ data class InntektPeriode(
 
 data class BostatusPeriode(
     val bostatusPeriodeDatoFraTil: Periode,
-    val borAlene: Boolean) : PeriodisertGrunnlag {
+    val bostatusKode: BostatusKode) : PeriodisertGrunnlag {
   override fun getDatoFraTil(): Periode {
     return bostatusPeriodeDatoFraTil
   }
@@ -56,8 +56,7 @@ data class AntallBarnIEgetHusholdPeriode(
 
 data class SaerfradragPeriode(
     val saerfradragPeriodeDatoFraTil: Periode,
-    val saerfradrag: Boolean,
-    val halvtSaerfradrag: Boolean) : PeriodisertGrunnlag {
+    val saerfradragKode: SaerfradragKode) : PeriodisertGrunnlag {
   override fun getDatoFraTil(): Periode {
     return saerfradragPeriodeDatoFraTil
   }
@@ -84,14 +83,23 @@ data class SjablonPeriodeVerdi(
 data class BeregnBidragsevneGrunnlagPeriodisert(
     val inntektBelop: Double,
     val skatteklasse: Int,
-    val borAlene: Boolean,
+    val bostatusKode: BostatusKode,
     val antallEgneBarnIHusstand: Int,
-    val saerfradrag: Boolean,
-    val halvtSaerfradrag: Boolean,
+    val saerfradragkode: SaerfradragKode,
     val sjablonPeriodeListe: List<SjablonPeriode>) {
   fun hentSjablon(sjablonnavn: String?): SjablonPeriode? = sjablonPeriodeListe.first() { it.sjablonnavn == sjablonnavn }
 }
 
+// ENUMs
+enum class BostatusKode {
+  ALENE,
+  MED_ANDRE
+}
+enum class SaerfradragKode {
+  INGEN,
+  HALVT,
+  HELT
+}
 
 
 
