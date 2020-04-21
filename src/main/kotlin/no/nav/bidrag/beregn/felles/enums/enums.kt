@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.felles.enum
+package no.nav.bidrag.beregn.felles.enums
 
 enum class BostatusKode {
   ALENE,
