@@ -7,4 +7,5 @@ Repo for alle felles beregninger for bidrag. Disse erstatter beregninger i BBM.
 
 Versjon | Endringstype | Beskrivelse
 --------|--------------|------------
+0.0.2   | Endret       | Gjort om tester til Java, flyttet enums og fjernet overflødig kode
 0.0.1   | Opprettet    | `Periode` og `Periodiserer`
