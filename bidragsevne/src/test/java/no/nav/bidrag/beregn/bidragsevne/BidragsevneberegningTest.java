@@ -1,13 +1,12 @@
-package no.nav.bidrag.beregn.felles.bidragsevne;
+package no.nav.bidrag.beregn.bidragsevne;
 
 import java.time.LocalDate;
-import no.nav.bidrag.beregn.felles.bidragsevne.beregning.BidragsevneberegningImpl;
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneGrunnlagAlt;
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneGrunnlagPeriodisert;
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.BostatusKode;
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.SaerfradragKode;
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.SjablonPeriode;
-import no.nav.bidrag.beregn.felles.bidragsevne.periode.Periode;
+import no.nav.bidrag.beregn.bidragsevne.beregning.BidragsevneberegningImpl;
+import no.nav.bidrag.beregn.bidragsevne.bo.BeregnBidragsevneGrunnlagPeriodisert;
+import no.nav.bidrag.beregn.bidragsevne.bo.BostatusKode;
+import no.nav.bidrag.beregn.bidragsevne.bo.SaerfradragKode;
+import no.nav.bidrag.beregn.bidragsevne.bo.SjablonPeriode;
+import no.nav.bidrag.beregn.bidragsevne.periode.Periode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -26,23 +25,23 @@ class BidragsevneberegningTest {
 
     sjabloner.add(new SjablonPeriode(
         new Periode(LocalDate.parse("2013-01-01"), LocalDate.parse("9999-12-31")),
-        "fordelSkatteklasse2", Double.valueOf(0), null));
+        "FordelSkatteklasse2", Double.valueOf(0), null));
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "satsTrygdeavgift", Double.valueOf(8.2), null));
+        "SatsTrygdeavgift", Double.valueOf(8.2), null));
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
         "belopUnderholdEgneBarnIHusstand", Double.valueOf(3487), null));
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "minstefradragBelop", Double.valueOf(85050), null));
+        "MinstefradragBelop", Double.valueOf(85050), null));
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "minstefradragProsentsats", Double.valueOf(31), null));
+        "MinstefradragProsentInntekt", Double.valueOf(31), null));
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "personfradragKlasse1", Double.valueOf(56550), null));
+        "PersonfradragKlasse1", Double.valueOf(56550), null));
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "personfradragKlasse2", Double.valueOf(56550), null));
+        "PersonfradragKlasse2", Double.valueOf(56550), null));
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "fordelSarfradrag", Double.valueOf(0), null));
+        "FordelSaerfradrag", Double.valueOf(0), null));
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "skattesats", Double.valueOf(22), null));
+        "Skattesats", Double.valueOf(22), null));
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
         "skattetrinn1", Double.valueOf(174500), Double.valueOf((1.9))));
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
@@ -60,24 +59,24 @@ class BidragsevneberegningTest {
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
         "belopUnderholdEgetGs", Double.valueOf(7557), null)); //GS
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "fordelSkatteklasse2", Double.valueOf(0), null));
+        "FordelSkatteklasse2", Double.valueOf(0), null));
 
     BidragsevneberegningImpl bidragsevneberegning = new BidragsevneberegningImpl();
 
     BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert
         = new BeregnBidragsevneGrunnlagPeriodisert(Double.valueOf(1000000), 1, BostatusKode.ALENE, 1, SaerfradragKode.HELT, sjabloner);
     assertEquals(Double.valueOf(33050),
-        bidragsevneberegning.beregn(beregnBidragsevneGrunnlagPeriodisert).getEvne());
+        bidragsevneberegning.beregn(beregnBidragsevneGrunnlagPeriodisert).getResultatBelopEvne());
 
     BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert2
         = new BeregnBidragsevneGrunnlagPeriodisert(Double.valueOf(520000), 1, BostatusKode.ALENE, 1, SaerfradragKode.HELT, sjabloner);
     assertEquals(Double.valueOf(9767),
-        bidragsevneberegning.beregn(beregnBidragsevneGrunnlagPeriodisert2).getEvne());
+        bidragsevneberegning.beregn(beregnBidragsevneGrunnlagPeriodisert2).getResultatBelopEvne());
 
     BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert3
         = new BeregnBidragsevneGrunnlagPeriodisert(Double.valueOf(666000), 1, BostatusKode.ALENE, 3, SaerfradragKode.HELT, sjabloner);
     assertEquals(Double.valueOf(10410),
-        bidragsevneberegning.beregn(beregnBidragsevneGrunnlagPeriodisert3).getEvne());
+        bidragsevneberegning.beregn(beregnBidragsevneGrunnlagPeriodisert3).getResultatBelopEvne());
 
   }
 
@@ -87,15 +86,15 @@ class BidragsevneberegningTest {
     ArrayList<SjablonPeriode> sjabloner = new ArrayList<>();
     //Sjablonverdier pr 2019-12-31
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "minstefradragProsentsats", Double.valueOf(31), null)); //EN
+        "MinstefradragProsentInntekt", Double.valueOf(31), null)); //EN
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "minstefradragBelop", Double.valueOf(85050), null)); //EN
+        "MinstefradragBelop", Double.valueOf(85050), null)); //EN
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
         "personfradrag", Double.valueOf(56550), null)); //EN
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "skattesats", Double.valueOf(22), null)); //EN
+        "Skattesats", Double.valueOf(22), null)); //EN
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "satsTrygdeavgift", Double.valueOf(8.2), null)); //EN
+        "SatsTrygdeavgift", Double.valueOf(8.2), null)); //EN
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
         "skattetrinn1", Double.valueOf(174500), Double.valueOf((1.9))));
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
@@ -111,9 +110,9 @@ class BidragsevneberegningTest {
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
         "belopUnderholdEgneBarnIHusstand", Double.valueOf(3487), null)); //EN
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "fordelSarfradrag", Double.valueOf(0), null)); //EN
+        "FordelSaerfradrag", Double.valueOf(0), null)); //EN
     sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "fordelSkatteklasse2", Double.valueOf(0), null)); //EN
+        "FordelSkatteklasse2", Double.valueOf(0), null)); //EN
 
 //    beregnBidragsevneGrunnlagPeriodisert.setSjablonPeriodeListe(sjabloner);
     BidragsevneberegningImpl bidragsevneberegning = new BidragsevneberegningImpl();

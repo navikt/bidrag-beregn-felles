@@ -2,13 +2,27 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3a0eeba3-aa4a-48cd-ad0c-c85c5cf42a7c" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/bidragsevne/BidragsevneCore.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/bidragsevne/BidragsevneCoreImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/no/nav/bidrag/beregn/bidragsevne/bo/periode.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/no/nav/bidrag/beregn/bidragsevne/bo/resultat.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/no/nav/bidrag/beregn/bidragsevne/dto/coredto.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/BidragsevneberegningImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/BidragsevneberegningImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/BidragsevnePeriodeImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/BidragsevnePeriodeImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/no/nav/bidrag/beregn/felles/bidragsevne/bo/corebo.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/no/nav/bidrag/beregn/felles/bidragsevne/bo/corebo.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/BidragsevnePeriodeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/BidragsevnePeriodeTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/BidragsevneberegningGrunnlagTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/BidragsevneberegningGrunnlagTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/BidragsevneberegningTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/BidragsevneberegningTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/Bidragsevneberegning.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/bidragsevne/beregning/Bidragsevneberegning.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/BidragsevneberegningImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/bidragsevne/beregning/BidragsevneberegningImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/beregning/ResultatBeregning.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/BidragsevnePeriode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/bidragsevne/periode/BidragsevnePeriode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/BidragsevnePeriodeImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/bidragsevne/periode/BidragsevnePeriodeImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/Periode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/bidragsevne/periode/Periode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/PeriodeUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/bidragsevne/periode/PeriodeUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/Periodiserer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/bidragsevne/periode/Periodiserer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/PeriodisertGrunnlag.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/no/nav/bidrag/beregn/felles/bidragsevne/bo/corebo.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/no/nav/bidrag/beregn/bidragsevne/bo/corebo.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/no/nav/bidrag/beregn/felles/bidragsevne/dto/coredto.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/BidragsevnePeriodeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/bidragsevne/BidragsevnePeriodeTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/BidragsevneberegningGrunnlagTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/bidragsevne/BidragsevneberegningGrunnlagTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/BidragsevneberegningTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/bidragsevne/BidragsevneberegningTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/ResultatBeregningTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/bidragsevne/ResultatBeregningTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,6 +36,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="JUnit5 Test Class" />
+        <option value="Class" />
+        <option value="Kotlin File" />
       </list>
     </option>
   </component>
@@ -204,7 +220,10 @@
       <workItem from="1586330781712" duration="3609000" />
       <workItem from="1586630358730" duration="18000" />
       <workItem from="1586775886137" duration="35000" />
-      <workItem from="1586846150600" duration="9808000" />
+      <workItem from="1586846150600" duration="11618000" />
+      <workItem from="1586932990249" duration="17250000" />
+      <workItem from="1587449333372" duration="598000" />
+      <workItem from="1587450243570" duration="1031000" />
     </task>
     <servers />
   </component>
@@ -241,15 +260,15 @@
     </state>
     <state x="593" y="321" width="656" height="286" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1585144779361" />
     <state x="5035" y="763" width="494" height="288" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585576207224" />
-    <state x="4850" y="261" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1585666192552">
+    <state x="4850" y="261" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1587128873812">
       <screen x="3840" y="261" width="3440" height="1440" />
     </state>
     <state x="501" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1584698117198" />
-    <state x="4850" y="261" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585666192552" />
-    <state x="4544" y="732" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1585663080877">
+    <state x="4850" y="261" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1587128873812" />
+    <state x="4544" y="732" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1587129832450">
       <screen x="3840" y="261" width="3440" height="1440" />
     </state>
-    <state x="4544" y="732" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1585663080877" />
+    <state x="4544" y="732" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1587129832450" />
     <state x="4152" y="309" width="1480" height="997" key="#xdebugger.evaluate" timestamp="1586866886770">
       <screen x="3840" y="261" width="3440" height="1440" />
     </state>
@@ -323,28 +342,22 @@
       <screen x="0" y="0" width="1707" height="920" />
     </state>
     <state x="599" y="180" width="849" height="559" key="com.intellij.testIntegration.createTest.CreateTestDialog/0.0.1707.920/3840.261.3440.1440@0.0.1707.920" timestamp="1584450402316" />
-    <state x="4592" y="591" width="672" height="678" key="search.everywhere.popup" timestamp="1586855615639">
+    <state x="4344" y="529" width="737" height="909" key="find.popup" timestamp="1587043092345">
       <screen x="3840" y="261" width="3440" height="1440" />
     </state>
-    <state x="4592" y="591" width="672" height="678" key="search.everywhere.popup/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1586855615639" />
+    <state x="4344" y="529" width="737" height="909" key="find.popup/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1587043092345" />
+    <state x="4592" y="591" width="672" height="678" key="search.everywhere.popup" timestamp="1587028671311">
+      <screen x="3840" y="261" width="3440" height="1440" />
+    </state>
+    <state x="4592" y="591" width="672" height="678" key="search.everywhere.popup/0.0.1707.920/3840.261.3440.1440@3840.261.3440.1440" timestamp="1587028671311" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/felles/bidragsevne/BidragsevneberegningGrunnlagTest.java</url>
+          <url>file://$PROJECT_DIR$/src/test/java/no/nav/bidrag/beregn/bidragsevne/BidragsevneberegningGrunnlagTest.java</url>
           <line>58</line>
           <option name="timeStamp" value="24" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/BidragsevnePeriodeImpl.java</url>
-          <line>85</line>
-          <option name="timeStamp" value="26" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/no/nav/bidrag/beregn/felles/bidragsevne/periode/BidragsevnePeriodeImpl.java</url>
-          <line>90</line>
-          <option name="timeStamp" value="27" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

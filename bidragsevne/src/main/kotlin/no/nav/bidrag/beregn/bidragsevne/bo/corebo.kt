@@ -1,10 +1,7 @@
-package no.nav.bidrag.beregn.felles.bidragsevne.bo
+package no.nav.bidrag.beregn.bidragsevne.bo
 
-import no.nav.bidrag.beregn.felles.bidragsevne.beregning.ResultatBeregning
-import no.nav.bidrag.beregn.felles.bidragsevne.periode.Periode
-import no.nav.bidrag.beregn.felles.bidragsevne.periode.PeriodisertGrunnlag
+import no.nav.bidrag.beregn.bidragsevne.periode.Periode
 import java.time.LocalDate
-import java.util.function.Predicate
 
 
 // Grunnlag periode
@@ -22,7 +19,7 @@ data class SjablonPeriode(
     val sjablonPeriodeDatoFraTil: Periode?,
     val sjablonnavn: String?,
     val sjablonVerdi1: Double?,
-    val sjablonVerdi2: Double? ) : PeriodisertGrunnlag {
+    val sjablonVerdi2: Double? ) {
   override fun getDatoFraTil(): Periode? {
     return sjablonPeriodeDatoFraTil
   }
@@ -32,7 +29,7 @@ data class SjablonPeriode(
 data class InntektPeriode(
     val inntektDatoFraTil: Periode,
     val skatteklasse: Int,
-    val inntektBelop: Double) : PeriodisertGrunnlag {
+    val inntektBelop: Double) {
   override fun getDatoFraTil(): Periode {
     return inntektDatoFraTil
   }
@@ -40,7 +37,7 @@ data class InntektPeriode(
 
 data class BostatusPeriode(
     val bostatusPeriodeDatoFraTil: Periode,
-    val bostatusKode: BostatusKode) : PeriodisertGrunnlag {
+    val bostatusKode: BostatusKode) {
   override fun getDatoFraTil(): Periode {
     return bostatusPeriodeDatoFraTil
   }
@@ -48,7 +45,7 @@ data class BostatusPeriode(
 
 data class AntallBarnIEgetHusholdPeriode(
     val antallBarnIEgetHusholdPeriodeDatoFraTil: Periode,
-    val antallBarn: Int) : PeriodisertGrunnlag {
+    val antallBarn: Int) {
   override fun getDatoFraTil(): Periode {
     return antallBarnIEgetHusholdPeriodeDatoFraTil
   }
@@ -56,13 +53,11 @@ data class AntallBarnIEgetHusholdPeriode(
 
 data class SaerfradragPeriode(
     val saerfradragPeriodeDatoFraTil: Periode,
-    val saerfradragKode: SaerfradragKode) : PeriodisertGrunnlag {
+    val saerfradragKode: SaerfradragKode) {
   override fun getDatoFraTil(): Periode {
     return saerfradragPeriodeDatoFraTil
   }
 }
-
-
 
 // Resultat periode
 data class BeregnBidragsevneResultat(
@@ -74,10 +69,17 @@ data class ResultatPeriode(
     val resultatBeregning: ResultatBeregning
 )
 
-
 data class SjablonPeriodeVerdi(
     val sjablonnavn: String,
     val sjablonVerdi: Int)
+
+
+// Avvik periode
+data class Avvik(
+    val avvikTekst: String,
+    val avvikType: AvvikType
+)
+
 
 // Grunnlag beregning
 data class BeregnBidragsevneGrunnlagPeriodisert(
@@ -101,5 +103,11 @@ enum class SaerfradragKode {
   HELT
 }
 
-
+enum class AvvikType {
+  PERIODER_OVERLAPPER,
+  PERIODER_HAR_OPPHOLD,
+  NULL_VERDI_I_DATO,
+  DATO_FRA_ETTER_DATO_TIL,
+  INPUT_DATA_MANGLER
+}
 

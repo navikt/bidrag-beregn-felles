@@ -1,22 +1,20 @@
-package no.nav.bidrag.beregn.felles.bidragsevne.periode;
+package no.nav.bidrag.beregn.bidragsevne.periode;
 
 import static java.util.stream.Collectors.toCollection;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import no.nav.bidrag.beregn.felles.bidragsevne.beregning.Bidragsevneberegning;
-import no.nav.bidrag.beregn.felles.bidragsevne.beregning.ResultatBeregning;
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneGrunnlagAlt;
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneGrunnlagPeriodisert;
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneResultat;
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.BostatusPeriode;
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.InntektPeriode;
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.ResultatPeriode;
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.SaerfradragPeriode;
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.SjablonPeriode;
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.AntallBarnIEgetHusholdPeriode;
+import no.nav.bidrag.beregn.bidragsevne.beregning.Bidragsevneberegning;
+import no.nav.bidrag.beregn.bidragsevne.bo.AntallBarnIEgetHusholdPeriode;
+import no.nav.bidrag.beregn.bidragsevne.bo.BeregnBidragsevneGrunnlagAlt;
+import no.nav.bidrag.beregn.bidragsevne.bo.BeregnBidragsevneGrunnlagPeriodisert;
+import no.nav.bidrag.beregn.bidragsevne.bo.BeregnBidragsevneResultat;
+import no.nav.bidrag.beregn.bidragsevne.bo.BostatusPeriode;
+import no.nav.bidrag.beregn.bidragsevne.bo.InntektPeriode;
+import no.nav.bidrag.beregn.bidragsevne.bo.ResultatPeriode;
+import no.nav.bidrag.beregn.bidragsevne.bo.SaerfradragPeriode;
+import no.nav.bidrag.beregn.bidragsevne.bo.SjablonPeriode;
 
 
 public class BidragsevnePeriodeImpl implements BidragsevnePeriode {

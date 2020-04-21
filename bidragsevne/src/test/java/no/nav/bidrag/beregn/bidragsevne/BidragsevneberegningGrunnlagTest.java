@@ -1,12 +1,11 @@
-package no.nav.bidrag.beregn.felles.bidragsevne;
+package no.nav.bidrag.beregn.bidragsevne;
 
 import java.time.LocalDate;
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneGrunnlagAlt;
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneGrunnlagPeriodisert;
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.BostatusKode;
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.SaerfradragKode;
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.SjablonPeriode;
-import no.nav.bidrag.beregn.felles.bidragsevne.periode.Periode;
+import no.nav.bidrag.beregn.bidragsevne.bo.BeregnBidragsevneGrunnlagPeriodisert;
+import no.nav.bidrag.beregn.bidragsevne.bo.BostatusKode;
+import no.nav.bidrag.beregn.bidragsevne.bo.SaerfradragKode;
+import no.nav.bidrag.beregn.bidragsevne.bo.SjablonPeriode;
+import no.nav.bidrag.beregn.bidragsevne.periode.Periode;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 @DisplayName("Test hent av sjablonverdi")
 
 class BidragsevneberegningGrunnlagTest {
-    String sjablonnavn = "minstefradragBelop";
+    String sjablonnavn = "MinstefradragBelop";
 
     @Test
     void hentSjablon() {
@@ -25,15 +24,15 @@ class BidragsevneberegningGrunnlagTest {
         ArrayList<SjablonPeriode> sjabloner = new ArrayList<>();
         //Sjablonverdier pr 2019-12-31
         sjabloner.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06")),
-            "minstefradragProsentsats", Double.valueOf(31), null)); //EN
+            "MinstefradragProsentInntekt", Double.valueOf(31), null)); //EN
         sjabloner.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06")),
-            "minstefradragBelop", Double.valueOf(85500), null)); //EN
+            "MinstefradragBelop", Double.valueOf(85500), null)); //EN
         sjabloner.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06")),
             "personfradrag", Double.valueOf(56550), null)); //EN
         sjabloner.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06")),
-            "skattesats", Double.valueOf(0.22), null)); //EN
+            "Skattesats", Double.valueOf(0.22), null)); //EN
         sjabloner.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06")),
-            "satsTrygdeavgift", Double.valueOf(0.082), null)); //EN
+            "SatsTrygdeavgift", Double.valueOf(0.082), null)); //EN
         sjabloner.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06")),
             "skattetrinn1", Double.valueOf(174500), Double.valueOf((0.019))));
         sjabloner.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06")),
@@ -49,14 +48,14 @@ class BidragsevneberegningGrunnlagTest {
         sjabloner.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06")),
             "belopUnderholdEgneBarnIHusstand", Double.valueOf(3487), null)); //EN
         sjabloner.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06")),
-            "fordelSarfradrag", Double.valueOf(12977), null)); //EN
+            "FordelSaerfradrag", Double.valueOf(12977), null)); //EN
 
         BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert
             = new BeregnBidragsevneGrunnlagPeriodisert(Double.valueOf(1000000), 1, BostatusKode.ALENE, 1, SaerfradragKode.HELT, sjabloner);
 
         Assertions
             .assertTrue(
-                beregnBidragsevneGrunnlagPeriodisert.hentSjablon("skattesats").getSjablonVerdi1()
+                beregnBidragsevneGrunnlagPeriodisert.hentSjablon("Skattesats").getSjablonVerdi1()
                     .equals(Double.valueOf(0.22)));
         Assertions
             .assertTrue(
@@ -66,7 +65,7 @@ class BidragsevneberegningGrunnlagTest {
             .assertTrue(
                 beregnBidragsevneGrunnlagPeriodisert.hentSjablon("skattetrinn1").getSjablonVerdi2()
                     .equals(Double.valueOf(0.019)));
-        //System.out.println(beregnBidragsevneGrunnlagPeriodisert.hentSjablon("skattesats").getVerdi1());
+        //System.out.println(beregnBidragsevneGrunnlagPeriodisert.hentSjablon("Skattesats").getVerdi1());
 
 
 
