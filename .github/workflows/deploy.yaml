@@ -24,7 +24,7 @@ jobs:
       - run: mvn -B install -e
       - uses: navikt/bidrag-release/prepare-mvn-pkg@feature-commit.release
         id: prepare
-        if: github.ref == 'refs/heads/master'
+#        if: github.ref == 'refs/heads/master'
       - uses: navikt/bidrag-release/verify-auto-release@feature-commit.release
         id: verify
 #        if: github.ref == 'refs/heads/master'
