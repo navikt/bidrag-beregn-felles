@@ -47,6 +47,6 @@ jobs:
           pattern: pom.xml
           is_release_candidate: ${{ steps.verify.outputs.is_release_candidate }}
           tag: ${{ steps.prepare.outputs.release_version }}
-          is_commit_release: true
+          is_commit_tag: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
