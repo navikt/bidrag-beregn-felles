@@ -22,30 +22,31 @@ jobs:
             ${{ runner.os }}-maven-
       - uses: navikt/bidrag-maven/verify-dependencies@v1
       - run: mvn -B install -e
-      - uses: navikt/bidrag-release/prepare-mvn-pkg@v3
+      - uses: navikt/bidrag-release/prepare-mvn-pkg@feature-commit.release
         id: prepare
         if: github.ref == 'refs/heads/master'
-      - uses: navikt/bidrag-release/verify-auto-release@v3
+      - uses: navikt/bidrag-release/verify-auto-release@feature-commit.release
         id: verify
-        if: github.ref == 'refs/heads/master'
+#        if: github.ref == 'refs/heads/master'
         with:
           changelog_file: README.md
           release_version: ${{ steps.prepare.outputs.release_version }}
-      - uses: navikt/bidrag-release/mvn-github-pkg@v3
-        if: github.ref == 'refs/heads/master'
+      - uses: navikt/bidrag-release/mvn-github-pkg@feature-commit.release
+#        if: github.ref == 'refs/heads/master'
         with:
           is_release_candidate: ${{ steps.verify.outputs.is_release_candidate }}
           new_snapshot_version: ${{ steps.prepare.outputs.new_snapshot_version }}
           release_version: ${{ steps.prepare.outputs.release_version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: navikt/bidrag-release/tag-n-commit-release@v3
-        if: github.ref == 'refs/heads/master'
+      - uses: navikt/bidrag-release/tag-n-commit-release@feature-commit.release
+#        if: github.ref == 'refs/heads/master'
         with:
           commit_message: Bumped to new SNAPSHOT version after release of version ${{ steps.prepare.outputs.release_version }}
           tag_message: Released new version - ${{ steps.prepare.outputs.release_version }}
           pattern: pom.xml
           is_release_candidate: ${{ steps.verify.outputs.is_release_candidate }}
           tag: ${{ steps.prepare.outputs.release_version }}
+          is_commit_release: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
