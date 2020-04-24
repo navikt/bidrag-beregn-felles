@@ -37,6 +37,7 @@ jobs:
           is_release_candidate: ${{ steps.verify.outputs.is_release_candidate }}
           new_snapshot_version: ${{ steps.prepare.outputs.new_snapshot_version }}
           release_version: ${{ steps.prepare.outputs.release_version }}
+          is_commit_tag: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: navikt/bidrag-release/tag-n-commit-release@v3
@@ -47,5 +48,6 @@ jobs:
           pattern: pom.xml
           is_release_candidate: ${{ steps.verify.outputs.is_release_candidate }}
           tag: ${{ steps.prepare.outputs.release_version }}
+          new_snapshot_version: ${{ steps.prepare.outputs.new_snapshot_version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
