@@ -12,6 +12,16 @@ enum class SivilstandKode {
   ENSLIG
 }
 
+enum class InntektType {
+  LØNNSINNTEKT,
+  KAPITALINNTEKT,
+  BARNETRYGD,
+  UTVIDET_BARNETRYGD,
+  KONTANTSTØTTE,
+  PENSJON,
+  SYKEPENGER
+}
+
 enum class AvvikType {
   PERIODER_OVERLAPPER,
   PERIODER_HAR_OPPHOLD,
