@@ -9,7 +9,7 @@ import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneResultat;
 public interface BidragsevnePeriode {
     BeregnBidragsevneResultat beregnPerioder(
         BeregnBidragsevneGrunnlagAlt beregnBidragsevneGrunnlagAlt);
-    List<Avvik> validerInput(BeregnBidragsevneGrunnlagAlt grunnlag);
+    List<Avvik> validerInput(BeregnBidragsevneGrunnlagAlt beregnBidragsevneGrunnlagAlt);
     static BidragsevnePeriode getInstance() {
         return new BidragsevnePeriodeImpl(Bidragsevneberegning.getInstance());
     }

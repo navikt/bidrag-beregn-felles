@@ -1,16 +1,20 @@
 package no.nav.bidrag.beregn.felles.bidragsevne;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.time.LocalDate;
-import no.nav.bidrag.beregn.felles.bo.BeregnBidragsevneGrunnlagPeriodisert;
-import no.nav.bidrag.beregn.felles.bo.BostatusKode;
-import no.nav.bidrag.beregn.felles.bo.SaerfradragKode;
-import no.nav.bidrag.beregn.felles.bo.SjablonPeriode;
-import no.nav.bidrag.beregn.felles.periode.Periode;
+import java.util.List;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneGrunnlagPeriodisert;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.Inntekt;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.SjablonPeriode;
+import no.nav.bidrag.beregn.felles.bo.Periode;
+import no.nav.bidrag.beregn.felles.enums.BostatusKode;
+import no.nav.bidrag.beregn.felles.enums.InntektType;
+import no.nav.bidrag.beregn.felles.enums.SaerfradragKode;
 import org.junit.jupiter.api.Assertions;
+import java.util.ArrayList;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
 
 @DisplayName("Test hent av sjablonverdi")
 
@@ -50,8 +54,11 @@ class BidragsevneberegningGrunnlagTest {
         sjabloner.add(new SjablonPeriode(new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06")),
             "FordelSaerfradrag", Double.valueOf(12977), null)); //EN
 
+        ArrayList<Inntekt> inntekter = new ArrayList<>();
+        inntekter.add(new Inntekt(InntektType.LØNNSINNTEKT, Double.valueOf(1000000)));
+
         BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert
-            = new BeregnBidragsevneGrunnlagPeriodisert(Double.valueOf(1000000), 1, BostatusKode.ALENE, 1, SaerfradragKode.HELT, sjabloner);
+            = new BeregnBidragsevneGrunnlagPeriodisert(inntekter, 1, BostatusKode.ALENE, 1, SaerfradragKode.HELT, sjabloner);
 
         Assertions
             .assertTrue(

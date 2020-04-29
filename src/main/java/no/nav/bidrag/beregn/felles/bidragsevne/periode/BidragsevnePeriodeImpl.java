@@ -1,6 +1,7 @@
 package no.nav.bidrag.beregn.felles.bidragsevne.periode;
 
 import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toList;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneGrunnlagAlt;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneGrunnlagPeriodisert;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneResultat;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.BostatusPeriode;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.Inntekt;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.InntektPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.ResultatBeregning;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.ResultatPeriode;
@@ -46,10 +48,6 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
         .map(InntektPeriode::new)
         .collect(toCollection(ArrayList::new));
 
-//    var justertBostatusPeriodeListe = beregnBidragsevneGrunnlagAlt.getBostatusPeriodeListe().stream()
-//        .map(bP -> new BostatusPeriode(PeriodeUtil.justerPeriode(bP.getDatoFraTil()), bP.getBostatusKode()))
-//            .collect(toCollection(ArrayList::new));
-
     var justertBostatusPeriodeListe = beregnBidragsevneGrunnlagAlt.getBostatusPeriodeListe()
         .stream()
         .map(BostatusPeriode::new)
@@ -80,8 +78,8 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
 
     for (Periode beregningsperiode : perioder) {
 
-      var inntektBelop = justertInntektPeriodeListe.stream()
-          .filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode)).map(InntektPeriode::getInntektBelop).findFirst().orElse(null);
+      var inntektListe = justertInntektPeriodeListe.stream().filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode))
+          .map(inntektPeriode -> new Inntekt(inntektPeriode.getInntektType(), inntektPeriode.getInntektBelop())).collect(toList());
 
       var skatteklasse = justertInntektPeriodeListe.stream()
           .filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode)).map(InntektPeriode::getSkatteklasse).findFirst().orElse(null);
@@ -100,7 +98,7 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
 
       System.out.println("Beregner bidragsevne for periode: " + beregningsperiode.getDatoFra() + " " + beregningsperiode.getDatoTil());
 
-      var beregnBidragsevneGrunnlagPeriodisert = new BeregnBidragsevneGrunnlagPeriodisert(inntektBelop, skatteklasse, bostatusKode, antallBarnIEgetHushold,
+      var beregnBidragsevneGrunnlagPeriodisert = new BeregnBidragsevneGrunnlagPeriodisert(inntektListe, skatteklasse, bostatusKode, antallBarnIEgetHushold,
           saerfradrag, sjablonliste);
 
       resultatPeriodeListe.add(new ResultatPeriode(beregningsperiode, bidragsevneberegning.beregn(beregnBidragsevneGrunnlagPeriodisert),

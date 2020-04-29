@@ -7,17 +7,18 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import no.nav.bidrag.beregn.bidragsevne.bo.AntallBarnIEgetHusholdPeriode;
-import no.nav.bidrag.beregn.bidragsevne.bo.BeregnBidragsevneGrunnlagAlt;
-import no.nav.bidrag.beregn.bidragsevne.bo.BeregnBidragsevneResultat;
-import no.nav.bidrag.beregn.bidragsevne.bo.BostatusKode;
-import no.nav.bidrag.beregn.bidragsevne.bo.BostatusPeriode;
-import no.nav.bidrag.beregn.bidragsevne.bo.InntektPeriode;
-import no.nav.bidrag.beregn.bidragsevne.bo.SaerfradragKode;
-import no.nav.bidrag.beregn.bidragsevne.bo.SaerfradragPeriode;
-import no.nav.bidrag.beregn.bidragsevne.bo.SjablonPeriode;
-import no.nav.bidrag.beregn.bidragsevne.periode.BidragsevnePeriode;
-import no.nav.bidrag.beregn.bidragsevne.periode.Periode;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.AntallBarnIEgetHusholdPeriode;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneGrunnlagAlt;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneResultat;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.BostatusPeriode;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.InntektPeriode;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.SaerfradragPeriode;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.SjablonPeriode;
+import no.nav.bidrag.beregn.felles.bidragsevne.periode.BidragsevnePeriode;
+import no.nav.bidrag.beregn.felles.bo.Periode;
+import no.nav.bidrag.beregn.felles.enums.BostatusKode;
+import no.nav.bidrag.beregn.felles.enums.InntektType;
+import no.nav.bidrag.beregn.felles.enums.SaerfradragKode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -37,6 +38,7 @@ class BidragsevnePeriodeTest {
         lagSjablongGrunnlag(), lagInntektGrunnlag(), lagBostatusGrunnlag(), lagAntallBarnIEgetHusholdGrunnlag(), lagSaerfradragGrunnlag());
 
     var resultat = bidragsevnePeriode.beregnPerioder(beregnBidragsevneGrunnlagAlt);
+
     assertThat(resultat).isNotNull();
 
     assertAll(
@@ -53,12 +55,12 @@ class BidragsevnePeriodeTest {
         () -> assertThat(resultat.getResultatPeriodeListe().get(1).getResultatBeregning().getResultatBelopEvne()).isEqualTo(Double.valueOf(15604)),
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2019-02-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2019-07-01")),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2019-04-01")),
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatBelopEvne()).isEqualTo(Double.valueOf(20536)),
 
-        // Inntekt økt med 1 krone fra 1 april, resultatet skal bli det samme som i forrige periode og periodene skal bli slått sammen
-        () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatBeregning().getResultatBelopEvne()).isNotEqualTo(Double.valueOf(20536))
-
+        () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2019-04-01")),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2019-07-01")),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatBeregning().getResultatBelopEvne()).isEqualTo(Double.valueOf(20536))
 
         );
 
@@ -74,18 +76,23 @@ class BidragsevnePeriodeTest {
 
     inntektPeriodeListe.add(new InntektPeriode(
         new Periode(LocalDate.parse("2003-01-01"), LocalDate.parse("2003-12-31")),
+        InntektType.LØNNSINNTEKT,
         1, Double.valueOf(666000)));
     inntektPeriodeListe.add(new InntektPeriode(
         new Periode(LocalDate.parse("2004-01-01"), LocalDate.parse("2015-12-31")),
+        InntektType.LØNNSINNTEKT,
         1, Double.valueOf(555000)));
     inntektPeriodeListe.add(new InntektPeriode(
         new Periode(LocalDate.parse("2016-01-01"), LocalDate.parse("2019-01-01")),
+        InntektType.LØNNSINNTEKT,
         1, Double.valueOf(444000)));
     inntektPeriodeListe.add(new InntektPeriode(
         new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-04-01")),
+        InntektType.LØNNSINNTEKT,
         1, Double.valueOf(666000)));
     inntektPeriodeListe.add(new InntektPeriode(
         new Periode(LocalDate.parse("2019-04-01"), LocalDate.parse("2019-12-31")),
+        InntektType.LØNNSINNTEKT,
         1, Double.valueOf(666001)));
 
     return inntektPeriodeListe;
