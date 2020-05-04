@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # log files
 *.log
 
@@ -5,12 +6,9 @@
 **/*.iml
 .idea/*
 **/target
-*/.idea/*
 
 .classpath
 .project
 .settings/
 .vscode/
 .DS_Store
-*.class
-target
