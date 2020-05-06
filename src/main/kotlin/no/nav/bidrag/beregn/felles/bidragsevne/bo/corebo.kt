@@ -5,7 +5,6 @@ import no.nav.bidrag.beregn.felles.enums.AvvikType
 import no.nav.bidrag.beregn.felles.enums.BostatusKode
 import no.nav.bidrag.beregn.felles.enums.InntektType
 import no.nav.bidrag.beregn.felles.enums.SaerfradragKode
-import java.math.BigDecimal
 import java.time.LocalDate
 
 
@@ -52,9 +51,15 @@ data class BeregnBidragsevneGrunnlagPeriodisert(
     val bostatusKode: BostatusKode,
     val antallEgneBarnIHusstand: Int,
     val saerfradragkode: SaerfradragKode,
-    val sjablonPeriodeListe: List<SjablonPeriode>) {
-  fun hentSjablon(sjablonnavn: String?): SjablonPeriode? = sjablonPeriodeListe.first() { it.sjablonnavn == sjablonnavn }
+    val sjablonListe: List<Sjablon>) {
+  fun hentSjablon(sjablonnavn: String?): Sjablon? = sjablonListe.first() { it.sjablonnavn == sjablonnavn }
 }
+
+data class Sjablon(
+    val sjablonnavn: String,
+    val sjablonVerdi1: Double,
+    val sjablonVerdi2: Double?)
+
 
 data class Inntekt(
     val inntektType: InntektType,
