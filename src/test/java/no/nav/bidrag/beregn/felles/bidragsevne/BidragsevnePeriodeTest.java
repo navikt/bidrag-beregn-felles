@@ -13,6 +13,7 @@ import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneResultat;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.BostatusPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.InntektPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.SaerfradragPeriode;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.Sjablon;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.SjablonPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.periode.BidragsevnePeriode;
 import no.nav.bidrag.beregn.felles.bo.Periode;
@@ -25,7 +26,7 @@ import org.junit.jupiter.api.Test;
 
 @DisplayName("BidragsevneperiodeTest")
 class BidragsevnePeriodeTest {
-  private BeregnBidragsevneGrunnlagAlt beregnBidragsevneGrunnlagAlt;
+
   private BidragsevnePeriode bidragsevnePeriode = BidragsevnePeriode.getInstance();
 
   @Test
@@ -34,8 +35,10 @@ class BidragsevnePeriodeTest {
     var beregnDatoFra = LocalDate.parse("2018-07-01");
     var beregnDatoTil = LocalDate.parse("2019-08-01");
 
-    beregnBidragsevneGrunnlagAlt = new BeregnBidragsevneGrunnlagAlt(beregnDatoFra, beregnDatoTil,
-        lagSjablongGrunnlag(), lagInntektGrunnlag(), lagBostatusGrunnlag(), lagAntallBarnIEgetHusholdGrunnlag(), lagSaerfradragGrunnlag());
+    BeregnBidragsevneGrunnlagAlt beregnBidragsevneGrunnlagAlt = new BeregnBidragsevneGrunnlagAlt(
+        beregnDatoFra, beregnDatoTil,
+        lagSjablongGrunnlag(), lagInntektGrunnlag(), lagBostatusGrunnlag(),
+        lagAntallBarnIEgetHusholdGrunnlag(), lagSaerfradragGrunnlag());
 
     var resultat = bidragsevnePeriode.beregnPerioder(beregnBidragsevneGrunnlagAlt);
 

@@ -1,12 +1,9 @@
 package no.nav.bidrag.beregn.felles.bidragsevne;
 
-import java.time.LocalDate;
-
 import no.nav.bidrag.beregn.felles.bidragsevne.beregning.BidragsevneberegningImpl;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneGrunnlagPeriodisert;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.Inntekt;
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.SjablonPeriode;
-import no.nav.bidrag.beregn.felles.bo.Periode;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.Sjablon;
 import no.nav.bidrag.beregn.felles.enums.BostatusKode;
 import no.nav.bidrag.beregn.felles.enums.SaerfradragKode;
 import no.nav.bidrag.beregn.felles.enums.InntektType;
@@ -23,46 +20,27 @@ class BidragsevneberegningTest {
   @Test
   void beregn() {
 
-    ArrayList<SjablonPeriode> sjabloner = new ArrayList<>();
+    ArrayList<Sjablon> sjabloner = new ArrayList<>();
     //Sjablonverdier pr 2019-12-31
 
-    sjabloner.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2013-01-01"), LocalDate.parse("9999-12-31")),
-        "FordelSkatteklasse2", Double.valueOf(0), null));
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "SatsTrygdeavgift", Double.valueOf(8.2), null));
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "belopUnderholdEgneBarnIHusstand", Double.valueOf(3487), null));
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "MinstefradragBelop", Double.valueOf(85050), null));
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "MinstefradragProsentInntekt", Double.valueOf(31), null));
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "PersonfradragKlasse1", Double.valueOf(56550), null));
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "PersonfradragKlasse2", Double.valueOf(56550), null));
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "FordelSaerfradrag", Double.valueOf(0), null));
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "Skattesats", Double.valueOf(22), null));
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "skattetrinn1", Double.valueOf(174500), Double.valueOf((1.9))));
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "skattetrinn2", Double.valueOf(245650), Double.valueOf((4.2))));
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "skattetrinn3", Double.valueOf(617500), Double.valueOf((13.2))));
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "skattetrinn4", Double.valueOf(964800), Double.valueOf((16.2))));
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "belopBoutgiftEn", Double.valueOf(9591), null));  //EN
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "belopUnderholdEgetEn", Double.valueOf(8925), null)); //EN
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "belopBoutgiftGs", Double.valueOf(5875), null));  //GS
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "belopUnderholdEgetGs", Double.valueOf(7557), null)); //GS
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "FordelSkatteklasse2", Double.valueOf(0), null));
+    sjabloner.add(new Sjablon("FordelSkatteklasse2", Double.valueOf(0), null));
+    sjabloner.add(new Sjablon("SatsTrygdeavgift", Double.valueOf(8.2), null));
+    sjabloner.add(new Sjablon("belopUnderholdEgneBarnIHusstand", Double.valueOf(3487), null));
+    sjabloner.add(new Sjablon("MinstefradragBelop", Double.valueOf(85050), null));
+    sjabloner.add(new Sjablon("MinstefradragProsentInntekt", Double.valueOf(31), null));
+    sjabloner.add(new Sjablon("PersonfradragKlasse1", Double.valueOf(56550), null));
+    sjabloner.add(new Sjablon("PersonfradragKlasse2", Double.valueOf(56550), null));
+    sjabloner.add(new Sjablon("FordelSaerfradrag", Double.valueOf(0), null));
+    sjabloner.add(new Sjablon("Skattesats", Double.valueOf(22), null));
+    sjabloner.add(new Sjablon("skattetrinn1", Double.valueOf(174500), Double.valueOf((1.9))));
+    sjabloner.add(new Sjablon("skattetrinn2", Double.valueOf(245650), Double.valueOf((4.2))));
+    sjabloner.add(new Sjablon("skattetrinn3", Double.valueOf(617500), Double.valueOf((13.2))));
+    sjabloner.add(new Sjablon("skattetrinn4", Double.valueOf(964800), Double.valueOf((16.2))));
+    sjabloner.add(new Sjablon("belopBoutgiftEn", Double.valueOf(9591), null));  //EN
+    sjabloner.add(new Sjablon("belopUnderholdEgetEn", Double.valueOf(8925), null)); //EN
+    sjabloner.add(new Sjablon("belopBoutgiftGs", Double.valueOf(5875), null));  //GS
+    sjabloner.add(new Sjablon("belopUnderholdEgetGs", Double.valueOf(7557), null)); //GS
+    sjabloner.add(new Sjablon("FordelSkatteklasse2", Double.valueOf(0), null));
 
     ArrayList<Inntekt> inntekter = new ArrayList<>();
     inntekter.add(new Inntekt(InntektType.LØNNSINNTEKT, Double.valueOf(1000000)));
@@ -91,36 +69,22 @@ class BidragsevneberegningTest {
   @Test
   void beregnMinstefradrag() {
 
-    ArrayList<SjablonPeriode> sjabloner = new ArrayList<>();
+    ArrayList<Sjablon> sjabloner = new ArrayList<>();
     //Sjablonverdier pr 2019-12-31
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "MinstefradragProsentInntekt", Double.valueOf(31), null)); //EN
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "MinstefradragBelop", Double.valueOf(85050), null)); //EN
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "personfradrag", Double.valueOf(56550), null)); //EN
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "Skattesats", Double.valueOf(22), null)); //EN
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "SatsTrygdeavgift", Double.valueOf(8.2), null)); //EN
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "skattetrinn1", Double.valueOf(174500), Double.valueOf((1.9))));
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "skattetrinn2", Double.valueOf(245650), Double.valueOf((4.2))));
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "skattetrinn3", Double.valueOf(617500), Double.valueOf((13.2))));
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "skattetrinn4", Double.valueOf(964800), Double.valueOf((16.2))));
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "belopBoutgift", Double.valueOf(9591), null));  //EN
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "belopUnderholdEget", Double.valueOf(8925), null)); //EN
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "belopUnderholdEgneBarnIHusstand", Double.valueOf(3487), null)); //EN
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "FordelSaerfradrag", Double.valueOf(0), null)); //EN
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "FordelSkatteklasse2", Double.valueOf(0), null)); //EN
+    sjabloner.add(new Sjablon("MinstefradragProsentInntekt", Double.valueOf(31), null)); //EN
+    sjabloner.add(new Sjablon("MinstefradragBelop", Double.valueOf(85050), null)); //EN
+    sjabloner.add(new Sjablon("personfradrag", Double.valueOf(56550), null)); //EN
+    sjabloner.add(new Sjablon("Skattesats", Double.valueOf(22), null)); //EN
+    sjabloner.add(new Sjablon("SatsTrygdeavgift", Double.valueOf(8.2), null)); //EN
+    sjabloner.add(new Sjablon("skattetrinn1", Double.valueOf(174500), Double.valueOf((1.9))));
+    sjabloner.add(new Sjablon("skattetrinn2", Double.valueOf(245650), Double.valueOf((4.2))));
+    sjabloner.add(new Sjablon("skattetrinn3", Double.valueOf(617500), Double.valueOf((13.2))));
+    sjabloner.add(new Sjablon("skattetrinn4", Double.valueOf(964800), Double.valueOf((16.2))));
+    sjabloner.add(new Sjablon("belopBoutgift", Double.valueOf(9591), null));  //EN
+    sjabloner.add(new Sjablon("belopUnderholdEget", Double.valueOf(8925), null)); //EN
+    sjabloner.add(new Sjablon("belopUnderholdEgneBarnIHusstand", Double.valueOf(3487), null)); //EN
+    sjabloner.add(new Sjablon("FordelSaerfradrag", Double.valueOf(0), null)); //EN
+    sjabloner.add(new Sjablon("FordelSkatteklasse2", Double.valueOf(0), null)); //EN
 
     ArrayList<Inntekt> inntekter = new ArrayList<>();
     inntekter.add(new Inntekt(InntektType.LØNNSINNTEKT, Double.valueOf(200000)));
@@ -147,16 +111,12 @@ class BidragsevneberegningTest {
 
   @Test
   void beregnSkattetrinnBelop() {
-    ArrayList<SjablonPeriode> sjabloner = new ArrayList<>();
+    ArrayList<Sjablon> sjabloner = new ArrayList<>();
     //Sjablonverdier pr 2019-12-31
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "skattetrinn1", Double.valueOf(174500), Double.valueOf((1.9))));
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "skattetrinn2", Double.valueOf(245650), Double.valueOf((4.2))));
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "skattetrinn3", Double.valueOf(617500), Double.valueOf((13.2))));
-    sjabloner.add(new SjablonPeriode((new Periode(LocalDate.parse("2017-06-06"), LocalDate.parse("2020-06-06"))),
-        "skattetrinn4", Double.valueOf(964800), Double.valueOf((16.2))));
+    sjabloner.add(new Sjablon("skattetrinn1", Double.valueOf(174500), Double.valueOf((1.9))));
+    sjabloner.add(new Sjablon("skattetrinn2", Double.valueOf(245650), Double.valueOf((4.2))));
+    sjabloner.add(new Sjablon("skattetrinn3", Double.valueOf(617500), Double.valueOf((13.2))));
+    sjabloner.add(new Sjablon("skattetrinn4", Double.valueOf(964800), Double.valueOf((16.2))));
 
     BidragsevneberegningImpl bidragsevneberegning = new BidragsevneberegningImpl();
 

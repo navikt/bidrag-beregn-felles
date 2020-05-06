@@ -8,8 +8,8 @@ import no.nav.bidrag.beregn.felles.enums.SaerfradragKode
 
 data class SjablonPeriode(
     val sjablonDatoFraTil: Periode,
-    val sjablonnavn: String?,
-    val sjablonVerdi1: Double?,
+    val sjablonnavn: String,
+    val sjablonVerdi1: Double,
     val sjablonVerdi2: Double? ) : PeriodisertGrunnlag {
   constructor(sjablonPeriode: SjablonPeriode) : this(sjablonPeriode.sjablonDatoFraTil.justerDatoer(), sjablonPeriode.sjablonnavn,
       sjablonPeriode.sjablonVerdi1, sjablonPeriode.sjablonVerdi2)

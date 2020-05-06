@@ -1,19 +1,13 @@
 package no.nav.bidrag.beregn.felles.bidragsevne.dto
 
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.ResultatBeregning
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.SjablonPeriode
-import no.nav.bidrag.beregn.felles.bo.Periode
-import no.nav.bidrag.beregn.felles.enums.BostatusKode
-import no.nav.bidrag.beregn.felles.enums.InntektType
 import no.nav.bidrag.beregn.felles.enums.SaerfradragKode
-import java.math.BigDecimal
 import java.time.LocalDate
 
 // Grunnlag periode
 data class BeregnBidragsevneGrunnlagAltCore(
     val beregnDatoFra: LocalDate,
     val beregnDatoTil: LocalDate,
-    val sjablonPeriodeListe: List<SjablonPeriodeCore>,
+    var sjablonPeriodeListe: List<SjablonPeriodeCore>,
     val inntektPeriodeListe: List<InntektPeriodeCore>,
     val bostatusPeriodeListe: List<BostatusPeriodeCore>,
     val antallBarnIEgetHusholdPeriodeListe: List<AntallBarnIEgetHusholdPeriodeCore>,
@@ -21,32 +15,32 @@ data class BeregnBidragsevneGrunnlagAltCore(
 )
 
 data class SjablonPeriodeCore(
-    val sjablonPeriodeDatoFraTil: PeriodeCore?,
+    val sjablonPeriodeDatoFraTil: PeriodeCore,
     val sjablonnavn: String?,
     val sjablonVerdi1: Double?,
     val sjablonVerdi2: Double?
 )
 
 data class InntektPeriodeCore(
-    val inntektDatoFraTil: Periode,
+    val inntektPeriodeDatoFraTil: PeriodeCore,
     val inntektType: String,
     val skatteklasse: Int,
     val inntektBelop: Double
 )
 
 data class BostatusPeriodeCore(
-    val bostatusPeriodeDatoFraTil: Periode,
+    val bostatusPeriodeDatoFraTil: PeriodeCore,
     val bostatusKode: String
 )
 
 data class AntallBarnIEgetHusholdPeriodeCore(
-    val antallBarnIEgetHusholdPeriodeDatoFraTil: Periode,
+    val antallBarnIEgetHusholdPeriodeDatoFraTil: PeriodeCore,
     val antallBarn: Int
 )
 
 data class SaerfradragPeriodeCore(
-    val saerfradragPeriodeDatoFraTil: Periode,
-    val saerfradragKode: SaerfradragKode
+    val saerfradragPeriodeDatoFraTil: PeriodeCore,
+    val saerfradragKode: String
 )
 
 
@@ -73,9 +67,14 @@ data class ResultatGrunnlagCore(
     val bostatusKode: String,
     val antallEgneBarnIHusstand: Int,
     val saerfradragkode: String,
-    val sjablonPeriodeListe: List<SjablonPeriode>
+    val sjablonListe: List<SjablonCore>
 )
 
+data class SjablonCore(
+    val sjablonnavn: String,
+    val sjablonVerdi1: Double,
+    val sjablonVerdi2: Double
+)
 
 data class InntektCore(
     val inntektType: String,
@@ -87,8 +86,8 @@ data class AvvikCore(
     val avvikType: String
 )
 
-  // Felles
-  data class PeriodeCore(
-      val periodeDatoFra: LocalDate,
-      val periodeDatoTil: LocalDate?
-  )
+// Felles
+data class PeriodeCore(
+    val periodeDatoFra: LocalDate,
+    val periodeDatoTil: LocalDate?
+)
