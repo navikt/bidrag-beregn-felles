@@ -162,7 +162,7 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
     for (SjablonPeriode sjablonPeriode : beregnBidragsevneGrunnlagAlt.getSjablonPeriodeListe()) {
       sjablonPeriodeListe.add(sjablonPeriode.getDatoFraTil());
     }
-    avvikListe.addAll(validerInput("sjablonPeriodeListe", sjablonPeriodeListe, true, true, true));
+    avvikListe.addAll(validerInput("sjablonPeriodeListe", sjablonPeriodeListe, false, false, false));
 
     // Sjekk perioder for inntekt
     var inntektPeriodeListe = new ArrayList<Periode>();
