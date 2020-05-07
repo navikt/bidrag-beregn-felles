@@ -32,6 +32,7 @@ import no.nav.bidrag.beregn.felles.bidragsevne.dto.InntektPeriodeCore;
 import no.nav.bidrag.beregn.felles.bo.Periode;
 import no.nav.bidrag.beregn.felles.enums.BostatusKode;
 import no.nav.bidrag.beregn.felles.enums.InntektType;
+import no.nav.bidrag.beregn.felles.enums.SaerfradragKode;
 
 public class BidragsevneCoreImpl implements BidragsevneCore {
 
@@ -80,10 +81,10 @@ public class BidragsevneCoreImpl implements BidragsevneCore {
     var inntektPeriodeListe = new ArrayList<InntektPeriode>();
     for (InntektPeriodeCore inntektPeriodeCore : inntektPeriodeListeCore) {
       inntektPeriodeListe.add(new InntektPeriode(
-          new Periode(inntektPeriodeCore.getInntektDatoFraTil().getPeriodeDatoFra(),
-              inntektPeriodeCore.getInntektDatoFraTil().getPeriodeDatoTil()),
-              InntektType.valueOf(inntektPeriodeCore.getInntektType()),
-              inntektPeriodeCore.getSkatteklasse(), inntektPeriodeCore.getInntektBelop()));
+          new Periode(inntektPeriodeCore.getInntektPeriodeDatoFraTil().getPeriodeDatoFra(),
+              inntektPeriodeCore.getInntektPeriodeDatoFraTil().getPeriodeDatoTil()),
+          InntektType.valueOf(inntektPeriodeCore.getInntektType()),
+          inntektPeriodeCore.getSkatteklasse(), inntektPeriodeCore.getInntektBelop()));
     }
     return inntektPeriodeListe;
   }
@@ -94,7 +95,7 @@ public class BidragsevneCoreImpl implements BidragsevneCore {
       bostatusPeriodeListe.add(new BostatusPeriode(
           new Periode(bostatusPeriodeCore.getBostatusPeriodeDatoFraTil().getPeriodeDatoFra(),
               bostatusPeriodeCore.getBostatusPeriodeDatoFraTil().getPeriodeDatoTil()),
-              BostatusKode.valueOf(bostatusPeriodeCore.getBostatusKode())));
+          BostatusKode.valueOf(bostatusPeriodeCore.getBostatusKode())));
     }
     return bostatusPeriodeListe;
   }
@@ -107,8 +108,8 @@ public class BidragsevneCoreImpl implements BidragsevneCore {
           new Periode(antallBarnIEgetHusholdPeriodeCore.getAntallBarnIEgetHusholdPeriodeDatoFraTil()
               .getPeriodeDatoFra(),
               antallBarnIEgetHusholdPeriodeCore.getAntallBarnIEgetHusholdPeriodeDatoFraTil()
-              .getPeriodeDatoTil()),
-              antallBarnIEgetHusholdPeriodeCore.getAntallBarn()));
+                  .getPeriodeDatoTil()),
+          antallBarnIEgetHusholdPeriodeCore.getAntallBarn()));
     }
     return antallBarnIEgetHusholdPeriodeListe;
   }
@@ -119,7 +120,7 @@ public class BidragsevneCoreImpl implements BidragsevneCore {
       saerfradragPeriodeListe.add(new SaerfradragPeriode(
           new Periode(saerfradragPeriodeCore.getSaerfradragPeriodeDatoFraTil().getPeriodeDatoFra(),
               saerfradragPeriodeCore.getSaerfradragPeriodeDatoFraTil().getPeriodeDatoTil()),
-              saerfradragPeriodeCore.getSaerfradragKode()));
+          SaerfradragKode.valueOf(saerfradragPeriodeCore.getSaerfradragKode())));
     }
     return saerfradragPeriodeListe;
   }
