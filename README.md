@@ -7,6 +7,7 @@ Repo for alle felles beregninger for bidrag. Disse erstatter beregninger i BBM.
 
 Versjon | Endringstype | Beskrivelse
 --------|--------------|------------
+0.1.4   | Endret       | Rettet slik at alle sjablonnavn starter med stor bokstav
 0.1.3   | Endret       | Slått av test på sjablonperioder
 0.1.2   | Endret       | Noen feilfikser etter review av bidragsevneberegning
 0.1.1   | Slettet      | Slettet Kotlin-unittester
