@@ -76,6 +76,17 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
 
     // Løper gjennom periodene og finner matchende verdi for hver kategori. Kaller beregningsmodulen for hver beregningsperiode
 
+    // Hvis det ligger 2 perioder på slutten som i til-dato inneholder hhv. beregningsperiodens til-dato og null slås de sammen
+    if (perioder.size() > 1) {
+      if ((perioder.get(perioder.size() - 2).getDatoTil().equals(beregnBidragsevneGrunnlagAlt.getBeregnDatoTil())) &&
+          (perioder.get(perioder.size() - 1).getDatoTil() == null)) {
+        var nyPeriode = new Periode(perioder.get(perioder.size() - 2).getDatoFra(), null);
+        perioder.remove(perioder.size() - 1);
+        perioder.remove(perioder.size() - 1);
+        perioder.add(nyPeriode);
+      }
+    }
+
     for (Periode beregningsperiode : perioder) {
 
       var inntektListe = justertInntektPeriodeListe.stream().filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode))
