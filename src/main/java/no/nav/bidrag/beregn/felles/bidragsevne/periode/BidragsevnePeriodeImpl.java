@@ -113,6 +113,7 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
 
       System.out.println("Beregner bidragsevne for periode: " + beregningsperiode.getDatoFra() + " " + beregningsperiode.getDatoTil());
 
+      // Kaller beregningsmodulen for hver beregningsperiode
       var beregnBidragsevneGrunnlagPeriodisert = new BeregnBidragsevneGrunnlagPeriodisert(inntektListe, skatteklasse, bostatusKode, antallBarnIEgetHushold,
           saerfradrag, sjablonliste);
 
@@ -125,44 +126,6 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
 
   }
 
-
-/*  // Slår sammen perioder hvis beregnet bidragsevne er lik i tilgrensende perioder
-  private BeregnBidragsevneResultat mergePerioder(ArrayList<ResultatPeriode> resultatPeriodeListe) {
-    var filtrertPeriodeResultatListe = new ArrayList<ResultatPeriode>();
-    var resultatPeriodeForrige = new ResultatPeriode(new Periode(LocalDate.MIN, LocalDate.MAX),
-        new ResultatBeregning(Double.valueOf(0.0)));
-    var datoFra = resultatPeriodeListe.get(0).getResultatDatoFraTil().getDatoFra();
-    var mergePerioder = false;
-    int count = 0;
-
-    for (ResultatPeriode resultatPeriode : resultatPeriodeListe) {
-      count++;
-
-      if (resultatPeriode.getResultatBeregning().kanMergesMed(resultatPeriodeForrige.getResultatBeregning())) {
-        mergePerioder = true;
-      } else {
-        if (mergePerioder) {
-          resultatPeriodeForrige.getResultatDatoFraTil().setDatoFra(datoFra);
-          mergePerioder = false;
-        }
-        if (count > 1) {
-          filtrertPeriodeResultatListe.add(resultatPeriodeForrige);
-        }
-        datoFra = resultatPeriode.getResultatDatoFraTil().getDatoFra();
-      }
-
-      resultatPeriodeForrige = resultatPeriode;
-    }
-
-    if (count > 0) {
-      if (mergePerioder) {
-        resultatPeriodeForrige.getResultatDatoFraTil().setDatoFra(datoFra);
-      }
-      filtrertPeriodeResultatListe.add(resultatPeriodeForrige);
-    }
-
-    return new BeregnBidragsevneResultat(filtrertPeriodeResultatListe);
-  }*/
 
   // Validerer at input-verdier til bidragsevneberegning er gyldige
   public List<Avvik> validerInput(BeregnBidragsevneGrunnlagAlt beregnBidragsevneGrunnlagAlt) {

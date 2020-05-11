@@ -49,10 +49,10 @@ class BidragsevneberegningGrunnlagTest {
         assertEquals(beregnBidragsevneGrunnlagPeriodisert.hentSjablon("Skattesats").getSjablonVerdi1(),
         Double.valueOf(0.22));
 
-        assertEquals(beregnBidragsevneGrunnlagPeriodisert.hentSjablon("skattetrinn1").getSjablonVerdi1(),
+        assertEquals(beregnBidragsevneGrunnlagPeriodisert.hentSjablon("Skattetrinn1").getSjablonVerdi1(),
         Double.valueOf(174500));
 
-        assertEquals(beregnBidragsevneGrunnlagPeriodisert.hentSjablon("skattetrinn1").getSjablonVerdi2(),
+        assertEquals(beregnBidragsevneGrunnlagPeriodisert.hentSjablon("Skattetrinn1").getSjablonVerdi2(),
         Double.valueOf(0.019));
 
         //System.out.println(beregnBidragsevneGrunnlagPeriodisert.hentSjablon("Skattesats").getVerdi1());

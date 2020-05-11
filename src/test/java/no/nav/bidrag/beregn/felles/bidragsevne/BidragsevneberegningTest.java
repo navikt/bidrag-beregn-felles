@@ -25,7 +25,7 @@ class BidragsevneberegningTest {
 
     sjabloner.add(new Sjablon("FordelSkatteklasse2", Double.valueOf(0), null));
     sjabloner.add(new Sjablon("SatsTrygdeavgift", Double.valueOf(8.2), null));
-    sjabloner.add(new Sjablon("belopUnderholdEgneBarnIHusstand", Double.valueOf(3487), null));
+    sjabloner.add(new Sjablon("BelopUnderholdEgneBarnIHusstand", Double.valueOf(3487), null));
     sjabloner.add(new Sjablon("MinstefradragBelop", Double.valueOf(85050), null));
     sjabloner.add(new Sjablon("MinstefradragProsentInntekt", Double.valueOf(31), null));
     sjabloner.add(new Sjablon("PersonfradragKlasse1", Double.valueOf(56550), null));
@@ -73,7 +73,7 @@ class BidragsevneberegningTest {
     //Sjablonverdier pr 2019-12-31
     sjabloner.add(new Sjablon("FordelSkatteklasse2", Double.valueOf(0), null));
     sjabloner.add(new Sjablon("SatsTrygdeavgift", Double.valueOf(8.2), null));
-    sjabloner.add(new Sjablon("belopUnderholdEgneBarnIHusstand", Double.valueOf(3487), null));
+    sjabloner.add(new Sjablon("BelopUnderholdEgneBarnIHusstand", Double.valueOf(3487), null));
     sjabloner.add(new Sjablon("MinstefradragBelop", Double.valueOf(85050), null));
     sjabloner.add(new Sjablon("MinstefradragProsentInntekt", Double.valueOf(31), null));
     sjabloner.add(new Sjablon("PersonfradragKlasse1", Double.valueOf(56550), null));
