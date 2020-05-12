@@ -32,7 +32,7 @@ class BidragsevnePeriodeTest {
   void lagGrunnlagTest() {
     System.out.println("Starter test");
     var beregnDatoFra = LocalDate.parse("2018-07-01");
-    var beregnDatoTil = LocalDate.parse("2019-07-01");
+    var beregnDatoTil = LocalDate.parse("2020-01-01");
 
     BeregnBidragsevneGrunnlagAlt beregnBidragsevneGrunnlagAlt = new BeregnBidragsevneGrunnlagAlt(
         beregnDatoFra, beregnDatoTil,
@@ -61,9 +61,12 @@ class BidragsevnePeriodeTest {
         () -> assertThat(resultat.getResultatPeriodeListe().get(2).getResultatBeregning().getResultatBelopEvne()).isEqualTo(Double.valueOf(20536)),
 
         () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2019-04-01")),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatDatoFraTil().getDatoTil()).isNull(),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatBeregning().getResultatBelopEvne()).isEqualTo(Double.valueOf(20536))
+        () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2019-07-01")),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(3).getResultatBeregning().getResultatBelopEvne()).isEqualTo(Double.valueOf(20536)),
 
+        () -> assertThat(resultat.getResultatPeriodeListe().get(4).getResultatDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2019-07-01")),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(4).getResultatDatoFraTil().getDatoTil()).isNull(),
+        () -> assertThat(resultat.getResultatPeriodeListe().get(4).getResultatBeregning().getResultatBelopEvne()).isEqualTo(Double.valueOf(20063))
         );
 
 
@@ -77,11 +80,11 @@ class BidragsevnePeriodeTest {
     var inntektPeriodeListe = new ArrayList<InntektPeriode>();
 
     inntektPeriodeListe.add(new InntektPeriode(
-        new Periode(LocalDate.parse("2003-01-01"), LocalDate.parse("2003-12-31")),
+        new Periode(LocalDate.parse("2003-01-01"), LocalDate.parse("2004-01-01")),
         InntektType.LØNNSINNTEKT,
         1, Double.valueOf(666000)));
     inntektPeriodeListe.add(new InntektPeriode(
-        new Periode(LocalDate.parse("2004-01-01"), LocalDate.parse("2015-12-31")),
+        new Periode(LocalDate.parse("2004-01-01"), LocalDate.parse("2016-01-01")),
         InntektType.LØNNSINNTEKT,
         1, Double.valueOf(555000)));
     inntektPeriodeListe.add(new InntektPeriode(
@@ -93,7 +96,7 @@ class BidragsevnePeriodeTest {
         InntektType.LØNNSINNTEKT,
         1, Double.valueOf(666000)));
     inntektPeriodeListe.add(new InntektPeriode(
-        new Periode(LocalDate.parse("2019-04-01"), LocalDate.parse("2019-12-31")),
+        new Periode(LocalDate.parse("2019-04-01"), LocalDate.parse("2020-01-01")),
         InntektType.LØNNSINNTEKT,
         1, Double.valueOf(666001)));
 
