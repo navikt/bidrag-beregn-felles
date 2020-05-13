@@ -62,26 +62,26 @@ public class BidragsevneberegningImpl implements Bidragsevneberegning {
 
     // Trekker fra boutgifter og midler til eget underhold
     if (beregnBidragsevneGrunnlagPeriodisert.getBostatusKode().equals(BostatusKode.ALENE)) {
-      forelopigBidragsevne -= (beregnBidragsevneGrunnlagPeriodisert.hentSjablon("belopBoutgiftEn").
+      forelopigBidragsevne -= (beregnBidragsevneGrunnlagPeriodisert.hentSjablon("BelopBoutgiftEn").
           getSjablonVerdi1() * 12);
       System.out.println(
           "Foreløpig evne etter fratrekk av boutgifter bor alene: " + forelopigBidragsevne);
 
       forelopigBidragsevne -= (
-          beregnBidragsevneGrunnlagPeriodisert.hentSjablon("belopUnderholdEgetEn").
+          beregnBidragsevneGrunnlagPeriodisert.hentSjablon("BelopUnderholdEgetEn").
               getSjablonVerdi1() * 12);
       System.out.println(
           "Foreløpig evne etter fratrekk av midler til eget underhold bor alene: "
               + forelopigBidragsevne);
 
     } else {
-      forelopigBidragsevne -= (beregnBidragsevneGrunnlagPeriodisert.hentSjablon("belopBoutgiftGs").
+      forelopigBidragsevne -= (beregnBidragsevneGrunnlagPeriodisert.hentSjablon("BelopBoutgiftGs").
           getSjablonVerdi1() * 12);
       System.out.println(
           "Foreløpig evne etter fratrekk av boutgifter gift/samboer: " + forelopigBidragsevne);
 
       forelopigBidragsevne -= (
-          beregnBidragsevneGrunnlagPeriodisert.hentSjablon("belopUnderholdEgetGs").
+          beregnBidragsevneGrunnlagPeriodisert.hentSjablon("BelopUnderholdEgetGs").
               getSjablonVerdi1() * 12);
       System.out.println(
           "Foreløpig evne etter fratrekk av midler til eget underhold gift/samboer: "
@@ -90,7 +90,7 @@ public class BidragsevneberegningImpl implements Bidragsevneberegning {
 
     // Trekker fra midler til underhold egne barn i egen husstand
     forelopigBidragsevne -= (
-        beregnBidragsevneGrunnlagPeriodisert.hentSjablon("belopUnderholdEgneBarnIHusstand").
+        beregnBidragsevneGrunnlagPeriodisert.hentSjablon("BelopUnderholdEgneBarnIHusstand").
             getSjablonVerdi1() * beregnBidragsevneGrunnlagPeriodisert.getAntallEgneBarnIHusstand()
             * 12);
     System.out.println("Foreløpig evne etter fratrekk av underhold for egne barn i egen husstand: "
@@ -157,21 +157,21 @@ public class BidragsevneberegningImpl implements Bidragsevneberegning {
         .reduce(Double.valueOf(0), Double::sum);
 
     long samletSkattetrinnbelop = 0;
-    Double belopSkattetrinn1 = beregnBidragsevneGrunnlagPeriodisert.hentSjablon("skattetrinn1")
+    Double belopSkattetrinn1 = beregnBidragsevneGrunnlagPeriodisert.hentSjablon("Skattetrinn1")
         .getSjablonVerdi1();
-    Double satsSkattetrinn1 = beregnBidragsevneGrunnlagPeriodisert.hentSjablon("skattetrinn1")
+    Double satsSkattetrinn1 = beregnBidragsevneGrunnlagPeriodisert.hentSjablon("Skattetrinn1")
         .getSjablonVerdi2();
-    Double belopSkattetrinn2 = beregnBidragsevneGrunnlagPeriodisert.hentSjablon("skattetrinn2")
+    Double belopSkattetrinn2 = beregnBidragsevneGrunnlagPeriodisert.hentSjablon("Skattetrinn2")
         .getSjablonVerdi1();
-    Double satsSkattetrinn2 = beregnBidragsevneGrunnlagPeriodisert.hentSjablon("skattetrinn2")
+    Double satsSkattetrinn2 = beregnBidragsevneGrunnlagPeriodisert.hentSjablon("Skattetrinn2")
         .getSjablonVerdi2();
-    Double belopSkattetrinn3 = beregnBidragsevneGrunnlagPeriodisert.hentSjablon("skattetrinn3")
+    Double belopSkattetrinn3 = beregnBidragsevneGrunnlagPeriodisert.hentSjablon("Skattetrinn3")
         .getSjablonVerdi1();
-    Double satsSkattetrinn3 = beregnBidragsevneGrunnlagPeriodisert.hentSjablon("skattetrinn3")
+    Double satsSkattetrinn3 = beregnBidragsevneGrunnlagPeriodisert.hentSjablon("Skattetrinn3")
         .getSjablonVerdi2();
-    Double belopSkattetrinn4 = beregnBidragsevneGrunnlagPeriodisert.hentSjablon("skattetrinn4")
+    Double belopSkattetrinn4 = beregnBidragsevneGrunnlagPeriodisert.hentSjablon("Skattetrinn4")
         .getSjablonVerdi1();
-    Double satsSkattetrinn4 = beregnBidragsevneGrunnlagPeriodisert.hentSjablon("skattetrinn4")
+    Double satsSkattetrinn4 = beregnBidragsevneGrunnlagPeriodisert.hentSjablon("Skattetrinn4")
         .getSjablonVerdi2();
 
     if (inntekt > belopSkattetrinn1) {
