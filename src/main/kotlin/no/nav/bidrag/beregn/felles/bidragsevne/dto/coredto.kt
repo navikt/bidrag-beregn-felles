@@ -7,11 +7,11 @@ import java.time.LocalDate
 data class BeregnBidragsevneGrunnlagAltCore(
     val beregnDatoFra: LocalDate,
     val beregnDatoTil: LocalDate,
-    var sjablonPeriodeListe: List<SjablonPeriodeCore>,
     val inntektPeriodeListe: List<InntektPeriodeCore>,
     val bostatusPeriodeListe: List<BostatusPeriodeCore>,
     val antallBarnIEgetHusholdPeriodeListe: List<AntallBarnIEgetHusholdPeriodeCore>,
-    val saerfradragPeriodeListe: List<SaerfradragPeriodeCore>
+    val saerfradragPeriodeListe: List<SaerfradragPeriodeCore>,
+    var sjablonPeriodeListe: List<SjablonPeriodeCore>
 )
 
 data class SjablonPeriodeCore(
@@ -48,7 +48,7 @@ data class SaerfradragPeriodeCore(
 // Resultat
 data class BeregnBidragsevneResultatCore(
     val resultatPeriodeListe: List<ResultatPeriodeCore>,
-    val avviksListe: List<AvvikCore>
+    val avvikListe: List<AvvikCore>
 )
 
 data class ResultatPeriodeCore(

@@ -30,11 +30,6 @@ data class ResultatPeriode(
     val resultatGrunnlag: BeregnBidragsevneGrunnlagPeriodisert
 )
 
-/*
-data class SjablonPeriodeVerdi(
-    val sjablonnavn: String,
-    val sjablonVerdi: Int)
-*/
 
 
 // Avvikperiode
