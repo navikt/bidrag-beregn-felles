@@ -23,15 +23,15 @@ class BidragsevneberegningTest {
     ArrayList<Sjablon> sjabloner = new ArrayList<>();
     //Sjablonverdier pr 2019-12-31
 
-    sjabloner.add(new Sjablon("FordelSkatteklasse2", Double.valueOf(0), null));
-    sjabloner.add(new Sjablon("SatsTrygdeavgift", Double.valueOf(8.2), null));
-    sjabloner.add(new Sjablon("BelopUnderholdEgneBarnIHusstand", Double.valueOf(3487), null));
-    sjabloner.add(new Sjablon("MinstefradragBelop", Double.valueOf(85050), null));
-    sjabloner.add(new Sjablon("MinstefradragProsentInntekt", Double.valueOf(31), null));
-    sjabloner.add(new Sjablon("PersonfradragKlasse1", Double.valueOf(56550), null));
-    sjabloner.add(new Sjablon("PersonfradragKlasse2", Double.valueOf(56550), null));
-    sjabloner.add(new Sjablon("FordelSaerfradrag", Double.valueOf(0), null));
-    sjabloner.add(new Sjablon("Skattesats", Double.valueOf(22), null));
+    sjabloner.add(new Sjablon("FordelSkatteklasse2Belop", Double.valueOf(0), null));
+    sjabloner.add(new Sjablon("TrygdeavgiftProsent", Double.valueOf(8.2), null));
+    sjabloner.add(new Sjablon("UnderholdEgneBarnIHusstandBelop", Double.valueOf(3487), null));
+    sjabloner.add(new Sjablon("MinstefradragInntektBelop", Double.valueOf(85050), null));
+    sjabloner.add(new Sjablon("MinstefradragInntektProsent", Double.valueOf(31), null));
+    sjabloner.add(new Sjablon("PersonfradragKlasse1Belop", Double.valueOf(56550), null));
+    sjabloner.add(new Sjablon("PersonfradragKlasse2Belop", Double.valueOf(56550), null));
+    sjabloner.add(new Sjablon("FordelSaerfradragBelop", Double.valueOf(0), null));
+    sjabloner.add(new Sjablon("SkattesatsAlminneligInntektProsent", Double.valueOf(22), null));
     sjabloner.add(new Sjablon("Skattetrinn1", Double.valueOf(174500), Double.valueOf((1.9))));
     sjabloner.add(new Sjablon("Skattetrinn2", Double.valueOf(245650), Double.valueOf((4.2))));
     sjabloner.add(new Sjablon("Skattetrinn3", Double.valueOf(617500), Double.valueOf((13.2))));
@@ -40,7 +40,7 @@ class BidragsevneberegningTest {
     sjabloner.add(new Sjablon("BelopUnderholdEgetEn", Double.valueOf(8925), null)); //EN
     sjabloner.add(new Sjablon("BelopBoutgiftGs", Double.valueOf(5875), null));  //GS
     sjabloner.add(new Sjablon("BelopUnderholdEgetGs", Double.valueOf(7557), null)); //GS
-    sjabloner.add(new Sjablon("FordelSkatteklasse2", Double.valueOf(0), null));
+    sjabloner.add(new Sjablon("FordelSkatteklasse2Belop", Double.valueOf(0), null));
 
     ArrayList<Inntekt> inntekter = new ArrayList<>();
     inntekter.add(new Inntekt(InntektType.LØNNSINNTEKT, Double.valueOf(1000000)));
@@ -71,15 +71,15 @@ class BidragsevneberegningTest {
 
     ArrayList<Sjablon> sjabloner = new ArrayList<>();
     //Sjablonverdier pr 2019-12-31
-    sjabloner.add(new Sjablon("FordelSkatteklasse2", Double.valueOf(0), null));
-    sjabloner.add(new Sjablon("SatsTrygdeavgift", Double.valueOf(8.2), null));
-    sjabloner.add(new Sjablon("BelopUnderholdEgneBarnIHusstand", Double.valueOf(3487), null));
-    sjabloner.add(new Sjablon("MinstefradragBelop", Double.valueOf(85050), null));
-    sjabloner.add(new Sjablon("MinstefradragProsentInntekt", Double.valueOf(31), null));
-    sjabloner.add(new Sjablon("PersonfradragKlasse1", Double.valueOf(56550), null));
-    sjabloner.add(new Sjablon("PersonfradragKlasse2", Double.valueOf(56550), null));
-    sjabloner.add(new Sjablon("FordelSaerfradrag", Double.valueOf(0), null));
-    sjabloner.add(new Sjablon("Skattesats", Double.valueOf(22), null));
+    sjabloner.add(new Sjablon("FordelSkatteklasse2Belop", Double.valueOf(0), null));
+    sjabloner.add(new Sjablon("TrygdeavgiftProsent", Double.valueOf(8.2), null));
+    sjabloner.add(new Sjablon("UnderholdEgneBarnIHusstandBelop", Double.valueOf(3487), null));
+    sjabloner.add(new Sjablon("MinstefradragInntektBelop", Double.valueOf(85050), null));
+    sjabloner.add(new Sjablon("MinstefradragInntektProsent", Double.valueOf(31), null));
+    sjabloner.add(new Sjablon("PersonfradragKlasse1Belop", Double.valueOf(56550), null));
+    sjabloner.add(new Sjablon("PersonfradragKlasse2Belop", Double.valueOf(56550), null));
+    sjabloner.add(new Sjablon("FordelSaerfradragBelop", Double.valueOf(0), null));
+    sjabloner.add(new Sjablon("SkattesatsAlminneligInntektProsent", Double.valueOf(22), null));
     sjabloner.add(new Sjablon("Skattetrinn1", Double.valueOf(174500), Double.valueOf((1.9))));
     sjabloner.add(new Sjablon("Skattetrinn2", Double.valueOf(245650), Double.valueOf((4.2))));
     sjabloner.add(new Sjablon("Skattetrinn3", Double.valueOf(617500), Double.valueOf((13.2))));
@@ -88,7 +88,7 @@ class BidragsevneberegningTest {
     sjabloner.add(new Sjablon("BelopUnderholdEgetEn", Double.valueOf(8925), null)); //EN
     sjabloner.add(new Sjablon("BelopBoutgiftGs", Double.valueOf(5875), null));  //GS
     sjabloner.add(new Sjablon("BelopUnderholdEgetGs", Double.valueOf(7557), null)); //GS
-    sjabloner.add(new Sjablon("FordelSkatteklasse2", Double.valueOf(0), null));
+    sjabloner.add(new Sjablon("FordelSkatteklasse2Belop", Double.valueOf(0), null));
 
     ArrayList<Inntekt> inntekter = new ArrayList<>();
     inntekter.add(new Inntekt(InntektType.LØNNSINNTEKT, Double.valueOf(200000)));
