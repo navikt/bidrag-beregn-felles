@@ -36,10 +36,10 @@ class BidragsevneberegningTest {
     sjabloner.add(new Sjablon("Skattetrinn2", Double.valueOf(245650), Double.valueOf((4.2))));
     sjabloner.add(new Sjablon("Skattetrinn3", Double.valueOf(617500), Double.valueOf((13.2))));
     sjabloner.add(new Sjablon("Skattetrinn4", Double.valueOf(964800), Double.valueOf((16.2))));
-    sjabloner.add(new Sjablon("BelopBoutgiftEn", Double.valueOf(9591), null));  //EN
-    sjabloner.add(new Sjablon("BelopUnderholdEgetEn", Double.valueOf(8925), null)); //EN
-    sjabloner.add(new Sjablon("BelopBoutgiftGs", Double.valueOf(5875), null));  //GS
-    sjabloner.add(new Sjablon("BelopUnderholdEgetGs", Double.valueOf(7557), null)); //GS
+    sjabloner.add(new Sjablon("BoutgiftEnBelop", Double.valueOf(9591), null));  //EN
+    sjabloner.add(new Sjablon("UnderholdEgetEnBelop", Double.valueOf(8925), null)); //EN
+    sjabloner.add(new Sjablon("BoutgiftGsBelop", Double.valueOf(5875), null));  //GS
+    sjabloner.add(new Sjablon("UnderholdEgetGsBelop", Double.valueOf(7557), null)); //GS
     sjabloner.add(new Sjablon("FordelSkatteklasse2Belop", Double.valueOf(0), null));
 
     ArrayList<Inntekt> inntekter = new ArrayList<>();
@@ -84,10 +84,10 @@ class BidragsevneberegningTest {
     sjabloner.add(new Sjablon("Skattetrinn2", Double.valueOf(245650), Double.valueOf((4.2))));
     sjabloner.add(new Sjablon("Skattetrinn3", Double.valueOf(617500), Double.valueOf((13.2))));
     sjabloner.add(new Sjablon("Skattetrinn4", Double.valueOf(964800), Double.valueOf((16.2))));
-    sjabloner.add(new Sjablon("BelopBoutgiftEn", Double.valueOf(9591), null));  //EN
-    sjabloner.add(new Sjablon("BelopUnderholdEgetEn", Double.valueOf(8925), null)); //EN
-    sjabloner.add(new Sjablon("BelopBoutgiftGs", Double.valueOf(5875), null));  //GS
-    sjabloner.add(new Sjablon("BelopUnderholdEgetGs", Double.valueOf(7557), null)); //GS
+    sjabloner.add(new Sjablon("BoutgiftEnBelop", Double.valueOf(9591), null));  //EN
+    sjabloner.add(new Sjablon("UnderholdEgetEnBelop", Double.valueOf(8925), null)); //EN
+    sjabloner.add(new Sjablon("BoutgiftGsBelop", Double.valueOf(5875), null));  //GS
+    sjabloner.add(new Sjablon("UnderholdEgetGsBelop", Double.valueOf(7557), null)); //GS
     sjabloner.add(new Sjablon("FordelSkatteklasse2Belop", Double.valueOf(0), null));
 
     ArrayList<Inntekt> inntekter = new ArrayList<>();

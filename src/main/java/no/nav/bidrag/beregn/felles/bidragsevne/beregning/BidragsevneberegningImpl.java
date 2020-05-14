@@ -63,26 +63,26 @@ public class BidragsevneberegningImpl implements Bidragsevneberegning {
 
     // Trekker fra boutgifter og midler til eget underhold
     if (beregnBidragsevneGrunnlagPeriodisert.getBostatusKode().equals(BostatusKode.ALENE)) {
-      forelopigBidragsevne -= (beregnBidragsevneGrunnlagPeriodisert.hentSjablon("BelopBoutgiftEn").
+      forelopigBidragsevne -= (beregnBidragsevneGrunnlagPeriodisert.hentSjablon("BoutgiftEnBelop").
           getSjablonVerdi1() * 12);
       System.out.println(
           "Foreløpig evne etter fratrekk av boutgifter bor alene: " + forelopigBidragsevne);
 
       forelopigBidragsevne -= (
-          beregnBidragsevneGrunnlagPeriodisert.hentSjablon("BelopUnderholdEgetEn").
+          beregnBidragsevneGrunnlagPeriodisert.hentSjablon("UnderholdEgetEnBelop").
               getSjablonVerdi1() * 12);
       System.out.println(
           "Foreløpig evne etter fratrekk av midler til eget underhold bor alene: "
               + forelopigBidragsevne);
 
     } else {
-      forelopigBidragsevne -= (beregnBidragsevneGrunnlagPeriodisert.hentSjablon("BelopBoutgiftGs").
+      forelopigBidragsevne -= (beregnBidragsevneGrunnlagPeriodisert.hentSjablon("BoutgiftGsBelop").
           getSjablonVerdi1() * 12);
       System.out.println(
           "Foreløpig evne etter fratrekk av boutgifter gift/samboer: " + forelopigBidragsevne);
 
       forelopigBidragsevne -= (
-          beregnBidragsevneGrunnlagPeriodisert.hentSjablon("BelopUnderholdEgetGs").
+          beregnBidragsevneGrunnlagPeriodisert.hentSjablon("UnderholdEgetGsBelop").
               getSjablonVerdi1() * 12);
       System.out.println(
           "Foreløpig evne etter fratrekk av midler til eget underhold gift/samboer: "
