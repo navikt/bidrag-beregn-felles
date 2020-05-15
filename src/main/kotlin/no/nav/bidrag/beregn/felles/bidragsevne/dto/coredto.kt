@@ -73,7 +73,7 @@ data class ResultatGrunnlagCore(
 data class SjablonCore(
     val sjablonnavn: String,
     val sjablonVerdi1: Double,
-    val sjablonVerdi2: Double
+    val sjablonVerdi2: Double?
 )
 
 data class InntektCore(
