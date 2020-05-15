@@ -7,6 +7,7 @@ Repo for alle felles beregninger for bidrag. Disse erstatter beregninger i BBM.
 
 Versjon | Endringstype | Beskrivelse
 --------|--------------|------------
+0.1.6   | Endret       | Feilfiks etter null pointer exeption
 0.1.5   | Endret       | Ny full gjennomgang av og endring til mer selvforklarende sjablonnavn
 0.1.4   | Endret       | Sjablonnavn starter med stor bokstav, lagt til BidragsevneCoreTest
 0.1.3   | Endret       | Slått av test på sjablonperioder
