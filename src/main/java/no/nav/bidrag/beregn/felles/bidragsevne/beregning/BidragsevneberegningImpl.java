@@ -17,6 +17,8 @@ public class BidragsevneberegningImpl implements Bidragsevneberegning {
 
     //  Preconditions.checkNotNull(beregnBidragsevneGrunnlagPeriodisert, "Grunnlag kan ikke være null");
 
+    System.out.println("Start beregning av bidragsevne");
+
     Double minstefradrag = beregnMinstefradrag(beregnBidragsevneGrunnlagPeriodisert);
 
     // Legger sammen inntektene
@@ -24,7 +26,7 @@ public class BidragsevneberegningImpl implements Bidragsevneberegning {
         .map(Inntekt::getInntektBelop)
         .reduce(Double.valueOf(0), Double::sum);
 
-    System.out.println("Start beregning av bidragsevne");
+    System.out.println("Samlede inntekter: " + inntekt);
 
     // finner personfradragklasse ut fra angitt skatteklasse
     Double personfradrag = 0.0;
@@ -35,6 +37,8 @@ public class BidragsevneberegningImpl implements Bidragsevneberegning {
       personfradrag = beregnBidragsevneGrunnlagPeriodisert.hentSjablon("PersonfradragKlasse2Belop")
           .getSjablonVerdi1();
     }
+
+    System.out.println("Beregnet personfradrag: " + personfradrag);
 
     Double inntektMinusFradrag =
         inntekt - minstefradrag - personfradrag;
@@ -121,6 +125,12 @@ public class BidragsevneberegningImpl implements Bidragsevneberegning {
     // Finner månedlig beløp for bidragsevne
     Double maanedligBidragsevne = Double.valueOf(Math.round(forelopigBidragsevne / 12));
     System.out.println("Endelig beregnet bidragsevne: " + maanedligBidragsevne);
+
+    if (maanedligBidragsevne.compareTo(0.0) < 0){
+      System.out.println("Beregnet bidragsevne er mindre enn 0, settes til 0");
+      maanedligBidragsevne = Double.valueOf(0.0);
+      System.out.println("Korrigert bidragsevne: " + maanedligBidragsevne);
+    }
     System.out.println("------------------------------------------------------");
 
     return new ResultatBeregning(maanedligBidragsevne);
