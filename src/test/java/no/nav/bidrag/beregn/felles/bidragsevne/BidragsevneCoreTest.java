@@ -1,5 +1,6 @@
 package no.nav.bidrag.beregn.felles.bidragsevne;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
@@ -153,7 +154,7 @@ public class BidragsevneCoreTest {
     sjablonPeriodeListe.add(sjablonPeriode);
 
     beregnBidragsevneGrunnlagCore = new BeregnBidragsevneGrunnlagAltCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01"),
-        inntektPeriodeListe, bostatusPeriodeListe, antallEgneBarnIHusstandPeriodeListe, saerfradragPeriodeListe, sjablonPeriodeListe);
+        inntektPeriodeListe, bostatusPeriodeListe, antallEgneBarnIHusstandPeriodeListe, saerfradragPeriodeListe, sjablonPeriodeListe, emptyList());
   }
 
   private void byggBidragsevnePeriodeResultat() {
