@@ -1,6 +1,5 @@
 package no.nav.bidrag.beregn.felles.bidragsevne.dto
 
-import no.nav.bidrag.beregn.felles.enums.SaerfradragKode
 import java.time.LocalDate
 
 // Grunnlag periode
@@ -11,14 +10,8 @@ data class BeregnBidragsevneGrunnlagAltCore(
     val bostatusPeriodeListe: List<BostatusPeriodeCore>,
     val antallBarnIEgetHusholdPeriodeListe: List<AntallBarnIEgetHusholdPeriodeCore>,
     val saerfradragPeriodeListe: List<SaerfradragPeriodeCore>,
-    var sjablonPeriodeListe: List<SjablonPeriodeCore>
-)
-
-data class SjablonPeriodeCore(
-    val sjablonPeriodeDatoFraTil: PeriodeCore,
-    val sjablonnavn: String?,
-    val sjablonVerdi1: Double?,
-    val sjablonVerdi2: Double?
+    var sjablonPeriodeListe: List<SjablonPeriodeCore>,
+    var sjablonPeriodeListeNy: List<SjablonPeriodeCoreNy>
 )
 
 data class InntektPeriodeCore(
@@ -41,6 +34,30 @@ data class AntallBarnIEgetHusholdPeriodeCore(
 data class SaerfradragPeriodeCore(
     val saerfradragPeriodeDatoFraTil: PeriodeCore,
     val saerfradragKode: String
+)
+
+data class SjablonPeriodeCore(
+    val sjablonPeriodeDatoFraTil: PeriodeCore,
+    val sjablonnavn: String?,
+    val sjablonVerdi1: Double?,
+    val sjablonVerdi2: Double?
+)
+
+data class SjablonPeriodeCoreNy(
+    val sjablonPeriodeDatoFraTil: PeriodeCore,
+    val sjablonNavn: String,
+    val sjablonNokkelListe: List<SjablonNokkelCoreNy>,
+    val sjablonInnholdListe: List<SjablonInnholdCoreNy>
+)
+
+data class SjablonNokkelCoreNy(
+    val sjablonNokkelNavn: String,
+    val sjablonNokkelVerdi: String
+)
+
+data class SjablonInnholdCoreNy(
+    val sjablonInnholdNavn: String,
+    val sjablonInnholdVerdi: Double
 )
 
 
