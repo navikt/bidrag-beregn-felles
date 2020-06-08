@@ -12,11 +12,12 @@ import java.time.LocalDate
 data class BeregnBidragsevneGrunnlagAlt(
     val beregnDatoFra: LocalDate,
     val beregnDatoTil: LocalDate,
-    val sjablonPeriodeListe: List<SjablonPeriode>,
     val inntektPeriodeListe: List<InntektPeriode>,
     val bostatusPeriodeListe: List<BostatusPeriode>,
     val antallBarnIEgetHusholdPeriodeListe: List<AntallBarnIEgetHusholdPeriode>,
-    val saerfradragPeriodeListe: List<SaerfradragPeriode>
+    val saerfradragPeriodeListe: List<SaerfradragPeriode>,
+    val sjablonPeriodeListe: List<SjablonPeriode>,
+    val sjablonPeriodeListeNy: List<SjablonPeriodeNy>
 )
 
 // Resultatperiode

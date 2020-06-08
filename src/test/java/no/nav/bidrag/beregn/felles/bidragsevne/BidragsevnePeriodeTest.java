@@ -1,5 +1,6 @@
 package no.nav.bidrag.beregn.felles.bidragsevne;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -34,10 +35,8 @@ class BidragsevnePeriodeTest {
     var beregnDatoFra = LocalDate.parse("2018-07-01");
     var beregnDatoTil = LocalDate.parse("2020-01-01");
 
-    BeregnBidragsevneGrunnlagAlt beregnBidragsevneGrunnlagAlt = new BeregnBidragsevneGrunnlagAlt(
-        beregnDatoFra, beregnDatoTil,
-        lagSjablongGrunnlag(), lagInntektGrunnlag(), lagBostatusGrunnlag(),
-        lagAntallBarnIEgetHusholdGrunnlag(), lagSaerfradragGrunnlag());
+    BeregnBidragsevneGrunnlagAlt beregnBidragsevneGrunnlagAlt = new BeregnBidragsevneGrunnlagAlt(beregnDatoFra, beregnDatoTil, lagInntektGrunnlag(),
+        lagBostatusGrunnlag(), lagAntallBarnIEgetHusholdGrunnlag(), lagSaerfradragGrunnlag(), lagSjablonGrunnlag(), emptyList());
 
     var resultat = bidragsevnePeriode.beregnPerioder(beregnBidragsevneGrunnlagAlt);
 
@@ -178,7 +177,7 @@ class BidragsevnePeriodeTest {
 
   }
 
-  private List<SjablonPeriode> lagSjablongGrunnlag() {
+  private List<SjablonPeriode> lagSjablonGrunnlag() {
 
     var sjablonPeriodeListe = new ArrayList<SjablonPeriode>();
     sjablonPeriodeListe.add(new SjablonPeriode(
