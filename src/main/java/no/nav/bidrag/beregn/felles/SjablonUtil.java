@@ -75,7 +75,7 @@ public class SjablonUtil {
   public static List<TrinnvisSkattesatsNy> hentTrinnvisSkattesats(List<SjablonNy> sjablonListe, String sjablonNavn) {
     var filtrertSjablonListe = filtrerPaaSjablonNavn(sjablonListe, sjablonNavn);
     var sjablonInnholdListe = hentSjablonInnholdListe(filtrertSjablonListe);
-    var inntektGrenseListe = hentSjablonInnholdVerdiListe(sjablonInnholdListe, SjablonInnholdNavn.INNTEKTSGRENSE_BELOEP.getNavn());
+    var inntektGrenseListe = hentSjablonInnholdVerdiListe(sjablonInnholdListe, SjablonInnholdNavn.INNTEKTSGRENSE_BELOP.getNavn());
     var satsListe = hentSjablonInnholdVerdiListe(sjablonInnholdListe, SjablonInnholdNavn.SKATTESATS_PROSENT.getNavn());
 
     var indeks = 0;

@@ -9,7 +9,7 @@ import java.util.List;
 import no.nav.bidrag.beregn.felles.SjablonUtil;
 import no.nav.bidrag.beregn.felles.enums.SjablonInnholdNavn;
 import no.nav.bidrag.beregn.felles.enums.SjablonNavn;
-import no.nav.bidrag.beregn.felles.enums.SjablonNoekkelNavn;
+import no.nav.bidrag.beregn.felles.enums.SjablonNokkelNavn;
 import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -35,11 +35,11 @@ class SjablonTest {
     byggSjabloner();
 
     sjablonNokkelListe.clear();
-    sjablonNokkelListe.add(new SjablonNokkelNy(SjablonNoekkelNavn.STOENAD_TYPE.getNavn(), "64"));
-    sjablonNokkelListe.add(new SjablonNokkelNy(SjablonNoekkelNavn.TILSYN_TYPE.getNavn(), "DU"));
+    sjablonNokkelListe.add(new SjablonNokkelNy(SjablonNokkelNavn.STONAD_TYPE.getNavn(), "64"));
+    sjablonNokkelListe.add(new SjablonNokkelNy(SjablonNokkelNavn.TILSYN_TYPE.getNavn(), "DU"));
 
     var belopBarnetilsyn = SjablonUtil
-        .hentBarnetilsyn(sjablonListe, SjablonNavn.BARNETILSYN.getNavn(), sjablonNokkelListe, SjablonInnholdNavn.BARNETILSYN_BELOEP.getNavn());
+        .hentBarnetilsyn(sjablonListe, SjablonNavn.BARNETILSYN.getNavn(), sjablonNokkelListe, SjablonInnholdNavn.BARNETILSYN_BELOP.getNavn());
 
     assertThat(belopBarnetilsyn).isEqualTo(258d);
   }
@@ -51,12 +51,12 @@ class SjablonTest {
     byggSjabloner();
 
     sjablonNokkelListe.clear();
-    sjablonNokkelListe.add(new SjablonNokkelNy(SjablonNoekkelNavn.BOSTATUS.getNavn(), "GS"));
+    sjablonNokkelListe.add(new SjablonNokkelNy(SjablonNokkelNavn.BOSTATUS.getNavn(), "GS"));
 
     var belopBoutgift = SjablonUtil
-        .hentBidragsevne(sjablonListe, SjablonNavn.BIDRAGSEVNE.getNavn(), sjablonNokkelListe, SjablonInnholdNavn.BOUTGIFT_BELOEP.getNavn());
+        .hentBidragsevne(sjablonListe, SjablonNavn.BIDRAGSEVNE.getNavn(), sjablonNokkelListe, SjablonInnholdNavn.BOUTGIFT_BELOP.getNavn());
     var belopUnderhold = SjablonUtil
-        .hentBidragsevne(sjablonListe, SjablonNavn.BIDRAGSEVNE.getNavn(), sjablonNokkelListe, SjablonInnholdNavn.UNDERHOLD_BELOEP.getNavn());
+        .hentBidragsevne(sjablonListe, SjablonNavn.BIDRAGSEVNE.getNavn(), sjablonNokkelListe, SjablonInnholdNavn.UNDERHOLD_BELOP.getNavn());
 
     assertThat(belopBoutgift).isEqualTo(5875d);
     assertThat(belopUnderhold).isEqualTo(7557d);
@@ -83,7 +83,7 @@ class SjablonTest {
 
     sjablonNokkelVerdi = "3";
 
-    var belopForbrukTot = SjablonUtil.hentMaksFradrag(sjablonListe, SjablonNavn.MAX_FRADRAG.getNavn(), sjablonNokkelVerdi);
+    var belopForbrukTot = SjablonUtil.hentMaksFradrag(sjablonListe, SjablonNavn.MAKS_FRADRAG.getNavn(), sjablonNokkelVerdi);
 
     assertThat(belopForbrukTot).isEqualTo(4583d);
   }
@@ -96,7 +96,7 @@ class SjablonTest {
 
     sjablonNokkelVerdi = "2";
 
-    var belopForbrukTot = SjablonUtil.hentMaksTilsyn(sjablonListe, SjablonNavn.MAX_TILSYN.getNavn(), sjablonNokkelVerdi);
+    var belopForbrukTot = SjablonUtil.hentMaksTilsyn(sjablonListe, SjablonNavn.MAKS_TILSYN.getNavn(), sjablonNokkelVerdi);
 
     assertThat(belopForbrukTot).isEqualTo(8109d);
   }
@@ -108,15 +108,15 @@ class SjablonTest {
     byggSjabloner();
 
     sjablonNokkelListe.clear();
-    sjablonNokkelListe.add(new SjablonNokkelNy(SjablonNoekkelNavn.SAMVAERSKLASSE.getNavn(), "03"));
+    sjablonNokkelListe.add(new SjablonNokkelNy(SjablonNokkelNavn.SAMVAERSKLASSE.getNavn(), "03"));
     sjablonNokkelVerdi = "12";
 
     var antDagerTom = SjablonUtil.hentSamvaersfradrag(sjablonListe, SjablonNavn.SAMVAERSFRADRAG.getNavn(), sjablonNokkelListe,
-        SjablonNoekkelNavn.ALDER_TOM.getNavn(), sjablonNokkelVerdi, SjablonInnholdNavn.ANTALL_DAGER_TOM.getNavn());
+        SjablonNokkelNavn.ALDER_TOM.getNavn(), sjablonNokkelVerdi, SjablonInnholdNavn.ANTALL_DAGER_TOM.getNavn());
     var antNetterTom = SjablonUtil.hentSamvaersfradrag(sjablonListe, SjablonNavn.SAMVAERSFRADRAG.getNavn(), sjablonNokkelListe,
-        SjablonNoekkelNavn.ALDER_TOM.getNavn(), sjablonNokkelVerdi, SjablonInnholdNavn.ANTALL_NETTER_TOM.getNavn());
+        SjablonNokkelNavn.ALDER_TOM.getNavn(), sjablonNokkelVerdi, SjablonInnholdNavn.ANTALL_NETTER_TOM.getNavn());
     var belopFradrag = SjablonUtil.hentSamvaersfradrag(sjablonListe, SjablonNavn.SAMVAERSFRADRAG.getNavn(), sjablonNokkelListe,
-        SjablonNoekkelNavn.ALDER_TOM.getNavn(), sjablonNokkelVerdi, SjablonInnholdNavn.FRADRAG_BELOEP.getNavn());
+        SjablonNokkelNavn.ALDER_TOM.getNavn(), sjablonNokkelVerdi, SjablonInnholdNavn.FRADRAG_BELOP.getNavn());
 
     assertThat(antDagerTom).isEqualTo(0d);
     assertThat(antNetterTom).isEqualTo(13d);
@@ -130,7 +130,7 @@ class SjablonTest {
     byggSjabloner();
 
     var sjablonVerdi = SjablonUtil
-        .hentSjablontall(sjablonListe, SjablonTallNavn.BOUTGIFTER_BIDRAGSBARN_BELOEP.getNavn(), SjablonInnholdNavn.SJABLON_VERDI.getNavn());
+        .hentSjablontall(sjablonListe, SjablonTallNavn.BOUTGIFTER_BIDRAGSBARN_BELOP.getNavn(), SjablonInnholdNavn.SJABLON_VERDI.getNavn());
 
     assertThat(sjablonVerdi).isEqualTo(2775d);
   }
@@ -261,237 +261,237 @@ class SjablonTest {
 
     // Barnetilsyn
     sjablonListe.add(new SjablonNy(SjablonNavn.BARNETILSYN.getNavn(),
-        Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.STOENAD_TYPE.getNavn(), "64"),
-            new SjablonNokkelNy(SjablonNoekkelNavn.TILSYN_TYPE.getNavn(), "DO")),
-        Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.BARNETILSYN_BELOEP.getNavn(), 355d))));
+        Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.STONAD_TYPE.getNavn(), "64"),
+            new SjablonNokkelNy(SjablonNokkelNavn.TILSYN_TYPE.getNavn(), "DO")),
+        Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.BARNETILSYN_BELOP.getNavn(), 355d))));
     sjablonListe.add(new SjablonNy(SjablonNavn.BARNETILSYN.getNavn(),
-        Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.STOENAD_TYPE.getNavn(), "64"),
-            new SjablonNokkelNy(SjablonNoekkelNavn.TILSYN_TYPE.getNavn(), "DU")),
-        Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.BARNETILSYN_BELOEP.getNavn(), 258d))));
+        Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.STONAD_TYPE.getNavn(), "64"),
+            new SjablonNokkelNy(SjablonNokkelNavn.TILSYN_TYPE.getNavn(), "DU")),
+        Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.BARNETILSYN_BELOP.getNavn(), 258d))));
     sjablonListe.add(new SjablonNy(SjablonNavn.BARNETILSYN.getNavn(),
-        Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.STOENAD_TYPE.getNavn(), "64"),
-            new SjablonNokkelNy(SjablonNoekkelNavn.TILSYN_TYPE.getNavn(), "HO")),
-        Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.BARNETILSYN_BELOEP.getNavn(), 579d))));
+        Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.STONAD_TYPE.getNavn(), "64"),
+            new SjablonNokkelNy(SjablonNokkelNavn.TILSYN_TYPE.getNavn(), "HO")),
+        Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.BARNETILSYN_BELOP.getNavn(), 579d))));
     sjablonListe.add(new SjablonNy(SjablonNavn.BARNETILSYN.getNavn(),
-        Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.STOENAD_TYPE.getNavn(), "64"),
-            new SjablonNokkelNy(SjablonNoekkelNavn.TILSYN_TYPE.getNavn(), "HU")),
-        Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.BARNETILSYN_BELOEP.getNavn(), 644d))));
+        Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.STONAD_TYPE.getNavn(), "64"),
+            new SjablonNokkelNy(SjablonNokkelNavn.TILSYN_TYPE.getNavn(), "HU")),
+        Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.BARNETILSYN_BELOP.getNavn(), 644d))));
 
     // Bidragsevne
     sjablonListe
-        .add(new SjablonNy(SjablonNavn.BIDRAGSEVNE.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.BOSTATUS.getNavn(), "EN")),
-            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.BOUTGIFT_BELOEP.getNavn(), 9591d),
-                new SjablonInnholdNy(SjablonInnholdNavn.UNDERHOLD_BELOEP.getNavn(), 8925d))));
+        .add(new SjablonNy(SjablonNavn.BIDRAGSEVNE.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.BOSTATUS.getNavn(), "EN")),
+            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.BOUTGIFT_BELOP.getNavn(), 9591d),
+                new SjablonInnholdNy(SjablonInnholdNavn.UNDERHOLD_BELOP.getNavn(), 8925d))));
     sjablonListe
-        .add(new SjablonNy(SjablonNavn.BIDRAGSEVNE.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.BOSTATUS.getNavn(), "GS")),
-            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.BOUTGIFT_BELOEP.getNavn(), 5875d),
-                new SjablonInnholdNy(SjablonInnholdNavn.UNDERHOLD_BELOEP.getNavn(), 7557d))));
+        .add(new SjablonNy(SjablonNavn.BIDRAGSEVNE.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.BOSTATUS.getNavn(), "GS")),
+            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.BOUTGIFT_BELOP.getNavn(), 5875d),
+                new SjablonInnholdNy(SjablonInnholdNavn.UNDERHOLD_BELOP.getNavn(), 7557d))));
 
     // Forbruksutgifter
     sjablonListe
-        .add(new SjablonNy(SjablonNavn.FORBRUKSUTGIFTER.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.ALDER_TOM.getNavn(), "18")),
-            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.FORBRUK_TOTAL_BELOEP.getNavn(), 6985d))));
+        .add(new SjablonNy(SjablonNavn.FORBRUKSUTGIFTER.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.ALDER_TOM.getNavn(), "18")),
+            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.FORBRUK_TOTAL_BELOP.getNavn(), 6985d))));
     sjablonListe
-        .add(new SjablonNy(SjablonNavn.FORBRUKSUTGIFTER.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.ALDER_TOM.getNavn(), "5")),
-            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.FORBRUK_TOTAL_BELOEP.getNavn(), 3661d))));
+        .add(new SjablonNy(SjablonNavn.FORBRUKSUTGIFTER.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.ALDER_TOM.getNavn(), "5")),
+            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.FORBRUK_TOTAL_BELOP.getNavn(), 3661d))));
     sjablonListe
-        .add(new SjablonNy(SjablonNavn.FORBRUKSUTGIFTER.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.ALDER_TOM.getNavn(), "99")),
-            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.FORBRUK_TOTAL_BELOEP.getNavn(), 6985d))));
+        .add(new SjablonNy(SjablonNavn.FORBRUKSUTGIFTER.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.ALDER_TOM.getNavn(), "99")),
+            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.FORBRUK_TOTAL_BELOP.getNavn(), 6985d))));
     sjablonListe
-        .add(new SjablonNy(SjablonNavn.FORBRUKSUTGIFTER.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.ALDER_TOM.getNavn(), "10")),
-            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.FORBRUK_TOTAL_BELOEP.getNavn(), 5113d))));
+        .add(new SjablonNy(SjablonNavn.FORBRUKSUTGIFTER.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.ALDER_TOM.getNavn(), "10")),
+            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.FORBRUK_TOTAL_BELOP.getNavn(), 5113d))));
     sjablonListe
-        .add(new SjablonNy(SjablonNavn.FORBRUKSUTGIFTER.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.ALDER_TOM.getNavn(), "14")),
-            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.FORBRUK_TOTAL_BELOEP.getNavn(), 6099d))));
+        .add(new SjablonNy(SjablonNavn.FORBRUKSUTGIFTER.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.ALDER_TOM.getNavn(), "14")),
+            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.FORBRUK_TOTAL_BELOP.getNavn(), 6099d))));
 
     // Maks fradrag
     sjablonListe
-        .add(new SjablonNy(SjablonNavn.MAX_FRADRAG.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.ANTALL_BARN_TOM.getNavn(), "1")),
-            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.MAX_FRADRAG_BELOEP.getNavn(), 2083.33d))));
+        .add(new SjablonNy(SjablonNavn.MAKS_FRADRAG.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.ANTALL_BARN_TOM.getNavn(), "1")),
+            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.getNavn(), 2083.33d))));
     sjablonListe
-        .add(new SjablonNy(SjablonNavn.MAX_FRADRAG.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.ANTALL_BARN_TOM.getNavn(), "2")),
-            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.MAX_FRADRAG_BELOEP.getNavn(), 3333d))));
+        .add(new SjablonNy(SjablonNavn.MAKS_FRADRAG.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.ANTALL_BARN_TOM.getNavn(), "2")),
+            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.getNavn(), 3333d))));
     sjablonListe
-        .add(new SjablonNy(SjablonNavn.MAX_FRADRAG.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.ANTALL_BARN_TOM.getNavn(), "3")),
-            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.MAX_FRADRAG_BELOEP.getNavn(), 4583d))));
+        .add(new SjablonNy(SjablonNavn.MAKS_FRADRAG.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.ANTALL_BARN_TOM.getNavn(), "3")),
+            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.getNavn(), 4583d))));
     sjablonListe
-        .add(new SjablonNy(SjablonNavn.MAX_FRADRAG.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.ANTALL_BARN_TOM.getNavn(), "4")),
-            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.MAX_FRADRAG_BELOEP.getNavn(), 5833d))));
+        .add(new SjablonNy(SjablonNavn.MAKS_FRADRAG.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.ANTALL_BARN_TOM.getNavn(), "4")),
+            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.getNavn(), 5833d))));
     sjablonListe
-        .add(new SjablonNy(SjablonNavn.MAX_FRADRAG.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.ANTALL_BARN_TOM.getNavn(), "5")),
-            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.MAX_FRADRAG_BELOEP.getNavn(), 7083d))));
+        .add(new SjablonNy(SjablonNavn.MAKS_FRADRAG.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.ANTALL_BARN_TOM.getNavn(), "5")),
+            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.getNavn(), 7083d))));
     sjablonListe
-        .add(new SjablonNy(SjablonNavn.MAX_FRADRAG.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.ANTALL_BARN_TOM.getNavn(), "6")),
-            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.MAX_FRADRAG_BELOEP.getNavn(), 8333d))));
+        .add(new SjablonNy(SjablonNavn.MAKS_FRADRAG.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.ANTALL_BARN_TOM.getNavn(), "6")),
+            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.getNavn(), 8333d))));
     sjablonListe
-        .add(new SjablonNy(SjablonNavn.MAX_FRADRAG.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.ANTALL_BARN_TOM.getNavn(), "7")),
-            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.MAX_FRADRAG_BELOEP.getNavn(), 9583d))));
+        .add(new SjablonNy(SjablonNavn.MAKS_FRADRAG.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.ANTALL_BARN_TOM.getNavn(), "7")),
+            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.getNavn(), 9583d))));
     sjablonListe
-        .add(new SjablonNy(SjablonNavn.MAX_FRADRAG.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.ANTALL_BARN_TOM.getNavn(), "8")),
-            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.MAX_FRADRAG_BELOEP.getNavn(), 10833d))));
+        .add(new SjablonNy(SjablonNavn.MAKS_FRADRAG.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.ANTALL_BARN_TOM.getNavn(), "8")),
+            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.getNavn(), 10833d))));
     sjablonListe
-        .add(new SjablonNy(SjablonNavn.MAX_FRADRAG.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.ANTALL_BARN_TOM.getNavn(), "99")),
-            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.MAX_FRADRAG_BELOEP.getNavn(), 12083d))));
+        .add(new SjablonNy(SjablonNavn.MAKS_FRADRAG.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.ANTALL_BARN_TOM.getNavn(), "99")),
+            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.getNavn(), 12083d))));
 
     // Maks tilsyn
     sjablonListe
-        .add(new SjablonNy(SjablonNavn.MAX_TILSYN.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.ANTALL_BARN_TOM.getNavn(), "1")),
-            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.MAX_TILSYN_BELOEP.getNavn(), 6214d))));
+        .add(new SjablonNy(SjablonNavn.MAKS_TILSYN.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.ANTALL_BARN_TOM.getNavn(), "1")),
+            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.MAKS_TILSYN_BELOP.getNavn(), 6214d))));
     sjablonListe
-        .add(new SjablonNy(SjablonNavn.MAX_TILSYN.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.ANTALL_BARN_TOM.getNavn(), "2")),
-            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.MAX_TILSYN_BELOEP.getNavn(), 8109d))));
+        .add(new SjablonNy(SjablonNavn.MAKS_TILSYN.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.ANTALL_BARN_TOM.getNavn(), "2")),
+            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.MAKS_TILSYN_BELOP.getNavn(), 8109d))));
     sjablonListe
-        .add(new SjablonNy(SjablonNavn.MAX_TILSYN.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.ANTALL_BARN_TOM.getNavn(), "99")),
-            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.MAX_TILSYN_BELOEP.getNavn(), 9189d))));
+        .add(new SjablonNy(SjablonNavn.MAKS_TILSYN.getNavn(), Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.ANTALL_BARN_TOM.getNavn(), "99")),
+            Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.MAKS_TILSYN_BELOP.getNavn(), 9189d))));
 
     // Samvaersfradrag
     sjablonListe.add(new SjablonNy(SjablonNavn.SAMVAERSFRADRAG.getNavn(),
-        Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.SAMVAERSKLASSE.getNavn(), "00"),
-            new SjablonNokkelNy(SjablonNoekkelNavn.ALDER_TOM.getNavn(), "99")),
+        Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.SAMVAERSKLASSE.getNavn(), "00"),
+            new SjablonNokkelNy(SjablonNokkelNavn.ALDER_TOM.getNavn(), "99")),
         Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_DAGER_TOM.getNavn(), 1d),
             new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_NETTER_TOM.getNavn(), 1d),
-            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOEP.getNavn(), 0d))));
+            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOP.getNavn(), 0d))));
     sjablonListe.add(new SjablonNy(SjablonNavn.SAMVAERSFRADRAG.getNavn(),
-        Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.SAMVAERSKLASSE.getNavn(), "01"),
-            new SjablonNokkelNy(SjablonNoekkelNavn.ALDER_TOM.getNavn(), "5")),
+        Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.SAMVAERSKLASSE.getNavn(), "01"),
+            new SjablonNokkelNy(SjablonNokkelNavn.ALDER_TOM.getNavn(), "5")),
         Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_DAGER_TOM.getNavn(), 3d),
             new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_NETTER_TOM.getNavn(), 3d),
-            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOEP.getNavn(), 219d))));
+            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOP.getNavn(), 219d))));
     sjablonListe.add(new SjablonNy(SjablonNavn.SAMVAERSFRADRAG.getNavn(),
-        Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.SAMVAERSKLASSE.getNavn(), "01"),
-            new SjablonNokkelNy(SjablonNoekkelNavn.ALDER_TOM.getNavn(), "10")),
+        Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.SAMVAERSKLASSE.getNavn(), "01"),
+            new SjablonNokkelNy(SjablonNokkelNavn.ALDER_TOM.getNavn(), "10")),
         Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_DAGER_TOM.getNavn(), 3d),
             new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_NETTER_TOM.getNavn(), 3d),
-            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOEP.getNavn(), 318d))));
+            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOP.getNavn(), 318d))));
     sjablonListe.add(new SjablonNy(SjablonNavn.SAMVAERSFRADRAG.getNavn(),
-        Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.SAMVAERSKLASSE.getNavn(), "01"),
-            new SjablonNokkelNy(SjablonNoekkelNavn.ALDER_TOM.getNavn(), "14")),
+        Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.SAMVAERSKLASSE.getNavn(), "01"),
+            new SjablonNokkelNy(SjablonNokkelNavn.ALDER_TOM.getNavn(), "14")),
         Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_DAGER_TOM.getNavn(), 3d),
             new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_NETTER_TOM.getNavn(), 3d),
-            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOEP.getNavn(), 400d))));
+            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOP.getNavn(), 400d))));
     sjablonListe.add(new SjablonNy(SjablonNavn.SAMVAERSFRADRAG.getNavn(),
-        Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.SAMVAERSKLASSE.getNavn(), "01"),
-            new SjablonNokkelNy(SjablonNoekkelNavn.ALDER_TOM.getNavn(), "18")),
+        Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.SAMVAERSKLASSE.getNavn(), "01"),
+            new SjablonNokkelNy(SjablonNokkelNavn.ALDER_TOM.getNavn(), "18")),
         Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_DAGER_TOM.getNavn(), 3d),
             new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_NETTER_TOM.getNavn(), 3d),
-            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOEP.getNavn(), 460d))));
+            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOP.getNavn(), 460d))));
     sjablonListe.add(new SjablonNy(SjablonNavn.SAMVAERSFRADRAG.getNavn(),
-        Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.SAMVAERSKLASSE.getNavn(), "01"),
-            new SjablonNokkelNy(SjablonNoekkelNavn.ALDER_TOM.getNavn(), "99")),
+        Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.SAMVAERSKLASSE.getNavn(), "01"),
+            new SjablonNokkelNy(SjablonNokkelNavn.ALDER_TOM.getNavn(), "99")),
         Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_DAGER_TOM.getNavn(), 3d),
             new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_NETTER_TOM.getNavn(), 3d),
-            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOEP.getNavn(), 460d))));
+            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOP.getNavn(), 460d))));
     sjablonListe.add(new SjablonNy(SjablonNavn.SAMVAERSFRADRAG.getNavn(),
-        Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.SAMVAERSKLASSE.getNavn(), "02"),
-            new SjablonNokkelNy(SjablonNoekkelNavn.ALDER_TOM.getNavn(), "5")),
+        Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.SAMVAERSKLASSE.getNavn(), "02"),
+            new SjablonNokkelNy(SjablonNokkelNavn.ALDER_TOM.getNavn(), "5")),
         Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_DAGER_TOM.getNavn(), 0d),
             new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_NETTER_TOM.getNavn(), 8d),
-            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOEP.getNavn(), 727d))));
+            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOP.getNavn(), 727d))));
     sjablonListe.add(new SjablonNy(SjablonNavn.SAMVAERSFRADRAG.getNavn(),
-        Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.SAMVAERSKLASSE.getNavn(), "02"),
-            new SjablonNokkelNy(SjablonNoekkelNavn.ALDER_TOM.getNavn(), "10")),
+        Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.SAMVAERSKLASSE.getNavn(), "02"),
+            new SjablonNokkelNy(SjablonNokkelNavn.ALDER_TOM.getNavn(), "10")),
         Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_DAGER_TOM.getNavn(), 0d),
             new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_NETTER_TOM.getNavn(), 8d),
-            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOEP.getNavn(), 1052d))));
+            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOP.getNavn(), 1052d))));
     sjablonListe.add(new SjablonNy(SjablonNavn.SAMVAERSFRADRAG.getNavn(), Arrays
-        .asList(new SjablonNokkelNy(SjablonNoekkelNavn.SAMVAERSKLASSE.getNavn(), "02"),
-            new SjablonNokkelNy(SjablonNoekkelNavn.ALDER_TOM.getNavn(), "14")),
+        .asList(new SjablonNokkelNy(SjablonNokkelNavn.SAMVAERSKLASSE.getNavn(), "02"),
+            new SjablonNokkelNy(SjablonNokkelNavn.ALDER_TOM.getNavn(), "14")),
         Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_DAGER_TOM.getNavn(), 0d),
             new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_NETTER_TOM.getNavn(), 8d),
-            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOEP.getNavn(), 1323d))));
+            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOP.getNavn(), 1323d))));
     sjablonListe.add(new SjablonNy(SjablonNavn.SAMVAERSFRADRAG.getNavn(),
-        Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.SAMVAERSKLASSE.getNavn(), "02"),
-            new SjablonNokkelNy(SjablonNoekkelNavn.ALDER_TOM.getNavn(), "18")),
+        Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.SAMVAERSKLASSE.getNavn(), "02"),
+            new SjablonNokkelNy(SjablonNokkelNavn.ALDER_TOM.getNavn(), "18")),
         Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_DAGER_TOM.getNavn(), 0d),
             new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_NETTER_TOM.getNavn(), 8d),
-            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOEP.getNavn(), 1525d))));
+            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOP.getNavn(), 1525d))));
     sjablonListe.add(new SjablonNy(SjablonNavn.SAMVAERSFRADRAG.getNavn(),
-        Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.SAMVAERSKLASSE.getNavn(), "02"),
-            new SjablonNokkelNy(SjablonNoekkelNavn.ALDER_TOM.getNavn(), "99")),
+        Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.SAMVAERSKLASSE.getNavn(), "02"),
+            new SjablonNokkelNy(SjablonNokkelNavn.ALDER_TOM.getNavn(), "99")),
         Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_DAGER_TOM.getNavn(), 0d),
             new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_NETTER_TOM.getNavn(), 8d),
-            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOEP.getNavn(), 1525d))));
+            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOP.getNavn(), 1525d))));
     sjablonListe.add(new SjablonNy(SjablonNavn.SAMVAERSFRADRAG.getNavn(),
-        Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.SAMVAERSKLASSE.getNavn(), "03"),
-            new SjablonNokkelNy(SjablonNoekkelNavn.ALDER_TOM.getNavn(), "5")),
+        Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.SAMVAERSKLASSE.getNavn(), "03"),
+            new SjablonNokkelNy(SjablonNokkelNavn.ALDER_TOM.getNavn(), "5")),
         Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_DAGER_TOM.getNavn(), 0d),
             new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_NETTER_TOM.getNavn(), 13d),
-            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOEP.getNavn(), 2082d))));
+            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOP.getNavn(), 2082d))));
     sjablonListe.add(new SjablonNy(SjablonNavn.SAMVAERSFRADRAG.getNavn(),
-        Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.SAMVAERSKLASSE.getNavn(), "03"),
-            new SjablonNokkelNy(SjablonNoekkelNavn.ALDER_TOM.getNavn(), "10")),
+        Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.SAMVAERSKLASSE.getNavn(), "03"),
+            new SjablonNokkelNy(SjablonNokkelNavn.ALDER_TOM.getNavn(), "10")),
         Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_DAGER_TOM.getNavn(), 0d),
             new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_NETTER_TOM.getNavn(), 13d),
-            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOEP.getNavn(), 2536d))));
+            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOP.getNavn(), 2536d))));
     sjablonListe.add(new SjablonNy(SjablonNavn.SAMVAERSFRADRAG.getNavn(),
-        Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.SAMVAERSKLASSE.getNavn(), "03"),
-            new SjablonNokkelNy(SjablonNoekkelNavn.ALDER_TOM.getNavn(), "14")),
+        Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.SAMVAERSKLASSE.getNavn(), "03"),
+            new SjablonNokkelNy(SjablonNokkelNavn.ALDER_TOM.getNavn(), "14")),
         Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_DAGER_TOM.getNavn(), 0d),
             new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_NETTER_TOM.getNavn(), 13d),
-            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOEP.getNavn(), 2914d))));
+            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOP.getNavn(), 2914d))));
     sjablonListe.add(new SjablonNy(SjablonNavn.SAMVAERSFRADRAG.getNavn(),
-        Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.SAMVAERSKLASSE.getNavn(), "03"),
-            new SjablonNokkelNy(SjablonNoekkelNavn.ALDER_TOM.getNavn(), "18")),
+        Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.SAMVAERSKLASSE.getNavn(), "03"),
+            new SjablonNokkelNy(SjablonNokkelNavn.ALDER_TOM.getNavn(), "18")),
         Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_DAGER_TOM.getNavn(), 0d),
             new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_NETTER_TOM.getNavn(), 13d),
-            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOEP.getNavn(), 3196d))));
+            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOP.getNavn(), 3196d))));
     sjablonListe.add(new SjablonNy(SjablonNavn.SAMVAERSFRADRAG.getNavn(),
-        Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.SAMVAERSKLASSE.getNavn(), "03"),
-            new SjablonNokkelNy(SjablonNoekkelNavn.ALDER_TOM.getNavn(), "99")),
+        Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.SAMVAERSKLASSE.getNavn(), "03"),
+            new SjablonNokkelNy(SjablonNokkelNavn.ALDER_TOM.getNavn(), "99")),
         Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_DAGER_TOM.getNavn(), 0d),
             new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_NETTER_TOM.getNavn(), 13d),
-            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOEP.getNavn(), 3196d))));
+            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOP.getNavn(), 3196d))));
     sjablonListe.add(new SjablonNy(SjablonNavn.SAMVAERSFRADRAG.getNavn(),
-        Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.SAMVAERSKLASSE.getNavn(), "04"),
-            new SjablonNokkelNy(SjablonNoekkelNavn.ALDER_TOM.getNavn(), "5")),
+        Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.SAMVAERSKLASSE.getNavn(), "04"),
+            new SjablonNokkelNy(SjablonNokkelNavn.ALDER_TOM.getNavn(), "5")),
         Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_DAGER_TOM.getNavn(), 0d),
             new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_NETTER_TOM.getNavn(), 15d),
-            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOEP.getNavn(), 2614d))));
+            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOP.getNavn(), 2614d))));
     sjablonListe.add(new SjablonNy(SjablonNavn.SAMVAERSFRADRAG.getNavn(),
-        Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.SAMVAERSKLASSE.getNavn(), "04"),
-            new SjablonNokkelNy(SjablonNoekkelNavn.ALDER_TOM.getNavn(), "10")),
+        Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.SAMVAERSKLASSE.getNavn(), "04"),
+            new SjablonNokkelNy(SjablonNokkelNavn.ALDER_TOM.getNavn(), "10")),
         Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_DAGER_TOM.getNavn(), 0d),
             new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_NETTER_TOM.getNavn(), 15d),
-            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOEP.getNavn(), 3184d))));
+            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOP.getNavn(), 3184d))));
     sjablonListe.add(new SjablonNy(SjablonNavn.SAMVAERSFRADRAG.getNavn(),
-        Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.SAMVAERSKLASSE.getNavn(), "04"),
-            new SjablonNokkelNy(SjablonNoekkelNavn.ALDER_TOM.getNavn(), "14")),
+        Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.SAMVAERSKLASSE.getNavn(), "04"),
+            new SjablonNokkelNy(SjablonNokkelNavn.ALDER_TOM.getNavn(), "14")),
         Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_DAGER_TOM.getNavn(), 0d),
             new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_NETTER_TOM.getNavn(), 15d),
-            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOEP.getNavn(), 3658d))));
+            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOP.getNavn(), 3658d))));
     sjablonListe.add(new SjablonNy(SjablonNavn.SAMVAERSFRADRAG.getNavn(),
-        Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.SAMVAERSKLASSE.getNavn(), "04"),
-            new SjablonNokkelNy(SjablonNoekkelNavn.ALDER_TOM.getNavn(), "18")),
+        Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.SAMVAERSKLASSE.getNavn(), "04"),
+            new SjablonNokkelNy(SjablonNokkelNavn.ALDER_TOM.getNavn(), "18")),
         Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_DAGER_TOM.getNavn(), 0d),
             new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_NETTER_TOM.getNavn(), 15d),
-            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOEP.getNavn(), 4012d))));
+            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOP.getNavn(), 4012d))));
     sjablonListe.add(new SjablonNy(SjablonNavn.SAMVAERSFRADRAG.getNavn(),
-        Arrays.asList(new SjablonNokkelNy(SjablonNoekkelNavn.SAMVAERSKLASSE.getNavn(), "04"),
-            new SjablonNokkelNy(SjablonNoekkelNavn.ALDER_TOM.getNavn(), "99")),
+        Arrays.asList(new SjablonNokkelNy(SjablonNokkelNavn.SAMVAERSKLASSE.getNavn(), "04"),
+            new SjablonNokkelNy(SjablonNokkelNavn.ALDER_TOM.getNavn(), "99")),
         Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_DAGER_TOM.getNavn(), 0d),
             new SjablonInnholdNy(SjablonInnholdNavn.ANTALL_NETTER_TOM.getNavn(), 15d),
-            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOEP.getNavn(), 4012d))));
+            new SjablonInnholdNy(SjablonInnholdNavn.FRADRAG_BELOP.getNavn(), 4012d))));
 
     // Sjablontall
-    sjablonListe.add(new SjablonNy(SjablonTallNavn.ORDINAER_BARNETRYGD_BELOEP.getNavn(), emptyList(),
+    sjablonListe.add(new SjablonNy(SjablonTallNavn.ORDINAER_BARNETRYGD_BELOP.getNavn(), emptyList(),
         Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), 1054d))));
     sjablonListe.add(new SjablonNy(SjablonTallNavn.ORDINAER_SMAABARNSTILLEGG_BELOP.getNavn(), emptyList(),
         Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), 0d))));
-    sjablonListe.add(new SjablonNy(SjablonTallNavn.BOUTGIFTER_BIDRAGSBARN_BELOEP.getNavn(), emptyList(),
+    sjablonListe.add(new SjablonNy(SjablonTallNavn.BOUTGIFTER_BIDRAGSBARN_BELOP.getNavn(), emptyList(),
         Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), 2775d))));
 
     // Trinnvis skattesats
     sjablonListe.add(new SjablonNy(SjablonNavn.TRINNVIS_SKATTESATS.getNavn(), emptyList(),
-        Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.INNTEKTSGRENSE_BELOEP.getNavn(), 999550d),
+        Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.INNTEKTSGRENSE_BELOP.getNavn(), 999550d),
             new SjablonInnholdNy(SjablonInnholdNavn.SKATTESATS_PROSENT.getNavn(), 16.2d))));
     sjablonListe.add(new SjablonNy(SjablonNavn.TRINNVIS_SKATTESATS.getNavn(), emptyList(),
-        Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.INNTEKTSGRENSE_BELOEP.getNavn(), 254500d),
+        Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.INNTEKTSGRENSE_BELOP.getNavn(), 254500d),
             new SjablonInnholdNy(SjablonInnholdNavn.SKATTESATS_PROSENT.getNavn(), 4.2d))));
     sjablonListe.add(new SjablonNy(SjablonNavn.TRINNVIS_SKATTESATS.getNavn(), emptyList(),
-        Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.INNTEKTSGRENSE_BELOEP.getNavn(), 639750d),
+        Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.INNTEKTSGRENSE_BELOP.getNavn(), 639750d),
             new SjablonInnholdNy(SjablonInnholdNavn.SKATTESATS_PROSENT.getNavn(), 13.2d))));
     sjablonListe.add(new SjablonNy(SjablonNavn.TRINNVIS_SKATTESATS.getNavn(), emptyList(),
-        Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.INNTEKTSGRENSE_BELOEP.getNavn(), 180800d),
+        Arrays.asList(new SjablonInnholdNy(SjablonInnholdNavn.INNTEKTSGRENSE_BELOP.getNavn(), 180800d),
             new SjablonInnholdNy(SjablonInnholdNavn.SKATTESATS_PROSENT.getNavn(), 1.9d))));
   }
 }

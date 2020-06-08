@@ -7,6 +7,8 @@ Repo for alle felles beregninger for bidrag. Disse erstatter beregninger i BBM.
 
 Versjon | Endringstype | Beskrivelse
 --------|--------------|------------
+0.1.10  | Opprettet    | Nye utilityklasser og testklasser for håndtering av sjabloner + mapping ny sjablonstruktur DTO/BO
+0.1.9   | Endret       | Noen endringer i navn for sjablon-enumer
 0.1.8   | Opprettet    | Ny dto + enum for sjabloner
 0.1.7   | Endret       | Ved negativ bidragsevne settes bidragsevne nå til 0
 0.1.6   | Endret       | Feilfiks etter null pointer exeption
