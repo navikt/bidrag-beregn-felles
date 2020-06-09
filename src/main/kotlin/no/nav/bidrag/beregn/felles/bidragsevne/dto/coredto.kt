@@ -46,7 +46,7 @@ data class SjablonPeriodeCore(
 data class SjablonPeriodeCoreNy(
     val sjablonPeriodeDatoFraTil: PeriodeCore,
     val sjablonNavn: String,
-    val sjablonNokkelListe: List<SjablonNokkelCoreNy>,
+    val sjablonNokkelListe: List<SjablonNokkelCoreNy>? = emptyList(),
     val sjablonInnholdListe: List<SjablonInnholdCoreNy>
 )
 

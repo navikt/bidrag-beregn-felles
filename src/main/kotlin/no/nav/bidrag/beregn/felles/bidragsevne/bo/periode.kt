@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.felles.bidragsevne.bo
 
 import no.nav.bidrag.beregn.felles.bo.Periode
 import no.nav.bidrag.beregn.felles.bo.PeriodisertGrunnlag
+import no.nav.bidrag.beregn.felles.bo.SjablonNy
 import no.nav.bidrag.beregn.felles.enums.BostatusKode
 import no.nav.bidrag.beregn.felles.enums.InntektType
 import no.nav.bidrag.beregn.felles.enums.SaerfradragKode
@@ -13,6 +14,15 @@ data class SjablonPeriode(
     val sjablonVerdi2: Double? ) : PeriodisertGrunnlag {
   constructor(sjablonPeriode: SjablonPeriode) : this(sjablonPeriode.sjablonDatoFraTil.justerDatoer(), sjablonPeriode.sjablonnavn,
       sjablonPeriode.sjablonVerdi1, sjablonPeriode.sjablonVerdi2)
+  override fun getDatoFraTil(): Periode {
+    return sjablonDatoFraTil
+  }
+}
+
+data class SjablonPeriodeNy(
+    val sjablonDatoFraTil: Periode,
+    val sjablonNy: SjablonNy) : PeriodisertGrunnlag {
+  constructor(sjablonPeriodeNy: SjablonPeriodeNy) : this(sjablonPeriodeNy.sjablonDatoFraTil.justerDatoer(), sjablonPeriodeNy.sjablonNy)
   override fun getDatoFraTil(): Periode {
     return sjablonDatoFraTil
   }

@@ -70,6 +70,7 @@ enum class SjablonInnholdNavn (val navn: String) {
   UNDERHOLD_BELOP("UnderholdBeløp"),
   FORBRUK_TOTAL_BELOP("ForbrukTotalBeløp"),
   MAKS_FRADRAG_BELOP("MaksFradragBeløp"),
+  MAKS_TILSYN_BELOP("MaksTilsynBeløp"),
   ANTALL_DAGER_TOM("AntallDagerTOM"),
   ANTALL_NETTER_TOM("AntallNetterTOM"),
   FRADRAG_BELOP("FradragBeløp"),
