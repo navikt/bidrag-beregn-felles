@@ -3,7 +3,7 @@ package no.nav.bidrag.beregn.felles.bo
 // Nye sjablonklasser
 data class SjablonNy(
     val sjablonNavn: String,
-    val sjablonNokkelListe: List<SjablonNokkelNy>,
+    val sjablonNokkelListe: List<SjablonNokkelNy>? = emptyList(),
     val sjablonInnholdListe: List<SjablonInnholdNy>
 )
 
