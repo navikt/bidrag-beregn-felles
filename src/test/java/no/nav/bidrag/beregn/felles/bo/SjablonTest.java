@@ -39,7 +39,7 @@ class SjablonTest {
     sjablonNokkelListe.add(new SjablonNokkelNy(SjablonNokkelNavn.TILSYN_TYPE.getNavn(), "DU"));
 
     var belopBarnetilsyn = SjablonUtil
-        .hentBarnetilsyn(sjablonListe, SjablonNavn.BARNETILSYN.getNavn(), sjablonNokkelListe, SjablonInnholdNavn.BARNETILSYN_BELOP.getNavn());
+        .hentSjablonverdi(sjablonListe, SjablonNavn.BARNETILSYN.getNavn(), sjablonNokkelListe, SjablonInnholdNavn.BARNETILSYN_BELOP.getNavn());
 
     assertThat(belopBarnetilsyn).isEqualTo(258d);
   }
@@ -54,9 +54,9 @@ class SjablonTest {
     sjablonNokkelListe.add(new SjablonNokkelNy(SjablonNokkelNavn.BOSTATUS.getNavn(), "GS"));
 
     var belopBoutgift = SjablonUtil
-        .hentBidragsevne(sjablonListe, SjablonNavn.BIDRAGSEVNE.getNavn(), sjablonNokkelListe, SjablonInnholdNavn.BOUTGIFT_BELOP.getNavn());
+        .hentSjablonverdi(sjablonListe, SjablonNavn.BIDRAGSEVNE.getNavn(), sjablonNokkelListe, SjablonInnholdNavn.BOUTGIFT_BELOP.getNavn());
     var belopUnderhold = SjablonUtil
-        .hentBidragsevne(sjablonListe, SjablonNavn.BIDRAGSEVNE.getNavn(), sjablonNokkelListe, SjablonInnholdNavn.UNDERHOLD_BELOP.getNavn());
+        .hentSjablonverdi(sjablonListe, SjablonNavn.BIDRAGSEVNE.getNavn(), sjablonNokkelListe, SjablonInnholdNavn.UNDERHOLD_BELOP.getNavn());
 
     assertThat(belopBoutgift).isEqualTo(5875d);
     assertThat(belopUnderhold).isEqualTo(7557d);
@@ -70,7 +70,7 @@ class SjablonTest {
 
     sjablonNokkelVerdi = "12";
 
-    var belopForbrukTot = SjablonUtil.hentForbruksutgifter(sjablonListe, SjablonNavn.FORBRUKSUTGIFTER.getNavn(), sjablonNokkelVerdi);
+    var belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.FORBRUKSUTGIFTER.getNavn(), sjablonNokkelVerdi);
 
     assertThat(belopForbrukTot).isEqualTo(6099d);
   }
@@ -83,7 +83,7 @@ class SjablonTest {
 
     sjablonNokkelVerdi = "3";
 
-    var belopForbrukTot = SjablonUtil.hentMaksFradrag(sjablonListe, SjablonNavn.MAKS_FRADRAG.getNavn(), sjablonNokkelVerdi);
+    var belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.MAKS_FRADRAG.getNavn(), sjablonNokkelVerdi);
 
     assertThat(belopForbrukTot).isEqualTo(4583d);
   }
@@ -96,7 +96,7 @@ class SjablonTest {
 
     sjablonNokkelVerdi = "2";
 
-    var belopForbrukTot = SjablonUtil.hentMaksTilsyn(sjablonListe, SjablonNavn.MAKS_TILSYN.getNavn(), sjablonNokkelVerdi);
+    var belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.MAKS_TILSYN.getNavn(), sjablonNokkelVerdi);
 
     assertThat(belopForbrukTot).isEqualTo(8109d);
   }
@@ -111,11 +111,11 @@ class SjablonTest {
     sjablonNokkelListe.add(new SjablonNokkelNy(SjablonNokkelNavn.SAMVAERSKLASSE.getNavn(), "03"));
     sjablonNokkelVerdi = "12";
 
-    var antDagerTom = SjablonUtil.hentSamvaersfradrag(sjablonListe, SjablonNavn.SAMVAERSFRADRAG.getNavn(), sjablonNokkelListe,
+    var antDagerTom = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.SAMVAERSFRADRAG.getNavn(), sjablonNokkelListe,
         SjablonNokkelNavn.ALDER_TOM.getNavn(), sjablonNokkelVerdi, SjablonInnholdNavn.ANTALL_DAGER_TOM.getNavn());
-    var antNetterTom = SjablonUtil.hentSamvaersfradrag(sjablonListe, SjablonNavn.SAMVAERSFRADRAG.getNavn(), sjablonNokkelListe,
+    var antNetterTom = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.SAMVAERSFRADRAG.getNavn(), sjablonNokkelListe,
         SjablonNokkelNavn.ALDER_TOM.getNavn(), sjablonNokkelVerdi, SjablonInnholdNavn.ANTALL_NETTER_TOM.getNavn());
-    var belopFradrag = SjablonUtil.hentSamvaersfradrag(sjablonListe, SjablonNavn.SAMVAERSFRADRAG.getNavn(), sjablonNokkelListe,
+    var belopFradrag = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.SAMVAERSFRADRAG.getNavn(), sjablonNokkelListe,
         SjablonNokkelNavn.ALDER_TOM.getNavn(), sjablonNokkelVerdi, SjablonInnholdNavn.FRADRAG_BELOP.getNavn());
 
     assertThat(antDagerTom).isEqualTo(0d);
