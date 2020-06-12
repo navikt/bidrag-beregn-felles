@@ -19,7 +19,9 @@ import no.nav.bidrag.beregn.felles.bidragsevne.bo.ResultatPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.SaerfradragPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.Sjablon;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.SjablonPeriode;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.SjablonPeriodeNy;
 import no.nav.bidrag.beregn.felles.bo.Periode;
+import no.nav.bidrag.beregn.felles.bo.SjablonNy;
 import no.nav.bidrag.beregn.felles.enums.AvvikType;
 import no.nav.bidrag.beregn.felles.periode.Periodiserer;
 
@@ -41,6 +43,11 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
     var justertSjablonPeriodeListe = beregnBidragsevneGrunnlagAlt.getSjablonPeriodeListe()
         .stream()
         .map(SjablonPeriode::new)
+        .collect(toCollection(ArrayList::new));
+
+    var justertSjablonPeriodeListeNy = beregnBidragsevneGrunnlagAlt.getSjablonPeriodeListeNy()
+        .stream()
+        .map(SjablonPeriodeNy::new)
         .collect(toCollection(ArrayList::new));
 
     var justertInntektPeriodeListe = beregnBidragsevneGrunnlagAlt.getInntektPeriodeListe()
@@ -68,6 +75,7 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
     List<Periode> perioder = new Periodiserer()
         .addBruddpunkt(beregnBidragsevneGrunnlagAlt.getBeregnDatoFra()) //For å sikre bruddpunkt på start-beregning-fra-dato
         .addBruddpunkter(justertSjablonPeriodeListe)
+        .addBruddpunkter(justertSjablonPeriodeListeNy)
         .addBruddpunkter(justertInntektPeriodeListe)
         .addBruddpunkter(justertBostatusPeriodeListe)
         .addBruddpunkter(justertAntallBarnIEgetHusholdPeriodeListe)
@@ -111,11 +119,16 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
           .map(sjablonPeriode -> new Sjablon(sjablonPeriode.getSjablonnavn(), sjablonPeriode.getSjablonVerdi1()
           , sjablonPeriode.getSjablonVerdi2())).collect(toList());
 
+      var sjablonlisteNy = justertSjablonPeriodeListeNy.stream().filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode))
+          .map(sjablonPeriode -> new SjablonNy(sjablonPeriode.getSjablonNy().getSjablonNavn(),
+              sjablonPeriode.getSjablonNy().getSjablonNokkelListe(),
+              sjablonPeriode.getSjablonNy().getSjablonInnholdListe())).collect(toList());
+
       System.out.println("Beregner bidragsevne for periode: " + beregningsperiode.getDatoFra() + " " + beregningsperiode.getDatoTil());
 
       // Kaller beregningsmodulen for hver beregningsperiode
       var beregnBidragsevneGrunnlagPeriodisert = new BeregnBidragsevneGrunnlagPeriodisert(inntektListe, skatteklasse, bostatusKode, antallBarnIEgetHushold,
-          saerfradrag, sjablonliste);
+          saerfradrag, sjablonliste, sjablonlisteNy);
 
       resultatPeriodeListe.add(new ResultatPeriode(beregningsperiode, bidragsevneberegning.beregn(beregnBidragsevneGrunnlagPeriodisert),
           beregnBidragsevneGrunnlagPeriodisert));

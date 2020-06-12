@@ -1,6 +1,7 @@
 package no.nav.bidrag.beregn.felles.bidragsevne.bo
 
 import no.nav.bidrag.beregn.felles.bo.Periode
+import no.nav.bidrag.beregn.felles.bo.SjablonNy
 import no.nav.bidrag.beregn.felles.enums.AvvikType
 import no.nav.bidrag.beregn.felles.enums.BostatusKode
 import no.nav.bidrag.beregn.felles.enums.InntektType
@@ -47,7 +48,8 @@ data class BeregnBidragsevneGrunnlagPeriodisert(
     val bostatusKode: BostatusKode,
     val antallEgneBarnIHusstand: Int,
     val saerfradragkode: SaerfradragKode,
-    val sjablonListe: List<Sjablon>) {
+    val sjablonListe: List<Sjablon>,
+    val sjablonListeNy: List<SjablonNy>) {
   fun hentSjablon(sjablonnavn: String?): Sjablon? = sjablonListe.first() { it.sjablonnavn == sjablonnavn }
 }
 
