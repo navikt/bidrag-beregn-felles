@@ -18,45 +18,23 @@ import no.nav.bidrag.beregn.felles.enums.SjablonInnholdNavn;
 
 public class SjablonUtil {
 
-  // Henter verdier fra sjablon Barnetilsyn (N:1, eksakt match)
-  public static double hentBarnetilsyn(List<SjablonNy> sjablonListe, String sjablonNavn, List<SjablonNokkelNy> sjablonNokkelListe,
+  // Henter verdier fra sjablonene Barnetilsyn (N:1, eksakt match) og Bidragsevne (1:N, eksakt match)
+  public static double hentSjablonverdi(List<SjablonNy> sjablonListe, String sjablonNavn, List<SjablonNokkelNy> sjablonNokkelListe,
       String sjablonInnholdNavn) {
     var filtrertSjablonListe = filtrerSjablonNokkelListePaaSjablonNokkel(filtrerPaaSjablonNavn(sjablonListe, sjablonNavn), sjablonNokkelListe);
     var sjablonInnholdListe = mapSjablonListeTilSjablonInnholdListe(filtrertSjablonListe);
     return hentSjablonInnholdVerdiEksakt(sjablonInnholdListe, sjablonInnholdNavn);
   }
 
-  // Henter verdier fra sjablon Bidragsevne (1:N, eksakt match)
-  public static double hentBidragsevne(List<SjablonNy> sjablonListe, String sjablonNavn, List<SjablonNokkelNy> sjablonNokkelListe,
-      String sjablonInnholdNavn) {
-    var filtrertSjablonListe = filtrerSjablonNokkelListePaaSjablonNokkel(filtrerPaaSjablonNavn(sjablonListe, sjablonNavn), sjablonNokkelListe);
-    var sjablonInnholdListe = mapSjablonListeTilSjablonInnholdListe(filtrertSjablonListe);
-    return hentSjablonInnholdVerdiEksakt(sjablonInnholdListe, sjablonInnholdNavn);
-  }
-
-  // Henter verdier fra sjablon Forbruksutgifter (1:1, intervall)
-  public static double hentForbruksutgifter(List<SjablonNy> sjablonListe, String sjablonNavn, String sjablonNokkelVerdi) {
-    var filtrertSjablonListe = filtrerPaaSjablonNavn(sjablonListe, sjablonNavn);
-    var sortertSjablonSingelNokkelSingelInnholdListe = mapTilSingelListeNokkelInnholdSortert(filtrertSjablonListe);
-    return hentSjablonInnholdVerdiIntervall(sortertSjablonSingelNokkelSingelInnholdListe, sjablonNokkelVerdi);
-  }
-
-  // Henter verdier fra sjablon MaksFradrag 1:1, intervall)
-  public static double hentMaksFradrag(List<SjablonNy> sjablonListe, String sjablonNavn, String sjablonNokkelVerdi) {
-    var filtrertSjablonListe = filtrerPaaSjablonNavn(sjablonListe, sjablonNavn);
-    var sortertSjablonSingelNokkelSingelInnholdListe = mapTilSingelListeNokkelInnholdSortert(filtrertSjablonListe);
-    return hentSjablonInnholdVerdiIntervall(sortertSjablonSingelNokkelSingelInnholdListe, sjablonNokkelVerdi);
-  }
-
-  // Henter verdier fra sjablon MaksTilsyn (1:1, intervall)
-  public static double hentMaksTilsyn(List<SjablonNy> sjablonListe, String sjablonNavn, String sjablonNokkelVerdi) {
+  // Henter verdier fra sjablonene Forbruksutgifter, MaksFradrag og MaksTilsyn (1:1, intervall)
+  public static double hentSjablonverdi(List<SjablonNy> sjablonListe, String sjablonNavn, String sjablonNokkelVerdi) {
     var filtrertSjablonListe = filtrerPaaSjablonNavn(sjablonListe, sjablonNavn);
     var sortertSjablonSingelNokkelSingelInnholdListe = mapTilSingelListeNokkelInnholdSortert(filtrertSjablonListe);
     return hentSjablonInnholdVerdiIntervall(sortertSjablonSingelNokkelSingelInnholdListe, sjablonNokkelVerdi);
   }
 
   // Henter verdier fra sjablon Samværsfradrag (N:N, eksakt match + intervall)
-  public static double hentSamvaersfradrag(List<SjablonNy> sjablonListe, String sjablonNavn, List<SjablonNokkelNy> sjablonNokkelListe,
+  public static double hentSjablonverdi(List<SjablonNy> sjablonListe, String sjablonNavn, List<SjablonNokkelNy> sjablonNokkelListe,
       String sjablonNokkelNavn, String sjablonNokkelVerdi, String sjablonInnholdNavn) {
     var filtrertSjablonListe = filtrerSjablonNokkelListePaaSjablonNokkel(filtrerPaaSjablonNavn(sjablonListe, sjablonNavn), sjablonNokkelListe);
     var sortertSjablonSingelNokkelListe = mapTilSingelListeNokkelSortert(filtrertSjablonListe, sjablonNokkelNavn);
