@@ -17,11 +17,10 @@ import no.nav.bidrag.beregn.felles.bidragsevne.bo.Inntekt;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.InntektPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.ResultatPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.SaerfradragPeriode;
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.Sjablon;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.SjablonPeriode;
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.SjablonPeriodeNy;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.SkatteklassePeriode;
 import no.nav.bidrag.beregn.felles.bo.Periode;
-import no.nav.bidrag.beregn.felles.bo.SjablonNy;
+import no.nav.bidrag.beregn.felles.bo.Sjablon;
 import no.nav.bidrag.beregn.felles.enums.AvvikType;
 import no.nav.bidrag.beregn.felles.periode.Periodiserer;
 
@@ -40,19 +39,24 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
 
     var resultatPeriodeListe = new ArrayList<ResultatPeriode>();
 
+    var justertSjablonPeriodeListeOld = beregnBidragsevneGrunnlagAlt.getSjablonPeriodeListe()
+        .stream()
+        .map(SjablonPeriode::new)
+        .collect(toCollection(ArrayList::new));
+
     var justertSjablonPeriodeListe = beregnBidragsevneGrunnlagAlt.getSjablonPeriodeListe()
         .stream()
         .map(SjablonPeriode::new)
         .collect(toCollection(ArrayList::new));
 
-    var justertSjablonPeriodeListeNy = beregnBidragsevneGrunnlagAlt.getSjablonPeriodeListeNy()
-        .stream()
-        .map(SjablonPeriodeNy::new)
-        .collect(toCollection(ArrayList::new));
-
     var justertInntektPeriodeListe = beregnBidragsevneGrunnlagAlt.getInntektPeriodeListe()
         .stream()
         .map(InntektPeriode::new)
+        .collect(toCollection(ArrayList::new));
+
+    var justertSkatteklassePeriodeListe = beregnBidragsevneGrunnlagAlt.getSkatteklassePeriodeListe()
+        .stream()
+        .map(SkatteklassePeriode::new)
         .collect(toCollection(ArrayList::new));
 
     var justertBostatusPeriodeListe = beregnBidragsevneGrunnlagAlt.getBostatusPeriodeListe()
@@ -75,8 +79,8 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
     List<Periode> perioder = new Periodiserer()
         .addBruddpunkt(beregnBidragsevneGrunnlagAlt.getBeregnDatoFra()) //For å sikre bruddpunkt på start-beregning-fra-dato
         .addBruddpunkter(justertSjablonPeriodeListe)
-        .addBruddpunkter(justertSjablonPeriodeListeNy)
         .addBruddpunkter(justertInntektPeriodeListe)
+        .addBruddpunkter(justertSkatteklassePeriodeListe)
         .addBruddpunkter(justertBostatusPeriodeListe)
         .addBruddpunkter(justertAntallBarnIEgetHusholdPeriodeListe)
         .addBruddpunkter(justertSaerfradragPeriodeListe)
@@ -100,8 +104,8 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
       var inntektListe = justertInntektPeriodeListe.stream().filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode))
           .map(inntektPeriode -> new Inntekt(inntektPeriode.getInntektType(), inntektPeriode.getInntektBelop())).collect(toList());
 
-      var skatteklasse = justertInntektPeriodeListe.stream()
-          .filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode)).map(InntektPeriode::getSkatteklasse).findFirst().orElse(null);
+      var skatteklasse = justertSkatteklassePeriodeListe.stream()
+          .filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode)).map(SkatteklassePeriode::getSkatteklasse).findFirst().orElse(null);
 
       var bostatusKode = justertBostatusPeriodeListe.stream().filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode))
           .map(BostatusPeriode::getBostatusKode).findFirst().orElse(null);
@@ -115,20 +119,20 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
   //    var inntektListe = justertInntektPeriodeListe.stream().filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode))
   //        .map(inntektPeriode -> new Inntekt(inntektPeriode.getInntektType(), inntektPeriode.getInntektBelop())).collect(toList());
 
-      var sjablonliste = justertSjablonPeriodeListe.stream().filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode))
-          .map(sjablonPeriode -> new Sjablon(sjablonPeriode.getSjablonnavn(), sjablonPeriode.getSjablonVerdi1()
-          , sjablonPeriode.getSjablonVerdi2())).collect(toList());
+/*      var sjablonliste = justertSjablonPeriodeListeOld.stream().filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode))
+          .map(sjablonPeriode -> new SjablonOld(sjablonPeriode.getSjablonnavn(), sjablonPeriode.getSjablonVerdi1()
+          , sjablonPeriode.getSjablonVerdi2())).collect(toList());*/
 
-      var sjablonlisteNy = justertSjablonPeriodeListeNy.stream().filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode))
-          .map(sjablonPeriode -> new SjablonNy(sjablonPeriode.getSjablonNy().getSjablonNavn(),
-              sjablonPeriode.getSjablonNy().getSjablonNokkelListe(),
-              sjablonPeriode.getSjablonNy().getSjablonInnholdListe())).collect(toList());
+      var sjablonliste = justertSjablonPeriodeListe.stream().filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode))
+          .map(sjablonPeriode -> new Sjablon(sjablonPeriode.getSjablon().getSjablonNavn(),
+              sjablonPeriode.getSjablon().getSjablonNokkelListe(),
+              sjablonPeriode.getSjablon().getSjablonInnholdListe())).collect(toList());
 
       System.out.println("Beregner bidragsevne for periode: " + beregningsperiode.getDatoFra() + " " + beregningsperiode.getDatoTil());
 
       // Kaller beregningsmodulen for hver beregningsperiode
       var beregnBidragsevneGrunnlagPeriodisert = new BeregnBidragsevneGrunnlagPeriodisert(inntektListe, skatteklasse, bostatusKode, antallBarnIEgetHushold,
-          saerfradrag, sjablonliste, sjablonlisteNy);
+          saerfradrag, sjablonliste);
 
       resultatPeriodeListe.add(new ResultatPeriode(beregningsperiode, bidragsevneberegning.beregn(beregnBidragsevneGrunnlagPeriodisert),
           beregnBidragsevneGrunnlagPeriodisert));
@@ -157,6 +161,14 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
       inntektPeriodeListe.add(inntektPeriode.getDatoFraTil());
     }
     avvikListe.addAll(validerInput("inntektPeriodeListe", inntektPeriodeListe, true, true, true));
+
+    // Sjekk perioder for skatteklasse
+    var skatteklassePeriodeListe = new ArrayList<Periode>();
+    for (SkatteklassePeriode skatteklassePeriode : beregnBidragsevneGrunnlagAlt.getSkatteklassePeriodeListe()) {
+      skatteklassePeriodeListe.add(skatteklassePeriode.getDatoFraTil());
+    }
+    avvikListe.addAll(validerInput("skatteklassePeriodeListe", skatteklassePeriodeListe, true, true, true));
+
 
     // Sjekk perioder for bostatus
     var bostatusPeriodeListe = new ArrayList<Periode>();

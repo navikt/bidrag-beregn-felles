@@ -6,8 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import no.nav.bidrag.beregn.felles.SjablonUtil;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.AntallBarnIEgetHusholdPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneGrunnlagAlt;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneResultat;
@@ -15,11 +17,19 @@ import no.nav.bidrag.beregn.felles.bidragsevne.bo.BostatusPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.InntektPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.SaerfradragPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.SjablonPeriode;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.SkatteklassePeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.periode.BidragsevnePeriode;
 import no.nav.bidrag.beregn.felles.bo.Periode;
+import no.nav.bidrag.beregn.felles.bo.Sjablon;
+import no.nav.bidrag.beregn.felles.bo.SjablonInnhold;
+import no.nav.bidrag.beregn.felles.bo.SjablonNokkel;
 import no.nav.bidrag.beregn.felles.enums.BostatusKode;
 import no.nav.bidrag.beregn.felles.enums.InntektType;
 import no.nav.bidrag.beregn.felles.enums.SaerfradragKode;
+import no.nav.bidrag.beregn.felles.enums.SjablonInnholdNavn;
+import no.nav.bidrag.beregn.felles.enums.SjablonNavn;
+import no.nav.bidrag.beregn.felles.enums.SjablonNokkelNavn;
+import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +46,7 @@ class BidragsevnePeriodeTest {
     var beregnDatoTil = LocalDate.parse("2020-01-01");
 
     BeregnBidragsevneGrunnlagAlt beregnBidragsevneGrunnlagAlt = new BeregnBidragsevneGrunnlagAlt(beregnDatoFra, beregnDatoTil, lagInntektGrunnlag(),
-        lagBostatusGrunnlag(), lagAntallBarnIEgetHusholdGrunnlag(), lagSaerfradragGrunnlag(), lagSjablonGrunnlag(), emptyList());
+        lagSkatteklasseGrunnlag(), lagBostatusGrunnlag(), lagAntallBarnIEgetHusholdGrunnlag(), lagSaerfradragGrunnlag(), lagSjablonGrunnlag());
 
     var resultat = bidragsevnePeriode.beregnPerioder(beregnBidragsevneGrunnlagAlt);
 
@@ -77,15 +87,9 @@ class BidragsevnePeriodeTest {
         () -> assertThat(resultat.getResultatPeriodeListe().get(5).getResultatBeregning().getResultatBelopEvne()).isEqualTo(Double.valueOf(20063)),
         () -> assertThat(resultat.getResultatPeriodeListe().get(5).getResultatGrunnlag().getInntektListe().get(0).equals(Double.valueOf(666001))),
         () -> assertThat(resultat.getResultatPeriodeListe().get(5).getResultatGrunnlag().getInntektListe().get(1).equals(Double.valueOf(2))),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(5).getResultatGrunnlag().getInntektListe().get(2).equals(Double.valueOf(3))),
-        () -> assertThat(resultat.getResultatPeriodeListe().get(5).getResultatGrunnlag().hentSjablon("Skattetrinn4")
-            .getSjablonVerdi2().equals(Double.valueOf(16.2)))
-        );
-
-
+        () -> assertThat(resultat.getResultatPeriodeListe().get(5).getResultatGrunnlag().getInntektListe().get(2).equals(Double.valueOf(3))));
 
     printGrunnlagResultat(resultat);
-
 
   }
 
@@ -94,38 +98,52 @@ class BidragsevnePeriodeTest {
 
     inntektPeriodeListe.add(new InntektPeriode(
         new Periode(LocalDate.parse("2003-01-01"), LocalDate.parse("2004-01-01")),
-        InntektType.LØNNSINNTEKT,
-        1, Double.valueOf(666000)));
+        InntektType.LØNNSINNTEKT, Double.valueOf(666000)));
     inntektPeriodeListe.add(new InntektPeriode(
         new Periode(LocalDate.parse("2004-01-01"), LocalDate.parse("2016-01-01")),
-        InntektType.LØNNSINNTEKT,
-        1, Double.valueOf(555000)));
+        InntektType.LØNNSINNTEKT, Double.valueOf(555000)));
     inntektPeriodeListe.add(new InntektPeriode(
         new Periode(LocalDate.parse("2016-01-01"), LocalDate.parse("2019-01-01")),
-        InntektType.LØNNSINNTEKT,
-        1, Double.valueOf(444000)));
+        InntektType.LØNNSINNTEKT, Double.valueOf(444000)));
     inntektPeriodeListe.add(new InntektPeriode(
         new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-04-01")),
-        InntektType.LØNNSINNTEKT,
-        1, Double.valueOf(666000)));
+        InntektType.LØNNSINNTEKT, Double.valueOf(666000)));
     inntektPeriodeListe.add(new InntektPeriode(
         new Periode(LocalDate.parse("2019-04-01"), LocalDate.parse("2020-01-01")),
-        InntektType.LØNNSINNTEKT,
-        1, Double.valueOf(666001)));
+        InntektType.LØNNSINNTEKT, Double.valueOf(666001)));
     inntektPeriodeListe.add(new InntektPeriode(
         new Periode(LocalDate.parse("2019-05-01"), LocalDate.parse("2020-01-01")),
-        InntektType.BARNETRYGD,
-        1, Double.valueOf(2)));
+        InntektType.BARNETRYGD, Double.valueOf(2)));
     inntektPeriodeListe.add(new InntektPeriode(
         new Periode(LocalDate.parse("2019-07-01"), LocalDate.parse("2020-01-01")),
-        InntektType.KONTANTSTØTTE,
-        1, Double.valueOf(3)));
+        InntektType.KONTANTSTØTTE, Double.valueOf(3)));
 
     return inntektPeriodeListe;
 
 //    beregnBidragsevneGrunnlag.setInntektPeriodeListe(inntektPeriodeListe);
 
   }
+
+  private List<SkatteklassePeriode> lagSkatteklasseGrunnlag(){
+    var skatteklassePeriodeListe = new ArrayList<SkatteklassePeriode>();
+
+    skatteklassePeriodeListe.add(new SkatteklassePeriode(
+        new Periode(LocalDate.parse("2003-01-01"), LocalDate.parse("2004-01-01")), 2));
+    skatteklassePeriodeListe.add(new SkatteklassePeriode(
+        new Periode(LocalDate.parse("2004-01-01"), LocalDate.parse("2016-01-01")), 2));
+    skatteklassePeriodeListe.add(new SkatteklassePeriode(
+        new Periode(LocalDate.parse("2016-01-01"), LocalDate.parse("2019-01-01")), 1));
+    skatteklassePeriodeListe.add(new SkatteklassePeriode(
+        new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-04-01")), 1));
+    skatteklassePeriodeListe.add(new SkatteklassePeriode(
+        new Periode(LocalDate.parse("2019-04-01"), LocalDate.parse("2020-01-01")), 1));
+    skatteklassePeriodeListe.add(new SkatteklassePeriode(
+        new Periode(LocalDate.parse("2020-01-01"), null), 1));
+
+    return skatteklassePeriodeListe;
+
+  }
+
 
   private List<BostatusPeriode> lagBostatusGrunnlag(){
 
@@ -182,137 +200,213 @@ class BidragsevnePeriodeTest {
     var sjablonPeriodeListe = new ArrayList<SjablonPeriode>();
     sjablonPeriodeListe.add(new SjablonPeriode(
         new Periode(LocalDate.parse("2003-01-01"), LocalDate.parse("2003-12-31")),
-        "FordelSkatteklasse2Belop", Double.valueOf(8848), null));
+        new Sjablon(SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELOP.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(),
+                8848d)))));
     sjablonPeriodeListe.add(new SjablonPeriode(
         new Periode(LocalDate.parse("2013-01-01"), null),
-        "FordelSkatteklasse2Belop", Double.valueOf(0), null));
+        new Sjablon(SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELOP.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(),
+                0d)))));
 
     sjablonPeriodeListe.add(new SjablonPeriode(
         new Periode(LocalDate.parse("2003-01-01"), LocalDate.parse("2013-12-31")),
-        "TrygdeavgiftProsent", Double.valueOf(7.8), null));
+        new Sjablon(SjablonTallNavn.TRYGDEAVGIFT_PROSENT.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(),
+                7.8d)))));
+
     sjablonPeriodeListe.add(new SjablonPeriode(
         new Periode(LocalDate.parse("2014-01-01"), null),
-        "TrygdeavgiftProsent", Double.valueOf(8.2), null));
+        new Sjablon(SjablonTallNavn.TRYGDEAVGIFT_PROSENT.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(),
+                8.2d)))));
 
     sjablonPeriodeListe.add(new SjablonPeriode(
         new Periode(LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30")),
-        "UnderholdEgneBarnIHusstandBelop", Double.valueOf(3417), null));
+        new Sjablon(SjablonTallNavn.UNDERHOLD_EGNE_BARN_I_HUSSTAND_BELOP.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(),
+                3417d)))));
     sjablonPeriodeListe.add(new SjablonPeriode(
         new Periode(LocalDate.parse("2019-07-01"), null),
-        "UnderholdEgneBarnIHusstandBelop", Double.valueOf(3487), null));
+        new Sjablon(SjablonTallNavn.UNDERHOLD_EGNE_BARN_I_HUSSTAND_BELOP.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(),
+                3487d)))));
 
     sjablonPeriodeListe.add(new SjablonPeriode(
         new Periode(LocalDate.parse("2005-01-01"), LocalDate.parse("2005-05-31")),
-        "MinstefradragInntektBelop", Double.valueOf(57400), null));
+        new Sjablon(SjablonTallNavn.MINSTEFRADRAG_INNTEKT_BELOP.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(),
+                57400d)))));
     sjablonPeriodeListe.add(new SjablonPeriode(
         new Periode(LocalDate.parse("2017-07-01"), LocalDate.parse("2017-12-31")),
-        "MinstefradragInntektBelop", Double.valueOf(75000), null));
+        new Sjablon(SjablonTallNavn.MINSTEFRADRAG_INNTEKT_BELOP.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(),
+                75000d)))));
     sjablonPeriodeListe.add(new SjablonPeriode(
         new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-06-30")),
-        "MinstefradragInntektBelop", Double.valueOf(75000), null));
+        new Sjablon(SjablonTallNavn.MINSTEFRADRAG_INNTEKT_BELOP.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(),
+                75000d)))));
     sjablonPeriodeListe.add(new SjablonPeriode(
         new Periode(LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30")),
-        "MinstefradragInntektBelop", Double.valueOf(83000), null));
+        new Sjablon(SjablonTallNavn.MINSTEFRADRAG_INNTEKT_BELOP.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(),
+                83000d)))));
     sjablonPeriodeListe.add(new SjablonPeriode(
         new Periode(LocalDate.parse("2019-07-01"), null),
-        "MinstefradragInntektBelop", Double.valueOf(85050), null));
+        new Sjablon(SjablonTallNavn.MINSTEFRADRAG_INNTEKT_BELOP.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(),
+                85050d)))));
 
     sjablonPeriodeListe.add(new SjablonPeriode(
         new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("9999-12-31")),
-        "MinstefradragInntektProsent", Double.valueOf(31), null));
+        new Sjablon(SjablonTallNavn.MINSTEFRADRAG_INNTEKT_PROSENT.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(),
+                31d)))));
 
     sjablonPeriodeListe.add(new SjablonPeriode(
         new Periode(LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30")),
-        "PersonfradragKlasse1Belop", Double.valueOf(54750), null));
+        new Sjablon(SjablonTallNavn.PERSONFRADRAG_KLASSE1_BELOP.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(),
+                54750d)))));
+
     sjablonPeriodeListe.add(new SjablonPeriode(
         new Periode(LocalDate.parse("2019-07-01"), null),
-        "PersonfradragKlasse1Belop", Double.valueOf(56550), null));
+        new Sjablon(SjablonTallNavn.PERSONFRADRAG_KLASSE1_BELOP.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(),
+                56550d)))));
 
     sjablonPeriodeListe.add(new SjablonPeriode(
         new Periode(LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30")),
-        "PersonfradragKlasse2Belop", Double.valueOf(54750), null));
+        new Sjablon(SjablonTallNavn.PERSONFRADRAG_KLASSE2_BELOP.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(),
+                54750d)))));
     sjablonPeriodeListe.add(new SjablonPeriode(
         new Periode(LocalDate.parse("2019-07-01"), null),
-        "PersonfradragKlasse2Belop", Double.valueOf(56550), null));
+        new Sjablon(SjablonTallNavn.PERSONFRADRAG_KLASSE2_BELOP.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(),
+                56550d)))));
 
     sjablonPeriodeListe.add(new SjablonPeriode(
         new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
-        "FordelSaerfradragBelop", Double.valueOf(13132), null));
+        new Sjablon(SjablonTallNavn.FORDEL_SAERFRADRAG_BELOP.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(),
+                13132d)))));
+
     sjablonPeriodeListe.add(new SjablonPeriode(
         new Periode(LocalDate.parse("2019-01-01"), null),
-        "FordelSaerfradragBelop", Double.valueOf(12977), null));
+        new Sjablon(SjablonTallNavn.FORDEL_SAERFRADRAG_BELOP.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(),
+                12977d)))));
 
     sjablonPeriodeListe.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")), "SkattesatsAlminneligInntektProsent",
-        Double.valueOf(23), null));
+        new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
+        new Sjablon(SjablonTallNavn.SKATTESATS_ALMINNELIG_INNTEKT_PROSENT.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(),
+                23d)))));
     sjablonPeriodeListe.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2019-01-01"), null), "SkattesatsAlminneligInntektProsent",
-        Double.valueOf(22), null));
+        new Periode(LocalDate.parse("2019-01-01"), null),
+        new Sjablon(SjablonTallNavn.SKATTESATS_ALMINNELIG_INNTEKT_PROSENT.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(),
+                22d)))));
+
 
     sjablonPeriodeListe.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")), "Skattetrinn1",
-        Double.valueOf(169000), Double.valueOf(1.4)));
-    sjablonPeriodeListe.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")), "Skattetrinn2",
-        Double.valueOf(237900), Double.valueOf(3.3)));
-    sjablonPeriodeListe.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")), "Skattetrinn3",
-        Double.valueOf(598050), Double.valueOf(12.4)));
-    sjablonPeriodeListe.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")), "Skattetrinn4",
-        Double.valueOf(962050), Double.valueOf(15.4)));
+        new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
+        new Sjablon(SjablonNavn.TRINNVIS_SKATTESATS.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.INNTEKTSGRENSE_BELOP.getNavn(), 169000d),
+                new SjablonInnhold(SjablonInnholdNavn.SKATTESATS_PROSENT.getNavn(), 1.4d)))));
 
     sjablonPeriodeListe.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-12-31")), "Skattetrinn1",
-        Double.valueOf(174500), Double.valueOf(1.9)));
-    sjablonPeriodeListe.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-12-31")), "Skattetrinn2",
-        Double.valueOf(245650), Double.valueOf(4.2)));
-    sjablonPeriodeListe.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-12-31")), "Skattetrinn3",
-        Double.valueOf(617500), Double.valueOf(13.2)));
-    sjablonPeriodeListe.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-12-31")), "Skattetrinn4",
-        Double.valueOf(964800), Double.valueOf(16.2)));
+        new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
+        new Sjablon(SjablonNavn.TRINNVIS_SKATTESATS.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.INNTEKTSGRENSE_BELOP.getNavn(), 237900d),
+                new SjablonInnhold(SjablonInnholdNavn.SKATTESATS_PROSENT.getNavn(), 3.3d)))));
 
     sjablonPeriodeListe.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2020-01-01"), null), "Skattetrinn1",
-        Double.valueOf(180800), Double.valueOf(1.9)));
+        new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
+        new Sjablon(SjablonNavn.TRINNVIS_SKATTESATS.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.INNTEKTSGRENSE_BELOP.getNavn(), 598050d),
+                new SjablonInnhold(SjablonInnholdNavn.SKATTESATS_PROSENT.getNavn(), 12.4d)))));
+
     sjablonPeriodeListe.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2020-01-01"), null), "Skattetrinn2",
-        Double.valueOf(254500), Double.valueOf(4.2)));
+        new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
+        new Sjablon(SjablonNavn.TRINNVIS_SKATTESATS.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.INNTEKTSGRENSE_BELOP.getNavn(), 962050d),
+                new SjablonInnhold(SjablonInnholdNavn.SKATTESATS_PROSENT.getNavn(), 15.4d)))));
+
     sjablonPeriodeListe.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2020-01-01"), null), "Skattetrinn3",
-        Double.valueOf(639750), Double.valueOf(13.2)));
+        new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-12-31")),
+        new Sjablon(SjablonNavn.TRINNVIS_SKATTESATS.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.INNTEKTSGRENSE_BELOP.getNavn(), 174500d),
+                new SjablonInnhold(SjablonInnholdNavn.SKATTESATS_PROSENT.getNavn(), 1.9d)))));
+
     sjablonPeriodeListe.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2020-01-01"), null), "Skattetrinn4",
-        Double.valueOf(999550), Double.valueOf(16.2)));
+        new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-12-31")),
+        new Sjablon(SjablonNavn.TRINNVIS_SKATTESATS.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.INNTEKTSGRENSE_BELOP.getNavn(), 245650d),
+                new SjablonInnhold(SjablonInnholdNavn.SKATTESATS_PROSENT.getNavn(), 4.2d)))));
+
+    sjablonPeriodeListe.add(new SjablonPeriode(
+        new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-12-31")),
+        new Sjablon(SjablonNavn.TRINNVIS_SKATTESATS.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.INNTEKTSGRENSE_BELOP.getNavn(), 617500d),
+                new SjablonInnhold(SjablonInnholdNavn.SKATTESATS_PROSENT.getNavn(), 13.2d)))));
+
+    sjablonPeriodeListe.add(new SjablonPeriode(
+        new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-12-31")),
+        new Sjablon(SjablonNavn.TRINNVIS_SKATTESATS.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.INNTEKTSGRENSE_BELOP.getNavn(), 964800d),
+                new SjablonInnhold(SjablonInnholdNavn.SKATTESATS_PROSENT.getNavn(), 16.2d)))));
+
+    sjablonPeriodeListe.add(new SjablonPeriode(
+        new Periode(LocalDate.parse("2020-01-01"), null),
+        new Sjablon(SjablonNavn.TRINNVIS_SKATTESATS.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.INNTEKTSGRENSE_BELOP.getNavn(), 180800d),
+                new SjablonInnhold(SjablonInnholdNavn.SKATTESATS_PROSENT.getNavn(), 1.9d)))));
+
+    sjablonPeriodeListe.add(new SjablonPeriode(
+        new Periode(LocalDate.parse("2020-01-01"), null),
+        new Sjablon(SjablonNavn.TRINNVIS_SKATTESATS.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.INNTEKTSGRENSE_BELOP.getNavn(), 254500d),
+                new SjablonInnhold(SjablonInnholdNavn.SKATTESATS_PROSENT.getNavn(), 4.2d)))));
+
+    sjablonPeriodeListe.add(new SjablonPeriode(
+        new Periode(LocalDate.parse("2020-01-01"), null),
+        new Sjablon(SjablonNavn.TRINNVIS_SKATTESATS.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.INNTEKTSGRENSE_BELOP.getNavn(), 639750d),
+                new SjablonInnhold(SjablonInnholdNavn.SKATTESATS_PROSENT.getNavn(), 13.2d)))));
+
+    sjablonPeriodeListe.add(new SjablonPeriode(
+        new Periode(LocalDate.parse("2020-01-01"), null),
+        new Sjablon(SjablonNavn.TRINNVIS_SKATTESATS.getNavn(), emptyList(),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.INNTEKTSGRENSE_BELOP.getNavn(), 999550d),
+                new SjablonInnhold(SjablonInnholdNavn.SKATTESATS_PROSENT.getNavn(), 16.2d)))));
 
     sjablonPeriodeListe.add(new SjablonPeriode(
         new Periode(LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30")),
-        "BoutgiftEnBelop", Double.valueOf(9303), null));
+        new Sjablon(SjablonNavn.BIDRAGSEVNE.getNavn(), Arrays.asList(new SjablonNokkel(SjablonNokkelNavn.BOSTATUS.getNavn(), "EN")),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.BOUTGIFT_BELOP.getNavn(), 9303d),
+                new SjablonInnhold(SjablonInnholdNavn.UNDERHOLD_BELOP.getNavn(), 8657d)))));
+
     sjablonPeriodeListe.add(new SjablonPeriode(
         new Periode(LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30")),
-        "UnderholdEgetEnBelop", Double.valueOf(8657), null));
-    sjablonPeriodeListe.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30")),
-        "BoutgiftGsBelop", Double.valueOf(5698), null));
-    sjablonPeriodeListe.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30")),
-        "UnderholdEgetGsBelop", Double.valueOf(7330), null));
+        new Sjablon(SjablonNavn.BIDRAGSEVNE.getNavn(), Arrays.asList(new SjablonNokkel(SjablonNokkelNavn.BOSTATUS.getNavn(), "GS")),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.BOUTGIFT_BELOP.getNavn(), 5698d),
+                new SjablonInnhold(SjablonInnholdNavn.UNDERHOLD_BELOP.getNavn(), 7330d)))));
 
     sjablonPeriodeListe.add(new SjablonPeriode(
         new Periode(LocalDate.parse("2019-07-01"), null),
-        "BoutgiftEnBelop", Double.valueOf(9591), null));
+        new Sjablon(SjablonNavn.BIDRAGSEVNE.getNavn(), Arrays.asList(new SjablonNokkel(SjablonNokkelNavn.BOSTATUS.getNavn(), "EN")),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.BOUTGIFT_BELOP.getNavn(), 9591d),
+                new SjablonInnhold(SjablonInnholdNavn.UNDERHOLD_BELOP.getNavn(), 8925d)))));
+
     sjablonPeriodeListe.add(new SjablonPeriode(
         new Periode(LocalDate.parse("2019-07-01"), null),
-        "UnderholdEgetEnBelop", Double.valueOf(8925), null));
-    sjablonPeriodeListe.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2019-07-01"), null),
-        "BoutgiftGsBelop", Double.valueOf(5875), null));
-    sjablonPeriodeListe.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2019-07-01"), null),
-        "UnderholdEgetGsBelop", Double.valueOf(7557), null));
+        new Sjablon(SjablonNavn.BIDRAGSEVNE.getNavn(), Arrays.asList(new SjablonNokkel(SjablonNokkelNavn.BOSTATUS.getNavn(), "GS")),
+            Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.BOUTGIFT_BELOP.getNavn(), 5875d),
+                new SjablonInnhold(SjablonInnholdNavn.UNDERHOLD_BELOP.getNavn(), 7557d)))));
+
 
     return sjablonPeriodeListe;
 
@@ -330,608 +424,5 @@ class BidragsevnePeriodeTest {
                 + sortedPR.getResultatDatoFraTil().getDatoTil()
                 + "; " + "Beløp: " + sortedPR.getResultatBeregning().getResultatBelopEvne()));
   }
-
-
-//  private void lagSjablongGrunnlagAlt() {
-  public static List<SjablonPeriode> lagSjablongGrunnlagAlt() {
-
-    var sjablonPeriode = new ArrayList<SjablonPeriode>();
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2003-01-01"), LocalDate.parse("2003-12-31")),
-        "FordelSkatteklasse2Belop", Double.valueOf(8848), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2004-01-01"), LocalDate.parse("2004-12-31")),
-        "FordelSkatteklasse2Belop", Double.valueOf(9212), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2005-01-01"), LocalDate.parse("2005-12-31")),
-        "FordelSkatteklasse2Belop", Double.valueOf(9576), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2006-01-01"), LocalDate.parse("2006-12-31")),
-        "FordelSkatteklasse2Belop", Double.valueOf(9912), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2007-01-01"), LocalDate.parse("2007-12-31")),
-        "FordelSkatteklasse2Belop", Double.valueOf(10360), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2008-01-01"), LocalDate.parse("2008-12-31")),
-        "FordelSkatteklasse2Belop", Double.valueOf(10878), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2009-01-01"), LocalDate.parse("2009-12-31")),
-        "FordelSkatteklasse2Belop", Double.valueOf(11424), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2010-01-01"), LocalDate.parse("2010-12-31")),
-        "FordelSkatteklasse2Belop", Double.valueOf(11818), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2011-01-01"), LocalDate.parse("2011-12-31")),
-        "FordelSkatteklasse2Belop", Double.valueOf(12208), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2012-01-01"), LocalDate.parse("2012-06-30")),
-        "FordelSkatteklasse2Belop", Double.valueOf(12712), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2012-07-01"), LocalDate.parse("2012-12-31")),
-        "FordelSkatteklasse2Belop", Double.valueOf(12712), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2013-01-01"), LocalDate.parse("9999-12-31")),
-        "FordelSkatteklasse2Belop", Double.valueOf(0), null));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2003-01-01"), LocalDate.parse("2013-12-31")),
-        "TrygdeavgiftProsent", Double.valueOf(7.8), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2014-01-01"), LocalDate.parse("9999-12-31")),
-        "TrygdeavgiftProsent", Double.valueOf(8.2), null));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2003-01-01"), LocalDate.parse("2003-12-31")),
-        "UnderholdEgneBarnIHusstandBelop", Double.valueOf(1560), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2004-01-01"), LocalDate.parse("2004-06-30")),
-        "UnderholdEgneBarnIHusstandBelop", Double.valueOf(1880), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2004-07-01"), LocalDate.parse("2005-06-30")),
-        "UnderholdEgneBarnIHusstandBelop", Double.valueOf(1840), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2005-07-01"), LocalDate.parse("2006-06-30")),
-        "UnderholdEgneBarnIHusstandBelop", Double.valueOf(2030), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2006-07-01"), LocalDate.parse("2007-06-30")),
-        "UnderholdEgneBarnIHusstandBelop", Double.valueOf(1960), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2007-07-01"), LocalDate.parse("2008-06-30")),
-        "UnderholdEgneBarnIHusstandBelop", Double.valueOf(2170), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2008-07-01"), LocalDate.parse("2008-12-31")),
-        "UnderholdEgneBarnIHusstandBelop", Double.valueOf(2380), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2009-01-01"), LocalDate.parse("2009-06-30")),
-        "UnderholdEgneBarnIHusstandBelop", Double.valueOf(2470), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2009-07-01"), LocalDate.parse("2010-06-30")),
-        "UnderholdEgneBarnIHusstandBelop", Double.valueOf(2614), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2010-07-01"), LocalDate.parse("2011-06-30")),
-        "UnderholdEgneBarnIHusstandBelop", Double.valueOf(2824), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2011-07-01"), LocalDate.parse("2012-06-30")),
-        "UnderholdEgneBarnIHusstandBelop", Double.valueOf(2886), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2012-07-01"), LocalDate.parse("2013-06-30")),
-        "UnderholdEgneBarnIHusstandBelop", Double.valueOf(2931), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2013-07-01"), LocalDate.parse("2014-06-30")),
-        "UnderholdEgneBarnIHusstandBelop", Double.valueOf(2943), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2014-07-01"), LocalDate.parse("2015-06-30")),
-        "UnderholdEgneBarnIHusstandBelop", Double.valueOf(3091), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30")),
-        "UnderholdEgneBarnIHusstandBelop", Double.valueOf(3150), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30")),
-        "UnderholdEgneBarnIHusstandBelop", Double.valueOf(3294), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30")),
-        "UnderholdEgneBarnIHusstandBelop", Double.valueOf(3365), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30")),
-        "UnderholdEgneBarnIHusstandBelop", Double.valueOf(3417), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2019-07-01"), LocalDate.parse("9999-12-31")),
-        "UnderholdEgneBarnIHusstandBelop", Double.valueOf(3487), null));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2003-01-01"), LocalDate.parse("2003-12-31")),
-        "MinstefradragInntektBelop", Double.valueOf(45700), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2004-01-01"), LocalDate.parse("2004-12-31")),
-        "MinstefradragInntektBelop", Double.valueOf(47500), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2005-01-01"), LocalDate.parse("2005-05-31")),
-        "MinstefradragInntektBelop", Double.valueOf(57400), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2005-06-01"), LocalDate.parse("2005-12-31")),
-        "MinstefradragInntektBelop", Double.valueOf(49400), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2006-01-01"), LocalDate.parse("2006-12-31")),
-        "MinstefradragInntektBelop", Double.valueOf(51100), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2007-01-01"), LocalDate.parse("2007-12-31")),
-        "MinstefradragInntektBelop", Double.valueOf(53400), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2008-01-01"), LocalDate.parse("2009-06-30")),
-        "MinstefradragInntektBelop", Double.valueOf(56100), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2009-07-01"), LocalDate.parse("2010-06-30")),
-        "MinstefradragInntektBelop", Double.valueOf(58900), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2010-07-01"), LocalDate.parse("2011-06-30")),
-        "MinstefradragInntektBelop", Double.valueOf(60950), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2011-07-01"), LocalDate.parse("2012-06-30")),
-        "MinstefradragInntektBelop", Double.valueOf(62950), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2012-07-01"), LocalDate.parse("2013-06-30")),
-        "MinstefradragInntektBelop", Double.valueOf(65450), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2013-07-01"), LocalDate.parse("2014-06-30")),
-        "MinstefradragInntektBelop", Double.valueOf(68050), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2014-07-01"), LocalDate.parse("2015-06-30")),
-        "MinstefradragInntektBelop", Double.valueOf(70400), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30")),
-        "MinstefradragInntektBelop", Double.valueOf(72200), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30")),
-        "MinstefradragInntektBelop", Double.valueOf(73600), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2017-07-01"), LocalDate.parse("2017-12-31")),
-        "MinstefradragInntektBelop", Double.valueOf(75000), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-06-30")),
-        "MinstefradragInntektBelop", Double.valueOf(75000), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30")),
-        "MinstefradragInntektBelop", Double.valueOf(83000), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2019-07-01"), LocalDate.parse("9999-12-31")),
-        "MinstefradragInntektBelop", Double.valueOf(85050), null));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2003-01-01"), LocalDate.parse("2004-12-31")),
-        "MinstefradragInntektProsent", Double.valueOf(24), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2005-01-01"), LocalDate.parse("2005-05-31")),
-        "MinstefradragInntektProsent", Double.valueOf(31), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2005-06-01"), LocalDate.parse("2007-12-31")),
-        "MinstefradragInntektProsent", Double.valueOf(24), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2008-01-01"), LocalDate.parse("2013-12-31")),
-        "MinstefradragInntektProsent", Double.valueOf(26), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2014-01-01"), LocalDate.parse("2014-12-31")),
-        "MinstefradragInntektProsent", Double.valueOf(27), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2015-01-01"), LocalDate.parse("2017-12-31")),
-        "MinstefradragInntektProsent", Double.valueOf(29), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("9999-12-31")),
-        "MinstefradragInntektProsent", Double.valueOf(31), null));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2003-01-01"), LocalDate.parse("2003-12-31")),
-        "PersonfradragKlasse1Belop", Double.valueOf(31600), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2004-01-01"), LocalDate.parse("2004-12-31")),
-        "PersonfradragKlasse1Belop", Double.valueOf(32900), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2005-01-01"), LocalDate.parse("2005-12-31")),
-        "PersonfradragKlasse1Belop", Double.valueOf(34200), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2006-01-01"), LocalDate.parse("2006-12-31")),
-        "PersonfradragKlasse1Belop", Double.valueOf(35400), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2007-01-01"), LocalDate.parse("2007-12-31")),
-        "PersonfradragKlasse1Belop", Double.valueOf(37000), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2008-01-01"), LocalDate.parse("2009-06-30")),
-        "PersonfradragKlasse1Belop", Double.valueOf(38850), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2009-07-01"), LocalDate.parse("2010-06-30")),
-        "PersonfradragKlasse1Belop", Double.valueOf(40800), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2010-07-01"), LocalDate.parse("2011-06-30")),
-        "PersonfradragKlasse1Belop", Double.valueOf(42210), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2011-07-01"), LocalDate.parse("2012-06-30")),
-        "PersonfradragKlasse1Belop", Double.valueOf(43600), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2012-07-01"), LocalDate.parse("2013-06-30")),
-        "PersonfradragKlasse1Belop", Double.valueOf(45300), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2013-07-01"), LocalDate.parse("2013-12-31")),
-        "PersonfradragKlasse1Belop", Double.valueOf(47150), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2014-01-01"), LocalDate.parse("2014-06-30")),
-        "PersonfradragKlasse1Belop", Double.valueOf(47150), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2014-07-01"), LocalDate.parse("2015-06-30")),
-        "PersonfradragKlasse1Belop", Double.valueOf(48800), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30")),
-        "PersonfradragKlasse1Belop", Double.valueOf(50400), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30")),
-        "PersonfradragKlasse1Belop", Double.valueOf(51750), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2017-07-01"), LocalDate.parse("2017-12-31")),
-        "PersonfradragKlasse1Belop", Double.valueOf(53150), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-06-30")),
-        "PersonfradragKlasse1Belop", Double.valueOf(53150), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30")),
-        "PersonfradragKlasse1Belop", Double.valueOf(54750), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2019-07-01"), LocalDate.parse("9999-12-31")),
-        "PersonfradragKlasse1Belop", Double.valueOf(56550), null));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2003-01-01"), LocalDate.parse("2003-12-31")),
-        "PersonfradragKlasse2Belop", Double.valueOf(63200), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2004-01-01"), LocalDate.parse("2004-12-31")),
-        "PersonfradragKlasse2Belop", Double.valueOf(65800), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2005-01-01"), LocalDate.parse("2005-12-31")),
-        "PersonfradragKlasse2Belop", Double.valueOf(68400), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2006-01-01"), LocalDate.parse("2006-12-31")),
-        "PersonfradragKlasse2Belop", Double.valueOf(70800), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2007-01-01"), LocalDate.parse("2007-12-31")),
-        "PersonfradragKlasse2Belop", Double.valueOf(74000), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2008-01-01"), LocalDate.parse("2009-06-30")),
-        "PersonfradragKlasse2Belop", Double.valueOf(77700), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2009-07-01"), LocalDate.parse("2010-06-30")),
-        "PersonfradragKlasse2Belop", Double.valueOf(81600), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2010-07-01"), LocalDate.parse("2011-06-30")),
-        "PersonfradragKlasse2Belop", Double.valueOf(84420), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2011-07-01"), LocalDate.parse("2012-06-30")),
-        "PersonfradragKlasse2Belop", Double.valueOf(87200), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2012-07-01"), LocalDate.parse("2013-06-30")),
-        "PersonfradragKlasse2Belop", Double.valueOf(90700), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2013-07-01"), LocalDate.parse("2013-12-31")),
-        "PersonfradragKlasse2Belop", Double.valueOf(94300), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2014-01-01"), LocalDate.parse("2015-06-30")),
-        "PersonfradragKlasse2Belop", Double.valueOf(72000), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30")),
-        "PersonfradragKlasse2Belop", Double.valueOf(74250), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30")),
-        "PersonfradragKlasse2Belop", Double.valueOf(76250), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30")),
-        "PersonfradragKlasse2Belop", Double.valueOf(78300), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30")),
-        "PersonfradragKlasse2Belop", Double.valueOf(54750), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2019-07-01"), LocalDate.parse("9999-12-31")),
-        "PersonfradragKlasse2Belop", Double.valueOf(56550), null));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2003-01-01"), LocalDate.parse("2003-12-31")),
-        "FordelSaerfradragBelop", Double.valueOf(13205), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2014-01-01"), LocalDate.parse("2015-12-31")),
-        "FordelSaerfradragBelop", Double.valueOf(13177), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2016-01-01"), LocalDate.parse("2016-12-31")),
-        "FordelSaerfradragBelop", Double.valueOf(13505), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2017-12-31")),
-        "FordelSaerfradragBelop", Double.valueOf(13298), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
-        "FordelSaerfradragBelop", Double.valueOf(13132), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("9999-12-31")),
-        "FordelSaerfradragBelop", Double.valueOf(12977), null));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")), "SkattesatsAlminneligInntektProsent",
-        Double.valueOf(23), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("9999-12-31")), "SkattesatsAlminneligInntektProsent",
-        Double.valueOf(22), null));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")), "Skattetrinn1",
-        Double.valueOf(169000), Double.valueOf(1.4)));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")), "Skattetrinn2",
-        Double.valueOf(237900), Double.valueOf(3.3)));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")), "Skattetrinn3",
-        Double.valueOf(598050), Double.valueOf(12.4)));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")), "Skattetrinn4",
-        Double.valueOf(962050), Double.valueOf(15.4)));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-12-31")), "Skattetrinn1",
-        Double.valueOf(174500), Double.valueOf(1.9)));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-12-31")), "Skattetrinn2",
-        Double.valueOf(245650), Double.valueOf(4.2)));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-12-31")), "Skattetrinn3",
-        Double.valueOf(617500), Double.valueOf(13.2)));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-12-31")), "Skattetrinn4",
-        Double.valueOf(964800), Double.valueOf(16.2)));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2020-01-01"), LocalDate.parse("9999-12-31")), "Skattetrinn1",
-        Double.valueOf(180800), Double.valueOf(1.9)));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2020-01-01"), LocalDate.parse("9999-12-31")), "Skattetrinn2",
-        Double.valueOf(254500), Double.valueOf(4.2)));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2020-01-01"), LocalDate.parse("9999-12-31")), "Skattetrinn3",
-        Double.valueOf(639750), Double.valueOf(13.2)));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2020-01-01"), LocalDate.parse("9999-12-31")), "Skattetrinn4",
-        Double.valueOf(999550), Double.valueOf(16.2)));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2003-01-01"), LocalDate.parse("2003-12-31")),
-        "BoutgiftEnBelop", Double.valueOf(4313), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2003-01-01"), LocalDate.parse("2003-12-31")),
-        "UnderholdEgetEnBelop", Double.valueOf(6245), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2003-01-01"), LocalDate.parse("2003-12-31")),
-        "BoutgiftGsBelop", Double.valueOf(2631), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2003-01-01"), LocalDate.parse("2003-12-31")),
-        "UnderholdEgetGsBelop", Double.valueOf(5287), null));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2004-01-01"), LocalDate.parse("2004-06-30")),
-        "BoutgiftEnBelop", Double.valueOf(4313), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2004-01-01"), LocalDate.parse("2004-06-30")),
-        "UnderholdEgetEnBelop", Double.valueOf(6565), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2004-01-01"), LocalDate.parse("2004-06-30")),
-        "BoutgiftGsBelop", Double.valueOf(2631), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2004-01-01"), LocalDate.parse("2004-06-30")),
-        "UnderholdEgetGsBelop", Double.valueOf(5558), null));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2004-07-01"), LocalDate.parse("2005-06-30")),
-        "BoutgiftEnBelop", Double.valueOf(4761), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2004-07-01"), LocalDate.parse("2005-06-30")),
-        "UnderholdEgetEnBelop", Double.valueOf(6565), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2004-07-01"), LocalDate.parse("2005-06-30")),
-        "BoutgiftGsBelop", Double.valueOf(2826), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2004-07-01"), LocalDate.parse("2005-06-30")),
-        "UnderholdEgetGsBelop", Double.valueOf(5558), null));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2005-07-01"), LocalDate.parse("2006-06-30")),
-        "BoutgiftEnBelop", Double.valueOf(4544), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2005-07-01"), LocalDate.parse("2006-06-30")),
-        "UnderholdEgetEnBelop", Double.valueOf(6637), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2005-07-01"), LocalDate.parse("2006-06-30")),
-        "BoutgiftGsBelop", Double.valueOf(2806), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2005-07-01"), LocalDate.parse("2006-06-30")),
-        "UnderholdEgetGsBelop", Double.valueOf(5619), null));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2006-07-01"), LocalDate.parse("2007-06-30")),
-        "BoutgiftEnBelop", Double.valueOf(4556), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2006-07-01"), LocalDate.parse("2007-06-30")),
-        "UnderholdEgetEnBelop", Double.valueOf(6756), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2006-07-01"), LocalDate.parse("2007-06-30")),
-        "BoutgiftGsBelop", Double.valueOf(3040), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2006-07-01"), LocalDate.parse("2007-06-30")),
-        "UnderholdEgetGsBelop", Double.valueOf(5720), null));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2007-07-01"), LocalDate.parse("2008-06-30")),
-        "BoutgiftEnBelop", Double.valueOf(4638), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2007-07-01"), LocalDate.parse("2008-06-30")),
-        "UnderholdEgetEnBelop", Double.valueOf(6837), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2007-07-01"), LocalDate.parse("2008-06-30")),
-        "BoutgiftGsBelop", Double.valueOf(3364), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2007-07-01"), LocalDate.parse("2008-06-30")),
-        "UnderholdEgetGsBelop", Double.valueOf(5789), null));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2008-07-01"), LocalDate.parse("2009-06-30")),
-        "BoutgiftEnBelop", Double.valueOf(5243), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2008-07-01"), LocalDate.parse("2009-06-30")),
-        "UnderholdEgetEnBelop", Double.valueOf(7090), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2008-07-01"), LocalDate.parse("2009-06-30")),
-        "BoutgiftGsBelop", Double.valueOf(3906), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2008-07-01"), LocalDate.parse("2009-06-30")),
-        "UnderholdEgetGsBelop", Double.valueOf(6003), null));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2009-07-01"), LocalDate.parse("2010-06-30")),
-        "BoutgiftEnBelop", Double.valueOf(6113), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2009-07-01"), LocalDate.parse("2010-06-30")),
-        "UnderholdEgetEnBelop", Double.valueOf(7246), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2009-07-01"), LocalDate.parse("2010-06-30")),
-        "BoutgiftGsBelop", Double.valueOf(4323), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2009-07-01"), LocalDate.parse("2010-06-30")),
-        "UnderholdEgetGsBelop", Double.valueOf(6135), null));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2010-07-01"), LocalDate.parse("2011-06-30")),
-        "BoutgiftEnBelop", Double.valueOf(6495), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2010-07-01"), LocalDate.parse("2011-06-30")),
-        "UnderholdEgetEnBelop", Double.valueOf(7427), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2010-07-01"), LocalDate.parse("2011-06-30")),
-        "BoutgiftGsBelop", Double.valueOf(4488), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2010-07-01"), LocalDate.parse("2011-06-30")),
-        "UnderholdEgetGsBelop", Double.valueOf(6288), null));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2011-07-01"), LocalDate.parse("2012-06-30")),
-        "BoutgiftEnBelop", Double.valueOf(7259), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2011-07-01"), LocalDate.parse("2012-06-30")),
-        "UnderholdEgetEnBelop", Double.valueOf(7576), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2011-07-01"), LocalDate.parse("2012-06-30")),
-        "BoutgiftGsBelop", Double.valueOf(4776), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2011-07-01"), LocalDate.parse("2012-06-30")),
-        "UnderholdEgetGsBelop", Double.valueOf(6414), null));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2012-07-01"), LocalDate.parse("2013-06-30")),
-        "BoutgiftEnBelop", Double.valueOf(7295), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2012-07-01"), LocalDate.parse("2013-06-30")),
-        "UnderholdEgetEnBelop", Double.valueOf(7614), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2012-07-01"), LocalDate.parse("2013-06-30")),
-        "BoutgiftGsBelop", Double.valueOf(4800), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2012-07-01"), LocalDate.parse("2013-06-30")),
-        "UnderholdEgetGsBelop", Double.valueOf(6446), null));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2013-07-01"), LocalDate.parse("2014-06-30")),
-        "BoutgiftEnBelop", Double.valueOf(7390), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2013-07-01"), LocalDate.parse("2014-06-30")),
-        "UnderholdEgetEnBelop", Double.valueOf(7713), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2013-07-01"), LocalDate.parse("2014-06-30")),
-        "BoutgiftGsBelop", Double.valueOf(4862), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2013-07-01"), LocalDate.parse("2014-06-30")),
-        "UnderholdEgetGsBelop", Double.valueOf(6530), null));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2014-07-01"), LocalDate.parse("2015-06-30")),
-        "BoutgiftEnBelop", Double.valueOf(7560), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2014-07-01"), LocalDate.parse("2015-06-30")),
-        "UnderholdEgetEnBelop", Double.valueOf(7890), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2014-07-01"), LocalDate.parse("2015-06-30")),
-        "BoutgiftGsBelop", Double.valueOf(4974), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2014-07-01"), LocalDate.parse("2015-06-30")),
-        "UnderholdEgetGsBelop", Double.valueOf(6680), null));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30")),
-        "BoutgiftEnBelop", Double.valueOf(7711), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30")),
-        "UnderholdEgetEnBelop", Double.valueOf(8048), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30")),
-        "BoutgiftGsBelop", Double.valueOf(5073), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30")),
-        "UnderholdEgetGsBelop", Double.valueOf(6814), null));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30")),
-        "BoutgiftEnBelop", Double.valueOf(8907), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30")),
-        "UnderholdEgetEnBelop", Double.valueOf(8289), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30")),
-        "BoutgiftGsBelop", Double.valueOf(5456), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30")),
-        "UnderholdEgetGsBelop", Double.valueOf(7018), null));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30")),
-        "BoutgiftEnBelop", Double.valueOf(9156), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30")),
-        "UnderholdEgetEnBelop", Double.valueOf(8521), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30")),
-        "BoutgiftGsBelop", Double.valueOf(5609), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30")),
-        "UnderholdEgetGsBelop", Double.valueOf(7215), null));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30")),
-        "BoutgiftEnBelop", Double.valueOf(9303), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30")),
-        "UnderholdEgetEnBelop", Double.valueOf(8657), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30")),
-        "BoutgiftGsBelop", Double.valueOf(5698), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30")),
-        "UnderholdEgetGsBelop", Double.valueOf(7330), null));
-
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2019-07-01"), LocalDate.parse("9999-12-31")),
-        "BoutgiftEnBelop", Double.valueOf(9591), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2019-07-01"), LocalDate.parse("9999-12-31")),
-        "UnderholdEgetEnBelop", Double.valueOf(8925), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2019-07-01"), LocalDate.parse("9999-12-31")),
-        "BoutgiftGsBelop", Double.valueOf(5875), null));
-    sjablonPeriode.add(new SjablonPeriode(
-        new Periode(LocalDate.parse("2019-07-01"), LocalDate.parse("9999-12-31")),
-        "UnderholdEgetGsBelop", Double.valueOf(7557), null));
-
-//    bidragsevnePeriodeGrunnlag.setSjablonPeriodeListe(sjablonPeriode);
-    return sjablonPeriode;
-
-
-  }
-
 
 }
