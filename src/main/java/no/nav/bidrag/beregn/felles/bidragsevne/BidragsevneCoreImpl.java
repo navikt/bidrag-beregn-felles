@@ -33,9 +33,9 @@ import no.nav.bidrag.beregn.felles.bidragsevne.dto.SjablonPeriodeCore;
 import no.nav.bidrag.beregn.felles.bidragsevne.dto.SkatteklassePeriodeCore;
 import no.nav.bidrag.beregn.felles.bidragsevne.periode.BidragsevnePeriode;
 import no.nav.bidrag.beregn.felles.bo.Periode;
+import no.nav.bidrag.beregn.felles.bo.Sjablon;
 import no.nav.bidrag.beregn.felles.bo.SjablonInnhold;
 import no.nav.bidrag.beregn.felles.bo.SjablonNokkel;
-import no.nav.bidrag.beregn.felles.bo.Sjablon;
 import no.nav.bidrag.beregn.felles.enums.BostatusKode;
 import no.nav.bidrag.beregn.felles.enums.InntektType;
 import no.nav.bidrag.beregn.felles.enums.SaerfradragKode;
@@ -82,12 +82,10 @@ public class BidragsevneCoreImpl implements BidragsevneCore {
       var sjablonNokkelListe = new ArrayList<SjablonNokkel>();
       var sjablonInnholdListe = new ArrayList<SjablonInnhold>();
       for (SjablonNokkelCore sjablonNokkelCore : sjablonPeriodeCore.getSjablonNokkelListe()) {
-        sjablonNokkelListe.add(new SjablonNokkel(sjablonNokkelCore.getSjablonNokkelNavn(), sjablonNokkelCore
-            .getSjablonNokkelVerdi()));
+        sjablonNokkelListe.add(new SjablonNokkel(sjablonNokkelCore.getSjablonNokkelNavn(), sjablonNokkelCore.getSjablonNokkelVerdi()));
       }
       for (SjablonInnholdCore sjablonInnholdCore : sjablonPeriodeCore.getSjablonInnholdListe()) {
-        sjablonInnholdListe.add(new SjablonInnhold(sjablonInnholdCore.getSjablonInnholdNavn(), sjablonInnholdCore
-            .getSjablonInnholdVerdi()));
+        sjablonInnholdListe.add(new SjablonInnhold(sjablonInnholdCore.getSjablonInnholdNavn(), sjablonInnholdCore.getSjablonInnholdVerdi()));
       }
       sjablonPeriodeListe.add(new SjablonPeriode(
           new Periode(sjablonPeriodeCore.getSjablonPeriodeDatoFraTil().getPeriodeDatoFra(),
@@ -115,7 +113,7 @@ public class BidragsevneCoreImpl implements BidragsevneCore {
       skatteklassePeriodeListe.add(new SkatteklassePeriode(
           new Periode(skatteklassePeriodeCore.getSkatteklassePeriodeDatoFraTil().getPeriodeDatoFra(),
               skatteklassePeriodeCore.getSkatteklassePeriodeDatoFraTil().getPeriodeDatoTil()),
-              skatteklassePeriodeCore.getSkatteklasse()));
+          skatteklassePeriodeCore.getSkatteklasse()));
     }
     return skatteklassePeriodeListe;
   }
@@ -198,10 +196,18 @@ public class BidragsevneCoreImpl implements BidragsevneCore {
   private List<SjablonCore> mapResultatGrunnlagSjabloner(List<Sjablon> resultatGrunnlagSjablonListe) {
     var resultatGrunnlagSjablonListeCore = new ArrayList<SjablonCore>();
     for (Sjablon resultatGrunnlagSjablon : resultatGrunnlagSjablonListe) {
+      var sjablonNokkelListeCore = new ArrayList<SjablonNokkelCore>();
+      var sjablonInnholdListeCore = new ArrayList<SjablonInnholdCore>();
+      for (SjablonNokkel sjablonNokkel : resultatGrunnlagSjablon.getSjablonNokkelListe()) {
+        sjablonNokkelListeCore.add(new SjablonNokkelCore(sjablonNokkel.getSjablonNokkelNavn(), sjablonNokkel.getSjablonNokkelVerdi()));
+      }
+      for (SjablonInnhold sjablonInnhold : resultatGrunnlagSjablon.getSjablonInnholdListe()) {
+        sjablonInnholdListeCore.add(new SjablonInnholdCore(sjablonInnhold.getSjablonInnholdNavn(), sjablonInnhold.getSjablonInnholdVerdi()));
+      }
       resultatGrunnlagSjablonListeCore
-          .add(new SjablonCore(resultatGrunnlagSjablon.getSjablonNavn(), resultatGrunnlagSjablon.getSjablonNokkelListe(),
-              resultatGrunnlagSjablon.getSjablonInnholdListe()));
+          .add(new SjablonCore(resultatGrunnlagSjablon.getSjablonNavn(), sjablonNokkelListeCore, sjablonInnholdListeCore));
     }
+
     return resultatGrunnlagSjablonListeCore;
   }
 
