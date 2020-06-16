@@ -29,7 +29,6 @@ import no.nav.bidrag.beregn.felles.bidragsevne.dto.SaerfradragPeriodeCore;
 import no.nav.bidrag.beregn.felles.bidragsevne.dto.SjablonCore;
 import no.nav.bidrag.beregn.felles.bidragsevne.dto.SjablonInnholdCore;
 import no.nav.bidrag.beregn.felles.bidragsevne.dto.SjablonNokkelCore;
-//import no.nav.bidrag.beregn.felles.bidragsevne.dto.SjablonPeriodeCoreOld;
 import no.nav.bidrag.beregn.felles.bidragsevne.dto.SjablonPeriodeCore;
 import no.nav.bidrag.beregn.felles.bidragsevne.dto.SkatteklassePeriodeCore;
 import no.nav.bidrag.beregn.felles.bidragsevne.periode.BidragsevnePeriode;
@@ -76,17 +75,6 @@ public class BidragsevneCoreImpl implements BidragsevneCore {
         bostatusPeriodeListe, antallBarnIEgetHusholdPeriodeListe, saerfradragPeriodeListe, sjablonPeriodeListe);
   }
 
-/*  private List<SjablonPeriodeOld> mapSjablonPeriodeListeOld(List<SjablonPeriodeCoreOld> sjablonPeriodeListeCore) {
-    var sjablonPeriodeListe = new ArrayList<SjablonPeriodeOld>();
-    for (SjablonPeriodeCoreOld sjablonPeriodeCoreOld : sjablonPeriodeListeCore) {
-      sjablonPeriodeListe.add(new SjablonPeriodeOld(
-          new Periode(sjablonPeriodeCoreOld.getSjablonPeriodeDatoFraTil().getPeriodeDatoFra(),
-              sjablonPeriodeCoreOld.getSjablonPeriodeDatoFraTil().getPeriodeDatoTil()),
-          sjablonPeriodeCoreOld.getSjablonnavn(), sjablonPeriodeCoreOld.getSjablonVerdi1(), sjablonPeriodeCoreOld
-          .getSjablonVerdi2()));
-    }
-    return sjablonPeriodeListe;
-  }*/
 
   private List<SjablonPeriode> mapSjablonPeriodeListe(List<SjablonPeriodeCore> sjablonPeriodeListeCore) {
     var sjablonPeriodeListe = new ArrayList<SjablonPeriode>();

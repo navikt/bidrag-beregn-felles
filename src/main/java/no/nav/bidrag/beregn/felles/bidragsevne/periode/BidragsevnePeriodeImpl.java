@@ -39,11 +39,6 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
 
     var resultatPeriodeListe = new ArrayList<ResultatPeriode>();
 
-    var justertSjablonPeriodeListeOld = beregnBidragsevneGrunnlagAlt.getSjablonPeriodeListe()
-        .stream()
-        .map(SjablonPeriode::new)
-        .collect(toCollection(ArrayList::new));
-
     var justertSjablonPeriodeListe = beregnBidragsevneGrunnlagAlt.getSjablonPeriodeListe()
         .stream()
         .map(SjablonPeriode::new)
@@ -115,13 +110,6 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
 
       var saerfradrag = justertSaerfradragPeriodeListe.stream()
           .filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode)).map(SaerfradragPeriode::getSaerfradragKode).findFirst().orElse(null);
-
-  //    var inntektListe = justertInntektPeriodeListe.stream().filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode))
-  //        .map(inntektPeriode -> new Inntekt(inntektPeriode.getInntektType(), inntektPeriode.getInntektBelop())).collect(toList());
-
-/*      var sjablonliste = justertSjablonPeriodeListeOld.stream().filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode))
-          .map(sjablonPeriode -> new SjablonOld(sjablonPeriode.getSjablonnavn(), sjablonPeriode.getSjablonVerdi1()
-          , sjablonPeriode.getSjablonVerdi2())).collect(toList());*/
 
       var sjablonliste = justertSjablonPeriodeListe.stream().filter(i -> i.getDatoFraTil().overlapperMed(beregningsperiode))
           .map(sjablonPeriode -> new Sjablon(sjablonPeriode.getSjablon().getSjablonNavn(),
