@@ -1,9 +1,7 @@
 package no.nav.bidrag.beregn.felles.bidragsevne;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import no.nav.bidrag.beregn.felles.SjablonUtil;
 import no.nav.bidrag.beregn.felles.bidragsevne.beregning.BidragsevneberegningImpl;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneGrunnlagPeriodisert;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.Inntekt;
@@ -17,7 +15,6 @@ import no.nav.bidrag.beregn.felles.enums.SjablonInnholdNavn;
 import no.nav.bidrag.beregn.felles.enums.SjablonNavn;
 import no.nav.bidrag.beregn.felles.enums.SjablonNokkelNavn;
 import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn;
-import org.assertj.core.data.Index;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -69,7 +66,7 @@ class BidragsevneberegningTest {
     assertEquals(Double.valueOf(0),
         bidragsevneberegning.beregn(beregnBidragsevneGrunnlagPeriodisert4).getResultatBelopEvne());
 
-    // Test at fordel skatteklasse 2 legges til på beregnet evne
+    // Test at fordel skatteklasse 2 ikke legges til beregnet evne når skatteklasse = 1
     inntekter.set(0, new Inntekt(InntektType.LØNNSINNTEKT, Double.valueOf(666000)));
     sjablonListe.set(0, new Sjablon(SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELOP.getNavn(), emptyList(),
         Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), 12000d))));
@@ -77,47 +74,47 @@ class BidragsevneberegningTest {
     BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert5
         = new BeregnBidragsevneGrunnlagPeriodisert(inntekter, 1, BostatusKode.ALENE, 3,
         SaerfradragKode.INGEN, sjablonListe);
-    assertEquals(Double.valueOf(11410),
+    assertEquals(Double.valueOf(10410),
         bidragsevneberegning.beregn(beregnBidragsevneGrunnlagPeriodisert5).getResultatBelopEvne());
 
-    // Test at personfradrag skatteklasse 2 brukes hvis skatteklasse 2 er angitt
-//    sjablonListe.set(
-
- /*   var finnIndeks = sjablonListe.indexOf(SjablonUtil.hentSjablontall(sjablonListe, SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELOP.getNavn(),
-        SjablonInnholdNavn.SJABLON_VERDI.getNavn()));
-
-    sjablonListe.set(finnIndeks, new Sjablon(SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELOP.getNavn(), emptyList(),
-        Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), 0d))));
-
-    finnIndeks = sjablonListe.indexOf(SjablonUtil.hentSjablontall(sjablonListe, SjablonTallNavn.PERSONFRADRAG_KLASSE2_BELOP.getNavn(),
-        SjablonInnholdNavn.SJABLON_VERDI.getNavn()));
-
-    sjablonListe.set(finnIndeks, new Sjablon(SjablonTallNavn.PERSONFRADRAG_KLASSE2_BELOP.getNavn(),emptyList(),
-        Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), Double.valueOf(24000d)))));
+    // Test at fordel skatteklasse 2 legges til beregnet evne når skatteklasse = 2
+    inntekter.set(0, new Inntekt(InntektType.LØNNSINNTEKT, Double.valueOf(666000)));
+    sjablonListe.set(0, new Sjablon(SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELOP.getNavn(), emptyList(),
+        Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), 12000d))));
 
     BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert6
         = new BeregnBidragsevneGrunnlagPeriodisert(inntekter, 2, BostatusKode.ALENE, 3,
         SaerfradragKode.INGEN, sjablonListe);
-    assertEquals(Double.valueOf(9814),
+    assertEquals(Double.valueOf(11410),
         bidragsevneberegning.beregn(beregnBidragsevneGrunnlagPeriodisert6).getResultatBelopEvne());
+
+    // Test at personfradrag skatteklasse 2 brukes hvis skatteklasse 2 er angitt
+    sjablonListe.set(0, new Sjablon(SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELOP.getNavn(), emptyList(),
+        Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), 0d))));
+
+    sjablonListe.set(1, new Sjablon(SjablonTallNavn.PERSONFRADRAG_KLASSE2_BELOP.getNavn(),emptyList(),
+        Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), Double.valueOf(24000d)))));
+
+    BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert7
+        = new BeregnBidragsevneGrunnlagPeriodisert(inntekter, 2, BostatusKode.ALENE, 3,
+        SaerfradragKode.INGEN, sjablonListe);
+    assertEquals(Double.valueOf(9814),
+        bidragsevneberegning.beregn(beregnBidragsevneGrunnlagPeriodisert7).getResultatBelopEvne());
 
 
     // Test av halvt særfradrag
-    sjablonListe.set(finnIndeks, new Sjablon(SjablonTallNavn.PERSONFRADRAG_KLASSE2_BELOP.getNavn(),emptyList(),
-        Arrays.asList(new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), Double.valueOf(12000d)))));
-
-    BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert7
+    BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert8
         = new BeregnBidragsevneGrunnlagPeriodisert(inntekter, 1, BostatusKode.ALENE, 3,
         SaerfradragKode.HALVT, sjablonListe);
     assertEquals(Double.valueOf(10951),
-        bidragsevneberegning.beregn(beregnBidragsevneGrunnlagPeriodisert7).getResultatBelopEvne());
-*/
+        bidragsevneberegning.beregn(beregnBidragsevneGrunnlagPeriodisert8).getResultatBelopEvne());
+
     // Test av bostatus MED_FLERE
-    BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert8
+    BeregnBidragsevneGrunnlagPeriodisert beregnBidragsevneGrunnlagPeriodisert9
         = new BeregnBidragsevneGrunnlagPeriodisert(inntekter, 1, BostatusKode.MED_ANDRE, 3,
         SaerfradragKode.HALVT, sjablonListe);
-    assertEquals(Double.valueOf(17035),
-        bidragsevneberegning.beregn(beregnBidragsevneGrunnlagPeriodisert8).getResultatBelopEvne());
+    assertEquals(Double.valueOf(16035),
+        bidragsevneberegning.beregn(beregnBidragsevneGrunnlagPeriodisert9).getResultatBelopEvne());
 
   }
 

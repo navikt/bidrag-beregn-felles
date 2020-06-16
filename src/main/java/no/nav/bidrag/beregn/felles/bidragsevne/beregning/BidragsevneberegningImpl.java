@@ -40,9 +40,11 @@ public class BidragsevneberegningImpl implements Bidragsevneberegning {
     // finner personfradragklasse ut fra angitt skatteklasse
     Double personfradrag = 0.0;
     if (beregnBidragsevneGrunnlagPeriodisert.getSkatteklasse() == (1)) {
+      System.out.println("Skatteklasse 1");
       personfradrag = SjablonUtil.hentSjablontall(beregnBidragsevneGrunnlagPeriodisert.getSjablonListe(),
           SjablonTallNavn.PERSONFRADRAG_KLASSE1_BELOP.getNavn(), SjablonInnholdNavn.SJABLON_VERDI.getNavn());
     } else {
+      System.out.println("Skatteklasse 2");
       personfradrag = SjablonUtil.hentSjablontall(beregnBidragsevneGrunnlagPeriodisert.getSjablonListe(),
           SjablonTallNavn.PERSONFRADRAG_KLASSE2_BELOP.getNavn(), SjablonInnholdNavn.SJABLON_VERDI.getNavn());
     }
@@ -156,12 +158,14 @@ public class BidragsevneberegningImpl implements Bidragsevneberegning {
     }
 
     // Legger til fordel skatteklasse2
-    forelopigBidragsevne += SjablonUtil.hentSjablontall(
-        beregnBidragsevneGrunnlagPeriodisert.getSjablonListe(),
-        SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELOP.getNavn(),
-        SjablonInnholdNavn.SJABLON_VERDI.getNavn());
-    System.out
-        .println("Foreløpig evne etter tillegg for fordel skatteklasse2: " + forelopigBidragsevne);
+    if (beregnBidragsevneGrunnlagPeriodisert.getSkatteklasse() == (2)) {
+      forelopigBidragsevne += SjablonUtil.hentSjablontall(
+          beregnBidragsevneGrunnlagPeriodisert.getSjablonListe(),
+          SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELOP.getNavn(),
+          SjablonInnholdNavn.SJABLON_VERDI.getNavn());
+      System.out
+          .println("Foreløpig evne etter tillegg for fordel skatteklasse2: " + forelopigBidragsevne);
+    }
 
     // Finner månedlig beløp for bidragsevne
     Double maanedligBidragsevne = Double.valueOf(Math.round(forelopigBidragsevne / 12));
