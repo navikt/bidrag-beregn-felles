@@ -1,5 +1,7 @@
 package no.nav.bidrag.beregn.felles.bidragsevne.dto
 
+import no.nav.bidrag.beregn.felles.bo.SjablonInnhold
+import no.nav.bidrag.beregn.felles.bo.SjablonNokkel
 import java.time.LocalDate
 
 // Grunnlag periode
@@ -7,18 +9,22 @@ data class BeregnBidragsevneGrunnlagAltCore(
     val beregnDatoFra: LocalDate,
     val beregnDatoTil: LocalDate,
     val inntektPeriodeListe: List<InntektPeriodeCore>,
+    val skatteklassePeriodeListe: List<SkatteklassePeriodeCore>,
     val bostatusPeriodeListe: List<BostatusPeriodeCore>,
     val antallBarnIEgetHusholdPeriodeListe: List<AntallBarnIEgetHusholdPeriodeCore>,
     val saerfradragPeriodeListe: List<SaerfradragPeriodeCore>,
-    var sjablonPeriodeListe: List<SjablonPeriodeCore>,
-    var sjablonPeriodeListeNy: List<SjablonPeriodeCoreNy>
+    var sjablonPeriodeListe: List<SjablonPeriodeCore>
 )
 
 data class InntektPeriodeCore(
     val inntektPeriodeDatoFraTil: PeriodeCore,
     val inntektType: String,
-    val skatteklasse: Int,
     val inntektBelop: Double
+)
+
+data class SkatteklassePeriodeCore(
+    val skatteklassePeriodeDatoFraTil: PeriodeCore,
+    val skatteklasse: Int
 )
 
 data class BostatusPeriodeCore(
@@ -38,24 +44,17 @@ data class SaerfradragPeriodeCore(
 
 data class SjablonPeriodeCore(
     val sjablonPeriodeDatoFraTil: PeriodeCore,
-    val sjablonnavn: String?,
-    val sjablonVerdi1: Double?,
-    val sjablonVerdi2: Double?
-)
-
-data class SjablonPeriodeCoreNy(
-    val sjablonPeriodeDatoFraTil: PeriodeCore,
     val sjablonNavn: String,
-    val sjablonNokkelListe: List<SjablonNokkelCoreNy>? = emptyList(),
-    val sjablonInnholdListe: List<SjablonInnholdCoreNy>
+    val sjablonNokkelListe: List<SjablonNokkelCore>? = emptyList(),
+    val sjablonInnholdListe: List<SjablonInnholdCore>
 )
 
-data class SjablonNokkelCoreNy(
+data class SjablonNokkelCore(
     val sjablonNokkelNavn: String,
     val sjablonNokkelVerdi: String
 )
 
-data class SjablonInnholdCoreNy(
+data class SjablonInnholdCore(
     val sjablonInnholdNavn: String,
     val sjablonInnholdVerdi: Double
 )
@@ -88,9 +87,9 @@ data class ResultatGrunnlagCore(
 )
 
 data class SjablonCore(
-    val sjablonnavn: String,
-    val sjablonVerdi1: Double,
-    val sjablonVerdi2: Double?
+    val sjablonNavn: String,
+    val sjablonNokkelListe: List<SjablonNokkel>? = emptyList(),
+    val sjablonInnholdListe: List<SjablonInnhold>
 )
 
 data class InntektCore(

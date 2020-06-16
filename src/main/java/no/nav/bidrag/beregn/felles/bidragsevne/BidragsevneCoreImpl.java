@@ -12,9 +12,8 @@ import no.nav.bidrag.beregn.felles.bidragsevne.bo.Inntekt;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.InntektPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.ResultatPeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.SaerfradragPeriode;
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.Sjablon;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.SjablonPeriode;
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.SjablonPeriodeNy;
+import no.nav.bidrag.beregn.felles.bidragsevne.bo.SkatteklassePeriode;
 import no.nav.bidrag.beregn.felles.bidragsevne.dto.AntallBarnIEgetHusholdPeriodeCore;
 import no.nav.bidrag.beregn.felles.bidragsevne.dto.AvvikCore;
 import no.nav.bidrag.beregn.felles.bidragsevne.dto.BeregnBidragsevneGrunnlagAltCore;
@@ -28,15 +27,15 @@ import no.nav.bidrag.beregn.felles.bidragsevne.dto.ResultatGrunnlagCore;
 import no.nav.bidrag.beregn.felles.bidragsevne.dto.ResultatPeriodeCore;
 import no.nav.bidrag.beregn.felles.bidragsevne.dto.SaerfradragPeriodeCore;
 import no.nav.bidrag.beregn.felles.bidragsevne.dto.SjablonCore;
-import no.nav.bidrag.beregn.felles.bidragsevne.dto.SjablonInnholdCoreNy;
-import no.nav.bidrag.beregn.felles.bidragsevne.dto.SjablonNokkelCoreNy;
+import no.nav.bidrag.beregn.felles.bidragsevne.dto.SjablonInnholdCore;
+import no.nav.bidrag.beregn.felles.bidragsevne.dto.SjablonNokkelCore;
 import no.nav.bidrag.beregn.felles.bidragsevne.dto.SjablonPeriodeCore;
-import no.nav.bidrag.beregn.felles.bidragsevne.dto.SjablonPeriodeCoreNy;
+import no.nav.bidrag.beregn.felles.bidragsevne.dto.SkatteklassePeriodeCore;
 import no.nav.bidrag.beregn.felles.bidragsevne.periode.BidragsevnePeriode;
 import no.nav.bidrag.beregn.felles.bo.Periode;
-import no.nav.bidrag.beregn.felles.bo.SjablonInnholdNy;
-import no.nav.bidrag.beregn.felles.bo.SjablonNokkelNy;
-import no.nav.bidrag.beregn.felles.bo.SjablonNy;
+import no.nav.bidrag.beregn.felles.bo.SjablonInnhold;
+import no.nav.bidrag.beregn.felles.bo.SjablonNokkel;
+import no.nav.bidrag.beregn.felles.bo.Sjablon;
 import no.nav.bidrag.beregn.felles.enums.BostatusKode;
 import no.nav.bidrag.beregn.felles.enums.InntektType;
 import no.nav.bidrag.beregn.felles.enums.SaerfradragKode;
@@ -65,44 +64,37 @@ public class BidragsevneCoreImpl implements BidragsevneCore {
     var beregnDatoFra = beregnBidragsevneGrunnlagAltCore.getBeregnDatoFra();
     var beregnDatoTil = beregnBidragsevneGrunnlagAltCore.getBeregnDatoTil();
     var inntektPeriodeListe = mapInntektPeriodeListe(beregnBidragsevneGrunnlagAltCore.getInntektPeriodeListe());
+    var skatteklassePeriodeListe = mapSkatteklassePeriodeListe(beregnBidragsevneGrunnlagAltCore.getSkatteklassePeriodeListe());
     var bostatusPeriodeListe = mapBostatusPeriodeListe(beregnBidragsevneGrunnlagAltCore.getBostatusPeriodeListe());
     var antallBarnIEgetHusholdPeriodeListe = mapAntallBarnIEgetHusholdPeriodeListe(
         beregnBidragsevneGrunnlagAltCore.getAntallBarnIEgetHusholdPeriodeListe());
     var saerfradragPeriodeListe = mapSaerfradragPeriodeListe(beregnBidragsevneGrunnlagAltCore.getSaerfradragPeriodeListe());
+//    var sjablonPeriodeListeOld = mapSjablonPeriodeListe(beregnBidragsevneGrunnlagAltCore.getSjablonPeriodeListeOld());
     var sjablonPeriodeListe = mapSjablonPeriodeListe(beregnBidragsevneGrunnlagAltCore.getSjablonPeriodeListe());
-    var sjablonPeriodeListeNy = mapSjablonPeriodeListeNy(beregnBidragsevneGrunnlagAltCore.getSjablonPeriodeListeNy());
-    return new BeregnBidragsevneGrunnlagAlt(beregnDatoFra, beregnDatoTil, inntektPeriodeListe, bostatusPeriodeListe,
-        antallBarnIEgetHusholdPeriodeListe, saerfradragPeriodeListe, sjablonPeriodeListe, sjablonPeriodeListeNy);
+    return new BeregnBidragsevneGrunnlagAlt(beregnDatoFra, beregnDatoTil, inntektPeriodeListe, skatteklassePeriodeListe,
+        bostatusPeriodeListe, antallBarnIEgetHusholdPeriodeListe, saerfradragPeriodeListe, sjablonPeriodeListe);
   }
+
 
   private List<SjablonPeriode> mapSjablonPeriodeListe(List<SjablonPeriodeCore> sjablonPeriodeListeCore) {
     var sjablonPeriodeListe = new ArrayList<SjablonPeriode>();
     for (SjablonPeriodeCore sjablonPeriodeCore : sjablonPeriodeListeCore) {
+      var sjablonNokkelListe = new ArrayList<SjablonNokkel>();
+      var sjablonInnholdListe = new ArrayList<SjablonInnhold>();
+      for (SjablonNokkelCore sjablonNokkelCore : sjablonPeriodeCore.getSjablonNokkelListe()) {
+        sjablonNokkelListe.add(new SjablonNokkel(sjablonNokkelCore.getSjablonNokkelNavn(), sjablonNokkelCore
+            .getSjablonNokkelVerdi()));
+      }
+      for (SjablonInnholdCore sjablonInnholdCore : sjablonPeriodeCore.getSjablonInnholdListe()) {
+        sjablonInnholdListe.add(new SjablonInnhold(sjablonInnholdCore.getSjablonInnholdNavn(), sjablonInnholdCore
+            .getSjablonInnholdVerdi()));
+      }
       sjablonPeriodeListe.add(new SjablonPeriode(
           new Periode(sjablonPeriodeCore.getSjablonPeriodeDatoFraTil().getPeriodeDatoFra(),
               sjablonPeriodeCore.getSjablonPeriodeDatoFraTil().getPeriodeDatoTil()),
-          sjablonPeriodeCore.getSjablonnavn(), sjablonPeriodeCore.getSjablonVerdi1(), sjablonPeriodeCore.getSjablonVerdi2()));
+          new Sjablon(sjablonPeriodeCore.getSjablonNavn(), sjablonNokkelListe, sjablonInnholdListe)));
     }
     return sjablonPeriodeListe;
-  }
-
-  private List<SjablonPeriodeNy> mapSjablonPeriodeListeNy(List<SjablonPeriodeCoreNy> sjablonPeriodeListeCoreNy) {
-    var sjablonPeriodeListeNy = new ArrayList<SjablonPeriodeNy>();
-    for (SjablonPeriodeCoreNy sjablonPeriodeCoreNy : sjablonPeriodeListeCoreNy) {
-      var sjablonNokkelListeNy = new ArrayList<SjablonNokkelNy>();
-      var sjablonInnholdListeNy = new ArrayList<SjablonInnholdNy>();
-      for (SjablonNokkelCoreNy sjablonNokkelCoreNy : sjablonPeriodeCoreNy.getSjablonNokkelListe()) {
-        sjablonNokkelListeNy.add(new SjablonNokkelNy(sjablonNokkelCoreNy.getSjablonNokkelNavn(), sjablonNokkelCoreNy.getSjablonNokkelVerdi()));
-      }
-      for (SjablonInnholdCoreNy sjablonInnholdCoreNy : sjablonPeriodeCoreNy.getSjablonInnholdListe()) {
-        sjablonInnholdListeNy.add(new SjablonInnholdNy(sjablonInnholdCoreNy.getSjablonInnholdNavn(), sjablonInnholdCoreNy.getSjablonInnholdVerdi()));
-      }
-      sjablonPeriodeListeNy.add(new SjablonPeriodeNy(
-          new Periode(sjablonPeriodeCoreNy.getSjablonPeriodeDatoFraTil().getPeriodeDatoFra(),
-              sjablonPeriodeCoreNy.getSjablonPeriodeDatoFraTil().getPeriodeDatoTil()),
-          new SjablonNy(sjablonPeriodeCoreNy.getSjablonNavn(), sjablonNokkelListeNy, sjablonInnholdListeNy)));
-    }
-    return sjablonPeriodeListeNy;
   }
 
   private List<InntektPeriode> mapInntektPeriodeListe(List<InntektPeriodeCore> inntektPeriodeListeCore) {
@@ -112,9 +104,20 @@ public class BidragsevneCoreImpl implements BidragsevneCore {
           new Periode(inntektPeriodeCore.getInntektPeriodeDatoFraTil().getPeriodeDatoFra(),
               inntektPeriodeCore.getInntektPeriodeDatoFraTil().getPeriodeDatoTil()),
           InntektType.valueOf(inntektPeriodeCore.getInntektType()),
-          inntektPeriodeCore.getSkatteklasse(), inntektPeriodeCore.getInntektBelop()));
+          inntektPeriodeCore.getInntektBelop()));
     }
     return inntektPeriodeListe;
+  }
+
+  private List<SkatteklassePeriode> mapSkatteklassePeriodeListe(List<SkatteklassePeriodeCore> skatteklassePeriodeListeCore) {
+    var skatteklassePeriodeListe = new ArrayList<SkatteklassePeriode>();
+    for (SkatteklassePeriodeCore skatteklassePeriodeCore : skatteklassePeriodeListeCore) {
+      skatteklassePeriodeListe.add(new SkatteklassePeriode(
+          new Periode(skatteklassePeriodeCore.getSkatteklassePeriodeDatoFraTil().getPeriodeDatoFra(),
+              skatteklassePeriodeCore.getSkatteklassePeriodeDatoFraTil().getPeriodeDatoTil()),
+              skatteklassePeriodeCore.getSkatteklasse()));
+    }
+    return skatteklassePeriodeListe;
   }
 
   private List<BostatusPeriode> mapBostatusPeriodeListe(List<BostatusPeriodeCore> bostatusPeriodeListeCore) {
@@ -196,8 +199,8 @@ public class BidragsevneCoreImpl implements BidragsevneCore {
     var resultatGrunnlagSjablonListeCore = new ArrayList<SjablonCore>();
     for (Sjablon resultatGrunnlagSjablon : resultatGrunnlagSjablonListe) {
       resultatGrunnlagSjablonListeCore
-          .add(new SjablonCore(resultatGrunnlagSjablon.getSjablonnavn(), resultatGrunnlagSjablon.getSjablonVerdi1(),
-              resultatGrunnlagSjablon.getSjablonVerdi2()));
+          .add(new SjablonCore(resultatGrunnlagSjablon.getSjablonNavn(), resultatGrunnlagSjablon.getSjablonNokkelListe(),
+              resultatGrunnlagSjablon.getSjablonInnholdListe()));
     }
     return resultatGrunnlagSjablonListeCore;
   }

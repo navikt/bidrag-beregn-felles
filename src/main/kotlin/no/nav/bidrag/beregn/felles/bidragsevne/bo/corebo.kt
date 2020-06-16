@@ -1,6 +1,7 @@
 package no.nav.bidrag.beregn.felles.bidragsevne.bo
 
 import no.nav.bidrag.beregn.felles.bo.Periode
+import no.nav.bidrag.beregn.felles.bo.Sjablon
 import no.nav.bidrag.beregn.felles.enums.AvvikType
 import no.nav.bidrag.beregn.felles.enums.BostatusKode
 import no.nav.bidrag.beregn.felles.enums.InntektType
@@ -13,11 +14,11 @@ data class BeregnBidragsevneGrunnlagAlt(
     val beregnDatoFra: LocalDate,
     val beregnDatoTil: LocalDate,
     val inntektPeriodeListe: List<InntektPeriode>,
+    val skatteklassePeriodeListe: List<SkatteklassePeriode>,
     val bostatusPeriodeListe: List<BostatusPeriode>,
     val antallBarnIEgetHusholdPeriodeListe: List<AntallBarnIEgetHusholdPeriode>,
     val saerfradragPeriodeListe: List<SaerfradragPeriode>,
-    val sjablonPeriodeListe: List<SjablonPeriode>,
-    val sjablonPeriodeListeNy: List<SjablonPeriodeNy>
+    val sjablonPeriodeListe: List<SjablonPeriode>
 )
 
 // Resultatperiode
@@ -47,14 +48,7 @@ data class BeregnBidragsevneGrunnlagPeriodisert(
     val bostatusKode: BostatusKode,
     val antallEgneBarnIHusstand: Int,
     val saerfradragkode: SaerfradragKode,
-    val sjablonListe: List<Sjablon>) {
-  fun hentSjablon(sjablonnavn: String?): Sjablon? = sjablonListe.first() { it.sjablonnavn == sjablonnavn }
-}
-
-data class Sjablon(
-    val sjablonnavn: String,
-    val sjablonVerdi1: Double,
-    val sjablonVerdi2: Double?)
+    val sjablonListe: List<Sjablon>)
 
 
 data class Inntekt(

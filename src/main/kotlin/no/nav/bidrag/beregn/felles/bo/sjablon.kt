@@ -1,35 +1,35 @@
 package no.nav.bidrag.beregn.felles.bo
 
 // Nye sjablonklasser
-data class SjablonNy(
+data class Sjablon(
     val sjablonNavn: String,
-    val sjablonNokkelListe: List<SjablonNokkelNy>? = emptyList(),
-    val sjablonInnholdListe: List<SjablonInnholdNy>
+    val sjablonNokkelListe: List<SjablonNokkel>? = emptyList(),
+    val sjablonInnholdListe: List<SjablonInnhold>
 )
 
-data class SjablonNokkelNy(
+data class SjablonNokkel(
     val sjablonNokkelNavn: String,
     val sjablonNokkelVerdi: String
 )
 
-data class SjablonInnholdNy(
+data class SjablonInnhold(
     val sjablonInnholdNavn: String,
     val sjablonInnholdVerdi: Double
 )
 
-data class SjablonSingelNokkelNy(
+data class SjablonSingelNokkel(
     val sjablonNavn: String,
     val sjablonNokkelVerdi: String,
-    val sjablonInnholdListe: List<SjablonInnholdNy>
+    val sjablonInnholdListe: List<SjablonInnhold>
 )
 
-data class SjablonSingelNokkelSingelInnholdNy(
+data class SjablonSingelNokkelSingelInnhold(
     val sjablonNavn: String,
     val sjablonNokkelVerdi: String,
     val sjablonInnholdVerdi: Double
 )
 
-data class TrinnvisSkattesatsNy(
+data class TrinnvisSkattesats(
     val inntektGrense: Double,
     val sats: Double
 )
