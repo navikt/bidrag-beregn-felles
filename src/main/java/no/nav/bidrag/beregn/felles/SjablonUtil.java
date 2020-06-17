@@ -8,53 +8,56 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
+import no.nav.bidrag.beregn.felles.bo.Sjablon;
 import no.nav.bidrag.beregn.felles.bo.SjablonInnhold;
 import no.nav.bidrag.beregn.felles.bo.SjablonNokkel;
-import no.nav.bidrag.beregn.felles.bo.Sjablon;
 import no.nav.bidrag.beregn.felles.bo.SjablonSingelNokkel;
 import no.nav.bidrag.beregn.felles.bo.SjablonSingelNokkelSingelInnhold;
 import no.nav.bidrag.beregn.felles.bo.TrinnvisSkattesats;
 import no.nav.bidrag.beregn.felles.enums.SjablonInnholdNavn;
+import no.nav.bidrag.beregn.felles.enums.SjablonNavn;
+import no.nav.bidrag.beregn.felles.enums.SjablonNokkelNavn;
+import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn;
 
 public class SjablonUtil {
 
   // Henter verdier fra sjablonene Barnetilsyn (N:1, eksakt match) og Bidragsevne (1:N, eksakt match)
-  public static double hentSjablonverdi(List<Sjablon> sjablonListe, String sjablonNavn, List<SjablonNokkel> sjablonNokkelListe,
-      String sjablonInnholdNavn) {
-    var filtrertSjablonListe = filtrerSjablonNokkelListePaaSjablonNokkel(filtrerPaaSjablonNavn(sjablonListe, sjablonNavn), sjablonNokkelListe);
+  public static double hentSjablonverdi(List<Sjablon> sjablonListe, SjablonNavn sjablonNavn, List<SjablonNokkel> sjablonNokkelListe,
+      SjablonInnholdNavn sjablonInnholdNavn) {
+    var filtrertSjablonListe = filtrerSjablonNokkelListePaaSjablonNokkel(filtrerPaaSjablonNavn(sjablonListe, sjablonNavn.getNavn()), sjablonNokkelListe);
     var sjablonInnholdListe = mapSjablonListeTilSjablonInnholdListe(filtrertSjablonListe);
     return hentSjablonInnholdVerdiEksakt(sjablonInnholdListe, sjablonInnholdNavn);
   }
 
   // Henter verdier fra sjablonene Forbruksutgifter, MaksFradrag og MaksTilsyn (1:1, intervall)
-  public static double hentSjablonverdi(List<Sjablon> sjablonListe, String sjablonNavn, String sjablonNokkelVerdi) {
-    var filtrertSjablonListe = filtrerPaaSjablonNavn(sjablonListe, sjablonNavn);
+  public static double hentSjablonverdi(List<Sjablon> sjablonListe, SjablonNavn sjablonNavn, String sjablonNokkelVerdi) {
+    var filtrertSjablonListe = filtrerPaaSjablonNavn(sjablonListe, sjablonNavn.getNavn());
     var sortertSjablonSingelNokkelSingelInnholdListe = mapTilSingelListeNokkelInnholdSortert(filtrertSjablonListe);
     return hentSjablonInnholdVerdiIntervall(sortertSjablonSingelNokkelSingelInnholdListe, sjablonNokkelVerdi);
   }
 
   // Henter verdier fra sjablon Samværsfradrag (N:N, eksakt match + intervall)
-  public static double hentSjablonverdi(List<Sjablon> sjablonListe, String sjablonNavn, List<SjablonNokkel> sjablonNokkelListe,
-      String sjablonNokkelNavn, String sjablonNokkelVerdi, String sjablonInnholdNavn) {
-    var filtrertSjablonListe = filtrerSjablonNokkelListePaaSjablonNokkel(filtrerPaaSjablonNavn(sjablonListe, sjablonNavn), sjablonNokkelListe);
+  public static double hentSjablonverdi(List<Sjablon> sjablonListe, SjablonNavn sjablonNavn, List<SjablonNokkel> sjablonNokkelListe,
+      SjablonNokkelNavn sjablonNokkelNavn, String sjablonNokkelVerdi, SjablonInnholdNavn sjablonInnholdNavn) {
+    var filtrertSjablonListe = filtrerSjablonNokkelListePaaSjablonNokkel(filtrerPaaSjablonNavn(sjablonListe, sjablonNavn.getNavn()), sjablonNokkelListe);
     var sortertSjablonSingelNokkelListe = mapTilSingelListeNokkelSortert(filtrertSjablonListe, sjablonNokkelNavn);
     var sjablonInnholdListe = finnSjablonInnholdVerdiListeIntervall(sortertSjablonSingelNokkelListe, sjablonNokkelVerdi);
     return hentSjablonInnholdVerdiEksakt(sjablonInnholdListe, sjablonInnholdNavn);
   }
 
   // Henter verdier fra sjablon Sjablontall (1:1, eksakt match)
-  public static double hentSjablontall(List<Sjablon> sjablonListe, String sjablonNavn, String sjablonInnholdNavn) {
-    var filtrertSjablonListe = filtrerPaaSjablonNavn(sjablonListe, sjablonNavn);
+  public static double hentSjablonverdi(List<Sjablon> sjablonListe, SjablonTallNavn sjablonTallNavn) {
+    var filtrertSjablonListe = filtrerPaaSjablonNavn(sjablonListe, sjablonTallNavn.getNavn());
     var sjablonInnholdListe = mapSjablonListeTilSjablonInnholdListe(filtrertSjablonListe);
-    return hentSjablonInnholdVerdiEksakt(sjablonInnholdListe, sjablonInnholdNavn);
+    return hentSjablonInnholdVerdiEksakt(sjablonInnholdListe, SjablonInnholdNavn.SJABLON_VERDI);
   }
 
   // Henter liste med verdier fra sjablon TrinnvisSkattesats (0:N, hent alle)
-  public static List<TrinnvisSkattesats> hentTrinnvisSkattesats(List<Sjablon> sjablonListe, String sjablonNavn) {
-    var filtrertSjablonListe = filtrerPaaSjablonNavn(sjablonListe, sjablonNavn);
+  public static List<TrinnvisSkattesats> hentTrinnvisSkattesats(List<Sjablon> sjablonListe, SjablonNavn sjablonNavn) {
+    var filtrertSjablonListe = filtrerPaaSjablonNavn(sjablonListe, sjablonNavn.getNavn());
     var sjablonInnholdListe = mapSjablonListeTilSjablonInnholdListe(filtrertSjablonListe);
-    var inntektGrenseListe = finnSjablonInnholdVerdiListe(sjablonInnholdListe, SjablonInnholdNavn.INNTEKTSGRENSE_BELOP.getNavn());
-    var satsListe = finnSjablonInnholdVerdiListe(sjablonInnholdListe, SjablonInnholdNavn.SKATTESATS_PROSENT.getNavn());
+    var inntektGrenseListe = finnSjablonInnholdVerdiListe(sjablonInnholdListe, SjablonInnholdNavn.INNTEKTSGRENSE_BELOP);
+    var satsListe = finnSjablonInnholdVerdiListe(sjablonInnholdListe, SjablonInnholdNavn.SKATTESATS_PROSENT);
 
     var indeks = 0;
     var trinnvisSkattesatsListe = new ArrayList<TrinnvisSkattesats>();
@@ -117,13 +120,13 @@ public class SjablonUtil {
   // Tar inn filtrertSjablonListe og mapper denne om til en liste med singel nøkkelverdi og liste med innholdverdier (1:N). Returnerer en ny liste
   // sortert på nøkkelverdi.
   // Brukes av sjabloner som har ett nøkkelobjekt med eksakt match og flere innholdobjekter (Samværsfradrag).
-  private static List<SjablonSingelNokkel> mapTilSingelListeNokkelSortert(List<Sjablon> filtrertSjablonListe, String nokkelNavn) {
+  private static List<SjablonSingelNokkel> mapTilSingelListeNokkelSortert(List<Sjablon> filtrertSjablonListe, SjablonNokkelNavn sjablonNokkelNavn) {
     return filtrertSjablonListe
         .stream()
         .map(sjablon -> new SjablonSingelNokkel(sjablon.getSjablonNavn(),
             sjablon.getSjablonNokkelListe()
                 .stream()
-                .filter(sjablonNokkel -> sjablonNokkel.getSjablonNokkelNavn().equals(nokkelNavn))
+                .filter(sjablonNokkel -> sjablonNokkel.getSjablonNokkelNavn().equals(sjablonNokkelNavn.getNavn()))
                 .map(SjablonNokkel::getSjablonNokkelVerdi)
                 .findFirst()
                 .orElse(" "),
@@ -135,10 +138,10 @@ public class SjablonUtil {
   // Filtrerer sjablonInnholdListe på sjablonInnholdNavn (eksakt match) og returnerer matchende verdi (0d hvis sjablonInnholdNavn mot formodning ikke
   // finnes).
   // Brukes av sjabloner som skal hente eksakt verdi (Barnetilsyn, Bidragsevne, Sjablontall, Samværsfradrag).
-  private static Double hentSjablonInnholdVerdiEksakt(List<SjablonInnhold> sjablonInnholdListe, String sjablonInnholdNavn) {
+  private static Double hentSjablonInnholdVerdiEksakt(List<SjablonInnhold> sjablonInnholdListe, SjablonInnholdNavn sjablonInnholdNavn) {
     return sjablonInnholdListe
         .stream()
-        .filter(sjablonInnhold -> sjablonInnhold.getSjablonInnholdNavn().equals(sjablonInnholdNavn))
+        .filter(sjablonInnhold -> sjablonInnhold.getSjablonInnholdNavn().equals(sjablonInnholdNavn.getNavn()))
         .map(SjablonInnhold::getSjablonInnholdVerdi)
         .findFirst()
         .orElse(0d);
@@ -148,11 +151,11 @@ public class SjablonUtil {
   // ikke finnes noen verdi).
   // Brukes av 1:1 sjabloner som henter verdi basert på intervall (Forbruksutgifter, MaxFradrag, MaxTilsyn).
   private static Double hentSjablonInnholdVerdiIntervall(List<SjablonSingelNokkelSingelInnhold> sortertSjablonSingelNokkelSingelInnholdListe,
-      String sjablonNokkel) {
+      String sjablonNokkelVerdi) {
     return sortertSjablonSingelNokkelSingelInnholdListe
         .stream()
-        .filter(
-            sortertSjablonSingelNokkelSingelInnhold -> sortertSjablonSingelNokkelSingelInnhold.getSjablonNokkelVerdi().compareTo(sjablonNokkel) >= 0)
+        .filter(sortertSjablonSingelNokkelSingelInnhold ->
+            sortertSjablonSingelNokkelSingelInnhold.getSjablonNokkelVerdi().compareTo(sjablonNokkelVerdi) >= 0)
         .findFirst()
         .map(SjablonSingelNokkelSingelInnhold::getSjablonInnholdVerdi)
         .orElse(0d);
@@ -162,10 +165,10 @@ public class SjablonUtil {
   // mot formodning ikke finnes noen forekomster).
   // Brukes av sjabloner som har flere innholdobjekter og som henter verdi(er) basert på intervall (Samværsfradrag).
   private static List<SjablonInnhold> finnSjablonInnholdVerdiListeIntervall(List<SjablonSingelNokkel> sortertSjablonSingelNokkelListe,
-      String sjablonNokkel) {
+      String sjablonNokkelVerdi) {
     return sortertSjablonSingelNokkelListe
         .stream()
-        .filter(sjablon -> sjablon.getSjablonNokkelVerdi().compareTo(sjablonNokkel) >= 0)
+        .filter(sjablon -> sjablon.getSjablonNokkelVerdi().compareTo(sjablonNokkelVerdi) >= 0)
         .findFirst()
         .map(SjablonSingelNokkel::getSjablonInnholdListe)
         .orElse(emptyList());
@@ -174,10 +177,10 @@ public class SjablonUtil {
 
   // Filtrerer sjablonInnholdListe på sjablonInnholdNavn og returnerer en liste over alle matchende verdier.
   // Brukes av sjabloner som skal returnere en liste med innholdverdier (TrinnvisSkattesats).
-  private static List<Double> finnSjablonInnholdVerdiListe(List<SjablonInnhold> sjablonInnholdListe, String sjablonInnholdNavn) {
+  private static List<Double> finnSjablonInnholdVerdiListe(List<SjablonInnhold> sjablonInnholdListe, SjablonInnholdNavn sjablonInnholdNavn) {
     return sjablonInnholdListe
         .stream()
-        .filter(sjablonInnhold -> sjablonInnhold.getSjablonInnholdNavn().equals(sjablonInnholdNavn))
+        .filter(sjablonInnhold -> sjablonInnhold.getSjablonInnholdNavn().equals(sjablonInnholdNavn.getNavn()))
         .map(SjablonInnhold::getSjablonInnholdVerdi)
         .collect(toList());
   }

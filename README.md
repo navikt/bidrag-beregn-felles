@@ -7,6 +7,7 @@ Repo for alle felles beregninger for bidrag. Disse erstatter beregninger i BBM.
 
 Versjon | Endringstype | Beskrivelse
 --------|--------------|------------
+0.4.1   | Endret       | Forenklet funksjonalitet i SjablonUtil. Opprettet TestUtil-klasse med metode for å bygge opp liste med sjabloner.
 0.4.0   | Endret       | SjablonCore dto (resultatet) pekte på bo-objekter. Rettet til å peke på dto-objekter.
 0.3.0   | Endret       | Bidragsevne omskrevet til å bruke ny sjablonlogikk + egen klasse for skatteklasse
 0.2.1   | Endret       | Gjort noen justeringer i SjablonUtil      
