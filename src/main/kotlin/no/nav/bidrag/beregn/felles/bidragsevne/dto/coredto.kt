@@ -1,5 +1,9 @@
 package no.nav.bidrag.beregn.felles.bidragsevne.dto
 
+import no.nav.bidrag.beregn.felles.dto.AvvikCore
+import no.nav.bidrag.beregn.felles.dto.PeriodeCore
+import no.nav.bidrag.beregn.felles.dto.SjablonCore
+import no.nav.bidrag.beregn.felles.dto.SjablonPeriodeCore
 import java.time.LocalDate
 
 // Grunnlag periode
@@ -40,13 +44,6 @@ data class SaerfradragPeriodeCore(
     val saerfradragKode: String
 )
 
-data class SjablonPeriodeCore(
-    val sjablonPeriodeDatoFraTil: PeriodeCore,
-    val sjablonNavn: String,
-    val sjablonNokkelListe: List<SjablonNokkelCore>? = emptyList(),
-    val sjablonInnholdListe: List<SjablonInnholdCore>
-)
-
 
 // Resultat
 data class BeregnBidragsevneResultatCore(
@@ -73,35 +70,9 @@ data class ResultatGrunnlagCore(
     val sjablonListe: List<SjablonCore>
 )
 
-data class SjablonCore(
-    val sjablonNavn: String,
-    val sjablonNokkelListe: List<SjablonNokkelCore>? = emptyList(),
-    val sjablonInnholdListe: List<SjablonInnholdCore>
-)
-
 data class InntektCore(
     val inntektType: String,
     val inntektBelop: Double
 )
 
-data class AvvikCore(
-    val avvikTekst: String,
-    val avvikType: String
-)
 
-
-// Felles
-data class PeriodeCore(
-    val periodeDatoFra: LocalDate,
-    val periodeDatoTil: LocalDate?
-)
-
-data class SjablonNokkelCore(
-    val sjablonNokkelNavn: String,
-    val sjablonNokkelVerdi: String
-)
-
-data class SjablonInnholdCore(
-    val sjablonInnholdNavn: String,
-    val sjablonInnholdVerdi: Double
-)

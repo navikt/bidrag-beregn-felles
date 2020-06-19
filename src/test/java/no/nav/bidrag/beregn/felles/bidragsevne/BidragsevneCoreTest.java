@@ -20,10 +20,10 @@ import no.nav.bidrag.beregn.felles.bidragsevne.dto.AntallBarnIEgetHusholdPeriode
 import no.nav.bidrag.beregn.felles.bidragsevne.dto.BeregnBidragsevneGrunnlagAltCore;
 import no.nav.bidrag.beregn.felles.bidragsevne.dto.BostatusPeriodeCore;
 import no.nav.bidrag.beregn.felles.bidragsevne.dto.InntektPeriodeCore;
-import no.nav.bidrag.beregn.felles.bidragsevne.dto.PeriodeCore;
+import no.nav.bidrag.beregn.felles.dto.PeriodeCore;
 import no.nav.bidrag.beregn.felles.bidragsevne.dto.SaerfradragPeriodeCore;
-import no.nav.bidrag.beregn.felles.bidragsevne.dto.SjablonInnholdCore;
-import no.nav.bidrag.beregn.felles.bidragsevne.dto.SjablonPeriodeCore;
+import no.nav.bidrag.beregn.felles.dto.SjablonInnholdCore;
+import no.nav.bidrag.beregn.felles.dto.SjablonPeriodeCore;
 import no.nav.bidrag.beregn.felles.bidragsevne.dto.SkatteklassePeriodeCore;
 import no.nav.bidrag.beregn.felles.bidragsevne.periode.BidragsevnePeriode;
 import no.nav.bidrag.beregn.felles.bo.Periode;
