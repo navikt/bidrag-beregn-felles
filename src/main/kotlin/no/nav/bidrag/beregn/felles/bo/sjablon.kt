@@ -34,3 +34,11 @@ data class TrinnvisSkattesats(
     val sats: Double
 )
 
+data class SjablonPeriode(
+    val sjablonDatoFraTil: Periode,
+    val sjablon: Sjablon) : PeriodisertGrunnlag {
+  constructor(sjablonPeriode: SjablonPeriode) : this(sjablonPeriode.sjablonDatoFraTil.justerDatoer(), sjablonPeriode.sjablon)
+  override fun getDatoFraTil(): Periode {
+    return sjablonDatoFraTil
+  }
+}

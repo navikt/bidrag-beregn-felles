@@ -7,6 +7,7 @@ Repo for alle felles beregninger for bidrag. Disse erstatter beregninger i BBM.
 
 Versjon | Endringstype | Beskrivelse
 --------|--------------|------------
+0.4.3   | Endret       | Flyttet også sjablonPeriode og Avvik fra bidragsevne over til felles.
 0.4.2   | Endret       | Flyttet gjenstående sjablonklasser + Avvik og Periode fra bidragsevne over til felles.
 0.4.1   | Endret       | Forenklet funksjonalitet i SjablonUtil. Opprettet TestUtil-klasse med metode for å bygge opp liste med sjabloner.
 0.4.0   | Endret       | SjablonCore dto (resultatet) pekte på bo-objekter. Rettet til å peke på dto-objekter.
