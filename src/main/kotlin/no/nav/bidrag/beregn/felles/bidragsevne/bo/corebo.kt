@@ -2,10 +2,10 @@ package no.nav.bidrag.beregn.felles.bidragsevne.bo
 
 import no.nav.bidrag.beregn.felles.bo.Periode
 import no.nav.bidrag.beregn.felles.bo.Sjablon
-import no.nav.bidrag.beregn.felles.enums.AvvikType
 import no.nav.bidrag.beregn.felles.enums.BostatusKode
 import no.nav.bidrag.beregn.felles.enums.InntektType
 import no.nav.bidrag.beregn.felles.enums.SaerfradragKode
+import no.nav.bidrag.beregn.felles.bo.SjablonPeriode
 import java.time.LocalDate
 
 
@@ -30,14 +30,6 @@ data class ResultatPeriode(
     val resultatDatoFraTil: Periode,
     val resultatBeregning: ResultatBeregning,
     val resultatGrunnlag: BeregnBidragsevneGrunnlagPeriodisert
-)
-
-
-
-// Avvikperiode
-data class Avvik(
-    val avvikTekst: String,
-    val avvikType: AvvikType
 )
 
 

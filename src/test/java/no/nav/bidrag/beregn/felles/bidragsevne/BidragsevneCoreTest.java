@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import no.nav.bidrag.beregn.felles.bidragsevne.bo.Avvik;
+import no.nav.bidrag.beregn.felles.bo.Avvik;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneGrunnlagPeriodisert;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.BeregnBidragsevneResultat;
 import no.nav.bidrag.beregn.felles.bidragsevne.bo.Inntekt;

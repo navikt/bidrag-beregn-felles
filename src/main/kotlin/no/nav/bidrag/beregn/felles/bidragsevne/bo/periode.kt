@@ -2,19 +2,9 @@ package no.nav.bidrag.beregn.felles.bidragsevne.bo
 
 import no.nav.bidrag.beregn.felles.bo.Periode
 import no.nav.bidrag.beregn.felles.bo.PeriodisertGrunnlag
-import no.nav.bidrag.beregn.felles.bo.Sjablon
 import no.nav.bidrag.beregn.felles.enums.BostatusKode
 import no.nav.bidrag.beregn.felles.enums.InntektType
 import no.nav.bidrag.beregn.felles.enums.SaerfradragKode
-
-data class SjablonPeriode(
-    val sjablonDatoFraTil: Periode,
-    val sjablon: Sjablon) : PeriodisertGrunnlag {
-  constructor(sjablonPeriode: SjablonPeriode) : this(sjablonPeriode.sjablonDatoFraTil.justerDatoer(), sjablonPeriode.sjablon)
-  override fun getDatoFraTil(): Periode {
-    return sjablonDatoFraTil
-  }
-}
 
 data class InntektPeriode(
     val inntektDatoFraTil: Periode,
