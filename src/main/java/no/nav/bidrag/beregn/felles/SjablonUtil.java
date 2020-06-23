@@ -30,7 +30,7 @@ public class SjablonUtil {
   }
 
   // Henter verdier fra sjablonene Forbruksutgifter, MaksFradrag og MaksTilsyn (1:1, intervall)
-  public static double hentSjablonverdi(List<Sjablon> sjablonListe, SjablonNavn sjablonNavn, String sjablonNokkelVerdi) {
+  public static double hentSjablonverdi(List<Sjablon> sjablonListe, SjablonNavn sjablonNavn, Integer sjablonNokkelVerdi) {
     var filtrertSjablonListe = filtrerPaaSjablonNavn(sjablonListe, sjablonNavn.getNavn());
     var sortertSjablonSingelNokkelSingelInnholdListe = mapTilSingelListeNokkelInnholdSortert(filtrertSjablonListe);
     return hentSjablonInnholdVerdiIntervall(sortertSjablonSingelNokkelSingelInnholdListe, sjablonNokkelVerdi);
@@ -38,7 +38,7 @@ public class SjablonUtil {
 
   // Henter verdier fra sjablon Samværsfradrag (N:N, eksakt match + intervall)
   public static double hentSjablonverdi(List<Sjablon> sjablonListe, SjablonNavn sjablonNavn, List<SjablonNokkel> sjablonNokkelListe,
-      SjablonNokkelNavn sjablonNokkelNavn, String sjablonNokkelVerdi, SjablonInnholdNavn sjablonInnholdNavn) {
+      SjablonNokkelNavn sjablonNokkelNavn, Integer sjablonNokkelVerdi, SjablonInnholdNavn sjablonInnholdNavn) {
     var filtrertSjablonListe = filtrerSjablonNokkelListePaaSjablonNokkel(filtrerPaaSjablonNavn(sjablonListe, sjablonNavn.getNavn()), sjablonNokkelListe);
     var sortertSjablonSingelNokkelListe = mapTilSingelListeNokkelSortert(filtrertSjablonListe, sjablonNokkelNavn);
     var sjablonInnholdListe = finnSjablonInnholdVerdiListeIntervall(sortertSjablonSingelNokkelListe, sjablonNokkelVerdi);
@@ -113,7 +113,7 @@ public class SjablonUtil {
         .map(sjablon -> new SjablonSingelNokkelSingelInnhold(sjablon.getSjablonNavn(),
             sjablon.getSjablonNokkelListe().stream().map(sjablonNokkel -> sjablonNokkel.getSjablonNokkelVerdi()).findFirst().orElse(" "),
             sjablon.getSjablonInnholdListe().stream().map(sjablonInnhold -> sjablonInnhold.getSjablonInnholdVerdi()).findFirst().orElse(0d)))
-        .sorted(comparing(SjablonSingelNokkelSingelInnhold::getSjablonNokkelVerdi))
+        .sorted(comparing(sjablonSingelNokkelSingelInnhold -> Integer.valueOf(sjablonSingelNokkelSingelInnhold.getSjablonNokkelVerdi())))
         .collect(toList());
   }
 
@@ -131,7 +131,7 @@ public class SjablonUtil {
                 .findFirst()
                 .orElse(" "),
             sjablon.getSjablonInnholdListe()))
-        .sorted(comparing(SjablonSingelNokkel::getSjablonNokkelVerdi))
+        .sorted(comparing(sjablonSingelNokkel -> Integer.valueOf(sjablonSingelNokkel.getSjablonNokkelVerdi())))
         .collect(toList());
   }
 
@@ -151,11 +151,11 @@ public class SjablonUtil {
   // ikke finnes noen verdi).
   // Brukes av 1:1 sjabloner som henter verdi basert på intervall (Forbruksutgifter, MaxFradrag, MaxTilsyn).
   private static Double hentSjablonInnholdVerdiIntervall(List<SjablonSingelNokkelSingelInnhold> sortertSjablonSingelNokkelSingelInnholdListe,
-      String sjablonNokkelVerdi) {
+      Integer sjablonNokkelVerdi) {
     return sortertSjablonSingelNokkelSingelInnholdListe
         .stream()
         .filter(sortertSjablonSingelNokkelSingelInnhold ->
-            sortertSjablonSingelNokkelSingelInnhold.getSjablonNokkelVerdi().compareTo(sjablonNokkelVerdi) >= 0)
+            Integer.valueOf(sortertSjablonSingelNokkelSingelInnhold.getSjablonNokkelVerdi()).compareTo(sjablonNokkelVerdi) >= 0)
         .findFirst()
         .map(SjablonSingelNokkelSingelInnhold::getSjablonInnholdVerdi)
         .orElse(0d);
@@ -165,10 +165,10 @@ public class SjablonUtil {
   // mot formodning ikke finnes noen forekomster).
   // Brukes av sjabloner som har flere innholdobjekter og som henter verdi(er) basert på intervall (Samværsfradrag).
   private static List<SjablonInnhold> finnSjablonInnholdVerdiListeIntervall(List<SjablonSingelNokkel> sortertSjablonSingelNokkelListe,
-      String sjablonNokkelVerdi) {
+      Integer sjablonNokkelVerdi) {
     return sortertSjablonSingelNokkelListe
         .stream()
-        .filter(sjablon -> sjablon.getSjablonNokkelVerdi().compareTo(sjablonNokkelVerdi) >= 0)
+        .filter(sjablon -> Integer.valueOf(sjablon.getSjablonNokkelVerdi()).compareTo(sjablonNokkelVerdi) >= 0)
         .findFirst()
         .map(SjablonSingelNokkel::getSjablonInnholdListe)
         .orElse(emptyList());

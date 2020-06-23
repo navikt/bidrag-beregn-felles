@@ -21,6 +21,7 @@ class SjablonTest {
   private List<Sjablon> sjablonListe = TestUtil.byggSjabloner();
   private List<SjablonNokkel> sjablonNokkelListe = new ArrayList<>();
   private String sjablonNokkelVerdi;
+  private Integer sjablonNokkelVerdiInteger;
 
   @BeforeEach
   void initMocks() {
@@ -61,33 +62,79 @@ class SjablonTest {
   @DisplayName("Test Forbruksutgifter (1:1, intervall)")
   void testHentForbruksutgifter() {
 
-    sjablonNokkelVerdi = "12";
+    sjablonNokkelVerdiInteger = 3;
+    var belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.FORBRUKSUTGIFTER, sjablonNokkelVerdiInteger);
+    assertThat(belopForbrukTot).isEqualTo(3661d);
 
-    var belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.FORBRUKSUTGIFTER, sjablonNokkelVerdi);
+    sjablonNokkelVerdiInteger = 5;
+    belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.FORBRUKSUTGIFTER, sjablonNokkelVerdiInteger);
+    assertThat(belopForbrukTot).isEqualTo(3661d);
 
+    sjablonNokkelVerdiInteger = 7;
+    belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.FORBRUKSUTGIFTER, sjablonNokkelVerdiInteger);
+    assertThat(belopForbrukTot).isEqualTo(5113d);
+
+    sjablonNokkelVerdiInteger = 10;
+    belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.FORBRUKSUTGIFTER, sjablonNokkelVerdiInteger);
+    assertThat(belopForbrukTot).isEqualTo(5113d);
+
+    sjablonNokkelVerdiInteger = 12;
+    belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.FORBRUKSUTGIFTER, sjablonNokkelVerdiInteger);
     assertThat(belopForbrukTot).isEqualTo(6099d);
+
+    sjablonNokkelVerdiInteger = 99;
+    belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.FORBRUKSUTGIFTER, sjablonNokkelVerdiInteger);
+    assertThat(belopForbrukTot).isEqualTo(6985d);
   }
 
   @Test
   @DisplayName("Test Maks Fradrag (1:1, intervall)")
   void testHentMaksFradrag() {
 
-    sjablonNokkelVerdi = "3";
+    sjablonNokkelVerdiInteger = 0;
+    var belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.MAKS_FRADRAG, sjablonNokkelVerdiInteger);
+    assertThat(belopForbrukTot).isEqualTo(2083.33d);
 
-    var belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.MAKS_FRADRAG, sjablonNokkelVerdi);
+    sjablonNokkelVerdiInteger = 1;
+    belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.MAKS_FRADRAG, sjablonNokkelVerdiInteger);
+    assertThat(belopForbrukTot).isEqualTo(2083.33d);
 
+    sjablonNokkelVerdiInteger = 3;
+    belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.MAKS_FRADRAG, sjablonNokkelVerdiInteger);
     assertThat(belopForbrukTot).isEqualTo(4583d);
+
+    sjablonNokkelVerdiInteger = 90;
+    belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.MAKS_FRADRAG, sjablonNokkelVerdiInteger);
+    assertThat(belopForbrukTot).isEqualTo(12083d);
+
+    sjablonNokkelVerdiInteger = 99;
+    belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.MAKS_FRADRAG, sjablonNokkelVerdiInteger);
+    assertThat(belopForbrukTot).isEqualTo(12083d);
   }
 
   @Test
   @DisplayName("Test Maks Tilsyn (1:1, intervall)")
   void testHentMaksTilsyn() {
 
-    sjablonNokkelVerdi = "2";
+    sjablonNokkelVerdiInteger = 0;
+    var belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.MAKS_TILSYN, sjablonNokkelVerdiInteger);
+    assertThat(belopForbrukTot).isEqualTo(6214d);
 
-    var belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.MAKS_TILSYN, sjablonNokkelVerdi);
+    sjablonNokkelVerdiInteger = 1;
+    belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.MAKS_TILSYN, sjablonNokkelVerdiInteger);
+    assertThat(belopForbrukTot).isEqualTo(6214d);
 
+    sjablonNokkelVerdiInteger = 2;
+    belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.MAKS_TILSYN, sjablonNokkelVerdiInteger);
     assertThat(belopForbrukTot).isEqualTo(8109d);
+
+    sjablonNokkelVerdiInteger = 90;
+    belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.MAKS_TILSYN, sjablonNokkelVerdiInteger);
+    assertThat(belopForbrukTot).isEqualTo(9189d);
+
+    sjablonNokkelVerdiInteger = 99;
+    belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.MAKS_TILSYN, sjablonNokkelVerdiInteger);
+    assertThat(belopForbrukTot).isEqualTo(9189d);
   }
 
   @Test
@@ -96,18 +143,50 @@ class SjablonTest {
 
     sjablonNokkelListe.clear();
     sjablonNokkelListe.add(new SjablonNokkel(SjablonNokkelNavn.SAMVAERSKLASSE.getNavn(), "03"));
-    sjablonNokkelVerdi = "12";
 
+    sjablonNokkelVerdiInteger = 3;
     var antDagerTom = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.SAMVAERSFRADRAG, sjablonNokkelListe, SjablonNokkelNavn.ALDER_TOM,
-        sjablonNokkelVerdi, SjablonInnholdNavn.ANTALL_DAGER_TOM);
+        sjablonNokkelVerdiInteger, SjablonInnholdNavn.ANTALL_DAGER_TOM);
     var antNetterTom = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.SAMVAERSFRADRAG, sjablonNokkelListe, SjablonNokkelNavn.ALDER_TOM,
-        sjablonNokkelVerdi, SjablonInnholdNavn.ANTALL_NETTER_TOM);
+        sjablonNokkelVerdiInteger, SjablonInnholdNavn.ANTALL_NETTER_TOM);
     var belopFradrag = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.SAMVAERSFRADRAG, sjablonNokkelListe, SjablonNokkelNavn.ALDER_TOM,
-        sjablonNokkelVerdi, SjablonInnholdNavn.FRADRAG_BELOP);
+        sjablonNokkelVerdiInteger, SjablonInnholdNavn.FRADRAG_BELOP);
 
     assertThat(antDagerTom).isEqualTo(0d);
     assertThat(antNetterTom).isEqualTo(13d);
-    assertThat(belopFradrag).isEqualTo(2914d);
+    assertThat(belopFradrag).isEqualTo(2082d);
+
+    sjablonNokkelVerdiInteger = 5;
+    antDagerTom = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.SAMVAERSFRADRAG, sjablonNokkelListe, SjablonNokkelNavn.ALDER_TOM,
+        sjablonNokkelVerdiInteger, SjablonInnholdNavn.ANTALL_DAGER_TOM);
+    antNetterTom = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.SAMVAERSFRADRAG, sjablonNokkelListe, SjablonNokkelNavn.ALDER_TOM,
+        sjablonNokkelVerdiInteger, SjablonInnholdNavn.ANTALL_NETTER_TOM);
+    belopFradrag = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.SAMVAERSFRADRAG, sjablonNokkelListe, SjablonNokkelNavn.ALDER_TOM,
+        sjablonNokkelVerdiInteger, SjablonInnholdNavn.FRADRAG_BELOP);
+
+    assertThat(antDagerTom).isEqualTo(0d);
+    assertThat(antNetterTom).isEqualTo(13d);
+    assertThat(belopFradrag).isEqualTo(2082d);
+
+    sjablonNokkelVerdiInteger = 12;
+    antDagerTom = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.SAMVAERSFRADRAG, sjablonNokkelListe, SjablonNokkelNavn.ALDER_TOM,
+        sjablonNokkelVerdiInteger, SjablonInnholdNavn.ANTALL_DAGER_TOM);
+    antNetterTom = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.SAMVAERSFRADRAG, sjablonNokkelListe, SjablonNokkelNavn.ALDER_TOM,
+        sjablonNokkelVerdiInteger, SjablonInnholdNavn.ANTALL_NETTER_TOM);
+    belopFradrag = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.SAMVAERSFRADRAG, sjablonNokkelListe, SjablonNokkelNavn.ALDER_TOM,
+        sjablonNokkelVerdiInteger, SjablonInnholdNavn.FRADRAG_BELOP);
+
+    sjablonNokkelVerdiInteger = 99;
+    antDagerTom = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.SAMVAERSFRADRAG, sjablonNokkelListe, SjablonNokkelNavn.ALDER_TOM,
+        sjablonNokkelVerdiInteger, SjablonInnholdNavn.ANTALL_DAGER_TOM);
+    antNetterTom = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.SAMVAERSFRADRAG, sjablonNokkelListe, SjablonNokkelNavn.ALDER_TOM,
+        sjablonNokkelVerdiInteger, SjablonInnholdNavn.ANTALL_NETTER_TOM);
+    belopFradrag = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.SAMVAERSFRADRAG, sjablonNokkelListe, SjablonNokkelNavn.ALDER_TOM,
+        sjablonNokkelVerdiInteger, SjablonInnholdNavn.FRADRAG_BELOP);
+
+    assertThat(antDagerTom).isEqualTo(0d);
+    assertThat(antNetterTom).isEqualTo(13d);
+    assertThat(belopFradrag).isEqualTo(3196d);
   }
 
   @Test
