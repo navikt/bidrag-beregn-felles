@@ -7,6 +7,7 @@ Repo for alle felles beregninger for bidrag. Disse erstatter beregninger i BBM.
 
 Versjon | Endringstype | Beskrivelse
 --------|--------------|------------
+0.4.5   | Endret       | Rettet feil i input-validering av særfradrag.
 0.4.4   | Endret       | Rettet feil i sortering i SjablonUtil. Lagt til noen flere tester i SjablonTest.
 0.4.3   | Endret       | Flyttet også sjablonPeriode og Avvik fra bidragsevne over til felles.
 0.4.2   | Endret       | Flyttet gjenstående sjablonklasser + Avvik og Periode fra bidragsevne over til felles.
