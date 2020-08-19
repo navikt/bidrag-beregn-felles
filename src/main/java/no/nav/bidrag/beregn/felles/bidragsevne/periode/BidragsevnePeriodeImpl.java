@@ -79,6 +79,7 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
         .addBruddpunkter(justertBostatusPeriodeListe)
         .addBruddpunkter(justertAntallBarnIEgetHusholdPeriodeListe)
         .addBruddpunkter(justertSaerfradragPeriodeListe)
+        .addBruddpunkt(beregnBidragsevneGrunnlagAlt.getBeregnDatoTil()) //For å sikre bruddpunkt på start-beregning-til-dato
         .finnPerioder(beregnBidragsevneGrunnlagAlt.getBeregnDatoFra(), beregnBidragsevneGrunnlagAlt.getBeregnDatoTil());
 
     // Løper gjennom periodene og finner matchende verdi for hver kategori. Kaller beregningsmodulen for hver beregningsperiode
