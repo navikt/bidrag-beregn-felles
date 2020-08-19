@@ -158,7 +158,6 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
     }
     avvikListe.addAll(validerInput("skatteklassePeriodeListe", skatteklassePeriodeListe, true, true, true));
 
-
     // Sjekk perioder for bostatus
     var bostatusPeriodeListe = new ArrayList<Periode>();
     for (BostatusPeriode bostatusPeriode : beregnBidragsevneGrunnlagAlt.getBostatusPeriodeListe()) {
@@ -173,12 +172,12 @@ public class BidragsevnePeriodeImpl implements BidragsevnePeriode {
     }
     avvikListe.addAll(validerInput("antallBarnIEgetHusholdPeriodeListe", antallBarnIEgetHusholdPeriodeListe, false, false, false));
 
-    // Sjekk perioder for antall barn i eget hushold
+    // Sjekk perioder for særfradrag
     var saerfradragPeriodeListe = new ArrayList<Periode>();
     for (SaerfradragPeriode saerfradragPeriode : beregnBidragsevneGrunnlagAlt.getSaerfradragPeriodeListe()) {
       saerfradragPeriodeListe.add(saerfradragPeriode.getDatoFraTil());
     }
-    avvikListe.addAll(validerInput("saerfradragPeriodeListe", antallBarnIEgetHusholdPeriodeListe, false, false, false));
+    avvikListe.addAll(validerInput("saerfradragPeriodeListe", saerfradragPeriodeListe, true, true, true));
 
     // Sjekk beregn dato fra/til
     avvikListe.addAll(validerBeregnPeriodeInput(beregnBidragsevneGrunnlagAlt.getBeregnDatoFra(), beregnBidragsevneGrunnlagAlt.getBeregnDatoTil()));
