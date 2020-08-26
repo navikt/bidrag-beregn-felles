@@ -7,6 +7,7 @@ Repo for alle felles beregninger for bidrag. Disse erstatter beregninger i BBM.
 
 Versjon | Endringstype | Beskrivelse
 --------|--------------|------------
+0.4.7   | Endret       | Forbedret input-kontroll på datoer
 0.4.7   | Opprettet    | Lagt til ny verdi i enum AVVIK_TYPE
 0.4.6   | Endret       | Beregn-til-dato lagt med i periodisering for beregning av bidragsevne.
 0.4.5   | Endret       | Rettet feil i input-validering av særfradrag.
