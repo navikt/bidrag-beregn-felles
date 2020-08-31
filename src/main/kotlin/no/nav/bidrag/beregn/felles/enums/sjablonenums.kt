@@ -51,6 +51,7 @@ enum class SjablonTallNavn (val navn: String) {
   FORSKUDDSSATS_75PROSENT_BELOP("Forskuddssats75ProsentBeløp"),
   FORDEL_SAERFRADRAG_BELOP("FordelSærfradragBeløp"),
   SKATTESATS_ALMINNELIG_INNTEKT_PROSENT("SkattesatsAlminneligInntektProsent"),
+  FORHOYET_BARNETRYGD_BELOP("ForhøyetBarnetrygdBeløp"),
   FASTSETTELSESGEBYR_BELOP("FastsettelsesgebyrBeløp")
 }
 

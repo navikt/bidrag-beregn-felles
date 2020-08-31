@@ -7,6 +7,7 @@ Repo for alle felles beregninger for bidrag. Disse erstatter beregninger i BBM.
 
 Versjon | Endringstype | Beskrivelse
 --------|--------------|------------
+0.4.10  | Endret       | Lagt til ny sjablontype
 0.4.9   | Endret       | Flyttet input-kontroll av datoer ut i en felles-modul (util)
 0.4.8   | Endret       | Forbedret input-kontroll på datoer
 0.4.7   | Opprettet    | Lagt til ny verdi i enum AVVIK_TYPE
