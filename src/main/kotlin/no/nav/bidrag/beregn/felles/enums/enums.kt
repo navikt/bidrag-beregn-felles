@@ -38,3 +38,15 @@ enum class SaerfradragKode {
   HALVT,
   HELT
 }
+
+enum class ResultatKode {
+  KOSTNADSBEREGNET_BIDRAG,                   // Kostnadsberegnet bidrag
+  BARNET_ER_SELVFORSORGET,                   // Barnet er selvforsørget
+  BIDRAG_REDUSERT_AV_EVNE,                   // Bidrag redusert pga ikke full evne
+  BIDRAG_REDUSERT_TIL_25_PROSENT_AV_INNTEKT, // Maks 25% av inntekt
+  BIDRAG_SATT_TIL_BARNETILLEGGBP,            // BarnetilleggBP er høyere enn beregnet bidrag
+  BIDRAG_SATT_TIL_BARNETILLEGGBM,            // BarnetilleggBM er høyere enn beregnet bidrag
+  BIDRAG_SATT_TIL_BARNETILLEGGFORSVARET,     // Barnebidrag settes likt barnetillegg fra forsvaret
+  DELT_BOSTED,                               // Barnet bor like mye hos begge foreldre
+  BEGRENSET_REVURDERING                      // Barnet bor like mye hos begge foreldre
+}
