@@ -40,13 +40,14 @@ enum class SaerfradragKode {
 }
 
 enum class ResultatKode {
-  KOSTNADSBEREGNET_BIDRAG,                   // Kostnadsberegnet bidrag
-  BARNET_ER_SELVFORSORGET,                   // Barnet er selvforsørget
-  BIDRAG_REDUSERT_AV_EVNE,                   // Bidrag redusert pga ikke full evne
-  BIDRAG_REDUSERT_TIL_25_PROSENT_AV_INNTEKT, // Maks 25% av inntekt
-  BIDRAG_SATT_TIL_BARNETILLEGG_BP,           // BarnetilleggBP er høyere enn beregnet bidrag
-  BIDRAG_SATT_TIL_BARNETILLEGG_BM,           // BarnetilleggBM er høyere enn beregnet bidrag
-  BIDRAG_SATT_TIL_BARNETILLEGG_FORSVARET,    // Barnebidrag settes likt barnetillegg fra forsvaret
-  DELT_BOSTED,                               // Barnet bor like mye hos begge foreldre
-  BEGRENSET_REVURDERING                      // Beregnet bidrag er større enn forskuddsats, settes lik forskuddssats
+  KOSTNADSBEREGNET_BIDRAG,                                 // Kostnadsberegnet bidrag
+  BARNET_ER_SELVFORSORGET,                                 // Barnet er selvforsørget
+  BIDRAG_REDUSERT_AV_EVNE,                                 // Bidrag redusert pga ikke full evne
+  INGEN_EVNE,                                              // BP har 0.- i bidragsevne, bidrag satt til 0.-
+  BIDRAG_REDUSERT_TIL_25_PROSENT_AV_INNTEKT,               // Maks 25% av inntekt
+  BIDRAG_SATT_TIL_BARNETILLEGG_BP,                         // BarnetilleggBP er høyere enn beregnet bidrag
+  BIDRAG_SATT_TIL_UNDERHOLDSKOSTNAD_MINUS_BARNETILLEGG_BM, // Beregnet bidrag er lavere enn underholdskostnad minus barnetilleggBM
+  BIDRAG_SATT_TIL_BARNETILLEGG_FORSVARET,                  // Barnebidrag settes likt barnetillegg fra forsvaret
+  DELT_BOSTED,                                             // Barnet bor like mye hos begge foreldre
+  BEGRENSET_REVURDERING                                    // Beregnet bidrag er større enn forskuddsats, settes lik forskuddssats
 }

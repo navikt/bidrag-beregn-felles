@@ -7,6 +7,7 @@ Repo for alle felles beregninger for bidrag. Disse erstatter beregninger i BBM.
 
 Versjon | Endringstype | Beskrivelse
 --------|--------------|------------
+0.5.2   | Slettet      | Lagt til ny enum for resultatkode og endret en eksisterende enum
 0.5.1   | Slettet      | Lagt til enums for resultatkoder
 0.5.0   | Slettet      | Slettet funksjonalitet for bidragsevneberegning (flyttet til bidrag-beregn-barnebidrag-core)
 0.4.10  | Endret       | Lagt til ny sjablontype
