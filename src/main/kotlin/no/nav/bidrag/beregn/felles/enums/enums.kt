@@ -15,28 +15,33 @@ enum class SivilstandKode {
   ENSLIG
 }
 
-enum class InntektType {
-  LØNNSINNTEKT,
-  KAPITALINNTEKT,
-  BARNETRYGD,
-  UTVIDET_BARNETRYGD,
-  KONTANTSTØTTE,
-  PENSJON,
-  SYKEPENGER
-}
-
 enum class AvvikType {
   PERIODER_OVERLAPPER,
   PERIODER_HAR_OPPHOLD,
   NULL_VERDI_I_DATO,
   DATO_FRA_ETTER_DATO_TIL,
-  PERIODE_MANGLER_DATA
+  PERIODE_MANGLER_DATA,
+  UGYLDIG_INNTEKT_TYPE,
+  UGYLDIG_INNTEKT_PERIODE,
+  OVERLAPPENDE_INNTEKT
 }
 
 enum class SaerfradragKode {
   INGEN,
   HALVT,
   HELT
+}
+
+enum class SoknadType {
+  FORSKUDD,
+  BIDRAG,
+  SAERTILSKUDD
+}
+
+enum class Rolle {
+  BIDRAGSPLIKTIG,
+  BIDRAGSMOTTAKER,
+  SOKNADSBARN
 }
 
 enum class ResultatKode {
