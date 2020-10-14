@@ -7,6 +7,7 @@ Repo for alle felles beregninger for bidrag. Disse erstatter beregninger i BBM.
 
 Versjon | Endringstype | Beskrivelse
 --------|--------------|------------
+0.7.0   | Endret       | Lagt til flere egenskaper på enum SjablonTallNavn
 0.6.0   | Opprettet    | Lagt til funksjonalitet for validering og justering av inntekter. Lagt til / endret enum for inntektstyper med egenskaper
 0.5.2   | Opprettet    | Lagt til ny enum for resultatkode og endret en eksisterende enum
 0.5.1   | Opprettet    | Lagt til enums for resultatkoder
