@@ -18,9 +18,7 @@ public class PeriodeUtil {
       boolean sjekkOverlapp, boolean sjekkOpphold, boolean sjekkNull, boolean sjekkBeregnPeriode) {
     var indeks = 0;
     Periode forrigePeriode = null;
-
-    // Sjekk beregn dato fra/til
-    var avvikListe = new ArrayList<>(PeriodeUtil.validerBeregnPeriodeInput(beregnDatoFra, beregnDatoTil));
+    var avvikListe = new ArrayList<Avvik>();
 
     // Validerer at dataene i periodelisten dekker hele perioden det skal beregnes for
     if (sjekkBeregnPeriode) {
@@ -55,11 +53,6 @@ public class PeriodeUtil {
               ", periodeDatoTil=" + dennePeriode.getDatoTil();
           avvikListe.add(new Avvik(feilmelding, AvvikType.NULL_VERDI_I_DATO));
         }
-        if ((indeks != 1) && (dennePeriode.getDatoFra() == null)) {
-          var feilmelding = "periodeDatoFra kan ikke være null i " + dataElement + ": periodeDatoFra=" + dennePeriode.getDatoFra() +
-              ", periodeDatoTil=" + dennePeriode.getDatoTil();
-          avvikListe.add(new Avvik(feilmelding, AvvikType.NULL_VERDI_I_DATO));
-        }
       }
 
       //Sjekk om dato fra er etter dato til
@@ -76,7 +69,7 @@ public class PeriodeUtil {
   }
 
   // Validerer at beregningsperiode fra/til er gyldig
-  private static List<Avvik> validerBeregnPeriodeInput(LocalDate beregnDatoFra, LocalDate beregnDatoTil) {
+  public static List<Avvik> validerBeregnPeriodeInput(LocalDate beregnDatoFra, LocalDate beregnDatoTil) {
     var avvikListe = new ArrayList<Avvik>();
 
     if (beregnDatoFra == null) {
