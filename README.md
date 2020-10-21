@@ -7,6 +7,7 @@ Repo for alle felles beregninger for bidrag. Disse erstatter beregninger i BBM.
 
 Versjon | Endringstype | Beskrivelse
 --------|--------------|------------
+0.9.0   | Opprettet    | Lagt til nye sjablonklasser
 0.8.0   | Endret       | Endret PeriodeUtil.validerBeregnPeriodeInput til public
 0.7.0   | Endret       | Lagt til flere egenskaper på enum SjablonTallNavn
 0.6.0   | Opprettet    | Lagt til funksjonalitet for validering og justering av inntekter. Lagt til / endret enum for inntektstyper med egenskaper

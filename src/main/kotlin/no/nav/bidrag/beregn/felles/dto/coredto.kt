@@ -35,3 +35,8 @@ data class SjablonInnholdCore(
     val sjablonInnholdNavn: String,
     val sjablonInnholdVerdi: Double
 )
+
+data class SjablonNavnVerdiCore(
+    val sjablonNavn: String,
+    val sjablonVerdi: Double
+)
