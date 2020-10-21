@@ -42,3 +42,8 @@ data class SjablonPeriode(
     return sjablonDatoFraTil
   }
 }
+
+data class SjablonNavnVerdi(
+    val sjablonNavn: String,
+    val sjablonVerdi: Double
+)
