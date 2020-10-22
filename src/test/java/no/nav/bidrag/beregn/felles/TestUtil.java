@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.felles;
 
 import static java.util.Collections.emptyList;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -302,11 +303,11 @@ public class TestUtil {
     var inntektGrunnlagListe = new ArrayList<InntektGrunnlag>();
 
     inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("9999-12-31")),
-        InntektType.INNTEKTSOPPL_ARBEIDSGIVER, 200000d));
+        InntektType.INNTEKTSOPPL_ARBEIDSGIVER, BigDecimal.valueOf(200000)));
     inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
-        InntektType.ATTFORING_AAP, 150000d));
+        InntektType.ATTFORING_AAP, BigDecimal.valueOf(150000)));
     inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
-        InntektType.ALOYSE, 250000d));
+        InntektType.ALOYSE, BigDecimal.valueOf(250000)));
 
     return inntektGrunnlagListe;
   }
@@ -315,11 +316,11 @@ public class TestUtil {
     var inntektGrunnlagListe = new ArrayList<InntektGrunnlag>();
 
     inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("9999-12-31")),
-        InntektType.INNTEKTSOPPL_ARBEIDSGIVER, 200000d));
+        InntektType.INNTEKTSOPPL_ARBEIDSGIVER, BigDecimal.valueOf(200000)));
     inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
-        InntektType.ATTFORING_AAP, 150000d));
+        InntektType.ATTFORING_AAP, BigDecimal.valueOf(150000)));
     inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
-        InntektType.KAPITALINNTEKT_SKE, 250000d));
+        InntektType.KAPITALINNTEKT_SKE, BigDecimal.valueOf(250000)));
 
     return inntektGrunnlagListe;
   }
@@ -328,11 +329,11 @@ public class TestUtil {
     var inntektGrunnlagListe = new ArrayList<InntektGrunnlag>();
 
     inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("9999-12-31")),
-        InntektType.BARNETRYGD_MAN_VURDERING, 200000d));
+        InntektType.BARNETRYGD_MAN_VURDERING, BigDecimal.valueOf(200000)));
     inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
-        InntektType.ATTFORING_AAP, 150000d));
+        InntektType.ATTFORING_AAP, BigDecimal.valueOf(150000)));
     inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
-        InntektType.OVERGANGSSTONAD, 250000d));
+        InntektType.OVERGANGSSTONAD, BigDecimal.valueOf(250000)));
 
     return inntektGrunnlagListe;
   }
@@ -341,15 +342,15 @@ public class TestUtil {
     var inntektGrunnlagListe = new ArrayList<InntektGrunnlag>();
 
     inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2020-01-01"), LocalDate.MAX),
-        InntektType.ALOYSE, 250000d));
+        InntektType.ALOYSE, BigDecimal.valueOf(250000)));
     inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
-        InntektType.INNTEKTSOPPL_ARBEIDSGIVER, 150000d));
+        InntektType.INNTEKTSOPPL_ARBEIDSGIVER, BigDecimal.valueOf(150000)));
     inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2019-01-01"), LocalDate.MAX),
-        InntektType.SAKSBEHANDLER_BEREGNET_INNTEKT, 300000d));
+        InntektType.SAKSBEHANDLER_BEREGNET_INNTEKT, BigDecimal.valueOf(300000)));
     inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2019-01-01"), LocalDate.MAX),
-        InntektType.KAPITALINNTEKT_EGNE_OPPL, 100000d));
+        InntektType.KAPITALINNTEKT_EGNE_OPPL, BigDecimal.valueOf(100000)));
     inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.MAX),
-        InntektType.INNTEKTSOPPL_ARBEIDSGIVER, 200000d));
+        InntektType.INNTEKTSOPPL_ARBEIDSGIVER, BigDecimal.valueOf(200000)));
 
     return inntektGrunnlagListe;
   }

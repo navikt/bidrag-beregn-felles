@@ -5,6 +5,7 @@ import static java.util.Collections.singletonList;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -37,7 +38,7 @@ public class InntektUtil {
   }
 
   // Justerer inntekt
-  public static List<InntektGrunnlag> justerInntekter(List<InntektGrunnlag> inntektGrunnlagListe, SoknadType soknadType, Rolle rolle) {
+  public static List<InntektGrunnlag> justerInntekter(List<InntektGrunnlag> inntektGrunnlagListe) {
 
     return justerPerioder(inntektGrunnlagListe);
   }
@@ -105,7 +106,7 @@ public class InntektUtil {
         .sorted(kriterie)
         .collect(toList());
 
-    var inntektGrunnlagForrige = new InntektGrunnlag(new Periode(LocalDate.MIN, LocalDate.MAX), InntektType.AINNTEKT_BEREGNET, 0);
+    var inntektGrunnlagForrige = new InntektGrunnlag(new Periode(LocalDate.MIN, LocalDate.MAX), InntektType.AINNTEKT_BEREGNET, BigDecimal.ZERO);
 
     for (var inntektGrunnlag : inntektGrunnlagListeSortert) {
 
