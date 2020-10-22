@@ -3,7 +3,7 @@
 
   <groupId>no.nav.bidrag</groupId>
   <artifactId>bidrag-beregn-felles</artifactId>
-  <version>0.11.0</version>
+  <version>0.11.1-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>bidrag-beregn-felles</name>
   <description>Felles logikk for bidrag beregn</description>
