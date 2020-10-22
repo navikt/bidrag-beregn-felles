@@ -3,6 +3,7 @@ package no.nav.bidrag.beregn.felles.inntekt;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -28,7 +29,7 @@ public class InntektTest {
   void testUgyldigSoknadstype() {
     var inntektGrunnlagListe = Collections
         .singletonList(new InntektGrunnlag(new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("9999-12-31")),
-            InntektType.AINNTEKT_BEREGNET, 200000d));
+            InntektType.AINNTEKT_BEREGNET, BigDecimal.valueOf(200000)));
     avvikListe = InntektUtil.validerInntekter(inntektGrunnlagListe, SoknadType.SAERTILSKUDD, Rolle.BIDRAGSMOTTAKER);
 
     assertAll(
@@ -45,7 +46,7 @@ public class InntektTest {
   void testUgyldigRolle() {
     var inntektGrunnlagListe = Collections
         .singletonList(new InntektGrunnlag(new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("9999-12-31")),
-            InntektType.AINNTEKT_BEREGNET, 200000d));
+            InntektType.AINNTEKT_BEREGNET, BigDecimal.valueOf(200000)));
     avvikListe = InntektUtil.validerInntekter(inntektGrunnlagListe, SoknadType.BIDRAG, Rolle.BIDRAGSPLIKTIG);
 
     assertAll(
@@ -62,7 +63,7 @@ public class InntektTest {
   void testUgyldigFraDato() {
     var inntektGrunnlagListe = Collections
         .singletonList(new InntektGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-12-31")),
-            InntektType.AINNTEKT_BEREGNET, 200000d));
+            InntektType.AINNTEKT_BEREGNET, BigDecimal.valueOf(200000)));
     avvikListe = InntektUtil.validerInntekter(inntektGrunnlagListe, SoknadType.BIDRAG, Rolle.BIDRAGSMOTTAKER);
 
     assertAll(
@@ -80,7 +81,7 @@ public class InntektTest {
   void testUgyldigTilDato() {
     var inntektGrunnlagListe = Collections
         .singletonList(new InntektGrunnlag(new Periode(LocalDate.parse("2016-01-01"), LocalDate.parse("2019-12-31")),
-            InntektType.BARNS_SYKDOM, 200000d));
+            InntektType.BARNS_SYKDOM, BigDecimal.valueOf(200000)));
     avvikListe = InntektUtil.validerInntekter(inntektGrunnlagListe, SoknadType.BIDRAG, Rolle.BIDRAGSMOTTAKER);
 
     assertAll(
@@ -96,7 +97,8 @@ public class InntektTest {
   @DisplayName("Til-dato 9999-12-31 gyldig for inntektstype")
   void testGyldigTilDato99991231() {
     var inntektGrunnlagListe = Collections.singletonList(
-        new InntektGrunnlag(new Periode(LocalDate.parse("2016-01-01"), LocalDate.parse("9999-12-31")), InntektType.BARNS_SYKDOM, 200000d));
+        new InntektGrunnlag(new Periode(LocalDate.parse("2016-01-01"), LocalDate.parse("9999-12-31")), InntektType.BARNS_SYKDOM,
+            BigDecimal.valueOf(200000)));
     avvikListe = InntektUtil.validerInntekter(inntektGrunnlagListe, SoknadType.BIDRAG, Rolle.BIDRAGSMOTTAKER);
 
     assertAll(
@@ -108,7 +110,7 @@ public class InntektTest {
   @DisplayName("Til-dato LocalDate.MAX gyldig for inntektstype")
   void testGyldigTilDatoMAX() {
     var inntektGrunnlagListe = Collections.singletonList(
-        new InntektGrunnlag(new Periode(LocalDate.parse("2016-01-01"), LocalDate.MAX), InntektType.BARNS_SYKDOM, 200000d));
+        new InntektGrunnlag(new Periode(LocalDate.parse("2016-01-01"), LocalDate.MAX), InntektType.BARNS_SYKDOM, BigDecimal.valueOf(200000)));
     avvikListe = InntektUtil.validerInntekter(inntektGrunnlagListe, SoknadType.BIDRAG, Rolle.BIDRAGSMOTTAKER);
 
     assertAll(
@@ -120,7 +122,7 @@ public class InntektTest {
   @DisplayName("Til-dato null gyldig for inntektstype")
   void testGyldigTilDatoNull() {
     var inntektGrunnlagListe = Collections.singletonList(
-        new InntektGrunnlag(new Periode(LocalDate.parse("2016-01-01"), null), InntektType.BARNS_SYKDOM, 200000d));
+        new InntektGrunnlag(new Periode(LocalDate.parse("2016-01-01"), null), InntektType.BARNS_SYKDOM, BigDecimal.valueOf(200000)));
     avvikListe = InntektUtil.validerInntekter(inntektGrunnlagListe, SoknadType.BIDRAG, Rolle.BIDRAGSMOTTAKER);
 
     assertAll(
@@ -165,34 +167,34 @@ public class InntektTest {
   @DisplayName("Juster perioder for inntekter innefor samme gruppe som delvis overlapper")
   void testJusterDelvisOverlappSammeGruppe() {
     inntektGrunnlagListe = InntektUtil
-        .justerInntekter(TestUtil.byggInntektGrunnlagListeDelvisOverlappSammeGruppe(), SoknadType.BIDRAG, Rolle.BIDRAGSMOTTAKER);
+        .justerInntekter(TestUtil.byggInntektGrunnlagListeDelvisOverlappSammeGruppe());
 
     assertAll(
         () -> assertThat(inntektGrunnlagListe).isNotEmpty(),
         () -> assertThat(inntektGrunnlagListe.size()).isEqualTo(5),
 
         () -> assertThat(inntektGrunnlagListe.get(0).getInntektType()).isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
-        () -> assertThat(inntektGrunnlagListe.get(0).getInntektBelop()).isEqualTo(200000d),
+        () -> assertThat(inntektGrunnlagListe.get(0).getInntektBelop()).isEqualTo(BigDecimal.valueOf(200000)),
         () -> assertThat(inntektGrunnlagListe.get(0).getInntektDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2018-01-01")),
         () -> assertThat(inntektGrunnlagListe.get(0).getInntektDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2018-05-31")),
 
         () -> assertThat(inntektGrunnlagListe.get(1).getInntektType()).isEqualTo(InntektType.INNTEKTSOPPL_ARBEIDSGIVER),
-        () -> assertThat(inntektGrunnlagListe.get(1).getInntektBelop()).isEqualTo(150000d),
+        () -> assertThat(inntektGrunnlagListe.get(1).getInntektBelop()).isEqualTo(BigDecimal.valueOf(150000)),
         () -> assertThat(inntektGrunnlagListe.get(1).getInntektDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2018-06-01")),
         () -> assertThat(inntektGrunnlagListe.get(1).getInntektDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2018-12-31")),
 
         () -> assertThat(inntektGrunnlagListe.get(2).getInntektType()).isEqualTo(InntektType.SAKSBEHANDLER_BEREGNET_INNTEKT),
-        () -> assertThat(inntektGrunnlagListe.get(2).getInntektBelop()).isEqualTo(300000d),
+        () -> assertThat(inntektGrunnlagListe.get(2).getInntektBelop()).isEqualTo(BigDecimal.valueOf(300000)),
         () -> assertThat(inntektGrunnlagListe.get(2).getInntektDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2019-01-01")),
         () -> assertThat(inntektGrunnlagListe.get(2).getInntektDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2019-12-31")),
 
         () -> assertThat(inntektGrunnlagListe.get(3).getInntektType()).isEqualTo(InntektType.ALOYSE),
-        () -> assertThat(inntektGrunnlagListe.get(3).getInntektBelop()).isEqualTo(250000d),
+        () -> assertThat(inntektGrunnlagListe.get(3).getInntektBelop()).isEqualTo(BigDecimal.valueOf(250000)),
         () -> assertThat(inntektGrunnlagListe.get(3).getInntektDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2020-01-01")),
         () -> assertThat(inntektGrunnlagListe.get(3).getInntektDatoFraTil().getDatoTil()).isEqualTo(LocalDate.MAX),
 
         () -> assertThat(inntektGrunnlagListe.get(4).getInntektType()).isEqualTo(InntektType.KAPITALINNTEKT_EGNE_OPPL),
-        () -> assertThat(inntektGrunnlagListe.get(4).getInntektBelop()).isEqualTo(100000d),
+        () -> assertThat(inntektGrunnlagListe.get(4).getInntektBelop()).isEqualTo(BigDecimal.valueOf(100000)),
         () -> assertThat(inntektGrunnlagListe.get(4).getInntektDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2019-01-01")),
         () -> assertThat(inntektGrunnlagListe.get(4).getInntektDatoFraTil().getDatoTil()).isEqualTo(LocalDate.MAX)
     );
