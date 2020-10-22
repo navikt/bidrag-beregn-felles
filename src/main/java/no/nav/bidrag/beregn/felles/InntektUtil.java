@@ -16,14 +16,12 @@ import no.nav.bidrag.beregn.felles.enums.InntektType;
 import no.nav.bidrag.beregn.felles.enums.Rolle;
 import no.nav.bidrag.beregn.felles.enums.SoknadType;
 import no.nav.bidrag.beregn.felles.inntekt.InntektGrunnlag;
-import no.nav.bidrag.beregn.felles.inntekt.InntektGrunnlagJustert;
 
 public class InntektUtil {
 
-  // Validerer og justerer inntekt
-  public static InntektGrunnlagJustert validerOgJusterInntekter(List<InntektGrunnlag> inntektGrunnlagListe, SoknadType soknadType, Rolle rolle) {
+  // Validerer inntekt
+  public static List<Avvik> validerInntekter(List<InntektGrunnlag> inntektGrunnlagListe, SoknadType soknadType, Rolle rolle) {
 
-    List<InntektGrunnlag> inntektGrunnlagListeJustert = new ArrayList<>();
     List<Avvik> avvikListe = new ArrayList<>();
 
     // Validerer søknadstype, rolle og fra- /til-dato for en inntektstype
@@ -35,12 +33,13 @@ public class InntektUtil {
     // Validerer at flere inntekter innenfor samme inntektsgruppe ikke starter på samme dato
     avvikListe.addAll(validerFraDatoPerInntektsgruppe(inntektGrunnlagListe));
 
-    // Justerer perioder for å unngå overlapp innenfor samme gruppe
-    if (avvikListe.isEmpty()) {
-      inntektGrunnlagListeJustert = justerPerioder(inntektGrunnlagListe);
-    }
+    return avvikListe;
+  }
 
-    return new InntektGrunnlagJustert(inntektGrunnlagListeJustert, avvikListe);
+  // Justerer inntekt
+  public static List<InntektGrunnlag> justerInntekter(List<InntektGrunnlag> inntektGrunnlagListe, SoknadType soknadType, Rolle rolle) {
+
+    return justerPerioder(inntektGrunnlagListe);
   }
 
   // Validerer at søknadstype og rolle er gyldig for en inntektstype
