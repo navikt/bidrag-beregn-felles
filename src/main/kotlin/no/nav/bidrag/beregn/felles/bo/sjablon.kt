@@ -1,5 +1,7 @@
 package no.nav.bidrag.beregn.felles.bo
 
+import java.math.BigDecimal
+
 // Nye sjablonklasser
 data class Sjablon(
     val sjablonNavn: String,
@@ -14,7 +16,7 @@ data class SjablonNokkel(
 
 data class SjablonInnhold(
     val sjablonInnholdNavn: String,
-    val sjablonInnholdVerdi: Double
+    val sjablonInnholdVerdi: BigDecimal
 )
 
 data class SjablonSingelNokkel(
@@ -26,12 +28,12 @@ data class SjablonSingelNokkel(
 data class SjablonSingelNokkelSingelInnhold(
     val sjablonNavn: String,
     val sjablonNokkelVerdi: String,
-    val sjablonInnholdVerdi: Double
+    val sjablonInnholdVerdi: BigDecimal
 )
 
 data class TrinnvisSkattesats(
-    val inntektGrense: Double,
-    val sats: Double
+    val inntektGrense: BigDecimal,
+    val sats: BigDecimal
 )
 
 data class SjablonPeriode(
@@ -45,5 +47,5 @@ data class SjablonPeriode(
 
 data class SjablonNavnVerdi(
     val sjablonNavn: String,
-    val sjablonVerdi: Double
+    val sjablonVerdi: BigDecimal
 )

@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.felles.bo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import no.nav.bidrag.beregn.felles.SjablonUtil;
@@ -18,9 +19,8 @@ import org.mockito.MockitoAnnotations;
 @DisplayName("SjablonTest")
 class SjablonTest {
 
-  private List<Sjablon> sjablonListe = TestUtil.byggSjabloner();
-  private List<SjablonNokkel> sjablonNokkelListe = new ArrayList<>();
-  private String sjablonNokkelVerdi;
+  private final List<Sjablon> sjablonListe = TestUtil.byggSjabloner();
+  private final List<SjablonNokkel> sjablonNokkelListe = new ArrayList<>();
   private Integer sjablonNokkelVerdiInteger;
 
   @BeforeEach
@@ -39,7 +39,7 @@ class SjablonTest {
     var belopBarnetilsyn = SjablonUtil
         .hentSjablonverdi(sjablonListe, SjablonNavn.BARNETILSYN, sjablonNokkelListe, SjablonInnholdNavn.BARNETILSYN_BELOP);
 
-    assertThat(belopBarnetilsyn).isEqualTo(258d);
+    assertThat(belopBarnetilsyn).isEqualTo(BigDecimal.valueOf(258));
   }
 
   @Test
@@ -54,8 +54,8 @@ class SjablonTest {
     var belopUnderhold = SjablonUtil
         .hentSjablonverdi(sjablonListe, SjablonNavn.BIDRAGSEVNE, sjablonNokkelListe, SjablonInnholdNavn.UNDERHOLD_BELOP);
 
-    assertThat(belopBoutgift).isEqualTo(5875d);
-    assertThat(belopUnderhold).isEqualTo(7557d);
+    assertThat(belopBoutgift).isEqualTo(BigDecimal.valueOf(5875));
+    assertThat(belopUnderhold).isEqualTo(BigDecimal.valueOf(7557));
   }
 
   @Test
@@ -64,27 +64,27 @@ class SjablonTest {
 
     sjablonNokkelVerdiInteger = 3;
     var belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.FORBRUKSUTGIFTER, sjablonNokkelVerdiInteger);
-    assertThat(belopForbrukTot).isEqualTo(3661d);
+    assertThat(belopForbrukTot).isEqualTo(BigDecimal.valueOf(3661));
 
     sjablonNokkelVerdiInteger = 5;
     belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.FORBRUKSUTGIFTER, sjablonNokkelVerdiInteger);
-    assertThat(belopForbrukTot).isEqualTo(3661d);
+    assertThat(belopForbrukTot).isEqualTo(BigDecimal.valueOf(3661));
 
     sjablonNokkelVerdiInteger = 7;
     belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.FORBRUKSUTGIFTER, sjablonNokkelVerdiInteger);
-    assertThat(belopForbrukTot).isEqualTo(5113d);
+    assertThat(belopForbrukTot).isEqualTo(BigDecimal.valueOf(5113));
 
     sjablonNokkelVerdiInteger = 10;
     belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.FORBRUKSUTGIFTER, sjablonNokkelVerdiInteger);
-    assertThat(belopForbrukTot).isEqualTo(5113d);
+    assertThat(belopForbrukTot).isEqualTo(BigDecimal.valueOf(5113));
 
     sjablonNokkelVerdiInteger = 12;
     belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.FORBRUKSUTGIFTER, sjablonNokkelVerdiInteger);
-    assertThat(belopForbrukTot).isEqualTo(6099d);
+    assertThat(belopForbrukTot).isEqualTo(BigDecimal.valueOf(6099));
 
     sjablonNokkelVerdiInteger = 99;
     belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.FORBRUKSUTGIFTER, sjablonNokkelVerdiInteger);
-    assertThat(belopForbrukTot).isEqualTo(6985d);
+    assertThat(belopForbrukTot).isEqualTo(BigDecimal.valueOf(6985));
   }
 
   @Test
@@ -93,23 +93,23 @@ class SjablonTest {
 
     sjablonNokkelVerdiInteger = 0;
     var belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.MAKS_FRADRAG, sjablonNokkelVerdiInteger);
-    assertThat(belopForbrukTot).isEqualTo(2083.33d);
+    assertThat(belopForbrukTot).isEqualTo(BigDecimal.valueOf(2083.33));
 
     sjablonNokkelVerdiInteger = 1;
     belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.MAKS_FRADRAG, sjablonNokkelVerdiInteger);
-    assertThat(belopForbrukTot).isEqualTo(2083.33d);
+    assertThat(belopForbrukTot).isEqualTo(BigDecimal.valueOf(2083.33));
 
     sjablonNokkelVerdiInteger = 3;
     belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.MAKS_FRADRAG, sjablonNokkelVerdiInteger);
-    assertThat(belopForbrukTot).isEqualTo(4583d);
+    assertThat(belopForbrukTot).isEqualTo(BigDecimal.valueOf(4583));
 
     sjablonNokkelVerdiInteger = 90;
     belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.MAKS_FRADRAG, sjablonNokkelVerdiInteger);
-    assertThat(belopForbrukTot).isEqualTo(12083d);
+    assertThat(belopForbrukTot).isEqualTo(BigDecimal.valueOf(12083));
 
     sjablonNokkelVerdiInteger = 99;
     belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.MAKS_FRADRAG, sjablonNokkelVerdiInteger);
-    assertThat(belopForbrukTot).isEqualTo(12083d);
+    assertThat(belopForbrukTot).isEqualTo(BigDecimal.valueOf(12083));
   }
 
   @Test
@@ -118,23 +118,23 @@ class SjablonTest {
 
     sjablonNokkelVerdiInteger = 0;
     var belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.MAKS_TILSYN, sjablonNokkelVerdiInteger);
-    assertThat(belopForbrukTot).isEqualTo(6214d);
+    assertThat(belopForbrukTot).isEqualTo(BigDecimal.valueOf(6214));
 
     sjablonNokkelVerdiInteger = 1;
     belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.MAKS_TILSYN, sjablonNokkelVerdiInteger);
-    assertThat(belopForbrukTot).isEqualTo(6214d);
+    assertThat(belopForbrukTot).isEqualTo(BigDecimal.valueOf(6214));
 
     sjablonNokkelVerdiInteger = 2;
     belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.MAKS_TILSYN, sjablonNokkelVerdiInteger);
-    assertThat(belopForbrukTot).isEqualTo(8109d);
+    assertThat(belopForbrukTot).isEqualTo(BigDecimal.valueOf(8109));
 
     sjablonNokkelVerdiInteger = 90;
     belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.MAKS_TILSYN, sjablonNokkelVerdiInteger);
-    assertThat(belopForbrukTot).isEqualTo(9189d);
+    assertThat(belopForbrukTot).isEqualTo(BigDecimal.valueOf(9189));
 
     sjablonNokkelVerdiInteger = 99;
     belopForbrukTot = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.MAKS_TILSYN, sjablonNokkelVerdiInteger);
-    assertThat(belopForbrukTot).isEqualTo(9189d);
+    assertThat(belopForbrukTot).isEqualTo(BigDecimal.valueOf(9189));
   }
 
   @Test
@@ -152,9 +152,9 @@ class SjablonTest {
     var belopFradrag = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.SAMVAERSFRADRAG, sjablonNokkelListe, SjablonNokkelNavn.ALDER_TOM,
         sjablonNokkelVerdiInteger, SjablonInnholdNavn.FRADRAG_BELOP);
 
-    assertThat(antDagerTom).isEqualTo(0d);
-    assertThat(antNetterTom).isEqualTo(13d);
-    assertThat(belopFradrag).isEqualTo(2082d);
+    assertThat(antDagerTom).isEqualTo(BigDecimal.ZERO);
+    assertThat(antNetterTom).isEqualTo(BigDecimal.valueOf(13));
+    assertThat(belopFradrag).isEqualTo(BigDecimal.valueOf(2082));
 
     sjablonNokkelVerdiInteger = 5;
     antDagerTom = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.SAMVAERSFRADRAG, sjablonNokkelListe, SjablonNokkelNavn.ALDER_TOM,
@@ -164,9 +164,9 @@ class SjablonTest {
     belopFradrag = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.SAMVAERSFRADRAG, sjablonNokkelListe, SjablonNokkelNavn.ALDER_TOM,
         sjablonNokkelVerdiInteger, SjablonInnholdNavn.FRADRAG_BELOP);
 
-    assertThat(antDagerTom).isEqualTo(0d);
-    assertThat(antNetterTom).isEqualTo(13d);
-    assertThat(belopFradrag).isEqualTo(2082d);
+    assertThat(antDagerTom).isEqualTo(BigDecimal.ZERO);
+    assertThat(antNetterTom).isEqualTo(BigDecimal.valueOf(13));
+    assertThat(belopFradrag).isEqualTo(BigDecimal.valueOf(2082));
 
     sjablonNokkelVerdiInteger = 12;
     antDagerTom = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.SAMVAERSFRADRAG, sjablonNokkelListe, SjablonNokkelNavn.ALDER_TOM,
@@ -176,6 +176,10 @@ class SjablonTest {
     belopFradrag = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.SAMVAERSFRADRAG, sjablonNokkelListe, SjablonNokkelNavn.ALDER_TOM,
         sjablonNokkelVerdiInteger, SjablonInnholdNavn.FRADRAG_BELOP);
 
+    assertThat(antDagerTom).isEqualTo(BigDecimal.ZERO);
+    assertThat(antNetterTom).isEqualTo(BigDecimal.valueOf(13));
+    assertThat(belopFradrag).isEqualTo(BigDecimal.valueOf(2914));
+
     sjablonNokkelVerdiInteger = 99;
     antDagerTom = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.SAMVAERSFRADRAG, sjablonNokkelListe, SjablonNokkelNavn.ALDER_TOM,
         sjablonNokkelVerdiInteger, SjablonInnholdNavn.ANTALL_DAGER_TOM);
@@ -184,9 +188,9 @@ class SjablonTest {
     belopFradrag = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.SAMVAERSFRADRAG, sjablonNokkelListe, SjablonNokkelNavn.ALDER_TOM,
         sjablonNokkelVerdiInteger, SjablonInnholdNavn.FRADRAG_BELOP);
 
-    assertThat(antDagerTom).isEqualTo(0d);
-    assertThat(antNetterTom).isEqualTo(13d);
-    assertThat(belopFradrag).isEqualTo(3196d);
+    assertThat(antDagerTom).isEqualTo(BigDecimal.ZERO);
+    assertThat(antNetterTom).isEqualTo(BigDecimal.valueOf(13));
+    assertThat(belopFradrag).isEqualTo(BigDecimal.valueOf(3196));
   }
 
   @Test
@@ -195,7 +199,7 @@ class SjablonTest {
 
     var sjablonVerdi = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonTallNavn.BOUTGIFTER_BIDRAGSBARN_BELOP);
 
-    assertThat(sjablonVerdi).isEqualTo(2775d);
+    assertThat(sjablonVerdi).isEqualTo(BigDecimal.valueOf(2775));
   }
 
   @Test
@@ -205,7 +209,7 @@ class SjablonTest {
     var sortertTrinnvisSkattesatsListe = SjablonUtil.hentTrinnvisSkattesats(sjablonListe, SjablonNavn.TRINNVIS_SKATTESATS);
 
     assertThat(sortertTrinnvisSkattesatsListe.size()).isEqualTo(4);
-    assertThat(sortertTrinnvisSkattesatsListe.get(0).getInntektGrense()).isEqualTo(174500d);
-    assertThat(sortertTrinnvisSkattesatsListe.get(0).getSats()).isEqualTo(1.9d);
+    assertThat(sortertTrinnvisSkattesatsListe.get(0).getInntektGrense()).isEqualTo(BigDecimal.valueOf(174500));
+    assertThat(sortertTrinnvisSkattesatsListe.get(0).getSats()).isEqualTo(BigDecimal.valueOf(1.9));
   }
 }
