@@ -1,5 +1,6 @@
 package no.nav.bidrag.beregn.felles.dto
 
+import java.math.BigDecimal
 import java.time.LocalDate
 
 // Felles
@@ -33,10 +34,10 @@ data class SjablonNokkelCore(
 
 data class SjablonInnholdCore(
     val sjablonInnholdNavn: String,
-    val sjablonInnholdVerdi: Double
+    val sjablonInnholdVerdi: BigDecimal
 )
 
 data class SjablonNavnVerdiCore(
     val sjablonNavn: String,
-    val sjablonVerdi: Double
+    val sjablonVerdi: BigDecimal
 )
