@@ -106,7 +106,8 @@ public class InntektUtil {
         .sorted(kriterie)
         .collect(toList());
 
-    var inntektGrunnlagForrige = new InntektGrunnlag(new Periode(LocalDate.MIN, LocalDate.MAX), InntektType.AINNTEKT_BEREGNET, BigDecimal.ZERO);
+    var inntektGrunnlagForrige = new InntektGrunnlag(new Periode(LocalDate.MIN, LocalDate.MAX), InntektType.AINNTEKT_KORRIGERT_BARNETILLEGG,
+        BigDecimal.ZERO);
 
     for (var inntektGrunnlag : inntektGrunnlagListeSortert) {
 
