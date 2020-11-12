@@ -7,6 +7,7 @@ Repo for alle felles beregninger for bidrag. Disse erstatter beregninger i BBM.
 
 Versjon | Endringstype | Beskrivelse
 --------|--------------|------------
+0.12.1  | Endret       | Gjort noen justeringer i inntekt enum
 0.12.0  | Endret       | Endret SjablonUtil + DTO/BO fra Double til BigDecimal
 0.11.0  | Endret       | Endret fra Double til BigDecimal i InntektUtil
 0.10.0  | Endret       | Splittet validering og justering av inntekter i 2 public-metoder
