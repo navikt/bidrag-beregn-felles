@@ -15,7 +15,7 @@ enum class SjablonTallNavn(val navn: String, val id: String, val bidragsevne: Bo
   ORDINAER_BARNETRYGD_BELOP("OrdinærBarnetrygdBeløp", "0001", false, false, true, false, false, false),
   ORDINAER_SMAABARNSTILLEGG_BELOP("OrdinærSmåbarnstilleggBeløp", "0002", false, false, false, false, false, false),
   BOUTGIFTER_BIDRAGSBARN_BELOP("BoutgifterBidragsbarnBeløp", "0003", false, false, true, false, false, false),
-  FORDEL_SKATTEKLASSE2_BELOP("FordelSkatteklasse2Beløp", "0004", true, false, false, false, false, false),
+  FORDEL_SKATTEKLASSE2_BELOP("FordelSkatteklasse2Beløp", "0004", true, false, false, true, false, false),
   FORSKUDDSSATS_BELOP("ForskuddssatsBeløp", "0005", false, false, false, true, false, true),
   INNSLAG_KAPITALINNTEKT_BELOP("InnslagKapitalInntektBeløp", "0006", false, false, false, false, false, false),
   INNTEKTSINTERVALL_TILLEGGSBIDRAG_BELOP("InntektsintervallTilleggsbidragBeløp", "0007", false, false, false, false, false, false),
@@ -41,8 +41,8 @@ enum class SjablonTallNavn(val navn: String, val id: String, val bidragsevne: Bo
   PERSONFRADRAG_KLASSE1_BELOP("PersonfradragKlasse1Beløp", "0027", true, false, false, false, false, false),
   PERSONFRADRAG_KLASSE2_BELOP("PersonfradragKlasse2Beløp", "0028", true, false, false, false, false, false),
   KONTANTSTOTTE_BELOP("KontantstøtteBeløp", "0029", false, false, false, false, false, false),
-  OVRE_INNTEKTSGRENSE_IKKE_I_SKATTEPOSISJON_BELOP("ØvreInntektsgrenseIkkeISkatteposisjonBeløp", "0030", false, false, false, false, false, false),
-  NEDRE_INNTEKTSGRENSE_FULL_SKATTEPOSISJON_BELOP("NedreInntektsgrenseFullSkatteposisjonBeløp", "0031", false, false, false, false, false, false),
+  OVRE_INNTEKTSGRENSE_IKKE_I_SKATTEPOSISJON_BELOP("ØvreInntektsgrenseIkkeISkatteposisjonBeløp", "0030", false, false, false, true, false, false),
+  NEDRE_INNTEKTSGRENSE_FULL_SKATTEPOSISJON_BELOP("NedreInntektsgrenseFullSkatteposisjonBeløp", "0031", false, false, false, true, false, false),
   EKSTRA_SMAABARNSTILLEGG_BELOP("EkstraSmåbarnstilleggBeløp", "0032", false, false, false, false, false, false),
   OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP("ØvreInntektsgrenseFulltForskuddBeløp", "0033", false, false, false, false, false, true),
   OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP("ØvreInntektsgrense75ProsentForskuddEnBeløp", "0034", false, false, false, false, false, true),
@@ -50,11 +50,15 @@ enum class SjablonTallNavn(val navn: String, val id: String, val bidragsevne: Bo
   INNTEKTSINTERVALL_FORSKUDD_BELOP("InntektsintervallForskuddBeløp", "0036", false, false, false, false, false, true),
   OVRE_GRENSE_SAERTILSKUDD_BELOP("ØvreGrenseSærtilskuddBeløp", "0037", false, false, false, false, false, false),
   FORSKUDDSSATS_75PROSENT_BELOP("Forskuddssats75ProsentBeløp", "0038", false, false, false, false, false, false),
-  FORDEL_SAERFRADRAG_BELOP("FordelSærfradragBeløp", "0039", true, false, false, false, false, false),
+  FORDEL_SAERFRADRAG_BELOP("FordelSærfradragBeløp", "0039", true, false, false, true, false, false),
   SKATTESATS_ALMINNELIG_INNTEKT_PROSENT("SkattesatsAlminneligInntektProsent", "0040", true, false, false, false, false, false),
   FORHOYET_BARNETRYGD_BELOP("ForhøyetBarnetrygdBeløp", "0041", false, false, true, false, false, false),
   FASTSETTELSESGEBYR_BELOP("FastsettelsesgebyrBeløp", "0100", false, false, false, false, false, false),
-  DUMMY("Dummy", "9999", false, false, false, false, false, false)
+  DUMMY("Dummy", "9999", false, false, false, false, false, false);
+
+  companion object {
+    fun from(search: String): SjablonTallNavn = requireNotNull(values().find { it.navn == search }) { DUMMY }
+  }
 }
 
 

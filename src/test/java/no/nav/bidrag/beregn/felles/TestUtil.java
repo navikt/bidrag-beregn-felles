@@ -12,12 +12,13 @@ import no.nav.bidrag.beregn.felles.bo.Periode;
 import no.nav.bidrag.beregn.felles.bo.Sjablon;
 import no.nav.bidrag.beregn.felles.bo.SjablonInnhold;
 import no.nav.bidrag.beregn.felles.bo.SjablonNokkel;
+import no.nav.bidrag.beregn.felles.bo.SjablonPeriode;
 import no.nav.bidrag.beregn.felles.enums.InntektType;
 import no.nav.bidrag.beregn.felles.enums.SjablonInnholdNavn;
 import no.nav.bidrag.beregn.felles.enums.SjablonNavn;
 import no.nav.bidrag.beregn.felles.enums.SjablonNokkelNavn;
 import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn;
-import no.nav.bidrag.beregn.felles.inntekt.InntektGrunnlag;
+import no.nav.bidrag.beregn.felles.inntekt.InntektPeriodeGrunnlag;
 
 public class TestUtil {
 
@@ -298,60 +299,176 @@ public class TestUtil {
     return sjablonListe;
   }
 
+  public static List<InntektPeriodeGrunnlag> byggInntektGrunnlagListeMedLikFraDatoLikGruppe() {
+    var inntektGrunnlagListe = new ArrayList<InntektPeriodeGrunnlag>();
 
-  public static List<InntektGrunnlag> byggInntektGrunnlagListeMedLikFraDatoLikGruppe() {
-    var inntektGrunnlagListe = new ArrayList<InntektGrunnlag>();
-
-    inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("9999-12-31")),
-        InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(200000)));
-    inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
-        InntektType.ATTFORING_AAP, BigDecimal.valueOf(150000)));
-    inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
-        InntektType.ALOYSE, BigDecimal.valueOf(250000)));
-
-    return inntektGrunnlagListe;
-  }
-
-  public static List<InntektGrunnlag> byggInntektGrunnlagListeMedLikFraDatoUlikGruppe() {
-    var inntektGrunnlagListe = new ArrayList<InntektGrunnlag>();
-
-    inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("9999-12-31")),
-        InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(200000)));
-    inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
-        InntektType.ATTFORING_AAP, BigDecimal.valueOf(150000)));
-    inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
-        InntektType.KAPITALINNTEKT_SKE, BigDecimal.valueOf(250000)));
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("9999-12-31")),
+        InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(200000), false, false));
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
+        InntektType.ATTFORING_AAP, BigDecimal.valueOf(150000), false, false));
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
+        InntektType.ALOYSE, BigDecimal.valueOf(250000), false, false));
 
     return inntektGrunnlagListe;
   }
 
-  public static List<InntektGrunnlag> byggInntektGrunnlagListeMedLikFraDatoUtenGruppe() {
-    var inntektGrunnlagListe = new ArrayList<InntektGrunnlag>();
+  public static List<InntektPeriodeGrunnlag> byggInntektGrunnlagListeMedLikFraDatoUlikGruppe() {
+    var inntektGrunnlagListe = new ArrayList<InntektPeriodeGrunnlag>();
 
-    inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("9999-12-31")),
-        InntektType.BARNETRYGD_MANUELL_VURDERING, BigDecimal.valueOf(200000)));
-    inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
-        InntektType.ATTFORING_AAP, BigDecimal.valueOf(150000)));
-    inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
-        InntektType.OVERGANGSSTONAD, BigDecimal.valueOf(250000)));
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("9999-12-31")),
+        InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(200000), false, false));
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
+        InntektType.ATTFORING_AAP, BigDecimal.valueOf(150000), false, false));
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
+        InntektType.KAPITALINNTEKT_SKE, BigDecimal.valueOf(250000), false, false));
 
     return inntektGrunnlagListe;
   }
 
-  public static List<InntektGrunnlag> byggInntektGrunnlagListeDelvisOverlappSammeGruppe() {
-    var inntektGrunnlagListe = new ArrayList<InntektGrunnlag>();
+  public static List<InntektPeriodeGrunnlag> byggInntektGrunnlagListeMedLikFraDatoUtenGruppe() {
+    var inntektGrunnlagListe = new ArrayList<InntektPeriodeGrunnlag>();
 
-    inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2020-01-01"), LocalDate.MAX),
-        InntektType.ALOYSE, BigDecimal.valueOf(250000)));
-    inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
-        InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(150000)));
-    inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2019-01-01"), LocalDate.MAX),
-        InntektType.SAKSBEHANDLER_BEREGNET_INNTEKT, BigDecimal.valueOf(300000)));
-    inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2019-01-01"), LocalDate.MAX),
-        InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER, BigDecimal.valueOf(100000)));
-    inntektGrunnlagListe.add(new InntektGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.MAX),
-        InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(200000)));
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("9999-12-31")),
+        InntektType.BARNETRYGD_MANUELL_VURDERING, BigDecimal.valueOf(200000), false, false));
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
+        InntektType.ATTFORING_AAP, BigDecimal.valueOf(150000), false, false));
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
+        InntektType.OVERGANGSSTONAD, BigDecimal.valueOf(250000), false, false));
 
     return inntektGrunnlagListe;
+  }
+
+  public static List<InntektPeriodeGrunnlag> byggInntektGrunnlagListeDelvisOverlappSammeGruppe() {
+    var inntektGrunnlagListe = new ArrayList<InntektPeriodeGrunnlag>();
+
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2020-01-01"), LocalDate.MAX),
+        InntektType.ALOYSE, BigDecimal.valueOf(250000), false, false));
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
+        InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(150000), false, false));
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2019-01-01"), LocalDate.MAX),
+        InntektType.SAKSBEHANDLER_BEREGNET_INNTEKT, BigDecimal.valueOf(300000), false, false));
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2019-01-01"), LocalDate.MAX),
+        InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER, BigDecimal.valueOf(100000), false, false));
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.MAX),
+        InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(200000), false, false));
+
+    return inntektGrunnlagListe;
+  }
+
+
+  public static List<InntektPeriodeGrunnlag> byggInntektGrunnlagUtvidetBarnetrygdFull() {
+    var inntektGrunnlagListe = new ArrayList<InntektPeriodeGrunnlag>();
+
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-06-01")),
+        InntektType.UTVIDET_BARNETRYGD, BigDecimal.valueOf(12000), false, false));
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2018-12-31"), LocalDate.parse("2019-05-31")),
+        InntektType.UTVIDET_BARNETRYGD, BigDecimal.valueOf(12000), false, false));
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2019-06-01"), LocalDate.parse("2020-01-01")),
+        InntektType.UTVIDET_BARNETRYGD, BigDecimal.valueOf(12000), true, false));
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2020-04-01"), LocalDate.parse("2020-09-01")),
+        InntektType.UTVIDET_BARNETRYGD, BigDecimal.valueOf(10000), false, false));
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2020-09-01"), LocalDate.parse("2021-01-01")),
+        InntektType.UTVIDET_BARNETRYGD, BigDecimal.valueOf(10000), true, false));
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2020-01-01")),
+        InntektType.SKATTEGRUNNLAG_SKE, BigDecimal.valueOf(90000), false, false));
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2020-01-01"), LocalDate.parse("2021-01-01")),
+        InntektType.SKATTEGRUNNLAG_SKE, BigDecimal.valueOf(105000), false, false));
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2019-04-01"), LocalDate.parse("2019-08-01")),
+        InntektType.KAPITALINNTEKT_SKE, BigDecimal.valueOf(30000), false, false));
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2020-04-01"), LocalDate.parse("2020-08-01")),
+        InntektType.KAPITALINNTEKT_SKE, BigDecimal.valueOf(10000), false, false));
+
+    return inntektGrunnlagListe;
+  }
+
+  public static List<InntektPeriodeGrunnlag> byggInntektGrunnlagUtvidetBarnetrygdOvergang() {
+    var inntektGrunnlagListe = new ArrayList<InntektPeriodeGrunnlag>();
+
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2012-06-01"), LocalDate.parse("2013-06-01")),
+        InntektType.UTVIDET_BARNETRYGD, BigDecimal.valueOf(12000), false, true));
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2012-06-01"), LocalDate.parse("2013-06-01")),
+        InntektType.SKATTEGRUNNLAG_SKE, BigDecimal.valueOf(120000), false, false));
+
+    return inntektGrunnlagListe;
+  }
+
+
+  public static List<SjablonPeriode> byggSjablontallGrunnlagUtvidetBarnetrygdFull() {
+    var sjablontallPeriodeListe = new ArrayList<SjablonPeriode>();
+
+    // Sjablon 0004
+    sjablontallPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2011-07-01"), LocalDate.parse("2012-07-01")),
+        new Sjablon(SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELOP.getNavn(), emptyList(), Collections.singletonList(
+            new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), BigDecimal.valueOf(7500))))));
+    sjablontallPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2012-07-01"), LocalDate.parse("2013-07-01")),
+        new Sjablon(SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELOP.getNavn(), emptyList(), Collections.singletonList(
+            new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), BigDecimal.valueOf(8500))))));
+
+    // Sjablon 0030
+    sjablontallPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")),
+        new Sjablon(SjablonTallNavn.OVRE_INNTEKTSGRENSE_IKKE_I_SKATTEPOSISJON_BELOP.getNavn(), emptyList(), Collections.singletonList(
+            new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), BigDecimal.valueOf(99540))))));
+    sjablontallPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2020-01-01")),
+        new Sjablon(SjablonTallNavn.OVRE_INNTEKTSGRENSE_IKKE_I_SKATTEPOSISJON_BELOP.getNavn(), emptyList(), Collections.singletonList(
+            new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), BigDecimal.valueOf(105000))))));
+    sjablontallPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2020-01-01"), LocalDate.parse("9999-12-31")),
+        new Sjablon(SjablonTallNavn.OVRE_INNTEKTSGRENSE_IKKE_I_SKATTEPOSISJON_BELOP.getNavn(), emptyList(), Collections.singletonList(
+            new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), BigDecimal.valueOf(100000))))));
+
+    // Sjablon 0031
+    sjablontallPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")),
+        new Sjablon(SjablonTallNavn.NEDRE_INNTEKTSGRENSE_FULL_SKATTEPOSISJON_BELOP.getNavn(), emptyList(), Collections.singletonList(
+            new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), BigDecimal.valueOf(99540))))));
+    sjablontallPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2020-01-01")),
+        new Sjablon(SjablonTallNavn.NEDRE_INNTEKTSGRENSE_FULL_SKATTEPOSISJON_BELOP.getNavn(), emptyList(), Collections.singletonList(
+            new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), BigDecimal.valueOf(105000))))));
+    sjablontallPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2020-01-01"), LocalDate.parse("2020-10-01")),
+        new Sjablon(SjablonTallNavn.NEDRE_INNTEKTSGRENSE_FULL_SKATTEPOSISJON_BELOP.getNavn(), emptyList(), Collections.singletonList(
+            new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), BigDecimal.valueOf(110000))))));
+    sjablontallPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2020-10-01"), LocalDate.parse("9999-12-31")),
+        new Sjablon(SjablonTallNavn.NEDRE_INNTEKTSGRENSE_FULL_SKATTEPOSISJON_BELOP.getNavn(), emptyList(), Collections.singletonList(
+            new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), BigDecimal.valueOf(100000))))));
+
+    // Sjablon 0039
+    sjablontallPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2018-07-01"), LocalDate.parse("2019-01-01")),
+        new Sjablon(SjablonTallNavn.FORDEL_SAERFRADRAG_BELOP.getNavn(), emptyList(), Collections.singletonList(
+            new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), BigDecimal.valueOf(12500))))));
+    sjablontallPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2020-07-01")),
+        new Sjablon(SjablonTallNavn.FORDEL_SAERFRADRAG_BELOP.getNavn(), emptyList(), Collections.singletonList(
+            new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), BigDecimal.valueOf(13000))))));
+    sjablontallPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31")),
+        new Sjablon(SjablonTallNavn.FORDEL_SAERFRADRAG_BELOP.getNavn(), emptyList(), Collections.singletonList(
+            new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), BigDecimal.valueOf(14000))))));
+
+    return sjablontallPeriodeListe;
+  }
+
+  public static List<SjablonPeriode> byggSjablontallGrunnlagUtvidetBarnetrygdOvergang() {
+    var sjablontallPeriodeListe = new ArrayList<SjablonPeriode>();
+
+    // Sjablon 0004
+    sjablontallPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2011-07-01"), LocalDate.parse("2012-07-01")),
+        new Sjablon(SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELOP.getNavn(), emptyList(), Collections.singletonList(
+            new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), BigDecimal.valueOf(7500))))));
+    sjablontallPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2012-07-01"), LocalDate.parse("2013-07-01")),
+        new Sjablon(SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELOP.getNavn(), emptyList(), Collections.singletonList(
+            new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), BigDecimal.valueOf(8500))))));
+
+    // Sjablon 0030
+    sjablontallPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2012-01-01"), LocalDate.parse("2014-01-01")),
+        new Sjablon(SjablonTallNavn.OVRE_INNTEKTSGRENSE_IKKE_I_SKATTEPOSISJON_BELOP.getNavn(), emptyList(), Collections.singletonList(
+            new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), BigDecimal.valueOf(100000))))));
+
+    // Sjablon 0031
+    sjablontallPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2012-01-01"), LocalDate.parse("2014-01-01")),
+        new Sjablon(SjablonTallNavn.NEDRE_INNTEKTSGRENSE_FULL_SKATTEPOSISJON_BELOP.getNavn(), emptyList(), Collections.singletonList(
+            new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), BigDecimal.valueOf(100000))))));
+
+    // Sjablon 0039
+    sjablontallPeriodeListe.add(new SjablonPeriode(new Periode(LocalDate.parse("2012-01-01"), LocalDate.parse("2014-01-01")),
+        new Sjablon(SjablonTallNavn.FORDEL_SAERFRADRAG_BELOP.getNavn(), emptyList(), Collections.singletonList(
+            new SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), BigDecimal.valueOf(12500))))));
+
+    return sjablontallPeriodeListe;
   }
 }
