@@ -19,7 +19,7 @@ enum class InntektType(val beskrivelse: String, val belopstype: String, val grup
   OVERGANGSSTONAD("Overgangsstønad", "EFOS", "",
       false, true, true, true, true, true, true, LocalDate.MIN, LocalDate.MAX),
   EKSTRA_SMAABARNSTILLEGG("Ekstra småbarnstillegg", "ESBT", "BMA",
-      true, true, true, true, true, true, false, LocalDate.MIN, LocalDate.MAX),
+      true, true, true, true, false, true, false, LocalDate.MIN, LocalDate.MAX),
   MANGLENDE_BRUK_EVNE_SKJONN("Manglende bruk av evne (skjønn)", "EVNE", "A",
       false, true, true, true, true, true, true, LocalDate.MIN, LocalDate.MAX),
   FOEDSEL_ADOPSJON("Fødsels- og adopsjonspenger", "FA", "A",
@@ -35,7 +35,7 @@ enum class InntektType(val beskrivelse: String, val belopstype: String, val grup
   KAPITALINNTEKT_EGNE_OPPLYSNINGER("Kapitalinntekt egne opplysninger", "KIEO", "B",
       false, true, true, true, true, true, true, LocalDate.MIN, LocalDate.MAX),
   KONTANTSTOTTE("Kontantstøtte", "KONT", "BMB",
-      true, true, true, true, true, true, false, LocalDate.MIN, LocalDate.MAX),
+      true, true, true, true, false, true, false, LocalDate.MIN, LocalDate.MAX),
   SKATTEGRUNNLAG_KORRIGERT_BARNETILLEGG("Skattegrunnlag korrigert for barnetillegg", "LIGB", "A",
       false, true, false, false, false, true, false, LocalDate.parse("2013-01-01"), LocalDate.MAX),
   LIGNING_SKE("Ligning fra Skatteetaten", "LIGN", "A",
@@ -65,7 +65,7 @@ enum class InntektType(val beskrivelse: String, val belopstype: String, val grup
   SYKEPENGER("Sykepenger", "SP", "A",
       false, true, true, true, true, true, true, LocalDate.MIN, LocalDate.MAX),
   UTVIDET_BARNETRYGD("Utvidet barnetrygd", "UBAT", "BMC",
-      true, true, true, true, true, true, false, LocalDate.MIN, LocalDate.MAX),
+      true, true, true, true, false, true, false, LocalDate.MIN, LocalDate.MAX),
   FORDEL_SKATTEKLASSE2("Fordel skatteklasse 2", "FS2", "C",
   false, false, true, true, false, true, false, LocalDate.MIN, LocalDate.parse("2013-01-01"))
 }
