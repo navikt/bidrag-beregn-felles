@@ -54,5 +54,6 @@ enum class ResultatKode {
   BIDRAG_SATT_TIL_UNDERHOLDSKOSTNAD_MINUS_BARNETILLEGG_BM, // Beregnet bidrag er lavere enn underholdskostnad minus barnetilleggBM
   BIDRAG_SATT_TIL_BARNETILLEGG_FORSVARET,                  // Barnebidrag settes likt barnetillegg fra forsvaret
   DELT_BOSTED,                                             // Barnet bor like mye hos begge foreldre
-  BEGRENSET_REVURDERING                                    // Beregnet bidrag er større enn forskuddsats, settes lik forskuddssats
+  BEGRENSET_REVURDERING,                                   // Beregnet bidrag er større enn forskuddsats, settes lik forskuddssats
+  BARNEBIDRAG_IKKE_BEREGNET_DELT_BOSTED                    // Barnet har delt bosted og BPs andel av U er under 50%, bidrag skal ikke beregnes
 }
