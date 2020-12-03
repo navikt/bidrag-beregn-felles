@@ -8,7 +8,8 @@ Repo for alle felles beregninger for bidrag. Disse erstatter beregninger i BBM.
 Versjon | Endringstype | Beskrivelse
 --------|--------------|------------
 0.14.0  | Opprettet    | Lagt til sjablonparametre for Særtilskudd
-0.13.1  | Opprettet    | Små justeringer på inntekt enum
+0.13.2  | Endret       | Ny enum lagt til for resultatkode BARNEBIDRAG_IKKE_BEREGNET_DELT_BOSTED 
+0.13.1  | Endret       | Små justeringer på inntekt enum
 0.13.0  | Opprettet    | Lagt til logikk for utvidet barnetrygd og generering av nye inntekter. Gjort noen justeringer i inntekt og sjablon enums.
 0.12.1  | Endret       | Gjort noen justeringer i inntekt enum
 0.12.0  | Endret       | Endret SjablonUtil + DTO/BO fra Double til BigDecimal
