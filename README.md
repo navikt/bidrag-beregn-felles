@@ -7,7 +7,7 @@ Repo for alle felles beregninger for bidrag. Disse erstatter beregninger i BBM.
 
 Versjon | Endringstype | Beskrivelse
 --------|--------------|------------
-0.14.3  | Endret       | Endret enum under til: SAERTILSKUDD_IKKE_FULL_BIDRAGSEVNE
+0.14.3  | Endret       | Endret enum under til: SAERTILSKUDD_IKKE_FULL_BIDRAGSEVNE, dette innebærer at særtilskuddet ikke innvilges
 0.14.2  | Endret       | Ny resultatkode: SAERTILSKUDD_REDUSERT_AV_EVNE
 0.14.1  | Endret       | Ny enum lagt til for resultatkode SAERTILSKUDD_INNVILGET
 0.14.0  | Opprettet    | Lagt til sjablonparametre for Særtilskudd
