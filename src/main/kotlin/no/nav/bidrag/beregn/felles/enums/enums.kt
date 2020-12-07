@@ -56,5 +56,6 @@ enum class ResultatKode {
   DELT_BOSTED,                                             // Barnet bor like mye hos begge foreldre
   BEGRENSET_REVURDERING,                                   // Beregnet bidrag er større enn forskuddsats, settes lik forskuddssats
   BARNEBIDRAG_IKKE_BEREGNET_DELT_BOSTED,                   // Barnet har delt bosted og BPs andel av U er under 50%, bidrag skal ikke beregnes
-  SAERTILSKUDD_INNVILGET                                   // Resultat av beregning av særtilskudd
+  SAERTILSKUDD_INNVILGET,                                  // Resultat av beregning av særtilskudd
+  SAERTILSKUDD_REDUSERT_AV_EVNE                            // Resultat av beregning av særtilskudd
 }
