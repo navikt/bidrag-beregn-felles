@@ -7,6 +7,7 @@ Repo for alle felles beregninger for bidrag. Disse erstatter beregninger i BBM.
 
 Versjon | Endringstype | Beskrivelse
 --------|--------------|------------
+0.14.2  | Endret       | Ny resultatkode: SAERTILSKUDD_REDUSERT_AV_EVNE
 0.14.1  | Endret       | Ny enum lagt til for resultatkode SAERTILSKUDD_INNVILGET
 0.14.0  | Opprettet    | Lagt til sjablonparametre for Særtilskudd
 0.13.2  | Endret       | Ny enum lagt til for resultatkode BARNEBIDRAG_IKKE_BEREGNET_DELT_BOSTED 
