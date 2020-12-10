@@ -7,6 +7,7 @@ Repo for alle felles beregninger for bidrag. Disse erstatter beregninger i BBM.
 
 Versjon | Endringstype | Beskrivelse
 --------|--------------|------------
+0.14.5  | Endret       | Lagt til les av flere sjabloner for bpandelsaertilskudd (ifbm utvidet barnetrygd)
 0.14.4  | Endret       | Tatt vekk sjabloner for delberegning særtilskudd
 0.14.3  | Endret       | Endret enum under til: SAERTILSKUDD_IKKE_FULL_BIDRAGSEVNE, dette innebærer at særtilskuddet ikke innvilges
 0.14.2  | Endret       | Ny resultatkode: SAERTILSKUDD_REDUSERT_AV_EVNE
