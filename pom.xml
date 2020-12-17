@@ -26,7 +26,7 @@
 
     <!-- language -->
     <java.version>15</java.version>
-    <kotlin.version>1.4.10</kotlin.version>
+    <kotlin.version>1.4.21</kotlin.version>
 
     <!-- build -->
     <build-helper-maven.version>3.1.0</build-helper-maven.version>
@@ -35,7 +35,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <!-- dependencies -->
-    <spring-boot.version>2.3.6.RELEASE</spring-boot.version>
+    <spring-boot.version>2.4.1</spring-boot.version>
   </properties>
 
   <distributionManagement>
