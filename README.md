@@ -7,6 +7,7 @@ Repo for alle felles beregninger for bidrag. Disse erstatter beregninger i BBM.
 
 Versjon | Endringstype | Beskrivelse
 --------|--------------|------------
+0.14.7  | Endret       | Sjablon 0038 brukes av Forskudd
 0.14.6  | Endret       | Ny enum for resultatkode som angir at det skal gjøres en forholdsmessig fordeling
 0.14.5  | Endret       | Lagt til les av flere sjabloner for bpandelsaertilskudd (ifbm utvidet barnetrygd)
 0.14.4  | Endret       | Tatt vekk sjabloner for delberegning særtilskudd
