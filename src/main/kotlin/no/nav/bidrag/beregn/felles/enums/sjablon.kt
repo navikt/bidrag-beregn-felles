@@ -50,7 +50,7 @@ enum class SjablonTallNavn(val navn: String, val id: String, val bidragsevne: Bo
   OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP("ØvreInntektsgrense75ProsentForskuddGSBeløp", "0035", false, false, false, false, false, true, false, false),
   INNTEKTSINTERVALL_FORSKUDD_BELOP("InntektsintervallForskuddBeløp", "0036", false, false, false, false, false, true, false, false),
   OVRE_GRENSE_SAERTILSKUDD_BELOP("ØvreGrenseSærtilskuddBeløp", "0037", false, false, false, false, false, false, false, false),
-  FORSKUDDSSATS_75PROSENT_BELOP("Forskuddssats75ProsentBeløp", "0038", false, false, false, false, false, false, false, false),
+  FORSKUDDSSATS_75PROSENT_BELOP("Forskuddssats75ProsentBeløp", "0038", false, false, false, false, false, true, false, false),
   FORDEL_SAERFRADRAG_BELOP("FordelSærfradragBeløp", "0039", true, false, false, true, false, false, true, false),
   SKATTESATS_ALMINNELIG_INNTEKT_PROSENT("SkattesatsAlminneligInntektProsent", "0040", true, false, false, false, false, false, false, false),
   FORHOYET_BARNETRYGD_BELOP("ForhøyetBarnetrygdBeløp", "0041", false, false, true, false, false, false, false, false),
