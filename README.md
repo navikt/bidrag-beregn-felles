@@ -1,12 +1,14 @@
 # bidrag-beregn-felles
 ![](https://github.com/navikt/bidrag-beregn-felles/workflows/maven%20deploy/badge.svg)
 
-Repo for alle felles beregninger for bidrag. Disse erstatter beregninger i BBM.
+Felles-repo for beregninger i bidrag. Brukes av bidrag-beregn-forskudd-xxx, bidrag-beregn-barnebidrag-xxx og bidrag-beregn-saertilskudd-xxx.
+Tilbyr enums og util-metoder for håndtering av inntekter, sjabloner og perioder.
 
 ## Changelog:
 
 Versjon | Endringstype | Beskrivelse
 --------|--------------|------------
+0.14.8  | Endret       | Lagt til noe dokumentasjon
 0.14.7  | Endret       | Sjablon 0038 brukes av Forskudd
 0.14.6  | Endret       | Ny enum for resultatkode som angir at det skal gjøres en forholdsmessig fordeling
 0.14.5  | Endret       | Lagt til les av flere sjabloner for bpandelsaertilskudd (ifbm utvidet barnetrygd)
