@@ -299,40 +299,40 @@ public class TestUtil {
     return sjablonListe;
   }
 
-  public static List<InntektPeriodeGrunnlag> byggInntektGrunnlagListeMedLikFraDatoLikGruppe() {
+  public static List<InntektPeriodeGrunnlag> byggInntektGrunnlagListeMedLikDatoFomLikGruppe() {
     var inntektGrunnlagListe = new ArrayList<InntektPeriodeGrunnlag>();
 
-    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("9999-12-31")),
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag("REF1", new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("9999-12-31")),
         InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(200000), false, false));
-    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag("REF2", new Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
         InntektType.ATTFORING_AAP, BigDecimal.valueOf(150000), false, false));
-    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag("REF3", new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
         InntektType.ALOYSE, BigDecimal.valueOf(250000), false, false));
 
     return inntektGrunnlagListe;
   }
 
-  public static List<InntektPeriodeGrunnlag> byggInntektGrunnlagListeMedLikFraDatoUlikGruppe() {
+  public static List<InntektPeriodeGrunnlag> byggInntektGrunnlagListeMedLikDatoFomUlikGruppe() {
     var inntektGrunnlagListe = new ArrayList<InntektPeriodeGrunnlag>();
 
-    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("9999-12-31")),
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag("REF1", new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("9999-12-31")),
         InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(200000), false, false));
-    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag("REF2", new Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
         InntektType.ATTFORING_AAP, BigDecimal.valueOf(150000), false, false));
-    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag("REF3", new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
         InntektType.KAPITALINNTEKT_SKE, BigDecimal.valueOf(250000), false, false));
 
     return inntektGrunnlagListe;
   }
 
-  public static List<InntektPeriodeGrunnlag> byggInntektGrunnlagListeMedLikFraDatoUtenGruppe() {
+  public static List<InntektPeriodeGrunnlag> byggInntektGrunnlagListeMedLikDatoFomUtenGruppe() {
     var inntektGrunnlagListe = new ArrayList<InntektPeriodeGrunnlag>();
 
-    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("9999-12-31")),
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag("REF1", new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("9999-12-31")),
         InntektType.BARNETRYGD_MANUELL_VURDERING, BigDecimal.valueOf(200000), false, false));
-    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag("REF2", new Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
         InntektType.ATTFORING_AAP, BigDecimal.valueOf(150000), false, false));
-    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag("REF3", new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
         InntektType.OVERGANGSSTONAD, BigDecimal.valueOf(250000), false, false));
 
     return inntektGrunnlagListe;
@@ -341,15 +341,15 @@ public class TestUtil {
   public static List<InntektPeriodeGrunnlag> byggInntektGrunnlagListeDelvisOverlappSammeGruppe() {
     var inntektGrunnlagListe = new ArrayList<InntektPeriodeGrunnlag>();
 
-    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2020-01-01"), LocalDate.MAX),
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag("REF1", new Periode(LocalDate.parse("2020-01-01"), LocalDate.MAX),
         InntektType.ALOYSE, BigDecimal.valueOf(250000), false, false));
-    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag("REF2", new Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
         InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(150000), false, false));
-    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2019-01-01"), LocalDate.MAX),
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag("REF3", new Periode(LocalDate.parse("2019-01-01"), LocalDate.MAX),
         InntektType.SAKSBEHANDLER_BEREGNET_INNTEKT, BigDecimal.valueOf(300000), false, false));
-    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2019-01-01"), LocalDate.MAX),
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag("REF4", new Periode(LocalDate.parse("2019-01-01"), LocalDate.MAX),
         InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER, BigDecimal.valueOf(100000), false, false));
-    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.MAX),
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag("REF5", new Periode(LocalDate.parse("2018-01-01"), LocalDate.MAX),
         InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER, BigDecimal.valueOf(200000), false, false));
 
     return inntektGrunnlagListe;
@@ -359,23 +359,23 @@ public class TestUtil {
   public static List<InntektPeriodeGrunnlag> byggInntektGrunnlagUtvidetBarnetrygdFull() {
     var inntektGrunnlagListe = new ArrayList<InntektPeriodeGrunnlag>();
 
-    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-06-01")),
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag("REF1", new Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-06-01")),
         InntektType.UTVIDET_BARNETRYGD, BigDecimal.valueOf(12000), false, false));
-    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2018-12-31"), LocalDate.parse("2019-05-31")),
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag("REF2", new Periode(LocalDate.parse("2018-12-31"), LocalDate.parse("2019-05-31")),
         InntektType.UTVIDET_BARNETRYGD, BigDecimal.valueOf(12000), false, false));
-    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2019-06-01"), LocalDate.parse("2020-01-01")),
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag("REF3", new Periode(LocalDate.parse("2019-06-01"), LocalDate.parse("2020-01-01")),
         InntektType.UTVIDET_BARNETRYGD, BigDecimal.valueOf(12000), true, false));
-    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2020-04-01"), LocalDate.parse("2020-09-01")),
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag("REF4", new Periode(LocalDate.parse("2020-04-01"), LocalDate.parse("2020-09-01")),
         InntektType.UTVIDET_BARNETRYGD, BigDecimal.valueOf(10000), false, false));
-    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2020-09-01"), LocalDate.parse("2021-01-01")),
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag("REF5", new Periode(LocalDate.parse("2020-09-01"), LocalDate.parse("2021-01-01")),
         InntektType.UTVIDET_BARNETRYGD, BigDecimal.valueOf(10000), true, false));
-    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2020-01-01")),
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag("REF6", new Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2020-01-01")),
         InntektType.SKATTEGRUNNLAG_SKE, BigDecimal.valueOf(90000), false, false));
-    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2020-01-01"), LocalDate.parse("2021-01-01")),
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag("REF7", new Periode(LocalDate.parse("2020-01-01"), LocalDate.parse("2021-01-01")),
         InntektType.SKATTEGRUNNLAG_SKE, BigDecimal.valueOf(105000), false, false));
-    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2019-04-01"), LocalDate.parse("2019-08-01")),
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag("REF8", new Periode(LocalDate.parse("2019-04-01"), LocalDate.parse("2019-08-01")),
         InntektType.KAPITALINNTEKT_SKE, BigDecimal.valueOf(30000), false, false));
-    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2020-04-01"), LocalDate.parse("2020-08-01")),
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag("REF9", new Periode(LocalDate.parse("2020-04-01"), LocalDate.parse("2020-08-01")),
         InntektType.KAPITALINNTEKT_SKE, BigDecimal.valueOf(10000), false, false));
 
     return inntektGrunnlagListe;
@@ -384,9 +384,9 @@ public class TestUtil {
   public static List<InntektPeriodeGrunnlag> byggInntektGrunnlagUtvidetBarnetrygdOvergang() {
     var inntektGrunnlagListe = new ArrayList<InntektPeriodeGrunnlag>();
 
-    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2012-06-01"), LocalDate.parse("2013-06-01")),
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag("REF1", new Periode(LocalDate.parse("2012-06-01"), LocalDate.parse("2013-06-01")),
         InntektType.UTVIDET_BARNETRYGD, BigDecimal.valueOf(12000), false, true));
-    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag(new Periode(LocalDate.parse("2012-06-01"), LocalDate.parse("2013-06-01")),
+    inntektGrunnlagListe.add(new InntektPeriodeGrunnlag("REF2", new Periode(LocalDate.parse("2012-06-01"), LocalDate.parse("2013-06-01")),
         InntektType.SKATTEGRUNNLAG_SKE, BigDecimal.valueOf(120000), false, false));
 
     return inntektGrunnlagListe;

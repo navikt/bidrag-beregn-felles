@@ -5,39 +5,39 @@ import java.time.LocalDate
 
 // Felles
 data class PeriodeCore(
-    val periodeDatoFra: LocalDate,
-    val periodeDatoTil: LocalDate?
+    val datoFom: LocalDate,
+    val datoTil: LocalDate?
 )
 
 data class SjablonPeriodeCore(
-    val sjablonPeriodeDatoFraTil: PeriodeCore,
-    val sjablonNavn: String,
-    val sjablonNokkelListe: List<SjablonNokkelCore>? = emptyList(),
-    val sjablonInnholdListe: List<SjablonInnholdCore>
+    val periode: PeriodeCore,
+    val navn: String,
+    val nokkelListe: List<SjablonNokkelCore>? = emptyList(),
+    val innholdListe: List<SjablonInnholdCore>
 )
 
 data class SjablonCore(
-    val sjablonNavn: String,
-    val sjablonNokkelListe: List<SjablonNokkelCore>? = emptyList(),
-    val sjablonInnholdListe: List<SjablonInnholdCore>
-)
-
-data class AvvikCore(
-    val avvikTekst: String,
-    val avvikType: String
+    val navn: String,
+    val nokkelListe: List<SjablonNokkelCore>? = emptyList(),
+    val innholdListe: List<SjablonInnholdCore>
 )
 
 data class SjablonNokkelCore(
-    val sjablonNokkelNavn: String,
-    val sjablonNokkelVerdi: String
+    val navn: String,
+    val verdi: String
 )
 
 data class SjablonInnholdCore(
-    val sjablonInnholdNavn: String,
-    val sjablonInnholdVerdi: BigDecimal
+    val navn: String,
+    val verdi: BigDecimal
 )
 
 data class SjablonNavnVerdiCore(
-    val sjablonNavn: String,
-    val sjablonVerdi: BigDecimal
+    val navn: String,
+    val verdi: BigDecimal
+)
+
+data class AvvikCore(
+  val avvikTekst: String,
+  val avvikType: String
 )

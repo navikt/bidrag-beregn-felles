@@ -9,6 +9,7 @@ import static java.util.stream.Collectors.toList;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -37,12 +38,12 @@ public class InntektUtil {
 
     // Validerer søknadstype, rolle og fra- /til-dato for en inntektstype
     inntektPeriodeGrunnlagListe.forEach(inntektPeriodeGrunnlag -> {
-      avvikListe.addAll(validerSoknadstypeOgRolle(inntektPeriodeGrunnlag.getInntektType(), soknadType, rolle));
+      avvikListe.addAll(validerSoknadstypeOgRolle(inntektPeriodeGrunnlag.getType(), soknadType, rolle));
       avvikListe.addAll(validerPeriode(inntektPeriodeGrunnlag));
     });
 
     // Validerer at flere inntekter innenfor samme inntektsgruppe ikke starter på samme dato
-    avvikListe.addAll(validerFraDatoPerInntektsgruppe(inntektPeriodeGrunnlagListe));
+    avvikListe.addAll(validerDatoFomPerInntektsgruppe(inntektPeriodeGrunnlagListe));
 
     return avvikListe;
   }
@@ -76,8 +77,8 @@ public class InntektUtil {
     };
 
     if (!soknadstypeOgRolleErGyldig) {
-      return singletonList(new Avvik("inntektType " + inntektType.toString() + " er ugyldig for søknadstype " + soknadType.toString() + " og rolle "
-          + rolle.toString(), AvvikType.UGYLDIG_INNTEKT_TYPE));
+      return singletonList(new Avvik("inntektType " + inntektType + " er ugyldig for søknadstype " + soknadType + " og rolle " + rolle,
+          AvvikType.UGYLDIG_INNTEKT_TYPE));
     } else {
       return emptyList();
     }
@@ -86,21 +87,21 @@ public class InntektUtil {
   // Validerer at inntektstypen er gyldig innenfor den angitte tidsperioden
   private static List<Avvik> validerPeriode(InntektPeriodeGrunnlag inntektPeriodeGrunnlag) {
 
-    var inntektDatoFra = inntektPeriodeGrunnlag.getInntektDatoFraTil().getDatoFra();
+    var inntektDatoFom = inntektPeriodeGrunnlag.getPeriode().getDatoFom();
     LocalDate inntektDatoTil;
-    var inntektType = inntektPeriodeGrunnlag.getInntektType();
+    var inntektType = inntektPeriodeGrunnlag.getType();
 
-    // Åpen eller uendelig slutt-dato skal ikke ryke ut på dato-test (?). Setter datoTil lik siste dato i året til datoFra
-    if (inntektPeriodeGrunnlag.getInntektDatoFraTil().getDatoTil() == null || inntektPeriodeGrunnlag.getInntektDatoFraTil().getDatoTil()
+    // Åpen eller uendelig slutt-dato skal ikke ryke ut på dato-test (?). Setter datoTil lik siste dato i året til datoFom
+    if (inntektPeriodeGrunnlag.getPeriode().getDatoTil() == null || inntektPeriodeGrunnlag.getPeriode().getDatoTil()
         .equals(LocalDate.MAX) ||
-        inntektPeriodeGrunnlag.getInntektDatoFraTil().getDatoTil().equals(LocalDate.parse("9999-12-31"))) {
-      inntektDatoTil = inntektDatoFra.withMonth(12).withDayOfMonth(31);
+        inntektPeriodeGrunnlag.getPeriode().getDatoTil().equals(LocalDate.parse("9999-12-31"))) {
+      inntektDatoTil = inntektDatoFom.withMonth(12).withDayOfMonth(31);
     } else {
-      inntektDatoTil = inntektPeriodeGrunnlag.getInntektDatoFraTil().getDatoTil();
+      inntektDatoTil = inntektPeriodeGrunnlag.getPeriode().getDatoTil();
     }
 
-    if ((inntektDatoFra.compareTo(inntektType.getGyldigFom()) < 0) || (inntektDatoTil.compareTo(inntektType.getGyldigTil()) > 0)) {
-      return singletonList(new Avvik("inntektType " + inntektType.toString() + " er kun gyldig fom. " + inntektType.getGyldigFom().toString()
+    if ((inntektDatoFom.compareTo(inntektType.getGyldigFom()) < 0) || (inntektDatoTil.compareTo(inntektType.getGyldigTil()) > 0)) {
+      return singletonList(new Avvik("inntektType " + inntektType + " er kun gyldig fom. " + inntektType.getGyldigFom().toString()
           + " tom. " + inntektType.getGyldigTil().toString(), AvvikType.UGYLDIG_INNTEKT_PERIODE));
     } else {
       return emptyList();
@@ -108,30 +109,30 @@ public class InntektUtil {
   }
 
   // Validerer at flere inntekter innenfor samme inntektsgruppe ikke starter på samme dato
-  private static List<Avvik> validerFraDatoPerInntektsgruppe(List<InntektPeriodeGrunnlag> inntektPeriodeGrunnlagListe) {
+  private static List<Avvik> validerDatoFomPerInntektsgruppe(List<InntektPeriodeGrunnlag> inntektPeriodeGrunnlagListe) {
 
     var avvikListe = new ArrayList<Avvik>();
-    Comparator<InntektPeriodeGrunnlag> kriterie = comparing(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getInntektType().getGruppe());
-    kriterie = kriterie.thenComparing(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getInntektDatoFraTil().getDatoFra());
+    Comparator<InntektPeriodeGrunnlag> kriterie = comparing(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getType().getGruppe());
+    kriterie = kriterie.thenComparing(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getPeriode().getDatoFom());
 
     var inntektGrunnlagListeSortert = inntektPeriodeGrunnlagListe.stream()
         .sorted(kriterie)
         .collect(toList());
 
-    var inntektGrunnlagForrige = new InntektPeriodeGrunnlag(new Periode(LocalDate.MIN, LocalDate.MAX), InntektType.AINNTEKT_KORRIGERT_BARNETILLEGG,
-        BigDecimal.ZERO, false, false);
+    var inntektGrunnlagForrige = new InntektPeriodeGrunnlag("", new Periode(LocalDate.MIN, LocalDate.MAX),
+        InntektType.AINNTEKT_KORRIGERT_BARNETILLEGG, BigDecimal.ZERO, false, false);
 
     for (var inntektGrunnlag : inntektGrunnlagListeSortert) {
 
-      var inntektGruppe = inntektGrunnlag.getInntektType().getGruppe();
-      var inntektGruppeForrige = inntektGrunnlagForrige.getInntektType().getGruppe();
-      var datoFra = inntektGrunnlag.getInntektDatoFraTil().getDatoFra();
-      var datoFraForrige = inntektGrunnlagForrige.getInntektDatoFraTil().getDatoFra();
+      var inntektGruppe = inntektGrunnlag.getType().getGruppe();
+      var inntektGruppeForrige = inntektGrunnlagForrige.getType().getGruppe();
+      var datoFom = inntektGrunnlag.getPeriode().getDatoFom();
+      var datoFomForrige = inntektGrunnlagForrige.getPeriode().getDatoFom();
 
-      if ((!inntektGruppe.isBlank()) && (inntektGruppe.equals(inntektGruppeForrige)) && (datoFra.equals(datoFraForrige))) {
+      if ((!inntektGruppe.isBlank()) && (inntektGruppe.equals(inntektGruppeForrige)) && (datoFom.equals(datoFomForrige))) {
         avvikListe.add(new Avvik(
-            "inntektType " + inntektGrunnlag.getInntektType().toString() + " og inntektType " + inntektGrunnlagForrige.getInntektType().toString()
-                + " tilhører samme inntektsgruppe og har samme fraDato (" + datoFra.toString() + ")", AvvikType.OVERLAPPENDE_INNTEKT));
+            "inntektType " + inntektGrunnlag.getType() + " og inntektType " + inntektGrunnlagForrige.getType()
+                + " tilhører samme inntektsgruppe og har samme datoFom (" + datoFom + ")", AvvikType.OVERLAPPENDE_INNTEKT));
       }
       inntektGrunnlagForrige = inntektGrunnlag;
     }
@@ -140,12 +141,12 @@ public class InntektUtil {
   }
 
   // Justerer perioder for å unngå overlapp innefor samme inntektsgruppe.
-  // Sorterer inntektGrunnlagListe på gruppe og datoFra.
-  // datoTil (forrige forekomst) settes lik datoFra - 1 dag (denne forekomst) hvis de tilhører samme gruppe
+  // Sorterer inntektGrunnlagListe på gruppe og datoFom.
+  // datoTil (forrige forekomst) settes lik datoFom - 1 dag (denne forekomst) hvis de tilhører samme gruppe
   private static List<InntektPeriodeGrunnlag> justerPerioder(List<InntektPeriodeGrunnlag> inntektPeriodeGrunnlagListe) {
 
-    Comparator<InntektPeriodeGrunnlag> kriterie = comparing(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getInntektType().getGruppe());
-    kriterie = kriterie.thenComparing(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getInntektDatoFraTil().getDatoFra());
+    Comparator<InntektPeriodeGrunnlag> kriterie = comparing(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getType().getGruppe());
+    kriterie = kriterie.thenComparing(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getPeriode().getDatoFom());
 
     var inntektGrunnlagListeSortert = inntektPeriodeGrunnlagListe.stream().sorted(kriterie).collect(toList());
     var inntektGrunnlagListeJustert = new ArrayList<InntektPeriodeGrunnlag>();
@@ -154,8 +155,8 @@ public class InntektUtil {
     var hoppOverInntekt = true;
     String inntektGruppe;
     String inntektGruppeForrige;
-    LocalDate datoFra;
-    LocalDate datoFraForrige;
+    LocalDate datoFom;
+    LocalDate datoFomForrige;
     LocalDate nyDatoTilForrige;
 
     for (var inntektGrunnlag : inntektGrunnlagListeSortert) {
@@ -165,16 +166,16 @@ public class InntektUtil {
         continue;
       }
 
-      inntektGruppe = inntektGrunnlag.getInntektType().getGruppe();
-      inntektGruppeForrige = inntektPeriodeGrunnlagForrige.getInntektType().getGruppe();
-      datoFra = inntektGrunnlag.getInntektDatoFraTil().getDatoFra();
-      datoFraForrige = inntektPeriodeGrunnlagForrige.getInntektDatoFraTil().getDatoFra();
+      inntektGruppe = inntektGrunnlag.getType().getGruppe();
+      inntektGruppeForrige = inntektPeriodeGrunnlagForrige.getType().getGruppe();
+      datoFom = inntektGrunnlag.getPeriode().getDatoFom();
+      datoFomForrige = inntektPeriodeGrunnlagForrige.getPeriode().getDatoFom();
 
-      if ((!inntektGruppe.isBlank()) && (inntektGruppe.equals(inntektGruppeForrige)) && (datoFra.isAfter(datoFraForrige))) {
-        nyDatoTilForrige = datoFra.minusDays(1);
+      if ((!inntektGruppe.isBlank()) && (inntektGruppe.equals(inntektGruppeForrige)) && (datoFom.isAfter(datoFomForrige))) {
+        nyDatoTilForrige = datoFom.minusDays(1);
         inntektGrunnlagListeJustert
-            .add(new InntektPeriodeGrunnlag(new Periode(datoFraForrige, nyDatoTilForrige), inntektPeriodeGrunnlagForrige.getInntektType(),
-                inntektPeriodeGrunnlagForrige.getInntektBelop(), inntektPeriodeGrunnlagForrige.getDeltFordel(),
+            .add(new InntektPeriodeGrunnlag(inntektPeriodeGrunnlagForrige.getReferanse(), new Periode(datoFomForrige, nyDatoTilForrige),
+                inntektPeriodeGrunnlagForrige.getType(), inntektPeriodeGrunnlagForrige.getBelop(), inntektPeriodeGrunnlagForrige.getDeltFordel(),
                 inntektPeriodeGrunnlagForrige.getSkatteklasse2()));
       } else {
         inntektGrunnlagListeJustert.add(inntektPeriodeGrunnlagForrige);
@@ -196,13 +197,13 @@ public class InntektUtil {
     var justertInntektPeriodeGrunnlagListeAlleInntekter = inntektPeriodeGrunnlagListe
         .stream()
         .map(InntektPeriodeGrunnlag::new)
-        .sorted(comparing(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getInntektDatoFraTil().getDatoFra()))
+        .sorted(comparing(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getPeriode().getDatoFom()))
         .collect(toCollection(ArrayList::new));
 
     // Danner liste over alle inntekter av type UTVIDET_BARNETRYGD
     var justertInntektPeriodeGrunnlagListeUtvidetBarnetrygd = justertInntektPeriodeGrunnlagListeAlleInntekter
         .stream()
-        .filter(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getInntektType().equals(InntektType.UTVIDET_BARNETRYGD))
+        .filter(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getType().equals(InntektType.UTVIDET_BARNETRYGD))
         .collect(toList());
 
     // Hvis det ikke finnes inntekter av type UTVIDET_BARNETRYGD, returnerer den samme listen som ble sendt inn
@@ -213,13 +214,13 @@ public class InntektUtil {
     // Finner laveste og høyeste dato i listen over inntekter av type UTVIDET_BARNETRYGD
     var minDato = justertInntektPeriodeGrunnlagListeUtvidetBarnetrygd
         .stream()
-        .map(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getInntektDatoFraTil().getDatoFra())
+        .map(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getPeriode().getDatoFom())
         .min(LocalDate::compareTo)
         .orElse(LocalDate.parse("1900-01-01"));
 
     var maxDato = justertInntektPeriodeGrunnlagListeUtvidetBarnetrygd
         .stream()
-        .map(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getInntektDatoFraTil().getDatoTil())
+        .map(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getPeriode().getDatoTil())
         .filter(Objects::nonNull)
         .max(LocalDate::compareTo)
         .orElse(LocalDate.parse("2100-01-01"));
@@ -233,9 +234,9 @@ public class InntektUtil {
     var justertSjablonListe = sjablonPeriodeListe
         .stream()
         .filter(sjablonPeriode -> sjablonFilter.stream()
-            .anyMatch(sjablonTallNavn -> sjablonTallNavn.getNavn().equals(sjablonPeriode.getSjablon().getSjablonNavn())))
+            .anyMatch(sjablonTallNavn -> sjablonTallNavn.getNavn().equals(sjablonPeriode.getSjablon().getNavn())))
         .map(SjablonPeriode::new)
-        .sorted(comparing(sjablonPeriode -> sjablonPeriode.getSjablonDatoFraTil().getDatoFra()))
+        .sorted(comparing(sjablonPeriode -> sjablonPeriode.getSjablonPeriode().getDatoFom()))
         .collect(toCollection(ArrayList::new));
 
     // Danner bruddperioder for inntekter og sjabloner. Legger til ekstra bruddperioder for gyldigheten til inntektstypene som skal beregnes
@@ -253,22 +254,22 @@ public class InntektUtil {
     // UTVIDET_BARNETRYGD filtreres bort
     bruddPeriodeListe
         .forEach(periode -> {
-          if (periodeHarUtvidetBarnetrygd(periode.getDatoFraTil(), justertInntektPeriodeGrunnlagListeUtvidetBarnetrygd)) {
+          if (periodeHarUtvidetBarnetrygd(periode.getPeriode(), justertInntektPeriodeGrunnlagListeUtvidetBarnetrygd)) {
             periodisertInntektListe.add(new PeriodisertInntekt(
-                periode.getDatoFraTil(), summerInntektPeriode(periode.getDatoFraTil(), justertInntektPeriodeGrunnlagListeAlleInntekter),
+                periode.getPeriode(), summerInntektPeriode(periode.getPeriode(), justertInntektPeriodeGrunnlagListeAlleInntekter),
                 BigDecimal.ZERO,
-                finnSjablonverdi(periode.getDatoFraTil(), justertSjablonListe, SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELOP),
-                finnSjablonverdi(periode.getDatoFraTil(), justertSjablonListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_IKKE_I_SKATTEPOSISJON_BELOP),
-                finnSjablonverdi(periode.getDatoFraTil(), justertSjablonListe, SjablonTallNavn.NEDRE_INNTEKTSGRENSE_FULL_SKATTEPOSISJON_BELOP),
-                finnSjablonverdi(periode.getDatoFraTil(), justertSjablonListe, SjablonTallNavn.FORDEL_SAERFRADRAG_BELOP),
-                finnDeltFordel(periode.getDatoFraTil(), justertInntektPeriodeGrunnlagListeAlleInntekter),
-                finnSkatteklasse2(periode.getDatoFraTil(), justertInntektPeriodeGrunnlagListeAlleInntekter)));
+                finnSjablonverdi(periode.getPeriode(), justertSjablonListe, SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELOP),
+                finnSjablonverdi(periode.getPeriode(), justertSjablonListe, SjablonTallNavn.OVRE_INNTEKTSGRENSE_IKKE_I_SKATTEPOSISJON_BELOP),
+                finnSjablonverdi(periode.getPeriode(), justertSjablonListe, SjablonTallNavn.NEDRE_INNTEKTSGRENSE_FULL_SKATTEPOSISJON_BELOP),
+                finnSjablonverdi(periode.getPeriode(), justertSjablonListe, SjablonTallNavn.FORDEL_SAERFRADRAG_BELOP),
+                finnDeltFordel(periode.getPeriode(), justertInntektPeriodeGrunnlagListeAlleInntekter),
+                finnSkatteklasse2(periode.getPeriode(), justertInntektPeriodeGrunnlagListeAlleInntekter)));
           }
         });
 
     // Løper gjennom periodisertInntektListe og beregner fordel særfradrag / fordel skatteklasse 2
     periodisertInntektListe
-        .forEach(periodisertInntekt -> periodisertInntekt.setInntektFordelSaerfradragBelop(beregnFordelSaerfradrag(periodisertInntekt)));
+        .forEach(periodisertInntekt -> periodisertInntekt.setFordelSaerfradragBelop(beregnFordelSaerfradrag(periodisertInntekt)));
 
     // Slår sammen perioder med like beløp og rydder vekk perioder med 0 i beløp. Danner ny InntektPeriodeGrunnlag-liste
     var inntektPeriodeGrunnlagListeSaerfradragEnsligForsorger = dannInntektListeSaerfradragEnsligForsorger(periodisertInntektListe);
@@ -285,7 +286,7 @@ public class InntektUtil {
 
     return justertInntektPeriodeGrunnlagListeUtvidetBarnetrygd
         .stream()
-        .anyMatch(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getInntektDatoFraTil().overlapperMed(periode));
+        .anyMatch(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getPeriode().overlapperMed(periode));
   }
 
   // Summerer inntektene i en gitt periode (eksklusiv inntekttype utvidet barnetrygd)
@@ -293,9 +294,9 @@ public class InntektUtil {
 
     return justertInntektPeriodeGrunnlagListe
         .stream()
-        .filter(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getDatoFraTil().overlapperMed(periode))
-        .filter(inntektPeriodeGrunnlag -> !(inntektPeriodeGrunnlag.getInntektType().equals(InntektType.UTVIDET_BARNETRYGD)))
-        .map(InntektPeriodeGrunnlag::getInntektBelop)
+        .filter(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getPeriode().overlapperMed(periode))
+        .filter(inntektPeriodeGrunnlag -> !(inntektPeriodeGrunnlag.getType().equals(InntektType.UTVIDET_BARNETRYGD)))
+        .map(InntektPeriodeGrunnlag::getBelop)
         .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 
@@ -304,8 +305,8 @@ public class InntektUtil {
 
     return justertsjablonListe
         .stream()
-        .filter(sjablonPeriode -> sjablonPeriode.getDatoFraTil().overlapperMed(periode))
-        .filter(sjablonPeriode -> sjablonPeriode.getSjablon().getSjablonNavn().equals(sjablonTallNavn.getNavn()))
+        .filter(sjablonPeriode -> sjablonPeriode.getPeriode().overlapperMed(periode))
+        .filter(sjablonPeriode -> sjablonPeriode.getSjablon().getNavn().equals(sjablonTallNavn.getNavn()))
         .map(sjablonPeriode -> SjablonUtil.hentSjablonverdi(singletonList(sjablonPeriode.getSjablon()), sjablonTallNavn))
         .findFirst()
         .orElse(BigDecimal.ZERO);
@@ -316,8 +317,8 @@ public class InntektUtil {
 
     return justertInntektPeriodeGrunnlagListe
         .stream()
-        .filter(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getDatoFraTil().overlapperMed(periode))
-        .filter(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getInntektType().equals(InntektType.UTVIDET_BARNETRYGD))
+        .filter(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getPeriode().overlapperMed(periode))
+        .filter(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getType().equals(InntektType.UTVIDET_BARNETRYGD))
         .map(InntektPeriodeGrunnlag::getDeltFordel)
         .findFirst()
         .orElse(false);
@@ -328,8 +329,8 @@ public class InntektUtil {
 
     return justertInntektPeriodeGrunnlagListe
         .stream()
-        .filter(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getDatoFraTil().overlapperMed(periode))
-        .filter(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getInntektType().equals(InntektType.UTVIDET_BARNETRYGD))
+        .filter(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getPeriode().overlapperMed(periode))
+        .filter(inntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getType().equals(InntektType.UTVIDET_BARNETRYGD))
         .map(InntektPeriodeGrunnlag::getSkatteklasse2)
         .findFirst()
         .orElse(false);
@@ -338,15 +339,15 @@ public class InntektUtil {
   // Beregner fordel særfradrag
   private static BigDecimal beregnFordelSaerfradrag(PeriodisertInntekt periodisertInntekt) {
 
-    if (periodisertInntekt.getInntektSummertBelop().compareTo(periodisertInntekt.getSjablon0030OvreInntektsgrenseBelop()) < 0) {
+    if (periodisertInntekt.getSummertBelop().compareTo(periodisertInntekt.getSjablon0030OvreInntektsgrenseBelop()) < 0) {
       return BigDecimal.ZERO;
     }
 
     // Fordel skatteklasse 2 (før 2013-01-01)
-    if (periodisertInntekt.getInntektDatoFraTil()
+    if (periodisertInntekt.getPeriode()
         .overlapperMed(new Periode(InntektType.FORDEL_SKATTEKLASSE2.getGyldigFom(), InntektType.FORDEL_SKATTEKLASSE2.getGyldigTil()))) {
       if (periodisertInntekt.getSkatteklasse2()) {
-        if (periodisertInntekt.getInntektSummertBelop().compareTo(periodisertInntekt.getSjablon0031NedreInntektsgrenseBelop()) < 0) {
+        if (periodisertInntekt.getSummertBelop().compareTo(periodisertInntekt.getSjablon0031NedreInntektsgrenseBelop()) < 0) {
           return periodisertInntekt.getSjablon0004FordelSkatteklasse2Belop().divide(BigDecimal.valueOf(2), 0, RoundingMode.HALF_UP);
         }
         if (periodisertInntekt.getDeltFordel()) {
@@ -357,10 +358,10 @@ public class InntektUtil {
     }
 
     // Fordel særfradrag (etter 2013-01-01)
-    if (periodisertInntekt.getInntektDatoFraTil()
+    if (periodisertInntekt.getPeriode()
         .overlapperMed(new Periode(InntektType.FORDEL_SAERFRADRAG_ENSLIG_FORSORGER.getGyldigFom(),
             InntektType.FORDEL_SAERFRADRAG_ENSLIG_FORSORGER.getGyldigTil()))) {
-      if (periodisertInntekt.getInntektSummertBelop().compareTo(periodisertInntekt.getSjablon0031NedreInntektsgrenseBelop()) < 0) {
+      if (periodisertInntekt.getSummertBelop().compareTo(periodisertInntekt.getSjablon0031NedreInntektsgrenseBelop()) < 0) {
         return periodisertInntekt.getSjablon0039FordelSaerfradragBelop().divide(BigDecimal.valueOf(2), 0, RoundingMode.HALF_UP);
       }
       if (periodisertInntekt.getDeltFordel()) {
@@ -381,33 +382,36 @@ public class InntektUtil {
 
     var inntektListeSaerfradragEnsligForsorger = new ArrayList<InntektPeriodeGrunnlag>();
 
-    var forrigeDatoFra = periodisertInntektListe.get(0).getInntektDatoFraTil().getDatoFra();
-    var forrigeDatoTil = periodisertInntektListe.get(0).getInntektDatoFraTil().getDatoTil();
-    var forrigeBelop = periodisertInntektListe.get(0).getInntektFordelSaerfradragBelop();
+    var forrigeDatoFom = periodisertInntektListe.get(0).getPeriode().getDatoFom();
+    var forrigeDatoTil = periodisertInntektListe.get(0).getPeriode().getDatoTil();
+    var forrigeBelop = periodisertInntektListe.get(0).getFordelSaerfradragBelop();
     var inntektType = InntektType.FORDEL_SAERFRADRAG_ENSLIG_FORSORGER;
 
     for (var periodisertInntekt : periodisertInntektListe) {
-      if (forrigeBelop.compareTo(periodisertInntekt.getInntektFordelSaerfradragBelop()) != 0) {
+      if (forrigeBelop.compareTo(periodisertInntekt.getFordelSaerfradragBelop()) != 0) {
         if (forrigeBelop.compareTo(BigDecimal.ZERO) != 0) {
-          inntektType = forrigeDatoFra.isBefore(InntektType.FORDEL_SKATTEKLASSE2.getGyldigTil()) ? InntektType.FORDEL_SKATTEKLASSE2
+          inntektType = forrigeDatoFom.isBefore(InntektType.FORDEL_SKATTEKLASSE2.getGyldigTil()) ? InntektType.FORDEL_SKATTEKLASSE2
               : InntektType.FORDEL_SAERFRADRAG_ENSLIG_FORSORGER;
-          inntektListeSaerfradragEnsligForsorger
-              .add(new InntektPeriodeGrunnlag(new Periode(forrigeDatoFra, forrigeDatoTil), inntektType, forrigeBelop,
-                  false, false));
+          inntektListeSaerfradragEnsligForsorger.add(new InntektPeriodeGrunnlag(lagReferanse(inntektType, forrigeDatoFom),
+              new Periode(forrigeDatoFom, forrigeDatoTil), inntektType, forrigeBelop,false, false));
         }
-        forrigeDatoFra = periodisertInntekt.getInntektDatoFraTil().getDatoFra();
-        forrigeBelop = periodisertInntekt.getInntektFordelSaerfradragBelop();
+        forrigeDatoFom = periodisertInntekt.getPeriode().getDatoFom();
+        forrigeBelop = periodisertInntekt.getFordelSaerfradragBelop();
       }
-      forrigeDatoTil = periodisertInntekt.getInntektDatoFraTil().getDatoTil();
+      forrigeDatoTil = periodisertInntekt.getPeriode().getDatoTil();
     }
 
     if (forrigeBelop.compareTo(BigDecimal.ZERO) != 0) {
-      inntektType = forrigeDatoFra.isBefore(InntektType.FORDEL_SKATTEKLASSE2.getGyldigTil()) ? InntektType.FORDEL_SKATTEKLASSE2
+      inntektType = forrigeDatoFom.isBefore(InntektType.FORDEL_SKATTEKLASSE2.getGyldigTil()) ? InntektType.FORDEL_SKATTEKLASSE2
           : InntektType.FORDEL_SAERFRADRAG_ENSLIG_FORSORGER;
-      inntektListeSaerfradragEnsligForsorger.add(new InntektPeriodeGrunnlag(new Periode(forrigeDatoFra, forrigeDatoTil), inntektType, forrigeBelop,
-          false, false));
+      inntektListeSaerfradragEnsligForsorger.add(new InntektPeriodeGrunnlag(lagReferanse(inntektType, forrigeDatoFom),
+          new Periode(forrigeDatoFom, forrigeDatoTil), inntektType, forrigeBelop, false, false));
     }
 
     return inntektListeSaerfradragEnsligForsorger;
+  }
+
+  private static String lagReferanse(InntektType inntektType, LocalDate datoFom) {
+    return "Beregnet_Inntekt_" + inntektType.getBelopstype() + "_" + datoFom.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
   }
 }

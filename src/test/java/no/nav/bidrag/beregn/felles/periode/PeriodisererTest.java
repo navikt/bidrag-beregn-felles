@@ -34,7 +34,7 @@ class PeriodisererTest {
     assertAll(
         () -> assertThat(perioder).isNotNull(),
         () -> assertThat(perioder.size()).isEqualTo(1),
-        () -> assertThat(perioder.get(0).getDatoFra()).isEqualTo(LocalDate.parse("2019-01-01")),
+        () -> assertThat(perioder.get(0).getDatoFom()).isEqualTo(LocalDate.parse("2019-01-01")),
         () -> assertThat(perioder.get(0).getDatoTil()).isEqualTo(LocalDate.parse("2019-03-01"))
     );
   }

@@ -77,7 +77,7 @@ public class SjablonUtil {
   private static List<Sjablon> filtrerPaaSjablonNavn(List<Sjablon> sjablonListe, String sjablonNavn) {
     return sjablonListe
         .stream()
-        .filter(sjablon -> sjablon.getSjablonNavn().equals(sjablonNavn))
+        .filter(sjablon -> sjablon.getNavn().equals(sjablonNavn))
         .collect(toList());
   }
 
@@ -95,16 +95,16 @@ public class SjablonUtil {
   // Intern bruk.
   private static Stream<Sjablon> filtrerPaaSjablonNokkel(Stream<Sjablon> sjablonStream, SjablonNokkel sjablonNokkelInput) {
     return sjablonStream
-        .filter(sjablon -> sjablon.getSjablonNokkelListe()
+        .filter(sjablon -> sjablon.getNokkelListe()
             .stream()
-            .anyMatch(sjablonNokkel -> (sjablonNokkel.getSjablonNokkelNavn().equals(sjablonNokkelInput.getSjablonNokkelNavn())) &&
-                (sjablonNokkel.getSjablonNokkelVerdi().equals(sjablonNokkelInput.getSjablonNokkelVerdi()))));
+            .anyMatch(sjablonNokkel -> (sjablonNokkel.getNavn().equals(sjablonNokkelInput.getNavn())) &&
+                (sjablonNokkel.getVerdi().equals(sjablonNokkelInput.getVerdi()))));
   }
 
   // Tar inn en sjablonListe og returnerer en sjablonInnholdListe.
   // Brukes av Bidragsevne, Sjablontall, TrinnvisSkattesats.
   private static List<SjablonInnhold> mapSjablonListeTilSjablonInnholdListe(List<Sjablon> sjablonListe) {
-    return sjablonListe.stream().map(Sjablon::getSjablonInnholdListe).flatMap(Collection::stream).collect(toList());
+    return sjablonListe.stream().map(Sjablon::getInnholdListe).flatMap(Collection::stream).collect(toList());
   }
 
   // Tar inn filtrertSjablonListe og mapper denne om til en liste med singel nøkkelverdi og singel innholdverdi (1:1). Returnerer en ny liste sortert
@@ -113,18 +113,18 @@ public class SjablonUtil {
   private static List<SjablonSingelNokkelSingelInnhold> mapTilSingelListeNokkelInnholdSortert(List<Sjablon> filtrertSjablonListe) {
     return filtrertSjablonListe
         .stream()
-        .map(sjablon -> new SjablonSingelNokkelSingelInnhold(sjablon.getSjablonNavn(),
-            sjablon.getSjablonNokkelListe()
+        .map(sjablon -> new SjablonSingelNokkelSingelInnhold(sjablon.getNavn(),
+            sjablon.getNokkelListe()
                 .stream()
-                .map(SjablonNokkel::getSjablonNokkelVerdi)
+                .map(SjablonNokkel::getVerdi)
                 .findFirst()
                 .orElse(" "),
-            sjablon.getSjablonInnholdListe()
+            sjablon.getInnholdListe()
                 .stream()
-                .map(SjablonInnhold::getSjablonInnholdVerdi)
+                .map(SjablonInnhold::getVerdi)
                 .findFirst()
                 .orElse(BigDecimal.ZERO)))
-        .sorted(comparing(sjablonSingelNokkelSingelInnhold -> Integer.valueOf(sjablonSingelNokkelSingelInnhold.getSjablonNokkelVerdi())))
+        .sorted(comparing(sjablonSingelNokkelSingelInnhold -> Integer.valueOf(sjablonSingelNokkelSingelInnhold.getNokkelVerdi())))
         .collect(toList());
   }
 
@@ -134,15 +134,15 @@ public class SjablonUtil {
   private static List<SjablonSingelNokkel> mapTilSingelListeNokkelSortert(List<Sjablon> filtrertSjablonListe, SjablonNokkelNavn sjablonNokkelNavn) {
     return filtrertSjablonListe
         .stream()
-        .map(sjablon -> new SjablonSingelNokkel(sjablon.getSjablonNavn(),
-            sjablon.getSjablonNokkelListe()
+        .map(sjablon -> new SjablonSingelNokkel(sjablon.getNavn(),
+            sjablon.getNokkelListe()
                 .stream()
-                .filter(sjablonNokkel -> sjablonNokkel.getSjablonNokkelNavn().equals(sjablonNokkelNavn.getNavn()))
-                .map(SjablonNokkel::getSjablonNokkelVerdi)
+                .filter(sjablonNokkel -> sjablonNokkel.getNavn().equals(sjablonNokkelNavn.getNavn()))
+                .map(SjablonNokkel::getVerdi)
                 .findFirst()
                 .orElse(" "),
-            sjablon.getSjablonInnholdListe()))
-        .sorted(comparing(sjablonSingelNokkel -> Integer.valueOf(sjablonSingelNokkel.getSjablonNokkelVerdi())))
+            sjablon.getInnholdListe()))
+        .sorted(comparing(sjablonSingelNokkel -> Integer.valueOf(sjablonSingelNokkel.getVerdi())))
         .collect(toList());
   }
 
@@ -152,8 +152,8 @@ public class SjablonUtil {
   private static BigDecimal hentSjablonInnholdVerdiEksakt(List<SjablonInnhold> sjablonInnholdListe, SjablonInnholdNavn sjablonInnholdNavn) {
     return sjablonInnholdListe
         .stream()
-        .filter(sjablonInnhold -> sjablonInnhold.getSjablonInnholdNavn().equals(sjablonInnholdNavn.getNavn()))
-        .map(SjablonInnhold::getSjablonInnholdVerdi)
+        .filter(sjablonInnhold -> sjablonInnhold.getNavn().equals(sjablonInnholdNavn.getNavn()))
+        .map(SjablonInnhold::getVerdi)
         .findFirst()
         .orElse(BigDecimal.ZERO);
   }
@@ -166,9 +166,9 @@ public class SjablonUtil {
     return sortertSjablonSingelNokkelSingelInnholdListe
         .stream()
         .filter(sortertSjablonSingelNokkelSingelInnhold ->
-            Integer.valueOf(sortertSjablonSingelNokkelSingelInnhold.getSjablonNokkelVerdi()).compareTo(sjablonNokkelVerdi) >= 0)
+            Integer.valueOf(sortertSjablonSingelNokkelSingelInnhold.getNokkelVerdi()).compareTo(sjablonNokkelVerdi) >= 0)
         .findFirst()
-        .map(SjablonSingelNokkelSingelInnhold::getSjablonInnholdVerdi)
+        .map(SjablonSingelNokkelSingelInnhold::getInnholdVerdi)
         .orElse(BigDecimal.ZERO);
   }
 
@@ -179,9 +179,9 @@ public class SjablonUtil {
       Integer sjablonNokkelVerdi) {
     return sortertSjablonSingelNokkelListe
         .stream()
-        .filter(sjablon -> Integer.valueOf(sjablon.getSjablonNokkelVerdi()).compareTo(sjablonNokkelVerdi) >= 0)
+        .filter(sjablon -> Integer.valueOf(sjablon.getVerdi()).compareTo(sjablonNokkelVerdi) >= 0)
         .findFirst()
-        .map(SjablonSingelNokkel::getSjablonInnholdListe)
+        .map(SjablonSingelNokkel::getInnholdListe)
         .orElse(emptyList());
   }
 
@@ -191,8 +191,8 @@ public class SjablonUtil {
   private static List<BigDecimal> finnSjablonInnholdVerdiListe(List<SjablonInnhold> sjablonInnholdListe, SjablonInnholdNavn sjablonInnholdNavn) {
     return sjablonInnholdListe
         .stream()
-        .filter(sjablonInnhold -> sjablonInnhold.getSjablonInnholdNavn().equals(sjablonInnholdNavn.getNavn()))
-        .map(SjablonInnhold::getSjablonInnholdVerdi)
+        .filter(sjablonInnhold -> sjablonInnhold.getNavn().equals(sjablonInnholdNavn.getNavn()))
+        .map(SjablonInnhold::getVerdi)
         .collect(toList());
   }
 }

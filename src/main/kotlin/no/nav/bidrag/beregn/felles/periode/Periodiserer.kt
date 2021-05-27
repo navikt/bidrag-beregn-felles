@@ -3,12 +3,11 @@ package no.nav.bidrag.beregn.felles.periode
 import no.nav.bidrag.beregn.felles.bo.Periode
 import no.nav.bidrag.beregn.felles.bo.PeriodisertGrunnlag
 import java.time.LocalDate
-import java.util.*
 import java.util.stream.Collectors
 
 class Periodiserer {
-    internal val bruddpunkter: MutableSet<LocalDate> = HashSet()
-    internal var aapenSluttdato = false
+    private val bruddpunkter: MutableSet<LocalDate> = HashSet()
+    private var aapenSluttdato = false
 
     fun addBruddpunkt(dato: LocalDate): Periodiserer {
         bruddpunkter.add(dato)
@@ -16,7 +15,7 @@ class Periodiserer {
     }
 
     private fun addBruddpunkter(periode: Periode) {
-        addBruddpunkt(periode.datoFra)
+        addBruddpunkt(periode.datoFom)
 
         if (periode.datoTil == null) {
             aapenSluttdato = true
@@ -26,7 +25,7 @@ class Periodiserer {
     }
 
     fun addBruddpunkter(grunnlag: PeriodisertGrunnlag): Periodiserer {
-        addBruddpunkter(grunnlag.getDatoFraTil())
+        addBruddpunkter(grunnlag.getPeriode())
         return this
     }
 
@@ -39,9 +38,9 @@ class Periodiserer {
     }
 
     // Setter perioder basert på fra- og til-dato
-    fun finnPerioder(beregnDatoFra: LocalDate, beregnDatoTil: LocalDate): List<Periode> {
+    fun finnPerioder(beregnDatoFom: LocalDate, beregnDatoTil: LocalDate): List<Periode> {
         val sortertBruddpunktListe = bruddpunkter.stream()
-                .filter { dato: LocalDate -> dato.isAfter(beregnDatoFra.minusDays(1)) }
+                .filter { dato: LocalDate -> dato.isAfter(beregnDatoFom.minusDays(1)) }
                 .filter { dato: LocalDate -> dato.isBefore(beregnDatoTil.plusDays(1)) }
                 .sorted().collect(Collectors.toList())
 

@@ -4,31 +4,31 @@ import java.math.BigDecimal
 
 // Nye sjablonklasser
 data class Sjablon(
-    val sjablonNavn: String,
-    val sjablonNokkelListe: List<SjablonNokkel>? = emptyList(),
-    val sjablonInnholdListe: List<SjablonInnhold>
+    val navn: String,
+    val nokkelListe: List<SjablonNokkel>? = emptyList(),
+    val innholdListe: List<SjablonInnhold>
 )
 
 data class SjablonNokkel(
-    val sjablonNokkelNavn: String,
-    val sjablonNokkelVerdi: String
+    val navn: String,
+    val verdi: String
 )
 
 data class SjablonInnhold(
-    val sjablonInnholdNavn: String,
-    val sjablonInnholdVerdi: BigDecimal
+    val navn: String,
+    val verdi: BigDecimal
 )
 
 data class SjablonSingelNokkel(
-    val sjablonNavn: String,
-    val sjablonNokkelVerdi: String,
-    val sjablonInnholdListe: List<SjablonInnhold>
+    val navn: String,
+    val verdi: String,
+    val innholdListe: List<SjablonInnhold>
 )
 
 data class SjablonSingelNokkelSingelInnhold(
-    val sjablonNavn: String,
-    val sjablonNokkelVerdi: String,
-    val sjablonInnholdVerdi: BigDecimal
+    val navn: String,
+    val nokkelVerdi: String,
+    val innholdVerdi: BigDecimal
 )
 
 data class TrinnvisSkattesats(
@@ -37,15 +37,26 @@ data class TrinnvisSkattesats(
 )
 
 data class SjablonPeriode(
-    val sjablonDatoFraTil: Periode,
+    val sjablonPeriode: Periode,
     val sjablon: Sjablon) : PeriodisertGrunnlag {
-  constructor(sjablonPeriode: SjablonPeriode) : this(sjablonPeriode.sjablonDatoFraTil.justerDatoer(), sjablonPeriode.sjablon)
-  override fun getDatoFraTil(): Periode {
-    return sjablonDatoFraTil
+  constructor(sjablonPeriode: SjablonPeriode) : this(sjablonPeriode.sjablonPeriode.justerDatoer(), sjablonPeriode.sjablon)
+  override fun getPeriode(): Periode {
+    return sjablonPeriode
   }
 }
 
+data class SjablonPeriodeInnhold(
+    val sjablonPeriode: Periode,
+    val sjablonInnhold: List<SjablonInnhold>
+)
+
 data class SjablonNavnVerdi(
-    val sjablonNavn: String,
-    val sjablonVerdi: BigDecimal
+    val navn: String,
+    val verdi: BigDecimal
+)
+
+data class SjablonPeriodeNavnVerdi(
+    val periode: Periode,
+    val navn: String,
+    val verdi: BigDecimal
 )
