@@ -11,22 +11,18 @@ import no.nav.bidrag.beregn.felles.enums.SjablonInnholdNavn;
 import no.nav.bidrag.beregn.felles.enums.SjablonNavn;
 import no.nav.bidrag.beregn.felles.enums.SjablonNokkelNavn;
 import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 @DisplayName("SjablonTest")
 class SjablonTest {
 
   private final List<Sjablon> sjablonListe = TestUtil.byggSjabloner();
   private final List<SjablonNokkel> sjablonNokkelListe = new ArrayList<>();
   private Integer sjablonNokkelVerdiInteger;
-
-  @BeforeEach
-  void initMocks() {
-    MockitoAnnotations.initMocks(this);
-  }
 
   @Test
   @DisplayName("Test Barnetilsyn (N:1, eksakt match)")

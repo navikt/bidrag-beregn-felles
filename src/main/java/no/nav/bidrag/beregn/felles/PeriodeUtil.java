@@ -14,7 +14,7 @@ import no.nav.bidrag.beregn.felles.enums.AvvikType;
 public class PeriodeUtil {
 
   // Validerer at datoer er gyldige
-  public static List<Avvik> validerInputDatoer(LocalDate beregnDatoFra, LocalDate beregnDatoTil, String dataElement, List<Periode> periodeListe,
+  public static List<Avvik> validerInputDatoer(LocalDate beregnDatoFom, LocalDate beregnDatoTil, String dataElement, List<Periode> periodeListe,
       boolean sjekkOverlapp, boolean sjekkOpphold, boolean sjekkNull, boolean sjekkBeregnPeriode) {
     var indeks = 0;
     Periode forrigePeriode = null;
@@ -22,7 +22,7 @@ public class PeriodeUtil {
 
     // Validerer at dataene i periodelisten dekker hele perioden det skal beregnes for
     if (sjekkBeregnPeriode) {
-      avvikListe.addAll(sjekkBeregnPeriode(beregnDatoFra, beregnDatoTil, dataElement, periodeListe));
+      avvikListe.addAll(sjekkBeregnPeriode(beregnDatoFom, beregnDatoTil, dataElement, periodeListe));
     }
 
     for (Periode dennePeriode : periodeListe) {
@@ -31,8 +31,8 @@ public class PeriodeUtil {
       //Sjekk om perioder overlapper
       if (sjekkOverlapp) {
         if (dennePeriode.overlapper(forrigePeriode)) {
-          var feilmelding = "Overlappende perioder i " + dataElement + ": periodeDatoTil=" + forrigePeriode.getDatoTil() + ", periodeDatoFra=" +
-              dennePeriode.getDatoFra();
+          var feilmelding = "Overlappende perioder i " + dataElement + ": datoTil=" + forrigePeriode.getDatoTil() + ", datoFom=" +
+              dennePeriode.getDatoFom();
           avvikListe.add(new Avvik(feilmelding, AvvikType.PERIODER_OVERLAPPER));
         }
       }
@@ -40,8 +40,8 @@ public class PeriodeUtil {
       //Sjekk om det er opphold mellom perioder
       if (sjekkOpphold) {
         if (dennePeriode.harOpphold(forrigePeriode)) {
-          var feilmelding = "Opphold mellom perioder i " + dataElement + ": periodeDatoTil=" + forrigePeriode.getDatoTil() + ", periodeDatoFra=" +
-              dennePeriode.getDatoFra();
+          var feilmelding = "Opphold mellom perioder i " + dataElement + ": datoTil=" + forrigePeriode.getDatoTil() + ", datoFom=" +
+              dennePeriode.getDatoFom();
           avvikListe.add(new Avvik(feilmelding, AvvikType.PERIODER_HAR_OPPHOLD));
         }
       }
@@ -49,20 +49,20 @@ public class PeriodeUtil {
       //Sjekk om dato er null
       if (sjekkNull) {
         if ((indeks != periodeListe.size()) && (dennePeriode.getDatoTil() == null)) {
-          var feilmelding = "periodeDatoTil kan ikke være null i " + dataElement + ": periodeDatoFra=" + dennePeriode.getDatoFra() +
-              ", periodeDatoTil=" + dennePeriode.getDatoTil();
+          var feilmelding = "datoTil kan ikke være null i " + dataElement + ": datoFom=" + dennePeriode.getDatoFom() +
+              ", datoTil=" + dennePeriode.getDatoTil();
           avvikListe.add(new Avvik(feilmelding, AvvikType.NULL_VERDI_I_DATO));
         }
       }
 
       //Sjekk om dato fra er etter dato til
-      if (!(dennePeriode.datoTilErEtterDatoFra())) {
-        var feilmelding = "periodeDatoTil må være etter periodeDatoFra i " + dataElement + ": periodeDatoFra=" + dennePeriode.getDatoFra() +
-            ", periodeDatoTil=" + dennePeriode.getDatoTil();
-        avvikListe.add(new Avvik(feilmelding, AvvikType.DATO_FRA_ETTER_DATO_TIL));
+      if (!(dennePeriode.datoTilErEtterDatoFom())) {
+        var feilmelding = "datoTil må være etter datoFom i " + dataElement + ": datoFom=" + dennePeriode.getDatoFom() +
+            ", datoTil=" + dennePeriode.getDatoTil();
+        avvikListe.add(new Avvik(feilmelding, AvvikType.DATO_FOM_ETTER_DATO_TIL));
       }
 
-      forrigePeriode = new Periode(dennePeriode.getDatoFra(), dennePeriode.getDatoTil());
+      forrigePeriode = new Periode(dennePeriode.getDatoFom(), dennePeriode.getDatoTil());
     }
 
     return avvikListe;
@@ -78,8 +78,8 @@ public class PeriodeUtil {
     if (beregnDatoTil == null) {
       avvikListe.add(new Avvik("beregnDatoTil kan ikke være null", AvvikType.NULL_VERDI_I_DATO));
     }
-    if (!new Periode(beregnDatoFra, beregnDatoTil).datoTilErEtterDatoFra()) {
-      avvikListe.add(new Avvik("beregnDatoTil må være etter beregnDatoFra", AvvikType.DATO_FRA_ETTER_DATO_TIL));
+    if (!new Periode(beregnDatoFra, beregnDatoTil).datoTilErEtterDatoFom()) {
+      avvikListe.add(new Avvik("beregnDatoTil må være etter beregnDatoFra", AvvikType.DATO_FOM_ETTER_DATO_TIL));
     }
 
     return avvikListe;
@@ -90,7 +90,7 @@ public class PeriodeUtil {
     var avvikListe = new ArrayList<Avvik>();
 
     //Sjekk at første dato i periodelisten ikke er etter start-dato i perioden det skal beregnes for
-    var startDatoIPeriodeListe = periodeListe.stream().findFirst().get().getDatoFra();
+    var startDatoIPeriodeListe = periodeListe.stream().findFirst().get().getDatoFom();
 
     if (startDatoIPeriodeListe.isAfter(beregnDatoFra)) {
       var feilmelding = "Første dato i " + dataElement + " (" + startDatoIPeriodeListe + ") " + "er etter beregnDatoFra (" + beregnDatoFra + ")";

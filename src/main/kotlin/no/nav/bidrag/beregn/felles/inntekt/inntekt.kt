@@ -6,32 +6,37 @@ import no.nav.bidrag.beregn.felles.enums.InntektType
 import java.math.BigDecimal
 
 data class InntektPeriodeGrunnlag(
-    val inntektDatoFraTil: Periode,
-    val inntektType: InntektType,
-    val inntektBelop: BigDecimal,
-    val deltFordel: Boolean,
-    val skatteklasse2: Boolean) : PeriodisertGrunnlag {
+  val referanse: String,
+  val inntektPeriode: Periode,
+  val type: InntektType,
+  val belop: BigDecimal,
+  val deltFordel: Boolean,
+  val skatteklasse2: Boolean
+) : PeriodisertGrunnlag {
 
   constructor(inntektPeriodeGrunnlag: InntektPeriodeGrunnlag)
-      : this(inntektPeriodeGrunnlag.inntektDatoFraTil.justerDatoer(),
-      inntektPeriodeGrunnlag.inntektType,
-      inntektPeriodeGrunnlag.inntektBelop,
-      inntektPeriodeGrunnlag.deltFordel,
-      inntektPeriodeGrunnlag.skatteklasse2)
+      : this(
+    referanse = inntektPeriodeGrunnlag.referanse,
+    inntektPeriode = inntektPeriodeGrunnlag.inntektPeriode.justerDatoer(),
+    type = inntektPeriodeGrunnlag.type,
+    belop = inntektPeriodeGrunnlag.belop,
+    deltFordel = inntektPeriodeGrunnlag.deltFordel,
+    skatteklasse2 = inntektPeriodeGrunnlag.skatteklasse2
+  )
 
-  override fun getDatoFraTil(): Periode {
-    return inntektDatoFraTil
+  override fun getPeriode(): Periode {
+    return inntektPeriode
   }
 }
 
 data class PeriodisertInntekt(
-    val inntektDatoFraTil: Periode,
-    val inntektSummertBelop: BigDecimal,
-    var inntektFordelSaerfradragBelop: BigDecimal,
-    val sjablon0004FordelSkatteklasse2Belop: BigDecimal,
-    val sjablon0030OvreInntektsgrenseBelop: BigDecimal,
-    val sjablon0031NedreInntektsgrenseBelop: BigDecimal,
-    val sjablon0039FordelSaerfradragBelop: BigDecimal,
-    val deltFordel: Boolean,
-    val skatteklasse2: Boolean
+  val periode: Periode,
+  val summertBelop: BigDecimal,
+  var fordelSaerfradragBelop: BigDecimal,
+  val sjablon0004FordelSkatteklasse2Belop: BigDecimal,
+  val sjablon0030OvreInntektsgrenseBelop: BigDecimal,
+  val sjablon0031NedreInntektsgrenseBelop: BigDecimal,
+  val sjablon0039FordelSaerfradragBelop: BigDecimal,
+  val deltFordel: Boolean,
+  val skatteklasse2: Boolean
 )
