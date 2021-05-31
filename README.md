@@ -8,6 +8,7 @@ Tilbyr enums og util-metoder for håndtering av inntekter, sjabloner og perioder
 
 Versjon | Endringstype | Beskrivelse
 --------|--------------|------------
+0.16.0  | Endret       | Lagt til referanse på sjablon
 0.15.0  | Endret       | Lagt til referanse på inntekt + noe refaktorering
 0.14.9  | Endret       | Nye enums for resultatkode for resultat av forholdsmessig fordeling
 0.14.8  | Endret       | Lagt til noe dokumentasjon
