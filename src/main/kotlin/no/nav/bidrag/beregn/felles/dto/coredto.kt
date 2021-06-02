@@ -37,7 +37,8 @@ data class SjablonNavnVerdiCore(
   val verdi: BigDecimal
 )
 
-data class SjablonPeriodeNavnVerdiCore(
+data class SjablonResultatGrunnlagCore(
+  val referanse: String,
   val periode: PeriodeCore,
   val navn: String,
   val verdi: BigDecimal
