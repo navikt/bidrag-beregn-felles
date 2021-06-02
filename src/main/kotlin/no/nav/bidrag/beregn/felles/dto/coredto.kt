@@ -10,7 +10,6 @@ data class PeriodeCore(
 )
 
 data class SjablonPeriodeCore(
-  val referanse: String,
   val periode: PeriodeCore,
   val navn: String,
   val nokkelListe: List<SjablonNokkelCore>? = emptyList(),
@@ -34,6 +33,12 @@ data class SjablonInnholdCore(
 )
 
 data class SjablonNavnVerdiCore(
+  val navn: String,
+  val verdi: BigDecimal
+)
+
+data class SjablonPeriodeNavnVerdiCore(
+  val periode: PeriodeCore,
   val navn: String,
   val verdi: BigDecimal
 )
