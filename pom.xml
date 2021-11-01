@@ -26,7 +26,7 @@
 
     <!-- language -->
     <java.version>16</java.version>
-    <kotlin.version>1.5.30</kotlin.version>
+    <kotlin.version>1.5.31</kotlin.version>
 
     <!-- build -->
     <build-helper-maven.version>3.2.0</build-helper-maven.version>
