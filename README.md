@@ -8,6 +8,7 @@ Tilbyr enums og util-metoder for håndtering av inntekter, sjabloner og perioder
 
 Versjon | Endringstype | Beskrivelse
 --------|--------------|------------
+0.18.1  | Endret       | Oppdatert til Java 17 + oppdatert andre avhengigheter
 0.18.0  | Endret       | Lagt til ny dataklasse SjablonResultatGrunnlagCore
 0.17.0  | Endret       | Fjernet referanse fra sjablon igjen. Lagt til noen nye dataklasser.
 0.16.0  | Endret       | Lagt til referanse på sjablon
