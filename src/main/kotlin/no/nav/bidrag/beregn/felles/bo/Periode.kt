@@ -35,11 +35,12 @@ data class Periode(
     }
 
     // Sjekk om det er opphold (gap) mellom periodene (datoFom i denne perioden kommer senere enn datoTil i forrige periode)
+    // Legger en dag til datoTil for å ikke feilmarkere scenarioer hvor datoTil er satt til siste dag i en måned
     // Hvis forrige periode er null, er dette den første perioden. Ingen kontroll nødvendig
     fun harOpphold(forrigePeriode: Periode?): Boolean {
         if (forrigePeriode == null) return false
 
-        return forrigePeriode.datoTil != null && datoFom.isAfter(forrigePeriode.datoTil)
+        return forrigePeriode.datoTil != null && datoFom.isAfter(forrigePeriode.datoTil.plusDays(1))
     }
 
     // Sjekk om datoFom er tidligere eller lik datoTil
