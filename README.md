@@ -8,6 +8,7 @@ Tilbyr enums og util-metoder for håndtering av inntekter, sjabloner og perioder
 
 Versjon | Endringstype | Beskrivelse
 --------|--------------|------------
+0.18.3  | Endret       | Sjekker om periode liste er tom før validering av perioder i PeriodeUtil
 0.18.2  | Endret       | Liten justering på validering av datoer
 0.18.1  | Endret       | Oppdatert til Java 17 + oppdatert andre avhengigheter
 0.18.0  | Endret       | Lagt til ny dataklasse SjablonResultatGrunnlagCore
