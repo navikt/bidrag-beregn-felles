@@ -89,6 +89,9 @@ public class PeriodeUtil {
   private static List<Avvik> sjekkBeregnPeriode(LocalDate beregnDatoFra, LocalDate beregnDatoTil, String dataElement, List<Periode> periodeListe) {
     var avvikListe = new ArrayList<Avvik>();
 
+    if (periodeListe.isEmpty()) {
+      return avvikListe;
+    }
     //Sjekk at første dato i periodelisten ikke er etter start-dato i perioden det skal beregnes for
     var startDatoIPeriodeListe = periodeListe.stream().findFirst().get().getDatoFom();
 
