@@ -2,10 +2,8 @@ package no.nav.bidrag.beregn.felles.enums
 
 enum class BostatusKode {
   //Forskudd
-  ALENE,
-  MED_FORELDRE,
-  MED_ANDRE_ENN_FORELDRE,
-  ENSLIG_ASYLANT,
+  BOR_MED_FORELDRE,
+  BOR_IKKE_MED_FORELDRE,
   //Bidragsevne
   MED_ANDRE
 }
