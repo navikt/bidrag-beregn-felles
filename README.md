@@ -8,6 +8,7 @@ Tilbyr enums og util-metoder for håndtering av inntekter, sjabloner og perioder
 
 | Versjon | Endringstype | Beskrivelse                                                                                                                                                                      |
 |---------|--------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 0.19.3  | Endret       | Oppdatert versjoner av maven-surefire-plugin og kotlin-maven-plugin                                                                                                              |
 | 0.19.2  | Endret       | Lagt til Bostatuskode ALENE for bidragsevne/BP                                                                                                                                   |
 | 0.19.1  | Endret       | Oppdatert versjoner av Kotlin og Spring Boot                                                                                                                                     |
 | 0.19.0  | Endret       | Nye verdier for enum BostatusKode                                                                                                                                                |
