@@ -3,10 +3,10 @@
 
   <groupId>no.nav.bidrag</groupId>
   <artifactId>bidrag-beregn-felles</artifactId>
-  <version>0.19.4-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>bidrag-beregn-felles</name>
-  <description>Felles logikk for bidrag beregn</description>
+  <description>Felles logikk for bidragsberegning</description>
 
   <licenses>
     <license>
@@ -26,7 +26,7 @@
 
     <!-- language -->
     <java.version>17</java.version>
-    <kotlin.version>1.8.21</kotlin.version>
+    <kotlin.version>1.9.0</kotlin.version>
 
     <!-- build -->
     <build-helper-maven.version>3.3.0</build-helper-maven.version>
@@ -36,6 +36,7 @@
 
     <!-- dependencies -->
     <spring-boot.version>3.0.6</spring-boot.version>
+    <bidrag-domain.version>20230914102523_8f6d6ef</bidrag-domain.version>
   </properties>
 
   <distributionManagement>
@@ -47,13 +48,6 @@
 
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-dependencies</artifactId>
-        <version>${spring-boot.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
       <!-- Override vulnerable version of snakeyaml -->
       <dependency>
         <groupId>org.yaml</groupId>
@@ -72,18 +66,14 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
+      <groupId>no.nav.bidrag</groupId>
+      <artifactId>bidrag-domain</artifactId>
+      <version>${bidrag-domain.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-stdlib-jdk8</artifactId>
+      <artifactId>kotlin-stdlib</artifactId>
       <version>${kotlin.version}</version>
     </dependency>
 
@@ -91,6 +81,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
+      <version>${spring-boot.version}</version>
       <scope>test</scope>
     </dependency>
 
@@ -102,9 +93,12 @@
     </dependency>
   </dependencies>
 
-  <build>
-    <plugins>
 
+  <build>
+    <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+    <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
+
+    <plugins>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.0.0</version>
@@ -120,47 +114,15 @@
         <executions>
           <execution>
             <id>compile</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-            <configuration>
-              <sourceDirs>
-                <source>src/main/java</source>
-                <source>src/main/kotlin</source>
-              </sourceDirs>
-            </configuration>
-          </execution>
-          <execution>
-            <id>test-compile</id>
-            <phase>process-test-resources</phase>
-            <goals>
-              <goal>test-compile</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <jvmTarget>1.8</jvmTarget>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-        <executions>
-          <execution>
-            <id>compile</id>
             <phase>compile</phase>
             <goals>
               <goal>compile</goal>
             </goals>
           </execution>
           <execution>
-            <id>testCompile</id>
-            <phase>test-compile</phase>
+            <id>test-compile</id>
             <goals>
-              <goal>testCompile</goal>
+              <goal>test-compile</goal>
             </goals>
           </execution>
         </executions>
@@ -182,6 +144,53 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>ktlint</id>
+            <phase>verify</phase>
+            <configuration>
+              <target name="ktlint">
+                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true" classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
+                  <arg value="src/**/*.kt" />
+                </java>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>ktlint-format</id>
+            <phase>validate</phase>
+            <configuration>
+              <target name="ktlint">
+                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true" classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
+                  <jvmarg value="--add-opens" />
+                  <jvmarg value="java.base/java.lang=ALL-UNNAMED" />
+                  <arg value="-F" />
+                  <arg value="src/**/*.kt" />
+                </java>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>com.pinterest</groupId>
+            <artifactId>ktlint</artifactId>
+            <version>0.47.1</version>
+          </dependency>
+          <!-- additional 3rd party ruleset(s) can be specified here -->
+        </dependencies>
       </plugin>
 
     </plugins>

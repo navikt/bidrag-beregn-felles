@@ -4,8 +4,8 @@ import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
 
 data class Periode(
-        var datoFom: LocalDate,
-        val datoTil: LocalDate?
+    var datoFom: LocalDate,
+    val datoTil: LocalDate?
 ) : PeriodisertGrunnlag {
     companion object {
         // Juster dato til den første i neste måned (hvis ikke dato er den første i inneværende måned)
@@ -22,8 +22,10 @@ data class Periode(
 
     // Sjekker at en denne perioden overlapper med annenPeriode (intersect)
     fun overlapperMed(annenPeriode: Periode): Boolean {
-        return ((annenPeriode.datoTil == null || datoFom.isBefore(annenPeriode.datoTil))
-                && (datoTil == null || datoTil.isAfter(annenPeriode.datoFom)))
+        return (
+            (annenPeriode.datoTil == null || datoFom.isBefore(annenPeriode.datoTil)) &&
+                (datoTil == null || datoTil.isAfter(annenPeriode.datoFom))
+            )
     }
 
     // Sjekk om perioden overlapper (datoFom i denne perioden kommer tidligere enn datoTil i forrige periode)

@@ -2,12 +2,13 @@
 ![](https://github.com/navikt/bidrag-beregn-felles/workflows/maven%20deploy/badge.svg)
 
 Felles-repo for beregninger i bidrag. Brukes av bidrag-beregn-forskudd-xxx, bidrag-beregn-barnebidrag-xxx og bidrag-beregn-saertilskudd-xxx.
-Tilbyr enums og util-metoder for håndtering av inntekter, sjabloner og perioder.
+Tilbyr felles dataklasser og util-metoder for håndtering av inntekter, sjabloner og perioder.
 
 ## Changelog:
 
 | Versjon | Endringstype | Beskrivelse                                                                                                                                                                      |
 |---------|--------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1.0.0   | Endret       | Skrevet om til Kotlin. Flyttet enums til bidrag-domain. Refaktorert kode.                                                                                                        |
 | 0.19.3  | Endret       | Oppdatert versjoner av maven-surefire-plugin og kotlin-maven-plugin                                                                                                              |
 | 0.19.2  | Endret       | Lagt til Bostatuskode ALENE for bidragsevne/BP                                                                                                                                   |
 | 0.19.1  | Endret       | Oppdatert versjoner av Kotlin og Spring Boot                                                                                                                                     |
