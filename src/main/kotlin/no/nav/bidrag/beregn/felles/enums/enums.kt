@@ -1,11 +1,12 @@
 package no.nav.bidrag.beregn.felles.enums
 
 enum class BostatusKode {
-  //Forskudd
+  //Forskudd (barn)
   BOR_MED_FORELDRE,
   BOR_IKKE_MED_FORELDRE,
-  //Bidragsevne
-  MED_ANDRE
+  //Bidragsevne (BP særtilskudd/bidrag)
+  MED_ANDRE,
+  ALENE
 }
 
 enum class SivilstandKode {

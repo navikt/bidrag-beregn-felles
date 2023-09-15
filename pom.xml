@@ -3,7 +3,7 @@
 
   <groupId>no.nav.bidrag</groupId>
   <artifactId>bidrag-beregn-felles</artifactId>
-  <version>0.19.2-SNAPSHOT</version>
+  <version>0.19.4-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>bidrag-beregn-felles</name>
   <description>Felles logikk for bidrag beregn</description>
@@ -26,16 +26,16 @@
 
     <!-- language -->
     <java.version>17</java.version>
-    <kotlin.version>1.8.20</kotlin.version>
+    <kotlin.version>1.8.21</kotlin.version>
 
     <!-- build -->
-    <build-helper-maven.version>3.2.0</build-helper-maven.version>
+    <build-helper-maven.version>3.3.0</build-helper-maven.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <!-- dependencies -->
-    <spring-boot.version>2.7.5</spring-boot.version>
+    <spring-boot.version>3.0.6</spring-boot.version>
   </properties>
 
   <distributionManagement>
@@ -107,11 +107,16 @@
 
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.0.0</version>
+        <configuration>
+          <argLine>--enable-preview</argLine>
+        </configuration>
       </plugin>
 
       <plugin>
         <groupId>org.jetbrains.kotlin</groupId>
         <artifactId>kotlin-maven-plugin</artifactId>
+        <version>${kotlin.version}</version>
         <executions>
           <execution>
             <id>compile</id>
