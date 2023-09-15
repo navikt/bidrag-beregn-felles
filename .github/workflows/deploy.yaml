@@ -28,7 +28,6 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      - uses: navikt/bidrag-maven/verify-dependencies@v7
       - run: mvn -B -e --settings .m2/maven-settings.xml install
       - uses: navikt/bidrag-release/prepare-mvn-pkg@v3
         id: prepare
