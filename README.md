@@ -8,7 +8,6 @@ Tilbyr felles dataklasser og util-metoder for håndtering av inntekter, sjablone
 
 | Versjon | Endringstype | Beskrivelse                                                                                                                                                                      |
 |---------|--------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 1.0.1   | Endret       | Lagt tilbake settings.xml                                                                                                                                                        |
 | 1.0.0   | Endret       | Skrevet om til Kotlin. Flyttet enums til bidrag-domain. Refaktorert kode.                                                                                                        |
 | 0.19.3  | Endret       | Oppdatert versjoner av maven-surefire-plugin og kotlin-maven-plugin                                                                                                              |
 | 0.19.2  | Endret       | Lagt til Bostatuskode ALENE for bidragsevne/BP                                                                                                                                   |
