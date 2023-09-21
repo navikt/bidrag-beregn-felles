@@ -4,6 +4,7 @@ import no.nav.bidrag.beregn.felles.bo.Avvik
 import no.nav.bidrag.beregn.felles.bo.Periode
 import no.nav.bidrag.beregn.felles.bo.SjablonPeriode
 import no.nav.bidrag.beregn.felles.inntekt.InntektPeriodeGrunnlag
+import no.nav.bidrag.beregn.felles.inntekt.InntektPeriodeGrunnlagUtenInntektType
 import no.nav.bidrag.beregn.felles.inntekt.PeriodisertInntekt
 import no.nav.bidrag.beregn.felles.periode.Periodiserer
 import no.nav.bidrag.domain.enums.AvvikType
@@ -82,13 +83,14 @@ object InntektUtil {
         val inntektType = inntektPeriodeGrunnlag.type
 
         // Åpen eller uendelig slutt-dato skal ikke ryke ut på dato-test (?). Setter datoTil lik siste dato i året til datoFom
-        val inntektDatoTil = if ((inntektPeriodeGrunnlag.getPeriode().datoTil == null) || (inntektPeriodeGrunnlag.getPeriode().datoTil == LocalDate.MAX) ||
-            (inntektPeriodeGrunnlag.getPeriode().datoTil == LocalDate.parse("9999-12-31"))
-        ) {
-            inntektDatoFom.withMonth(12).withDayOfMonth(31)
-        } else {
-            inntektPeriodeGrunnlag.getPeriode().datoTil
-        }
+        val inntektDatoTil =
+            if ((inntektPeriodeGrunnlag.getPeriode().datoTil == null) || (inntektPeriodeGrunnlag.getPeriode().datoTil == LocalDate.MAX) ||
+                (inntektPeriodeGrunnlag.getPeriode().datoTil == LocalDate.parse("9999-12-31"))
+            ) {
+                inntektDatoFom.withMonth(12).withDayOfMonth(31)
+            } else {
+                inntektPeriodeGrunnlag.getPeriode().datoTil
+            }
 
         return if ((inntektDatoFom < inntektType.gyldigFom) || (inntektDatoTil!! > inntektType.gyldigTil)) {
             listOf(
@@ -196,18 +198,18 @@ object InntektUtil {
     // Regelverk for utvidet barnetrygd: Sjekker om det skal legges til inntekt for fordel særfradrag enslig forsørger og skatteklasse 2
     @JvmStatic
     fun behandlUtvidetBarnetrygd(
-        inntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlag>,
+        inntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlagUtenInntektType>,
         sjablonPeriodeListe: List<SjablonPeriode>
-    ): List<InntektPeriodeGrunnlag> {
+    ): List<InntektPeriodeGrunnlagUtenInntektType> {
         // Justerer datoer
         val justertInntektPeriodeGrunnlagListeAlleInntekter = inntektPeriodeGrunnlagListe
-            .map { InntektPeriodeGrunnlag(it) }
+            .map { InntektPeriodeGrunnlagUtenInntektType(it) }
             .sortedBy { it.getPeriode().datoFom }
             .toList()
 
         // Danner liste over alle inntekter av type UTVIDET_BARNETRYGD
         val justertInntektPeriodeGrunnlagListeUtvidetBarnetrygd = justertInntektPeriodeGrunnlagListeAlleInntekter
-            .filter { it.type == InntektType.UTVIDET_BARNETRYGD }
+            .filter { it.type == InntektType.UTVIDET_BARNETRYGD.name }
             .toList()
 
         // Hvis det ikke finnes inntekter av type UTVIDET_BARNETRYGD, returnerer den samme listen som ble sendt inn
@@ -314,17 +316,17 @@ object InntektUtil {
     // Sjekker om en gitt periode har utvidet barnetrygd
     private fun periodeHarUtvidetBarnetrygd(
         periode: Periode,
-        justertInntektPeriodeGrunnlagListeUtvidetBarnetrygd: List<InntektPeriodeGrunnlag>
+        justertInntektPeriodeGrunnlagListeUtvidetBarnetrygd: List<InntektPeriodeGrunnlagUtenInntektType>
     ) =
         justertInntektPeriodeGrunnlagListeUtvidetBarnetrygd.any {
             it.getPeriode().overlapperMed(periode)
         }
 
     // Summerer inntektene i en gitt periode (eksklusiv inntekttype utvidet barnetrygd)
-    private fun summerInntektPeriode(periode: Periode, justertInntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlag>) =
+    private fun summerInntektPeriode(periode: Periode, justertInntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlagUtenInntektType>) =
         justertInntektPeriodeGrunnlagListe
-            .filter { it.getPeriode().overlapperMed(periode) && it.type != InntektType.UTVIDET_BARNETRYGD }
-            .map(InntektPeriodeGrunnlag::belop)
+            .filter { it.getPeriode().overlapperMed(periode) && it.type != InntektType.UTVIDET_BARNETRYGD.name }
+            .map(InntektPeriodeGrunnlagUtenInntektType::belop)
             .fold(BigDecimal.ZERO) { acc, belop -> acc + belop }
 
     // Finner verdien til en gitt sjablon i en gitt periode
@@ -335,15 +337,15 @@ object InntektUtil {
             .firstOrNull() ?: BigDecimal.ZERO
 
     // Finner verdien til flagget 'Delt fordel' i en gitt periode
-    private fun finnDeltFordel(periode: Periode, justertInntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlag>) =
+    private fun finnDeltFordel(periode: Periode, justertInntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlagUtenInntektType>) =
         justertInntektPeriodeGrunnlagListe.firstOrNull {
-            it.getPeriode().overlapperMed(periode) && it.type == InntektType.UTVIDET_BARNETRYGD
+            it.getPeriode().overlapperMed(periode) && it.type == InntektType.UTVIDET_BARNETRYGD.name
         }?.deltFordel ?: false
 
     // Finner verdien til flagget 'Skatteklasse 2' i en gitt periode
-    private fun finnSkatteklasse2(periode: Periode, justertInntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlag>) =
+    private fun finnSkatteklasse2(periode: Periode, justertInntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlagUtenInntektType>) =
         justertInntektPeriodeGrunnlagListe.firstOrNull {
-            it.getPeriode().overlapperMed(periode) && it.type == InntektType.UTVIDET_BARNETRYGD
+            it.getPeriode().overlapperMed(periode) && it.type == InntektType.UTVIDET_BARNETRYGD.name
         }?.skatteklasse2 ?: false
 
     // Beregner fordel særfradrag
@@ -392,11 +394,11 @@ object InntektUtil {
     }
 
     // Slår sammen perioder med like beløp og rydder vekk perioder med 0 i beløp. Danner ny InntektPeriodeGrunnlag-liste
-    private fun dannInntektListeSaerfradragEnsligForsorger(periodisertInntektListe: List<PeriodisertInntekt>): List<InntektPeriodeGrunnlag> {
+    private fun dannInntektListeSaerfradragEnsligForsorger(periodisertInntektListe: List<PeriodisertInntekt>): List<InntektPeriodeGrunnlagUtenInntektType> {
         if (periodisertInntektListe.isEmpty()) {
             return emptyList()
         }
-        val inntektListeSaerfradragEnsligForsorger = mutableListOf<InntektPeriodeGrunnlag>()
+        val inntektListeSaerfradragEnsligForsorger = mutableListOf<InntektPeriodeGrunnlagUtenInntektType>()
         var forrigeDatoFom = periodisertInntektListe[0].periode.datoFom
         var forrigeDatoTil = periodisertInntektListe[0].periode.datoTil
         var forrigeBelop = periodisertInntektListe[0].fordelSaerfradragBelop
@@ -407,10 +409,10 @@ object InntektUtil {
                     inntektType =
                         if (forrigeDatoFom.isBefore(InntektType.FORDEL_SKATTEKLASSE2.gyldigTil)) InntektType.FORDEL_SKATTEKLASSE2 else InntektType.FORDEL_SAERFRADRAG_ENSLIG_FORSORGER
                     inntektListeSaerfradragEnsligForsorger.add(
-                        InntektPeriodeGrunnlag(
+                        InntektPeriodeGrunnlagUtenInntektType(
                             referanse = lagReferanse(inntektType = inntektType, datoFom = forrigeDatoFom),
                             inntektPeriode = Periode(datoFom = forrigeDatoFom, datoTil = forrigeDatoTil),
-                            type = inntektType,
+                            type = inntektType.name,
                             belop = forrigeBelop,
                             deltFordel = false,
                             skatteklasse2 = false
@@ -426,10 +428,10 @@ object InntektUtil {
             inntektType =
                 if (forrigeDatoFom.isBefore(InntektType.FORDEL_SKATTEKLASSE2.gyldigTil)) InntektType.FORDEL_SKATTEKLASSE2 else InntektType.FORDEL_SAERFRADRAG_ENSLIG_FORSORGER
             inntektListeSaerfradragEnsligForsorger.add(
-                InntektPeriodeGrunnlag(
+                InntektPeriodeGrunnlagUtenInntektType(
                     referanse = lagReferanse(inntektType = inntektType, datoFom = forrigeDatoFom),
                     inntektPeriode = Periode(datoFom = forrigeDatoFom, datoTil = forrigeDatoTil),
-                    type = inntektType,
+                    type = inntektType.name,
                     belop = forrigeBelop,
                     deltFordel = false,
                     skatteklasse2 = false
