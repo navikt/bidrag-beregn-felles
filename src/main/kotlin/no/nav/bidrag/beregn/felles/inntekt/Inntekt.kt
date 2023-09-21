@@ -29,6 +29,31 @@ data class InntektPeriodeGrunnlag(
     }
 }
 
+// TODO Midlertidig duplisert InntektPeriodeGrunnlag. Denne bør etterhvert erstatte InntektPeriodeGrunnlag (dvs. bruke String i stedet for InntektType)
+data class InntektPeriodeGrunnlagUtenInntektType(
+    val referanse: String,
+    val inntektPeriode: Periode,
+    val type: String,
+    val belop: BigDecimal,
+    val deltFordel: Boolean,
+    val skatteklasse2: Boolean
+) : PeriodisertGrunnlag {
+
+    constructor(inntektPeriodeGrunnlag: InntektPeriodeGrunnlagUtenInntektType) :
+        this(
+            referanse = inntektPeriodeGrunnlag.referanse,
+            inntektPeriode = inntektPeriodeGrunnlag.inntektPeriode.justerDatoer(),
+            type = inntektPeriodeGrunnlag.type,
+            belop = inntektPeriodeGrunnlag.belop,
+            deltFordel = inntektPeriodeGrunnlag.deltFordel,
+            skatteklasse2 = inntektPeriodeGrunnlag.skatteklasse2
+        )
+
+    override fun getPeriode(): Periode {
+        return inntektPeriode
+    }
+}
+
 data class PeriodisertInntekt(
     val periode: Periode,
     val summertBelop: BigDecimal,

@@ -6,6 +6,7 @@ import no.nav.bidrag.beregn.felles.bo.SjablonInnhold
 import no.nav.bidrag.beregn.felles.bo.SjablonNokkel
 import no.nav.bidrag.beregn.felles.bo.SjablonPeriode
 import no.nav.bidrag.beregn.felles.inntekt.InntektPeriodeGrunnlag
+import no.nav.bidrag.beregn.felles.inntekt.InntektPeriodeGrunnlagUtenInntektType
 import no.nav.bidrag.domain.enums.InntektType
 import no.nav.bidrag.domain.enums.sjablon.SjablonInnholdNavn
 import no.nav.bidrag.domain.enums.sjablon.SjablonNavn
@@ -818,93 +819,93 @@ object TestUtil {
     }
 
     @JvmStatic
-    fun byggInntektGrunnlagUtvidetBarnetrygdFull(): List<InntektPeriodeGrunnlag> {
-        val inntektGrunnlagListe = mutableListOf<InntektPeriodeGrunnlag>()
+    fun byggInntektGrunnlagUtvidetBarnetrygdFull(): List<InntektPeriodeGrunnlagUtenInntektType> {
+        val inntektGrunnlagListe = mutableListOf<InntektPeriodeGrunnlagUtenInntektType>()
         inntektGrunnlagListe.add(
-            InntektPeriodeGrunnlag(
+            InntektPeriodeGrunnlagUtenInntektType(
                 "REF1",
                 Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-06-01")),
-                InntektType.UTVIDET_BARNETRYGD,
+                InntektType.UTVIDET_BARNETRYGD.name,
                 BigDecimal.valueOf(12000),
                 false,
                 false
             )
         )
         inntektGrunnlagListe.add(
-            InntektPeriodeGrunnlag(
+            InntektPeriodeGrunnlagUtenInntektType(
                 "REF2",
                 Periode(LocalDate.parse("2018-12-31"), LocalDate.parse("2019-05-31")),
-                InntektType.UTVIDET_BARNETRYGD,
+                InntektType.UTVIDET_BARNETRYGD.name,
                 BigDecimal.valueOf(12000),
                 false,
                 false
             )
         )
         inntektGrunnlagListe.add(
-            InntektPeriodeGrunnlag(
+            InntektPeriodeGrunnlagUtenInntektType(
                 "REF3",
                 Periode(LocalDate.parse("2019-06-01"), LocalDate.parse("2020-01-01")),
-                InntektType.UTVIDET_BARNETRYGD,
+                InntektType.UTVIDET_BARNETRYGD.name,
                 BigDecimal.valueOf(12000),
                 true,
                 false
             )
         )
         inntektGrunnlagListe.add(
-            InntektPeriodeGrunnlag(
+            InntektPeriodeGrunnlagUtenInntektType(
                 "REF4",
                 Periode(LocalDate.parse("2020-04-01"), LocalDate.parse("2020-09-01")),
-                InntektType.UTVIDET_BARNETRYGD,
+                InntektType.UTVIDET_BARNETRYGD.name,
                 BigDecimal.valueOf(10000),
                 false,
                 false
             )
         )
         inntektGrunnlagListe.add(
-            InntektPeriodeGrunnlag(
+            InntektPeriodeGrunnlagUtenInntektType(
                 "REF5",
                 Periode(LocalDate.parse("2020-09-01"), LocalDate.parse("2021-01-01")),
-                InntektType.UTVIDET_BARNETRYGD,
+                InntektType.UTVIDET_BARNETRYGD.name,
                 BigDecimal.valueOf(10000),
                 true,
                 false
             )
         )
         inntektGrunnlagListe.add(
-            InntektPeriodeGrunnlag(
+            InntektPeriodeGrunnlagUtenInntektType(
                 "REF6",
                 Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2020-01-01")),
-                InntektType.SKATTEGRUNNLAG_SKE,
+                InntektType.SKATTEGRUNNLAG_SKE.name,
                 BigDecimal.valueOf(90000),
                 false,
                 false
             )
         )
         inntektGrunnlagListe.add(
-            InntektPeriodeGrunnlag(
+            InntektPeriodeGrunnlagUtenInntektType(
                 "REF7",
                 Periode(LocalDate.parse("2020-01-01"), LocalDate.parse("2021-01-01")),
-                InntektType.SKATTEGRUNNLAG_SKE,
+                InntektType.SKATTEGRUNNLAG_SKE.name,
                 BigDecimal.valueOf(105000),
                 false,
                 false
             )
         )
         inntektGrunnlagListe.add(
-            InntektPeriodeGrunnlag(
+            InntektPeriodeGrunnlagUtenInntektType(
                 "REF8",
                 Periode(LocalDate.parse("2019-04-01"), LocalDate.parse("2019-08-01")),
-                InntektType.KAPITALINNTEKT_SKE,
+                InntektType.KAPITALINNTEKT_SKE.name,
                 BigDecimal.valueOf(30000),
                 false,
                 false
             )
         )
         inntektGrunnlagListe.add(
-            InntektPeriodeGrunnlag(
+            InntektPeriodeGrunnlagUtenInntektType(
                 "REF9",
                 Periode(LocalDate.parse("2020-04-01"), LocalDate.parse("2020-08-01")),
-                InntektType.KAPITALINNTEKT_SKE,
+                InntektType.KAPITALINNTEKT_SKE.name,
                 BigDecimal.valueOf(10000),
                 false,
                 false
@@ -914,23 +915,23 @@ object TestUtil {
     }
 
     @JvmStatic
-    fun byggInntektGrunnlagUtvidetBarnetrygdOvergang(): List<InntektPeriodeGrunnlag> {
-        val inntektGrunnlagListe = mutableListOf<InntektPeriodeGrunnlag>()
+    fun byggInntektGrunnlagUtvidetBarnetrygdOvergang(): List<InntektPeriodeGrunnlagUtenInntektType> {
+        val inntektGrunnlagListe = mutableListOf<InntektPeriodeGrunnlagUtenInntektType>()
         inntektGrunnlagListe.add(
-            InntektPeriodeGrunnlag(
+            InntektPeriodeGrunnlagUtenInntektType(
                 "REF1",
                 Periode(LocalDate.parse("2012-06-01"), LocalDate.parse("2013-06-01")),
-                InntektType.UTVIDET_BARNETRYGD,
+                InntektType.UTVIDET_BARNETRYGD.name,
                 BigDecimal.valueOf(12000),
                 false,
                 true
             )
         )
         inntektGrunnlagListe.add(
-            InntektPeriodeGrunnlag(
+            InntektPeriodeGrunnlagUtenInntektType(
                 "REF2",
                 Periode(LocalDate.parse("2012-06-01"), LocalDate.parse("2013-06-01")),
-                InntektType.SKATTEGRUNNLAG_SKE,
+                InntektType.SKATTEGRUNNLAG_SKE.name,
                 BigDecimal.valueOf(120000),
                 false,
                 false
