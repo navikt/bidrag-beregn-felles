@@ -3,10 +3,10 @@ package no.nav.bidrag.beregn.felles.sjablon
 import no.nav.bidrag.beregn.felles.TestUtil.byggSjabloner
 import no.nav.bidrag.beregn.felles.bo.SjablonNokkel
 import no.nav.bidrag.beregn.felles.util.SjablonUtil
-import no.nav.bidrag.domain.enums.sjablon.SjablonInnholdNavn
-import no.nav.bidrag.domain.enums.sjablon.SjablonNavn
-import no.nav.bidrag.domain.enums.sjablon.SjablonNokkelNavn
-import no.nav.bidrag.domain.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
+import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
+import no.nav.bidrag.domene.enums.sjablon.SjablonNokkelNavn
+import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

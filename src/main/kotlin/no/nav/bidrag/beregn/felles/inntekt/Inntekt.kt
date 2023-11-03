@@ -2,7 +2,7 @@ package no.nav.bidrag.beregn.felles.inntekt
 
 import no.nav.bidrag.beregn.felles.bo.Periode
 import no.nav.bidrag.beregn.felles.bo.PeriodisertGrunnlag
-import no.nav.bidrag.domain.enums.InntektType
+import no.nav.bidrag.domene.enums.InntektType
 import java.math.BigDecimal
 
 data class InntektPeriodeGrunnlag(

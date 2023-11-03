@@ -7,20 +7,23 @@ import no.nav.bidrag.beregn.felles.inntekt.InntektPeriodeGrunnlag
 import no.nav.bidrag.beregn.felles.inntekt.InntektPeriodeGrunnlagUtenInntektType
 import no.nav.bidrag.beregn.felles.inntekt.PeriodisertInntekt
 import no.nav.bidrag.beregn.felles.periode.Periodiserer
-import no.nav.bidrag.domain.enums.AvvikType
-import no.nav.bidrag.domain.enums.Formaal
-import no.nav.bidrag.domain.enums.InntektType
-import no.nav.bidrag.domain.enums.Rolle
-import no.nav.bidrag.domain.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.domene.enums.Formaal
+import no.nav.bidrag.domene.enums.InntektType
+import no.nav.bidrag.domene.enums.Rolle
+import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.Comparator.comparing
 
 // TODO Vurdere om disse metodene trengs, evt flytte dem til bidrag-behandling eller bidrag-inntekt. Pt i bruk i beregn-barnebidrag-core, men
 //      fjernet (midlertidig?) fra beregn-forskudd-core og beregn-saertilskudd-core
 object InntektUtil {
+
+    private val FOM_DATO_FORDEL_SKATTEKLASSE2 = LocalDate.MIN
+    private val TIL_DATO_FORDEL_SKATTEKLASSE2 = LocalDate.parse("2013-01-01")
+    private val FOM_DATO_FORDEL_SAERFRADRAG_ENSLIG_FORSORGER = LocalDate.parse("2013-01-01")
+    private val TIL_DATO_FORDEL_SAERFRADRAG_ENSLIG_FORSORGER = LocalDate.MAX
 
     // Validerer inntekt
     @JvmStatic
@@ -28,172 +31,172 @@ object InntektUtil {
         val avvikListe = mutableListOf<Avvik>()
 
         // Validerer formaal, rolle og fra- /til-dato for en inntektstype
-        inntektPeriodeGrunnlagListe.forEach {
-            avvikListe.addAll(validerSoknadstypeOgRolle(it.type, formaal, rolle))
-            avvikListe.addAll(validerPeriode(it))
-        }
+//        inntektPeriodeGrunnlagListe.forEach {
+//            avvikListe.addAll(validerSoknadstypeOgRolle(it.type, formaal, rolle))
+//            avvikListe.addAll(validerPeriode(it))
+//        }
 
         // Validerer at flere inntekter innenfor samme inntektsgruppe ikke starter på samme dato
-        avvikListe.addAll(validerDatoFomPerInntektsgruppe(inntektPeriodeGrunnlagListe))
+//        avvikListe.addAll(validerDatoFomPerInntektsgruppe(inntektPeriodeGrunnlagListe))
 
         return avvikListe
     }
 
     // Justerer inntekt
-    @JvmStatic
-    fun justerInntekter(inntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlag>) =
-        justerPerioder(inntektPeriodeGrunnlagListe)
+//    @JvmStatic
+//    fun justerInntekter(inntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlag>) =
+//        justerPerioder(inntektPeriodeGrunnlagListe)
 
     // Validerer at formaal og rolle er gyldig for en inntektstype
-    private fun validerSoknadstypeOgRolle(inntektType: InntektType, formaal: Formaal, rolle: Rolle): List<Avvik> {
-        val soknadstypeOgRolleErGyldig = when (formaal) {
-            Formaal.BIDRAG -> when (rolle) {
-                Rolle.BIDRAGSPLIKTIG -> inntektType.bidrag && inntektType.bidragspliktig
-                Rolle.BIDRAGSMOTTAKER -> inntektType.bidrag && inntektType.bidragsmottaker
-                Rolle.SOKNADSBARN -> inntektType.bidrag && inntektType.soknadsbarn
-            }
-
-            Formaal.SAERTILSKUDD -> when (rolle) {
-                Rolle.BIDRAGSPLIKTIG -> inntektType.saertilskudd && inntektType.bidragspliktig
-                Rolle.BIDRAGSMOTTAKER -> inntektType.saertilskudd && inntektType.bidragsmottaker
-                Rolle.SOKNADSBARN -> inntektType.saertilskudd && inntektType.soknadsbarn
-            }
-
-            Formaal.FORSKUDD -> when (rolle) {
-                Rolle.BIDRAGSPLIKTIG -> inntektType.forskudd && inntektType.bidragspliktig
-                Rolle.BIDRAGSMOTTAKER -> inntektType.forskudd && inntektType.bidragsmottaker
-                Rolle.SOKNADSBARN -> inntektType.forskudd && inntektType.soknadsbarn
-            }
-        }
-        return if (!soknadstypeOgRolleErGyldig) {
-            listOf(
-                Avvik(
-                    avvikTekst = "inntektType $inntektType er ugyldig for formaal $formaal og rolle $rolle",
-                    avvikType = AvvikType.UGYLDIG_INNTEKT_TYPE
-                )
-            )
-        } else {
-            emptyList()
-        }
-    }
+//    private fun validerSoknadstypeOgRolle(inntektType: InntektType, formaal: Formaal, rolle: Rolle): List<Avvik> {
+//        val soknadstypeOgRolleErGyldig = when (formaal) {
+//            Formaal.BIDRAG -> when (rolle) {
+//                Rolle.BIDRAGSPLIKTIG -> inntektType.bidrag && inntektType.bidragspliktig
+//                Rolle.BIDRAGSMOTTAKER -> inntektType.bidrag && inntektType.bidragsmottaker
+//                Rolle.SOKNADSBARN -> inntektType.bidrag && inntektType.soknadsbarn
+//            }
+//
+//            Formaal.SAERTILSKUDD -> when (rolle) {
+//                Rolle.BIDRAGSPLIKTIG -> inntektType.saertilskudd && inntektType.bidragspliktig
+//                Rolle.BIDRAGSMOTTAKER -> inntektType.saertilskudd && inntektType.bidragsmottaker
+//                Rolle.SOKNADSBARN -> inntektType.saertilskudd && inntektType.soknadsbarn
+//            }
+//
+//            Formaal.FORSKUDD -> when (rolle) {
+//                Rolle.BIDRAGSPLIKTIG -> inntektType.forskudd && inntektType.bidragspliktig
+//                Rolle.BIDRAGSMOTTAKER -> inntektType.forskudd && inntektType.bidragsmottaker
+//                Rolle.SOKNADSBARN -> inntektType.forskudd && inntektType.soknadsbarn
+//            }
+//        }
+//        return if (!soknadstypeOgRolleErGyldig) {
+//            listOf(
+//                Avvik(
+//                    avvikTekst = "inntektType $inntektType er ugyldig for formaal $formaal og rolle $rolle",
+//                    avvikType = Avvikstype.UGYLDIG_INNTEKT_TYPE
+//                )
+//            )
+//        } else {
+//            emptyList()
+//        }
+//    }
 
     // Validerer at inntektstypen er gyldig innenfor den angitte tidsperioden
-    private fun validerPeriode(inntektPeriodeGrunnlag: InntektPeriodeGrunnlag): List<Avvik> {
-        val inntektDatoFom = inntektPeriodeGrunnlag.getPeriode().datoFom
-        val inntektType = inntektPeriodeGrunnlag.type
-
-        // Åpen eller uendelig slutt-dato skal ikke ryke ut på dato-test (?). Setter datoTil lik siste dato i året til datoFom
-        val inntektDatoTil =
-            if ((inntektPeriodeGrunnlag.getPeriode().datoTil == null) || (inntektPeriodeGrunnlag.getPeriode().datoTil == LocalDate.MAX) ||
-                (inntektPeriodeGrunnlag.getPeriode().datoTil == LocalDate.parse("9999-12-31"))
-            ) {
-                inntektDatoFom.withMonth(12).withDayOfMonth(31)
-            } else {
-                inntektPeriodeGrunnlag.getPeriode().datoTil
-            }
-
-        return if ((inntektDatoFom < inntektType.gyldigFom) || (inntektDatoTil!! > inntektType.gyldigTil)) {
-            listOf(
-                Avvik(
-                    avvikTekst = (
-                        "inntektType " + inntektType + " er kun gyldig fom. " + inntektType.gyldigFom.toString() +
-                            " tom. " + inntektType.gyldigTil.toString()
-                        ),
-                    avvikType = AvvikType.UGYLDIG_INNTEKT_PERIODE
-                )
-            )
-        } else {
-            emptyList()
-        }
-    }
+//    private fun validerPeriode(inntektPeriodeGrunnlag: InntektPeriodeGrunnlag): List<Avvik> {
+//        val inntektDatoFom = inntektPeriodeGrunnlag.getPeriode().datoFom
+//        val inntektType = inntektPeriodeGrunnlag.type
+//
+//        // Åpen eller uendelig slutt-dato skal ikke ryke ut på dato-test (?). Setter datoTil lik siste dato i året til datoFom
+//        val inntektDatoTil =
+//            if ((inntektPeriodeGrunnlag.getPeriode().datoTil == null) || (inntektPeriodeGrunnlag.getPeriode().datoTil == LocalDate.MAX) ||
+//                (inntektPeriodeGrunnlag.getPeriode().datoTil == LocalDate.parse("9999-12-31"))
+//            ) {
+//                inntektDatoFom.withMonth(12).withDayOfMonth(31)
+//            } else {
+//                inntektPeriodeGrunnlag.getPeriode().datoTil
+//            }
+//
+//        return if ((inntektDatoFom < inntektType.gyldigFom) || (inntektDatoTil!! > inntektType.gyldigTil)) {
+//            listOf(
+//                Avvik(
+//                    avvikTekst = (
+//                        "inntektType " + inntektType + " er kun gyldig fom. " + inntektType.gyldigFom.toString() +
+//                            " tom. " + inntektType.gyldigTil.toString()
+//                        ),
+//                    avvikType = Avvikstype.UGYLDIG_INNTEKT_PERIODE
+//                )
+//            )
+//        } else {
+//            emptyList()
+//        }
+//    }
 
     // Validerer at flere inntekter innenfor samme inntektsgruppe ikke starter på samme dato
-    private fun validerDatoFomPerInntektsgruppe(inntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlag>): List<Avvik> {
-        val avvikListe = mutableListOf<Avvik>()
-        val kriterie = comparing { inntektPeriodeGrunnlag: InntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.type.gruppe }
-            .thenComparing { inntektPeriodeGrunnlag: InntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getPeriode().datoFom }
-        val inntektGrunnlagListeSortert = inntektPeriodeGrunnlagListe.stream()
-            .sorted(kriterie)
-            .toList()
-        var inntektGrunnlagForrige = InntektPeriodeGrunnlag(
-            referanse = "",
-            inntektPeriode = Periode(LocalDate.MIN, LocalDate.MAX),
-            type = InntektType.AINNTEKT_KORRIGERT_BARNETILLEGG,
-            belop = BigDecimal.ZERO,
-            deltFordel = false,
-            skatteklasse2 = false
-        )
-        inntektGrunnlagListeSortert.forEach {
-            val inntektGruppe = it.type.gruppe
-            val inntektGruppeForrige = inntektGrunnlagForrige.type.gruppe
-            val datoFom = it.getPeriode().datoFom
-            val datoFomForrige = inntektGrunnlagForrige.getPeriode().datoFom
-            if (inntektGruppe.isNotBlank() && inntektGruppe == inntektGruppeForrige && datoFom == datoFomForrige) {
-                avvikListe.add(
-                    Avvik(
-                        avvikTekst = "inntektType " + it.type + " og inntektType " + inntektGrunnlagForrige.type +
-                            " tilhører samme inntektsgruppe og har samme datoFom (" + datoFom + ")",
-                        avvikType = AvvikType.OVERLAPPENDE_INNTEKT
-                    )
-                )
-            }
-            inntektGrunnlagForrige = it
-        }
-        return avvikListe
-    }
+//    private fun validerDatoFomPerInntektsgruppe(inntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlag>): List<Avvik> {
+//        val avvikListe = mutableListOf<Avvik>()
+//        val kriterie = comparing { inntektPeriodeGrunnlag: InntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.type.gruppe }
+//            .thenComparing { inntektPeriodeGrunnlag: InntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getPeriode().datoFom }
+//        val inntektGrunnlagListeSortert = inntektPeriodeGrunnlagListe.stream()
+//            .sorted(kriterie)
+//            .toList()
+//        var inntektGrunnlagForrige = InntektPeriodeGrunnlag(
+//            referanse = "",
+//            inntektPeriode = Periode(LocalDate.MIN, LocalDate.MAX),
+//            type = InntektType.AINNTEKT_KORRIGERT_BARNETILLEGG,
+//            belop = BigDecimal.ZERO,
+//            deltFordel = false,
+//            skatteklasse2 = false
+//        )
+//        inntektGrunnlagListeSortert.forEach {
+//            val inntektGruppe = it.type.gruppe
+//            val inntektGruppeForrige = inntektGrunnlagForrige.type.gruppe
+//            val datoFom = it.getPeriode().datoFom
+//            val datoFomForrige = inntektGrunnlagForrige.getPeriode().datoFom
+//            if (inntektGruppe.isNotBlank() && inntektGruppe == inntektGruppeForrige && datoFom == datoFomForrige) {
+//                avvikListe.add(
+//                    Avvik(
+//                        avvikTekst = "inntektType " + it.type + " og inntektType " + inntektGrunnlagForrige.type +
+//                            " tilhører samme inntektsgruppe og har samme datoFom (" + datoFom + ")",
+//                        avvikType = Avvikstype.OVERLAPPENDE_INNTEKT
+//                    )
+//                )
+//            }
+//            inntektGrunnlagForrige = it
+//        }
+//        return avvikListe
+//    }
 
     // Justerer perioder for å unngå overlapp innefor samme inntektsgruppe.
     // Sorterer inntektGrunnlagListe på gruppe og datoFom.
     // datoTil (forrige forekomst) settes lik datoFom - 1 dag (denne forekomst) hvis de tilhører samme gruppe
-    private fun justerPerioder(inntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlag>): List<InntektPeriodeGrunnlag> {
-        val kriterie = comparing { inntektPeriodeGrunnlag: InntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.type.gruppe }
-            .thenComparing { inntektPeriodeGrunnlag: InntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getPeriode().datoFom }
-        val inntektGrunnlagListeSortert = inntektPeriodeGrunnlagListe.stream()
-            .sorted(kriterie)
-            .toList()
-        val inntektGrunnlagListeJustert = mutableListOf<InntektPeriodeGrunnlag>()
-        var inntektPeriodeGrunnlagForrige: InntektPeriodeGrunnlag? = null
-        var hoppOverInntekt = true
-        var inntektGruppe: String
-        var inntektGruppeForrige: String
-        var datoFom: LocalDate
-        var datoFomForrige: LocalDate
-        var nyDatoTilForrige: LocalDate?
-
-        inntektGrunnlagListeSortert.forEach {
-            if (hoppOverInntekt) {
-                hoppOverInntekt = false
-                inntektPeriodeGrunnlagForrige = it
-                return@forEach
-            }
-            inntektGruppe = it.type.gruppe
-            inntektGruppeForrige = inntektPeriodeGrunnlagForrige!!.type.gruppe
-            datoFom = it.getPeriode().datoFom
-            datoFomForrige = inntektPeriodeGrunnlagForrige!!.getPeriode().datoFom
-            if (inntektGruppe.isNotBlank() && (inntektGruppe == inntektGruppeForrige) && (datoFom.isAfter(datoFomForrige))) {
-                nyDatoTilForrige = datoFom.minusDays(1)
-                inntektGrunnlagListeJustert
-                    .add(
-                        InntektPeriodeGrunnlag(
-                            inntektPeriodeGrunnlagForrige!!.referanse,
-                            Periode(datoFomForrige, nyDatoTilForrige),
-                            inntektPeriodeGrunnlagForrige!!.type,
-                            inntektPeriodeGrunnlagForrige!!.belop,
-                            inntektPeriodeGrunnlagForrige!!.deltFordel,
-                            inntektPeriodeGrunnlagForrige!!.skatteklasse2
-                        )
-                    )
-            } else {
-                inntektGrunnlagListeJustert.add(inntektPeriodeGrunnlagForrige!!)
-            }
-            inntektPeriodeGrunnlagForrige = it
-        }
-
-        // Legg til siste forekomst (skal aldri justeres)
-        inntektGrunnlagListeJustert.add(inntektPeriodeGrunnlagForrige!!)
-
-        return inntektGrunnlagListeJustert
-    }
+//    private fun justerPerioder(inntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlag>): List<InntektPeriodeGrunnlag> {
+//        val kriterie = comparing { inntektPeriodeGrunnlag: InntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.type.gruppe }
+//            .thenComparing { inntektPeriodeGrunnlag: InntektPeriodeGrunnlag -> inntektPeriodeGrunnlag.getPeriode().datoFom }
+//        val inntektGrunnlagListeSortert = inntektPeriodeGrunnlagListe.stream()
+//            .sorted(kriterie)
+//            .toList()
+//        val inntektGrunnlagListeJustert = mutableListOf<InntektPeriodeGrunnlag>()
+//        var inntektPeriodeGrunnlagForrige: InntektPeriodeGrunnlag? = null
+//        var hoppOverInntekt = true
+//        var inntektGruppe: String
+//        var inntektGruppeForrige: String
+//        var datoFom: LocalDate
+//        var datoFomForrige: LocalDate
+//        var nyDatoTilForrige: LocalDate?
+//
+//        inntektGrunnlagListeSortert.forEach {
+//            if (hoppOverInntekt) {
+//                hoppOverInntekt = false
+//                inntektPeriodeGrunnlagForrige = it
+//                return@forEach
+//            }
+//            inntektGruppe = it.type.gruppe
+//            inntektGruppeForrige = inntektPeriodeGrunnlagForrige!!.type.gruppe
+//            datoFom = it.getPeriode().datoFom
+//            datoFomForrige = inntektPeriodeGrunnlagForrige!!.getPeriode().datoFom
+//            if (inntektGruppe.isNotBlank() && (inntektGruppe == inntektGruppeForrige) && (datoFom.isAfter(datoFomForrige))) {
+//                nyDatoTilForrige = datoFom.minusDays(1)
+//                inntektGrunnlagListeJustert
+//                    .add(
+//                        InntektPeriodeGrunnlag(
+//                            inntektPeriodeGrunnlagForrige!!.referanse,
+//                            Periode(datoFomForrige, nyDatoTilForrige),
+//                            inntektPeriodeGrunnlagForrige!!.type,
+//                            inntektPeriodeGrunnlagForrige!!.belop,
+//                            inntektPeriodeGrunnlagForrige!!.deltFordel,
+//                            inntektPeriodeGrunnlagForrige!!.skatteklasse2
+//                        )
+//                    )
+//            } else {
+//                inntektGrunnlagListeJustert.add(inntektPeriodeGrunnlagForrige!!)
+//            }
+//            inntektPeriodeGrunnlagForrige = it
+//        }
+//
+//        // Legg til siste forekomst (skal aldri justeres)
+//        inntektGrunnlagListeJustert.add(inntektPeriodeGrunnlagForrige!!)
+//
+//        return inntektGrunnlagListeJustert
+//    }
 
     // Regelverk for utvidet barnetrygd: Sjekker om det skal legges til inntekt for fordel særfradrag enslig forsørger og skatteklasse 2
     @JvmStatic
@@ -246,11 +249,11 @@ object InntektUtil {
         val bruddPeriodeListe = Periodiserer()
             .addBruddpunkter(justertInntektPeriodeGrunnlagListeAlleInntekter)
             .addBruddpunkter(justertSjablonListe)
-            .addBruddpunkter(Periode(datoFom = InntektType.FORDEL_SKATTEKLASSE2.gyldigFom, datoTil = InntektType.FORDEL_SKATTEKLASSE2.gyldigTil))
+            .addBruddpunkter(Periode(datoFom = FOM_DATO_FORDEL_SKATTEKLASSE2, datoTil = TIL_DATO_FORDEL_SKATTEKLASSE2))
             .addBruddpunkter(
                 Periode(
-                    datoFom = InntektType.FORDEL_SAERFRADRAG_ENSLIG_FORSORGER.gyldigFom,
-                    datoTil = InntektType.FORDEL_SAERFRADRAG_ENSLIG_FORSORGER.gyldigTil
+                    datoFom = FOM_DATO_FORDEL_SAERFRADRAG_ENSLIG_FORSORGER,
+                    datoTil = TIL_DATO_FORDEL_SAERFRADRAG_ENSLIG_FORSORGER
                 )
             )
             .finnPerioder(beregnDatoFom = minDato, beregnDatoTil = maxDato!!)
@@ -358,8 +361,8 @@ object InntektUtil {
         if (periodisertInntekt.periode
             .overlapperMed(
                     Periode(
-                            datoFom = InntektType.FORDEL_SKATTEKLASSE2.gyldigFom,
-                            datoTil = InntektType.FORDEL_SKATTEKLASSE2.gyldigTil
+                            datoFom = FOM_DATO_FORDEL_SKATTEKLASSE2,
+                            datoTil = TIL_DATO_FORDEL_SKATTEKLASSE2
                         )
                 ) && periodisertInntekt.skatteklasse2
         ) {
@@ -376,8 +379,8 @@ object InntektUtil {
         if (periodisertInntekt.periode
             .overlapperMed(
                     Periode(
-                            datoFom = InntektType.FORDEL_SAERFRADRAG_ENSLIG_FORSORGER.gyldigFom,
-                            datoTil = InntektType.FORDEL_SAERFRADRAG_ENSLIG_FORSORGER.gyldigTil
+                            datoFom = FOM_DATO_FORDEL_SAERFRADRAG_ENSLIG_FORSORGER,
+                            datoTil = TIL_DATO_FORDEL_SAERFRADRAG_ENSLIG_FORSORGER
                         )
                 )
         ) {
@@ -406,8 +409,10 @@ object InntektUtil {
         periodisertInntektListe.forEach {
             if (forrigeBelop.compareTo(it.fordelSaerfradragBelop) != 0) {
                 if (forrigeBelop.compareTo(BigDecimal.ZERO) != 0) {
-                    inntektType =
-                        if (forrigeDatoFom.isBefore(InntektType.FORDEL_SKATTEKLASSE2.gyldigTil)) InntektType.FORDEL_SKATTEKLASSE2 else InntektType.FORDEL_SAERFRADRAG_ENSLIG_FORSORGER
+// TODO Må enten ha FORDEL_SKATTEKLASSE2 og FORDEL_SAERFRADRAG_ENSLIG_FORSORGER som egne inntektstyper eller forutsette at denne logikken flyttes til bidrag-behandling
+// TODO InntetkType.AAP er ikke gyldig her. Har bare satt den for at koden skal kompilere
+                    inntektType = InntektType.AAP
+//                        if (forrigeDatoFom.isBefore(TIL_DATO_FORDEL_SKATTEKLASSE2)) InntektType.FORDEL_SKATTEKLASSE2 else InntektType.FORDEL_SAERFRADRAG_ENSLIG_FORSORGER
                     inntektListeSaerfradragEnsligForsorger.add(
                         InntektPeriodeGrunnlagUtenInntektType(
                             referanse = lagReferanse(inntektType = inntektType, datoFom = forrigeDatoFom),
@@ -425,8 +430,10 @@ object InntektUtil {
             forrigeDatoTil = it.periode.datoTil
         }
         if (forrigeBelop.compareTo(BigDecimal.ZERO) != 0) {
-            inntektType =
-                if (forrigeDatoFom.isBefore(InntektType.FORDEL_SKATTEKLASSE2.gyldigTil)) InntektType.FORDEL_SKATTEKLASSE2 else InntektType.FORDEL_SAERFRADRAG_ENSLIG_FORSORGER
+// TODO Må enten ha FORDEL_SKATTEKLASSE2 og FORDEL_SAERFRADRAG_ENSLIG_FORSORGER som egne inntektstyper eller forutsette at denne logikken flyttes til bidrag-behandling
+// TODO InntetkType.AAP er ikke gyldig her. Har bare satt den for at koden skal kompilere
+            inntektType = InntektType.AAP
+//                if (forrigeDatoFom.isBefore(TIL_DATO_FORDEL_SKATTEKLASSE2)) InntektType.FORDEL_SKATTEKLASSE2 else InntektType.FORDEL_SAERFRADRAG_ENSLIG_FORSORGER
             inntektListeSaerfradragEnsligForsorger.add(
                 InntektPeriodeGrunnlagUtenInntektType(
                     referanse = lagReferanse(inntektType = inntektType, datoFom = forrigeDatoFom),
@@ -443,5 +450,5 @@ object InntektUtil {
     }
 
     private fun lagReferanse(inntektType: InntektType, datoFom: LocalDate) =
-        "Beregnet_Inntekt_" + inntektType.belopstype + "_" + datoFom.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+        "Beregnet_Inntekt_" + inntektType.name + "_" + datoFom.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
 }
