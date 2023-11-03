@@ -43,7 +43,7 @@
 
     <!-- dependencies -->
     <spring-boot.version>3.0.6</spring-boot.version>
-    <bidrag-domain.version>20230914102523_8f6d6ef</bidrag-domain.version>
+    <bidrag-domene.version>20231103104652_3baff64</bidrag-domene.version>
   </properties>
 
   <distributionManagement>
@@ -74,8 +74,8 @@
   <dependencies>
     <dependency>
       <groupId>no.nav.bidrag</groupId>
-      <artifactId>bidrag-domain</artifactId>
-      <version>${bidrag-domain.version}</version>
+      <artifactId>bidrag-domene</artifactId>
+      <version>${bidrag-domene.version}</version>
     </dependency>
 
     <dependency>

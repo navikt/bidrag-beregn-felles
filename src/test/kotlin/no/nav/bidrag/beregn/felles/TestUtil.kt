@@ -5,13 +5,12 @@ import no.nav.bidrag.beregn.felles.bo.Sjablon
 import no.nav.bidrag.beregn.felles.bo.SjablonInnhold
 import no.nav.bidrag.beregn.felles.bo.SjablonNokkel
 import no.nav.bidrag.beregn.felles.bo.SjablonPeriode
-import no.nav.bidrag.beregn.felles.inntekt.InntektPeriodeGrunnlag
 import no.nav.bidrag.beregn.felles.inntekt.InntektPeriodeGrunnlagUtenInntektType
-import no.nav.bidrag.domain.enums.InntektType
-import no.nav.bidrag.domain.enums.sjablon.SjablonInnholdNavn
-import no.nav.bidrag.domain.enums.sjablon.SjablonNavn
-import no.nav.bidrag.domain.enums.sjablon.SjablonNokkelNavn
-import no.nav.bidrag.domain.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.domene.enums.InntektType
+import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
+import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
+import no.nav.bidrag.domene.enums.sjablon.SjablonNokkelNavn
+import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -654,169 +653,169 @@ object TestUtil {
         return sjablonListe
     }
 
-    @JvmStatic
-    fun byggInntektGrunnlagListeMedLikDatoFomLikGruppe(): List<InntektPeriodeGrunnlag> {
-        val inntektGrunnlagListe = mutableListOf<InntektPeriodeGrunnlag>()
-        inntektGrunnlagListe.add(
-            InntektPeriodeGrunnlag(
-                "REF1",
-                Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("9999-12-31")),
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
-                BigDecimal.valueOf(200000),
-                false,
-                false
-            )
-        )
-        inntektGrunnlagListe.add(
-            InntektPeriodeGrunnlag(
-                "REF2",
-                Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
-                InntektType.ATTFORING_AAP,
-                BigDecimal.valueOf(150000),
-                false,
-                false
-            )
-        )
-        inntektGrunnlagListe.add(
-            InntektPeriodeGrunnlag(
-                "REF3",
-                Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
-                InntektType.ALOYSE,
-                BigDecimal.valueOf(250000),
-                false,
-                false
-            )
-        )
-        return inntektGrunnlagListe
-    }
+//    @JvmStatic
+//    fun byggInntektGrunnlagListeMedLikDatoFomLikGruppe(): List<InntektPeriodeGrunnlag> {
+//        val inntektGrunnlagListe = mutableListOf<InntektPeriodeGrunnlag>()
+//        inntektGrunnlagListe.add(
+//            InntektPeriodeGrunnlag(
+//                "REF1",
+//                Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("9999-12-31")),
+//                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+//                BigDecimal.valueOf(200000),
+//                false,
+//                false
+//            )
+//        )
+//        inntektGrunnlagListe.add(
+//            InntektPeriodeGrunnlag(
+//                "REF2",
+//                Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
+//                InntektType.ATTFORING_AAP,
+//                BigDecimal.valueOf(150000),
+//                false,
+//                false
+//            )
+//        )
+//        inntektGrunnlagListe.add(
+//            InntektPeriodeGrunnlag(
+//                "REF3",
+//                Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
+//                InntektType.ALOYSE,
+//                BigDecimal.valueOf(250000),
+//                false,
+//                false
+//            )
+//        )
+//        return inntektGrunnlagListe
+//    }
 
-    @JvmStatic
-    fun byggInntektGrunnlagListeMedLikDatoFomUlikGruppe(): List<InntektPeriodeGrunnlag> {
-        val inntektGrunnlagListe = mutableListOf<InntektPeriodeGrunnlag>()
-        inntektGrunnlagListe.add(
-            InntektPeriodeGrunnlag(
-                "REF1",
-                Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("9999-12-31")),
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
-                BigDecimal.valueOf(200000),
-                false,
-                false
-            )
-        )
-        inntektGrunnlagListe.add(
-            InntektPeriodeGrunnlag(
-                "REF2",
-                Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
-                InntektType.ATTFORING_AAP,
-                BigDecimal.valueOf(150000),
-                false,
-                false
-            )
-        )
-        inntektGrunnlagListe.add(
-            InntektPeriodeGrunnlag(
-                "REF3",
-                Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
-                InntektType.KAPITALINNTEKT_SKE,
-                BigDecimal.valueOf(250000),
-                false,
-                false
-            )
-        )
-        return inntektGrunnlagListe
-    }
+//    @JvmStatic
+//    fun byggInntektGrunnlagListeMedLikDatoFomUlikGruppe(): List<InntektPeriodeGrunnlag> {
+//        val inntektGrunnlagListe = mutableListOf<InntektPeriodeGrunnlag>()
+//        inntektGrunnlagListe.add(
+//            InntektPeriodeGrunnlag(
+//                "REF1",
+//                Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("9999-12-31")),
+//                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+//                BigDecimal.valueOf(200000),
+//                false,
+//                false
+//            )
+//        )
+//        inntektGrunnlagListe.add(
+//            InntektPeriodeGrunnlag(
+//                "REF2",
+//                Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
+//                InntektType.ATTFORING_AAP,
+//                BigDecimal.valueOf(150000),
+//                false,
+//                false
+//            )
+//        )
+//        inntektGrunnlagListe.add(
+//            InntektPeriodeGrunnlag(
+//                "REF3",
+//                Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
+//                InntektType.KAPITALINNTEKT_SKE,
+//                BigDecimal.valueOf(250000),
+//                false,
+//                false
+//            )
+//        )
+//        return inntektGrunnlagListe
+//    }
 
-    @JvmStatic
-    fun byggInntektGrunnlagListeMedLikDatoFomUtenGruppe(): List<InntektPeriodeGrunnlag> {
-        val inntektGrunnlagListe = mutableListOf<InntektPeriodeGrunnlag>()
-        inntektGrunnlagListe.add(
-            InntektPeriodeGrunnlag(
-                "REF1",
-                Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("9999-12-31")),
-                InntektType.BARNETRYGD_MANUELL_VURDERING,
-                BigDecimal.valueOf(200000),
-                false,
-                false
-            )
-        )
-        inntektGrunnlagListe.add(
-            InntektPeriodeGrunnlag(
-                "REF2",
-                Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
-                InntektType.ATTFORING_AAP,
-                BigDecimal.valueOf(150000),
-                false,
-                false
-            )
-        )
-        inntektGrunnlagListe.add(
-            InntektPeriodeGrunnlag(
-                "REF3",
-                Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
-                InntektType.OVERGANGSSTONAD,
-                BigDecimal.valueOf(250000),
-                false,
-                false
-            )
-        )
-        return inntektGrunnlagListe
-    }
+//    @JvmStatic
+//    fun byggInntektGrunnlagListeMedLikDatoFomUtenGruppe(): List<InntektPeriodeGrunnlag> {
+//        val inntektGrunnlagListe = mutableListOf<InntektPeriodeGrunnlag>()
+//        inntektGrunnlagListe.add(
+//            InntektPeriodeGrunnlag(
+//                "REF1",
+//                Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("9999-12-31")),
+//                InntektType.BARNETRYGD_MANUELL_VURDERING,
+//                BigDecimal.valueOf(200000),
+//                false,
+//                false
+//            )
+//        )
+//        inntektGrunnlagListe.add(
+//            InntektPeriodeGrunnlag(
+//                "REF2",
+//                Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
+//                InntektType.ATTFORING_AAP,
+//                BigDecimal.valueOf(150000),
+//                false,
+//                false
+//            )
+//        )
+//        inntektGrunnlagListe.add(
+//            InntektPeriodeGrunnlag(
+//                "REF3",
+//                Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2018-12-31")),
+//                InntektType.OVERGANGSSTONAD,
+//                BigDecimal.valueOf(250000),
+//                false,
+//                false
+//            )
+//        )
+//        return inntektGrunnlagListe
+//    }
 
-    @JvmStatic
-    fun byggInntektGrunnlagListeDelvisOverlappSammeGruppe(): List<InntektPeriodeGrunnlag> {
-        val inntektGrunnlagListe = mutableListOf<InntektPeriodeGrunnlag>()
-        inntektGrunnlagListe.add(
-            InntektPeriodeGrunnlag(
-                "REF1",
-                Periode(LocalDate.parse("2020-01-01"), LocalDate.MAX),
-                InntektType.ALOYSE,
-                BigDecimal.valueOf(250000),
-                false,
-                false
-            )
-        )
-        inntektGrunnlagListe.add(
-            InntektPeriodeGrunnlag(
-                "REF2",
-                Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
-                BigDecimal.valueOf(150000),
-                false,
-                false
-            )
-        )
-        inntektGrunnlagListe.add(
-            InntektPeriodeGrunnlag(
-                "REF3",
-                Periode(LocalDate.parse("2019-01-01"), LocalDate.MAX),
-                InntektType.SAKSBEHANDLER_BEREGNET_INNTEKT,
-                BigDecimal.valueOf(300000),
-                false,
-                false
-            )
-        )
-        inntektGrunnlagListe.add(
-            InntektPeriodeGrunnlag(
-                "REF4",
-                Periode(LocalDate.parse("2019-01-01"), LocalDate.MAX),
-                InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER,
-                BigDecimal.valueOf(100000),
-                false,
-                false
-            )
-        )
-        inntektGrunnlagListe.add(
-            InntektPeriodeGrunnlag(
-                "REF5",
-                Periode(LocalDate.parse("2018-01-01"), LocalDate.MAX),
-                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
-                BigDecimal.valueOf(200000),
-                false,
-                false
-            )
-        )
-        return inntektGrunnlagListe
-    }
+//    @JvmStatic
+//    fun byggInntektGrunnlagListeDelvisOverlappSammeGruppe(): List<InntektPeriodeGrunnlag> {
+//        val inntektGrunnlagListe = mutableListOf<InntektPeriodeGrunnlag>()
+//        inntektGrunnlagListe.add(
+//            InntektPeriodeGrunnlag(
+//                "REF1",
+//                Periode(LocalDate.parse("2020-01-01"), LocalDate.MAX),
+//                InntektType.ALOYSE,
+//                BigDecimal.valueOf(250000),
+//                false,
+//                false
+//            )
+//        )
+//        inntektGrunnlagListe.add(
+//            InntektPeriodeGrunnlag(
+//                "REF2",
+//                Periode(LocalDate.parse("2018-06-01"), LocalDate.parse("2018-12-31")),
+//                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+//                BigDecimal.valueOf(150000),
+//                false,
+//                false
+//            )
+//        )
+//        inntektGrunnlagListe.add(
+//            InntektPeriodeGrunnlag(
+//                "REF3",
+//                Periode(LocalDate.parse("2019-01-01"), LocalDate.MAX),
+//                InntektType.SAKSBEHANDLER_BEREGNET_INNTEKT,
+//                BigDecimal.valueOf(300000),
+//                false,
+//                false
+//            )
+//        )
+//        inntektGrunnlagListe.add(
+//            InntektPeriodeGrunnlag(
+//                "REF4",
+//                Periode(LocalDate.parse("2019-01-01"), LocalDate.MAX),
+//                InntektType.KAPITALINNTEKT_EGNE_OPPLYSNINGER,
+//                BigDecimal.valueOf(100000),
+//                false,
+//                false
+//            )
+//        )
+//        inntektGrunnlagListe.add(
+//            InntektPeriodeGrunnlag(
+//                "REF5",
+//                Periode(LocalDate.parse("2018-01-01"), LocalDate.MAX),
+//                InntektType.INNTEKTSOPPLYSNINGER_ARBEIDSGIVER,
+//                BigDecimal.valueOf(200000),
+//                false,
+//                false
+//            )
+//        )
+//        return inntektGrunnlagListe
+//    }
 
     @JvmStatic
     fun byggInntektGrunnlagUtvidetBarnetrygdFull(): List<InntektPeriodeGrunnlagUtenInntektType> {
@@ -875,7 +874,7 @@ object TestUtil {
             InntektPeriodeGrunnlagUtenInntektType(
                 "REF6",
                 Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2020-01-01")),
-                InntektType.SKATTEGRUNNLAG_SKE.name,
+                InntektType.LØNNSINNTEKT.name,
                 BigDecimal.valueOf(90000),
                 false,
                 false
@@ -885,7 +884,7 @@ object TestUtil {
             InntektPeriodeGrunnlagUtenInntektType(
                 "REF7",
                 Periode(LocalDate.parse("2020-01-01"), LocalDate.parse("2021-01-01")),
-                InntektType.SKATTEGRUNNLAG_SKE.name,
+                InntektType.LØNNSINNTEKT.name,
                 BigDecimal.valueOf(105000),
                 false,
                 false
@@ -895,7 +894,7 @@ object TestUtil {
             InntektPeriodeGrunnlagUtenInntektType(
                 "REF8",
                 Periode(LocalDate.parse("2019-04-01"), LocalDate.parse("2019-08-01")),
-                InntektType.KAPITALINNTEKT_SKE.name,
+                InntektType.KAPITALINNTEKT.name,
                 BigDecimal.valueOf(30000),
                 false,
                 false
@@ -905,7 +904,7 @@ object TestUtil {
             InntektPeriodeGrunnlagUtenInntektType(
                 "REF9",
                 Periode(LocalDate.parse("2020-04-01"), LocalDate.parse("2020-08-01")),
-                InntektType.KAPITALINNTEKT_SKE.name,
+                InntektType.KAPITALINNTEKT.name,
                 BigDecimal.valueOf(10000),
                 false,
                 false
@@ -931,7 +930,7 @@ object TestUtil {
             InntektPeriodeGrunnlagUtenInntektType(
                 "REF2",
                 Periode(LocalDate.parse("2012-06-01"), LocalDate.parse("2013-06-01")),
-                InntektType.SKATTEGRUNNLAG_SKE.name,
+                InntektType.LØNNSINNTEKT.name,
                 BigDecimal.valueOf(120000),
                 false,
                 false
