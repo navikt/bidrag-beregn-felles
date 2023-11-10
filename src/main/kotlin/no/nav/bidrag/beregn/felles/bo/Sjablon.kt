@@ -6,44 +6,43 @@ import java.math.BigDecimal
 data class Sjablon(
     val navn: String,
     val nokkelListe: List<SjablonNokkel>? = emptyList(),
-    val innholdListe: List<SjablonInnhold>
+    val innholdListe: List<SjablonInnhold>,
 )
 
 data class SjablonNokkel(
     val navn: String,
-    val verdi: String
+    val verdi: String,
 )
 
 data class SjablonInnhold(
     val navn: String,
-    val verdi: BigDecimal
+    val verdi: BigDecimal,
 )
 
 data class SjablonSingelNokkel(
     val navn: String,
     val verdi: String,
-    val innholdListe: List<SjablonInnhold>
+    val innholdListe: List<SjablonInnhold>,
 )
 
 data class SjablonSingelNokkelSingelInnhold(
     val navn: String,
     val nokkelVerdi: String,
-    val innholdVerdi: BigDecimal
+    val innholdVerdi: BigDecimal,
 )
 
 data class TrinnvisSkattesats(
     val inntektGrense: BigDecimal,
-    val sats: BigDecimal
+    val sats: BigDecimal,
 )
 
 data class SjablonPeriode(
     val sjablonPeriode: Periode,
-    val sjablon: Sjablon
+    val sjablon: Sjablon,
 ) : PeriodisertGrunnlag {
-
     constructor(sjablonPeriode: SjablonPeriode) : this(
         sjablonPeriode.sjablonPeriode.justerDatoer(),
-        sjablonPeriode.sjablon
+        sjablonPeriode.sjablon,
     )
 
     override fun getPeriode(): Periode {
@@ -53,16 +52,16 @@ data class SjablonPeriode(
 
 data class SjablonPeriodeInnhold(
     val sjablonPeriode: Periode,
-    val sjablonInnhold: List<SjablonInnhold>
+    val sjablonInnhold: List<SjablonInnhold>,
 )
 
 data class SjablonNavnVerdi(
     val navn: String,
-    val verdi: BigDecimal
+    val verdi: BigDecimal,
 )
 
 data class SjablonPeriodeNavnVerdi(
     val periode: Periode,
     val navn: String,
-    val verdi: BigDecimal
+    val verdi: BigDecimal,
 )

@@ -38,11 +38,15 @@ class Periodiserer {
     }
 
     // Setter perioder basert på fra- og til-dato
-    fun finnPerioder(beregnDatoFom: LocalDate, beregnDatoTil: LocalDate): List<Periode> {
-        val sortertBruddpunktListe = bruddpunkter.stream()
-            .filter { dato: LocalDate -> dato.isAfter(beregnDatoFom.minusDays(1)) }
-            .filter { dato: LocalDate -> dato.isBefore(beregnDatoTil.plusDays(1)) }
-            .sorted().collect(Collectors.toList())
+    fun finnPerioder(
+        beregnDatoFom: LocalDate,
+        beregnDatoTil: LocalDate,
+    ): List<Periode> {
+        val sortertBruddpunktListe =
+            bruddpunkter.stream()
+                .filter { dato: LocalDate -> dato.isAfter(beregnDatoFom.minusDays(1)) }
+                .filter { dato: LocalDate -> dato.isBefore(beregnDatoTil.plusDays(1)) }
+                .sorted().collect(Collectors.toList())
 
         val perioder: MutableList<Periode> = ArrayList()
         val bruddpunktIt = sortertBruddpunktListe.iterator()

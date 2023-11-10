@@ -25,7 +25,7 @@ internal class InntektTest {
         val nyInntektGrunnlagListe =
             behandlUtvidetBarnetrygd(
                 inntektPeriodeGrunnlagListe = byggInntektGrunnlagUtvidetBarnetrygdFull(),
-                sjablonPeriodeListe = byggSjablontallGrunnlagUtvidetBarnetrygdFull()
+                sjablonPeriodeListe = byggSjablontallGrunnlagUtvidetBarnetrygdFull(),
             )
 
         assertAll(
@@ -50,17 +50,18 @@ internal class InntektTest {
             Executable { assertThat(nyInntektGrunnlagListe[13].getPeriode().datoFom).isEqualTo(LocalDate.parse("2020-08-01")) },
             Executable { assertThat(nyInntektGrunnlagListe[13].getPeriode().datoTil).isEqualTo(LocalDate.parse("2021-01-01")) },
 //            Executable { assertThat(nyInntektGrunnlagListe[13].type).isEqualTo(InntektType.FORDEL_SAERFRADRAG_ENSLIG_FORSORGER.name) },
-            Executable { assertThat(nyInntektGrunnlagListe[13].belop).isEqualTo(BigDecimal.valueOf(7000)) }
+            Executable { assertThat(nyInntektGrunnlagListe[13].belop).isEqualTo(BigDecimal.valueOf(7000)) },
         )
     }
 
     @Test
     @DisplayName("Utvidet barnetrygd - test av overgang mellom regelverk for skatteklasse 2 og fordel særfradrag")
     fun testUtvidetBarnetrygdOvergangSkatteklasse2FordelSaerfradrag() {
-        val nyInntektGrunnlagListe = behandlUtvidetBarnetrygd(
-            inntektPeriodeGrunnlagListe = byggInntektGrunnlagUtvidetBarnetrygdOvergang(),
-            sjablonPeriodeListe = byggSjablontallGrunnlagUtvidetBarnetrygdOvergang()
-        )
+        val nyInntektGrunnlagListe =
+            behandlUtvidetBarnetrygd(
+                inntektPeriodeGrunnlagListe = byggInntektGrunnlagUtvidetBarnetrygdOvergang(),
+                sjablonPeriodeListe = byggSjablontallGrunnlagUtvidetBarnetrygdOvergang(),
+            )
 
         assertAll(
             Executable { assertThat(nyInntektGrunnlagListe).isNotEmpty() },
@@ -76,7 +77,7 @@ internal class InntektTest {
             Executable { assertThat(nyInntektGrunnlagListe[4].getPeriode().datoFom).isEqualTo(LocalDate.parse("2013-01-01")) },
             Executable { assertThat(nyInntektGrunnlagListe[4].getPeriode().datoTil).isEqualTo(LocalDate.parse("2013-06-01")) },
 //            Executable { assertThat(nyInntektGrunnlagListe[4].type).isEqualTo(InntektType.FORDEL_SAERFRADRAG_ENSLIG_FORSORGER.name) },
-            Executable { assertThat(nyInntektGrunnlagListe[4].belop).isEqualTo(BigDecimal.valueOf(12500)) }
+            Executable { assertThat(nyInntektGrunnlagListe[4].belop).isEqualTo(BigDecimal.valueOf(12500)) },
         )
     }
 }

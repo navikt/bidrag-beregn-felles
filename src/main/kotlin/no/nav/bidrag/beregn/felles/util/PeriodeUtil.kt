@@ -6,7 +6,6 @@ import no.nav.bidrag.domene.enums.Avvikstype
 import java.time.LocalDate
 
 object PeriodeUtil {
-
     // Validerer at datoer er gyldige
     @JvmStatic
     fun validerInputDatoer(
@@ -14,10 +13,11 @@ object PeriodeUtil {
         beregnDatoTil: LocalDate,
         dataElement: String,
         periodeListe: List<Periode>,
-        sjekkOverlapp: Boolean,
-        sjekkOpphold: Boolean,
-        sjekkNull: Boolean,
-        sjekkBeregnPeriode: Boolean
+        sjekkOverlappendePerioder: Boolean,
+        sjekkOppholdMellomPerioder: Boolean,
+        sjekkDatoTilNull: Boolean,
+        sjekkDatoStartSluttAvPerioden: Boolean,
+        sjekkBeregnPeriode: Boolean,
     ): List<Avvik> {
         var indeks = 0
         var forrigePeriode: Periode? = null
@@ -27,41 +27,47 @@ object PeriodeUtil {
         if (sjekkBeregnPeriode) {
             avvikListe.addAll(
                 sjekkBeregnPeriode(
-                    beregnDatoFra = beregnDatoFom,
+                    beregnDatoFom = beregnDatoFom,
                     beregnDatoTil = beregnDatoTil,
                     dataElement = dataElement,
-                    periodeListe = periodeListe
-                )
+                    periodeListe = periodeListe,
+                ),
             )
         }
         periodeListe.forEach {
             indeks++
 
             // Sjekk om perioder overlapper
-            if (sjekkOverlapp && it.overlapper(forrigePeriode)) {
-                val feilmelding = "Overlappende perioder i " + dataElement + ": datoTil=" + forrigePeriode!!.datoTil + ", datoFom=" +
-                    it.datoFom
+            if (sjekkOverlappendePerioder && it.overlapper(forrigePeriode)) {
+                val feilmelding = "Overlappende perioder i $dataElement: datoTil=${forrigePeriode!!.datoTil}, datoFom=${it.datoFom}"
                 avvikListe.add(Avvik(avvikTekst = feilmelding, avvikType = Avvikstype.PERIODER_OVERLAPPER))
             }
 
             // Sjekk om det er opphold mellom perioder
-            if (sjekkOpphold && it.harOpphold(forrigePeriode)) {
-                val feilmelding = "Opphold mellom perioder i " + dataElement + ": datoTil=" + forrigePeriode!!.datoTil + ", datoFom=" +
-                    it.datoFom
+            if (sjekkOppholdMellomPerioder && it.harOpphold(forrigePeriode)) {
+                val feilmelding = "Opphold mellom perioder i $dataElement: datoTil=${forrigePeriode!!.datoTil}, datoFom=${it.datoFom}"
                 avvikListe.add(Avvik(avvikTekst = feilmelding, avvikType = Avvikstype.PERIODER_HAR_OPPHOLD))
             }
 
-            // Sjekk om dato er null
-            if (sjekkNull && indeks != periodeListe.size && it.datoTil == null) {
-                val feilmelding = "datoTil kan ikke være null i " + dataElement + ": datoFom=" + it.datoFom +
-                    ", datoTil=" + it.datoTil
+            // Sjekk om datoTil er null (bortsett fra siste element)
+            if (sjekkDatoTilNull && indeks != periodeListe.size && it.datoTil == null) {
+                val feilmelding = "datoTil kan ikke være null i $dataElement: datoFom=${it.datoFom}, datoTil=${it.datoTil}"
                 avvikListe.add(Avvik(avvikTekst = feilmelding, avvikType = Avvikstype.NULL_VERDI_I_DATO))
             }
 
-            // Sjekk om dato fra er etter dato til
+            // Sjekk om datoFom og datoTil alltid er første dag i en måned
+            if (sjekkDatoStartSluttAvPerioden && it.datoFom.dayOfMonth != 1) {
+                val feilmelding = "datoFom i $dataElement må være den første dagen i måneden: datoFom=${it.datoFom}"
+                avvikListe.add(Avvik(avvikTekst = feilmelding, avvikType = Avvikstype.DAG_ER_IKKE_FØRSTE_DAG_I_MND))
+            }
+            if (sjekkDatoStartSluttAvPerioden && it.datoTil != null && it.datoTil.dayOfMonth != 1) {
+                val feilmelding = "datoTil i $dataElement må være den første dagen i måneden: datoTil=${it.datoTil}"
+                avvikListe.add(Avvik(avvikTekst = feilmelding, avvikType = Avvikstype.DAG_ER_IKKE_FØRSTE_DAG_I_MND))
+            }
+
+            // Sjekk om datoFom er etter datoTil
             if (!it.datoTilErEtterDatoFom()) {
-                val feilmelding = "datoTil må være etter datoFom i " + dataElement + ": datoFom=" + it.datoFom +
-                    ", datoTil=" + it.datoTil
+                val feilmelding = "datoTil må være etter datoFom i $dataElement: datoFom=${it.datoFom}, datoTil=${it.datoTil}"
                 avvikListe.add(Avvik(avvikTekst = feilmelding, avvikType = Avvikstype.DATO_FOM_ETTER_DATO_TIL))
             }
 
@@ -73,26 +79,29 @@ object PeriodeUtil {
 
     // Validerer at beregningsperiode fra/til er gyldig
     @JvmStatic
-    fun validerBeregnPeriodeInput(beregnDatoFra: LocalDate?, beregnDatoTil: LocalDate?): List<Avvik> {
+    fun validerBeregnPeriodeInput(
+        beregnDatoFom: LocalDate?,
+        beregnDatoTil: LocalDate?,
+    ): List<Avvik> {
         val avvikListe = mutableListOf<Avvik>()
-        if (beregnDatoFra == null) {
-            avvikListe.add(Avvik("beregnDatoFra kan ikke være null", Avvikstype.NULL_VERDI_I_DATO))
+        if (beregnDatoFom == null) {
+            avvikListe.add(Avvik("beregnDatoFom kan ikke være null", Avvikstype.NULL_VERDI_I_DATO))
         }
         if (beregnDatoTil == null) {
             avvikListe.add(Avvik("beregnDatoTil kan ikke være null", Avvikstype.NULL_VERDI_I_DATO))
         }
-        if (!Periode(beregnDatoFra!!, beregnDatoTil).datoTilErEtterDatoFom()) {
-            avvikListe.add(Avvik("beregnDatoTil må være etter beregnDatoFra", Avvikstype.DATO_FOM_ETTER_DATO_TIL))
+        if (beregnDatoFom != null && !Periode(beregnDatoFom, beregnDatoTil).datoTilErEtterDatoFom()) {
+            avvikListe.add(Avvik("beregnDatoTil må være etter beregnDatoFom", Avvikstype.DATO_FOM_ETTER_DATO_TIL))
         }
         return avvikListe
     }
 
     // Validerer at dataene i periodelisten dekker hele perioden det skal beregnes for
     private fun sjekkBeregnPeriode(
-        beregnDatoFra: LocalDate,
+        beregnDatoFom: LocalDate,
         beregnDatoTil: LocalDate,
         dataElement: String,
-        periodeListe: List<Periode>
+        periodeListe: List<Periode>,
     ): List<Avvik> {
         val avvikListe = mutableListOf<Avvik>()
         if (periodeListe.isEmpty()) {
@@ -101,8 +110,8 @@ object PeriodeUtil {
 
         // Sjekk at første dato i periodelisten ikke er etter start-dato i perioden det skal beregnes for
         val startDatoIPeriodeListe = periodeListe.first().datoFom
-        if (startDatoIPeriodeListe.isAfter(beregnDatoFra)) {
-            val feilmelding = "Første dato i $dataElement ($startDatoIPeriodeListe) er etter beregnDatoFra ($beregnDatoFra)"
+        if (startDatoIPeriodeListe.isAfter(beregnDatoFom)) {
+            val feilmelding = "Første dato i $dataElement ($startDatoIPeriodeListe) er etter beregnDatoFom ($beregnDatoFom)"
             avvikListe.add(Avvik(avvikTekst = feilmelding, avvikType = Avvikstype.PERIODE_MANGLER_DATA))
         }
 
