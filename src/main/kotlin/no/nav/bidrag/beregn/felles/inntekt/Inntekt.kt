@@ -11,9 +11,8 @@ data class InntektPeriodeGrunnlag(
     val type: InntektType,
     val belop: BigDecimal,
     val deltFordel: Boolean,
-    val skatteklasse2: Boolean
+    val skatteklasse2: Boolean,
 ) : PeriodisertGrunnlag {
-
     constructor(inntektPeriodeGrunnlag: InntektPeriodeGrunnlag) :
         this(
             referanse = inntektPeriodeGrunnlag.referanse,
@@ -21,7 +20,7 @@ data class InntektPeriodeGrunnlag(
             type = inntektPeriodeGrunnlag.type,
             belop = inntektPeriodeGrunnlag.belop,
             deltFordel = inntektPeriodeGrunnlag.deltFordel,
-            skatteklasse2 = inntektPeriodeGrunnlag.skatteklasse2
+            skatteklasse2 = inntektPeriodeGrunnlag.skatteklasse2,
         )
 
     override fun getPeriode(): Periode {
@@ -36,9 +35,8 @@ data class InntektPeriodeGrunnlagUtenInntektType(
     val type: String,
     val belop: BigDecimal,
     val deltFordel: Boolean,
-    val skatteklasse2: Boolean
+    val skatteklasse2: Boolean,
 ) : PeriodisertGrunnlag {
-
     constructor(inntektPeriodeGrunnlag: InntektPeriodeGrunnlagUtenInntektType) :
         this(
             referanse = inntektPeriodeGrunnlag.referanse,
@@ -46,7 +44,7 @@ data class InntektPeriodeGrunnlagUtenInntektType(
             type = inntektPeriodeGrunnlag.type,
             belop = inntektPeriodeGrunnlag.belop,
             deltFordel = inntektPeriodeGrunnlag.deltFordel,
-            skatteklasse2 = inntektPeriodeGrunnlag.skatteklasse2
+            skatteklasse2 = inntektPeriodeGrunnlag.skatteklasse2,
         )
 
     override fun getPeriode(): Periode {
@@ -63,5 +61,5 @@ data class PeriodisertInntekt(
     val sjablon0031NedreInntektsgrenseBelop: BigDecimal,
     val sjablon0039FordelSaerfradragBelop: BigDecimal,
     val deltFordel: Boolean,
-    val skatteklasse2: Boolean
+    val skatteklasse2: Boolean,
 )

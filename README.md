@@ -8,6 +8,7 @@ Tilbyr felles dataklasser og util-metoder for håndtering av inntekter, sjablone
 
 | Versjon | Endringstype | Beskrivelse                                                                                                                                                                      |
 |---------|--------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1.0.5   | Endret       | Lagt til validering av input-datoer i PeriodeUtil. Java versjon 21. ktlint formattering.                                                                                         |
 | 1.0.4   | Endret       | Ny versjon av bidrag-domene. Kommentert ut en del kode som gjelder inntektsvalidering.                                                                                           |
 | 1.0.3   | Endret       | Delvis fjernet bruk av InntektType                                                                                                                                               |
 | 1.0.2   | Endret       | Liten justering i workflow                                                                                                                                                       |

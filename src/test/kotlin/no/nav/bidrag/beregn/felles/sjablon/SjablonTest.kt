@@ -130,120 +130,132 @@ internal class SjablonTest {
         sjablonNokkelListe.add(SjablonNokkel(SjablonNokkelNavn.SAMVAERSKLASSE.navn, "03"))
 
         sjablonNokkelVerdiInteger = 3
-        var antDagerTom = SjablonUtil.hentSjablonverdi(
-            sjablonListe,
-            SjablonNavn.SAMVAERSFRADRAG,
-            sjablonNokkelListe,
-            SjablonNokkelNavn.ALDER_TOM,
-            sjablonNokkelVerdiInteger,
-            SjablonInnholdNavn.ANTALL_DAGER_TOM
-        )
-        var antNetterTom = SjablonUtil.hentSjablonverdi(
-            sjablonListe,
-            SjablonNavn.SAMVAERSFRADRAG,
-            sjablonNokkelListe,
-            SjablonNokkelNavn.ALDER_TOM,
-            sjablonNokkelVerdiInteger,
-            SjablonInnholdNavn.ANTALL_NETTER_TOM
-        )
-        var belopFradrag = SjablonUtil.hentSjablonverdi(
-            sjablonListe,
-            SjablonNavn.SAMVAERSFRADRAG,
-            sjablonNokkelListe,
-            SjablonNokkelNavn.ALDER_TOM,
-            sjablonNokkelVerdiInteger,
-            SjablonInnholdNavn.FRADRAG_BELOP
-        )
+        var antDagerTom =
+            SjablonUtil.hentSjablonverdi(
+                sjablonListe,
+                SjablonNavn.SAMVAERSFRADRAG,
+                sjablonNokkelListe,
+                SjablonNokkelNavn.ALDER_TOM,
+                sjablonNokkelVerdiInteger,
+                SjablonInnholdNavn.ANTALL_DAGER_TOM,
+            )
+        var antNetterTom =
+            SjablonUtil.hentSjablonverdi(
+                sjablonListe,
+                SjablonNavn.SAMVAERSFRADRAG,
+                sjablonNokkelListe,
+                SjablonNokkelNavn.ALDER_TOM,
+                sjablonNokkelVerdiInteger,
+                SjablonInnholdNavn.ANTALL_NETTER_TOM,
+            )
+        var belopFradrag =
+            SjablonUtil.hentSjablonverdi(
+                sjablonListe,
+                SjablonNavn.SAMVAERSFRADRAG,
+                sjablonNokkelListe,
+                SjablonNokkelNavn.ALDER_TOM,
+                sjablonNokkelVerdiInteger,
+                SjablonInnholdNavn.FRADRAG_BELOP,
+            )
 
         assertThat(antDagerTom).isEqualTo(BigDecimal.ZERO)
         assertThat(antNetterTom).isEqualTo(BigDecimal.valueOf(13))
         assertThat(belopFradrag).isEqualTo(BigDecimal.valueOf(2082))
 
         sjablonNokkelVerdiInteger = 5
-        antDagerTom = SjablonUtil.hentSjablonverdi(
-            sjablonListe,
-            SjablonNavn.SAMVAERSFRADRAG,
-            sjablonNokkelListe,
-            SjablonNokkelNavn.ALDER_TOM,
-            sjablonNokkelVerdiInteger,
-            SjablonInnholdNavn.ANTALL_DAGER_TOM
-        )
-        antNetterTom = SjablonUtil.hentSjablonverdi(
-            sjablonListe,
-            SjablonNavn.SAMVAERSFRADRAG,
-            sjablonNokkelListe,
-            SjablonNokkelNavn.ALDER_TOM,
-            sjablonNokkelVerdiInteger,
-            SjablonInnholdNavn.ANTALL_NETTER_TOM
-        )
-        belopFradrag = SjablonUtil.hentSjablonverdi(
-            sjablonListe,
-            SjablonNavn.SAMVAERSFRADRAG,
-            sjablonNokkelListe,
-            SjablonNokkelNavn.ALDER_TOM,
-            sjablonNokkelVerdiInteger,
-            SjablonInnholdNavn.FRADRAG_BELOP
-        )
+        antDagerTom =
+            SjablonUtil.hentSjablonverdi(
+                sjablonListe,
+                SjablonNavn.SAMVAERSFRADRAG,
+                sjablonNokkelListe,
+                SjablonNokkelNavn.ALDER_TOM,
+                sjablonNokkelVerdiInteger,
+                SjablonInnholdNavn.ANTALL_DAGER_TOM,
+            )
+        antNetterTom =
+            SjablonUtil.hentSjablonverdi(
+                sjablonListe,
+                SjablonNavn.SAMVAERSFRADRAG,
+                sjablonNokkelListe,
+                SjablonNokkelNavn.ALDER_TOM,
+                sjablonNokkelVerdiInteger,
+                SjablonInnholdNavn.ANTALL_NETTER_TOM,
+            )
+        belopFradrag =
+            SjablonUtil.hentSjablonverdi(
+                sjablonListe,
+                SjablonNavn.SAMVAERSFRADRAG,
+                sjablonNokkelListe,
+                SjablonNokkelNavn.ALDER_TOM,
+                sjablonNokkelVerdiInteger,
+                SjablonInnholdNavn.FRADRAG_BELOP,
+            )
 
         assertThat(antDagerTom).isEqualTo(BigDecimal.ZERO)
         assertThat(antNetterTom).isEqualTo(BigDecimal.valueOf(13))
         assertThat(belopFradrag).isEqualTo(BigDecimal.valueOf(2082))
 
         sjablonNokkelVerdiInteger = 12
-        antDagerTom = SjablonUtil.hentSjablonverdi(
-            sjablonListe,
-            SjablonNavn.SAMVAERSFRADRAG,
-            sjablonNokkelListe,
-            SjablonNokkelNavn.ALDER_TOM,
-            sjablonNokkelVerdiInteger,
-            SjablonInnholdNavn.ANTALL_DAGER_TOM
-        )
-        antNetterTom = SjablonUtil.hentSjablonverdi(
-            sjablonListe,
-            SjablonNavn.SAMVAERSFRADRAG,
-            sjablonNokkelListe,
-            SjablonNokkelNavn.ALDER_TOM,
-            sjablonNokkelVerdiInteger,
-            SjablonInnholdNavn.ANTALL_NETTER_TOM
-        )
-        belopFradrag = SjablonUtil.hentSjablonverdi(
-            sjablonListe,
-            SjablonNavn.SAMVAERSFRADRAG,
-            sjablonNokkelListe,
-            SjablonNokkelNavn.ALDER_TOM,
-            sjablonNokkelVerdiInteger,
-            SjablonInnholdNavn.FRADRAG_BELOP
-        )
+        antDagerTom =
+            SjablonUtil.hentSjablonverdi(
+                sjablonListe,
+                SjablonNavn.SAMVAERSFRADRAG,
+                sjablonNokkelListe,
+                SjablonNokkelNavn.ALDER_TOM,
+                sjablonNokkelVerdiInteger,
+                SjablonInnholdNavn.ANTALL_DAGER_TOM,
+            )
+        antNetterTom =
+            SjablonUtil.hentSjablonverdi(
+                sjablonListe,
+                SjablonNavn.SAMVAERSFRADRAG,
+                sjablonNokkelListe,
+                SjablonNokkelNavn.ALDER_TOM,
+                sjablonNokkelVerdiInteger,
+                SjablonInnholdNavn.ANTALL_NETTER_TOM,
+            )
+        belopFradrag =
+            SjablonUtil.hentSjablonverdi(
+                sjablonListe,
+                SjablonNavn.SAMVAERSFRADRAG,
+                sjablonNokkelListe,
+                SjablonNokkelNavn.ALDER_TOM,
+                sjablonNokkelVerdiInteger,
+                SjablonInnholdNavn.FRADRAG_BELOP,
+            )
 
         assertThat(antDagerTom).isEqualTo(BigDecimal.ZERO)
         assertThat(antNetterTom).isEqualTo(BigDecimal.valueOf(13))
         assertThat(belopFradrag).isEqualTo(BigDecimal.valueOf(2914))
 
         sjablonNokkelVerdiInteger = 99
-        antDagerTom = SjablonUtil.hentSjablonverdi(
-            sjablonListe,
-            SjablonNavn.SAMVAERSFRADRAG,
-            sjablonNokkelListe,
-            SjablonNokkelNavn.ALDER_TOM,
-            sjablonNokkelVerdiInteger,
-            SjablonInnholdNavn.ANTALL_DAGER_TOM
-        )
-        antNetterTom = SjablonUtil.hentSjablonverdi(
-            sjablonListe,
-            SjablonNavn.SAMVAERSFRADRAG,
-            sjablonNokkelListe,
-            SjablonNokkelNavn.ALDER_TOM,
-            sjablonNokkelVerdiInteger,
-            SjablonInnholdNavn.ANTALL_NETTER_TOM
-        )
-        belopFradrag = SjablonUtil.hentSjablonverdi(
-            sjablonListe,
-            SjablonNavn.SAMVAERSFRADRAG,
-            sjablonNokkelListe,
-            SjablonNokkelNavn.ALDER_TOM,
-            sjablonNokkelVerdiInteger,
-            SjablonInnholdNavn.FRADRAG_BELOP
-        )
+        antDagerTom =
+            SjablonUtil.hentSjablonverdi(
+                sjablonListe,
+                SjablonNavn.SAMVAERSFRADRAG,
+                sjablonNokkelListe,
+                SjablonNokkelNavn.ALDER_TOM,
+                sjablonNokkelVerdiInteger,
+                SjablonInnholdNavn.ANTALL_DAGER_TOM,
+            )
+        antNetterTom =
+            SjablonUtil.hentSjablonverdi(
+                sjablonListe,
+                SjablonNavn.SAMVAERSFRADRAG,
+                sjablonNokkelListe,
+                SjablonNokkelNavn.ALDER_TOM,
+                sjablonNokkelVerdiInteger,
+                SjablonInnholdNavn.ANTALL_NETTER_TOM,
+            )
+        belopFradrag =
+            SjablonUtil.hentSjablonverdi(
+                sjablonListe,
+                SjablonNavn.SAMVAERSFRADRAG,
+                sjablonNokkelListe,
+                SjablonNokkelNavn.ALDER_TOM,
+                sjablonNokkelVerdiInteger,
+                SjablonInnholdNavn.FRADRAG_BELOP,
+            )
 
         assertThat(antDagerTom).isEqualTo(BigDecimal.ZERO)
         assertThat(antNetterTom).isEqualTo(BigDecimal.valueOf(13))

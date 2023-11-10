@@ -4,5 +4,5 @@ import no.nav.bidrag.domene.enums.Avvikstype
 
 data class Avvik(
     val avvikTekst: String,
-    val avvikType: Avvikstype
+    val avvikType: Avvikstype,
 )

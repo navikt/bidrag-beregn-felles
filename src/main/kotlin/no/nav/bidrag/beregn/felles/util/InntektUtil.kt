@@ -19,7 +19,6 @@ import java.time.format.DateTimeFormatter
 // TODO Vurdere om disse metodene trengs, evt flytte dem til bidrag-behandling eller bidrag-inntekt. Pt i bruk i beregn-barnebidrag-core, men
 //      fjernet (midlertidig?) fra beregn-forskudd-core og beregn-saertilskudd-core
 object InntektUtil {
-
     private val FOM_DATO_FORDEL_SKATTEKLASSE2 = LocalDate.MIN
     private val TIL_DATO_FORDEL_SKATTEKLASSE2 = LocalDate.parse("2013-01-01")
     private val FOM_DATO_FORDEL_SAERFRADRAG_ENSLIG_FORSORGER = LocalDate.parse("2013-01-01")
@@ -27,7 +26,11 @@ object InntektUtil {
 
     // Validerer inntekt
     @JvmStatic
-    fun validerInntekter(inntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlag>, formaal: Formaal, rolle: Rolle): List<Avvik> {
+    fun validerInntekter(
+        inntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlag>,
+        formaal: Formaal,
+        rolle: Rolle,
+    ): List<Avvik> {
         val avvikListe = mutableListOf<Avvik>()
 
         // Validerer formaal, rolle og fra- /til-dato for en inntektstype
@@ -202,18 +205,20 @@ object InntektUtil {
     @JvmStatic
     fun behandlUtvidetBarnetrygd(
         inntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlagUtenInntektType>,
-        sjablonPeriodeListe: List<SjablonPeriode>
+        sjablonPeriodeListe: List<SjablonPeriode>,
     ): List<InntektPeriodeGrunnlagUtenInntektType> {
         // Justerer datoer
-        val justertInntektPeriodeGrunnlagListeAlleInntekter = inntektPeriodeGrunnlagListe
-            .map { InntektPeriodeGrunnlagUtenInntektType(it) }
-            .sortedBy { it.getPeriode().datoFom }
-            .toList()
+        val justertInntektPeriodeGrunnlagListeAlleInntekter =
+            inntektPeriodeGrunnlagListe
+                .map { InntektPeriodeGrunnlagUtenInntektType(it) }
+                .sortedBy { it.getPeriode().datoFom }
+                .toList()
 
         // Danner liste over alle inntekter av type UTVIDET_BARNETRYGD
-        val justertInntektPeriodeGrunnlagListeUtvidetBarnetrygd = justertInntektPeriodeGrunnlagListeAlleInntekter
-            .filter { it.type == InntektType.UTVIDET_BARNETRYGD.name }
-            .toList()
+        val justertInntektPeriodeGrunnlagListeUtvidetBarnetrygd =
+            justertInntektPeriodeGrunnlagListeAlleInntekter
+                .filter { it.type == InntektType.UTVIDET_BARNETRYGD.name }
+                .toList()
 
         // Hvis det ikke finnes inntekter av type UTVIDET_BARNETRYGD, returnerer den samme listen som ble sendt inn
         if (justertInntektPeriodeGrunnlagListeUtvidetBarnetrygd.isEmpty()) {
@@ -221,42 +226,47 @@ object InntektUtil {
         }
 
         // Finner laveste og høyeste dato i listen over inntekter av type UTVIDET_BARNETRYGD
-        val minDato = justertInntektPeriodeGrunnlagListeUtvidetBarnetrygd.minOfOrNull { it.getPeriode().datoFom } ?: LocalDate.parse("1900-01-01")
-        val maxDato = justertInntektPeriodeGrunnlagListeUtvidetBarnetrygd
-            .mapNotNull { it.getPeriode().datoTil }
-            .maxOrNull() ?: LocalDate.parse("2100-01-01")
+        val minDato =
+            justertInntektPeriodeGrunnlagListeUtvidetBarnetrygd.minOfOrNull { it.getPeriode().datoFom } ?: LocalDate.parse("1900-01-01")
+        val maxDato =
+            justertInntektPeriodeGrunnlagListeUtvidetBarnetrygd
+                .mapNotNull { it.getPeriode().datoTil }
+                .maxOrNull() ?: LocalDate.parse("2100-01-01")
 
         // Lager filter over de sjablonene som skal brukes (0004, 0030, 0031, 0039)
-        val sjablonFilter = listOf(
-            SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELOP,
-            SjablonTallNavn.OVRE_INNTEKTSGRENSE_IKKE_I_SKATTEPOSISJON_BELOP,
-            SjablonTallNavn.NEDRE_INNTEKTSGRENSE_FULL_SKATTEPOSISJON_BELOP,
-            SjablonTallNavn.FORDEL_SAERFRADRAG_BELOP
-        )
+        val sjablonFilter =
+            listOf(
+                SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELOP,
+                SjablonTallNavn.OVRE_INNTEKTSGRENSE_IKKE_I_SKATTEPOSISJON_BELOP,
+                SjablonTallNavn.NEDRE_INNTEKTSGRENSE_FULL_SKATTEPOSISJON_BELOP,
+                SjablonTallNavn.FORDEL_SAERFRADRAG_BELOP,
+            )
 
         // Filtrerer sjabloner og justerer datoer
-        val justertSjablonListe = sjablonPeriodeListe
-            .filter {
-                sjablonFilter.any { sjablonTallNavn ->
-                    sjablonTallNavn.navn == it.sjablon.navn
+        val justertSjablonListe =
+            sjablonPeriodeListe
+                .filter {
+                    sjablonFilter.any { sjablonTallNavn ->
+                        sjablonTallNavn.navn == it.sjablon.navn
+                    }
                 }
-            }
-            .map { SjablonPeriode(it) }
-            .sortedBy { it.sjablonPeriode.datoFom }
-            .toList()
+                .map { SjablonPeriode(it) }
+                .sortedBy { it.sjablonPeriode.datoFom }
+                .toList()
 
         // Danner bruddperioder for inntekter og sjabloner. Legger til ekstra bruddperioder for gyldigheten til inntektstypene som skal beregnes
-        val bruddPeriodeListe = Periodiserer()
-            .addBruddpunkter(justertInntektPeriodeGrunnlagListeAlleInntekter)
-            .addBruddpunkter(justertSjablonListe)
-            .addBruddpunkter(Periode(datoFom = FOM_DATO_FORDEL_SKATTEKLASSE2, datoTil = TIL_DATO_FORDEL_SKATTEKLASSE2))
-            .addBruddpunkter(
-                Periode(
-                    datoFom = FOM_DATO_FORDEL_SAERFRADRAG_ENSLIG_FORSORGER,
-                    datoTil = TIL_DATO_FORDEL_SAERFRADRAG_ENSLIG_FORSORGER
+        val bruddPeriodeListe =
+            Periodiserer()
+                .addBruddpunkter(justertInntektPeriodeGrunnlagListeAlleInntekter)
+                .addBruddpunkter(justertSjablonListe)
+                .addBruddpunkter(Periode(datoFom = FOM_DATO_FORDEL_SKATTEKLASSE2, datoTil = TIL_DATO_FORDEL_SKATTEKLASSE2))
+                .addBruddpunkter(
+                    Periode(
+                        datoFom = FOM_DATO_FORDEL_SAERFRADRAG_ENSLIG_FORSORGER,
+                        datoTil = TIL_DATO_FORDEL_SAERFRADRAG_ENSLIG_FORSORGER,
+                    ),
                 )
-            )
-            .finnPerioder(beregnDatoFom = minDato, beregnDatoTil = maxDato!!)
+                .finnPerioder(beregnDatoFom = minDato, beregnDatoTil = maxDato!!)
 
         val periodisertInntektListe = mutableListOf<PeriodisertInntekt>()
 
@@ -268,40 +278,47 @@ object InntektUtil {
                     periodisertInntektListe.add(
                         PeriodisertInntekt(
                             periode = it.getPeriode(),
-                            summertBelop = summerInntektPeriode(
-                                periode = it.getPeriode(),
-                                justertInntektPeriodeGrunnlagListe = justertInntektPeriodeGrunnlagListeAlleInntekter
-                            ),
+                            summertBelop =
+                                summerInntektPeriode(
+                                    periode = it.getPeriode(),
+                                    justertInntektPeriodeGrunnlagListe = justertInntektPeriodeGrunnlagListeAlleInntekter,
+                                ),
                             fordelSaerfradragBelop = BigDecimal.ZERO,
-                            sjablon0004FordelSkatteklasse2Belop = finnSjablonverdi(
-                                periode = it.getPeriode(),
-                                justertsjablonListe = justertSjablonListe,
-                                sjablonTallNavn = SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELOP
-                            ),
-                            sjablon0030OvreInntektsgrenseBelop = finnSjablonverdi(
-                                periode = it.getPeriode(),
-                                justertsjablonListe = justertSjablonListe,
-                                sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_IKKE_I_SKATTEPOSISJON_BELOP
-                            ),
-                            sjablon0031NedreInntektsgrenseBelop = finnSjablonverdi(
-                                periode = it.getPeriode(),
-                                justertsjablonListe = justertSjablonListe,
-                                sjablonTallNavn = SjablonTallNavn.NEDRE_INNTEKTSGRENSE_FULL_SKATTEPOSISJON_BELOP
-                            ),
-                            sjablon0039FordelSaerfradragBelop = finnSjablonverdi(
-                                periode = it.getPeriode(),
-                                justertsjablonListe = justertSjablonListe,
-                                sjablonTallNavn = SjablonTallNavn.FORDEL_SAERFRADRAG_BELOP
-                            ),
-                            deltFordel = finnDeltFordel(
-                                periode = it.getPeriode(),
-                                justertInntektPeriodeGrunnlagListe = justertInntektPeriodeGrunnlagListeAlleInntekter
-                            ),
-                            skatteklasse2 = finnSkatteklasse2(
-                                periode = it.getPeriode(),
-                                justertInntektPeriodeGrunnlagListe = justertInntektPeriodeGrunnlagListeAlleInntekter
-                            )
-                        )
+                            sjablon0004FordelSkatteklasse2Belop =
+                                finnSjablonverdi(
+                                    periode = it.getPeriode(),
+                                    justertsjablonListe = justertSjablonListe,
+                                    sjablonTallNavn = SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELOP,
+                                ),
+                            sjablon0030OvreInntektsgrenseBelop =
+                                finnSjablonverdi(
+                                    periode = it.getPeriode(),
+                                    justertsjablonListe = justertSjablonListe,
+                                    sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_IKKE_I_SKATTEPOSISJON_BELOP,
+                                ),
+                            sjablon0031NedreInntektsgrenseBelop =
+                                finnSjablonverdi(
+                                    periode = it.getPeriode(),
+                                    justertsjablonListe = justertSjablonListe,
+                                    sjablonTallNavn = SjablonTallNavn.NEDRE_INNTEKTSGRENSE_FULL_SKATTEPOSISJON_BELOP,
+                                ),
+                            sjablon0039FordelSaerfradragBelop =
+                                finnSjablonverdi(
+                                    periode = it.getPeriode(),
+                                    justertsjablonListe = justertSjablonListe,
+                                    sjablonTallNavn = SjablonTallNavn.FORDEL_SAERFRADRAG_BELOP,
+                                ),
+                            deltFordel =
+                                finnDeltFordel(
+                                    periode = it.getPeriode(),
+                                    justertInntektPeriodeGrunnlagListe = justertInntektPeriodeGrunnlagListeAlleInntekter,
+                                ),
+                            skatteklasse2 =
+                                finnSkatteklasse2(
+                                    periode = it.getPeriode(),
+                                    justertInntektPeriodeGrunnlagListe = justertInntektPeriodeGrunnlagListeAlleInntekter,
+                                ),
+                        ),
                     )
                 }
             }
@@ -319,37 +336,45 @@ object InntektUtil {
     // Sjekker om en gitt periode har utvidet barnetrygd
     private fun periodeHarUtvidetBarnetrygd(
         periode: Periode,
-        justertInntektPeriodeGrunnlagListeUtvidetBarnetrygd: List<InntektPeriodeGrunnlagUtenInntektType>
-    ) =
-        justertInntektPeriodeGrunnlagListeUtvidetBarnetrygd.any {
-            it.getPeriode().overlapperMed(periode)
-        }
+        justertInntektPeriodeGrunnlagListeUtvidetBarnetrygd: List<InntektPeriodeGrunnlagUtenInntektType>,
+    ) = justertInntektPeriodeGrunnlagListeUtvidetBarnetrygd.any {
+        it.getPeriode().overlapperMed(periode)
+    }
 
     // Summerer inntektene i en gitt periode (eksklusiv inntekttype utvidet barnetrygd)
-    private fun summerInntektPeriode(periode: Periode, justertInntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlagUtenInntektType>) =
-        justertInntektPeriodeGrunnlagListe
-            .filter { it.getPeriode().overlapperMed(periode) && it.type != InntektType.UTVIDET_BARNETRYGD.name }
-            .map(InntektPeriodeGrunnlagUtenInntektType::belop)
-            .fold(BigDecimal.ZERO) { acc, belop -> acc + belop }
+    private fun summerInntektPeriode(
+        periode: Periode,
+        justertInntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlagUtenInntektType>,
+    ) = justertInntektPeriodeGrunnlagListe
+        .filter { it.getPeriode().overlapperMed(periode) && it.type != InntektType.UTVIDET_BARNETRYGD.name }
+        .map(InntektPeriodeGrunnlagUtenInntektType::belop)
+        .fold(BigDecimal.ZERO) { acc, belop -> acc + belop }
 
     // Finner verdien til en gitt sjablon i en gitt periode
-    private fun finnSjablonverdi(periode: Periode, justertsjablonListe: List<SjablonPeriode>, sjablonTallNavn: SjablonTallNavn) =
-        justertsjablonListe
-            .filter { it.getPeriode().overlapperMed(periode) && it.sjablon.navn == sjablonTallNavn.navn }
-            .map { SjablonUtil.hentSjablonverdi(listOf(it.sjablon), sjablonTallNavn) }
-            .firstOrNull() ?: BigDecimal.ZERO
+    private fun finnSjablonverdi(
+        periode: Periode,
+        justertsjablonListe: List<SjablonPeriode>,
+        sjablonTallNavn: SjablonTallNavn,
+    ) = justertsjablonListe
+        .filter { it.getPeriode().overlapperMed(periode) && it.sjablon.navn == sjablonTallNavn.navn }
+        .map { SjablonUtil.hentSjablonverdi(listOf(it.sjablon), sjablonTallNavn) }
+        .firstOrNull() ?: BigDecimal.ZERO
 
     // Finner verdien til flagget 'Delt fordel' i en gitt periode
-    private fun finnDeltFordel(periode: Periode, justertInntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlagUtenInntektType>) =
-        justertInntektPeriodeGrunnlagListe.firstOrNull {
-            it.getPeriode().overlapperMed(periode) && it.type == InntektType.UTVIDET_BARNETRYGD.name
-        }?.deltFordel ?: false
+    private fun finnDeltFordel(
+        periode: Periode,
+        justertInntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlagUtenInntektType>,
+    ) = justertInntektPeriodeGrunnlagListe.firstOrNull {
+        it.getPeriode().overlapperMed(periode) && it.type == InntektType.UTVIDET_BARNETRYGD.name
+    }?.deltFordel ?: false
 
     // Finner verdien til flagget 'Skatteklasse 2' i en gitt periode
-    private fun finnSkatteklasse2(periode: Periode, justertInntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlagUtenInntektType>) =
-        justertInntektPeriodeGrunnlagListe.firstOrNull {
-            it.getPeriode().overlapperMed(periode) && it.type == InntektType.UTVIDET_BARNETRYGD.name
-        }?.skatteklasse2 ?: false
+    private fun finnSkatteklasse2(
+        periode: Periode,
+        justertInntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlagUtenInntektType>,
+    ) = justertInntektPeriodeGrunnlagListe.firstOrNull {
+        it.getPeriode().overlapperMed(periode) && it.type == InntektType.UTVIDET_BARNETRYGD.name
+    }?.skatteklasse2 ?: false
 
     // Beregner fordel særfradrag
     private fun beregnFordelSaerfradrag(periodisertInntekt: PeriodisertInntekt): BigDecimal {
@@ -359,11 +384,11 @@ object InntektUtil {
 
         // Fordel skatteklasse 2 (før 2013-01-01)
         if (periodisertInntekt.periode
-            .overlapperMed(
+                .overlapperMed(
                     Periode(
-                            datoFom = FOM_DATO_FORDEL_SKATTEKLASSE2,
-                            datoTil = TIL_DATO_FORDEL_SKATTEKLASSE2
-                        )
+                        datoFom = FOM_DATO_FORDEL_SKATTEKLASSE2,
+                        datoTil = TIL_DATO_FORDEL_SKATTEKLASSE2,
+                    ),
                 ) && periodisertInntekt.skatteklasse2
         ) {
             return if (periodisertInntekt.summertBelop < periodisertInntekt.sjablon0031NedreInntektsgrenseBelop) {
@@ -377,11 +402,11 @@ object InntektUtil {
 
         // Fordel særfradrag (etter 2013-01-01)
         if (periodisertInntekt.periode
-            .overlapperMed(
+                .overlapperMed(
                     Periode(
-                            datoFom = FOM_DATO_FORDEL_SAERFRADRAG_ENSLIG_FORSORGER,
-                            datoTil = TIL_DATO_FORDEL_SAERFRADRAG_ENSLIG_FORSORGER
-                        )
+                        datoFom = FOM_DATO_FORDEL_SAERFRADRAG_ENSLIG_FORSORGER,
+                        datoTil = TIL_DATO_FORDEL_SAERFRADRAG_ENSLIG_FORSORGER,
+                    ),
                 )
         ) {
             return if (periodisertInntekt.summertBelop < periodisertInntekt.sjablon0031NedreInntektsgrenseBelop) {
@@ -397,7 +422,9 @@ object InntektUtil {
     }
 
     // Slår sammen perioder med like beløp og rydder vekk perioder med 0 i beløp. Danner ny InntektPeriodeGrunnlag-liste
-    private fun dannInntektListeSaerfradragEnsligForsorger(periodisertInntektListe: List<PeriodisertInntekt>): List<InntektPeriodeGrunnlagUtenInntektType> {
+    private fun dannInntektListeSaerfradragEnsligForsorger(
+        periodisertInntektListe: List<PeriodisertInntekt>,
+    ): List<InntektPeriodeGrunnlagUtenInntektType> {
         if (periodisertInntektListe.isEmpty()) {
             return emptyList()
         }
@@ -420,8 +447,8 @@ object InntektUtil {
                             type = inntektType.name,
                             belop = forrigeBelop,
                             deltFordel = false,
-                            skatteklasse2 = false
-                        )
+                            skatteklasse2 = false,
+                        ),
                     )
                 }
                 forrigeDatoFom = it.periode.datoFom
@@ -441,14 +468,16 @@ object InntektUtil {
                     type = inntektType.name,
                     belop = forrigeBelop,
                     deltFordel = false,
-                    skatteklasse2 = false
-                )
+                    skatteklasse2 = false,
+                ),
             )
         }
 
         return inntektListeSaerfradragEnsligForsorger
     }
 
-    private fun lagReferanse(inntektType: InntektType, datoFom: LocalDate) =
-        "Beregnet_Inntekt_" + inntektType.name + "_" + datoFom.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+    private fun lagReferanse(
+        inntektType: InntektType,
+        datoFom: LocalDate,
+    ) = "Beregnet_Inntekt_" + inntektType.name + "_" + datoFom.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
 }

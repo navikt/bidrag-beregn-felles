@@ -32,8 +32,8 @@
   <properties>
 
     <!-- language -->
-    <java.version>17</java.version>
-    <kotlin.version>1.9.0</kotlin.version>
+    <java.version>21</java.version>
+    <kotlin.version>1.9.20</kotlin.version>
 
     <!-- build -->
     <build-helper-maven.version>3.3.0</build-helper-maven.version>
@@ -43,7 +43,7 @@
 
     <!-- dependencies -->
     <spring-boot.version>3.0.6</spring-boot.version>
-    <bidrag-domene.version>20231103104652_3baff64</bidrag-domene.version>
+    <bidrag-domene.version>20231110092737_1f08513</bidrag-domene.version>
   </properties>
 
   <distributionManagement>
@@ -192,9 +192,9 @@
         </executions>
         <dependencies>
           <dependency>
-            <groupId>com.pinterest</groupId>
-            <artifactId>ktlint</artifactId>
-            <version>0.47.1</version>
+            <groupId>com.pinterest.ktlint</groupId>
+            <artifactId>ktlint-cli</artifactId>
+            <version>1.0.1</version>
           </dependency>
           <!-- additional 3rd party ruleset(s) can be specified here -->
         </dependencies>

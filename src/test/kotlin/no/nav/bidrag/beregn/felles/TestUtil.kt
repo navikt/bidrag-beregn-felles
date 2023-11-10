@@ -25,40 +25,40 @@ object TestUtil {
                 SjablonNavn.BARNETILSYN.navn,
                 listOf(
                     SjablonNokkel(SjablonNokkelNavn.STONAD_TYPE.navn, "64"),
-                    SjablonNokkel(SjablonNokkelNavn.TILSYN_TYPE.navn, "DO")
+                    SjablonNokkel(SjablonNokkelNavn.TILSYN_TYPE.navn, "DO"),
                 ),
-                listOf(SjablonInnhold(SjablonInnholdNavn.BARNETILSYN_BELOP.navn, BigDecimal.valueOf(355)))
-            )
+                listOf(SjablonInnhold(SjablonInnholdNavn.BARNETILSYN_BELOP.navn, BigDecimal.valueOf(355))),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonNavn.BARNETILSYN.navn,
                 listOf(
                     SjablonNokkel(SjablonNokkelNavn.STONAD_TYPE.navn, "64"),
-                    SjablonNokkel(SjablonNokkelNavn.TILSYN_TYPE.navn, "DU")
+                    SjablonNokkel(SjablonNokkelNavn.TILSYN_TYPE.navn, "DU"),
                 ),
-                listOf(SjablonInnhold(SjablonInnholdNavn.BARNETILSYN_BELOP.navn, BigDecimal.valueOf(258)))
-            )
+                listOf(SjablonInnhold(SjablonInnholdNavn.BARNETILSYN_BELOP.navn, BigDecimal.valueOf(258))),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonNavn.BARNETILSYN.navn,
                 listOf(
                     SjablonNokkel(SjablonNokkelNavn.STONAD_TYPE.navn, "64"),
-                    SjablonNokkel(SjablonNokkelNavn.TILSYN_TYPE.navn, "HO")
+                    SjablonNokkel(SjablonNokkelNavn.TILSYN_TYPE.navn, "HO"),
                 ),
-                listOf(SjablonInnhold(SjablonInnholdNavn.BARNETILSYN_BELOP.navn, BigDecimal.valueOf(579)))
-            )
+                listOf(SjablonInnhold(SjablonInnholdNavn.BARNETILSYN_BELOP.navn, BigDecimal.valueOf(579))),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonNavn.BARNETILSYN.navn,
                 listOf(
                     SjablonNokkel(SjablonNokkelNavn.STONAD_TYPE.navn, "64"),
-                    SjablonNokkel(SjablonNokkelNavn.TILSYN_TYPE.navn, "HU")
+                    SjablonNokkel(SjablonNokkelNavn.TILSYN_TYPE.navn, "HU"),
                 ),
-                listOf(SjablonInnhold(SjablonInnholdNavn.BARNETILSYN_BELOP.navn, BigDecimal.valueOf(644)))
-            )
+                listOf(SjablonInnhold(SjablonInnholdNavn.BARNETILSYN_BELOP.navn, BigDecimal.valueOf(644))),
+            ),
         )
 
         // Bidragsevne
@@ -69,9 +69,9 @@ object TestUtil {
                     listOf(SjablonNokkel(SjablonNokkelNavn.BOSTATUS.navn, "EN")),
                     listOf(
                         SjablonInnhold(SjablonInnholdNavn.BOUTGIFT_BELOP.navn, BigDecimal.valueOf(9591)),
-                        SjablonInnhold(SjablonInnholdNavn.UNDERHOLD_BELOP.navn, BigDecimal.valueOf(8925))
-                    )
-                )
+                        SjablonInnhold(SjablonInnholdNavn.UNDERHOLD_BELOP.navn, BigDecimal.valueOf(8925)),
+                    ),
+                ),
             )
         sjablonListe
             .add(
@@ -80,9 +80,9 @@ object TestUtil {
                     listOf(SjablonNokkel(SjablonNokkelNavn.BOSTATUS.navn, "GS")),
                     listOf(
                         SjablonInnhold(SjablonInnholdNavn.BOUTGIFT_BELOP.navn, BigDecimal.valueOf(5875)),
-                        SjablonInnhold(SjablonInnholdNavn.UNDERHOLD_BELOP.navn, BigDecimal.valueOf(7557))
-                    )
-                )
+                        SjablonInnhold(SjablonInnholdNavn.UNDERHOLD_BELOP.navn, BigDecimal.valueOf(7557)),
+                    ),
+                ),
             )
 
         // Forbruksutgifter
@@ -91,40 +91,40 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.FORBRUKSUTGIFTER.navn,
                     listOf(SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "18")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.FORBRUK_TOTAL_BELOP.navn, BigDecimal.valueOf(6985)))
-                )
+                    listOf(SjablonInnhold(SjablonInnholdNavn.FORBRUK_TOTAL_BELOP.navn, BigDecimal.valueOf(6985))),
+                ),
             )
         sjablonListe
             .add(
                 Sjablon(
                     SjablonNavn.FORBRUKSUTGIFTER.navn,
                     listOf(SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "5")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.FORBRUK_TOTAL_BELOP.navn, BigDecimal.valueOf(3661)))
-                )
+                    listOf(SjablonInnhold(SjablonInnholdNavn.FORBRUK_TOTAL_BELOP.navn, BigDecimal.valueOf(3661))),
+                ),
             )
         sjablonListe
             .add(
                 Sjablon(
                     SjablonNavn.FORBRUKSUTGIFTER.navn,
                     listOf(SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "99")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.FORBRUK_TOTAL_BELOP.navn, BigDecimal.valueOf(6985)))
-                )
+                    listOf(SjablonInnhold(SjablonInnholdNavn.FORBRUK_TOTAL_BELOP.navn, BigDecimal.valueOf(6985))),
+                ),
             )
         sjablonListe
             .add(
                 Sjablon(
                     SjablonNavn.FORBRUKSUTGIFTER.navn,
                     listOf(SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "10")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.FORBRUK_TOTAL_BELOP.navn, BigDecimal.valueOf(5113)))
-                )
+                    listOf(SjablonInnhold(SjablonInnholdNavn.FORBRUK_TOTAL_BELOP.navn, BigDecimal.valueOf(5113))),
+                ),
             )
         sjablonListe
             .add(
                 Sjablon(
                     SjablonNavn.FORBRUKSUTGIFTER.navn,
                     listOf(SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "14")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.FORBRUK_TOTAL_BELOP.navn, BigDecimal.valueOf(6099)))
-                )
+                    listOf(SjablonInnhold(SjablonInnholdNavn.FORBRUK_TOTAL_BELOP.navn, BigDecimal.valueOf(6099))),
+                ),
             )
 
         // Maks fradrag
@@ -133,72 +133,72 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.MAKS_FRADRAG.navn,
                     listOf(SjablonNokkel(SjablonNokkelNavn.ANTALL_BARN_TOM.navn, "1")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.navn, BigDecimal.valueOf(2083.33)))
-                )
+                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.navn, BigDecimal.valueOf(2083.33))),
+                ),
             )
         sjablonListe
             .add(
                 Sjablon(
                     SjablonNavn.MAKS_FRADRAG.navn,
                     listOf(SjablonNokkel(SjablonNokkelNavn.ANTALL_BARN_TOM.navn, "2")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.navn, BigDecimal.valueOf(3333)))
-                )
+                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.navn, BigDecimal.valueOf(3333))),
+                ),
             )
         sjablonListe
             .add(
                 Sjablon(
                     SjablonNavn.MAKS_FRADRAG.navn,
                     listOf(SjablonNokkel(SjablonNokkelNavn.ANTALL_BARN_TOM.navn, "3")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.navn, BigDecimal.valueOf(4583)))
-                )
+                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.navn, BigDecimal.valueOf(4583))),
+                ),
             )
         sjablonListe
             .add(
                 Sjablon(
                     SjablonNavn.MAKS_FRADRAG.navn,
                     listOf(SjablonNokkel(SjablonNokkelNavn.ANTALL_BARN_TOM.navn, "4")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.navn, BigDecimal.valueOf(5833)))
-                )
+                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.navn, BigDecimal.valueOf(5833))),
+                ),
             )
         sjablonListe
             .add(
                 Sjablon(
                     SjablonNavn.MAKS_FRADRAG.navn,
                     listOf(SjablonNokkel(SjablonNokkelNavn.ANTALL_BARN_TOM.navn, "5")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.navn, BigDecimal.valueOf(7083)))
-                )
+                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.navn, BigDecimal.valueOf(7083))),
+                ),
             )
         sjablonListe
             .add(
                 Sjablon(
                     SjablonNavn.MAKS_FRADRAG.navn,
                     listOf(SjablonNokkel(SjablonNokkelNavn.ANTALL_BARN_TOM.navn, "6")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.navn, BigDecimal.valueOf(8333)))
-                )
+                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.navn, BigDecimal.valueOf(8333))),
+                ),
             )
         sjablonListe
             .add(
                 Sjablon(
                     SjablonNavn.MAKS_FRADRAG.navn,
                     listOf(SjablonNokkel(SjablonNokkelNavn.ANTALL_BARN_TOM.navn, "7")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.navn, BigDecimal.valueOf(9583)))
-                )
+                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.navn, BigDecimal.valueOf(9583))),
+                ),
             )
         sjablonListe
             .add(
                 Sjablon(
                     SjablonNavn.MAKS_FRADRAG.navn,
                     listOf(SjablonNokkel(SjablonNokkelNavn.ANTALL_BARN_TOM.navn, "8")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.navn, BigDecimal.valueOf(10833)))
-                )
+                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.navn, BigDecimal.valueOf(10833))),
+                ),
             )
         sjablonListe
             .add(
                 Sjablon(
                     SjablonNavn.MAKS_FRADRAG.navn,
                     listOf(SjablonNokkel(SjablonNokkelNavn.ANTALL_BARN_TOM.navn, "99")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.navn, BigDecimal.valueOf(12083)))
-                )
+                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELOP.navn, BigDecimal.valueOf(12083))),
+                ),
             )
 
         // Maks tilsyn
@@ -207,24 +207,24 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.MAKS_TILSYN.navn,
                     listOf(SjablonNokkel(SjablonNokkelNavn.ANTALL_BARN_TOM.navn, "1")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_TILSYN_BELOP.navn, BigDecimal.valueOf(6214)))
-                )
+                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_TILSYN_BELOP.navn, BigDecimal.valueOf(6214))),
+                ),
             )
         sjablonListe
             .add(
                 Sjablon(
                     SjablonNavn.MAKS_TILSYN.navn,
                     listOf(SjablonNokkel(SjablonNokkelNavn.ANTALL_BARN_TOM.navn, "2")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_TILSYN_BELOP.navn, BigDecimal.valueOf(8109)))
-                )
+                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_TILSYN_BELOP.navn, BigDecimal.valueOf(8109))),
+                ),
             )
         sjablonListe
             .add(
                 Sjablon(
                     SjablonNavn.MAKS_TILSYN.navn,
                     listOf(SjablonNokkel(SjablonNokkelNavn.ANTALL_BARN_TOM.navn, "99")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_TILSYN_BELOP.navn, BigDecimal.valueOf(9189)))
-                )
+                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_TILSYN_BELOP.navn, BigDecimal.valueOf(9189))),
+                ),
             )
 
         // Samvaersfradrag
@@ -233,294 +233,294 @@ object TestUtil {
                 SjablonNavn.SAMVAERSFRADRAG.navn,
                 listOf(
                     SjablonNokkel(SjablonNokkelNavn.SAMVAERSKLASSE.navn, "00"),
-                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "99")
+                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "99"),
                 ),
                 listOf(
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.valueOf(1)),
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(1)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.ZERO)
-                )
-            )
+                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.ZERO),
+                ),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonNavn.SAMVAERSFRADRAG.navn,
                 listOf(
                     SjablonNokkel(SjablonNokkelNavn.SAMVAERSKLASSE.navn, "01"),
-                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "5")
+                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "5"),
                 ),
                 listOf(
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.valueOf(3)),
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(3)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(219))
-                )
-            )
+                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(219)),
+                ),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonNavn.SAMVAERSFRADRAG.navn,
                 listOf(
                     SjablonNokkel(SjablonNokkelNavn.SAMVAERSKLASSE.navn, "01"),
-                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "10")
+                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "10"),
                 ),
                 listOf(
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.valueOf(3)),
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(3)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(318))
-                )
-            )
+                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(318)),
+                ),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonNavn.SAMVAERSFRADRAG.navn,
                 listOf(
                     SjablonNokkel(SjablonNokkelNavn.SAMVAERSKLASSE.navn, "01"),
-                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "14")
+                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "14"),
                 ),
                 listOf(
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.valueOf(3)),
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(3)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(400))
-                )
-            )
+                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(400)),
+                ),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonNavn.SAMVAERSFRADRAG.navn,
                 listOf(
                     SjablonNokkel(SjablonNokkelNavn.SAMVAERSKLASSE.navn, "01"),
-                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "18")
+                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "18"),
                 ),
                 listOf(
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.valueOf(3)),
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(3)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(460))
-                )
-            )
+                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(460)),
+                ),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonNavn.SAMVAERSFRADRAG.navn,
                 listOf(
                     SjablonNokkel(SjablonNokkelNavn.SAMVAERSKLASSE.navn, "01"),
-                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "99")
+                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "99"),
                 ),
                 listOf(
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.valueOf(3)),
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(3)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(460))
-                )
-            )
+                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(460)),
+                ),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonNavn.SAMVAERSFRADRAG.navn,
                 listOf(
                     SjablonNokkel(SjablonNokkelNavn.SAMVAERSKLASSE.navn, "02"),
-                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "5")
+                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "5"),
                 ),
                 listOf(
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(8)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(727))
-                )
-            )
+                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(727)),
+                ),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonNavn.SAMVAERSFRADRAG.navn,
                 listOf(
                     SjablonNokkel(SjablonNokkelNavn.SAMVAERSKLASSE.navn, "02"),
-                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "10")
+                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "10"),
                 ),
                 listOf(
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(8)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(1052))
-                )
-            )
+                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(1052)),
+                ),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonNavn.SAMVAERSFRADRAG.navn,
                 listOf(
                     SjablonNokkel(SjablonNokkelNavn.SAMVAERSKLASSE.navn, "02"),
-                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "14")
+                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "14"),
                 ),
                 listOf(
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(8)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(1323))
-                )
-            )
+                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(1323)),
+                ),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonNavn.SAMVAERSFRADRAG.navn,
                 listOf(
                     SjablonNokkel(SjablonNokkelNavn.SAMVAERSKLASSE.navn, "02"),
-                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "18")
+                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "18"),
                 ),
                 listOf(
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(8)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(1525))
-                )
-            )
+                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(1525)),
+                ),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonNavn.SAMVAERSFRADRAG.navn,
                 listOf(
                     SjablonNokkel(SjablonNokkelNavn.SAMVAERSKLASSE.navn, "02"),
-                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "99")
+                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "99"),
                 ),
                 listOf(
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(8)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(1525))
-                )
-            )
+                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(1525)),
+                ),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonNavn.SAMVAERSFRADRAG.navn,
                 listOf(
                     SjablonNokkel(SjablonNokkelNavn.SAMVAERSKLASSE.navn, "03"),
-                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "5")
+                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "5"),
                 ),
                 listOf(
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(13)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(2082))
-                )
-            )
+                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(2082)),
+                ),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonNavn.SAMVAERSFRADRAG.navn,
                 listOf(
                     SjablonNokkel(SjablonNokkelNavn.SAMVAERSKLASSE.navn, "03"),
-                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "10")
+                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "10"),
                 ),
                 listOf(
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(13)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(2536))
-                )
-            )
+                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(2536)),
+                ),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonNavn.SAMVAERSFRADRAG.navn,
                 listOf(
                     SjablonNokkel(SjablonNokkelNavn.SAMVAERSKLASSE.navn, "03"),
-                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "14")
+                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "14"),
                 ),
                 listOf(
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(13)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(2914))
-                )
-            )
+                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(2914)),
+                ),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonNavn.SAMVAERSFRADRAG.navn,
                 listOf(
                     SjablonNokkel(SjablonNokkelNavn.SAMVAERSKLASSE.navn, "03"),
-                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "18")
+                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "18"),
                 ),
                 listOf(
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(13)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(3196))
-                )
-            )
+                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(3196)),
+                ),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonNavn.SAMVAERSFRADRAG.navn,
                 listOf(
                     SjablonNokkel(SjablonNokkelNavn.SAMVAERSKLASSE.navn, "03"),
-                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "99")
+                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "99"),
                 ),
                 listOf(
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(13)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(3196))
-                )
-            )
+                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(3196)),
+                ),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonNavn.SAMVAERSFRADRAG.navn,
                 listOf(
                     SjablonNokkel(SjablonNokkelNavn.SAMVAERSKLASSE.navn, "04"),
-                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "5")
+                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "5"),
                 ),
                 listOf(
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(15)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(2614))
-                )
-            )
+                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(2614)),
+                ),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonNavn.SAMVAERSFRADRAG.navn,
                 listOf(
                     SjablonNokkel(SjablonNokkelNavn.SAMVAERSKLASSE.navn, "04"),
-                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "10")
+                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "10"),
                 ),
                 listOf(
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(15)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(3184))
-                )
-            )
+                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(3184)),
+                ),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonNavn.SAMVAERSFRADRAG.navn,
                 listOf(
                     SjablonNokkel(SjablonNokkelNavn.SAMVAERSKLASSE.navn, "04"),
-                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "14")
+                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "14"),
                 ),
                 listOf(
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(15)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(3658))
-                )
-            )
+                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(3658)),
+                ),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonNavn.SAMVAERSFRADRAG.navn,
                 listOf(
                     SjablonNokkel(SjablonNokkelNavn.SAMVAERSKLASSE.navn, "04"),
-                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "18")
+                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "18"),
                 ),
                 listOf(
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(15)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(4012))
-                )
-            )
+                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(4012)),
+                ),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonNavn.SAMVAERSFRADRAG.navn,
                 listOf(
                     SjablonNokkel(SjablonNokkelNavn.SAMVAERSKLASSE.navn, "04"),
-                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "99")
+                    SjablonNokkel(SjablonNokkelNavn.ALDER_TOM.navn, "99"),
                 ),
                 listOf(
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
                     SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(15)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(4012))
-                )
-            )
+                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELOP.navn, BigDecimal.valueOf(4012)),
+                ),
+            ),
         )
 
         // Sjablontall
@@ -528,85 +528,85 @@ object TestUtil {
             Sjablon(
                 SjablonTallNavn.ORDINAER_BARNETRYGD_BELOP.navn,
                 emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(1054)))
-            )
+                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(1054))),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonTallNavn.ORDINAER_SMAABARNSTILLEGG_BELOP.navn,
                 emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.ZERO))
-            )
+                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.ZERO)),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonTallNavn.BOUTGIFTER_BIDRAGSBARN_BELOP.navn,
                 emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(2775)))
-            )
+                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(2775))),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonTallNavn.MINSTEFRADRAG_INNTEKT_PROSENT.navn,
                 emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(31)))
-            )
+                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(31))),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonTallNavn.MINSTEFRADRAG_INNTEKT_BELOP.navn,
                 emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(85050)))
-            )
+                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(85050))),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonTallNavn.PERSONFRADRAG_KLASSE1_BELOP.navn,
                 emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(56550)))
-            )
+                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(56550))),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonTallNavn.PERSONFRADRAG_KLASSE2_BELOP.navn,
                 emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(56550)))
-            )
+                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(56550))),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonTallNavn.SKATTESATS_ALMINNELIG_INNTEKT_PROSENT.navn,
                 emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(22)))
-            )
+                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(22))),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonTallNavn.TRYGDEAVGIFT_PROSENT.navn,
                 emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(8.2)))
-            )
+                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(8.2))),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonTallNavn.FORDEL_SAERFRADRAG_BELOP.navn,
                 emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(12977)))
-            )
+                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(12977))),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELOP.navn,
                 emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.ZERO))
-            )
+                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.ZERO)),
+            ),
         )
         sjablonListe.add(
             Sjablon(
                 SjablonTallNavn.UNDERHOLD_EGNE_BARN_I_HUSSTAND_BELOP.navn,
                 emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(3487)))
-            )
+                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(3487))),
+            ),
         )
 
         // Trinnvis skattesats
@@ -616,9 +616,9 @@ object TestUtil {
                 emptyList(),
                 listOf(
                     SjablonInnhold(SjablonInnholdNavn.INNTEKTSGRENSE_BELOP.navn, BigDecimal.valueOf(964800)),
-                    SjablonInnhold(SjablonInnholdNavn.SKATTESATS_PROSENT.navn, BigDecimal.valueOf(16.2))
-                )
-            )
+                    SjablonInnhold(SjablonInnholdNavn.SKATTESATS_PROSENT.navn, BigDecimal.valueOf(16.2)),
+                ),
+            ),
         )
         sjablonListe.add(
             Sjablon(
@@ -626,9 +626,9 @@ object TestUtil {
                 emptyList(),
                 listOf(
                     SjablonInnhold(SjablonInnholdNavn.INNTEKTSGRENSE_BELOP.navn, BigDecimal.valueOf(245650)),
-                    SjablonInnhold(SjablonInnholdNavn.SKATTESATS_PROSENT.navn, BigDecimal.valueOf(4.2))
-                )
-            )
+                    SjablonInnhold(SjablonInnholdNavn.SKATTESATS_PROSENT.navn, BigDecimal.valueOf(4.2)),
+                ),
+            ),
         )
         sjablonListe.add(
             Sjablon(
@@ -636,9 +636,9 @@ object TestUtil {
                 emptyList(),
                 listOf(
                     SjablonInnhold(SjablonInnholdNavn.INNTEKTSGRENSE_BELOP.navn, BigDecimal.valueOf(617500)),
-                    SjablonInnhold(SjablonInnholdNavn.SKATTESATS_PROSENT.navn, BigDecimal.valueOf(13.2))
-                )
-            )
+                    SjablonInnhold(SjablonInnholdNavn.SKATTESATS_PROSENT.navn, BigDecimal.valueOf(13.2)),
+                ),
+            ),
         )
         sjablonListe.add(
             Sjablon(
@@ -646,9 +646,9 @@ object TestUtil {
                 emptyList(),
                 listOf(
                     SjablonInnhold(SjablonInnholdNavn.INNTEKTSGRENSE_BELOP.navn, BigDecimal.valueOf(174500)),
-                    SjablonInnhold(SjablonInnholdNavn.SKATTESATS_PROSENT.navn, BigDecimal.valueOf(1.9))
-                )
-            )
+                    SjablonInnhold(SjablonInnholdNavn.SKATTESATS_PROSENT.navn, BigDecimal.valueOf(1.9)),
+                ),
+            ),
         )
         return sjablonListe
     }
@@ -827,8 +827,8 @@ object TestUtil {
                 InntektType.UTVIDET_BARNETRYGD.name,
                 BigDecimal.valueOf(12000),
                 false,
-                false
-            )
+                false,
+            ),
         )
         inntektGrunnlagListe.add(
             InntektPeriodeGrunnlagUtenInntektType(
@@ -837,8 +837,8 @@ object TestUtil {
                 InntektType.UTVIDET_BARNETRYGD.name,
                 BigDecimal.valueOf(12000),
                 false,
-                false
-            )
+                false,
+            ),
         )
         inntektGrunnlagListe.add(
             InntektPeriodeGrunnlagUtenInntektType(
@@ -847,8 +847,8 @@ object TestUtil {
                 InntektType.UTVIDET_BARNETRYGD.name,
                 BigDecimal.valueOf(12000),
                 true,
-                false
-            )
+                false,
+            ),
         )
         inntektGrunnlagListe.add(
             InntektPeriodeGrunnlagUtenInntektType(
@@ -857,8 +857,8 @@ object TestUtil {
                 InntektType.UTVIDET_BARNETRYGD.name,
                 BigDecimal.valueOf(10000),
                 false,
-                false
-            )
+                false,
+            ),
         )
         inntektGrunnlagListe.add(
             InntektPeriodeGrunnlagUtenInntektType(
@@ -867,8 +867,8 @@ object TestUtil {
                 InntektType.UTVIDET_BARNETRYGD.name,
                 BigDecimal.valueOf(10000),
                 true,
-                false
-            )
+                false,
+            ),
         )
         inntektGrunnlagListe.add(
             InntektPeriodeGrunnlagUtenInntektType(
@@ -877,8 +877,8 @@ object TestUtil {
                 InntektType.LØNNSINNTEKT.name,
                 BigDecimal.valueOf(90000),
                 false,
-                false
-            )
+                false,
+            ),
         )
         inntektGrunnlagListe.add(
             InntektPeriodeGrunnlagUtenInntektType(
@@ -887,8 +887,8 @@ object TestUtil {
                 InntektType.LØNNSINNTEKT.name,
                 BigDecimal.valueOf(105000),
                 false,
-                false
-            )
+                false,
+            ),
         )
         inntektGrunnlagListe.add(
             InntektPeriodeGrunnlagUtenInntektType(
@@ -897,8 +897,8 @@ object TestUtil {
                 InntektType.KAPITALINNTEKT.name,
                 BigDecimal.valueOf(30000),
                 false,
-                false
-            )
+                false,
+            ),
         )
         inntektGrunnlagListe.add(
             InntektPeriodeGrunnlagUtenInntektType(
@@ -907,8 +907,8 @@ object TestUtil {
                 InntektType.KAPITALINNTEKT.name,
                 BigDecimal.valueOf(10000),
                 false,
-                false
-            )
+                false,
+            ),
         )
         return inntektGrunnlagListe
     }
@@ -923,8 +923,8 @@ object TestUtil {
                 InntektType.UTVIDET_BARNETRYGD.name,
                 BigDecimal.valueOf(12000),
                 false,
-                true
-            )
+                true,
+            ),
         )
         inntektGrunnlagListe.add(
             InntektPeriodeGrunnlagUtenInntektType(
@@ -933,8 +933,8 @@ object TestUtil {
                 InntektType.LØNNSINNTEKT.name,
                 BigDecimal.valueOf(120000),
                 false,
-                false
-            )
+                false,
+            ),
         )
         return inntektGrunnlagListe
     }
@@ -951,10 +951,10 @@ object TestUtil {
                     SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELOP.navn,
                     emptyList(),
                     listOf(
-                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(7500))
-                    )
-                )
-            )
+                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(7500)),
+                    ),
+                ),
+            ),
         )
         sjablontallPeriodeListe.add(
             SjablonPeriode(
@@ -963,10 +963,10 @@ object TestUtil {
                     SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELOP.navn,
                     emptyList(),
                     listOf(
-                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(8500))
-                    )
-                )
-            )
+                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(8500)),
+                    ),
+                ),
+            ),
         )
 
         // Sjablon 0030
@@ -977,10 +977,10 @@ object TestUtil {
                     SjablonTallNavn.OVRE_INNTEKTSGRENSE_IKKE_I_SKATTEPOSISJON_BELOP.navn,
                     emptyList(),
                     listOf(
-                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(99540))
-                    )
-                )
-            )
+                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(99540)),
+                    ),
+                ),
+            ),
         )
         sjablontallPeriodeListe.add(
             SjablonPeriode(
@@ -989,10 +989,10 @@ object TestUtil {
                     SjablonTallNavn.OVRE_INNTEKTSGRENSE_IKKE_I_SKATTEPOSISJON_BELOP.navn,
                     emptyList(),
                     listOf(
-                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(105000))
-                    )
-                )
-            )
+                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(105000)),
+                    ),
+                ),
+            ),
         )
         sjablontallPeriodeListe.add(
             SjablonPeriode(
@@ -1001,10 +1001,10 @@ object TestUtil {
                     SjablonTallNavn.OVRE_INNTEKTSGRENSE_IKKE_I_SKATTEPOSISJON_BELOP.navn,
                     emptyList(),
                     listOf(
-                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(100000))
-                    )
-                )
-            )
+                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(100000)),
+                    ),
+                ),
+            ),
         )
 
         // Sjablon 0031
@@ -1015,10 +1015,10 @@ object TestUtil {
                     SjablonTallNavn.NEDRE_INNTEKTSGRENSE_FULL_SKATTEPOSISJON_BELOP.navn,
                     emptyList(),
                     listOf(
-                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(99540))
-                    )
-                )
-            )
+                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(99540)),
+                    ),
+                ),
+            ),
         )
         sjablontallPeriodeListe.add(
             SjablonPeriode(
@@ -1027,10 +1027,10 @@ object TestUtil {
                     SjablonTallNavn.NEDRE_INNTEKTSGRENSE_FULL_SKATTEPOSISJON_BELOP.navn,
                     emptyList(),
                     listOf(
-                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(105000))
-                    )
-                )
-            )
+                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(105000)),
+                    ),
+                ),
+            ),
         )
         sjablontallPeriodeListe.add(
             SjablonPeriode(
@@ -1039,10 +1039,10 @@ object TestUtil {
                     SjablonTallNavn.NEDRE_INNTEKTSGRENSE_FULL_SKATTEPOSISJON_BELOP.navn,
                     emptyList(),
                     listOf(
-                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(110000))
-                    )
-                )
-            )
+                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(110000)),
+                    ),
+                ),
+            ),
         )
         sjablontallPeriodeListe.add(
             SjablonPeriode(
@@ -1051,10 +1051,10 @@ object TestUtil {
                     SjablonTallNavn.NEDRE_INNTEKTSGRENSE_FULL_SKATTEPOSISJON_BELOP.navn,
                     emptyList(),
                     listOf(
-                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(100000))
-                    )
-                )
-            )
+                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(100000)),
+                    ),
+                ),
+            ),
         )
 
         // Sjablon 0039
@@ -1065,10 +1065,10 @@ object TestUtil {
                     SjablonTallNavn.FORDEL_SAERFRADRAG_BELOP.navn,
                     emptyList(),
                     listOf(
-                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(12500))
-                    )
-                )
-            )
+                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(12500)),
+                    ),
+                ),
+            ),
         )
         sjablontallPeriodeListe.add(
             SjablonPeriode(
@@ -1077,10 +1077,10 @@ object TestUtil {
                     SjablonTallNavn.FORDEL_SAERFRADRAG_BELOP.navn,
                     emptyList(),
                     listOf(
-                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(13000))
-                    )
-                )
-            )
+                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(13000)),
+                    ),
+                ),
+            ),
         )
         sjablontallPeriodeListe.add(
             SjablonPeriode(
@@ -1089,10 +1089,10 @@ object TestUtil {
                     SjablonTallNavn.FORDEL_SAERFRADRAG_BELOP.navn,
                     emptyList(),
                     listOf(
-                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(14000))
-                    )
-                )
-            )
+                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(14000)),
+                    ),
+                ),
+            ),
         )
         return sjablontallPeriodeListe
     }
@@ -1109,10 +1109,10 @@ object TestUtil {
                     SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELOP.navn,
                     emptyList(),
                     listOf(
-                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(7500))
-                    )
-                )
-            )
+                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(7500)),
+                    ),
+                ),
+            ),
         )
         sjablontallPeriodeListe.add(
             SjablonPeriode(
@@ -1121,10 +1121,10 @@ object TestUtil {
                     SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELOP.navn,
                     emptyList(),
                     listOf(
-                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(8500))
-                    )
-                )
-            )
+                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(8500)),
+                    ),
+                ),
+            ),
         )
 
         // Sjablon 0030
@@ -1135,10 +1135,10 @@ object TestUtil {
                     SjablonTallNavn.OVRE_INNTEKTSGRENSE_IKKE_I_SKATTEPOSISJON_BELOP.navn,
                     emptyList(),
                     listOf(
-                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(100000))
-                    )
-                )
-            )
+                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(100000)),
+                    ),
+                ),
+            ),
         )
 
         // Sjablon 0031
@@ -1149,10 +1149,10 @@ object TestUtil {
                     SjablonTallNavn.NEDRE_INNTEKTSGRENSE_FULL_SKATTEPOSISJON_BELOP.navn,
                     emptyList(),
                     listOf(
-                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(100000))
-                    )
-                )
-            )
+                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(100000)),
+                    ),
+                ),
+            ),
         )
 
         // Sjablon 0039
@@ -1163,10 +1163,10 @@ object TestUtil {
                     SjablonTallNavn.FORDEL_SAERFRADRAG_BELOP.navn,
                     emptyList(),
                     listOf(
-                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(12500))
-                    )
-                )
-            )
+                        SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(12500)),
+                    ),
+                ),
+            ),
         )
         return sjablontallPeriodeListe
     }
