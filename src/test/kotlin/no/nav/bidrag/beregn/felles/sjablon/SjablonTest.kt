@@ -5,7 +5,7 @@ import no.nav.bidrag.beregn.felles.bo.SjablonNokkel
 import no.nav.bidrag.beregn.felles.util.SjablonUtil
 import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
-import no.nav.bidrag.domene.enums.sjablon.SjablonNokkelNavn
+import no.nav.bidrag.domene.enums.sjablon.SjablonNøkkelNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
@@ -25,10 +25,10 @@ internal class SjablonTest {
     @DisplayName("Test Barnetilsyn (N:1, eksakt match)")
     fun testHentBarnetilsyn() {
         sjablonNokkelListe.clear()
-        sjablonNokkelListe.add(SjablonNokkel(SjablonNokkelNavn.STONAD_TYPE.navn, "64"))
-        sjablonNokkelListe.add(SjablonNokkel(SjablonNokkelNavn.TILSYN_TYPE.navn, "DU"))
+        sjablonNokkelListe.add(SjablonNokkel(SjablonNøkkelNavn.STØNAD_TYPE.navn, "64"))
+        sjablonNokkelListe.add(SjablonNokkel(SjablonNøkkelNavn.TILSYN_TYPE.navn, "DU"))
         val belopBarnetilsyn =
-            SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.BARNETILSYN, sjablonNokkelListe, SjablonInnholdNavn.BARNETILSYN_BELOP)
+            SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.BARNETILSYN, sjablonNokkelListe, SjablonInnholdNavn.BARNETILSYN_BELØP)
 
         assertThat(belopBarnetilsyn).isEqualTo(BigDecimal.valueOf(258))
     }
@@ -37,11 +37,11 @@ internal class SjablonTest {
     @DisplayName("Test Bidragsevne (1:N, eksakt match)")
     fun testHentBidragsevne() {
         sjablonNokkelListe.clear()
-        sjablonNokkelListe.add(SjablonNokkel(SjablonNokkelNavn.BOSTATUS.navn, "GS"))
+        sjablonNokkelListe.add(SjablonNokkel(SjablonNøkkelNavn.BOSTATUS.navn, "GS"))
         val belopBoutgift =
-            SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.BIDRAGSEVNE, sjablonNokkelListe, SjablonInnholdNavn.BOUTGIFT_BELOP)
+            SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.BIDRAGSEVNE, sjablonNokkelListe, SjablonInnholdNavn.BOUTGIFT_BELØP)
         val belopUnderhold =
-            SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.BIDRAGSEVNE, sjablonNokkelListe, SjablonInnholdNavn.UNDERHOLD_BELOP)
+            SjablonUtil.hentSjablonverdi(sjablonListe, SjablonNavn.BIDRAGSEVNE, sjablonNokkelListe, SjablonInnholdNavn.UNDERHOLD_BELØP)
 
         assertThat(belopBoutgift).isEqualTo(BigDecimal.valueOf(5875))
         assertThat(belopUnderhold).isEqualTo(BigDecimal.valueOf(7557))
@@ -127,35 +127,35 @@ internal class SjablonTest {
     @DisplayName("Test Samværsfradrag (N:N, eksakt match + intervall)")
     fun testHentSamvaersfradrag() {
         sjablonNokkelListe.clear()
-        sjablonNokkelListe.add(SjablonNokkel(SjablonNokkelNavn.SAMVAERSKLASSE.navn, "03"))
+        sjablonNokkelListe.add(SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "03"))
 
         sjablonNokkelVerdiInteger = 3
         var antDagerTom =
             SjablonUtil.hentSjablonverdi(
                 sjablonListe,
-                SjablonNavn.SAMVAERSFRADRAG,
+                SjablonNavn.SAMVÆRSFRADRAG,
                 sjablonNokkelListe,
-                SjablonNokkelNavn.ALDER_TOM,
+                SjablonNøkkelNavn.ALDER_TOM,
                 sjablonNokkelVerdiInteger,
                 SjablonInnholdNavn.ANTALL_DAGER_TOM,
             )
         var antNetterTom =
             SjablonUtil.hentSjablonverdi(
                 sjablonListe,
-                SjablonNavn.SAMVAERSFRADRAG,
+                SjablonNavn.SAMVÆRSFRADRAG,
                 sjablonNokkelListe,
-                SjablonNokkelNavn.ALDER_TOM,
+                SjablonNøkkelNavn.ALDER_TOM,
                 sjablonNokkelVerdiInteger,
                 SjablonInnholdNavn.ANTALL_NETTER_TOM,
             )
         var belopFradrag =
             SjablonUtil.hentSjablonverdi(
                 sjablonListe,
-                SjablonNavn.SAMVAERSFRADRAG,
+                SjablonNavn.SAMVÆRSFRADRAG,
                 sjablonNokkelListe,
-                SjablonNokkelNavn.ALDER_TOM,
+                SjablonNøkkelNavn.ALDER_TOM,
                 sjablonNokkelVerdiInteger,
-                SjablonInnholdNavn.FRADRAG_BELOP,
+                SjablonInnholdNavn.FRADRAG_BELØP,
             )
 
         assertThat(antDagerTom).isEqualTo(BigDecimal.ZERO)
@@ -166,29 +166,29 @@ internal class SjablonTest {
         antDagerTom =
             SjablonUtil.hentSjablonverdi(
                 sjablonListe,
-                SjablonNavn.SAMVAERSFRADRAG,
+                SjablonNavn.SAMVÆRSFRADRAG,
                 sjablonNokkelListe,
-                SjablonNokkelNavn.ALDER_TOM,
+                SjablonNøkkelNavn.ALDER_TOM,
                 sjablonNokkelVerdiInteger,
                 SjablonInnholdNavn.ANTALL_DAGER_TOM,
             )
         antNetterTom =
             SjablonUtil.hentSjablonverdi(
                 sjablonListe,
-                SjablonNavn.SAMVAERSFRADRAG,
+                SjablonNavn.SAMVÆRSFRADRAG,
                 sjablonNokkelListe,
-                SjablonNokkelNavn.ALDER_TOM,
+                SjablonNøkkelNavn.ALDER_TOM,
                 sjablonNokkelVerdiInteger,
                 SjablonInnholdNavn.ANTALL_NETTER_TOM,
             )
         belopFradrag =
             SjablonUtil.hentSjablonverdi(
                 sjablonListe,
-                SjablonNavn.SAMVAERSFRADRAG,
+                SjablonNavn.SAMVÆRSFRADRAG,
                 sjablonNokkelListe,
-                SjablonNokkelNavn.ALDER_TOM,
+                SjablonNøkkelNavn.ALDER_TOM,
                 sjablonNokkelVerdiInteger,
-                SjablonInnholdNavn.FRADRAG_BELOP,
+                SjablonInnholdNavn.FRADRAG_BELØP,
             )
 
         assertThat(antDagerTom).isEqualTo(BigDecimal.ZERO)
@@ -199,29 +199,29 @@ internal class SjablonTest {
         antDagerTom =
             SjablonUtil.hentSjablonverdi(
                 sjablonListe,
-                SjablonNavn.SAMVAERSFRADRAG,
+                SjablonNavn.SAMVÆRSFRADRAG,
                 sjablonNokkelListe,
-                SjablonNokkelNavn.ALDER_TOM,
+                SjablonNøkkelNavn.ALDER_TOM,
                 sjablonNokkelVerdiInteger,
                 SjablonInnholdNavn.ANTALL_DAGER_TOM,
             )
         antNetterTom =
             SjablonUtil.hentSjablonverdi(
                 sjablonListe,
-                SjablonNavn.SAMVAERSFRADRAG,
+                SjablonNavn.SAMVÆRSFRADRAG,
                 sjablonNokkelListe,
-                SjablonNokkelNavn.ALDER_TOM,
+                SjablonNøkkelNavn.ALDER_TOM,
                 sjablonNokkelVerdiInteger,
                 SjablonInnholdNavn.ANTALL_NETTER_TOM,
             )
         belopFradrag =
             SjablonUtil.hentSjablonverdi(
                 sjablonListe,
-                SjablonNavn.SAMVAERSFRADRAG,
+                SjablonNavn.SAMVÆRSFRADRAG,
                 sjablonNokkelListe,
-                SjablonNokkelNavn.ALDER_TOM,
+                SjablonNøkkelNavn.ALDER_TOM,
                 sjablonNokkelVerdiInteger,
-                SjablonInnholdNavn.FRADRAG_BELOP,
+                SjablonInnholdNavn.FRADRAG_BELØP,
             )
 
         assertThat(antDagerTom).isEqualTo(BigDecimal.ZERO)
@@ -232,29 +232,29 @@ internal class SjablonTest {
         antDagerTom =
             SjablonUtil.hentSjablonverdi(
                 sjablonListe,
-                SjablonNavn.SAMVAERSFRADRAG,
+                SjablonNavn.SAMVÆRSFRADRAG,
                 sjablonNokkelListe,
-                SjablonNokkelNavn.ALDER_TOM,
+                SjablonNøkkelNavn.ALDER_TOM,
                 sjablonNokkelVerdiInteger,
                 SjablonInnholdNavn.ANTALL_DAGER_TOM,
             )
         antNetterTom =
             SjablonUtil.hentSjablonverdi(
                 sjablonListe,
-                SjablonNavn.SAMVAERSFRADRAG,
+                SjablonNavn.SAMVÆRSFRADRAG,
                 sjablonNokkelListe,
-                SjablonNokkelNavn.ALDER_TOM,
+                SjablonNøkkelNavn.ALDER_TOM,
                 sjablonNokkelVerdiInteger,
                 SjablonInnholdNavn.ANTALL_NETTER_TOM,
             )
         belopFradrag =
             SjablonUtil.hentSjablonverdi(
                 sjablonListe,
-                SjablonNavn.SAMVAERSFRADRAG,
+                SjablonNavn.SAMVÆRSFRADRAG,
                 sjablonNokkelListe,
-                SjablonNokkelNavn.ALDER_TOM,
+                SjablonNøkkelNavn.ALDER_TOM,
                 sjablonNokkelVerdiInteger,
-                SjablonInnholdNavn.FRADRAG_BELOP,
+                SjablonInnholdNavn.FRADRAG_BELØP,
             )
 
         assertThat(antDagerTom).isEqualTo(BigDecimal.ZERO)
@@ -265,7 +265,7 @@ internal class SjablonTest {
     @Test
     @DisplayName("Test Sjablontall (1:1, eksakt match)")
     fun testHentSjablontall() {
-        val sjablonVerdi = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonTallNavn.BOUTGIFTER_BIDRAGSBARN_BELOP)
+        val sjablonVerdi = SjablonUtil.hentSjablonverdi(sjablonListe, SjablonTallNavn.BOUTGIFTER_BIDRAGSBARN_BELØP)
         assertThat(sjablonVerdi).isEqualTo(BigDecimal.valueOf(2775))
     }
 

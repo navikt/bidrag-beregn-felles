@@ -43,7 +43,7 @@
 
     <!-- dependencies -->
     <spring-boot.version>3.0.6</spring-boot.version>
-    <bidrag-domene.version>20231110092737_1f08513</bidrag-domene.version>
+    <bidrag-domene.version>20231129132715_50218a8</bidrag-domene.version>
   </properties>
 
   <distributionManagement>

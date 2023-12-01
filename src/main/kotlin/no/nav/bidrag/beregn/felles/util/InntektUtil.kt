@@ -7,10 +7,10 @@ import no.nav.bidrag.beregn.felles.inntekt.InntektPeriodeGrunnlag
 import no.nav.bidrag.beregn.felles.inntekt.InntektPeriodeGrunnlagUtenInntektType
 import no.nav.bidrag.beregn.felles.inntekt.PeriodisertInntekt
 import no.nav.bidrag.beregn.felles.periode.Periodiserer
-import no.nav.bidrag.domene.enums.Formaal
-import no.nav.bidrag.domene.enums.InntektType
-import no.nav.bidrag.domene.enums.Rolle
+import no.nav.bidrag.domene.enums.inntekt.Inntektstype
+import no.nav.bidrag.domene.enums.rolle.Rolle
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.domene.enums.vedtak.Formål
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.LocalDate
@@ -28,7 +28,7 @@ object InntektUtil {
     @JvmStatic
     fun validerInntekter(
         inntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlag>,
-        formaal: Formaal,
+        formaal: Formål,
         rolle: Rolle,
     ): List<Avvik> {
         val avvikListe = mutableListOf<Avvik>()
@@ -217,7 +217,7 @@ object InntektUtil {
         // Danner liste over alle inntekter av type UTVIDET_BARNETRYGD
         val justertInntektPeriodeGrunnlagListeUtvidetBarnetrygd =
             justertInntektPeriodeGrunnlagListeAlleInntekter
-                .filter { it.type == InntektType.UTVIDET_BARNETRYGD.name }
+                .filter { it.type == Inntektstype.UTVIDET_BARNETRYGD.name }
                 .toList()
 
         // Hvis det ikke finnes inntekter av type UTVIDET_BARNETRYGD, returnerer den samme listen som ble sendt inn
@@ -236,10 +236,10 @@ object InntektUtil {
         // Lager filter over de sjablonene som skal brukes (0004, 0030, 0031, 0039)
         val sjablonFilter =
             listOf(
-                SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELOP,
-                SjablonTallNavn.OVRE_INNTEKTSGRENSE_IKKE_I_SKATTEPOSISJON_BELOP,
-                SjablonTallNavn.NEDRE_INNTEKTSGRENSE_FULL_SKATTEPOSISJON_BELOP,
-                SjablonTallNavn.FORDEL_SAERFRADRAG_BELOP,
+                SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELØP,
+                SjablonTallNavn.ØVRE_INNTEKTSGRENSE_IKKE_I_SKATTEPOSISJON_BELØP,
+                SjablonTallNavn.NEDRE_INNTEKTSGRENSE_FULL_SKATTEPOSISJON_BELØP,
+                SjablonTallNavn.FORDEL_SÆRFRADRAG_BELØP,
             )
 
         // Filtrerer sjabloner og justerer datoer
@@ -288,25 +288,25 @@ object InntektUtil {
                                 finnSjablonverdi(
                                     periode = it.getPeriode(),
                                     justertsjablonListe = justertSjablonListe,
-                                    sjablonTallNavn = SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELOP,
+                                    sjablonTallNavn = SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELØP,
                                 ),
                             sjablon0030OvreInntektsgrenseBelop =
                                 finnSjablonverdi(
                                     periode = it.getPeriode(),
                                     justertsjablonListe = justertSjablonListe,
-                                    sjablonTallNavn = SjablonTallNavn.OVRE_INNTEKTSGRENSE_IKKE_I_SKATTEPOSISJON_BELOP,
+                                    sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_IKKE_I_SKATTEPOSISJON_BELØP,
                                 ),
                             sjablon0031NedreInntektsgrenseBelop =
                                 finnSjablonverdi(
                                     periode = it.getPeriode(),
                                     justertsjablonListe = justertSjablonListe,
-                                    sjablonTallNavn = SjablonTallNavn.NEDRE_INNTEKTSGRENSE_FULL_SKATTEPOSISJON_BELOP,
+                                    sjablonTallNavn = SjablonTallNavn.NEDRE_INNTEKTSGRENSE_FULL_SKATTEPOSISJON_BELØP,
                                 ),
                             sjablon0039FordelSaerfradragBelop =
                                 finnSjablonverdi(
                                     periode = it.getPeriode(),
                                     justertsjablonListe = justertSjablonListe,
-                                    sjablonTallNavn = SjablonTallNavn.FORDEL_SAERFRADRAG_BELOP,
+                                    sjablonTallNavn = SjablonTallNavn.FORDEL_SÆRFRADRAG_BELØP,
                                 ),
                             deltFordel =
                                 finnDeltFordel(
@@ -346,7 +346,7 @@ object InntektUtil {
         periode: Periode,
         justertInntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlagUtenInntektType>,
     ) = justertInntektPeriodeGrunnlagListe
-        .filter { it.getPeriode().overlapperMed(periode) && it.type != InntektType.UTVIDET_BARNETRYGD.name }
+        .filter { it.getPeriode().overlapperMed(periode) && it.type != Inntektstype.UTVIDET_BARNETRYGD.name }
         .map(InntektPeriodeGrunnlagUtenInntektType::belop)
         .fold(BigDecimal.ZERO) { acc, belop -> acc + belop }
 
@@ -365,7 +365,7 @@ object InntektUtil {
         periode: Periode,
         justertInntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlagUtenInntektType>,
     ) = justertInntektPeriodeGrunnlagListe.firstOrNull {
-        it.getPeriode().overlapperMed(periode) && it.type == InntektType.UTVIDET_BARNETRYGD.name
+        it.getPeriode().overlapperMed(periode) && it.type == Inntektstype.UTVIDET_BARNETRYGD.name
     }?.deltFordel ?: false
 
     // Finner verdien til flagget 'Skatteklasse 2' i en gitt periode
@@ -373,7 +373,7 @@ object InntektUtil {
         periode: Periode,
         justertInntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlagUtenInntektType>,
     ) = justertInntektPeriodeGrunnlagListe.firstOrNull {
-        it.getPeriode().overlapperMed(periode) && it.type == InntektType.UTVIDET_BARNETRYGD.name
+        it.getPeriode().overlapperMed(periode) && it.type == Inntektstype.UTVIDET_BARNETRYGD.name
     }?.skatteklasse2 ?: false
 
     // Beregner fordel særfradrag
@@ -432,13 +432,13 @@ object InntektUtil {
         var forrigeDatoFom = periodisertInntektListe[0].periode.datoFom
         var forrigeDatoTil = periodisertInntektListe[0].periode.datoTil
         var forrigeBelop = periodisertInntektListe[0].fordelSaerfradragBelop
-        var inntektType: InntektType
+        var inntektType: Inntektstype
         periodisertInntektListe.forEach {
             if (forrigeBelop.compareTo(it.fordelSaerfradragBelop) != 0) {
                 if (forrigeBelop.compareTo(BigDecimal.ZERO) != 0) {
 // TODO Må enten ha FORDEL_SKATTEKLASSE2 og FORDEL_SAERFRADRAG_ENSLIG_FORSORGER som egne inntektstyper eller forutsette at denne logikken flyttes til bidrag-behandling
 // TODO InntetkType.AAP er ikke gyldig her. Har bare satt den for at koden skal kompilere
-                    inntektType = InntektType.AAP
+                    inntektType = Inntektstype.AAP
 //                        if (forrigeDatoFom.isBefore(TIL_DATO_FORDEL_SKATTEKLASSE2)) InntektType.FORDEL_SKATTEKLASSE2 else InntektType.FORDEL_SAERFRADRAG_ENSLIG_FORSORGER
                     inntektListeSaerfradragEnsligForsorger.add(
                         InntektPeriodeGrunnlagUtenInntektType(
@@ -459,7 +459,7 @@ object InntektUtil {
         if (forrigeBelop.compareTo(BigDecimal.ZERO) != 0) {
 // TODO Må enten ha FORDEL_SKATTEKLASSE2 og FORDEL_SAERFRADRAG_ENSLIG_FORSORGER som egne inntektstyper eller forutsette at denne logikken flyttes til bidrag-behandling
 // TODO InntetkType.AAP er ikke gyldig her. Har bare satt den for at koden skal kompilere
-            inntektType = InntektType.AAP
+            inntektType = Inntektstype.AAP
 //                if (forrigeDatoFom.isBefore(TIL_DATO_FORDEL_SKATTEKLASSE2)) InntektType.FORDEL_SKATTEKLASSE2 else InntektType.FORDEL_SAERFRADRAG_ENSLIG_FORSORGER
             inntektListeSaerfradragEnsligForsorger.add(
                 InntektPeriodeGrunnlagUtenInntektType(
@@ -477,7 +477,7 @@ object InntektUtil {
     }
 
     private fun lagReferanse(
-        inntektType: InntektType,
+        inntektType: Inntektstype,
         datoFom: LocalDate,
     ) = "Beregnet_Inntekt_" + inntektType.name + "_" + datoFom.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
 }
