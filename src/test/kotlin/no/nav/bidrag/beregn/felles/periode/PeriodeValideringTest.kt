@@ -2,7 +2,7 @@ package no.nav.bidrag.beregn.felles.periode
 
 import no.nav.bidrag.beregn.felles.bo.Periode
 import no.nav.bidrag.beregn.felles.util.PeriodeUtil
-import no.nav.bidrag.domene.enums.Avvikstype
+import no.nav.bidrag.domene.enums.beregning.Avvikstype
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.DisplayName

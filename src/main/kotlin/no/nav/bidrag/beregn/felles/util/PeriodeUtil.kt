@@ -2,7 +2,7 @@ package no.nav.bidrag.beregn.felles.util
 
 import no.nav.bidrag.beregn.felles.bo.Avvik
 import no.nav.bidrag.beregn.felles.bo.Periode
-import no.nav.bidrag.domene.enums.Avvikstype
+import no.nav.bidrag.domene.enums.beregning.Avvikstype
 import java.time.LocalDate
 
 object PeriodeUtil {

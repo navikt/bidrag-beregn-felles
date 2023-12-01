@@ -8,7 +8,7 @@ import no.nav.bidrag.beregn.felles.bo.SjablonSingelNokkelSingelInnhold
 import no.nav.bidrag.beregn.felles.bo.TrinnvisSkattesats
 import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
-import no.nav.bidrag.domene.enums.sjablon.SjablonNokkelNavn
+import no.nav.bidrag.domene.enums.sjablon.SjablonNøkkelNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import java.math.BigDecimal
 import java.util.Comparator.comparing
@@ -55,7 +55,7 @@ object SjablonUtil {
         sjablonListe: List<Sjablon>,
         sjablonNavn: SjablonNavn,
         sjablonNokkelListe: List<SjablonNokkel>,
-        sjablonNokkelNavn: SjablonNokkelNavn,
+        sjablonNokkelNavn: SjablonNøkkelNavn,
         sjablonNokkelVerdi: Int,
         sjablonInnholdNavn: SjablonInnholdNavn,
     ): BigDecimal {
@@ -103,7 +103,7 @@ object SjablonUtil {
         val inntektGrenseListe =
             finnSjablonInnholdVerdiListe(
                 sjablonInnholdListe = sjablonInnholdListe,
-                sjablonInnholdNavn = SjablonInnholdNavn.INNTEKTSGRENSE_BELOP,
+                sjablonInnholdNavn = SjablonInnholdNavn.INNTEKTSGRENSE_BELØP,
             )
         val satsListe =
             finnSjablonInnholdVerdiListe(
@@ -176,7 +176,7 @@ object SjablonUtil {
     // Brukes av sjabloner som har ett nøkkelobjekt med eksakt match og flere innholdobjekter (Samværsfradrag).
     private fun mapTilSingelListeNokkelSortert(
         filtrertSjablonListe: List<Sjablon>,
-        sjablonNokkelNavn: SjablonNokkelNavn,
+        sjablonNokkelNavn: SjablonNøkkelNavn,
     ): List<SjablonSingelNokkel> =
         filtrertSjablonListe
             .map {
