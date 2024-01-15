@@ -44,7 +44,7 @@
     <repositories>
         <repository>
             <id>github</id>
-            <url>https://maven.pkg.github.com/navikt/bidrag-felles</url>
+            <url>https://maven.pkg.github.com/navikt/bidrag-commons</url>
         </repository>
     </repositories>
     <distributionManagement>
