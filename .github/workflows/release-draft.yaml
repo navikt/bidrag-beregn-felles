@@ -14,7 +14,6 @@ permissions:
 
 env:
   publish: ${{github.ref == 'refs/heads/main' && !startsWith(github.ref, 'refs/dependabot')}}
-
 jobs:
   build-artifact:
     name: "Build and run tests"
@@ -32,7 +31,8 @@ jobs:
           java-version: 21
           distribution: 'temurin'
           cache: 'maven'
-
+          server-username: x-access-token
+          server-password: ${{ secrets.GITHUB_TOKEN }}
       - name: Resolve/Update Dependencies
         run: mvn -B -q -fae package dependency:resolve-plugins dependency:go-offline
 
