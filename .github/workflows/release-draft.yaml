@@ -24,18 +24,14 @@ jobs:
           echo ${{ github.ref }}
           echo ${{ github.base_ref }}
           echo ${{ github.head_ref }}
+          echo ${{ env.GITHUB_ACTOR }}
+
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
           java-version: 21
           distribution: 'temurin'
           cache: 'maven'
-      - uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
 
       - name: Resolve/Update Dependencies
         run: mvn -B -q -fae package dependency:resolve-plugins dependency:go-offline
