@@ -31,8 +31,6 @@ jobs:
           java-version: 21
           distribution: 'temurin'
           cache: 'maven'
-          server-username: x-access-token
-          server-password: ${{ secrets.GITHUB_TOKEN }}
       - name: Resolve/Update Dependencies
         run: mvn -B -q -fae package dependency:resolve-plugins dependency:go-offline
 
