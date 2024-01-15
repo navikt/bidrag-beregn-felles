@@ -95,10 +95,6 @@
                 </dependencies>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-            </plugin>
-            <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
             </plugin>
         </plugins>
