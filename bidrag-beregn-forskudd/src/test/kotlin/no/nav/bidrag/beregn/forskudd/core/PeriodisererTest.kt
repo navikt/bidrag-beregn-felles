@@ -1,7 +1,7 @@
 package no.nav.bidrag.beregn.forskudd.core
 
-import no.nav.bidrag.beregn.felles.bo.Periode
-import no.nav.bidrag.beregn.felles.periode.Periodiserer
+import no.nav.bidrag.beregn.core.bo.Periode
+import no.nav.bidrag.beregn.core.periode.Periodiserer
 import no.nav.bidrag.beregn.forskudd.core.bo.BarnIHusstandenPeriode
 import no.nav.bidrag.beregn.forskudd.core.bo.BostatusPeriode
 import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode

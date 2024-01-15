@@ -1,7 +1,7 @@
 package no.nav.bidrag.beregn.forskudd.core
 
-import no.nav.bidrag.beregn.felles.bo.Avvik
-import no.nav.bidrag.beregn.felles.bo.Periode
+import no.nav.bidrag.beregn.core.bo.Avvik
+import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggForskuddGrunnlag
 import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggForskuddGrunnlagMedAvvik
 import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggForskuddGrunnlagMedFlereInntekterISammePeriode

@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.felles.bo
+package no.nav.bidrag.beregn.core.bo
 
 import no.nav.bidrag.domene.enums.beregning.Avvikstype
 

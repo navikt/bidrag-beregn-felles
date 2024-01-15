@@ -34,7 +34,7 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
       - name: Resolve/Update Dependencies
-        run: mvn --settings .github/.m2/maven-settings.xml -B -q -fae package dependency:resolve-plugins dependency:go-offline
+        run: mvn --settings .github/.m2/maven-settings.xml -B -q -fae -Dmaven.test.skip=true package dependency:resolve-plugins dependency:go-offline
 
       - name: Build (and run tests)
         run: mvn --settings .github/.m2/maven-settings.xml -B -q -fae clean install

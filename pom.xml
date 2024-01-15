@@ -35,6 +35,9 @@
         <maven-jar.version>3.3.0</maven-jar.version>
         <flatten-maven.version>1.5.0</flatten-maven.version>
         <build-helper-maven.version>3.5.0</build-helper-maven.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <modules>
@@ -78,6 +81,11 @@
             <dependency>
                 <groupId>no.nav.bidrag</groupId>
                 <artifactId>bidrag-transport-felles</artifactId>
+                <version>${bidrag-felles.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.bidrag</groupId>
+                <artifactId>bidrag-commons-felles</artifactId>
                 <version>${bidrag-felles.version}</version>
             </dependency>
             <dependency>

@@ -1,7 +1,7 @@
-package no.nav.bidrag.beregn.felles.util
+package no.nav.bidrag.beregn.core.util
 
-import no.nav.bidrag.beregn.felles.bo.Avvik
-import no.nav.bidrag.beregn.felles.bo.Periode
+import no.nav.bidrag.beregn.core.bo.Avvik
+import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.domene.enums.beregning.Avvikstype
 import java.time.LocalDate
 

@@ -1,11 +1,11 @@
-package no.nav.bidrag.beregn.felles.util
+package no.nav.bidrag.beregn.core.util
 
-import no.nav.bidrag.beregn.felles.bo.Sjablon
-import no.nav.bidrag.beregn.felles.bo.SjablonInnhold
-import no.nav.bidrag.beregn.felles.bo.SjablonNokkel
-import no.nav.bidrag.beregn.felles.bo.SjablonSingelNokkel
-import no.nav.bidrag.beregn.felles.bo.SjablonSingelNokkelSingelInnhold
-import no.nav.bidrag.beregn.felles.bo.TrinnvisSkattesats
+import no.nav.bidrag.beregn.core.bo.Sjablon
+import no.nav.bidrag.beregn.core.bo.SjablonInnhold
+import no.nav.bidrag.beregn.core.bo.SjablonNokkel
+import no.nav.bidrag.beregn.core.bo.SjablonSingelNokkel
+import no.nav.bidrag.beregn.core.bo.SjablonSingelNokkelSingelInnhold
+import no.nav.bidrag.beregn.core.bo.TrinnvisSkattesats
 import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonNøkkelNavn

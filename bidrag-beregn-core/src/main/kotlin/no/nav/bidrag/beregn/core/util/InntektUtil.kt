@@ -1,12 +1,12 @@
-package no.nav.bidrag.beregn.felles.util
+package no.nav.bidrag.beregn.core.util
 
-import no.nav.bidrag.beregn.felles.bo.Avvik
-import no.nav.bidrag.beregn.felles.bo.Periode
-import no.nav.bidrag.beregn.felles.bo.SjablonPeriode
-import no.nav.bidrag.beregn.felles.inntekt.InntektPeriodeGrunnlag
-import no.nav.bidrag.beregn.felles.inntekt.InntektPeriodeGrunnlagUtenInntektType
-import no.nav.bidrag.beregn.felles.inntekt.PeriodisertInntekt
-import no.nav.bidrag.beregn.felles.periode.Periodiserer
+import no.nav.bidrag.beregn.core.bo.Avvik
+import no.nav.bidrag.beregn.core.bo.Periode
+import no.nav.bidrag.beregn.core.bo.SjablonPeriode
+import no.nav.bidrag.beregn.core.inntekt.InntektPeriodeGrunnlag
+import no.nav.bidrag.beregn.core.inntekt.InntektPeriodeGrunnlagUtenInntektType
+import no.nav.bidrag.beregn.core.inntekt.PeriodisertInntekt
+import no.nav.bidrag.beregn.core.periode.Periodiserer
 import no.nav.bidrag.domene.enums.inntekt.Inntektstype
 import no.nav.bidrag.domene.enums.rolle.Rolle
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn

@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.felles.periode
+package no.nav.bidrag.beregn.core.periode
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll

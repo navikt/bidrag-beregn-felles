@@ -1,9 +1,9 @@
 package no.nav.bidrag.beregn.forskudd.core.periode
 
-import no.nav.bidrag.beregn.felles.bo.Avvik
-import no.nav.bidrag.beregn.felles.bo.Periode
-import no.nav.bidrag.beregn.felles.periode.Periodiserer
-import no.nav.bidrag.beregn.felles.util.PeriodeUtil
+import no.nav.bidrag.beregn.core.bo.Avvik
+import no.nav.bidrag.beregn.core.bo.Periode
+import no.nav.bidrag.beregn.core.periode.Periodiserer
+import no.nav.bidrag.beregn.core.util.PeriodeUtil
 import no.nav.bidrag.beregn.forskudd.core.ForskuddBeregning
 import no.nav.bidrag.beregn.forskudd.core.bo.Alder
 import no.nav.bidrag.beregn.forskudd.core.bo.AlderPeriode

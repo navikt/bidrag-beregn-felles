@@ -1,8 +1,8 @@
 package no.nav.bidrag.beregn.forskudd.core.bo
 
-import no.nav.bidrag.beregn.felles.bo.Periode
-import no.nav.bidrag.beregn.felles.bo.SjablonPeriode
-import no.nav.bidrag.beregn.felles.bo.SjablonPeriodeNavnVerdi
+import no.nav.bidrag.beregn.core.bo.Periode
+import no.nav.bidrag.beregn.core.bo.SjablonPeriode
+import no.nav.bidrag.beregn.core.bo.SjablonPeriodeNavnVerdi
 import no.nav.bidrag.domene.enums.beregning.ResultatkodeForskudd
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.enums.person.Sivilstandskode

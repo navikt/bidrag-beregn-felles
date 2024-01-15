@@ -1,11 +1,11 @@
-package no.nav.bidrag.beregn.felles.inntekt
+package no.nav.bidrag.beregn.core.inntekt
 
-import no.nav.bidrag.beregn.felles.TestUtil.byggInntektGrunnlagUtvidetBarnetrygdFull
-import no.nav.bidrag.beregn.felles.TestUtil.byggInntektGrunnlagUtvidetBarnetrygdOvergang
-import no.nav.bidrag.beregn.felles.TestUtil.byggSjablontallGrunnlagUtvidetBarnetrygdFull
-import no.nav.bidrag.beregn.felles.TestUtil.byggSjablontallGrunnlagUtvidetBarnetrygdOvergang
-import no.nav.bidrag.beregn.felles.bo.Avvik
-import no.nav.bidrag.beregn.felles.util.InntektUtil.behandlUtvidetBarnetrygd
+import no.nav.bidrag.beregn.core.TestUtil.byggInntektGrunnlagUtvidetBarnetrygdFull
+import no.nav.bidrag.beregn.core.TestUtil.byggInntektGrunnlagUtvidetBarnetrygdOvergang
+import no.nav.bidrag.beregn.core.TestUtil.byggSjablontallGrunnlagUtvidetBarnetrygdFull
+import no.nav.bidrag.beregn.core.TestUtil.byggSjablontallGrunnlagUtvidetBarnetrygdOvergang
+import no.nav.bidrag.beregn.core.bo.Avvik
+import no.nav.bidrag.beregn.core.util.InntektUtil.behandlUtvidetBarnetrygd
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.DisplayName

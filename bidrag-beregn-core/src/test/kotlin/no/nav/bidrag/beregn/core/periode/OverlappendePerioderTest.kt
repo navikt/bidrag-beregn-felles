@@ -1,6 +1,6 @@
-package no.nav.bidrag.beregn.felles.periode
+package no.nav.bidrag.beregn.core.periode
 
-import no.nav.bidrag.beregn.felles.bo.Periode
+import no.nav.bidrag.beregn.core.bo.Periode
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

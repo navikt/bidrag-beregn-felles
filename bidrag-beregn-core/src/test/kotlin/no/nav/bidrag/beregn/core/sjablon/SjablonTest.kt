@@ -1,8 +1,8 @@
-package no.nav.bidrag.beregn.felles.sjablon
+package no.nav.bidrag.beregn.core.sjablon
 
-import no.nav.bidrag.beregn.felles.TestUtil.byggSjabloner
-import no.nav.bidrag.beregn.felles.bo.SjablonNokkel
-import no.nav.bidrag.beregn.felles.util.SjablonUtil
+import no.nav.bidrag.beregn.core.TestUtil.byggSjabloner
+import no.nav.bidrag.beregn.core.bo.SjablonNokkel
+import no.nav.bidrag.beregn.core.util.SjablonUtil
 import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonNøkkelNavn

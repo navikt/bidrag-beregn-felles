@@ -10,11 +10,11 @@ import no.nav.bidrag.domene.enums.beregning.ResultatkodeForskudd
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Assertions.assertAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.function.Executable
-import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
@@ -24,7 +24,6 @@ import java.time.LocalDate
 @ExtendWith(MockitoExtension::class)
 @DisplayName("ForskuddCoreTest")
 internal class ForskuddCoreTest {
-    @InjectMocks
     private lateinit var forskuddCore: ForskuddCore
 
     @Mock
@@ -33,6 +32,11 @@ internal class ForskuddCoreTest {
     private val beregnForskuddGrunnlagCore = byggForskuddGrunnlagCore()
     private val beregnForskuddResultat = byggForskuddResultat()
     private val avvikListe = byggAvvikListe()
+
+    @BeforeEach
+    fun initMock()  {
+        forskuddCore = ForskuddCore(forskuddPeriode)
+    }
 
     @Test
     @DisplayName("Skal beregne forskudd")

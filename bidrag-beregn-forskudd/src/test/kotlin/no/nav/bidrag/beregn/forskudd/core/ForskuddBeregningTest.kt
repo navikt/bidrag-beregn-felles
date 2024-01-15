@@ -1,7 +1,7 @@
 package no.nav.bidrag.beregn.forskudd.core
 
-import no.nav.bidrag.beregn.felles.bo.SjablonPeriode
-import no.nav.bidrag.beregn.felles.util.SjablonUtil
+import no.nav.bidrag.beregn.core.bo.SjablonPeriode
+import no.nav.bidrag.beregn.core.util.SjablonUtil
 import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggSjablonPeriodeListe
 import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggSjablonPeriodeNavnVerdiListe
 import no.nav.bidrag.beregn.forskudd.core.bo.Alder

@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.felles.dto
+package no.nav.bidrag.beregn.core.dto
 
 import java.math.BigDecimal
 import java.time.LocalDate

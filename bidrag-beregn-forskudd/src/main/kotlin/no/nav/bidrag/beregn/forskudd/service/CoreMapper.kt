@@ -1,8 +1,8 @@
 package no.nav.bidrag.beregn.forskudd.service
 
-import no.nav.bidrag.beregn.felles.dto.PeriodeCore
-import no.nav.bidrag.beregn.felles.dto.SjablonInnholdCore
-import no.nav.bidrag.beregn.felles.dto.SjablonPeriodeCore
+import no.nav.bidrag.beregn.core.dto.PeriodeCore
+import no.nav.bidrag.beregn.core.dto.SjablonInnholdCore
+import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BarnIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BostatusPeriodeCore
