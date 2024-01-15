@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: write
+  id-token: "write"
 
 env:
   publish: ${{github.ref == 'refs/heads/main' && !startsWith(github.ref, 'refs/dependabot')}}
