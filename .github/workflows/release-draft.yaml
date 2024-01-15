@@ -29,12 +29,18 @@ jobs:
           java-version: 21
           distribution: 'temurin'
           cache: 'maven'
+      - uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
 
       - name: Resolve/Update Dependencies
-        run: mvn package dependency:resolve-plugins dependency:go-offline
+        run: mvn -B -q -fae package dependency:resolve-plugins dependency:go-offline
 
       - name: Build (and run tests)
-        run: mvn clean install
+        run: mvn -B -q -fae clean install
 
       - name: Save test results
         run: |
