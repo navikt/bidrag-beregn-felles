@@ -1,0 +1,76 @@
+{
+  "periode": {
+    "fom": "2020-12",
+    "til": "2021-01"
+  },
+  "søknadsbarnReferanse": "Person_Søknadsbarn_20201201",
+  "grunnlagListe": [
+    {
+      "referanse": "Person_Søknadsbarn_20201201",
+      "type": "PERSON",
+      "grunnlagsreferanseListe": [],
+      "innhold": {
+        "ident": "11111111110",
+        "navn": "Trengende Søknadsbarn",
+        "fødselsdato": "2015-01-01"
+      }
+    },
+    {
+      "referanse": "Person_Bidragsmottaker_20201201",
+      "type": "PERSON",
+      "grunnlagsreferanseListe": [],
+      "innhold": {
+        "ident": "22222222222",
+        "navn": "Søkende Bidragsmottaker",
+        "fødselsdato": "1982-05-05"
+      }
+    },
+    {
+      "referanse": "Bostatus_Søknadsbarn_20201201",
+      "type": "BOSTATUS_PERIODE",
+      "grunnlagsreferanseListe": [
+        "Person_Søknadsbarn_20201201"
+      ],
+      "innhold": {
+        "periode": {
+          "fom": "2020-12",
+          "til": "2021-01"
+        },
+        "bostatus": "MED_FORELDER",
+        "manueltRegistrert": false
+      }
+    },
+    {
+      "referanse": "BeregningInntektRapportering_Ainntekt_20201201",
+      "type": "BEREGNING_INNTEKT_RAPPORTERING_PERIODE",
+      "grunnlagsreferanseListe": [
+        "Person_Bidragsmottaker_20201201"
+      ],
+      "innhold": {
+        "periode": {
+          "fom": "2020-12",
+          "til": "2021-01"
+        },
+        "inntektsrapportering": "AINNTEKT",
+        "gjelderBarn": null,
+        "beløp": 290000,
+        "manueltRegistrert": false,
+        "valgt": true
+      }
+    },
+    {
+      "referanse": "Sivilstand_20201201",
+      "type": "SIVILSTAND_PERIODE",
+      "grunnlagsreferanseListe": [
+        "Person_Bidragsmottaker_20201201"
+      ],
+      "innhold": {
+        "periode": {
+          "fom": "2020-12",
+          "til": "2021-01"
+        },
+        "sivilstand": "BOR_ALENE_MED_BARN"
+      }
+    }
+  ]
+}

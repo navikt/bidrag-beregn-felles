@@ -61,17 +61,17 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
 
         if (resultatFraCore.avvikListe.isNotEmpty()) {
             val avvikTekst = resultatFraCore.avvikListe.joinToString("; ") { it.avvikTekst }
-            logger.warn("Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: $avvikTekst")
-            secureLogger.warn("Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: $avvikTekst")
-            secureLogger.info(
+            logger.warn { "Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: $avvikTekst" }
+            secureLogger.warn { "Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: $avvikTekst" }
+            secureLogger.info {
                 "Forskudd - grunnlag for beregning: " + System.lineSeparator() +
                     "beregnDatoFra= " + grunnlagTilCore.beregnDatoFra + System.lineSeparator() +
                     "beregnDatoTil= " + grunnlagTilCore.beregnDatoTil + System.lineSeparator() +
                     "soknadBarn= " + grunnlagTilCore.soknadBarn + System.lineSeparator() +
                     "barnIHusstandenPeriodeListe= " + grunnlagTilCore.barnIHusstandenPeriodeListe + System.lineSeparator() +
                     "inntektPeriodeListe= " + grunnlagTilCore.inntektPeriodeListe + System.lineSeparator() +
-                    "sivilstandPeriodeListe= " + grunnlagTilCore.sivilstandPeriodeListe + System.lineSeparator(),
-            )
+                    "sivilstandPeriodeListe= " + grunnlagTilCore.sivilstandPeriodeListe + System.lineSeparator()
+            }
             throw IllegalArgumentException("Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: $avvikTekst")
         }
 
