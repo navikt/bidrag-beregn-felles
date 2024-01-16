@@ -14,7 +14,20 @@ permissions:
   pull-requests: write
 
 jobs:
+  echo:
+    name: "Echo environment"
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo ${{ github }}
+          echo ${{ github.ref }}
+          echo ${{ github.base_ref }}
+          echo ${{ github.head_ref }}
+          echo ${{ env.GITHUB_ACTOR }}
+
   build-release:
     name: "Build and release package"
     uses: navikt/bidrag-workflow/.github/workflows/maven_release_drafter.yaml@workflow_publish
     secrets: inherit
+    with:
+      publish: true
