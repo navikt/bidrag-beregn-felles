@@ -23,6 +23,8 @@
         <bidrag-felles.version>2024.0115.123257</bidrag-felles.version>
         <spring-boot.version>3.2.1</spring-boot.version>
         <kotlin-logging-jvm.version>6.0.2</kotlin-logging-jvm.version>
+        <mockito-kotlin.version>5.2.1</mockito-kotlin.version>
+        <mockk.version>1.13.9</mockk.version>
 
         <!-- plugins -->
         <maven-compiler.version>3.12.1</maven-compiler.version>
@@ -143,7 +145,18 @@
                 <version>${kotlin.version}</version>
                 <scope>test</scope>
             </dependency>
-
+            <dependency>
+                <groupId>org.mockito.kotlin</groupId>
+                <artifactId>mockito-kotlin</artifactId>
+                <version>${mockito-kotlin.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.mockk</groupId>
+                <artifactId>mockk-jvm</artifactId>
+                <version>${mockk.version}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
