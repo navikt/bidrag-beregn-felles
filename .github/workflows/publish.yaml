@@ -1,4 +1,4 @@
-name: Publish artifacts2
+name: Publish artifacts
 on:
   release:
     types: [published]
@@ -13,7 +13,7 @@ permissions:
 jobs:
   build-and-release:
     name: Build and release package
-    uses: navikt/bidrag-workflow/.github/workflows/maven_publish.yaml@workflow_publish
+    uses: navikt/bidrag-workflow/.github/workflows/maven_publish.yaml@main
     with:
       version: ${{env.VERSION}}
     secrets: inherit

@@ -27,7 +27,7 @@ jobs:
 
   build-release:
     name: "Build and release package"
-    uses: navikt/bidrag-workflow/.github/workflows/maven_release_drafter.yaml@workflow_publish
+    uses: navikt/bidrag-workflow/.github/workflows/maven_release_drafter.yaml@main
     secrets: inherit
     with:
       publish: true
