@@ -34,7 +34,7 @@ internal class ForskuddCoreTest {
     private val avvikListe = byggAvvikListe()
 
     @BeforeEach
-    fun initMock()  {
+    fun initMock() {
         forskuddCore = ForskuddCore(forskuddPeriode)
     }
 

@@ -1,0 +1,825 @@
+andelIFellesTapVedSalgAvAndelISDF:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+andreFradragsberettigedeKostnader:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+annenSkattepliktigKapitalinntektFraAnnetFinansprodukt:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+annenSkattepliktigKapitalinntektFraVirtuellValuta:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+dagpengerForNaeringsdrivendeOgFisker:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+dagpengerVedSykehusoppholdMvFraBarneforsikring:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+fortsettelsesforsikring:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+forvaltningskostnaderFinans:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+forvaltningskostnadKnyttetTilAksjesparekonto:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+forvaltningskostnadKnyttetTilFondskonto:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+forvaltningskostnadKnyttetTilVerdipapirfond:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+fradragsberettigetTapPaaKapitalforsikringsavtale:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+fradragsberettigetTapVedRealisasjonAvFastEiendom:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+fradragsberettigetTapVedRealisasjonAvFastEiendomIUtlandet:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+gevinstValutalaan:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+gevinstVedRealisasjonAvAksje:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+gevinstVedRealisasjonAvAksjeOgVerdipapirfondAksjedel:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+gevinstVedRealisasjonAvAksjesparekonto:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+gevinstVedRealisasjonAvAndelIAksjedelIVerdipapirfond:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+gevinstVedRealisasjonAvAndelIRentedelIVerdipapirfond:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+gevinstVedRealisasjonAvAnnetFinansprodukt:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+gevinstVedRealisasjonAvFastEiendomMv:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2018
+    tom: 9999
+gevinstVedRealisasjonAvFastEiendomMvIUtlandet:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+gevinstVedRealisasjonAvObligasjonerSertifikaterMv:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+gevinstVedRealisasjonAvObligasjonVerdipapirfondRentedelMv:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+gevinstVedRealisasjonAvOgUttakFraAksjedelIFondskonto:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+gevinstVedRealisasjonAvOgUttakFraRentedelIFondskonto:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+gevinstVedRealisasjonAvVerdipapirfondsandelIKombifondKnyttetTilAksjedel:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+gevinstVedRealisasjonAvVerdipapirfondsandelKnyttetTilAksjedel:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 2018
+gevinstVedRealisasjonAvVirtuellValuta:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+gevinstVedSalgAvAndelINOKUS:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2018
+    tom: 9999
+gevinstVedSalgAvAndelISDF:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+inntektFraGevinstOgTapskonto:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+inntektFraLottEllerPartTilFiskerOgFangstmann:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2018
+    tom: 9999
+inntektsfoeringAvNegativSaldo:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+inntektsfradragAvRentefordelPaaLaanIArbeidsforhold:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+inntektsfradragAvRentefordelPaaLaanIPensjonsforhold:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+inntektVedUtleieAvFritidseiendomSomSkattepliktigeHarBrukt:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2018
+    tom: 9999
+investeringIOppstartsselskap:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+kapitalinntektFraSkogbruk:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+kapitalkostnadFraSkogbruk:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+livrenterIArbeidsforhold:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+livrenterUtenforArbeidsforhold:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+mottattFesteavgift:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+naeringsinntektFraKompensasjonsytelseUtbetaltAvNavInnenAnnenNaering:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+naeringsinntektFraKompensasjonsytelseUtbetaltAvNavInnenBarnepassIBarnepasserensHjem:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+naeringsinntektFraKompensasjonsytelseUtbetaltAvNavInnenFiskeOgFangst:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+oevrigInntekt:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+opptjenteRenterFraPrivatUtestaaendeFordring:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+overskuddAvEnkeltpersonforetakInnenJordbrukGartneriPelsdyrMv:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2018
+    tom: 9999
+overskuddAvEnkeltpersonforetakInnenReindrift:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2018
+    tom: 9999
+overskuddAvEnkeltpersonforetakInnenSkiferproduksjon:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2018
+    tom: 9999
+overskuddAvEnkeltpersonforetakInnenSkogbruk:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+personinntektFraKompensasjonsytelseUtbetaltAvNavInnenAnnenNaering:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+personinntektFraKompensasjonsytelseUtbetaltAvNavInnenBarnepassIBarnepasserensHjem:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+personinntektFraKompensasjonsytelseUtbetaltAvNavInnenFiskeOgFangst:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+personinntektFraSDFInnenAnnenNaering:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2018
+    tom: 9999
+personinntektFraSDFInnenFiskeEllerBarnepassIBarnepasserensHjem:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2018
+    tom: 9999
+personinntektFraSkattefriLottMedTrygdeavgiftspliktForUtenlandskFisker:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+positivPersoninntektFraEnkeltpersonforetakPaaSvalbard:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+paaloepteRenterFraInkassoselskap:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+paaloepteRenterFraPrivatGjeld:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+renteinntektAvAnnetFinansprodukt:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+renteinntektAvLivsforsikring:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+renteinntektAvObligasjon:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+renteinntektAvObligasjonVerdipapirfondRentedelMv:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+renteinntektAvObligasjonVerdipapirfondRentedelMvIUtlandet:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+renteinntektAvSkadeforsikring:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+renteinntektAvVerdipapirfondsandel:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+renteinntektMedEkstrabeskatningForLaanTilSelskap:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2018
+    tom: 9999
+returAvPremieFraIndividuellPensjonssparing:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+returprovisjonKnyttetTilAksjesparekonto:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+returprovisjonKnyttetTilFondskonto:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+returprovisjonKnyttetTilVerdipapirfond:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+samledeAndreOpptjenteRenter:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+samledeAndrePaaloepteRenter:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+samledeOpptjenteRenterIInnenlandskeBanker:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+samledeOpptjenteRenterIUtenlandskeBanker:
+  - plussMinus: PLUSS
+    sekkepost: JA
+    fom: 2018
+    tom: 9999
+samledePaaloepteRenter:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+samledePaaloepteRenterPaaGjeldIInnenlandskeBanker:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+samledePaaloepteRenterPaaGjeldIUtlandet:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+samledeUfoererenterOgLivrenter:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+samledeUnderholdsbidrag:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 2018
+samletAndelAvFradragsberettigetFelleskostnadForBoligselskapEllerBoligsameie:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+samletAndelAvInntektIBoligselskapEllerBoligsameie:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+samletAnnenInntekt:
+  - plussMinus: PLUSS
+    sekkepost: JA
+    fom: 2015
+    tom: 2016
+samletAnnenRenteinntekt:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+samletAvkastningAvKapitalforsikringsavtale:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+samletFradragsberettigetUnderskuddVedUtleieAvFastEiendom:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+samletFremfoerbartUnderskuddFraTidligereAar:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+samletGevinstVedRealisasjonAvAndreFinansprodukter:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 2018
+samletGevinstVedRealisasjonAvVerdipapirfondsandelKnyttetTilRentedel:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 2018
+samletInntektFraSkattepliktigUtbytteForVerdipapirfondsandel:
+  - plussMinus: PLUSS
+    sekkepost: JA
+    fom: 2015
+    tom: 2016
+samletLottinntekt:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2017
+samletOpptjenteRenterIUtlandskeBanker:
+  - plussMinus: PLUSS
+    sekkepost: JA
+    fom: 2015
+    tom: 2017
+samletOverskuddAvDeltakerlignetSelskapInnenAnnenNaering:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2017
+samletOverskuddAvDeltakerlignetSelskapInnenFiskeEllerFamiliebarnehage:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2017
+samletOverskuddAvEnkeltpersonforetakInnenAnnenNaering:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+samletOverskuddAvEnkeltpersonforetakInnenFamiliebarnehageEllerDagmammaIEgetHjem:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+samletOverskuddAvEnkeltpersonforetakInnenFiskeOgFangst:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+samletOverskuddAvEnkeltpersonforetakInnenJordbrukGartneriOgPelsdyr:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2017
+samletOverskuddAvEnkeltpersonforetakInnenReindrift:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2017
+samletOverskuddAvEnkeltpersonforetakInnenSkiferproduksjon:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2017
+samletOverskuddAvSDFInnenAnnenNaering:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2018
+    tom: 9999
+samletOverskuddAvSDFInnenFiskeEllerFamiliebarnehage:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2018
+    tom: 9999
+samletPensjonsinnbetalingTilIndividuellPensjonsordning:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2016
+samletPersoninntektFraDeltakerlignetSelskapInnenAnnenNaering:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2017
+samletPersoninntektFraDeltakerlignetSelskapInnenFiskeEllerFamiliebarnehage:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2017
+samletPersoninntektFraEnkeltpersonforetakInnenFamiliebarnehageEllerDagmammaIEgetHjem:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+samletPersoninntektFraEnkeltpersonforetakInnenFiskeOgFangst:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+samletPersoninntektFraEnkeltpersonforetakInnenJordbrukReindriftSkiferproduksjonOgAnnenNaering:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+samletRenteinntektPaaLaanTilSelskapSomSkalEkstrabeskattes:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2017
+samletSkattepliktigAksjegevinstEllerGevinstVedRealisasjonAvObligasjonEllerVerdipapirfondsandel:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2016
+samletSkattepliktigGevinstVedRealisasjonAvObligasjonEllerVerdipapirfondsandel:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 2018
+samletSkattepliktigGevinstVedSalgAvAndelerIKNANSNOKUS:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2017
+samletSkattepliktigGevinstVedSalgAvFastEiendomMv:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2017
+samletSkattepliktigOverskuddAvUtleieAvFritidseiendom:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2017
+samletSkattepliktigOverskuddFraUtleieAvFastEiendom:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+samletSkattepliktigOverskuddFraUtleieAvFastEiendomIUtlandet:
+  - plussMinus: PLUSS
+    sekkepost: JA
+    fom: 2015
+    tom: 9999
+samletSkattepliktigUtbyttePaaAksjerIkkeRegistrertIVerdipapirsentralen:
+  - plussMinus: PLUSS
+    sekkepost: JA
+    fom: 2015
+    tom: 2016
+samletSkattepliktigUtbyttePaaAksjerRegistrertIVerdipapirsentralen:
+  - plussMinus: PLUSS
+    sekkepost: JA
+    fom: 2015
+    tom: 2016
+samletSkjermingsfradrag:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2017
+samletTapVedRealisasjonAvVerdipapirfondsandelKnyttetTilRentedel:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2017
+    tom: 2018
+samletTapVedSalgAvAksjer:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2016
+samletTapVedSalgAvFastEiendom:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2016
+samletTilleggsinntektForDeltakerlignetSelskapInnenAnnenNaering:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2016
+samletTilleggsinntektForDeltakerlignetSelskapInnenFiskeEllerFamiliebarnehage:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2016
+samletUnderskuddAvSDF:
+  - plussMinus: MINUS
+    sekkepost: JA
+    fom: 2019
+    tom: 9999
+samletUnderskuddAvSDFPaaSvalbard:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2018
+    tom: 2018
+samletUnderskuddINaeringsvirksomhet:
+  - plussMinus: MINUS
+    sekkepost: JA
+    fom: 2015
+    tom: 9999
+samletUnderskuddINaeringsvirksomhetPaaSvalbard:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2018
+    tom: 2018
+skattepliktigAksjegevinst:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 2018
+skattepliktigAvkastningEllerKundeutbytte:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+skattepliktigUnderholdsbidragUfoererenterOgLivrenter:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2016
+skattepliktigUtbytteFraAksjeIkkeRegistrertIVerdipapirsentralen:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+skattepliktigUtbytteFraAksjeINOKUSIkkeRegistrertIVerdipapirsentralen:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+skattepliktigUtbytteFraAksjeOgVerdipapirfondAksjedel:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+skattepliktigUtbytteFraAksjerRegistrertIVerdipapirsentralen:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 2018
+skattepliktigUtbytteFraVerdipapirfondsandel:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 2018
+skattepliktigUtbytteFraVerdipapirfondsandelTilBarn:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 2018
+skjermingsfradrag:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2018
+    tom: 9999
+tapValutalaan:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+tapVedRealisajonAvOgUttakFraAksjedelIFondskonto:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+tapVedRealisasjonAvAksje:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+tapVedRealisasjonAvAksjeOgVerdipapirfondAksjedel:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+tapVedRealisasjonAvAksjesparekonto:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+tapVedRealisasjonAvAndelIAksjedelIVerdipapirfond:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+tapVedRealisasjonAvAndelIRentedelIVerdipapirfond:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+tapVedRealisasjonAvAnnetFinansprodukt:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+tapVedRealisasjonAvObligasjoner:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+tapVedRealisasjonAvObligasjonVerdipapirfondRentedelMv:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+tapVedRealisasjonAvOgUttakFraRentedelIFondskonto:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+tapVedRealisasjonAvVerdipapirfondsandelIKombifondKnyttetTilAksjedel:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+tapVedRealisasjonAvVerdipapirfondsandelKnyttetTilAksjedel:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2017
+    tom: 2018
+tapVedRealisasjonAvVirtuellValuta:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+tapVedSalgAvAndelINOKUS:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+totalePaaloepteRenter:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2016
+totalePaaloepteRenterIUtlandet:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2016
+underholdsbidragFraTidligereEktefelle:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+underskuddAvEnkeltpersonforetakFordeltFraEktefelle:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+underskuddAvEnkeltpersonforetakPaaSvalbard:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+underskuddOverfoertFraBarnOgFordelt:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+utbytteFraAksje:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+utbytteFraAksjesparekonto:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 2018
+utbytteFraVerdipapirfond:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999

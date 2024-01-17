@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.forskudd.service.consumer.wiremockstub
+package no.nav.bidrag.beregn.forskudd.service.testdata
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper

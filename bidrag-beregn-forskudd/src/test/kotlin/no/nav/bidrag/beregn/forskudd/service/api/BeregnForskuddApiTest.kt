@@ -1,11 +1,11 @@
-package no.nav.bidrag.beregn.forskudd.service.controller
+package no.nav.bidrag.beregn.forskudd.service.api
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.beregn.forskudd.core.ForskuddCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore
 import no.nav.bidrag.beregn.forskudd.service.BeregnForskuddService
 import no.nav.bidrag.beregn.forskudd.service.TestUtil
-import no.nav.bidrag.beregn.forskudd.service.consumer.wiremockstub.SjablonApiStub
+import no.nav.bidrag.beregn.forskudd.service.testdata.SjablonApiStub
 import no.nav.bidrag.domene.enums.beregning.ResultatkodeForskudd
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import org.assertj.core.api.Assertions.assertThat
@@ -27,7 +27,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 @ExtendWith(MockitoExtension::class)
-internal class BeregnForskuddControllerIntegrationTest {
+internal class BeregnForskuddApiTest {
     private lateinit var url: String
     private lateinit var filnavn: String
 

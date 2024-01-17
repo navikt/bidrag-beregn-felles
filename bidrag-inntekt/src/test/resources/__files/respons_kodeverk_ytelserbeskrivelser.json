@@ -1,0 +1,580 @@
+{
+  "betydninger": {
+    "ektefelletilleggUfoeretrygd": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Ektefelletillegg uføretrygd",
+            "term": "Ektefelletillegg uføretrygd"
+          }
+        }
+      }
+    ],
+    "dagpengerTilFiskerSomBareHarHyre": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Dagpenger til fisker som bare har hyre",
+            "term": "Dagpenger til fisker som bare har hyre"
+          }
+        }
+      }
+    ],
+    "dagpengerVedArbeidsloeshet": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Dagpenger ved arbeidsløshet",
+            "term": "Dagpenger ved arbeidsløshet"
+          }
+        }
+      }
+    ],
+    "ufoereytelseEtteroppgjoer": [
+      {
+        "gyldigFra": "2015-11-09",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Uføreytelse etteroppgjør",
+            "term": "Uføreytelse etteroppgjør"
+          }
+        }
+      }
+    ],
+    "sykepengerTilFiskerSomBareHarHyre": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Sykepenger til fisker som bare har hyre",
+            "term": "Sykepenger til fisker som bare har hyre"
+          }
+        }
+      }
+    ],
+    "sykepenger": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Sykepenger fra folketrygden",
+            "term": "Sykepenger fra folketrygden"
+          }
+        }
+      }
+    ],
+    "arbeidsavklaringspenger": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Arbeidsavklaringspenger",
+            "term": "Arbeidsavklaringspenger"
+          }
+        }
+      }
+    ],
+    "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere": [
+      {
+        "gyldigFra": "2014-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Overgangsstønad til enslig mor eller far som begynte å løpe 1. april 2014 eller senere",
+            "term": "Overgangsstønad til enslig mor eller far som begynte å løpe 1. april 2014 eller senere"
+          }
+        }
+      }
+    ],
+    "foreldrepenger": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Foreldrepenger fra folketrygden",
+            "term": "Foreldrepenger fra folketrygden"
+          }
+        }
+      }
+    ],
+    "svangerskapspenger": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Svangerskapspenger",
+            "term": "Svangerskapspenger"
+          }
+        }
+      }
+    ],
+    "underholdsbidragTilBarn": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Underholdsbidrag til barn",
+            "term": "Underholdsbidrag til barn"
+          }
+        }
+      }
+    ],
+    "ufoeretrygd": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Uføretrygd",
+            "term": "Uføretrygd"
+          }
+        }
+      }
+    ],
+    "venteloenn": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Ventelønn",
+            "term": "Ventelønn"
+          }
+        }
+      }
+    ],
+    "etterloennOgEtterpensjon": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Etterlønn og etterpensjon",
+            "term": "Etterlønn og etterpensjon"
+          }
+        }
+      }
+    ],
+    "ufoerepensjon": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Uførepensjon fra folketrygden",
+            "term": "Uførepensjon fra folketrygden"
+          }
+        }
+      }
+    ],
+    "ipaEllerIpsUfoerepensjon": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Ipa eller ips uførepensjon",
+            "term": "Ipa eller ips uførepensjon"
+          }
+        }
+      }
+    ],
+    "alderspensjonSkjermingstillegg": [
+      {
+        "gyldigFra": "2022-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Alderspensjon skjermingstillegg",
+            "term": "Alderspensjon skjermingstillegg"
+          }
+        }
+      }
+    ],
+    "bil": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Bil",
+            "term": "Bil"
+          }
+        }
+      }
+    ],
+    "bolig": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Bolig",
+            "term": "Bolig"
+          }
+        }
+      }
+    ],
+    "avtalefestetPensjon": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Avtalefestet pensjon (AFP)",
+            "term": "Avtalefestet pensjon (AFP)"
+          }
+        }
+      }
+    ],
+    "kvalifiseringstoenad": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Kvalifiseringstønad",
+            "term": "Kvalifiseringstønad"
+          }
+        }
+      }
+    ],
+    "ipaEllerIpsEngangsutbetaling": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Ipa eller ips engangsutbetaling",
+            "term": "Ipa eller ips engangsutbetaling"
+          }
+        }
+      }
+    ],
+    "nyeLivrenterIArbeidsforholdOgLivrenterFortsettelsesforsikringer": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Nye livrenter i arbeidsforhold (kollektive livrenter) og livrenter tegnet som fortsettelsesforsikringer",
+            "term": "Nye livrenter i arbeidsforhold (kollektive livrenter) og livrenter tegnet som fortsettelsesforsikringer"
+          }
+        }
+      }
+    ],
+    "ektefelletillegg": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Ektefelletillegg",
+            "term": "Ektefelletillegg"
+          }
+        }
+      }
+    ],
+    "elektroniskKommunikasjon": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Elektronisk kommunikasjon",
+            "term": "Elektronisk kommunikasjon"
+          }
+        }
+      }
+    ],
+    "overgangsstoenadTilGjenlevendeEktefelle": [
+      {
+        "gyldigFra": "2014-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Overgangsstønad til gjenlevende ektefelle",
+            "term": "Overgangsstønad til gjenlevende ektefelle"
+          }
+        }
+      }
+    ],
+    "supplerendeStoenadTilUfoerFlyktning": [
+      {
+        "gyldigFra": "2021-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Supplerende stønad til ufør flyktning",
+            "term": "Supplerende stønad til ufør flyktning"
+          }
+        }
+      }
+    ],
+    "slitertillegg": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Slitertillegg",
+            "term": "Slitertillegg"
+          }
+        }
+      }
+    ],
+    "introduksjonsstoenad": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Introduksjonsstønad",
+            "term": "Introduksjonsstønad"
+          }
+        }
+      }
+    ],
+    "ufoerepensjonFraAndreEnnFolketrygden": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Uførepensjon fra andre enn folketrygden",
+            "term": "Uførepensjon fra andre enn folketrygden"
+          }
+        }
+      }
+    ],
+    "annet": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Annet",
+            "term": "Annet"
+          }
+        }
+      }
+    ],
+    "alderspensjon": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Alderspensjon fra folketrygden",
+            "term": "Alderspensjon fra folketrygden"
+          }
+        }
+      }
+    ],
+    "nyAvtalefestetPensjonPrivatSektor": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Ny avtalefestet pensjon (AFP) i privat sektor",
+            "term": "Ny avtalefestet pensjon (AFP) i privat sektor"
+          }
+        }
+      }
+    ],
+    "ipaEllerIpsBarnepensjon": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Ipa eller ips barnepensjon",
+            "term": "Ipa eller ips barnepensjon"
+          }
+        }
+      }
+    ],
+    "etterlattepensjon": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Etterlattepensjon fra folketrygden",
+            "term": "Etterlattepensjon fra folketrygden"
+          }
+        }
+      }
+    ],
+    "pensjonOgLivrenterIArbeidsforhold": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Pensjon og livrenter i arbeidsforhold",
+            "term": "Pensjon og livrenter i arbeidsforhold"
+          }
+        }
+      }
+    ],
+    "pensjonIDoedsmaaneden": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Pensjon i dødsmåneden (skattefri)",
+            "term": "Pensjon i dødsmåneden (skattefri)"
+          }
+        }
+      }
+    ],
+    "foederaad": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Føderåd",
+            "term": "Føderåd"
+          }
+        }
+      }
+    ],
+    "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe31Mars2014EllerTidligere": [
+      {
+        "gyldigFra": "2014-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Overgangsstønad til enslig mor eller far som begynte å løpe 31. mars 2014 eller tidligere",
+            "term": "Overgangsstønad til enslig mor eller far som begynte å løpe 31. mars 2014 eller tidligere"
+          }
+        }
+      }
+    ],
+    "engangsutbetalingInnskuddspensjon": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Engangsutbetaling innskuddspensjon",
+            "term": "Engangsutbetaling innskuddspensjon"
+          }
+        }
+      }
+    ],
+    "supplerendeStoenadTilPersonKortBotidNorge": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Supplerende stønad til person med kort botid i Norge",
+            "term": "Supplerende stønad til person med kort botid i Norge"
+          }
+        }
+      }
+    ],
+    "ufoereytelseEtteroppgjoerFraAndreEnnFolketrygden": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Uføreytelse etteroppgjør fra andre enn folketrygden",
+            "term": "Uføreytelse etteroppgjør fra andre enn folketrygden"
+          }
+        }
+      }
+    ],
+    "barnepensjon": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Barnepensjon fra folketrygden",
+            "term": "Barnepensjon fra folketrygden"
+          }
+        }
+      }
+    ],
+    "ipaEllerIpsPeriodiskeYtelser": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Ipa eller ips periodiske ytelser",
+            "term": "Ipa eller ips periodiske ytelser"
+          }
+        }
+      }
+    ],
+    "etterloenn": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Etterlønn",
+            "term": "Etterlønn"
+          }
+        }
+      }
+    ],
+    "barnepensjonFraAndreEnnFolketrygden": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Barnepensjon fra andre enn folketrygden",
+            "term": "Barnepensjon fra andre enn folketrygden"
+          }
+        }
+      }
+    ],
+    "rentefordelLaan": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Rentefordel lån",
+            "term": "Rentefordel lån"
+          }
+        }
+      }
+    ],
+    "krigspensjon": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Krigspensjon mv.",
+            "term": "Krigspensjon mv."
+          }
+        }
+      }
+    ]
+  }
+}
