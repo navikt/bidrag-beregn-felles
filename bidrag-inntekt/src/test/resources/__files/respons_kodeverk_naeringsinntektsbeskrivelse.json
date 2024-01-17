@@ -1,0 +1,136 @@
+{
+  "betydninger": {
+    "annet": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Annet",
+            "term": "Annet"
+          }
+        }
+      }
+    ],
+    "dagpengerTilFisker": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Dagpenger til fisker",
+            "term": "Dagpenger til fisker"
+          }
+        }
+      }
+    ],
+    "dagpengerVedArbeidsloeshet": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Dagpenger ved arbeidsløshet utbetalt fra folketrygden",
+            "term": "Dagpenger ved arbeidsløshet utbetalt fra folketrygden"
+          }
+        }
+      }
+    ],
+    "kompensasjonForTaptPersoninntekt": [
+      {
+        "gyldigFra": "2020-04-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Kompensasjon for tapt personinntekt",
+            "term": "Kompensasjon for tapt personinntekt"
+          }
+        }
+      }
+    ],
+    "lottKunTrygdeavgift": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Lott det skal beregnes trygdeavgift av",
+            "term": "Lott det skal beregnes trygdeavgift av"
+          }
+        }
+      }
+    ],
+    "sykepenger": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Sykepenger fra folketrygden",
+            "term": "Sykepenger fra folketrygden"
+          }
+        }
+      }
+    ],
+    "sykepengerTilDagmamma": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Sykepenger til dagmamma",
+            "term": "Sykepenger til dagmamma"
+          }
+        }
+      }
+    ],
+    "sykepengerTilFisker": [
+      {
+        "gyldigFra": "2014-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Sykepenger til fisker",
+            "term": "Sykepenger til fisker"
+          }
+        }
+      }
+    ],
+    "sykepengerTilJordOgSkogbrukere": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Sykepenger til jord- og skogbrukere",
+            "term": "Sykepenger til jord- og skogbrukere"
+          }
+        }
+      }
+    ],
+    "vederlag": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Vederlag",
+            "term": "Vederlag"
+          }
+        }
+      }
+    ],
+    "vederlagDagmammaIEgetHjem": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Vederlag til dagmamma i eget hjem",
+            "term": "Vederlag til dagmamma i eget hjem"
+          }
+        }
+      }
+    ]
+  }
+}

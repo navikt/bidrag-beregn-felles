@@ -1,0 +1,892 @@
+{
+  "betydninger": {
+    "styrehonorarOgGodtgjoerelseVerv": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Styrehonorar og godtgjørelse i forbindelse med verv",
+            "tekst": "Styrehonorar og godtgjørelse i forbindelse med verv"
+          }
+        }
+      }
+    ],
+    "reiseNattillegg": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Reise nattillegg",
+            "tekst": "Reise nattillegg"
+          }
+        }
+      }
+    ],
+    "bil": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Bil",
+            "tekst": "Bil"
+          }
+        }
+      }
+    ],
+    "bolig": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Bolig",
+            "tekst": "Bolig"
+          }
+        }
+      }
+    ],
+    "bonus": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Bonus",
+            "tekst": "Bonus"
+          }
+        }
+      }
+    ],
+    "flyttegodtgjoerelse": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Flyttegodtgjørelse mv",
+            "tekst": "Flyttegodtgjørelse mv"
+          }
+        }
+      }
+    ],
+    "helligdagstillegg": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Helligdagstillegg",
+            "tekst": "Helligdagstillegg"
+          }
+        }
+      }
+    ],
+    "loennEtterDoedsfall": [
+      {
+        "gyldigFra": "2014-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Lønn etter dødsfall",
+            "tekst": "Lønn etter dødsfall"
+          }
+        }
+      }
+    ],
+    "fastBilgodtgjoerelse": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Fast bilgodtgjørelse",
+            "tekst": "Fast bilgodtgjørelse"
+          }
+        }
+      }
+    ],
+    "tips": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Tips",
+            "tekst": "Tips"
+          }
+        }
+      }
+    ],
+    "arbeidsoppholdKost": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Arbeidsopphold kost",
+            "tekst": "Arbeidsopphold kost"
+          }
+        }
+      }
+    ],
+    "losjiEgenBrakkeCampingvogn": [
+      {
+        "gyldigFra": "2014-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Losji egen brakke/campingvogn",
+            "tekst": "Losji egen brakke/campingvogn"
+          }
+        }
+      }
+    ],
+    "smusstillegg": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Smusstillegg",
+            "tekst": "Smusstillegg"
+          }
+        }
+      }
+    ],
+    "besoeksreiserHjemmetKost": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Besøksreiser hjemmet kost",
+            "tekst": "Besøksreiser hjemmet kost"
+          }
+        }
+      }
+    ],
+    "loennForBarnepassIBarnetsHjem": [
+      {
+        "gyldigFra": "2014-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Lønn og godtgjørelse til dagmamma eller praktikant som passer barn i barnets hjem",
+            "tekst": "Lønn og godtgjørelse til dagmamma eller praktikant som passer barn i barnets hjem"
+          }
+        }
+      }
+    ],
+    "betaltUtenlandskSkatt": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Betalt utenlandsk skatt",
+            "tekst": "Betalt utenlandsk skatt"
+          }
+        }
+      }
+    ],
+    "kommunalOmsorgsloennOgFosterhjemsgodtgjoerelse": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Kommunal omsorgslønn og fosterhjemsgodtgjørelse",
+            "tekst": "Kommunal omsorgslønn og fosterhjemsgodtgjørelse"
+          }
+        }
+      }
+    ],
+    "arbeidsoppholdLosji": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Arbeidsopphold losji",
+            "tekst": "Arbeidsopphold losji"
+          }
+        }
+      }
+    ],
+    "uregelmessigeTilleggKnyttetTilArbeidetTid": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Uregelmessige tillegg knyttet til arbeidet tid",
+            "tekst": "Uregelmessige tillegg knyttet til arbeidet tid"
+          }
+        }
+      }
+    ],
+    "besoeksreiserHjemmetAnnet": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Besøksreiser hjemmet annet",
+            "tekst": "Besøksreiser hjemmet annet"
+          }
+        }
+      }
+    ],
+    "fastTillegg": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Faste tillegg",
+            "tekst": "Faste tillegg"
+          }
+        }
+      }
+    ],
+    "innbetalingTilUtenlandskPensjonsordning": [
+      {
+        "gyldigFra": "2016-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Innbetaling til utenlandsk pensjonsordning",
+            "tekst": "Innbetaling til utenlandsk pensjonsordning"
+          }
+        }
+      }
+    ],
+    "skattefriErstatning": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Skattefri erstatning",
+            "tekst": "Skattefri erstatning"
+          }
+        }
+      }
+    ],
+    "losji": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Losji",
+            "tekst": "Losji"
+          }
+        }
+      }
+    ],
+    "sluttvederlag": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Sluttvederlag",
+            "tekst": "Sluttvederlag"
+          }
+        }
+      }
+    ],
+    "reiseKostMedOvernattingPaaHotell": [
+      {
+        "gyldigFra": "2014-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Reise kost med overnatting på hotell",
+            "tekst": "Reise kost med overnatting på hotell"
+          }
+        }
+      }
+    ],
+    "reiseKostMedOvernattingPaaHybelUtenKokEllerPensjonatEllerBrakke": [
+      {
+        "gyldigFra": "2023-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Reise kost med overnatting på hybel uten kok eller pensjonat eller brakke",
+            "tekst": ""
+          }
+        }
+      }
+    ],
+    "timeloenn": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Timelønn",
+            "tekst": "Timelønn"
+          }
+        }
+      }
+    ],
+    "kostbesparelseIHjemmet": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Kostbesparelse i hjemmet",
+            "tekst": "Kostbesparelse i hjemmet"
+          }
+        }
+      }
+    ],
+    "trekkILoennForFerie": [
+      {
+        "gyldigFra": "2016-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Trekk i lønn for ferie",
+            "tekst": "Trekk i lønn for ferie"
+          }
+        }
+      }
+    ],
+    "loennUtenlandskArtist": [
+      {
+        "gyldigFra": "2014-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Lønn utenlandsk artist",
+            "tekst": "Lønn utenlandsk artist"
+          }
+        }
+      }
+    ],
+    "fastloenn": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Fastlønn",
+            "tekst": "Fastlønn"
+          }
+        }
+      }
+    ],
+    "loennUtbetaltAvVeldedigEllerAllmennyttigInstitusjonEllerOrganisasjon": [
+      {
+        "gyldigFra": "2014-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Lønn og godtgjørelse utbetalt av veldedig eller allmennyttig institusjon eller organisasjon",
+            "tekst": "Lønn og godtgjørelse utbetalt av veldedig eller allmennyttig institusjon eller organisasjon"
+          }
+        }
+      }
+    ],
+    "loennTilVergeFraStatsforvalteren": [
+      {
+        "gyldigFra": "2022-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Lønn til verge fra Statsforvalteren",
+            "tekst": "Lønn til verge fra Statsforvalteren"
+          }
+        }
+      }
+    ],
+    "skattepliktigPersonalrabatt": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Skattepliktig personalrabatt",
+            "tekst": "Skattepliktig personalrabatt"
+          }
+        }
+      }
+    ],
+    "reiseLosji": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Reise losji",
+            "tekst": "Reise losji"
+          }
+        }
+      }
+    ],
+    "hyretillegg": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Hyretillegg",
+            "tekst": "Hyretillegg"
+          }
+        }
+      }
+    ],
+    "besoeksreiserHjemmetKilometergodtgjoerelseBil": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Besøksreiser hjemmet kilometergodtgjørelse bil",
+            "tekst": "Besøksreiser hjemmet kilometergodtgjørelse bil"
+          }
+        }
+      }
+    ],
+    "rentefordelLaan": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Rentefordel lån",
+            "tekst": "Rentefordel lån"
+          }
+        }
+      }
+    ],
+    "overtidsgodtgjoerelse": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Overtidsgodtgjørelse",
+            "tekst": "Overtidsgodtgjørelse"
+          }
+        }
+      }
+    ],
+    "loennTilPrivatpersonerForArbeidIHjemmet": [
+      {
+        "gyldigFra": "2014-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Lønn og godtgjørelse til privatpersoner for arbeidsoppdrag i oppdragsgivers hjem",
+            "tekst": "Lønn og godtgjørelse til privatpersoner for arbeidsoppdrag i oppdragsgivers hjem"
+          }
+        }
+      }
+    ],
+    "kapitalInntekt": [
+      {
+        "gyldigFra": "2014-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Kapitalinntekt",
+            "tekst": "Kapitalinntekt"
+          }
+        }
+      }
+    ],
+    "ikkeSkattepliktigLoennFraUtenlandskDiplomKonsulStasjon": [
+      {
+        "gyldigFra": "2014-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Lønn mv som ikke er skattepliktig i Norge fra utenlandsk diplomatisk eller konsulær stasjon",
+            "tekst": "Lønn mv som ikke er skattepliktig i Norge fra utenlandsk diplomatisk eller konsulær stasjon"
+          }
+        }
+      }
+    ],
+    "reiseKostMedOvernattingPaaHotellBeordringUtover28Doegn": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Reise kost med overnatting på hotell beordring utover 28 døgn",
+            "tekst": "Reise kost med overnatting på hotell beordring utover 28 døgn"
+          }
+        }
+      }
+    ],
+    "stipend": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Stipend",
+            "tekst": "Stipend"
+          }
+        }
+      }
+    ],
+    "kilometergodtgjoerelseAndreFremkomstmidler": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Kilometergodtgjørelse andre fremkomstmidler",
+            "tekst": "Kilometergodtgjørelse andre fremkomstmidler"
+          }
+        }
+      }
+    ],
+    "reiseKostMedOvernattingTilLangtransportsjaafoerForKjoeringInnenlands": [
+      {
+        "gyldigFra": "2022-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Reise kost med overnatting til langtransportsjåfør for kjøring innenlands",
+            "tekst": "Reise kost med overnatting til langtransportsjåfør for kjøring innenlands"
+          }
+        }
+      }
+    ],
+    "elektroniskKommunikasjon": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Elektronisk kommunikasjon",
+            "tekst": "Elektronisk kommunikasjon"
+          }
+        }
+      }
+    ],
+    "kostDoegn": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Kost (døgn)",
+            "tekst": "Kost (døgn)"
+          }
+        }
+      }
+    ],
+    "kilometergodtgjoerelsePassasjertillegg": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Kilometergodtgjørelse passasjertillegg",
+            "tekst": "Kilometergodtgjørelse passasjertillegg"
+          }
+        }
+      }
+    ],
+    "reiseAnnet": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Reise annet",
+            "tekst": "Reise annet"
+          }
+        }
+      }
+    ],
+    "reiseKostUtenOvernatting": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Reise kost uten overnatting",
+            "tekst": "Reise kost uten overnatting"
+          }
+        }
+      }
+    ],
+    "annet": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Annet",
+            "tekst": "Annet"
+          }
+        }
+      }
+    ],
+    "uregelmessigeTilleggKnyttetTilIkkeArbeidetTid": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Uregelmessige tillegg knyttet til ikke- arbeidet tid",
+            "tekst": "Uregelmessige tillegg knyttet til ikke- arbeidet tid"
+          }
+        }
+      }
+    ],
+    "skattefrieUtbetalinger": [
+      {
+        "gyldigFra": "2014-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Skattefrie utbetalinger",
+            "tekst": "Skattefrie utbetalinger"
+          }
+        }
+      }
+    ],
+    "reiseKost": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Reise kost",
+            "tekst": "Reise kost"
+          }
+        }
+      }
+    ],
+    "kompensasjonstilleggBolig": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Kompensasjonstillegg bolig",
+            "tekst": "Kompensasjonstillegg bolig"
+          }
+        }
+      }
+    ],
+    "skattepliktigDelForsikringer": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Skattepliktig del av visse typer forsikringer",
+            "tekst": "Skattepliktig del av visse typer forsikringer"
+          }
+        }
+      }
+    ],
+    "reiseKostMedOvernattingPaaHybelMedKokEllerPrivat": [
+      {
+        "gyldigFra": "2023-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Reise kost med overnatting på hybel med kok eller privat",
+            "tekst": ""
+          }
+        }
+      }
+    ],
+    "opsjoner": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Opsjoner",
+            "tekst": "Opsjoner"
+          }
+        }
+      }
+    ],
+    "yrkebilTjenestligbehovListepris": [
+      {
+        "gyldigFra": "2015-09-15",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Yrkebil tjenestligbehov listepris",
+            "tekst": "Yrkebil tjenestligbehov listepris"
+          }
+        }
+      }
+    ],
+    "aksjerGrunnfondsbevisTilUnderkurs": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Aksjer/grunnfondsbevis til underkurs",
+            "tekst": "Aksjer/grunnfondsbevis til underkurs"
+          }
+        }
+      }
+    ],
+    "reiseKostMedOvernattingTilLangtransportsjaafoerForKjoeringIUtlandet": [
+      {
+        "gyldigFra": "2014-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Reise kost med overnatting til langtransportsjåfør for kjøring i utlandet",
+            "tekst": "Reise kost med overnatting til langtransportsjåfør for kjøring i utlandet"
+          }
+        }
+      }
+    ],
+    "feriepenger": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Feriepenger",
+            "tekst": "Feriepenger"
+          }
+        }
+      }
+    ],
+    "skattepliktigGodtgjoerelseSaeravtaleUtland": [
+      {
+        "gyldigFra": "2023-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Skattepliktig godtgjørelse særavtale utland",
+            "tekst": ""
+          }
+        }
+      }
+    ],
+    "godtgjoerelseSaeravtaleUtland": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Godtgjørelse i henhold til særavtale utland",
+            "tekst": "Godtgjørelse i henhold til særavtale utland"
+          }
+        }
+      }
+    ],
+    "kilometergodtgjoerelseBil": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Kilometergodtgjørelse bil",
+            "tekst": "Kilometergodtgjørelse bil"
+          }
+        }
+      }
+    ],
+    "kostDager": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Kost (dager)",
+            "tekst": "Kost (dager)"
+          }
+        }
+      }
+    ],
+    "honorarAkkordProsentProvisjon": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Honorar/Akkord/Prosent/Provisjon",
+            "tekst": "Honorar/Akkord/Prosent/Provisjon"
+          }
+        }
+      }
+    ],
+    "beregnetSkatt": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Beregnet skatt",
+            "tekst": "Beregnet skatt"
+          }
+        }
+      }
+    ],
+    "bonusFraForsvaret": [
+      {
+        "gyldigFra": "2014-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Bonus fra forsvaret",
+            "tekst": "Bonus fra forsvaret"
+          }
+        }
+      }
+    ],
+    "yrkebilTjenestligbehovKilometer": [
+      {
+        "gyldigFra": "2015-09-15",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Yrkebil tjenestligbehov kilometer",
+            "tekst": "Yrkebil tjenestligbehov kilometer"
+          }
+        }
+      }
+    ],
+    "fondForIdrettsutoevere": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Fond for idrettsutøvere",
+            "tekst": "Fond for idrettsutøvere"
+          }
+        }
+      }
+    ],
+    "friTransport": [
+      {
+        "gyldigFra": "2013-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "term": "Fri transport",
+            "tekst": "Fri transport"
+          }
+        }
+      }
+    ]
+  }
+}

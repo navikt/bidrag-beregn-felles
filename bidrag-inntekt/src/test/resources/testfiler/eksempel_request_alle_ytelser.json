@@ -1,0 +1,180 @@
+{
+  "ainntektHentetDato": "2021-09-01",
+  "ainntektsposter": [
+    {
+      "utbetalingsperiode": "2021-08",
+      "beskrivelse": "arbeidsavklaringspenger",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2021-09",
+      "beskrivelse": "dagpengerTilFiskerSomBareHarHyre",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2021-10",
+      "beskrivelse": "dagpengerVedArbeidsloeshet",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2021-11",
+      "beskrivelse": "foreldrepenger",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2021-12",
+      "beskrivelse": "introduksjonsstoenad",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2021-12",
+      "beskrivelse": "kvalifiseringstoenad",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-01",
+      "beskrivelse": "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-02",
+      "beskrivelse": "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe31Mars2014EllerTidligere",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-03",
+      "beskrivelse": "overgangsstoenadTilGjenlevendeEktefelle",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-04",
+      "beskrivelse": "ektefelletilleggUfoeretrygd",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-05",
+      "beskrivelse": "ufoeretrygd",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-06",
+      "beskrivelse": "ufoereytelseEtteroppgjoer",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-07",
+      "beskrivelse": "alderspensjon",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-08",
+      "beskrivelse": "alderspensjonSkjermingstillegg",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-09",
+      "beskrivelse": "avtalefestetPensjon",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-10",
+      "beskrivelse": "barnepensjon",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-11",
+      "beskrivelse": "barnepensjonFraAndreEnnFolketrygden",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-12",
+      "beskrivelse": "engangsutbetalingInnskuddspensjon",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-12",
+      "beskrivelse": "etterlattepensjon",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-12",
+      "beskrivelse": "ipaEllerIpsBarnepensjon",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-12",
+      "beskrivelse": "ipaEllerIpsEngangsutbetaling",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-12",
+      "beskrivelse": "ipaEllerIpsPeriodiskeYtelser",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-12",
+      "beskrivelse": "ipaEllerIpsUfoerepensjon",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-12",
+      "beskrivelse": "krigspensjon",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-12",
+      "beskrivelse": "nyAvtalefestetPensjonPrivatSektor",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-12",
+      "beskrivelse": "pensjonOgLivrenterIArbeidsforhold",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-12",
+      "beskrivelse": "slitertillegg",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-12",
+      "beskrivelse": "supplerendeStoenadTilPersonKortBotidNorge",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-12",
+      "beskrivelse": "supplerendeStoenadTilUfoerFlyktning",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-12",
+      "beskrivelse": "ufoerepensjon",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-12",
+      "beskrivelse": "ufoerepensjonFraAndreEnnFolketrygden",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-12",
+      "beskrivelse": "ufoereytelseEtteroppgjoerFraAndreEnnFolketrygden",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-12",
+      "beskrivelse": "svangerskapspenger",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-12",
+      "beskrivelse": "sykepenger",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-12",
+      "beskrivelse": "sykepengerTilFiskerSomBareHarHyre",
+      "beløp": 1000
+    }
+  ]
+}

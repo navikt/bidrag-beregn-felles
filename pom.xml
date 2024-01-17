@@ -46,6 +46,7 @@
     <modules>
         <module>bidrag-beregn-core</module>
         <module>bidrag-beregn-forskudd</module>
+        <module>bidrag-inntekt</module>
     </modules>
     <repositories>
         <repository>
@@ -80,21 +81,19 @@
                 <groupId>no.nav.bidrag</groupId>
                 <artifactId>bidrag-domene-felles</artifactId>
                 <version>${bidrag-felles.version}</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>no.nav.bidrag</groupId>
                 <artifactId>bidrag-transport-felles</artifactId>
                 <version>${bidrag-felles.version}</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>no.nav.bidrag</groupId>
                 <artifactId>bidrag-commons-felles</artifactId>
                 <version>${bidrag-felles.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.yaml</groupId>
-                <artifactId>snakeyaml</artifactId>
-                <version>2.2</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>io.github.oshai</groupId>

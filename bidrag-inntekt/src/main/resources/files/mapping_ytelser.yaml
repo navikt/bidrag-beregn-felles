@@ -1,0 +1,55 @@
+AAP:
+  beskrivelser:
+    - "arbeidsavklaringspenger"
+DAGPENGER:
+  beskrivelser:
+    - "dagpengerTilFiskerSomBareHarHyre"
+    - "dagpengerVedArbeidsloeshet"
+    - "dagpengerTilFisker"
+FORELDREPENGER:
+  beskrivelser:
+    - "foreldrepenger"
+INTRODUKSJONSSTØNAD:
+  beskrivelser:
+    - "introduksjonsstoenad"
+KVALIFISERINGSSTØNAD:
+  beskrivelser:
+    - "kvalifiseringstoenad"
+OVERGANGSSTØNAD:
+  beskrivelser:
+    - "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere"
+    - "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe31Mars2014EllerTidligere"
+    - "overgangsstoenadTilGjenlevendeEktefelle"
+PENSJON:
+  beskrivelser:
+    - "ektefelletilleggUfoeretrygd"
+    - "ufoeretrygd"
+    - "ufoereytelseEtteroppgjoer"
+    - "alderspensjon"
+    - "alderspensjonSkjermingstillegg"
+    - "avtalefestetPensjon"
+    - "barnepensjon"
+    - "barnepensjonFraAndreEnnFolketrygden"
+    - "engangsutbetalingInnskuddspensjon"
+    - "etterlattepensjon"
+    - "ipaEllerIpsBarnepensjon"
+    - "ipaEllerIpsEngangsutbetaling"
+    - "ipaEllerIpsPeriodiskeYtelser"
+    - "ipaEllerIpsUfoerepensjon"
+    - "krigspensjon"
+    - "nyAvtalefestetPensjonPrivatSektor"
+    - "pensjonOgLivrenterIArbeidsforhold"
+    - "slitertillegg"
+    - "supplerendeStoenadTilPersonKortBotidNorge"
+    - "supplerendeStoenadTilUfoerFlyktning"
+    - "ufoerepensjon"
+    - "ufoerepensjonFraAndreEnnFolketrygden"
+    - "ufoereytelseEtteroppgjoerFraAndreEnnFolketrygden"
+SYKEPENGER:
+  beskrivelser:
+    - "svangerskapspenger"
+    - "sykepenger"
+    - "sykepengerTilFiskerSomBareHarHyre"
+    - "sykepengerTilDagmamma"
+    - "sykepengerTilFisker"
+    - "sykepengerTilJordOgSkogbrukere"

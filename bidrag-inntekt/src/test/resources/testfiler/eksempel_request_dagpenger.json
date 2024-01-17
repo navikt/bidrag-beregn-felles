@@ -1,0 +1,35 @@
+{
+  "ainntektHentetDato": "2021-09-01",
+  "ainntektsposter": [
+    {
+      "utbetalingsperiode": "2021-08",
+      "beskrivelse": "dagpengerTilFiskerSomBareHarHyre",
+      "beløp": 8000
+    },
+    {
+      "utbetalingsperiode": "2021-09",
+      "beskrivelse": "dagpengerVedArbeidsloeshet",
+      "beløp": 9000
+    },
+    {
+      "utbetalingsperiode": "2021-10",
+      "beskrivelse": "dagpengerTilFiskerSomBareHarHyre",
+      "beløp": 10000
+    },
+    {
+      "utbetalingsperiode": "2021-11",
+      "beskrivelse": "dagpengerVedArbeidsloeshet",
+      "beløp": 11000
+    },
+    {
+      "utbetalingsperiode": "2021-12",
+      "beskrivelse": "dagpengerTilFiskerSomBareHarHyre",
+      "beløp": 12000
+    },
+    {
+      "utbetalingsperiode": "2022-01",
+      "beskrivelse": "dagpengerVedArbeidsloeshet",
+      "beløp": 1000
+    }
+  ]
+}

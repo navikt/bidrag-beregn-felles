@@ -1,0 +1,222 @@
+{
+  "ainntektHentetDato": "2021-09-01",
+  "ainntektsposter": [
+    {
+      "utbetalingsperiode": "2022-05",
+      "opptjeningsperiodeFra": "2022-05-01",
+      "opptjeningsperiodeTil": null,
+      "beskrivelse": "fastloenn",
+      "beløp": 50000
+    },
+    {
+      "utbetalingsperiode": "2022-05",
+      "opptjeningsperiodeFra": "2021-11-01",
+      "opptjeningsperiodeTil": "2022-04-01",
+      "beskrivelse": "overtidsgodtgjoerelse",
+      "beløp": 10000
+    },
+    {
+      "utbetalingsperiode": "2022-05",
+      "opptjeningsperiodeFra": "2022-05-01",
+      "opptjeningsperiodeTil": "2022-06-01",
+      "beskrivelse": "bonus",
+      "beløp": 15000
+    },
+    {
+      "utbetalingsperiode": "2022-06",
+      "opptjeningsperiodeFra": "2022-06-01",
+      "opptjeningsperiodeTil": "2022-07-01",
+      "beskrivelse": "fastloenn",
+      "beløp": 50000
+    },
+    {
+      "utbetalingsperiode": "2022-07",
+      "opptjeningsperiodeFra": "2022-07-01",
+      "opptjeningsperiodeTil": "2022-08-01",
+      "beskrivelse": "fastloenn",
+      "beløp": 50000
+    },
+    {
+      "utbetalingsperiode": "2022-08",
+      "beskrivelse": "fastloenn",
+      "beløp": 55000.789
+    },
+    {
+      "utbetalingsperiode": "2022-09",
+      "beskrivelse": "fastloenn",
+      "beløp": 55000
+    },
+    {
+      "utbetalingsperiode": "2022-10",
+      "beskrivelse": "fastloenn",
+      "beløp": 55000
+    },
+    {
+      "utbetalingsperiode": "2022-11",
+      "beskrivelse": "fastloenn",
+      "beløp": 55000
+    },
+    {
+      "utbetalingsperiode": "2022-12",
+      "beskrivelse": "fastloenn",
+      "beløp": 55000
+    },
+    {
+      "utbetalingsperiode": "2023-01",
+      "opptjeningsperiodeFra": "2023-01-01",
+      "opptjeningsperiodeTil": "2023-02-01",
+      "beskrivelse": "fastloenn",
+      "beløp": 60000
+    },
+    {
+      "utbetalingsperiode": "2023-02",
+      "opptjeningsperiodeFra": "2023-02-01",
+      "opptjeningsperiodeTil": "2023-03-01",
+      "beskrivelse": "fastloenn",
+      "beløp": 60000.33
+    },
+    {
+      "utbetalingsperiode": "2023-03",
+      "opptjeningsperiodeFra": "2023-03-01",
+      "opptjeningsperiodeTil": "2023-04-01",
+      "beskrivelse": "fastloenn",
+      "beløp": 60000
+    },
+    {
+      "utbetalingsperiode": "2023-04",
+      "opptjeningsperiodeFra": "2023-04-01",
+      "opptjeningsperiodeTil": "2023-05-01",
+      "beskrivelse": "fastloenn",
+      "beløp": 60000
+    },
+    {
+      "utbetalingsperiode": "2023-05",
+      "beskrivelse": "fastloenn",
+      "beløp": 60000
+    },
+    {
+      "utbetalingsperiode": "2023-06",
+      "opptjeningsperiodeFra": "2023-04-15",
+      "opptjeningsperiodeTil": "2023-05-01",
+      "beskrivelse": "overtidsgodtgjoerelse",
+      "beløp": 8000
+    },
+    {
+      "utbetalingsperiode": "2023-06",
+      "beskrivelse": "fastloenn",
+      "beløp": 60000
+    },
+    {
+      "utbetalingsperiode": "2023-06",
+      "beskrivelse": "bonus",
+      "beløp": 15000
+    },
+    {
+      "utbetalingsperiode": "2023-07",
+      "beskrivelse": "feriepenger",
+      "beløp": 85000
+    }
+  ],
+  "skattegrunnlagsliste": [
+    {
+      "ligningsår": "2022",
+      "skattegrunnlagsposter": [
+        {
+          "skattegrunnlagType": "Ordinær",
+          "inntektType": "andelIFellesTapVedSalgAvAndelISDF",
+          "belop": 100
+        },
+        {
+          "skattegrunnlagType": "Ordinær",
+          "inntektType": "andreFradragsberettigedeKostnader",
+          "belop": 200
+        },
+        {
+          "skattegrunnlagType": "Ordinær",
+          "inntektType": "annenSkattepliktigKapitalinntektFraAnnetFinansprodukt",
+          "belop": 300
+        },
+        {
+          "skattegrunnlagType": "Ordinær",
+          "inntektType": "samledeOpptjenteRenterIUtenlandskeBanker",
+          "belop": 400
+        },
+        {
+          "skattegrunnlagType": "Ordinær",
+          "inntektType": "samletAnnenPensjonMedTrekkfritak",
+          "belop": 13500
+        },
+        {
+          "skattegrunnlagType": "Ordinær",
+          "inntektType": "overskuddAvUtgiftsgodtgjoerelseVedSmusstillegg",
+          "belop": 4560
+        },
+        {
+          "skattegrunnlagType": "Ordinær",
+          "inntektType": "samletLoennsinntekt",
+          "belop": 53560
+        },
+        {
+          "skattegrunnlagType": "Ordinær",
+          "inntektType": "samletOverskuddPaaUtgiftsgodtgjoerelse",
+          "belop": 7890.178
+        }
+      ]
+    },
+    {
+      "ligningsår": "2021",
+      "skattegrunnlagsposter": [
+        {
+          "skattegrunnlagType": "Ordinær",
+          "inntektType": "samledePaaloepteRenterPaaGjeldIInnenlandskeBanker",
+          "belop": 100
+        },
+        {
+          "skattegrunnlagType": "Ordinær",
+          "inntektType": "andreFradragsberettigedeKostnader",
+          "belop": 200
+        },
+        {
+          "skattegrunnlagType": "Ordinær",
+          "inntektType": "annenSkattepliktigKapitalinntektFraAnnetFinansprodukt",
+          "belop": 300
+        },
+        {
+          "skattegrunnlagType": "Ordinær",
+          "inntektType": "samledePaaloepteRenterPaaGjeldIUtlandet",
+          "belop": 4000
+        },
+        {
+          "skattegrunnlagType": "Ordinær",
+          "inntektType": "returAvPremieFraIndividuellPensjonssparing",
+          "belop": 2356
+        },
+        {
+          "skattegrunnlagType": "Ordinær",
+          "inntektType": "avkortetFordelVedElektroniskKommunikasjon",
+          "belop": 630
+        },
+        {
+          "skattegrunnlagType": "Ordinær",
+          "inntektType": "barnepensjonFraFolketrygden",
+          "belop": 1650
+        },
+        {
+          "skattegrunnlagType": "Ordinær",
+          "inntektType": "samletLoennsinntekt",
+          "belop": 47506
+        },
+        {
+          "skattegrunnlagType": "Ordinær",
+          "inntektType": "samledeUnderholdsbidrag",
+          "belop": 3500
+        },
+        {
+          "skattegrunnlagType": "Ordinær",
+          "inntektType": "personinntektFraKompensasjonsytelseUtbetaltAvNavInnenBarnepassIBarnepasserensHjem",
+          "belop": 1390.15
+        }
+      ]
+    }
+  ]
+}

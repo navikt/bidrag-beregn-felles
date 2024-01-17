@@ -1,0 +1,161 @@
+{
+  "ainntektHentetDato": "2021-09-01",
+  "ainntektsposter": [
+    {
+      "utbetalingsperiode": "2021-08",
+      "beskrivelse": "arbeidsavklaringspenger",
+      "beløp": 8000
+    },
+    {
+      "utbetalingsperiode": "2021-09",
+      "beskrivelse": "arbeidsavklaringspenger",
+      "beløp": 9000
+    },
+    {
+      "utbetalingsperiode": "2021-10",
+      "beskrivelse": "arbeidsavklaringspenger",
+      "beløp": 10000
+    },
+    {
+      "utbetalingsperiode": "2021-11",
+      "beskrivelse": "arbeidsavklaringspenger",
+      "beløp": 11000
+    },
+    {
+      "utbetalingsperiode": "2021-12",
+      "beskrivelse": "arbeidsavklaringspenger",
+      "beløp": 12000
+    },
+    {
+      "utbetalingsperiode": "2022-01",
+      "beskrivelse": "arbeidsavklaringspenger",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2022-02",
+      "beskrivelse": "arbeidsavklaringspenger",
+      "beløp": 2000
+    },
+    {
+      "utbetalingsperiode": "2022-03",
+      "beskrivelse": "arbeidsavklaringspenger",
+      "beløp": 3000
+    },
+    {
+      "utbetalingsperiode": "2022-04",
+      "beskrivelse": "arbeidsavklaringspenger",
+      "beløp": 4000
+    },
+    {
+      "utbetalingsperiode": "2022-05",
+      "opptjeningsperiodeFra": "2022-05-01",
+      "opptjeningsperiodeTil": null,
+      "beskrivelse": "fastloenn",
+      "beløp": 50500
+    },
+    {
+      "utbetalingsperiode": "2022-05",
+      "beskrivelse": "arbeidsavklaringspenger",
+      "beløp": 5000
+    },
+    {
+      "utbetalingsperiode": "2022-05",
+      "opptjeningsperiodeFra": "2021-01-01",
+      "opptjeningsperiodeTil": "2022-01-01",
+      "beskrivelse": "bonus",
+      "beløp": 15000
+    },
+    {
+      "utbetalingsperiode": "2022-06",
+      "beskrivelse": "arbeidsavklaringspenger",
+      "beløp": 6000
+    },
+    {
+      "utbetalingsperiode": "2022-07",
+      "beskrivelse": "arbeidsavklaringspenger",
+      "beløp": 7000
+    },
+    {
+      "utbetalingsperiode": "2022-08",
+      "beskrivelse": "arbeidsavklaringspenger",
+      "beløp": 8000.789
+    },
+    {
+      "utbetalingsperiode": "2022-09",
+      "beskrivelse": "arbeidsavklaringspenger",
+      "beløp": 9000
+    },
+    {
+      "utbetalingsperiode": "2022-10",
+      "beskrivelse": "arbeidsavklaringspenger",
+      "beløp": 10000
+    },
+    {
+      "utbetalingsperiode": "2022-10",
+      "beskrivelse": "bonus",
+      "beløp": 666
+    },
+    {
+      "utbetalingsperiode": "2022-11",
+      "beskrivelse": "arbeidsavklaringspenger",
+      "beløp": 11000
+    },
+    {
+      "utbetalingsperiode": "2022-12",
+      "beskrivelse": "arbeidsavklaringspenger",
+      "beløp": 12000
+    },
+    {
+      "utbetalingsperiode": "2022-12",
+      "beskrivelse": "arbeidsavklaringspenger",
+      "beløp": 500
+    },
+    {
+      "utbetalingsperiode": "2023-01",
+      "beskrivelse": "arbeidsavklaringspenger",
+      "beløp": 1000
+    },
+    {
+      "utbetalingsperiode": "2023-02",
+      "beskrivelse": "arbeidsavklaringspenger",
+      "beløp": 2000.33
+    },
+    {
+      "utbetalingsperiode": "2023-03",
+      "beskrivelse": "arbeidsavklaringspenger",
+      "beløp": 3000
+    },
+    {
+      "utbetalingsperiode": "2023-04",
+      "beskrivelse": "arbeidsavklaringspenger",
+      "beløp": 4000
+    },
+    {
+      "utbetalingsperiode": "2023-05",
+      "beskrivelse": "arbeidsavklaringspenger",
+      "beløp": 5000
+    },
+    {
+      "utbetalingsperiode": "2023-06",
+      "opptjeningsperiodeFra": "2023-04-15",
+      "opptjeningsperiodeTil": "2023-05-01",
+      "beskrivelse": "overtidsgodtgjoerelse",
+      "beløp": 8000
+    },
+    {
+      "utbetalingsperiode": "2023-06",
+      "beskrivelse": "arbeidsavklaringspenger",
+      "beløp": 6000
+    },
+    {
+      "utbetalingsperiode": "2023-06",
+      "beskrivelse": "bonus",
+      "beløp": 15000
+    },
+    {
+      "utbetalingsperiode": "2023-07",
+      "beskrivelse": "feriepenger",
+      "beløp": 85000
+    }
+  ]
+}

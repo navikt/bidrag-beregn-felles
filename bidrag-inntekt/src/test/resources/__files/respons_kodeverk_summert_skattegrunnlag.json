@@ -1,0 +1,4420 @@
+{
+  "betydninger": {
+    "samletGjenkjoepsverdiForLivsforsikring": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gjenkjøpsverdi for livsforsikring",
+            "term": "Gjenkjøpsverdi for livsforsikring"
+          }
+        }
+      }
+    ],
+    "betaltUnderholdsbidrag": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Betalt underholdsbidrag",
+            "term": "Betalt underholdsbidrag"
+          }
+        }
+      }
+    ],
+    "samletAndelAvInntektIBoligselskapEllerBoligsameie": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Andel av inntekt i boligselskap eller boligsameie",
+            "term": "Andel av inntekt i boligselskap eller boligsameie"
+          }
+        }
+      }
+    ],
+    "verdsettingsrabattForInventarLoesoereVedUtleie": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdsettingsrabatt for inventar løsøre ved utleie",
+            "term": "Verdsettingsrabatt for inventar løsøre ved utleie"
+          }
+        }
+      }
+    ],
+    "samletUnderskuddAvSDFPaaSvalbard": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Samlet underskudd av SDF på Svalbard",
+            "term": "Samlet underskudd av SDF på Svalbard"
+          }
+        }
+      }
+    ],
+    "gevinstValutalaan": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gevinst valutalån",
+            "term": "Gevinst valutalån"
+          }
+        }
+      }
+    ],
+    "barnepensjonFraIPAOgIPS": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Barnepensjon fra IPA og IPS",
+            "term": "Barnepensjon fra IPA og IPS"
+          }
+        }
+      }
+    ],
+    "samledePaaloepteRenterPaaGjeldIInnenlandskeBanker": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Samlede påløpte renter på gjeld i innenlandske banker",
+            "term": "Samlede påløpte renter på gjeld i innenlandske banker"
+          }
+        }
+      }
+    ],
+    "andreFradragsberettigedeKostnader": [
+      {
+        "gyldigFra": "2018-05-30",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Andre fradragsberettigede kostnader",
+            "term": "Andre fradragsberettigede kostnader"
+          }
+        }
+      }
+    ],
+    "dagpengerForNaeringsdrivendeOgFisker": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Dagpenger for næringsdrivende og fisker",
+            "term": "Dagpenger for næringsdrivende og fisker"
+          }
+        }
+      }
+    ],
+    "samletSaerfradragForUfoerhetIhtOvergangsregel": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Særfradrag for uførhet iht overgangsregel",
+            "term": "Særfradrag for uførhet iht overgangsregel"
+          }
+        }
+      }
+    ],
+    "gevinstVedRealisasjonAvAksjeOgVerdipapirfondAksjedel": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gevinst ved realisasjon av aksje-og verdipapirfond aksjedel",
+            "term": "Gevinst ved realisasjon av aksje-og verdipapirfond aksjedel"
+          }
+        }
+      }
+    ],
+    "samletSkattepliktigOverskuddAvUtleieAvFritidseiendom": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Skattepliktig overskudd av utleie av fritidseiendom",
+            "term": "Skattepliktig overskudd av utleie av fritidseiendom"
+          }
+        }
+      }
+    ],
+    "naeringsinntektFraKompensasjonsytelseUtbetaltAvNavInnenBarnepassIBarnepasserensHjem": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Næringsinntekt fra kompensasjonsytelse utbetalt av Nav innen barnepass i barnepasserens hjem",
+            "term": "Næringsinntekt fra kompensasjonsytelse utbetalt av Nav innen barnepass i barnepasserens hjem"
+          }
+        }
+      }
+    ],
+    "arbeidsavklaringspenger": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Arbeidsavklaringspenger",
+            "term": "Arbeidsavklaringspenger"
+          }
+        }
+      }
+    ],
+    "samletFormuesverdiForFastEiendomIUtlandet": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Formuesverdi for fast eiendom i utlandet",
+            "term": "Formuesverdi for fast eiendom i utlandet"
+          }
+        }
+      }
+    ],
+    "latentEllerRealisertGevinstPaaAnnetFinansproduktMvVedUtflytting": [
+      {
+        "gyldigFra": "2022-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Latent eller realisert gevinst på annet finansprodukt mv ved utflytting",
+            "term": "Latent eller realisert gevinst på annet finansprodukt mv ved utflytting"
+          }
+        }
+      }
+    ],
+    "minstefradragIInntektTilBarn": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Minstefradrag i inntekt til barn",
+            "term": "Minstefradrag i inntekt til barn"
+          }
+        }
+      }
+    ],
+    "samletAndelAvFellesgjeldIBoligselskapEllerBoligsameie": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Andel av fellesgjeld i boligselskap eller boligsameie",
+            "term": "Andel av fellesgjeld i boligselskap eller boligsameie"
+          }
+        }
+      }
+    ],
+    "inntektFraGevinstOgTapskonto": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Inntekt fra gevinst og tapskonto",
+            "term": "Inntekt fra gevinst og tapskonto"
+          }
+        }
+      }
+    ],
+    "samletSkattepliktigGevinstVedSalgAvFastEiendomMv": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Skattepliktig gevinst ved salg av fast eiendom mv",
+            "term": "Skattepliktig gevinst ved salg av fast eiendom mv"
+          }
+        }
+      }
+    ],
+    "underholdsbidragTilGode": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Underholdsbidrag til gode",
+            "term": "Underholdsbidrag til gode"
+          }
+        }
+      }
+    ],
+    "oppjustertTilleggTilTapVedRealisasjonAvVerdipapirfondsandelIKombifondKnyttetTilAksjedel": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Oppjustert tillegg til tap ved realisasjon av verdipapirfondsandel i kombifond knyttet til aksjedel",
+            "term": "Oppjustert tillegg til tap ved realisasjon av verdipapirfondsandel i kombifond knyttet til aksjedel"
+          }
+        }
+      }
+    ],
+    "underskuddFraSDF": [
+      {
+        "gyldigFra": "2022-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Underskudd fra SDF",
+            "term": "Underskudd fra SDF"
+          }
+        }
+      }
+    ],
+    "underskuddOverfoertFraBarnOgFordelt": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Underskudd overført fra barn og fordelt",
+            "term": "Underskudd overført fra barn og fordelt"
+          }
+        }
+      }
+    ],
+    "gevinstVedRealisasjonAvVirtuellValuta": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gevinst ved realisasjon av virtuell valuta",
+            "term": "Gevinst ved realisasjon av virtuell valuta"
+          }
+        }
+      }
+    ],
+    "sumInntekterIAlminneligInntektFoerFordelingsfradrag": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Sum inntekter i alminnelig inntekt før fordelingsfradrag",
+            "term": "Sum inntekter i alminnelig inntekt før fordelingsfradrag"
+          }
+        }
+      }
+    ],
+    "samletSkattepliktigGevinstVedRealisasjonAvObligasjonEllerVerdipapirfondsandel": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Skattepliktig gevinst ved realisasjon av obligasjon eller verdipapirfondsandel",
+            "term": "Skattepliktig gevinst ved realisasjon av obligasjon eller verdipapirfondsandel"
+          }
+        }
+      }
+    ],
+    "annenArbeidsinntekt": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Annen arbeidsinntekt",
+            "term": "Annen arbeidsinntekt"
+          }
+        }
+      }
+    ],
+    "skattepliktigUtbytteFraVerdipapirfondsandel": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Skattepliktig utbytte fra verdipapirfondsandel",
+            "term": "Skattepliktig utbytte fra verdipapirfondsandel"
+          }
+        }
+      }
+    ],
+    "gevinstVedRealisasjonAvVerdipapirfondsandelKnyttetTilAksjedel": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gevinst ved realisasjon av verdipapirfondsandel knyttet til aksjedel",
+            "term": "Gevinst ved realisasjon av verdipapirfondsandel knyttet til aksjedel"
+          }
+        }
+      }
+    ],
+    "samletAndelAvFradragsberettigetFelleskostnadForBoligselskapEllerBoligsameie": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Andel av fradragsberettiget felleskostnad for boligselskap eller boligsameie",
+            "term": "Andel av fradragsberettiget felleskostnad for boligselskap eller boligsameie"
+          }
+        }
+      }
+    ],
+    "samletAvtalefestetPensjon": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Avtalefestet pensjon",
+            "term": "Avtalefestet pensjon"
+          }
+        }
+      }
+    ],
+    "oppjustertTilleggTilAndelIFellesTapVedSalgAvAndelISDF": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Oppjustert tillegg til andel i felles tap ved salg av andel i SDF",
+            "term": "Oppjustert tillegg til andel i felles tap ved salg av andel i SDF"
+          }
+        }
+      }
+    ],
+    "sumFradragIAlminneligInntekt": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Sum fradrag i alminnelig inntekt",
+            "term": "Sum fradrag i alminnelig inntekt"
+          }
+        }
+      }
+    ],
+    "oppjustertTilleggTilSkattepliktigUtbytteFraAksjerRegistrertIVerdipapirsentralen": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Oppjustert tillegg til skattepliktig utbytte fra aksjer registrert i Verdipapirsentralen",
+            "term": "Oppjustert tillegg til skattepliktig utbytte fra aksjer registrert i Verdipapirsentralen"
+          }
+        }
+      }
+    ],
+    "tapVedRealisasjonAvOgUttakFraAksjedelIFondskonto": [
+      {
+        "gyldigFra": "2022-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "",
+            "term": "Tap ved realisasjon av og uttak fra aksjedel i fondskonto"
+          }
+        }
+      }
+    ],
+    "skjermingstilleggTilAlderspensjon": [
+      {
+        "gyldigFra": "2022-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Skjermingstillegg til alderspensjon",
+            "term": "Skjermingstillegg til alderspensjon"
+          }
+        }
+      }
+    ],
+    "tapVedRealisasjonAvOgUttakFraRentedelIFondskonto": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Tap ved realisasjon av og uttak fra rentedel i fondskonto",
+            "term": "Tap ved realisasjon av og uttak fra rentedel i fondskonto"
+          }
+        }
+      }
+    ],
+    "verdsettingsrabattForAksjedelIAksjesparekonto": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdsettingsrabatt for aksjedel i aksjesparekonto",
+            "term": "Verdsettingsrabatt for aksjedel i aksjesparekonto"
+          }
+        }
+      }
+    ],
+    "verdiFoerVerdsettingsrabattForKapitalisertFesteavgift": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdi før verdsettingsrabatt for kapitalisert festeavgift",
+            "term": "Verdi før verdsettingsrabatt for kapitalisert festeavgift"
+          }
+        }
+      }
+    ],
+    "verdiFoerVerdsettingsrabattForAksjeIUtlandet": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdi før verdsettingsrabatt for aksje i utlandet",
+            "term": "Verdi før verdsettingsrabatt for aksje i utlandet"
+          }
+        }
+      }
+    ],
+    "samletGevinstVedRealisasjonAvAndreFinansprodukter": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gevinst ved realisasjon av andre finansprodukter",
+            "term": "Gevinst ved realisasjon av andre finansprodukter"
+          }
+        }
+      }
+    ],
+    "verdiFoerVerdsettingsrabattForBilerMaskinerOgInventar": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdi før verdsettingsrabatt for biler maskiner og inventar",
+            "term": "Verdi før verdsettingsrabatt for biler maskiner og inventar"
+          }
+        }
+      }
+    ],
+    "formuesverdiForInnboLoesoereOgFritidsbaatUnderSalgsverdigrense": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Formuesverdi for innbo løsøre og fritidsbåt under salgsverdigrense",
+            "term": "Formuesverdi for innbo løsøre og fritidsbåt under salgsverdigrense"
+          }
+        }
+      }
+    ],
+    "engangsutbetalingFraIPSIPA": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Engangsutbetaling fra IPS IPA",
+            "term": "Engangsutbetaling fra IPS IPA"
+          }
+        }
+      }
+    ],
+    "latentEllerRealisertTapPaaAksjeAnnetFinansproduktMvVedUtflytting": [
+      {
+        "gyldigFra": "2022-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Latent eller realisert tap på aksje annet finansprodukt mv ved utflytting",
+            "term": "Latent eller realisert tap på aksje annet finansprodukt mv ved utflytting"
+          }
+        }
+      }
+    ],
+    "fradragsberettigetTapVedRealisasjonAvFastEiendom": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Fradragsberettiget tap ved realisasjon av fast eiendom",
+            "term": "Fradragsberettiget tap ved realisasjon av fast eiendom"
+          }
+        }
+      }
+    ],
+    "samletSupplerendeStoenad": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Supplerende stønad",
+            "term": "Supplerende stønad"
+          }
+        }
+      }
+    ],
+    "samletBarnepensjonOgLivrenteTilBarn": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Samlet barnepensjon og livrente til barn",
+            "term": "Samlet barnepensjon og livrente til barn"
+          }
+        }
+      }
+    ],
+    "utbytteFraAksje": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Utbytte fra aksje",
+            "term": "Utbytte fra aksje"
+          }
+        }
+      }
+    ],
+    "ufoeretrygdOmfattetAvLoennstrekkordningen": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Uføretrygd omfattet av lønnstrekkordningen",
+            "term": "Uføretrygd omfattet av lønnstrekkordningen"
+          }
+        }
+      }
+    ],
+    "renteinntektAvAnnetFinansprodukt": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Renteinntekt av annet finansprodukt",
+            "term": "Renteinntekt av annet finansprodukt"
+          }
+        }
+      }
+    ],
+    "samletOverskuddAvEnkeltpersonforetakInnenSkiferproduksjon": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Overskudd av enkeltpersonforetak innen skiferproduksjon",
+            "term": "Overskudd av enkeltpersonforetak innen skiferproduksjon"
+          }
+        }
+      }
+    ],
+    "paaloepteRenterFraAnnenGjeld": [
+      {
+        "gyldigFra": "2021-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "",
+            "term": "Påløpte renter fra annen gjeld"
+          }
+        }
+      }
+    ],
+    "samletUfoeretrygdFoerAlderspensjon": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Uføretrygd før alderspensjon",
+            "term": "Uføretrygd før alderspensjon"
+          }
+        }
+      }
+    ],
+    "overskuddAvEnkeltpersonforetakInnenSkiferproduksjon": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Overskudd av enkeltpersonforetak innen skiferproduksjon",
+            "term": "Overskudd av enkeltpersonforetak innen skiferproduksjon"
+          }
+        }
+      }
+    ],
+    "samletGevinstVedRealisasjonAvVerdipapirfondsandelKnyttetTilRentedel": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gevinst ved realisasjon av verdipapirfondsandel knyttet til rentedel",
+            "term": "Gevinst ved realisasjon av verdipapirfondsandel knyttet til rentedel"
+          }
+        }
+      }
+    ],
+    "samletFormuesverdiForBuskap": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Formuesverdi for buskap",
+            "term": "Formuesverdi for buskap"
+          }
+        }
+      }
+    ],
+    "samletOverskuddAvEnkeltpersonforetakInnenFiskeOgFangst": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Overskudd av enkeltpersonforetak innen fiske og fangst",
+            "term": "Overskudd av enkeltpersonforetak innen fiske og fangst"
+          }
+        }
+      }
+    ],
+    "personinntektFraSkattefriLottMedTrygdeavgiftspliktForUtenlandskFisker": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Personinntekt fra skattefri lott med trygdeavgiftsplikt for utenlandsk fisker",
+            "term": "Personinntekt fra skattefri lott med trygdeavgiftsplikt for utenlandsk fisker"
+          }
+        }
+      }
+    ],
+    "samletSkattepliktigGevinstVedSalgAvAndelerIKNANSNOKUS": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Skattepliktig gevinst ved salg av andeler i KNANSNOKUS",
+            "term": "Skattepliktig gevinst ved salg av andeler i KNANSNOKUS"
+          }
+        }
+      }
+    ],
+    "oppjustertTilleggTilTapVedRealisasjonAvAksjesparekonto": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Oppjustert tillegg til tap ved realisasjon av aksjesparekonto",
+            "term": "Oppjustert tillegg til tap ved realisasjon av aksjesparekonto"
+          }
+        }
+      }
+    ],
+    "samletFormuesverdiForAnnenFastEiendom": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Formuesverdi for annen fast eiendom",
+            "term": "Formuesverdi for annen fast eiendom"
+          }
+        }
+      }
+    ],
+    "oppjustertTilleggTilUtbytteFraAksjesparekonto": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Oppjustert tillegg til utbytte fra aksjesparekonto",
+            "term": "Oppjustert tillegg til utbytte fra aksjesparekonto"
+          }
+        }
+      }
+    ],
+    "andelAvUnderskuddFraTidligereAarVedDriftAvVaaningshusSomAnvendesIAaret": [
+      {
+        "gyldigFra": "2021-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "",
+            "term": "Andel av underskudd fra tidligere år ved drift av våningshus som anvendes i året"
+          }
+        }
+      }
+    ],
+    "pensjonsinntektOmfattetAvLoennstrekkordningen": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Pensjonsinntekt omfattet av lønnstrekkordningen",
+            "term": "Pensjonsinntekt omfattet av lønnstrekkordningen"
+          }
+        }
+      }
+    ],
+    "skattepliktigUtbytteFraVerdipapirfondsandelTilBarn": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Skattepliktig utbytte fra verdipapirfondsandel til barn",
+            "term": "Skattepliktig utbytte fra verdipapirfondsandel til barn"
+          }
+        }
+      }
+    ],
+    "verdiFoerVerdsettingsrabattForAndelINOKUS": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdi før verdsettingsrabatt for andel i NOKUS",
+            "term": "Verdi før verdsettingsrabatt for andel i NOKUS"
+          }
+        }
+      }
+    ],
+    "oppjustertTilleggTilSkattepliktigAksjegevinst": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Oppjustert tillegg til skattepliktig aksjegevinst",
+            "term": "Oppjustert tillegg til skattepliktig aksjegevinst"
+          }
+        }
+      }
+    ],
+    "verdiFoerVerdsettingsrabattForInventarLoesoereVedUtleie": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdi før verdsettingsrabatt for inventar løsøre ved utleie",
+            "term": "Verdi før verdsettingsrabatt for inventar løsøre ved utleie"
+          }
+        }
+      }
+    ],
+    "samletBarnepensjonOgLivrenteTilBarnUnderSyttenAar": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Barnepensjon og livrente til barn under sytten år",
+            "term": "Barnepensjon og livrente til barn under sytten år"
+          }
+        }
+      }
+    ],
+    "fradragForGaverTilFrivilligeOrganisasjoner": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Fradrag for gaver til frivillige organisasjoner",
+            "term": "Fradrag for gaver til frivillige organisasjoner"
+          }
+        }
+      }
+    ],
+    "fradragForIndividuellSparingTilPensjon": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Fradrag for individuell sparing til pensjon",
+            "term": "Fradrag for individuell sparing til pensjon"
+          }
+        }
+      }
+    ],
+    "tapVedRealisasjonAvVerdipapirfondsandelKnyttetTilAksjedel": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Tap ved realisasjon av verdipapirfondsandel knyttet til aksjedel",
+            "term": "Tap ved realisasjon av verdipapirfondsandel knyttet til aksjedel"
+          }
+        }
+      }
+    ],
+    "underskuddAvEnkeltpersonforetakFordeltFraEktefelle": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Underskudd av enkeltpersonforetak fordelt fra ektefelle",
+            "term": "Underskudd av enkeltpersonforetak fordelt fra ektefelle"
+          }
+        }
+      }
+    ],
+    "minstefradragIInntekt": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Minstefradrag i inntekt",
+            "term": "Minstefradrag i inntekt"
+          }
+        }
+      }
+    ],
+    "samletOverskuddAvEnkeltpersonforetakInnenAnnenNaering": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Overskudd av enkeltpersonforetak innen annen næring",
+            "term": "Overskudd av enkeltpersonforetak innen annen næring"
+          }
+        }
+      }
+    ],
+    "oevrigInntekt": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Øvrig inntekt",
+            "term": "Øvrig inntekt"
+          }
+        }
+      }
+    ],
+    "saerfradragOverfoertTilForelder": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Særfradrag overført til forelder",
+            "term": "Særfradrag overført til forelder"
+          }
+        }
+      }
+    ],
+    "gevinstVedRealisasjonAvFastEiendomMv": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gevinst ved realisasjon av fast eiendom mv.",
+            "term": "Gevinst ved realisasjon av fast eiendom mv."
+          }
+        }
+      }
+    ],
+    "overskuddAvEnkeltpersonforetakInnenSkogbruk": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Overskudd av enkeltpersonforetak innen skogbruk",
+            "term": "Overskudd av enkeltpersonforetak innen skogbruk"
+          }
+        }
+      }
+    ],
+    "gjeldPaaAnnetFinansprodukt": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gjeld på annet finansprodukt",
+            "term": "Gjeld på annet finansprodukt"
+          }
+        }
+      }
+    ],
+    "kapitalkostnadFraSkogbruk": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Kapitalkostnad fra skogbruk",
+            "term": "Kapitalkostnad fra skogbruk"
+          }
+        }
+      }
+    ],
+    "samletSkattefriDelAvFormue": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Skattefri del av formue",
+            "term": "Skattefri del av formue"
+          }
+        }
+      }
+    ],
+    "samletSkattepliktigOverskuddFraUtleieAvFastEiendom": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Skattepliktig overskudd fra utleie av fast eiendom",
+            "term": "Skattepliktig overskudd fra utleie av fast eiendom"
+          }
+        }
+      }
+    ],
+    "samletFormuesverdiForFritidbaatMedSalgsverdiOverSalgsverdigrense": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Formuesverdi for fritidbåt med salgsverdi over salgsverdigrense",
+            "term": "Formuesverdi for fritidbåt med salgsverdi over salgsverdigrense"
+          }
+        }
+      }
+    ],
+    "oppjustertTilleggTilTapVedRealisasjonAvAksje": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Oppjustert tillegg til tap ved realisasjon av aksje",
+            "term": "Oppjustert tillegg til tap ved realisasjon av aksje"
+          }
+        }
+      }
+    ],
+    "samletOverskuddPaaUtgiftsgodtgjoerelse": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Overskudd på utgiftsgodtgjørelse",
+            "term": "Overskudd på utgiftsgodtgjørelse"
+          }
+        }
+      }
+    ],
+    "tapVedRealisasjonAvAnnetFinansprodukt": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Tap ved realisasjon av annet finansprodukt",
+            "term": "Tap ved realisasjon av annet finansprodukt"
+          }
+        }
+      }
+    ],
+    "skattefriLoennsinntektMedTrygdeavgiftspliktOgMedTrekkplikt": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Skattefri loennsinntekt med trygdeavgiftsplikt og med trekkplikt",
+            "term": "Skattefri loennsinntekt med trygdeavgiftsplikt og med trekkplikt"
+          }
+        }
+      }
+    ],
+    "overskuddAvUtgiftsgodtgjoerelseVedSmusstillegg": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Overskudd av utgiftsgodtgjørelse ved smusstillegg",
+            "term": "Overskudd av utgiftsgodtgjørelse ved smusstillegg"
+          }
+        }
+      }
+    ],
+    "supplerendeStoenad": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Supplerende stønad",
+            "term": "Supplerende stønad"
+          }
+        }
+      }
+    ],
+    "inntektsfradragAvRentefordelPaaLaanIArbeidsforhold": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Inntektsfradrag av rentefordel på lån i arbeidsforhold",
+            "term": "Inntektsfradrag av rentefordel på lån i arbeidsforhold"
+          }
+        }
+      }
+    ],
+    "samletUnderskuddINaeringsvirksomhetPaaSvalbard": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Samlet underskudd i næringsvirksomhet på Svalbard",
+            "term": "Samlet underskudd i næringsvirksomhet på Svalbard"
+          }
+        }
+      }
+    ],
+    "skattepliktigUtbytteFraAksjeOgVerdipapirfondAksjedel": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Skattepliktig utbytte fra aksje-og verdipapirfond aksjedel",
+            "term": "Skattepliktig utbytte fra aksje-og verdipapirfond aksjedel"
+          }
+        }
+      }
+    ],
+    "grunnlagForKildeskattPaaPensjonOgUfoereytelser": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Grunnlag for kildeskatt på pensjon og uføreytelser",
+            "term": "Grunnlag for kildeskatt på pensjon og uføreytelser"
+          }
+        }
+      }
+    ],
+    "samletPersoninntektFraDeltakerlignetSelskapInnenFiskeEllerFamiliebarnehage": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Personinntekt fra deltakerlignet selskap innen fiske eller familiebarnehage",
+            "term": "Personinntekt fra deltakerlignet selskap innen fiske eller familiebarnehage"
+          }
+        }
+      }
+    ],
+    "tapVedRealisasjonAvAksjesparekonto": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Tap ved realisasjon av aksjesparekonto",
+            "term": "Tap ved realisasjon av aksjesparekonto"
+          }
+        }
+      }
+    ],
+    "samletInnskuddIInnenlandskeBanker": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Innskudd i innenlandske banker",
+            "term": "Innskudd i innenlandske banker"
+          }
+        }
+      }
+    ],
+    "opptjenteRenterFraUtestaaendeFordring": [
+      {
+        "gyldigFra": "2021-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "",
+            "term": "Opptjente renter fra utestående fordring"
+          }
+        }
+      }
+    ],
+    "gjeldsrentereduksjonForFormueIUtlandetUnntattBeskatningINorgeEtterSkatteavtale": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gjeldsrentereduksjon for formue i utlandet unntatt beskatning i norge etter skatteavtale",
+            "term": "Gjeldsrentereduksjon for formue i utlandet unntatt beskatning i norge etter skatteavtale"
+          }
+        }
+      }
+    ],
+    "samletLoennsinntektMedTrygdeavgiftspliktOgMedTrekkplikt": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Lønnsinntekt med trygdeavgiftsplikt og med trekkplikt",
+            "term": "Lønnsinntekt med trygdeavgiftsplikt og med trekkplikt"
+          }
+        }
+      }
+    ],
+    "inntektVedUtleieAvFritidseiendomSomSkattepliktigeHarBrukt": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Inntekt ved utleie av fritidseiendom som skattepliktige har brukt",
+            "term": "Inntekt ved utleie av fritidseiendom som skattepliktige har brukt"
+          }
+        }
+      }
+    ],
+    "utbytteFraVerdipapirfond": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Utbytte fra verdipapirfond",
+            "term": "Utbytte fra verdipapirfond"
+          }
+        }
+      }
+    ],
+    "introduksjonsstoenad": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Introduksjonsstønad",
+            "term": "Introduksjonsstønad"
+          }
+        }
+      }
+    ],
+    "gevinstVedRealisasjonAvAksjesparekonto": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gevinst ved realisasjon av aksjesparekonto",
+            "term": "Gevinst ved realisasjon av aksjesparekonto"
+          }
+        }
+      }
+    ],
+    "samletOverskuddAvSDFInnenFiskeEllerFamiliebarnehage": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Samlet overskudd av SDF innen fiske eller familiebarnehage",
+            "term": "Samlet overskudd av SDF innen fiske eller familiebarnehage"
+          }
+        }
+      }
+    ],
+    "formuesverdiForObligasjonerOpsjonerMvRegistrertIVerdipapirsentralen": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Formuesverdi for obligasjoner opsjoner mv registrert i Verdipapirsentralen",
+            "term": "Formuesverdi for obligasjoner opsjoner mv registrert i Verdipapirsentralen"
+          }
+        }
+      }
+    ],
+    "verdsettingsrabattForAksjeIkkeIVPS": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdsettingsrabatt for aksje ikke i VPS",
+            "term": "Verdsettingsrabatt for aksje ikke i VPS"
+          }
+        }
+      }
+    ],
+    "samletFormuesverdiForMotorkjoeretoey": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Formuesverdi for motorkjøretøy",
+            "term": "Formuesverdi for motorkjøretøy"
+          }
+        }
+      }
+    ],
+    "nettoinntektVedUtleieAvFastEiendomMv": [
+      {
+        "gyldigFra": "2022-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Nettoinntekt ved utleie av fast eiendom mv",
+            "term": "Nettoinntekt ved utleie av fast eiendom mv"
+          }
+        }
+      }
+    ],
+    "barnepensjonFraFolketrygden": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Barnepensjon fra Folketrygden",
+            "term": "Barnepensjon fra Folketrygden"
+          }
+        }
+      }
+    ],
+    "tapOgAnnenKostnadFraVirtuellEiendel": [
+      {
+        "gyldigFra": "2022-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Tap og annen kostnad fra virtuell eiendel",
+            "term": "Tap og annen kostnad fra virtuell eiendel"
+          }
+        }
+      }
+    ],
+    "gevinstVedRealisasjonAvAndelIRentedelIVerdipapirfond": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gevinst ved realisasjon av andel i rentedel i verdipapirfond",
+            "term": "Gevinst ved realisasjon av andel i rentedel i verdipapirfond"
+          }
+        }
+      }
+    ],
+    "underskuddVedUtleieMvAvFastEiendomUtenforNaering": [
+      {
+        "gyldigFra": "2022-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Underskuddved utleie mv. av fast eiendom utenfor næring",
+            "term": "Underskuddved utleie mv. av fast eiendom utenfor næring"
+          }
+        }
+      }
+    ],
+    "verdsettingsrabattForBilerMaskinerOgInventar": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdsettingsrabatt for biler maskiner og inventar",
+            "term": "Verdsettingsrabatt for biler maskiner og inventar"
+          }
+        }
+      }
+    ],
+    "saerfradragOverfoertFraBarn": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Særfradrag overført fra barn",
+            "term": "Særfradrag overført fra barn"
+          }
+        }
+      }
+    ],
+    "underholdsbidragFraTidligereEktefelle": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Underholdsbidrag fra tidligere ektefelle",
+            "term": "Underholdsbidrag fra tidligere ektefelle"
+          }
+        }
+      }
+    ],
+    "gevinstVedSalgAvAndelISDF": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gevinst ved salg av andel i SDF",
+            "term": "Gevinst ved salg av andel i SDF"
+          }
+        }
+      }
+    ],
+    "verdsettingsrabattForAnnenFormueInnenforInntektsgivendeAktivitet": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdsettingsrabatt for annen formue innenfor inntektsgivende aktivitet",
+            "term": "Verdsettingsrabatt for annen formue innenfor inntektsgivende aktivitet"
+          }
+        }
+      }
+    ],
+    "formuesverdiForKontanterMvIFondskonto": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Formuesverdi for kontanter mv i fondskonto",
+            "term": "Formuesverdi for kontanter mv i fondskonto"
+          }
+        }
+      }
+    ],
+    "tapVedRealisasjonAvAndelIAksjedelIVerdipapirfond": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Tap ved realisasjon av andel i aksjedel i verdipapirfond",
+            "term": "Tap ved realisasjon av andel i aksjedel i verdipapirfond"
+          }
+        }
+      }
+    ],
+    "oppjustertTilleggTilTapVedSalgAvAndelINOKUS": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Oppjustert tillegg til tap ved salg av andel i NOKUS",
+            "term": "Oppjustert tillegg til tap ved salg av andel i NOKUS"
+          }
+        }
+      }
+    ],
+    "reisefradrag": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Reisefradrag",
+            "term": "Reisefradrag"
+          }
+        }
+      }
+    ],
+    "oppjustertTilleggTilGevinstVedRealisasjonAvVerdipapirfondsandelIKombifondKnyttetTilAksjedel": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Oppjustert tillegg til gevinst ved realisasjon av verdipapirfondsandel i kombifond knyttet til aksjedel",
+            "term": "Oppjustert tillegg til gevinst ved realisasjon av verdipapirfondsandel i kombifond knyttet til aksjedel"
+          }
+        }
+      }
+    ],
+    "verdsettingsrabattForRettigheterKnyttetTilSkogUtmark": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdsettingsrabatt for rettigheter knyttet til skog utmark",
+            "term": "Verdsettingsrabatt for rettigheter knyttet til skog utmark"
+          }
+        }
+      }
+    ],
+    "samletOverskuddAvEnkeltpersonforetakInnenFamiliebarnehageEllerDagmammaIEgetHjem": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Overskudd av enkeltpersonforetak innen familiebarnehage eller dagmamma i eget hjem",
+            "term": "Overskudd av enkeltpersonforetak innen familiebarnehage eller dagmamma i eget hjem"
+          }
+        }
+      }
+    ],
+    "skattepliktigUtbytteFraAksjeIkkeRegistrertIVerdipapirsentralen": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Skattepliktig utbytte fra aksje i NOKUS ikke registrert i Verdipapirsentralen",
+            "term": "Skattepliktig utbytte fra aksje i NOKUS ikke registrert i Verdipapirsentralen"
+          }
+        }
+      }
+    ],
+    "samletAnnenPensjonUtenTrekkplikt": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Samlet annen pensjon uten trekkplikt",
+            "term": "Samlet annen pensjon uten trekkplikt"
+          }
+        }
+      }
+    ],
+    "gevinstOgAnnenInntektFraVirtuellEiendel": [
+      {
+        "gyldigFra": "2022-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gevinst og annen inntekt fra virtuell eiendel",
+            "term": "Gevinst og annen inntekt fra virtuell eiendel"
+          }
+        }
+      }
+    ],
+    "annenSkattepliktigKapitalinntektFraVirtuellValuta": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Annen skattepliktig kapitalinntekt fra virtuell valuta",
+            "term": "Annen skattepliktig kapitalinntekt fra virtuell valuta"
+          }
+        }
+      }
+    ],
+    "dagpengerForFisker": [
+      {
+        "gyldigFra": "2022-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Dagpenger for fisker",
+            "term": "Dagpenger for fisker"
+          }
+        }
+      }
+    ],
+    "saerfradragForEnsligForsoerger": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Særfradrag for enslig forsørger",
+            "term": "Særfradrag for enslig forsørger"
+          }
+        }
+      }
+    ],
+    "samletPersoninntektFraDeltakerlignetSelskapInnenAnnenNaering": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Personinntekt fra deltakerlignet selskap innen annen næring",
+            "term": "Personinntekt fra deltakerlignet selskap innen annen næring"
+          }
+        }
+      }
+    ],
+    "opptjenteRenterFraPrivatUtestaaendeFordring": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Opptjente renter fra privat utestående fordring",
+            "term": "Opptjente renter fra privat utestående fordring"
+          }
+        }
+      }
+    ],
+    "samletFormuesverdiForOevrigFormueIUtlandet": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Formuesverdi for øvrig formue i utlandet",
+            "term": "Formuesverdi for øvrig formue i utlandet"
+          }
+        }
+      }
+    ],
+    "aarsavgiftForKontoIVerdipapirregister": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Årsavgift for konto i verdipapirregister",
+            "term": "Årsavgift for konto i verdipapirregister"
+          }
+        }
+      }
+    ],
+    "verdsettingsrabattForSkipFiskeOgFangstfartoey": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdsettingsrabatt for skip fiske og fangstfartøy",
+            "term": "Verdsettingsrabatt for skip fiske og fangstfartøy"
+          }
+        }
+      }
+    ],
+    "utgiftVedRefinansieringAvLaan": [
+      {
+        "gyldigFra": "2021-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "",
+            "term": "Utgift ved refinansiering av lån"
+          }
+        }
+      }
+    ],
+    "forvaltningskostnaderFinans": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Forvaltningskostnader finans",
+            "term": "Forvaltningskostnader finans"
+          }
+        }
+      }
+    ],
+    "formuesverdiForObligasjonerOpsjonerMvIkkeRegistrertIVerdipapirsentralen": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Formuesverdi for obligasjoner opsjoner mv ikke registrert i Verdipapirsentralen",
+            "term": "Formuesverdi for obligasjoner opsjoner mv ikke registrert i Verdipapirsentralen"
+          }
+        }
+      }
+    ],
+    "personinntektFraKompensasjonsytelseUtbetaltAvNavInnenFiskeOgFangst": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Personinntekt fra kompensasjonsytelse utbetalt av Nav innen fiske og fangst",
+            "term": "Personinntekt fra kompensasjonsytelse utbetalt av Nav innen fiske og fangst"
+          }
+        }
+      }
+    ],
+    "inntektsfradragFraGevinstOgTapskonto": [
+      {
+        "gyldigFra": "2022-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Inntektsfradrag fra gevinst og tapskonto",
+            "term": "Inntektsfradrag fra gevinst og tapskonto"
+          }
+        }
+      }
+    ],
+    "tapValutalaan": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Tap valutalån",
+            "term": "Tap valutalån"
+          }
+        }
+      }
+    ],
+    "samletUfoereytelseFraAndreEnnFolketrygden": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Uføreytelse fra andre enn folketrygden",
+            "term": "Uføreytelse fra andre enn folketrygden"
+          }
+        }
+      }
+    ],
+    "gevinstVedRealisasjonAvFastEiendomMvIUtlandet": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gevinst ved realisasjon av fast eiendom mv i utlandet",
+            "term": "Gevinst ved realisasjon av fast eiendom mv i utlandet"
+          }
+        }
+      }
+    ],
+    "samletRenteinntektPaaLaanTilSelskapSomSkalEkstrabeskattes": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Renteinntekt på lån til selskap som skal ekstrabeskattes",
+            "term": "Renteinntekt på lån til selskap som skal ekstrabeskattes"
+          }
+        }
+      }
+    ],
+    "slitertillegg": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Slitertillegg",
+            "term": "Slitertillegg"
+          }
+        }
+      }
+    ],
+    "alderspensjonFraFolketrygden": [
+      {
+        "gyldigFra": "2022-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Alderspensjon fra Folketrygden",
+            "term": "Alderspensjon fra Folketrygden"
+          }
+        }
+      }
+    ],
+    "samletFremfoerbartUnderskuddFraTidligereAar": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Fremførbart underskudd fra tidligere år",
+            "term": "Fremførbart underskudd fra tidligere år"
+          }
+        }
+      }
+    ],
+    "samletSkattepliktigOverskuddFraUtleieAvFastEiendomIUtlandet": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Skattepliktig overskudd fra utleie av fast eiendom i utlandet",
+            "term": "Skattepliktig overskudd fra utleie av fast eiendom i utlandet"
+          }
+        }
+      }
+    ],
+    "samletOverskuddAvSDFInnenAnnenNaering": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Samlet overskudd av SDF innen annen næring",
+            "term": "Samlet overskudd av SDF innen annen næring"
+          }
+        }
+      }
+    ],
+    "fradragForFagforeningskontingent": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Fradrag for fagforeningskontingent",
+            "term": "Fradrag for fagforeningskontingent"
+          }
+        }
+      }
+    ],
+    "utbetalingFraAvtaleOmSkattefavorisertIndividuellSparingTilPensjonTegnetFomNov2017": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Utbetaling fra avtale om skattefavorisert individuell sparing til pensjon tegnet fom. Nov 2017",
+            "term": "Utbetaling fra avtale om skattefavorisert individuell sparing til pensjon tegnet fom. Nov 2017"
+          }
+        }
+      }
+    ],
+    "bruttoformue": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Bruttoformue",
+            "term": "Bruttoformue"
+          }
+        }
+      }
+    ],
+    "samletFormuesverdiForCampingvogn": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Formuesverdi for campingvogn",
+            "term": "Formuesverdi for campingvogn"
+          }
+        }
+      }
+    ],
+    "skyldigUnderholdsbidrag": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Skyldig underholdsbidrag",
+            "term": "Skyldig underholdsbidrag"
+          }
+        }
+      }
+    ],
+    "dagpengerForNaeringsdrivende": [
+      {
+        "gyldigFra": "2022-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Dagpenger for næringsdrivende",
+            "term": "Dagpenger for næringsdrivende"
+          }
+        }
+      }
+    ],
+    "samletUnderskuddINaeringsvirksomhet": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Underskudd i næringsvirksomhet",
+            "term": "Underskudd i næringsvirksomhet"
+          }
+        }
+      }
+    ],
+    "samletUnderskuddAvSDF": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Samlet underskudd av SDF",
+            "term": "Samlet underskudd av SDF"
+          }
+        }
+      }
+    ],
+    "samletSaerskiltFradragForSjoefolk": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Særskilt fradrag for sjøfolk",
+            "term": "Særskilt fradrag for sjøfolk"
+          }
+        }
+      }
+    ],
+    "verdiFoerVerdsettingsrabattForAksjeIVPS": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdi før verdsettingsrabatt for aksje i VPS",
+            "term": "Verdi før verdsettingsrabatt for aksje i VPS"
+          }
+        }
+      }
+    ],
+    "samletInnskuddIUtenlandskeBanker": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Innskudd i utenlandske banker",
+            "term": "Innskudd i utenlandske banker"
+          }
+        }
+      }
+    ],
+    "samledeOpptjenteRenterIInnenlandskeBanker": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Opptjente renter i innenlandske banker",
+            "term": "Opptjente renter i innenlandske banker"
+          }
+        }
+      }
+    ],
+    "verdiFoerVerdsettingsrabattForVerdipapirfondsandel": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdi før verdsettingsrabatt for verdipapirfondsandel",
+            "term": "Verdi før verdsettingsrabatt for verdipapirfondsandel"
+          }
+        }
+      }
+    ],
+    "tapVedRealisasjonAvVerdipapirfondsandelIKombifondKnyttetTilAksjedel": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Tap ved realisasjon av verdipapirfondsandel i kombifond knyttet til aksjedel",
+            "term": "Tap ved realisasjon av verdipapirfondsandel i kombifond knyttet til aksjedel"
+          }
+        }
+      }
+    ],
+    "renteinntektAvVerdipapirfondsandel": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Renteinntekt av verdipapirfondsandel",
+            "term": "Renteinntekt av verdipapirfondsandel"
+          }
+        }
+      }
+    ],
+    "utbytteFraAksjesparekonto": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Utbytte fra aksjesparekonto",
+            "term": "Utbytte fra aksjesparekonto"
+          }
+        }
+      }
+    ],
+    "formuesverdiForVirtuellValuta": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Formuesverdi for virtuell valuta",
+            "term": "Formuesverdi for virtuell valuta"
+          }
+        }
+      }
+    ],
+    "inntektsreduksjonVedAvkastningAvEngangserstatning": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Inntektsreduksjon ved avkastning av engangserstatning",
+            "term": "Inntektsreduksjon ved avkastning av engangserstatning"
+          }
+        }
+      }
+    ],
+    "styrehonorarFraNorskSelskapTilSkattepliktigBosattIUtlandet": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Styrehonorar fra norsk selskap til skattepliktig bosatt i utlandet",
+            "term": "Styrehonorar fra norsk selskap til skattepliktig bosatt i utlandet"
+          }
+        }
+      }
+    ],
+    "samletPersoninntektFraEnkeltpersonforetakInnenFamiliebarnehageEllerDagmammaIEgetHjem": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Personinntekt fra enkeltpersonforetak innen familiebarnehage eller dagmamma i eget hjem",
+            "term": "Personinntekt fra enkeltpersonforetak innen familiebarnehage eller dagmamma i eget hjem"
+          }
+        }
+      }
+    ],
+    "skattepliktigAksjegevinst": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Skattepliktig aksjegevinst",
+            "term": "Skattepliktig aksjegevinst"
+          }
+        }
+      }
+    ],
+    "samletAnnenPensjonMedTrekkpliktEksklusiveEktefelletillegg": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Annen pensjon med trekkplikt eksklusive ektefelletillegg",
+            "term": "Annen pensjon med trekkplikt eksklusive ektefelletillegg"
+          }
+        }
+      }
+    ],
+    "samledeAndrePaaloepteRenter": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Samlede andre påløpte renter",
+            "term": "Samlede andre påløpte renter"
+          }
+        }
+      }
+    ],
+    "skattepliktigUtbytteFraAksjeINOKUSIkkeRegistrertIVerdipapirsentralen": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Skattepliktig utbytte fra aksje ikke registrert i Verdipapirsentralen",
+            "term": "Skattepliktig utbytte fra aksje ikke registrert i Verdipapirsentralen"
+          }
+        }
+      }
+    ],
+    "saerskiltFradragForFiskeOgFangst": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Særskilt fradrag for fiske og fangst",
+            "term": "Særskilt fradrag for fiske og fangst"
+          }
+        }
+      }
+    ],
+    "gevinstVedRealisasjonAvOgUttakFraRentedelIFondskonto": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gevinst ved realisasjon av og uttak fra rentedel i fondskonto",
+            "term": "Gevinst ved realisasjon av og uttak fra rentedel i fondskonto"
+          }
+        }
+      }
+    ],
+    "verdsettingsrabattForVerdipapirfondsandelTilBarn": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdsettingsrabatt for verdipapirfondsandel til barn",
+            "term": "Verdsettingsrabatt for verdipapirfondsandel til barn"
+          }
+        }
+      }
+    ],
+    "skattepliktigAvkastningEllerKundeutbytte": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Skattepliktig avkastning eller kundeutbytte",
+            "term": "Skattepliktig avkastning eller kundeutbytte"
+          }
+        }
+      }
+    ],
+    "annenSkattepliktigKapitalinntektFraAnnetFinansprodukt": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Annen skattepliktig kapitalinntekt fra annet finansprodukt",
+            "term": "Annen skattepliktig kapitalinntekt fra annet finansprodukt"
+          }
+        }
+      }
+    ],
+    "standardfradrag": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Standardfradrag",
+            "term": "Standardfradrag"
+          }
+        }
+      }
+    ],
+    "returprovisjonKnyttetTilAksjesparekonto": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Returprovisjon knyttet til aksjesparekonto",
+            "term": "Returprovisjon knyttet til aksjesparekonto"
+          }
+        }
+      }
+    ],
+    "paaloepteRenterFraPrivatGjeld": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Påløpte renter fra privat gjeld",
+            "term": "Påløpte renter fra privat gjeld"
+          }
+        }
+      }
+    ],
+    "minstefradragIBarnepensjonTilBarn": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Minstefradrag i barnepensjon til barn",
+            "term": "Minstefradrag i barnepensjon til barn"
+          }
+        }
+      }
+    ],
+    "tapVedRealisasjonAvObligasjonVerdipapirfondRentedelMv": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Tap ved realisasjon av obligasjon, verdipapirfond, rentedel mv.",
+            "term": "Tap ved realisasjon av obligasjon, verdipapirfond, rentedel mv."
+          }
+        }
+      }
+    ],
+    "samledePaaloepteRenter": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Samlede påløpte renter",
+            "term": "Samlede påløpte renter"
+          }
+        }
+      }
+    ],
+    "pensjonsinnbetaling": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Pensjonsinnbetaling",
+            "term": "Pensjonsinnbetaling"
+          }
+        }
+      }
+    ],
+    "samletSaerskiltFradragForJordbrukReindriftOgSkiferproduksjon": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Særskilt fradrag for jordbruk, reindrift og skiferproduksjon",
+            "term": "Særskilt fradrag for jordbruk, reindrift og skiferproduksjon"
+          }
+        }
+      }
+    ],
+    "tapVedSalgAvAndelINOKUS": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Tap ved salg av andel i NOKUS",
+            "term": "Tap ved salg av andel i NOKUS"
+          }
+        }
+      }
+    ],
+    "verdiFoerVerdsettingsrabattForVerdipapirfondsandelTilBarn": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdi før verdsettingsrabatt for verdipapirfondsandel til barn",
+            "term": "Verdi før verdsettingsrabatt for verdipapirfondsandel til barn"
+          }
+        }
+      }
+    ],
+    "oppjustertTilleggTilSkattepliktigUtbytteFraAksjeINOKUSIkkeRegistrertIVerdipapirsentralen": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Oppjustert tillegg til skattepliktig utbytte fra aksje ikke registrert i Verdipapirsentralen",
+            "term": "Oppjustert tillegg til skattepliktig utbytte fra aksje ikke registrert i Verdipapirsentralen"
+          }
+        }
+      }
+    ],
+    "inntektFraLottEllerPartTilFiskerOgFangstmann": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Inntekt fra lott eller part til fisker og fangstmann",
+            "term": "Inntekt fra lott eller part til fisker og fangstmann"
+          }
+        }
+      }
+    ],
+    "loennsinntektUtenTrygdeavgiftspliktOmfattetAvLoennstrekkordningen": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Lønnsinntekt uten trygdeavgiftsplikt omfattet av lønnstrekkordningen",
+            "term": "Lønnsinntekt uten trygdeavgiftsplikt omfattet av lønnstrekkordningen"
+          }
+        }
+      }
+    ],
+    "naeringsinntektFraKompensasjonsytelseUtbetaltAvNavInnenFiskeOgFangst": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Næeringsinntekt fra kompensasjonsytelse utbetalt av Nav innen fiske og fangst",
+            "term": "Næeringsinntekt fra kompensasjonsytelse utbetalt av Nav innen fiske og fangst"
+          }
+        }
+      }
+    ],
+    "samletOpptjenteRenterIUtlandskeBanker": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Opptjente renter i utlandske banker",
+            "term": "Opptjente renter i utlandske banker"
+          }
+        }
+      }
+    ],
+    "samletFagforeningskontingent": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Samlet fagforeningskontingent",
+            "term": "Samlet fagforeningskontingent"
+          }
+        }
+      }
+    ],
+    "premiefondIndividuellPensjonsavtale": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Premiefond individuell pensjonsavtale",
+            "term": "Premiefond individuell pensjonsavtale"
+          }
+        }
+      }
+    ],
+    "samletLottinntekt": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Lottinntekt",
+            "term": "Lottinntekt"
+          }
+        }
+      }
+    ],
+    "gjeldsreduksjonForFastEiendomIUtlandetUnntattBeskatningINorgeEtterSkatteavtale": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gjeldsreduksjon for fast eiendom i utlandet unntatt beskatning i norge etter skatteavtale",
+            "term": "Gjeldsreduksjon for fast eiendom i utlandet unntatt beskatning i norge etter skatteavtale"
+          }
+        }
+      }
+    ],
+    "samletFormuesverdiForSekundaerbolig": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Formuesverdi for sekundærbolig",
+            "term": "Formuesverdi for sekundærbolig"
+          }
+        }
+      }
+    ],
+    "naeringsinntektFraKompensasjonsytelseUtbetaltAvNavInnenAnnenNaering": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Næringsinntekt fra kompensasjonsytelse utbetalt av Nav innen annen næring",
+            "term": "Næringsinntekt fra kompensasjonsytelse utbetalt av Nav innen annen næring"
+          }
+        }
+      }
+    ],
+    "utgifterTilPassOgStellAvHjemmevaerendeBarn": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Utgifter til pass og stell av hjemmeværende barn",
+            "term": "Utgifter til pass og stell av hjemmeværende barn"
+          }
+        }
+      }
+    ],
+    "samletFormuesverdiForAndelerIRentedelAvVerdipapirfond": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Formuesverdi for andeler i rentedel av verdipapirfond",
+            "term": "Formuesverdi for andeler i rentedel av verdipapirfond"
+          }
+        }
+      }
+    ],
+    "samletFormuesverdiForOevrigFormue": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Formuesverdi for øvrig formue",
+            "term": "Formuesverdi for øvrig formue"
+          }
+        }
+      }
+    ],
+    "gevinstVedRealisasjonAvObligasjonVerdipapirfondRentedelMv": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gevinst ved realisasjon av obligasjon verdipapirfond rentedel mv",
+            "term": "Gevinst ved realisasjon av obligasjon verdipapirfond rentedel mv"
+          }
+        }
+      }
+    ],
+    "samledeUnderholdsbidrag": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Samlede underholdsbidrag",
+            "term": "Samlede underholdsbidrag"
+          }
+        }
+      }
+    ],
+    "pensjonsinntektIEOESTilsvarendeAlderspensjonEllerAFP": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Pensjonsinntekt i EØS tilsvarende alderspensjon eller AFP",
+            "term": "Pensjonsinntekt i EØS tilsvarende alderspensjon eller AFP"
+          }
+        }
+      }
+    ],
+    "oppjustertTilleggTilGevinstVedRealisasjonAvVerdipapirfondsandelKnyttetTilAksjedel": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Oppjustert tillegg til gevinst ved realisasjon av verdipapirfondsandel knyttet til aksjedel",
+            "term": "Oppjustert tillegg til gevinst ved realisasjon av verdipapirfondsandel knyttet til aksjedel"
+          }
+        }
+      }
+    ],
+    "investeringIOppstartsselskap": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Investering i oppstartsselskap",
+            "term": "Investering i oppstartsselskap"
+          }
+        }
+      }
+    ],
+    "verdsettingsrabattForKapitalisertFesteavgift": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdsettingsrabatt for kapitalisert festeavgift",
+            "term": "Verdsettingsrabatt for kapitalisert festeavgift"
+          }
+        }
+      }
+    ],
+    "renteinntektAvObligasjonVerdipapirfondRentedelMvIUtlandet": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Renteinntekt av obligasjon, verdipapirfond, rentedel mv. i utlandet",
+            "term": "Renteinntekt av obligasjon, verdipapirfond, rentedel mv. i utlandet"
+          }
+        }
+      }
+    ],
+    "samletAnnenPensjonMedTrekkfritak": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Annen pensjon med trekkfritak",
+            "term": "Annen pensjon med trekkfritak"
+          }
+        }
+      }
+    ],
+    "underskuddAvEnkeltpersonforetakPaaSvalbard": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Underskudd av enkeltpersonforetak på Svalbard",
+            "term": "Underskudd av enkeltpersonforetak på Svalbard"
+          }
+        }
+      }
+    ],
+    "samletUfoeretrygdFraFolketrygdenEksklusiveEktefelletillegg": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Uføretrygd fra folketrygden eksklusive ektefelletillegg",
+            "term": "Uføretrygd fra folketrygden eksklusive ektefelletillegg"
+          }
+        }
+      }
+    ],
+    "etterlattepensjonFraFolketrygden": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Etterlattepensjon fra folketrygden",
+            "term": "Etterlattepensjon fra folketrygden"
+          }
+        }
+      }
+    ],
+    "fortsettelsesforsikring": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Fortsettelsesforsikring",
+            "term": "Fortsettelsesforsikring"
+          }
+        }
+      }
+    ],
+    "oppjustertTilleggTilGevinstVedSalgAvAndelINOKUS": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Oppjustert tillegg til gevinst ved salg av andel i NOKUS",
+            "term": "Oppjustert tillegg til gevinst ved salg av andel i NOKUS"
+          }
+        }
+      }
+    ],
+    "pensjonFraUtlandetSkattepliktigINorge": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Pensjon fra utlandet skattepliktig i Norge",
+            "term": "Pensjon fra utlandet skattepliktig i Norge"
+          }
+        }
+      }
+    ],
+    "samletSkattefriPensjonFraUtlandet": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Skattefri pensjon fra utlandet",
+            "term": "Skattefri pensjon fra utlandet"
+          }
+        }
+      }
+    ],
+    "livrenterIArbeidsforhold": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Livrenter i arbeidsforhold",
+            "term": "Livrenter i arbeidsforhold"
+          }
+        }
+      }
+    ],
+    "formuesverdiForAnnetFinansprodukt": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Formuesverdi for annet finansprodukt",
+            "term": "Formuesverdi for annet finansprodukt"
+          }
+        }
+      }
+    ],
+    "samletAnnenPensjonFoerAlderspensjon": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Annen pensjon før alderspensjon",
+            "term": "Annen pensjon før alderspensjon"
+          }
+        }
+      }
+    ],
+    "barnepensjonFraAndreEnnFolketrygden": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Barnepensjon fra andre enn Folketrygden",
+            "term": "Barnepensjon fra andre enn Folketrygden"
+          }
+        }
+      }
+    ],
+    "paaloepteRenterFraInkassoselskap": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Påløpte renter fra inkassoselskap",
+            "term": "Påløpte renter fra inkassoselskap"
+          }
+        }
+      }
+    ],
+    "kaarytelseUtenforJordOgSkogbruksvirksomhet": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Kårytelse utenfor jord- og skogbruksvirksomhet",
+            "term": "Kårytelse utenfor jord- og skogbruksvirksomhet"
+          }
+        }
+      }
+    ],
+    "renteinntektAvLivsforsikring": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Renteinntekt av livsforsikring",
+            "term": "Renteinntekt av livsforsikring"
+          }
+        }
+      }
+    ],
+    "alderspensjonFraIPAOgIPS": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Alderspensjon fra IPA og IPS",
+            "term": "Alderspensjon fra IPA og IPS"
+          }
+        }
+      }
+    ],
+    "verdsettingsrabattForAndelINOKUS": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdsettingsrabatt for andel i NOKUS",
+            "term": "Verdsettingsrabatt for andel i NOKUS"
+          }
+        }
+      }
+    ],
+    "samletMerkostnadVedArbeidsoppholdUtenforHjem": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Merkostnad ved arbeidsopphold utenfor hjem",
+            "term": "Merkostnad ved arbeidsopphold utenfor hjem"
+          }
+        }
+      }
+    ],
+    "returprovisjonKnyttetTilVerdipapirfond": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Returprovisjon knyttet til verdipapirfond",
+            "term": "Returprovisjon knyttet til verdipapirfond"
+          }
+        }
+      }
+    ],
+    "gevinstVedRealisasjonAvAnnetFinansprodukt": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gevinst ved realisasjon av annet finansprodukt",
+            "term": "Gevinst ved realisasjon av annet finansprodukt"
+          }
+        }
+      }
+    ],
+    "samletPersoninntektFraEnkeltpersonforetakInnenJordbrukReindriftSkiferproduksjonOgAnnenNaering": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Personinntekt fra enkeltpersonforetak innen jordbruk, reindrift, skiferproduksjon og annen næring",
+            "term": "Personinntekt fra enkeltpersonforetak innen jordbruk, reindrift, skiferproduksjon og annen næring"
+          }
+        }
+      }
+    ],
+    "latentEllerRealisertTapPaaAksjeAndelMvVedUtflytting": [
+      {
+        "gyldigFra": "2022-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Latent eller realisert tap på aksje andel mv ved utflytting",
+            "term": "Latent eller realisert tap på aksje andel mv ved utflytting"
+          }
+        }
+      }
+    ],
+    "skattepliktigEtterloennOgEtterpensjon": [
+      {
+        "gyldigFra": "2021-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "",
+            "term": "Skattepliktig etterlønn og etterpensjon"
+          }
+        }
+      }
+    ],
+    "gevinstVedRealisasjonAvVerdipapirfondsandelIKombifondKnyttetTilAksjedel": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gevinst ved realisasjon av verdipapirfondsandel i kombifond knyttet til aksjedel",
+            "term": "Gevinst ved realisasjon av verdipapirfondsandel i kombifond knyttet til aksjedel"
+          }
+        }
+      }
+    ],
+    "samletPremiefond": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Premiefond",
+            "term": "Premiefond"
+          }
+        }
+      }
+    ],
+    "forvaltningskostnadKnyttetTilFondskonto": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Forvaltningskostnad knyttet til fondskonto",
+            "term": "Forvaltningskostnad knyttet til fondskonto"
+          }
+        }
+      }
+    ],
+    "samletOverskuddAvEnkeltpersonforetakInnenReindrift": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Overskudd av enkeltpersonforetak innen reindrift",
+            "term": "Overskudd av enkeltpersonforetak innen reindrift"
+          }
+        }
+      }
+    ],
+    "nettoformue": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Nettoformue",
+            "term": "Nettoformue"
+          }
+        }
+      }
+    ],
+    "verdiFoerVerdsettingsrabattForAnnenFormueInnenforInntektsgivendeAktivitet": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdi før verdsettingsrabatt for annen formue innenfor inntektsgivende aktivitet",
+            "term": "Verdi før verdsettingsrabatt for annen formue innenfor inntektsgivende aktivitet"
+          }
+        }
+      }
+    ],
+    "fradragForVergegodtgjoerelse": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Fradrag for vergegodtgjørelse",
+            "term": "Fradrag for vergegodtgjørelse"
+          }
+        }
+      }
+    ],
+    "samletUtgiftsgodtgjoerelseMedTrekkplikt": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Samlet utgiftsgodtgjørelse med trekkplikt",
+            "term": "Samlet utgiftsgodtgjørelse med trekkplikt"
+          }
+        }
+      }
+    ],
+    "verdsettingsrabattForAndelIFellesNettoformueISDF": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdsettingsrabatt for andel i felles nettoformue i SDF",
+            "term": "Verdsettingsrabatt for andel i felles nettoformue i SDF"
+          }
+        }
+      }
+    ],
+    "loennsinntektMedTrygdeavgiftspliktOmfattetAvLoennstrekkordningen": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Lønnsinntekt med trygdeavgiftsplikt omfattet av lønnstrekkordningen",
+            "term": "Lønnsinntekt med trygdeavgiftsplikt omfattet av lønnstrekkordningen"
+          }
+        }
+      }
+    ],
+    "renteinntektAvSkadeforsikring": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Renteinntekt av skadeforsikring",
+            "term": "Renteinntekt av skadeforsikring"
+          }
+        }
+      }
+    ],
+    "annetInntektsfradrag": [
+      {
+        "gyldigFra": "2022-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Annet inntektsfradrag",
+            "term": "Annet inntektsfradrag"
+          }
+        }
+      }
+    ],
+    "samletLoennsinntektUtenTrygdeavgiftspliktOgMedTrekkplikt": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Lønnsinntekt med trygdeavgiftsplikt og med trekkplikt",
+            "term": "Lønnsinntekt med trygdeavgiftsplikt og med trekkplikt"
+          }
+        }
+      }
+    ],
+    "samletOverskuddAvEnkeltpersonforetakInnenJordbrukGartneriOgPelsdyr": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Overskudd av enkeltpersonforetak innen jordbruk, gartneri og pelsdyr",
+            "term": "Overskudd av enkeltpersonforetak innen jordbruk, gartneri og pelsdyr"
+          }
+        }
+      }
+    ],
+    "oppjustertTilleggTilSkattepliktigUtbytteFraAksjeIkkeRegistrertIVerdipapirsentralen": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Oppjustert tillegg til skattepliktig utbytte fra aksje i nokus ikke registrert i Verdipapirsentralen",
+            "term": "Oppjustert tillegg til skattepliktig utbytte fra aksje i nokus ikke registrert i Verdipapirsentralen"
+          }
+        }
+      }
+    ],
+    "premiefond": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Premiefond",
+            "term": "Premiefond"
+          }
+        }
+      }
+    ],
+    "verdiFoerVerdsettingsrabattForAksjedelIAksjesparekonto": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdi før verdsettingsrabatt for aksjedel i aksjesparekonto",
+            "term": "Verdi før verdsettingsrabatt for aksjedel i aksjesparekonto"
+          }
+        }
+      }
+    ],
+    "avkortetFordelVedElektroniskKommunikasjon": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Avkortet fordel ved elektronisk kommunikasjon",
+            "term": "Avkortet fordel ved elektronisk kommunikasjon"
+          }
+        }
+      }
+    ],
+    "samletFormuesverdiForSelveidFritidseiendomEllerAndelIFritidsboligselskap": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Formuesverdi for selveid fritidseiendom eller andel i fritidsboligselskap",
+            "term": "Formuesverdi for selveid fritidseiendom eller andel i fritidsboligselskap"
+          }
+        }
+      }
+    ],
+    "mottattFesteavgift": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Mottatt festeavgift",
+            "term": "Mottatt festeavgift"
+          }
+        }
+      }
+    ],
+    "livrenterUtenforArbeidsforhold": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Livrenter utenfor arbeidsforhold",
+            "term": "Livrenter utenfor arbeidsforhold"
+          }
+        }
+      }
+    ],
+    "ufoereytelseFraIPAOgIPS": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Uføreytelse fra IPA og IPS",
+            "term": "Uføreytelse fra IPA og IPS"
+          }
+        }
+      }
+    ],
+    "overskuddAvSDF": [
+      {
+        "gyldigFra": "2022-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Overskudd av SDF",
+            "term": "Overskudd av SDF"
+          }
+        }
+      }
+    ],
+    "oppjustertTilleggTilGevinstVedRealisasjonAvAksjesparekonto": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Oppjustert tillegg til gevinst ved realisasjon av aksjesparekonto",
+            "term": "Oppjustert tillegg til gevinst ved realisasjon av aksjesparekonto"
+          }
+        }
+      }
+    ],
+    "foederaad": [
+      {
+        "gyldigFra": "2022-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Føderåd",
+            "term": "Føderåd"
+          }
+        }
+      }
+    ],
+    "samletSkjermingsfradrag": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Skjermingsfradrag",
+            "term": "Skjermingsfradrag"
+          }
+        }
+      }
+    ],
+    "samledeOpptjenteRenterIUtenlandskeBanker": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Samlede opptjente renter i utenlandske banker",
+            "term": "Samlede opptjente renter i utenlandske banker"
+          }
+        }
+      }
+    ],
+    "samletBarnepensjonOgLivrente": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Barnepensjon og livrente",
+            "term": "Barnepensjon og livrente"
+          }
+        }
+      }
+    ],
+    "ufoeretrygdFoerAlderspensjon": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Uføretrygd før alderspensjon",
+            "term": "Uføretrygd før alderspensjon"
+          }
+        }
+      }
+    ],
+    "samletFormuesverdiForSkogeiendom": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Formuesverdi for skogeiendom",
+            "term": "Formuesverdi for skogeiendom"
+          }
+        }
+      }
+    ],
+    "loennsinntektTilBarn": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Lønnsinntekt til barn",
+            "term": "Lønnsinntekt til barn"
+          }
+        }
+      }
+    ],
+    "oppjustertTilleggTilSkattepliktigUtbytteFraVerdipapirfondsandelTilBarn": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Oppjustert tillegg til skattepliktig utbytte fra verdipapirfondsandel til barn",
+            "term": "Oppjustert tillegg til skattepliktig utbytte fra verdipapirfondsandel til barn"
+          }
+        }
+      }
+    ],
+    "dagpengerVedSykehusoppholdMvFraBarneforsikring": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Dagpenger ved sykehusopphold mv fra barneforsikring",
+            "term": "Dagpenger ved sykehusopphold mv fra barneforsikring"
+          }
+        }
+      }
+    ],
+    "samletGjeldIUtlandet": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gjeld i utlandet",
+            "term": "Gjeld i utlandet"
+          }
+        }
+      }
+    ],
+    "samletInntektSomGirRettTilSaerskiltFradragForSjoefolk": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Inntekt som gir rett til særskilt fradrag for sjøfolk",
+            "term": "Inntekt som gir rett til særskilt fradrag for sjøfolk"
+          }
+        }
+      }
+    ],
+    "samletLoennsinntektTilBarnUnderTrettenAar": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Lønnsinntekt til barn under tretten år",
+            "term": "Lønnsinntekt til barn under tretten år"
+          }
+        }
+      }
+    ],
+    "ektefelletilleggTilUfoeretrygd": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Ektefelletillegg til uføretrygd",
+            "term": "Ektefelletillegg til uføretrygd"
+          }
+        }
+      }
+    ],
+    "skjermingsfradrag": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Skjermingsfradrag",
+            "term": "Skjermingsfradrag"
+          }
+        }
+      }
+    ],
+    "ektefelletilleggTilPensjon": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Ektefelletillegg til pensjon",
+            "term": "Ektefelletillegg til pensjon"
+          }
+        }
+      }
+    ],
+    "annenPensjonFoerAlderspensjon": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Annen pensjon før alderspensjon",
+            "term": "Annen pensjon før alderspensjon"
+          }
+        }
+      }
+    ],
+    "verdiFoerVerdsettingsrabattForAndelIAksjedelIVerdipapirfond": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdi før verdsettingsrabatt for andel i aksjedel i verdipapirfond",
+            "term": "Verdi før verdsettingsrabatt for andel i aksjedel i verdipapirfond"
+          }
+        }
+      }
+    ],
+    "tapVedRealisasjonAvAksje": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Tap ved realisasjon av aksje",
+            "term": "Tap ved realisasjon av aksje"
+          }
+        }
+      }
+    ],
+    "loennsinntektUtenTrygdeavgiftspliktOgMedTrekkplikt": [
+      {
+        "gyldigFra": "2022-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Lønnsinntekt uten trygdeavgiftsplikt og med trekkplikt",
+            "term": "Lønnsinntekt uten trygdeavgiftsplikt og med trekkplikt"
+          }
+        }
+      }
+    ],
+    "personinntektFraKompensasjonsytelseUtbetaltAvNavInnenAnnenNaering": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Personinntekt fra kompensasjonsytelse utbetalt av Nav innen annen næring",
+            "term": "Personinntekt fra kompensasjonsytelse utbetalt av Nav innen annen næring"
+          }
+        }
+      }
+    ],
+    "formuesverdiForPrimaerbolig": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Formuesverdi for primærbolig",
+            "term": "Formuesverdi for primærbolig"
+          }
+        }
+      }
+    ],
+    "samletOverskuddAvDeltakerlignetSelskapInnenAnnenNaering": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Overskudd av deltakerlignet selskap innen annen næring",
+            "term": "Overskudd av deltakerlignet selskap innen annen næring"
+          }
+        }
+      }
+    ],
+    "pensjonFraUtlandetSkattefriINorge": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Pensjon fra utlandet skattefri i Norge",
+            "term": "Pensjon fra utlandet skattefri i Norge"
+          }
+        }
+      }
+    ],
+    "renteinntektAvObligasjon": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Renteinntekt av obligasjon",
+            "term": "Renteinntekt av obligasjon"
+          }
+        }
+      }
+    ],
+    "oppjustertTilleggTilAndelIFellesTilleggIAlminneligInntektFraSDFInnenBarnepassIBarnepasserensHjem": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Oppjustert tillegg til andel i felles tillegg i alminnelig inntekt fra SDF innen barnepass i barnepasserens hjem",
+            "term": "Oppjustert tillegg til andel i felles tillegg i alminnelig inntekt fra SDF innen barnepass i barnepasserens hjem"
+          }
+        }
+      }
+    ],
+    "samletFradragsberettigetUnderskuddVedUtleieAvFastEiendom": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Fradragsberettiget underskudd ved utleie av fast eiendom",
+            "term": "Fradragsberettiget underskudd ved utleie av fast eiendom"
+          }
+        }
+      }
+    ],
+    "kapitalinntektFraSkogbruk": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Kapitalinntekt fra skogbruk",
+            "term": "Kapitalinntekt fra skogbruk"
+          }
+        }
+      }
+    ],
+    "samletLoennsinntektUtenTrygdeavgiftspliktOgUtenTrekkplikt": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Samlet lønnsinntekt uten trygdeavgiftsplikt og uten trekkplikt",
+            "term": "Samlet lønnsinntekt uten trygdeavgiftsplikt og uten trekkplikt"
+          }
+        }
+      }
+    ],
+    "fradragsberettigetTapVedRealisasjonAvFastEiendomIUtlandet": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Fradragsberettiget tap ved realisasjon av fast eiendom i utlandet",
+            "term": "Fradragsberettiget tap ved realisasjon av fast eiendom i utlandet"
+          }
+        }
+      }
+    ],
+    "verdiFoerVerdsettingsrabattForAksjeOgAksjefondIFondskonto": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdi før verdsettingsrabatt for aksje og aksjefond i fondskonto",
+            "term": "Verdi før verdsettingsrabatt for aksje og aksjefond i fondskonto"
+          }
+        }
+      }
+    ],
+    "formuesverdiForObligasjon": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Formuesverdi for obligasjon",
+            "term": "Formuesverdi for obligasjon"
+          }
+        }
+      }
+    ],
+    "underskuddOverfoertTilForeldre": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Underskudd overført til foreldre",
+            "term": "Underskudd overført til foreldre"
+          }
+        }
+      }
+    ],
+    "fradragsberettigetTapPaaKapitalforsikringsavtale": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Fradragsberettiget tap på kapitalforsikringsavtale",
+            "term": "Fradragsberettiget tap på kapitalforsikringsavtale"
+          }
+        }
+      }
+    ],
+    "minstefradragIEktefelletillegg": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Minstefradrag i ektefelletillegg",
+            "term": "Minstefradrag i ektefelletillegg"
+          }
+        }
+      }
+    ],
+    "tapVedRealisasjonAvAksjeOgVerdipapirfondAksjedel": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Tap ved realisasjon av aksje- og verdipapirfond aksjedel",
+            "term": "Tap ved realisasjon av aksje- og verdipapirfond aksjedel"
+          }
+        }
+      }
+    ],
+    "verdiFoerVerdsettingsrabattForAksjeIkkeIVPS": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdi før verdsettingsrabatt for aksje ikke i VPS",
+            "term": "Verdi før verdsettingsrabatt for aksje ikke i VPS"
+          }
+        }
+      }
+    ],
+    "oppjustertTilleggTilAndelIFellesTilleggIAlminneligInntektFraSDFInnenAnnenNaering": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Oppjustert tillegg til andel i felles tillegg i alminnelig inntekt fra SDF innen annen næring",
+            "term": "Oppjustert tillegg til andel i felles tillegg i alminnelig inntekt fra SDF innen annen næring"
+          }
+        }
+      }
+    ],
+    "renteinntektAvObligasjonVerdipapirfondRentedelMv": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Renteinntekt av obligasjon, verdipapirfond, rentedel mv.",
+            "term": "Renteinntekt av obligasjon, verdipapirfond, rentedel mv."
+          }
+        }
+      }
+    ],
+    "overskuddAvEnkeltpersonforetakInnenReindrift": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Overskudd av enkeltpersonforetak innen reindrift",
+            "term": "Overskudd av enkeltpersonforetak innen reindrift"
+          }
+        }
+      }
+    ],
+    "samletFormuesverdiAvUtestaaendeFordring": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Formuesverdi av utestående fordring",
+            "term": "Formuesverdi av utestående fordring"
+          }
+        }
+      }
+    ],
+    "inntektsfoeringAvNegativSaldo": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Inntektsføring av negativ saldo",
+            "term": "Inntektsføring av negativ saldo"
+          }
+        }
+      }
+    ],
+    "personinntektFraSDFInnenAnnenNaering": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Personinntekt fra SDF innen annen næring",
+            "term": "Personinntekt fra SDF innen annen næring"
+          }
+        }
+      }
+    ],
+    "samledeAndreOpptjenteRenter": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Samlede andre opptjente renter",
+            "term": "Samlede andre opptjente renter"
+          }
+        }
+      }
+    ],
+    "oppjustertTilleggTilSkattepliktigUtbytteFraVerdipapirfondsandel": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Oppjustert tillegg til skattepliktig utbytte fra verdipapirfondsandel",
+            "term": "Oppjustert tillegg til skattepliktig utbytte fra verdipapirfondsandel"
+          }
+        }
+      }
+    ],
+    "betalteForsinkelsesrenter": [
+      {
+        "gyldigFra": "2022-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Betalte forsinkelsesrenter",
+            "term": "Betalte forsinkelsesrenter"
+          }
+        }
+      }
+    ],
+    "tapVedRealisasjonAvObligasjoner": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Tap ved realisasjon av obligasjoner",
+            "term": "Tap ved realisasjon av obligasjoner"
+          }
+        }
+      }
+    ],
+    "samledePaaloepteRenterPaaGjeldIUtlandet": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Samlede påløpte renter på gjeld i utlandet",
+            "term": "Samlede påløpte renter på gjeld i utlandet"
+          }
+        }
+      }
+    ],
+    "samletAnnenRenteinntekt": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Annen renteinntekt",
+            "term": "Annen renteinntekt"
+          }
+        }
+      }
+    ],
+    "samletAvkastningAvKapitalforsikringsavtale": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Avkastning av kapitalforsikringsavtale",
+            "term": "Avkastning av kapitalforsikringsavtale"
+          }
+        }
+      }
+    ],
+    "latentEllerRealisertGevinstPaaAksjeAndelMvVedUtflytting": [
+      {
+        "gyldigFra": "2022-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Latent eller realisert gevinst på aksje andel mv ved utflytting",
+            "term": "Latent eller realisert gevinst på aksje andel mv ved utflytting"
+          }
+        }
+      }
+    ],
+    "verdiFoerVerdsettingsrabattForSkipFiskeOgFangstfartoey": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdi før verdsettingsrabatt for skip fiske og fangstfartøy",
+            "term": "Verdi før verdsettingsrabatt for skip fiske og fangstfartøy"
+          }
+        }
+      }
+    ],
+    "kvalifiseringsstoenad": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Kvalifiseringsstønad",
+            "term": "Kvalifiseringsstønad"
+          }
+        }
+      }
+    ],
+    "inntektsfradragAvRentefordelPaaLaanIPensjonsforhold": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Inntektsfradrag av rentefordel på lån i pensjonsforhold",
+            "term": "Inntektsfradrag av rentefordel på lån i pensjonsforhold"
+          }
+        }
+      }
+    ],
+    "samletPremieTilTilleggstrygdForNaeringsdrivende": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Premie til tilleggstrygd for næringsdrivende",
+            "term": "Premie til tilleggstrygd for næringsdrivende"
+          }
+        }
+      }
+    ],
+    "verdsettingsrabattForAksjeIVPS": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdsettingsrabatt for aksje i VPS",
+            "term": "Verdsettingsrabatt for aksje i VPS"
+          }
+        }
+      }
+    ],
+    "andelIFellesTilleggIAlminneligInntektFraSDFInnenBarnepassIBarnepasserensHjem": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Andel i felles tillegg i alminnelig inntekt fra SDF innen barnepass i barnepasserens hjem",
+            "term": "Andel i felles tillegg i alminnelig inntekt fra SDF innen barnepass i barnepasserens hjem"
+          }
+        }
+      }
+    ],
+    "verdsettingsrabattForVerdipapirfondsandel": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdsettingsrabatt for verdipapirfondsandel",
+            "term": "Verdsettingsrabatt for verdipapirfondsandel"
+          }
+        }
+      }
+    ],
+    "sumGjeldsreduksjon": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Sum gjeldsreduksjon",
+            "term": "Sum gjeldsreduksjon"
+          }
+        }
+      }
+    ],
+    "arbeidsinntektFraKompensasjonsytelseUtbetaltAvNav": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Arbeidsinntekt fra kompensasjonsytelse utbetalt av Nav",
+            "term": "Arbeidsinntekt fra kompensasjonsytelse utbetalt av Nav"
+          }
+        }
+      }
+    ],
+    "kontantbeloep": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Kontantbeløp",
+            "term": "Kontantbeløp"
+          }
+        }
+      }
+    ],
+    "ufoereytelseFraUtlandet": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Uføreytelse fra utlandet",
+            "term": "Uføreytelse fra utlandet"
+          }
+        }
+      }
+    ],
+    "samletTapVedRealisasjonAvVerdipapirfondsandelKnyttetTilRentedel": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Tap ved realisasjon av verdipapirfondsandel knyttet til rentedel",
+            "term": "Tap ved realisasjon av verdipapirfondsandel knyttet til rentedel"
+          }
+        }
+      }
+    ],
+    "minstefradragIBarnepensjon": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Minstefradrag i barnepensjon",
+            "term": "Minstefradrag i barnepensjon"
+          }
+        }
+      }
+    ],
+    "tapVedRealisasjonAvVirtuellValuta": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Tap ved realisasjon av virtuell valuta",
+            "term": "Tap ved realisasjon av virtuell valuta"
+          }
+        }
+      }
+    ],
+    "formuesverdiForKontanterIAksjesparekonto": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Formuesverdi for kontanter i aksjesparekonto",
+            "term": "Formuesverdi for kontanter i aksjesparekonto"
+          }
+        }
+      }
+    ],
+    "samletSaerfradragForStoreSykdomsutgifter": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Særfradrag for store sykdomsutgifter",
+            "term": "Særfradrag for store sykdomsutgifter"
+          }
+        }
+      }
+    ],
+    "samletGjeld": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gjeld",
+            "term": "Gjeld"
+          }
+        }
+      }
+    ],
+    "forvaltningskostnadKnyttetTilVerdipapirfond": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Forvaltningskostnad knyttet til verdipapirfond",
+            "term": "Forvaltningskostnad knyttet til verdipapirfond"
+          }
+        }
+      }
+    ],
+    "gevinstVedRealisasjonAvOgUttakFraAksjedelIFondskonto": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gevinst ved realisasjon av og uttak fra aksjedel i fondskonto",
+            "term": "Gevinst ved realisasjon av og uttak fra aksjedel i fondskonto"
+          }
+        }
+      }
+    ],
+    "fradragsberettigedeFoederaadsytelserOgUnderholdsbidragTilAnnenPerson": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Fradragsberettigede føderådsytelser og underholdsbidrag til annen person",
+            "term": "Fradragsberettigede føderådsytelser og underholdsbidrag til annen person"
+          }
+        }
+      }
+    ],
+    "returAvPremieFraIndividuellPensjonssparing": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Retur av premie fra individuell pensjonssparing",
+            "term": "Retur av premie fra individuell pensjonssparing"
+          }
+        }
+      }
+    ],
+    "samletPensjonFraEOeSStatSomTilsvarerNorskAlderspensjonEllerAvtalefestetPensjon": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Pensjon fra EØS stat som tilsvarer norsk alderspensjon eller avtalefestet pensjon",
+            "term": "Pensjon fra EØS stat som tilsvarer norsk alderspensjon eller avtalefestet pensjon"
+          }
+        }
+      }
+    ],
+    "supplerendeStoenadTilUfoerFlyktning": [
+      {
+        "gyldigFra": "2021-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "",
+            "term": "Supplerende stønad til ufør flyktning"
+          }
+        }
+      }
+    ],
+    "forvaltningskostnadKnyttetTilAksjesparekonto": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Forvaltningskostnad knyttet til aksjesparekonto",
+            "term": "Forvaltningskostnad knyttet til aksjesparekonto"
+          }
+        }
+      }
+    ],
+    "samletInnenlandskGjeld": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Innenlandsk gjeld",
+            "term": "Innenlandsk gjeld"
+          }
+        }
+      }
+    ],
+    "andelIFellesTilleggIAlminneligInntektFraSDFInnenAnnenNaering": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Andel i felles tillegg i alminnelig inntekt fra SDF innen annen næring",
+            "term": "Andel i felles tillegg i alminnelig inntekt fra SDF innen annen næring"
+          }
+        }
+      }
+    ],
+    "personinntektFraKompensasjonsytelseUtbetaltAvNavInnenBarnepassIBarnepasserensHjem": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Personinntekt fra kompensasjonsytelse utbetalt av Nav innen barnepass i barnepasserens hjem",
+            "term": "Personinntekt fra kompensasjonsytelse utbetalt av Nav innen barnepass i barnepasserens hjem"
+          }
+        }
+      }
+    ],
+    "samledeUfoererenterOgLivrenter": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Samlede uførerenter og livrenter",
+            "term": "Samlede uførerenter og livrenter"
+          }
+        }
+      }
+    ],
+    "ufoererenterOgLivrenterUtenforArbeidsforhold": [
+      {
+        "gyldigFra": "2022-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Uførerenter og livrenter utenfor arbeidsforhold",
+            "term": "Uførerenter og livrenter utenfor arbeidsforhold"
+          }
+        }
+      }
+    ],
+    "oppjustertTilleggTilTapVedRealisasjonAvVerdipapirfondsandelKnyttetTilAksjedel": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Oppjustert tillegg til tap ved realisasjon av verdipapirfondsandel knyttet til aksjedel",
+            "term": "Oppjustert tillegg til tap ved realisasjon av verdipapirfondsandel knyttet til aksjedel"
+          }
+        }
+      }
+    ],
+    "nettoLoennsinntektFraArbeidINorge": [
+      {
+        "gyldigFra": "2022-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Netto lønnsinntekt fra arbeid i Norge",
+            "term": "Netto lønnsinntekt fra arbeid i Norge"
+          }
+        }
+      }
+    ],
+    "grunnlagForSkattPaaNaeringsoverskuddSvalbard": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Grunnlag for skatt på næringsoverskudd Svalbard",
+            "term": "Grunnlag for skatt på næringsoverskudd Svalbard"
+          }
+        }
+      }
+    ],
+    "gevinstVedSalgAvAndelINOKUS": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gevinst ved salg av andel i NOKUS",
+            "term": "Gevinst ved salg av andel i NOKUS"
+          }
+        }
+      }
+    ],
+    "gevinstVedRealisasjonAvObligasjonerSertifikaterMv": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gevinst ved realisasjon av obligasjoner sertifikater mv",
+            "term": "Gevinst ved realisasjon av obligasjoner sertifikater mv"
+          }
+        }
+      }
+    ],
+    "formuesverdiForAndelIRentedelIVerdipapirfond": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Formuesverdi for andel i rentedel i verdipapirfond",
+            "term": "Formuesverdi for andel i rentedel i verdipapirfond"
+          }
+        }
+      }
+    ],
+    "samletOverskuddAvDeltakerlignetSelskapInnenFiskeEllerFamiliebarnehage": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Overskudd av deltakerlignet selskap innen fiske eller familiebarnehage",
+            "term": "Overskudd av deltakerlignet selskap innen fiske eller familiebarnehage"
+          }
+        }
+      }
+    ],
+    "verdsettingsrabattForAksjeIUtlandet": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdsettingsrabatt for aksje i utlandet",
+            "term": "Verdsettingsrabatt for aksje i utlandet"
+          }
+        }
+      }
+    ],
+    "utbetalingFraSkadeforsikring": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Utbetaling fra skadeforsikring",
+            "term": "Utbetaling fra skadeforsikring"
+          }
+        }
+      }
+    ],
+    "samletPersoninntektFraEnkeltpersonforetakInnenFiskeOgFangst": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Personinntekt fra enkeltpersonforetak innen fiske og fangst",
+            "term": "Personinntekt fra enkeltpersonforetak innen fiske og fangst"
+          }
+        }
+      }
+    ],
+    "overgangsstoenadTilEnsligForelder": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Overgangsstønad til enslig forelder",
+            "term": "Overgangsstønad til enslig forelder"
+          }
+        }
+      }
+    ],
+    "samletFormuesverdiForAndelAnnenFormueIBoligselskapEllerBoligsameie": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Formuesverdi for ande i annen formue i boligselskapeller boligsameie",
+            "term": "Formuesverdi for ande i annen formue i boligselskapeller boligsameie"
+          }
+        }
+      }
+    ],
+    "personinntektFraSDFInnenFiskeEllerBarnepassIBarnepasserensHjem": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Personinntekt fra SDF innen fiske eller barnepass i barnepasserens hjem",
+            "term": "Personinntekt fra SDF innen fiske eller barnepass i barnepasserens hjem"
+          }
+        }
+      }
+    ],
+    "returprovisjonKnyttetTilFondskonto": [
+      {
+        "gyldigFra": "2020-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Returprovisjon knyttet til fondskonto",
+            "term": "Returprovisjon knyttet til fondskonto"
+          }
+        }
+      }
+    ],
+    "overskuddAvEnkeltpersonforetakInnenJordbrukGartneriPelsdyrMv": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Overskudd av enkeltpersonforetak innen jordbruk, gartneri, pelsdyr mv.",
+            "term": "Overskudd av enkeltpersonforetak innen jordbruk, gartneri, pelsdyr mv."
+          }
+        }
+      }
+    ],
+    "andelIFellesTapVedSalgAvAndelISDF": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Andel i felles tap ved salg av andel i SDF",
+            "term": "Andel i felles tap ved salg av andel i SDF"
+          }
+        }
+      }
+    ],
+    "samletFormuesverdiForVarelager": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Formuesverdi for varelager",
+            "term": "Formuesverdi for varelager"
+          }
+        }
+      }
+    ],
+    "samletPensjonFraFolketrygden": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Pensjon fra folketrygden",
+            "term": "Pensjon fra folketrygden"
+          }
+        }
+      }
+    ],
+    "samletFradragsberettigetKostnadTilknyttetArbeidMv": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Fradragsberettiget kostnad tilknyttet arbeid mv",
+            "term": "Fradragsberettiget kostnad tilknyttet arbeid mv"
+          }
+        }
+      }
+    ],
+    "renteinntektMedEkstrabeskatningForLaanTilSelskap": [
+      {
+        "gyldigFra": "2018-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Renteinntekt med ekstrabeskatning for lån til selskap",
+            "term": "Renteinntekt med ekstrabeskatning for lån til selskap"
+          }
+        }
+      }
+    ],
+    "positivPersoninntektFraEnkeltpersonforetakPaaSvalbard": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Positiv personinntekt fra enkeltpersonforetak på Svalbard",
+            "term": "Positiv personinntekt fra enkeltpersonforetak på Svalbard"
+          }
+        }
+      }
+    ],
+    "verdiFoerVerdsettingsrabattForAndelIFellesNettoformueISDF": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdi før verdsettingsrabatt for andel i felles nettoformue i SDF",
+            "term": "Verdi før verdsettingsrabatt for andel i felles nettoformue i SDF"
+          }
+        }
+      }
+    ],
+    "verdiFoerVerdsettingsrabattForRettigheterKnyttetTilSkogUtmark": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Verdi før verdsettingsrabatt for rettigheter knyttet til skog utmark",
+            "term": "Verdi før verdsettingsrabatt for rettigheter knyttet til skog utmark"
+          }
+        }
+      }
+    ],
+    "skattepliktigUtbytteFraAksjerRegistrertIVerdipapirsentralen": [
+      {
+        "gyldigFra": "2017-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Skattepliktig utbytte fra aksjer registrert i Verdipapirsentralen",
+            "term": "Skattepliktig utbytte fra aksjer registrert i Verdipapirsentralen"
+          }
+        }
+      }
+    ],
+    "premiefondLivsforsikring": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Premiefond livsforsikring",
+            "term": "Premiefond livsforsikring"
+          }
+        }
+      }
+    ],
+    "formuesverdiForUbetingetOpsjonIArbeidsforhold": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Formuesverdi for ubetinget opsjon i arbeidsforhold",
+            "term": "Formuesverdi for ubetinget opsjon i arbeidsforhold"
+          }
+        }
+      }
+    ],
+    "gevinstVedRealisasjonAvAksje": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gevinst ved realisasjon av aksje",
+            "term": "Gevinst ved realisasjon av aksje"
+          }
+        }
+      }
+    ],
+    "gevinstVedRealisasjonAvAndelIAksjedelIVerdipapirfond": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Gevinst ved realisasjon av andel i aksjedel i verdipapirfond",
+            "term": "Gevinst ved realisasjon av andel i aksjedel i verdipapirfond"
+          }
+        }
+      }
+    ],
+    "tapVedRealisasjonAvAndelIRentedelIVerdipapirfond": [
+      {
+        "gyldigFra": "2019-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Tap ved realisasjon av andel i rentedel i verdipapirfond",
+            "term": "Tap ved realisasjon av andel i rentedel i verdipapirfond"
+          }
+        }
+      }
+    ]
+  }
+}

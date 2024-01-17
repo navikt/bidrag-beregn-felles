@@ -1,0 +1,405 @@
+alderspensjonFraIPAOgIPS:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+andelAvUnderskuddFraTidligereAarVedDriftAvVaaningshusSomAnvendesIAaret:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2021
+    tom: 9999
+annenArbeidsinntekt:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+annenPensjonFoerAlderspensjon:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2018
+    tom: 9999
+arbeidsavklaringspenger:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+arbeidsinntektFraKompensasjonsytelseUtbetaltAvNav:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+avkortetFordelVedElektroniskKommunikasjon:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+barnepensjonFraAndreEnnFolketrygden:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 2019
+barnepensjonFraFolketrygden:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 2019
+barnepensjonFraIPAOgIPS:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+ektefelletilleggTilPensjon:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+ektefelletilleggTilUfoeretrygd:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+etterlattepensjonFraFolketrygden:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+introduksjonsstoenad:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+kvalifiseringsstoenad:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+livrenterUtenforArbeidsforhold:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+loennsinntektMedTrygdeavgiftspliktOmfattetAvLoennstrekkordningen:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+loennsinntektTilBarn:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2018
+    tom: 9999
+loennsinntektUtenTrygdeavgiftspliktOmfattetAvLoennstrekkordningen:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+opptjenteRenterFraUtestaaendeFordring:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2021
+    tom: 9999
+overgangsstoenadTilEnsligForelder:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+overskuddAvUtgiftsgodtgjoerelseVedSmusstillegg:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+pensjonFraUtlandetSkattefriINorge:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2018
+    tom: 9999
+pensjonFraUtlandetSkattepliktigINorge:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+pensjonsinntektIEOESTilsvarendeAlderspensjonEllerAFP:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2018
+    tom: 9999
+pensjonsinntektOmfattetAvLoennstrekkordningen:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+personinntektFraKompensasjonsytelseUtbetaltAvNavInnenAnnenNaering:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+personinntektFraKompensasjonsytelseUtbetaltAvNavInnenBarnepassIBarnepasserensHjem:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+personinntektFraKompensasjonsytelseUtbetaltAvNavInnenFiskeOgFangst:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+personinntektFraSDFInnenAnnenNaering:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2018
+    tom: 9999
+personinntektFraSDFInnenFiskeEllerBarnepassIBarnepasserensHjem:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2018
+    tom: 9999
+personinntektFraSkattefriLottMedTrygdeavgiftspliktForUtenlandskFisker:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+paaloepteRenterFraAnnenGjeld:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2021
+    tom: 9999
+samledeUfoererenterOgLivrenter:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+samledeUnderholdsbidrag:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 2018
+samletAlderspensjonFraFolketrygden:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2016
+samletAnnenPensjonFoerAlderspensjon:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2017
+samletAnnenPensjonMedTrekkfritak:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2017
+samletAnnenPensjonMedTrekkpliktEksklusiveEktefelletillegg:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+samletAnnenPensjonUtenTrekkplikt:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2018
+    tom: 9999
+samletAnnenTrekkpliktigPensjon:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2016
+samletAvtalefestetPensjon :
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+samletBarnepensjonOgLivrente:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+samletBarnepensjonOgLivrenteTilBarn:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2018
+    tom: 9999
+samletBarnepensjonOgLivrenteTilBarnUnderSyttenAar:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2017
+samletInntektSomGirRettTilSaerskiltFradragForSjoefolk:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+samletLoennsinntekt :
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2016
+samletLoennsinntektKunMedTrygdeavgiftsplikt:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2016
+samletLoennsinntektMedTrygdeavgiftspliktOgMedTrekkplikt:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+samletLoennsinntektPaaSvalbardOver12G:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2018
+samletLoennsinntektTilBarnUnderTrettenAar:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2017
+samletLoennsinntektUtenTrygdeavgiftspliktOgMedTrekkplikt:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+samletLoennsinntektUtenTrygdeavgiftspliktOgUtenTrekkplikt:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+samletOvergangsstoenadTilEnsligOgEtterlatt:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2016
+samletOverskuddPaaUtgiftsgodtgjoerelse:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+samletPensjonFraEOeSStatSomTilsvarerNorskAlderspensjonEllerAvtalefestetPensjon:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2017
+samletPensjonFraFolketrygden:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+samletPersoninntektFraDeltakerlignetSelskapInnenAnnenNaering :
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2017
+samletPersoninntektFraDeltakerlignetSelskapInnenFiskeEllerFamiliebarnehage:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2017
+samletPersoninntektFraEnkeltpersonforetakInnenFamiliebarnehageEllerDagmammaIEgetHjem:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+samletPersoninntektFraEnkeltpersonforetakInnenFiskeOgFangst:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+samletPersoninntektFraEnkeltpersonforetakInnenJordbrukReindriftSkiferproduksjonOgAnnenNaering:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+samletSkattefriPensjonFraUtlandet:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2016
+samletSupplerendeStoenad:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2017
+samletTrekkpliktigLoennsinntektUtenTrydgeavgiftsplikt:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2016
+samletTrekkpliktigUtgiftsgodtgjoerelse:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+samletUfoeretrygdFoerAlderspensjon:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 2017
+samletUfoeretrygdFraFolketrygden:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 2016
+samletUfoeretrygdFraFolketrygdenEksklusiveEktefelletillegg:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+samletUfoereytelseFraAndreEnnFolketrygden:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2015
+    tom: 9999
+samletUtgiftsgodtgjoerelseMedTrekkplikt:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+skattefriLoennsinntektMedTrygdeavgiftspliktOgMedTrekkplikt:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+skattepliktigEtterloennOgEtterpensjon:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2021
+    tom: 9999
+slitertillegg:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2020
+    tom: 9999
+styrehonorarFraNorskSelskapTilSkattepliktigBosattIUtlandet:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+supplerendeStoenad:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2018
+    tom: 9999
+supplerendeStoenadTilUfoerFlyktning:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2021
+    tom: 9999
+ufoeretrygdFoerAlderspensjon:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2018
+    tom: 9999
+ufoereytelseFraIPAOgIPS:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
+ufoereytelseFraUtlandet:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2017
+    tom: 9999
+underholdsbidragFraTidligereEktefelle:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2019
+    tom: 9999
