@@ -72,10 +72,10 @@ class SkattegrunnlagService {
                     referanse = "",
                     sumInntekt = sumInntekt,
                     periode =
-                        ÅrMånedsperiode(
-                            fom = YearMonth.of(skattegrunnlagForLigningsår.ligningsår, Month.JANUARY),
-                            til = YearMonth.of(skattegrunnlagForLigningsår.ligningsår, Month.DECEMBER),
-                        ),
+                    ÅrMånedsperiode(
+                        fom = YearMonth.of(skattegrunnlagForLigningsår.ligningsår, Month.JANUARY),
+                        til = YearMonth.of(skattegrunnlagForLigningsår.ligningsår, Month.DECEMBER),
+                    ),
                     inntektPostListe = inntektPostListe,
                 ),
             )

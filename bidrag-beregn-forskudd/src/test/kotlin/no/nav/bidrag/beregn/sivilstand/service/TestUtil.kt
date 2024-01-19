@@ -208,19 +208,19 @@ object TestUtil {
             ResultatPeriodeCore(
                 periode = PeriodeCore(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2019-01-01")),
                 resultat =
-                    ResultatBeregningCore(
-                        belop = BigDecimal.valueOf(100),
-                        kode = ResultatkodeForskudd.FORHØYET_FORSKUDD_100_PROSENT.name,
-                        regel = "REGEL 1",
-                    ),
+                ResultatBeregningCore(
+                    belop = BigDecimal.valueOf(100),
+                    kode = ResultatkodeForskudd.FORHØYET_FORSKUDD_100_PROSENT.name,
+                    regel = "REGEL 1",
+                ),
                 grunnlagsreferanseListe =
-                    listOf(
-                        INNTEKT_REFERANSE_1,
-                        SIVILSTAND_REFERANSE_ENSLIG,
-                        BARN_REFERANSE_1,
-                        SOKNADBARN_REFERANSE,
-                        BOSTATUS_REFERANSE_MED_FORELDRE_1,
-                    ),
+                listOf(
+                    INNTEKT_REFERANSE_1,
+                    SIVILSTAND_REFERANSE_ENSLIG,
+                    BARN_REFERANSE_1,
+                    SOKNADBARN_REFERANSE,
+                    BOSTATUS_REFERANSE_MED_FORELDRE_1,
+                ),
             ),
         )
 
@@ -238,8 +238,8 @@ object TestUtil {
         avvikListe.add(
             AvvikCore(
                 avvikTekst =
-                    "periodeDatoTil må være etter periodeDatoFra i bidragMottakInntektPeriodeListe: periodeDatoFra=2018-04-01, " +
-                        "periodeDatoTil=2018-03-01",
+                "periodeDatoTil må være etter periodeDatoFra i bidragMottakInntektPeriodeListe: periodeDatoFra=2018-04-01, " +
+                    "periodeDatoTil=2018-03-01",
                 avvikType = "DATO_FRA_ETTER_DATO_TIL",
             ),
         )
@@ -254,19 +254,19 @@ object TestUtil {
             ResultatPeriode(
                 periode = ÅrMånedsperiode(fom = LocalDate.parse("2017-01-01"), til = LocalDate.parse("2019-01-01")),
                 resultat =
-                    ResultatBeregning(
-                        belop = BigDecimal.valueOf(100),
-                        kode = ResultatkodeForskudd.FORHØYET_FORSKUDD_100_PROSENT,
-                        regel = "REGEL 1",
-                    ),
+                ResultatBeregning(
+                    belop = BigDecimal.valueOf(100),
+                    kode = ResultatkodeForskudd.FORHØYET_FORSKUDD_100_PROSENT,
+                    regel = "REGEL 1",
+                ),
                 grunnlagsreferanseListe =
-                    listOf(
-                        INNTEKT_REFERANSE_1,
-                        SIVILSTAND_REFERANSE_ENSLIG,
-                        BARN_REFERANSE_1,
-                        SOKNADBARN_REFERANSE,
-                        BOSTATUS_REFERANSE_MED_FORELDRE_1,
-                    ),
+                listOf(
+                    INNTEKT_REFERANSE_1,
+                    SIVILSTAND_REFERANSE_ENSLIG,
+                    BARN_REFERANSE_1,
+                    SOKNADBARN_REFERANSE,
+                    BOSTATUS_REFERANSE_MED_FORELDRE_1,
+                ),
             ),
         )
 

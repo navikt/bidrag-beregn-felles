@@ -158,13 +158,13 @@ internal class ForskuddBeregningTest {
                     referanse = INNTEKT_REFERANSE_1,
                     type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                     belop =
-                        finnSjablonVerdi(sjablonPeriodeListe = sjablonPeriodeListe, sjablonTallNavn = SjablonTallNavn.FORSKUDDSSATS_BELØP)
-                            .multiply(
-                                finnSjablonVerdi(
-                                    sjablonPeriodeListe = sjablonPeriodeListe,
-                                    sjablonTallNavn = SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR,
-                                ),
-                            ).add(BigDecimal.ONE),
+                    finnSjablonVerdi(sjablonPeriodeListe = sjablonPeriodeListe, sjablonTallNavn = SjablonTallNavn.FORSKUDDSSATS_BELØP)
+                        .multiply(
+                            finnSjablonVerdi(
+                                sjablonPeriodeListe = sjablonPeriodeListe,
+                                sjablonTallNavn = SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR,
+                            ),
+                        ).add(BigDecimal.ONE),
                 ),
             )
         val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.BOR_ALENE_MED_BARN)
@@ -201,10 +201,10 @@ internal class ForskuddBeregningTest {
                     referanse = INNTEKT_REFERANSE_1,
                     type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                     belop =
-                        finnSjablonVerdi(
-                            sjablonPeriodeListe = sjablonPeriodeListe,
-                            sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELØP,
-                        ),
+                    finnSjablonVerdi(
+                        sjablonPeriodeListe = sjablonPeriodeListe,
+                        sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELØP,
+                    ),
                 ),
             )
         val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.BOR_ALENE_MED_BARN)
@@ -241,10 +241,10 @@ internal class ForskuddBeregningTest {
                     referanse = INNTEKT_REFERANSE_1,
                     type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                     belop =
-                        finnSjablonVerdi(
-                            sjablonPeriodeListe = sjablonPeriodeListe,
-                            sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELØP,
-                        ),
+                    finnSjablonVerdi(
+                        sjablonPeriodeListe = sjablonPeriodeListe,
+                        sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELØP,
+                    ),
                 ),
             )
         val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.BOR_ALENE_MED_BARN)
@@ -281,10 +281,10 @@ internal class ForskuddBeregningTest {
                     referanse = INNTEKT_REFERANSE_1,
                     type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                     belop =
-                        finnSjablonVerdi(
-                            sjablonPeriodeListe = sjablonPeriodeListe,
-                            sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELØP,
-                        ),
+                    finnSjablonVerdi(
+                        sjablonPeriodeListe = sjablonPeriodeListe,
+                        sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELØP,
+                    ),
                 ),
             )
         val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.BOR_ALENE_MED_BARN)
@@ -322,10 +322,10 @@ internal class ForskuddBeregningTest {
                     referanse = INNTEKT_REFERANSE_1,
                     type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                     belop =
-                        finnSjablonVerdi(
-                            sjablonPeriodeListe = sjablonPeriodeListe,
-                            sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELØP,
-                        ).add(BigDecimal.ONE),
+                    finnSjablonVerdi(
+                        sjablonPeriodeListe = sjablonPeriodeListe,
+                        sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELØP,
+                    ).add(BigDecimal.ONE),
                 ),
             )
         val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.BOR_ALENE_MED_BARN)
@@ -363,15 +363,15 @@ internal class ForskuddBeregningTest {
                     referanse = INNTEKT_REFERANSE_1,
                     type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                     belop =
+                    finnSjablonVerdi(
+                        sjablonPeriodeListe = sjablonPeriodeListe,
+                        sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELØP,
+                    ).add(
                         finnSjablonVerdi(
                             sjablonPeriodeListe = sjablonPeriodeListe,
-                            sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELØP,
-                        ).add(
-                            finnSjablonVerdi(
-                                sjablonPeriodeListe = sjablonPeriodeListe,
-                                sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP,
-                            ),
+                            sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP,
                         ),
+                    ),
                 ),
             )
         val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.BOR_ALENE_MED_BARN)
@@ -410,15 +410,15 @@ internal class ForskuddBeregningTest {
                     referanse = INNTEKT_REFERANSE_1,
                     type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                     belop =
+                    finnSjablonVerdi(
+                        sjablonPeriodeListe = sjablonPeriodeListe,
+                        sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELØP,
+                    ).add(
                         finnSjablonVerdi(
                             sjablonPeriodeListe = sjablonPeriodeListe,
-                            sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELØP,
-                        ).add(
-                            finnSjablonVerdi(
-                                sjablonPeriodeListe = sjablonPeriodeListe,
-                                sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP,
-                            ),
-                        ).add(BigDecimal.ONE),
+                            sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP,
+                        ),
+                    ).add(BigDecimal.ONE),
                 ),
             )
         val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.BOR_ALENE_MED_BARN)
@@ -457,10 +457,10 @@ internal class ForskuddBeregningTest {
                     referanse = INNTEKT_REFERANSE_1,
                     type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                     belop =
-                        finnSjablonVerdi(
-                            sjablonPeriodeListe = sjablonPeriodeListe,
-                            sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP,
-                        ),
+                    finnSjablonVerdi(
+                        sjablonPeriodeListe = sjablonPeriodeListe,
+                        sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP,
+                    ),
                 ),
             )
         val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.GIFT_SAMBOER)
@@ -498,10 +498,10 @@ internal class ForskuddBeregningTest {
                     referanse = INNTEKT_REFERANSE_1,
                     type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                     belop =
-                        finnSjablonVerdi(
-                            sjablonPeriodeListe = sjablonPeriodeListe,
-                            sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP,
-                        ).add(BigDecimal.ONE),
+                    finnSjablonVerdi(
+                        sjablonPeriodeListe = sjablonPeriodeListe,
+                        sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP,
+                    ).add(BigDecimal.ONE),
                 ),
             )
         val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.GIFT_SAMBOER)
@@ -539,15 +539,15 @@ internal class ForskuddBeregningTest {
                     referanse = INNTEKT_REFERANSE_1,
                     type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                     belop =
+                    finnSjablonVerdi(
+                        sjablonPeriodeListe = sjablonPeriodeListe,
+                        sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP,
+                    ).add(
                         finnSjablonVerdi(
                             sjablonPeriodeListe = sjablonPeriodeListe,
-                            sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP,
-                        ).add(
-                            finnSjablonVerdi(
-                                sjablonPeriodeListe = sjablonPeriodeListe,
-                                sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP,
-                            ),
+                            sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP,
                         ),
+                    ),
                 ),
             )
         val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.GIFT_SAMBOER)
@@ -586,15 +586,15 @@ internal class ForskuddBeregningTest {
                     referanse = INNTEKT_REFERANSE_1,
                     type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                     belop =
+                    finnSjablonVerdi(
+                        sjablonPeriodeListe = sjablonPeriodeListe,
+                        sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP,
+                    ).add(
                         finnSjablonVerdi(
                             sjablonPeriodeListe = sjablonPeriodeListe,
-                            sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP,
-                        ).add(
-                            finnSjablonVerdi(
-                                sjablonPeriodeListe = sjablonPeriodeListe,
-                                sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP,
-                            ).add(BigDecimal.ONE),
-                        ),
+                            sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP,
+                        ).add(BigDecimal.ONE),
+                    ),
                 ),
             )
         val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.GIFT_SAMBOER)
@@ -633,19 +633,19 @@ internal class ForskuddBeregningTest {
                     referanse = INNTEKT_REFERANSE_1,
                     type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                     belop =
-                        finnSjablonVerdi(
-                            sjablonPeriodeListe = sjablonPeriodeListe,
-                            sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP,
-                        ),
+                    finnSjablonVerdi(
+                        sjablonPeriodeListe = sjablonPeriodeListe,
+                        sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP,
+                    ),
                 ),
                 Inntekt(
                     referanse = INNTEKT_REFERANSE_2,
                     type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                     belop =
-                        finnSjablonVerdi(
-                            sjablonPeriodeListe = sjablonPeriodeListe,
-                            sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP,
-                        ).add(BigDecimal.ONE),
+                    finnSjablonVerdi(
+                        sjablonPeriodeListe = sjablonPeriodeListe,
+                        sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP,
+                    ).add(BigDecimal.ONE),
                 ),
             )
         val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.GIFT_SAMBOER)
@@ -692,20 +692,14 @@ internal class ForskuddBeregningTest {
             )
     }
 
-    private fun finnSjablonVerdi(
-        sjablonPeriodeListe: List<SjablonPeriode>,
-        sjablonTallNavn: SjablonTallNavn,
-    ): BigDecimal {
+    private fun finnSjablonVerdi(sjablonPeriodeListe: List<SjablonPeriode>, sjablonTallNavn: SjablonTallNavn): BigDecimal {
         val sjablonListe =
             sjablonPeriodeListe
                 .map { it.sjablon }
         return SjablonUtil.hentSjablonverdi(sjablonListe = sjablonListe, sjablonTallNavn = sjablonTallNavn)
     }
 
-    private fun printGrunnlagResultat(
-        resultat: ResultatBeregning?,
-        betydning: String,
-    ) {
+    private fun printGrunnlagResultat(resultat: ResultatBeregning?, betydning: String) {
         println()
         println()
         println("SJABLONVERDIER:")

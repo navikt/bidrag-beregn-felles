@@ -22,10 +22,10 @@ internal class PeriodeValideringTest {
                 beregnDatoTil = LocalDate.parse("2023-04-01"),
                 dataElement = dataElement,
                 periodeListe =
-                    listOf(
-                        Periode(datoFom = LocalDate.parse("2023-01-01"), datoTil = LocalDate.parse("2023-03-01")),
-                        Periode(datoFom = LocalDate.parse("2023-02-01"), datoTil = LocalDate.parse("2023-04-01")),
-                    ),
+                listOf(
+                    Periode(datoFom = LocalDate.parse("2023-01-01"), datoTil = LocalDate.parse("2023-03-01")),
+                    Periode(datoFom = LocalDate.parse("2023-02-01"), datoTil = LocalDate.parse("2023-04-01")),
+                ),
                 sjekkOverlappendePerioder = true,
                 sjekkOppholdMellomPerioder = false,
                 sjekkDatoTilNull = false,
@@ -54,10 +54,10 @@ internal class PeriodeValideringTest {
                 beregnDatoTil = LocalDate.parse("2023-04-01"),
                 dataElement = dataElement,
                 periodeListe =
-                    listOf(
-                        Periode(datoFom = LocalDate.parse("2023-01-01"), datoTil = LocalDate.parse("2023-02-01")),
-                        Periode(datoFom = LocalDate.parse("2023-03-01"), datoTil = LocalDate.parse("2023-04-01")),
-                    ),
+                listOf(
+                    Periode(datoFom = LocalDate.parse("2023-01-01"), datoTil = LocalDate.parse("2023-02-01")),
+                    Periode(datoFom = LocalDate.parse("2023-03-01"), datoTil = LocalDate.parse("2023-04-01")),
+                ),
                 sjekkOverlappendePerioder = false,
                 sjekkOppholdMellomPerioder = true,
                 sjekkDatoTilNull = false,
@@ -86,10 +86,10 @@ internal class PeriodeValideringTest {
                 beregnDatoTil = LocalDate.parse("2023-04-01"),
                 dataElement = dataElement,
                 periodeListe =
-                    listOf(
-                        Periode(datoFom = LocalDate.parse("2023-01-01"), datoTil = null),
-                        Periode(datoFom = LocalDate.parse("2023-03-01"), datoTil = LocalDate.parse("2023-04-01")),
-                    ),
+                listOf(
+                    Periode(datoFom = LocalDate.parse("2023-01-01"), datoTil = null),
+                    Periode(datoFom = LocalDate.parse("2023-03-01"), datoTil = LocalDate.parse("2023-04-01")),
+                ),
                 sjekkOverlappendePerioder = false,
                 sjekkOppholdMellomPerioder = false,
                 sjekkDatoTilNull = true,
@@ -118,10 +118,10 @@ internal class PeriodeValideringTest {
                 beregnDatoTil = LocalDate.parse("2023-04-01"),
                 dataElement = dataElement,
                 periodeListe =
-                    listOf(
-                        Periode(datoFom = LocalDate.parse("2023-01-04"), datoTil = LocalDate.parse("2023-02-01")),
-                        Periode(datoFom = LocalDate.parse("2023-03-01"), datoTil = LocalDate.parse("2023-04-16")),
-                    ),
+                listOf(
+                    Periode(datoFom = LocalDate.parse("2023-01-04"), datoTil = LocalDate.parse("2023-02-01")),
+                    Periode(datoFom = LocalDate.parse("2023-03-01"), datoTil = LocalDate.parse("2023-04-16")),
+                ),
                 sjekkOverlappendePerioder = false,
                 sjekkOppholdMellomPerioder = false,
                 sjekkDatoTilNull = false,
@@ -156,10 +156,10 @@ internal class PeriodeValideringTest {
                 beregnDatoTil = LocalDate.parse("2023-04-01"),
                 dataElement = dataElement,
                 periodeListe =
-                    listOf(
-                        Periode(datoFom = LocalDate.parse("2023-02-01"), datoTil = LocalDate.parse("2023-01-01")),
-                        Periode(datoFom = LocalDate.parse("2023-02-01"), datoTil = LocalDate.parse("2023-04-01")),
-                    ),
+                listOf(
+                    Periode(datoFom = LocalDate.parse("2023-02-01"), datoTil = LocalDate.parse("2023-01-01")),
+                    Periode(datoFom = LocalDate.parse("2023-02-01"), datoTil = LocalDate.parse("2023-04-01")),
+                ),
                 sjekkOverlappendePerioder = false,
                 sjekkOppholdMellomPerioder = false,
                 sjekkDatoTilNull = false,
@@ -188,10 +188,10 @@ internal class PeriodeValideringTest {
                 beregnDatoTil = LocalDate.parse("2023-04-01"),
                 dataElement = dataElement,
                 periodeListe =
-                    listOf(
-                        Periode(datoFom = LocalDate.parse("2023-02-01"), datoTil = LocalDate.parse("2023-03-01")),
-                        Periode(datoFom = LocalDate.parse("2023-03-01"), datoTil = LocalDate.parse("2023-04-01")),
-                    ),
+                listOf(
+                    Periode(datoFom = LocalDate.parse("2023-02-01"), datoTil = LocalDate.parse("2023-03-01")),
+                    Periode(datoFom = LocalDate.parse("2023-03-01"), datoTil = LocalDate.parse("2023-04-01")),
+                ),
                 sjekkOverlappendePerioder = false,
                 sjekkOppholdMellomPerioder = false,
                 sjekkDatoTilNull = false,
@@ -220,10 +220,10 @@ internal class PeriodeValideringTest {
                 beregnDatoTil = LocalDate.parse("2023-04-01"),
                 dataElement = dataElement,
                 periodeListe =
-                    listOf(
-                        Periode(datoFom = LocalDate.parse("2023-01-01"), datoTil = LocalDate.parse("2023-02-01")),
-                        Periode(datoFom = LocalDate.parse("2023-02-01"), datoTil = LocalDate.parse("2023-03-01")),
-                    ),
+                listOf(
+                    Periode(datoFom = LocalDate.parse("2023-01-01"), datoTil = LocalDate.parse("2023-02-01")),
+                    Periode(datoFom = LocalDate.parse("2023-02-01"), datoTil = LocalDate.parse("2023-03-01")),
+                ),
                 sjekkOverlappendePerioder = false,
                 sjekkOppholdMellomPerioder = false,
                 sjekkDatoTilNull = false,

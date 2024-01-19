@@ -11,7 +11,7 @@ import java.time.YearMonth
 
 @Suppress("NonAsciiCharacters")
 class KontantstøtteService {
-    // Summerer mottat periode opp til beløp for 12 måneder og returnerer
+    // Summerer mottatt periode opp til beløp for 12 måneder og returnerer
     fun beregnKontantstøtte(kontantstøttelisteInn: List<Kontantstøtte>): List<SummertÅrsinntekt> {
         val kontantstøtteListeUt = mutableListOf<SummertÅrsinntekt>()
 
@@ -41,10 +41,10 @@ class KontantstøtteService {
                         referanse = "",
                         sumInntekt = it.beløp.times(BigDecimal.valueOf(12)),
                         periode =
-                            ÅrMånedsperiode(
-                                fom = YearMonth.of(it.periodeFra.year, it.periodeFra.month),
-                                til = finnPeriodeTil(it.periodeTil),
-                            ),
+                        ÅrMånedsperiode(
+                            fom = YearMonth.of(it.periodeFra.year, it.periodeFra.month),
+                            til = finnPeriodeTil(it.periodeTil),
+                        ),
                         gjelderBarnPersonId = barnPersonId,
                         inntektPostListe = emptyList(),
                     ),

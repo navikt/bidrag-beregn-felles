@@ -14,6 +14,7 @@ class InntektService(
     val skattegrunnlagService: SkattegrunnlagService = SkattegrunnlagService(),
     val kontantstøtteService: KontantstøtteService = KontantstøtteService(),
     val utvidetBarnetrygdOgSmåbarnstilleggService: UtvidetBarnetrygdOgSmåbarnstilleggService = UtvidetBarnetrygdOgSmåbarnstilleggService(),
+    val barnetilleggPensjonService: BarnetilleggPensjonService = BarnetilleggPensjonService(),
     val ytelserService: YtelserService = YtelserService(),
 ) {
     fun transformerInntekter(transformerInntekterRequest: TransformerInntekterRequest): TransformerInntekterResponse {
@@ -21,10 +22,10 @@ class InntektService(
             TransformerInntekterResponse(
                 versjon = "",
                 summertMånedsinntektListe =
-                    ainntektService.beregnMaanedsinntekt(
-                        ainntektListeInn = transformerInntekterRequest.ainntektsposter,
-                        ainntektHentetDato = transformerInntekterRequest.ainntektHentetDato,
-                    ),
+                ainntektService.beregnMaanedsinntekt(
+                    ainntektListeInn = transformerInntekterRequest.ainntektsposter,
+                    ainntektHentetDato = transformerInntekterRequest.ainntektHentetDato,
+                ),
                 summertÅrsinntektListe = (
                     ainntektService.beregnAarsinntekt(
                         ainntektListeInn = transformerInntekterRequest.ainntektsposter,
@@ -42,11 +43,12 @@ class InntektService(
                         utvidetBarnetrygdOgSmåbarnstilleggService.beregnUtvidetBarnetrygdOgSmåbarnstillegg(
                             transformerInntekterRequest.utvidetBarnetrygdOgSmåbarnstilleggliste,
                         ) +
+                        barnetilleggPensjonService.beregnBarnetilleggPensjon(transformerInntekterRequest.barnetilleggsliste) +
                         ytelserService.beregnYtelser(
                             ainntektListeInn = transformerInntekterRequest.ainntektsposter,
                             ainntektHentetDato = transformerInntekterRequest.ainntektHentetDato,
                         )
-                ),
+                    ),
             )
 
         secureLogger.info { "TransformerInntekterRequestDto: ${tilJson(transformerInntekterRequest.toString())}" }

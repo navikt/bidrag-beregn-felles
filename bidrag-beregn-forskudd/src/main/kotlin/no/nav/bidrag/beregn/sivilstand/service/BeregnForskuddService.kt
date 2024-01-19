@@ -90,27 +90,23 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
         return respons
     }
 
-    private fun mapFraResultatPeriodeCore(resultatPeriodeCoreListe: List<ResultatPeriodeCore>) =
-        resultatPeriodeCoreListe.map {
-            ResultatPeriode(
-                periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
-                resultat =
-                    ResultatBeregning(
-                        belop = it.resultat.belop,
-                        kode = ResultatkodeForskudd.valueOf(it.resultat.kode),
-                        regel = it.resultat.regel,
-                    ),
-                grunnlagsreferanseListe = it.grunnlagsreferanseListe,
-            )
-        }
+    private fun mapFraResultatPeriodeCore(resultatPeriodeCoreListe: List<ResultatPeriodeCore>) = resultatPeriodeCoreListe.map {
+        ResultatPeriode(
+            periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
+            resultat =
+            ResultatBeregning(
+                belop = it.resultat.belop,
+                kode = ResultatkodeForskudd.valueOf(it.resultat.kode),
+                regel = it.resultat.regel,
+            ),
+            grunnlagsreferanseListe = it.grunnlagsreferanseListe,
+        )
+    }
 
     // Lager en liste over resultatgrunnlag som inneholder:
     //   - mottatte grunnlag som er brukt i beregningen
     //   - sjabloner som er brukt i beregningen
-    private fun lagGrunnlagReferanseListe(
-        forskuddGrunnlag: BeregnGrunnlag,
-        resultatFraCore: BeregnetForskuddResultatCore,
-    ): List<Grunnlag> {
+    private fun lagGrunnlagReferanseListe(forskuddGrunnlag: BeregnGrunnlag, resultatFraCore: BeregnetForskuddResultatCore): List<Grunnlag> {
         val mapper = ObjectMapper().findAndRegisterModules().registerModules(JavaTimeModule())
         val resultatGrunnlagListe = mutableListOf<Grunnlag>()
         val grunnlagReferanseListe =

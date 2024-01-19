@@ -79,10 +79,7 @@ object PeriodeUtil {
 
     // Validerer at beregningsperiode fra/til er gyldig
     @JvmStatic
-    fun validerBeregnPeriodeInput(
-        beregnDatoFom: LocalDate?,
-        beregnDatoTil: LocalDate?,
-    ): List<Avvik> {
+    fun validerBeregnPeriodeInput(beregnDatoFom: LocalDate?, beregnDatoTil: LocalDate?): List<Avvik> {
         val avvikListe = mutableListOf<Avvik>()
         if (beregnDatoFom == null) {
             avvikListe.add(Avvik("beregnDatoFom kan ikke være null", Avvikstype.NULL_VERDI_I_DATO))

@@ -26,10 +26,7 @@ import java.time.temporal.ChronoUnit
 @Suppress("NonAsciiCharacters")
 class AinntektService {
     // Summerer, grupperer og transformerer ainntekter pr år
-    fun beregnAarsinntekt(
-        ainntektListeInn: List<Ainntektspost>,
-        ainntektHentetDato: LocalDate,
-    ): List<SummertÅrsinntekt> {
+    fun beregnAarsinntekt(ainntektListeInn: List<Ainntektspost>, ainntektHentetDato: LocalDate): List<SummertÅrsinntekt> {
         return if (ainntektListeInn.isNotEmpty()) {
             val ainntektMap = summerAarsinntekter(ainntektListeInn, ainntektHentetDato)
             val ainntektListeUt = mutableListOf<SummertÅrsinntekt>()
@@ -41,36 +38,36 @@ class AinntektService {
                 ainntektListeUt.add(
                     SummertÅrsinntekt(
                         inntektRapportering =
-                            when (it.key) {
-                                KEY_3MND -> Inntektsrapportering.AINNTEKT_BEREGNET_3MND
-                                KEY_12MND -> Inntektsrapportering.AINNTEKT_BEREGNET_12MND
-                                else -> Inntektsrapportering.AINNTEKT
-                            },
+                        when (it.key) {
+                            KEY_3MND -> Inntektsrapportering.AINNTEKT_BEREGNET_3MND
+                            KEY_12MND -> Inntektsrapportering.AINNTEKT_BEREGNET_12MND
+                            else -> Inntektsrapportering.AINNTEKT
+                        },
                         visningsnavn =
-                            when (it.key) {
-                                KEY_3MND -> Inntektsrapportering.AINNTEKT_BEREGNET_3MND.visningsnavn.intern
-                                KEY_12MND -> Inntektsrapportering.AINNTEKT_BEREGNET_12MND.visningsnavn.intern
-                                else -> Inntektsrapportering.AINNTEKT.visningsnavnIntern(it.value.periodeFra.year)
-                            },
+                        when (it.key) {
+                            KEY_3MND -> Inntektsrapportering.AINNTEKT_BEREGNET_3MND.visningsnavn.intern
+                            KEY_12MND -> Inntektsrapportering.AINNTEKT_BEREGNET_12MND.visningsnavn.intern
+                            else -> Inntektsrapportering.AINNTEKT.visningsnavnIntern(it.value.periodeFra.year)
+                        },
                         referanse = "",
                         sumInntekt =
-                            when (it.key) {
-                                KEY_3MND -> it.value.sumInntekt.toInt().times(4).toBigDecimal() // Regner om til årsinntekt
-                                else -> it.value.sumInntekt
-                            },
+                        when (it.key) {
+                            KEY_3MND -> it.value.sumInntekt.toInt().times(4).toBigDecimal() // Regner om til årsinntekt
+                            else -> it.value.sumInntekt
+                        },
                         periode = ÅrMånedsperiode(fom = it.value.periodeFra, til = it.value.periodeTil),
                         inntektPostListe =
-                            when (it.key) {
-                                KEY_3MND ->
-                                    grupperOgSummerDetaljposter(
-                                        inntektPostListe = it.value.inntektPostListe,
-                                        multiplikator = 4,
-                                    )
-                                else ->
-                                    grupperOgSummerDetaljposter(
-                                        inntektPostListe = it.value.inntektPostListe,
-                                    )
-                            },
+                        when (it.key) {
+                            KEY_3MND ->
+                                grupperOgSummerDetaljposter(
+                                    inntektPostListe = it.value.inntektPostListe,
+                                    multiplikator = 4,
+                                )
+                            else ->
+                                grupperOgSummerDetaljposter(
+                                    inntektPostListe = it.value.inntektPostListe,
+                                )
+                        },
                     ),
                 )
             }
@@ -81,10 +78,7 @@ class AinntektService {
     }
 
     // Summerer, grupperer og transformerer ainntekter pr måned
-    fun beregnMaanedsinntekt(
-        ainntektListeInn: List<Ainntektspost>,
-        ainntektHentetDato: LocalDate,
-    ): List<SummertMånedsinntekt> {
+    fun beregnMaanedsinntekt(ainntektListeInn: List<Ainntektspost>, ainntektHentetDato: LocalDate): List<SummertMånedsinntekt> {
         val ainntektMap = summerMaanedsinntekter(ainntektListeInn, ainntektHentetDato)
         val ainntektListeUt = mutableListOf<SummertMånedsinntekt>()
 
@@ -119,10 +113,7 @@ class AinntektService {
     }
 
     // Summerer og grupperer ainntekter pr år
-    private fun summerAarsinntekter(
-        ainntektsposter: List<Ainntektspost>,
-        ainntektHentetDato: LocalDate,
-    ): Map<String, InntektSumPost> {
+    private fun summerAarsinntekter(ainntektsposter: List<Ainntektspost>, ainntektHentetDato: LocalDate): Map<String, InntektSumPost> {
         val ainntektMap = mutableMapOf<String, InntektSumPost>()
         ainntektsposter.forEach { ainntektPost ->
             kalkulerbeløpForPeriode(
@@ -163,10 +154,7 @@ class AinntektService {
     }
 
     // Summerer og grupperer ainntekter pr måned
-    private fun summerMaanedsinntekter(
-        ainntektListeInn: List<Ainntektspost>,
-        ainntektHentetDato: LocalDate,
-    ): Map<String, InntektSumPost> {
+    private fun summerMaanedsinntekter(ainntektListeInn: List<Ainntektspost>, ainntektHentetDato: LocalDate): Map<String, InntektSumPost> {
         val ainntektMap = mutableMapOf<String, InntektSumPost>()
         ainntektListeInn.forEach { ainntektPost ->
             kalkulerbeløpForPeriode(
@@ -185,12 +173,7 @@ class AinntektService {
     }
 
     // Summerer inntekter og legger til detaljposter til map
-    private fun akkumulerPost(
-        ainntektMap: MutableMap<String, InntektSumPost>,
-        key: String,
-        value: Detaljpost,
-        ainntektHentetDato: LocalDate,
-    ) {
+    private fun akkumulerPost(ainntektMap: MutableMap<String, InntektSumPost>, key: String, value: Detaljpost, ainntektHentetDato: LocalDate) {
         val periode = bestemPeriode(key, ainntektHentetDato)
         val inntektSumPost =
             ainntektMap.getOrDefault(
@@ -275,12 +258,7 @@ class AinntektService {
         }
     }
 
-    private fun kalkulerBeløpForMnd(
-        periodeFra: YearMonth,
-        periodeTil: YearMonth,
-        beskrivelse: String,
-        beløp: BigDecimal,
-    ): Map<String, Detaljpost> {
+    private fun kalkulerBeløpForMnd(periodeFra: YearMonth, periodeTil: YearMonth, beskrivelse: String, beløp: BigDecimal): Map<String, Detaljpost> {
         val periodeMap = mutableMapOf<String, Detaljpost>()
         val antallMnd = ChronoUnit.MONTHS.between(periodeFra, periodeTil).toInt()
         val månedsbeløp = beregneBeløpPerMåned(beløp = beløp, antallMnd = antallMnd)
@@ -296,12 +274,7 @@ class AinntektService {
     }
 
     // Kalkulerer totalt beløp for hvert år forekomsten dekker
-    private fun kalkulerBeløpForAar(
-        periodeFra: YearMonth,
-        periodeTil: YearMonth,
-        beskrivelse: String,
-        beløp: BigDecimal,
-    ): Map<String, Detaljpost> {
+    private fun kalkulerBeløpForAar(periodeFra: YearMonth, periodeTil: YearMonth, beskrivelse: String, beløp: BigDecimal): Map<String, Detaljpost> {
         val periodeMap = mutableMapOf<String, Detaljpost>()
         val antallMndTotalt = ChronoUnit.MONTHS.between(periodeFra, periodeTil).toInt()
         val månedsbeløp = beregneBeløpPerMåned(beløp = beløp, antallMnd = antallMndTotalt)
@@ -371,10 +344,7 @@ class AinntektService {
     }
 
     // Finner riktig periode basert på nøkkelverdi i map og om det er type år, måned eller intervall
-    private fun bestemPeriode(
-        periodeVerdi: String,
-        ainntektHentetDato: LocalDate,
-    ): Periode {
+    private fun bestemPeriode(periodeVerdi: String, ainntektHentetDato: LocalDate): Periode {
         val periodeFra: YearMonth
         val periodeTil: YearMonth
 

@@ -1,6 +1,7 @@
 package no.nav.bidrag.inntekt.service
 
 import io.kotest.assertions.assertSoftly
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
@@ -21,41 +22,52 @@ class InntektServiceTest : AbstractServiceTest() {
 
     @Test
     fun `skal transformere inntekter`() {
-        val transformerteInntekterResponseDto =
-            inntektService.transformerInntekter(
-                inntektRequest.copy(ainntektHentetDato = ainntektHentetDato),
-            )
+        val transformerteInntekterResponseDto = inntektService.transformerInntekter(inntektRequest.copy(ainntektHentetDato = ainntektHentetDato))
+
+        TestUtil.printJson(transformerteInntekterResponseDto)
 
         assertSoftly {
             transformerteInntekterResponseDto.shouldNotBeNull()
             transformerteInntekterResponseDto.summertÅrsinntektListe.shouldNotBeEmpty()
-            transformerteInntekterResponseDto.summertÅrsinntektListe.size shouldBe 8
+            transformerteInntekterResponseDto.summertÅrsinntektListe.shouldHaveSize(23)
 
             transformerteInntekterResponseDto.summertÅrsinntektListe
                 .filter { it.inntektRapportering == Inntektsrapportering.AINNTEKT }.size shouldBe 2
-
-            transformerteInntekterResponseDto.summertÅrsinntektListe.filter {
-                it.inntektRapportering == Inntektsrapportering.AINNTEKT_BEREGNET_3MND
-            }.size shouldBe 1
-
-            transformerteInntekterResponseDto.summertÅrsinntektListe.filter {
-                it.inntektRapportering == Inntektsrapportering.AINNTEKT_BEREGNET_12MND
-            }.size shouldBe 1
-
-            transformerteInntekterResponseDto.summertÅrsinntektListe.filter {
-                it.inntektRapportering == Inntektsrapportering.LIGNINGSINNTEKT
-            }.size shouldBe 2
-
-            transformerteInntekterResponseDto.summertÅrsinntektListe.filter {
-                it.inntektRapportering == Inntektsrapportering.KAPITALINNTEKT
-            }.size shouldBe 2
-
             transformerteInntekterResponseDto.summertÅrsinntektListe[0].inntektPostListe[0].kode shouldBe "overtidsgodtgjoerelse"
-
             transformerteInntekterResponseDto.summertÅrsinntektListe[0].inntektPostListe[0].visningsnavn shouldBe "Overtidsgodtgjørelse"
 
+            transformerteInntekterResponseDto.summertÅrsinntektListe
+                .filter { it.inntektRapportering == Inntektsrapportering.AINNTEKT_BEREGNET_3MND }.size shouldBe 1
+
+            transformerteInntekterResponseDto.summertÅrsinntektListe
+                .filter { it.inntektRapportering == Inntektsrapportering.AINNTEKT_BEREGNET_12MND }.size shouldBe 1
+
+            transformerteInntekterResponseDto.summertÅrsinntektListe
+                .filter { it.inntektRapportering == Inntektsrapportering.LIGNINGSINNTEKT }.size shouldBe 2
+
+            transformerteInntekterResponseDto.summertÅrsinntektListe
+                .filter { it.inntektRapportering == Inntektsrapportering.KAPITALINNTEKT }.size shouldBe 2
+
+            transformerteInntekterResponseDto.summertÅrsinntektListe
+                .filter { it.inntektRapportering == Inntektsrapportering.KONTANTSTØTTE }.size shouldBe 5
+
+            transformerteInntekterResponseDto.summertÅrsinntektListe
+                .filter { it.inntektRapportering == Inntektsrapportering.SMÅBARNSTILLEGG }.size shouldBe 3
+
+            transformerteInntekterResponseDto.summertÅrsinntektListe
+                .filter { it.inntektRapportering == Inntektsrapportering.UTVIDET_BARNETRYGD }.size shouldBe 2
+
+            transformerteInntekterResponseDto.summertÅrsinntektListe
+                .filter { it.inntektRapportering == Inntektsrapportering.BARNETILLEGG }.size shouldBe 5
+
             transformerteInntekterResponseDto.summertMånedsinntektListe.shouldNotBeEmpty()
-            transformerteInntekterResponseDto.summertMånedsinntektListe.size shouldBe 20
+            transformerteInntekterResponseDto.summertMånedsinntektListe.shouldHaveSize(20)
+            transformerteInntekterResponseDto.summertMånedsinntektListe
+                .filter { it.gjelderÅrMåned.year == 2021 }.sumOf { it.sumInntekt.toInt() }.shouldBe(4000)
+            transformerteInntekterResponseDto.summertMånedsinntektListe
+                .filter { it.gjelderÅrMåned.year == 2022 }.sumOf { it.sumInntekt.toInt() }.shouldBe(446000)
+            transformerteInntekterResponseDto.summertMånedsinntektListe
+                .filter { it.gjelderÅrMåned.year == 2023 }.sumOf { it.sumInntekt.toInt() }.shouldBe(468000)
         }
     }
 }
