@@ -1,13 +1,8 @@
 package no.nav.bidrag.beregn.sivilstand.service.api
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import no.nav.bidrag.beregn.forskudd.core.ForskuddCore
-import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore
 import no.nav.bidrag.beregn.sivilstand.service.SivilstandService
 import no.nav.bidrag.beregn.sivilstand.service.TestUtil
-import no.nav.bidrag.beregn.sivilstand.service.testdata.SjablonApiStub
-import no.nav.bidrag.domene.enums.beregning.ResultatkodeForskudd
-import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.fail
