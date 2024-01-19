@@ -1,11 +1,11 @@
-package no.nav.bidrag.beregn.forskudd.service.service
+package no.nav.bidrag.beregn.sivilstand.service.service
 
 import io.mockk.every
 import io.mockk.mockkObject
 import no.nav.bidrag.beregn.forskudd.core.ForskuddCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore
-import no.nav.bidrag.beregn.forskudd.service.BeregnForskuddService
-import no.nav.bidrag.beregn.forskudd.service.TestUtil
+import no.nav.bidrag.beregn.sivilstand.service.BeregnForskuddService
+import no.nav.bidrag.beregn.sivilstand.service.TestUtil
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType

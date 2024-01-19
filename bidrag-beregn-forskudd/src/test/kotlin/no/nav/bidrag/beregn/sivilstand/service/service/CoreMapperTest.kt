@@ -1,7 +1,7 @@
-package no.nav.bidrag.beregn.forskudd.service.service
+package no.nav.bidrag.beregn.sivilstand.service.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import no.nav.bidrag.beregn.forskudd.service.CoreMapper
+import no.nav.bidrag.beregn.sivilstand.service.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
