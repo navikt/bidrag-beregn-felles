@@ -25,7 +25,7 @@ data class Periode(
         return (
             (annenPeriode.datoTil == null || datoFom.isBefore(annenPeriode.datoTil)) &&
                 (datoTil == null || datoTil.isAfter(annenPeriode.datoFom))
-        )
+            )
     }
 
     // Sjekk om perioden overlapper (datoFom i denne perioden kommer tidligere enn datoTil i forrige periode)

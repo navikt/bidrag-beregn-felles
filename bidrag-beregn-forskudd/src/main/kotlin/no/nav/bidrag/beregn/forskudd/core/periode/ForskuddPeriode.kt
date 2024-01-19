@@ -37,10 +37,7 @@ internal class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning 
     }
 
     // Lag
-    private fun lagGrunnlagTilBeregning(
-        periodeGrunnlag: BeregnForskuddGrunnlag,
-        grunnlagTilBeregning: GrunnlagTilBeregning,
-    ) {
+    private fun lagGrunnlagTilBeregning(periodeGrunnlag: BeregnForskuddGrunnlag, grunnlagTilBeregning: GrunnlagTilBeregning) {
         grunnlagTilBeregning.inntektPeriodeListe = periodeGrunnlag.inntektPeriodeListe.map { it }
         grunnlagTilBeregning.sivilstandPeriodeListe = periodeGrunnlag.sivilstandPeriodeListe.map { it }
         grunnlagTilBeregning.barnIHusstandenPeriodeListe = periodeGrunnlag.barnIHusstandenPeriodeListe.map { it }
@@ -58,10 +55,7 @@ internal class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning 
     }
 
     // Lager bruddperioder ved å løpe gjennom alle periodelistene
-    private fun lagBruddperioder(
-        periodeGrunnlag: BeregnForskuddGrunnlag,
-        grunnlagTilBeregning: GrunnlagTilBeregning,
-    ) {
+    private fun lagBruddperioder(periodeGrunnlag: BeregnForskuddGrunnlag, grunnlagTilBeregning: GrunnlagTilBeregning) {
         // Bygger opp liste over perioder, basert på alle typer inputparametre
         grunnlagTilBeregning.bruddPeriodeListe =
             Periodiserer()
@@ -169,11 +163,7 @@ internal class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning 
     }
 
     // Deler opp i aldersperioder med utgangspunkt i fødselsdato
-    private fun settBarnAlderPerioder(
-        fødselsdato: LocalDate,
-        beregnDatoFra: LocalDate,
-        beregnDatoTil: LocalDate,
-    ): List<AlderPeriode> {
+    private fun settBarnAlderPerioder(fødselsdato: LocalDate, beregnDatoFra: LocalDate, beregnDatoTil: LocalDate): List<AlderPeriode> {
         val bruddAlderListe = ArrayList<AlderPeriode>()
         val barn11AarDato = fødselsdato.plusYears(11).with(firstDayOfMonth())
         val barn18AarDato = fødselsdato.plusYears(18).with(firstDayOfNextMonth())
@@ -193,10 +183,10 @@ internal class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning 
                 AlderPeriode(
                     referanse = "",
                     alderPeriode =
-                        Periode(
-                            datoFom = beregnDatoFra.with(firstDayOfMonth()),
-                            datoTil = barn11AarDato.with(firstDayOfMonth()),
-                        ),
+                    Periode(
+                        datoFom = beregnDatoFra.with(firstDayOfMonth()),
+                        datoTil = barn11AarDato.with(firstDayOfMonth()),
+                    ),
                     alder = 0,
                 ),
             )
@@ -205,10 +195,10 @@ internal class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning 
                     AlderPeriode(
                         referanse = "",
                         alderPeriode =
-                            Periode(
-                                datoFom = barn11AarDato.with(firstDayOfMonth()),
-                                datoTil = barn18AarDato.with(firstDayOfMonth()),
-                            ),
+                        Periode(
+                            datoFom = barn11AarDato.with(firstDayOfMonth()),
+                            datoTil = barn18AarDato.with(firstDayOfMonth()),
+                        ),
                         alder = 11,
                     ),
                 )
@@ -234,10 +224,10 @@ internal class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning 
                     AlderPeriode(
                         referanse = "",
                         alderPeriode =
-                            Periode(
-                                datoFom = beregnDatoFra.with(firstDayOfMonth()),
-                                datoTil = barn18AarDato.with(firstDayOfMonth()),
-                            ),
+                        Periode(
+                            datoFom = beregnDatoFra.with(firstDayOfMonth()),
+                            datoTil = barn18AarDato.with(firstDayOfMonth()),
+                        ),
                         alder = 11,
                     ),
                 )

@@ -18,9 +18,7 @@ class UtvidetBarnetrygdOgSmåbarnstilleggServiceTest : AbstractServiceTest() {
 
         val ubst = TestUtil.byggUtvidetBarnetrygdOgSmåbarnstillegg()
         val beregnetUtvidetBarnetrygdOgSmåbarnstillegg =
-            utvidetBarnetrygdOgSmåbarnstilleggService.beregnUtvidetBarnetrygdOgSmåbarnstillegg(
-                ubst,
-            )
+            utvidetBarnetrygdOgSmåbarnstilleggService.beregnUtvidetBarnetrygdOgSmåbarnstillegg(ubst)
 
         assertSoftly {
             assertNotNull(beregnetUtvidetBarnetrygdOgSmåbarnstillegg)

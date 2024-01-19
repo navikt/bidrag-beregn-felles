@@ -54,8 +54,7 @@ object TestUtil {
     private const val BOSTATUS_REFERANSE_MED_FORELDRE_2 = "BOSTATUS_REFERANSE_MED_FORELDRE_2"
     private const val BOSTATUS_REFERANSE_MED_ANDRE_ENN_FORELDRE = "BOSTATUS_REFERANSE_MED_ANDRE_ENN_FORELDRE"
 
-    fun byggSjablonPeriodeNavnVerdiListe() =
-        // Sjablontall
+    fun byggSjablonPeriodeNavnVerdiListe() = // Sjablontall
         listOf(
             SjablonPeriodeNavnVerdi(
                 Periode(LocalDate.parse("2017-01-01"), null),
@@ -94,66 +93,64 @@ object TestUtil {
             ),
         )
 
-    fun byggSjablonPeriodeListe() =
-
-        listOf(
-            SjablonPeriode(
-                Periode(LocalDate.parse("2017-01-01"), null),
-                Sjablon(
-                    SjablonTallNavn.FORSKUDDSSATS_BELØP.navn,
-                    emptyList(),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(1710))),
-                ),
+    fun byggSjablonPeriodeListe() = listOf(
+        SjablonPeriode(
+            Periode(LocalDate.parse("2017-01-01"), null),
+            Sjablon(
+                SjablonTallNavn.FORSKUDDSSATS_BELØP.navn,
+                emptyList(),
+                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(1710))),
             ),
-            SjablonPeriode(
-                Periode(LocalDate.parse("2017-01-01"), null),
-                Sjablon(
-                    SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR.navn,
-                    emptyList(),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(320))),
-                ),
+        ),
+        SjablonPeriode(
+            Periode(LocalDate.parse("2017-01-01"), null),
+            Sjablon(
+                SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR.navn,
+                emptyList(),
+                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(320))),
             ),
-            SjablonPeriode(
-                Periode(LocalDate.parse("2017-01-01"), null),
-                Sjablon(
-                    SjablonTallNavn.ØVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELØP.navn,
-                    emptyList(),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(270200))),
-                ),
+        ),
+        SjablonPeriode(
+            Periode(LocalDate.parse("2017-01-01"), null),
+            Sjablon(
+                SjablonTallNavn.ØVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELØP.navn,
+                emptyList(),
+                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(270200))),
             ),
-            SjablonPeriode(
-                Periode(LocalDate.parse("2017-01-01"), null),
-                Sjablon(
-                    SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELØP.navn,
-                    emptyList(),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(419700))),
-                ),
+        ),
+        SjablonPeriode(
+            Periode(LocalDate.parse("2017-01-01"), null),
+            Sjablon(
+                SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELØP.navn,
+                emptyList(),
+                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(419700))),
             ),
-            SjablonPeriode(
-                Periode(LocalDate.parse("2017-01-01"), null),
-                Sjablon(
-                    SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP.navn,
-                    emptyList(),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(336500))),
-                ),
+        ),
+        SjablonPeriode(
+            Periode(LocalDate.parse("2017-01-01"), null),
+            Sjablon(
+                SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP.navn,
+                emptyList(),
+                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(336500))),
             ),
-            SjablonPeriode(
-                Periode(LocalDate.parse("2017-01-01"), null),
-                Sjablon(
-                    SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP.navn,
-                    emptyList(),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(61700))),
-                ),
+        ),
+        SjablonPeriode(
+            Periode(LocalDate.parse("2017-01-01"), null),
+            Sjablon(
+                SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP.navn,
+                emptyList(),
+                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(61700))),
             ),
-            SjablonPeriode(
-                Periode(LocalDate.parse("2017-01-01"), null),
-                Sjablon(
-                    SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELØP.navn,
-                    emptyList(),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(1280))),
-                ),
+        ),
+        SjablonPeriode(
+            Periode(LocalDate.parse("2017-01-01"), null),
+            Sjablon(
+                SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELØP.navn,
+                emptyList(),
+                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(1280))),
             ),
-        )
+        ),
+    )
 
     fun byggForskuddGrunnlagCore(): BeregnForskuddGrunnlagCore {
         return byggForskuddGrunnlagCore(Bostatuskode.MED_FORELDER.toString())
@@ -294,10 +291,7 @@ object TestUtil {
         return byggForskuddGrunnlag("2017-01-01", "2019-08-01")
     }
 
-    fun byggForskuddGrunnlag(
-        beregnDatoFra: String,
-        beregnDatoTil: String,
-    ): BeregnForskuddGrunnlag {
+    fun byggForskuddGrunnlag(beregnDatoFra: String, beregnDatoTil: String): BeregnForskuddGrunnlag {
         val fodselsdato = LocalDate.parse("2006-12-19")
 
         val bostatusListe =

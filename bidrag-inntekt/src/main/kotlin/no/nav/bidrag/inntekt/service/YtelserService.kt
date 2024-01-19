@@ -25,10 +25,7 @@ class YtelserService {
     internal val objectmapper = ObjectMapper(YAMLFactory()).findAndRegisterModules().registerKotlinModule()
 
     // Summerer, grupperer og transformerer ainntekter pr år per Navytelse
-    fun beregnYtelser(
-        ainntektListeInn: List<Ainntektspost>,
-        ainntektHentetDato: LocalDate,
-    ): List<SummertÅrsinntekt> {
+    fun beregnYtelser(ainntektListeInn: List<Ainntektspost>, ainntektHentetDato: LocalDate): List<SummertÅrsinntekt> {
         val alleYtelser = mutableListOf<SummertÅrsinntekt>()
         val mapping = hentMappingYtelser()
 
@@ -94,10 +91,7 @@ class YtelserService {
     }
 
     // Summerer og grupperer ainntekter pr år
-    private fun summerAarsinntekter(
-        ainntektsposter: List<Ainntektspost>,
-        ainntektHentetDato: LocalDate,
-    ): Map<String, InntektSumPost> {
+    private fun summerAarsinntekter(ainntektsposter: List<Ainntektspost>, ainntektHentetDato: LocalDate): Map<String, InntektSumPost> {
         val ainntektMap = mutableMapOf<String, InntektSumPost>()
         ainntektsposter.forEach { ainntektPost ->
             kalkulerbeløpForPeriode(
@@ -115,12 +109,7 @@ class YtelserService {
     }
 
     // Summerer inntekter og legger til detaljposter til map
-    private fun akkumulerPost(
-        ainntektMap: MutableMap<String, InntektSumPost>,
-        key: String,
-        value: Detaljpost,
-        ainntektHentetDato: LocalDate,
-    ) {
+    private fun akkumulerPost(ainntektMap: MutableMap<String, InntektSumPost>, key: String, value: Detaljpost, ainntektHentetDato: LocalDate) {
         val periode = bestemPeriode(key, ainntektHentetDato)
         val inntektSumPost =
             ainntektMap.getOrDefault(
@@ -177,12 +166,7 @@ class YtelserService {
     }
 
     // Kalkulerer totalt beløp for hvert år forekomsten dekker
-    private fun kalkulerBeløpForAar(
-        periodeFra: YearMonth,
-        periodeTil: YearMonth,
-        beskrivelse: String,
-        beløp: BigDecimal,
-    ): Map<String, Detaljpost> {
+    private fun kalkulerBeløpForAar(periodeFra: YearMonth, periodeTil: YearMonth, beskrivelse: String, beløp: BigDecimal): Map<String, Detaljpost> {
         val periodeMap = mutableMapOf<String, Detaljpost>()
         val antallMndTotalt = ChronoUnit.MONTHS.between(periodeFra, periodeTil).toInt()
         val månedsbeløp = beregneBeløpPerMåned(beløp = beløp, antallMnd = antallMndTotalt)
@@ -207,10 +191,7 @@ class YtelserService {
     }
 
     // Finner riktig periode basert på nøkkelverdi i map og om det er type år, måned eller intervall
-    private fun bestemPeriode(
-        periodeVerdi: String,
-        ainntektHentetDato: LocalDate,
-    ): Periode {
+    private fun bestemPeriode(periodeVerdi: String, ainntektHentetDato: LocalDate): Periode {
         val periodeFra: YearMonth
         val periodeTil: YearMonth
 
@@ -238,10 +219,7 @@ class YtelserService {
         return Periode(periodeFra = periodeFra, periodeTil = periodeTil)
     }
 
-    private fun filtrerInntekterPåYtelse(
-        ainntektListeInn: List<Ainntektspost>,
-        beskrivelserListe: List<String>,
-    ) = ainntektListeInn.filter {
+    private fun filtrerInntekterPåYtelse(ainntektListeInn: List<Ainntektspost>, beskrivelserListe: List<String>) = ainntektListeInn.filter {
         it.beskrivelse in beskrivelserListe
     }
 

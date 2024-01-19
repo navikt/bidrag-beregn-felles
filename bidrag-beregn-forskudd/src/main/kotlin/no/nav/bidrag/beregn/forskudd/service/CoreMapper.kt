@@ -26,10 +26,7 @@ import java.time.LocalDate
 internal object CoreMapper {
     private val MAX_DATO = LocalDate.parse("9999-12-31")
 
-    fun mapGrunnlagTilCore(
-        beregnForskuddGrunnlag: BeregnGrunnlag,
-        sjablontallListe: List<Sjablontall>,
-    ): BeregnForskuddGrunnlagCore {
+    fun mapGrunnlagTilCore(beregnForskuddGrunnlag: BeregnGrunnlag, sjablontallListe: List<Sjablontall>): BeregnForskuddGrunnlagCore {
         // Lager en map for sjablontall (id og navn)
         val sjablontallMap = HashMap<String, SjablonTallNavn>()
         SjablonTallNavn.entries.forEach {
@@ -109,10 +106,10 @@ internal object CoreMapper {
                 BostatusPeriodeCore(
                     referanse = it.referanse,
                     periode =
-                        PeriodeCore(
-                            datoFom = it.innhold.periode.toDatoperiode().fom,
-                            datoTil = it.innhold.periode.toDatoperiode().til,
-                        ),
+                    PeriodeCore(
+                        datoFom = it.innhold.periode.toDatoperiode().fom,
+                        datoTil = it.innhold.periode.toDatoperiode().til,
+                    ),
                     kode = it.innhold.bostatus.name,
                 )
             }
@@ -138,10 +135,10 @@ internal object CoreMapper {
                     InntektPeriodeCore(
                         referanse = it.referanse,
                         periode =
-                            PeriodeCore(
-                                datoFom = it.innhold.periode.toDatoperiode().fom,
-                                datoTil = it.innhold.periode.toDatoperiode().til,
-                            ),
+                        PeriodeCore(
+                            datoFom = it.innhold.periode.toDatoperiode().fom,
+                            datoTil = it.innhold.periode.toDatoperiode().til,
+                        ),
                         type = it.innhold.inntektsrapportering.name,
                         belop = it.innhold.beløp,
                     )
@@ -166,10 +163,10 @@ internal object CoreMapper {
                 SivilstandPeriodeCore(
                     referanse = it.referanse,
                     periode =
-                        PeriodeCore(
-                            datoFom = it.innhold.periode.toDatoperiode().fom,
-                            datoTil = it.innhold.periode.toDatoperiode().til,
-                        ),
+                    PeriodeCore(
+                        datoFom = it.innhold.periode.toDatoperiode().fom,
+                        datoTil = it.innhold.periode.toDatoperiode().til,
+                    ),
                     kode = it.innhold.sivilstand.name,
                 )
             }
@@ -194,10 +191,10 @@ internal object CoreMapper {
                     BarnIHusstandenPeriodeCore(
                         referanse = it.referanse,
                         periode =
-                            PeriodeCore(
-                                datoFom = it.innhold.periode.toDatoperiode().fom,
-                                datoTil = it.innhold.periode.toDatoperiode().til,
-                            ),
+                        PeriodeCore(
+                            datoFom = it.innhold.periode.toDatoperiode().fom,
+                            datoTil = it.innhold.periode.toDatoperiode().til,
+                        ),
                     )
                 }
         } catch (e: Exception) {

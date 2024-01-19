@@ -23,9 +23,8 @@ class StubUtils {
         val filnavnKodeverkLoennsbeskrivelser = "src/test/resources/__files/respons_kodeverk_loennsbeskrivelser.json"
         val filnavnKodeverkSummertSkattegrunnlag = "src/test/resources/__files/respons_kodeverk_summert_skattegrunnlag.json"
 
-        private fun createGenericResponse() =
-            WireMock.aResponse().withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
-                .withStatus(HttpStatus.OK.value())
+        private fun createGenericResponse() = WireMock.aResponse().withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
+            .withStatus(HttpStatus.OK.value())
 
         fun dummystubKodeverkProvider() {
             mockkObject(KodeverkProvider)
@@ -37,10 +36,7 @@ class StubUtils {
             every { finnVisningsnavnSkattegrunnlag(any()) } returns "Visningsnavn skattegrunnlag"
         }
 
-        fun stubKodeverkLønnsbeskrivelse(
-            response: KodeverkKoderBetydningerResponse? = null,
-            status: HttpStatus = HttpStatus.OK,
-        ) {
+        fun stubKodeverkLønnsbeskrivelse(response: KodeverkKoderBetydningerResponse? = null, status: HttpStatus = HttpStatus.OK) {
             wireMockServer.stubFor(
                 WireMock.get(WireMock.urlPathMatching(".*/kodeverk/Loennsbeskrivelse.*")).willReturn(
                     if (response != null) {
@@ -55,10 +51,7 @@ class StubUtils {
             )
         }
 
-        fun stubKodeverkSkattegrunnlag(
-            response: KodeverkKoderBetydningerResponse? = null,
-            status: HttpStatus = HttpStatus.OK,
-        ) {
+        fun stubKodeverkSkattegrunnlag(response: KodeverkKoderBetydningerResponse? = null, status: HttpStatus = HttpStatus.OK) {
             wireMockServer.stubFor(
                 WireMock.get(WireMock.urlPathMatching(".*/kodeverk/Summert.*")).willReturn(
                     if (response != null) {
@@ -73,10 +66,7 @@ class StubUtils {
             )
         }
 
-        fun stubKodeverkYtelsesbeskrivelser(
-            response: KodeverkKoderBetydningerResponse? = null,
-            status: HttpStatus = HttpStatus.OK,
-        ) {
+        fun stubKodeverkYtelsesbeskrivelser(response: KodeverkKoderBetydningerResponse? = null, status: HttpStatus = HttpStatus.OK) {
             wireMockServer.stubFor(
                 WireMock.get(WireMock.urlPathMatching(".*/kodeverk/YtelseFraOffentligeBeskrivelse.*")).willReturn(
                     if (response != null) {
@@ -91,10 +81,7 @@ class StubUtils {
             )
         }
 
-        fun stubKodeverkPensjonsbeskrivelser(
-            response: KodeverkKoderBetydningerResponse? = null,
-            status: HttpStatus = HttpStatus.OK,
-        ) {
+        fun stubKodeverkPensjonsbeskrivelser(response: KodeverkKoderBetydningerResponse? = null, status: HttpStatus = HttpStatus.OK) {
             wireMockServer.stubFor(
                 WireMock.get(WireMock.urlPathMatching(".*/kodeverk/PensjonEllerTrygdeBeskrivelse.*")).willReturn(
                     if (response != null) {
@@ -109,10 +96,7 @@ class StubUtils {
             )
         }
 
-        fun stubKodeverkNaeringsinntektsbeskrivelser(
-            response: KodeverkKoderBetydningerResponse? = null,
-            status: HttpStatus = HttpStatus.OK,
-        ) {
+        fun stubKodeverkNaeringsinntektsbeskrivelser(response: KodeverkKoderBetydningerResponse? = null, status: HttpStatus = HttpStatus.OK) {
             wireMockServer.stubFor(
                 WireMock.get(WireMock.urlPathMatching(".*/kodeverk/Naeringsinntektsbeskrivelse.*")).willReturn(
                     if (response != null) {

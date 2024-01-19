@@ -31,10 +31,10 @@ class UtvidetBarnetrygdOgSmåbarnstilleggService() {
                         referanse = "",
                         sumInntekt = it.beløp.times(BigDecimal.valueOf(12)),
                         periode =
-                            ÅrMånedsperiode(
-                                fom = YearMonth.of(it.periodeFra.year, it.periodeFra.month),
-                                til = finnPeriodeTil(it.periodeTil),
-                            ),
+                        ÅrMånedsperiode(
+                            fom = YearMonth.of(it.periodeFra.year, it.periodeFra.month),
+                            til = finnPeriodeTil(it.periodeTil),
+                        ),
                         inntektPostListe = emptyList(),
                     ),
                 )
@@ -47,10 +47,10 @@ class UtvidetBarnetrygdOgSmåbarnstilleggService() {
                         referanse = "",
                         sumInntekt = it.beløp.times(BigDecimal.valueOf(12)),
                         periode =
-                            ÅrMånedsperiode(
-                                fom = YearMonth.of(it.periodeFra.year, it.periodeFra.month),
-                                til = finnPeriodeTil(it.periodeTil),
-                            ),
+                        ÅrMånedsperiode(
+                            fom = YearMonth.of(it.periodeFra.year, it.periodeFra.month),
+                            til = finnPeriodeTil(it.periodeTil),
+                        ),
                         inntektPostListe = emptyList(),
                     ),
                 )
