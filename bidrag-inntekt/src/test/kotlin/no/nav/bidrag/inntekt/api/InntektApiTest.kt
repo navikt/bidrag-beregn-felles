@@ -5,7 +5,6 @@ import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldBeEmpty
 import no.nav.bidrag.commons.service.KodeverkProvider
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.inntekt.InntektApi
@@ -20,6 +19,7 @@ import java.time.LocalDate
 
 class InntektApiTest {
     private val inntektApi = InntektApi(kodeverkUrl)
+    private val ainntektHentetDato = LocalDate.of(2023, 9, 1)
 
     @BeforeEach
     fun initKodeverk() {
@@ -41,28 +41,41 @@ class InntektApiTest {
     fun `skal transformere inntekter`() {
         val filnavnEksempelRequest = "/testfiler/eksempel_request.json"
 
-        val transformerteInntekter =
-            inntektApi.transformerInntekter(
-                fileToObject<TransformerInntekterRequest>(filnavnEksempelRequest).copy(ainntektHentetDato = LocalDate.of(2023, 9, 1)),
-            )
+        val transformerteInntekter = inntektApi.transformerInntekter(
+            fileToObject<TransformerInntekterRequest>(filnavnEksempelRequest).copy(ainntektHentetDato = ainntektHentetDato),
+        )
 
         assertSoftly {
             transformerteInntekter.shouldNotBeNull()
-            transformerteInntekter.versjon.shouldBeEmpty()
             transformerteInntekter.summertÅrsinntektListe.shouldNotBeEmpty()
-            transformerteInntekter.summertÅrsinntektListe.shouldHaveSize(8)
+            transformerteInntekter.summertÅrsinntektListe.shouldHaveSize(23)
+
             transformerteInntekter.summertÅrsinntektListe
                 .filter { it.inntektRapportering == Inntektsrapportering.AINNTEKT }.size.shouldBe(2)
-            transformerteInntekter.summertÅrsinntektListe.filter {
-                it.inntektRapportering == Inntektsrapportering.AINNTEKT_BEREGNET_3MND
-            }.size.shouldBe(1)
-            transformerteInntekter.summertÅrsinntektListe.filter {
-                it.inntektRapportering == Inntektsrapportering.AINNTEKT_BEREGNET_12MND
-            }.size.shouldBe(1)
+            transformerteInntekter.summertÅrsinntektListe[0].inntektPostListe[0].kode shouldBe "overtidsgodtgjoerelse"
+            transformerteInntekter.summertÅrsinntektListe[0].inntektPostListe[0].visningsnavn shouldBe "Overtidsgodtgjørelse"
+
+            transformerteInntekter.summertÅrsinntektListe
+                .filter { it.inntektRapportering == Inntektsrapportering.AINNTEKT_BEREGNET_3MND }.size.shouldBe(1)
+
+            transformerteInntekter.summertÅrsinntektListe
+                .filter { it.inntektRapportering == Inntektsrapportering.AINNTEKT_BEREGNET_12MND }.size.shouldBe(1)
+
             transformerteInntekter.summertÅrsinntektListe
                 .filter { it.inntektRapportering == Inntektsrapportering.LIGNINGSINNTEKT }.size.shouldBe(2)
+
             transformerteInntekter.summertÅrsinntektListe
                 .filter { it.inntektRapportering == Inntektsrapportering.KAPITALINNTEKT }.size.shouldBe(2)
+
+            transformerteInntekter.summertÅrsinntektListe
+                .filter { it.inntektRapportering == Inntektsrapportering.SMÅBARNSTILLEGG }.size shouldBe 3
+
+            transformerteInntekter.summertÅrsinntektListe
+                .filter { it.inntektRapportering == Inntektsrapportering.UTVIDET_BARNETRYGD }.size shouldBe 2
+
+            transformerteInntekter.summertÅrsinntektListe
+                .filter { it.inntektRapportering == Inntektsrapportering.BARNETILLEGG }.size shouldBe 5
+
             transformerteInntekter.summertMånedsinntektListe.shouldNotBeEmpty()
             transformerteInntekter.summertMånedsinntektListe.shouldHaveSize(20)
             transformerteInntekter.summertMånedsinntektListe

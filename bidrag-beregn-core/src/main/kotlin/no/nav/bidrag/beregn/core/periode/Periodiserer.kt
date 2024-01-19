@@ -38,10 +38,7 @@ class Periodiserer {
     }
 
     // Setter perioder basert på fra- og til-dato
-    fun finnPerioder(
-        beregnDatoFom: LocalDate,
-        beregnDatoTil: LocalDate,
-    ): List<Periode> {
+    fun finnPerioder(beregnDatoFom: LocalDate, beregnDatoTil: LocalDate): List<Periode> {
         val sortertBruddpunktListe =
             bruddpunkter.stream()
                 .filter { dato: LocalDate -> dato.isAfter(beregnDatoFom.minusDays(1)) }

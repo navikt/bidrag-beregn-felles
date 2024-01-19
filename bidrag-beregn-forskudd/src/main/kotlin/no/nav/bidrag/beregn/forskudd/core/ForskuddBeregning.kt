@@ -83,11 +83,11 @@ class ForskuddBeregning {
                 resultatKode =
                     if (erUnderInntektsGrense(
                             inntektsgrense =
-                                finnInntektsgrense(
-                                    sivilstandKode = grunnlag.sivilstand.kode,
-                                    inntektsgrenseEnslig75Prosent = sjablonverdier.inntektsgrenseEnslig75ProsentForskuddBelop,
-                                    inntektsgrenseGift75Prosent = sjablonverdier.inntektsgrenseGiftSamboer75ProsentForskuddBelop,
-                                ).add(inntektsIntervallTotal),
+                            finnInntektsgrense(
+                                sivilstandKode = grunnlag.sivilstand.kode,
+                                inntektsgrenseEnslig75Prosent = sjablonverdier.inntektsgrenseEnslig75ProsentForskuddBelop,
+                                inntektsgrenseGift75Prosent = sjablonverdier.inntektsgrenseGiftSamboer75ProsentForskuddBelop,
+                            ).add(inntektsIntervallTotal),
                             inntekt = bidragMottakerInntekt,
                         )
                     ) {
@@ -122,16 +122,13 @@ class ForskuddBeregning {
     }
 
     // Mapper ut sjablonverdier til ResultatBeregning (dette for å sikre at kun sjabloner som faktisk er brukt legges ut i grunnlaget for beregning)
-    private fun byggSjablonListe(
-        sjablonPeriodeListe: List<SjablonPeriode>,
-        sjablonverdier: Sjablonverdier,
-    ) = listOf(
+    private fun byggSjablonListe(sjablonPeriodeListe: List<SjablonPeriode>, sjablonverdier: Sjablonverdier) = listOf(
         SjablonPeriodeNavnVerdi(
             periode =
-                hentPeriode(
-                    sjablonPeriodeListe = sjablonPeriodeListe,
-                    sjablonNavn = SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELØP.navn,
-                ),
+            hentPeriode(
+                sjablonPeriodeListe = sjablonPeriodeListe,
+                sjablonNavn = SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELØP.navn,
+            ),
             navn = SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELØP.navn,
             verdi = sjablonverdier.forskuddssats75ProsentBelop,
         ),
@@ -142,55 +139,52 @@ class ForskuddBeregning {
         ),
         SjablonPeriodeNavnVerdi(
             periode =
-                hentPeriode(
-                    sjablonPeriodeListe = sjablonPeriodeListe,
-                    sjablonNavn = SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR.navn,
-                ),
+            hentPeriode(
+                sjablonPeriodeListe = sjablonPeriodeListe,
+                sjablonNavn = SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR.navn,
+            ),
             navn = SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR.navn,
             verdi = sjablonverdier.maksInntektForskuddMottakerMultiplikator,
         ),
         SjablonPeriodeNavnVerdi(
             periode =
-                hentPeriode(
-                    sjablonPeriodeListe = sjablonPeriodeListe,
-                    sjablonNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELØP.navn,
-                ),
+            hentPeriode(
+                sjablonPeriodeListe = sjablonPeriodeListe,
+                sjablonNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELØP.navn,
+            ),
             navn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELØP.navn,
             verdi = sjablonverdier.inntektsgrense100ProsentForskuddBelop,
         ),
         SjablonPeriodeNavnVerdi(
             periode =
-                hentPeriode(
-                    sjablonPeriodeListe = sjablonPeriodeListe,
-                    sjablonNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELØP.navn,
-                ),
+            hentPeriode(
+                sjablonPeriodeListe = sjablonPeriodeListe,
+                sjablonNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELØP.navn,
+            ),
             navn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELØP.navn,
             verdi = sjablonverdier.inntektsgrenseEnslig75ProsentForskuddBelop,
         ),
         SjablonPeriodeNavnVerdi(
             periode =
-                hentPeriode(
-                    sjablonPeriodeListe = sjablonPeriodeListe,
-                    sjablonNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP.navn,
-                ),
+            hentPeriode(
+                sjablonPeriodeListe = sjablonPeriodeListe,
+                sjablonNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP.navn,
+            ),
             navn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP.navn,
             verdi = sjablonverdier.inntektsgrenseGiftSamboer75ProsentForskuddBelop,
         ),
         SjablonPeriodeNavnVerdi(
             periode =
-                hentPeriode(
-                    sjablonPeriodeListe = sjablonPeriodeListe,
-                    sjablonNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP.navn,
-                ),
+            hentPeriode(
+                sjablonPeriodeListe = sjablonPeriodeListe,
+                sjablonNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP.navn,
+            ),
             navn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP.navn,
             verdi = sjablonverdier.inntektsintervallForskuddBelop,
         ),
     )
 
-    private fun hentPeriode(
-        sjablonPeriodeListe: List<SjablonPeriode>,
-        sjablonNavn: String,
-    ): Periode {
+    private fun hentPeriode(sjablonPeriodeListe: List<SjablonPeriode>, sjablonNavn: String): Periode {
         val sjablonPeriode = sjablonPeriodeListe.find { it.sjablon.navn == sjablonNavn }
         return sjablonPeriode?.getPeriode() ?: Periode(LocalDate.MIN, LocalDate.MAX)
     }
@@ -200,10 +194,7 @@ class ForskuddBeregning {
     // Forskudd 75%  = Sjablon 0038
     // Forskudd 100% = Sjablon 0038 * 4/3
     // Forskudd 125% = Sjablon 0038 * 5/3
-    private fun beregnForskudd(
-        resultatKode: ResultatkodeForskudd,
-        forskuddssats75ProsentBelop: BigDecimal,
-    ) = when (resultatKode) {
+    private fun beregnForskudd(resultatKode: ResultatkodeForskudd, forskuddssats75ProsentBelop: BigDecimal) = when (resultatKode) {
         ResultatkodeForskudd.REDUSERT_FORSKUDD_50_PROSENT ->
             forskuddssats75ProsentBelop.multiply(BigDecimal.valueOf(2))
                 .divide(BigDecimal.valueOf(3), -1, RoundingMode.HALF_UP)
@@ -220,10 +211,7 @@ class ForskuddBeregning {
         else -> BigDecimal.ZERO
     }
 
-    private fun erUnderInntektsGrense(
-        inntektsgrense: BigDecimal,
-        inntekt: BigDecimal,
-    ) = inntekt.compareTo(inntektsgrense) < 1
+    private fun erUnderInntektsGrense(inntektsgrense: BigDecimal, inntekt: BigDecimal) = inntekt.compareTo(inntektsgrense) < 1
 
     private fun finnInntektsgrense(
         sivilstandKode: Sivilstandskode,

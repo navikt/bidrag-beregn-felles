@@ -66,10 +66,7 @@ fun String.isNumeric(): Boolean {
     return this.all { it.isDigit() }
 }
 
-fun beregneBeløpPerMåned(
-    beløp: BigDecimal,
-    antallMnd: Int,
-): BigDecimal {
+fun beregneBeløpPerMåned(beløp: BigDecimal, antallMnd: Int): BigDecimal {
     return if (antallMnd == 0) {
         BigDecimal.valueOf(0)
     } else {
