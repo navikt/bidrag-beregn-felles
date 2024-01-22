@@ -1,6 +1,5 @@
-package no.nav.bidrag.beregn.sivilstand.service.service
+package no.nav.bidrag.sivilstand.service
 
-import no.nav.bidrag.beregn.sivilstand.service.SivilstandService
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -11,14 +10,10 @@ import org.mockito.junit.jupiter.MockitoExtension
 internal class SivilstandServiceTest {
     private lateinit var sivilstandService: SivilstandService
 
-
     @Test
     @DisplayName("Skal beregne sivilstand")
     fun skalBeregneSivilstand() {
-
     }
-
-
 
     companion object MockitoHelper {
         fun <T> any(): T = Mockito.any()

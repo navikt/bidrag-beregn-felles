@@ -13,19 +13,10 @@
 
     <properties>
         <revision>1.0-SNAPSHOT</revision>
-        <guava.version>33.0.0-jre</guava.version>
+        <wiremock.version>2.35.1</wiremock.version>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>no.nav.bidrag</groupId>
             <artifactId>bidrag-beregn-core</artifactId>
@@ -37,22 +28,22 @@
         </dependency>
         <dependency>
             <groupId>no.nav.bidrag</groupId>
-            <artifactId>bidrag-domene-felles</artifactId>
+            <artifactId>bidrag-transport-felles</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.bidrag</groupId>
             <artifactId>bidrag-commons-felles</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
         <!-- test -->
+        <dependency>
+            <groupId>io.kotest</groupId>
+            <artifactId>kotest-runner-junit5-jvm</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -73,7 +64,14 @@
             <artifactId>mockk-jvm</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock-jre8-standalone</artifactId>
+            <version>${wiremock.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
     <build>
         <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
         <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
