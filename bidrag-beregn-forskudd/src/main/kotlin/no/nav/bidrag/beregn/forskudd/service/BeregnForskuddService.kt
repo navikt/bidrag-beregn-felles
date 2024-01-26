@@ -1,7 +1,6 @@
 package no.nav.bidrag.beregn.forskudd.service
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.databind.node.POJONode
 import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.bidrag.beregn.forskudd.core.ForskuddCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnetForskuddResultatCore
@@ -13,11 +12,11 @@ import no.nav.bidrag.domene.enums.beregning.ResultatkodeForskudd
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.behandling.beregning.felles.Grunnlag
 import no.nav.bidrag.transport.behandling.beregning.felles.valider
 import no.nav.bidrag.transport.behandling.beregning.forskudd.BeregnetForskuddResultat
 import no.nav.bidrag.transport.behandling.beregning.forskudd.ResultatBeregning
 import no.nav.bidrag.transport.behandling.beregning.forskudd.ResultatPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 
 private val logger = KotlinLogging.logger {}
 
@@ -106,9 +105,8 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
     // Lager en liste over resultatgrunnlag som inneholder:
     //   - mottatte grunnlag som er brukt i beregningen
     //   - sjabloner som er brukt i beregningen
-    private fun lagGrunnlagReferanseListe(forskuddGrunnlag: BeregnGrunnlag, resultatFraCore: BeregnetForskuddResultatCore): List<Grunnlag> {
-        val mapper = ObjectMapper().findAndRegisterModules().registerModules(JavaTimeModule())
-        val resultatGrunnlagListe = mutableListOf<Grunnlag>()
+    private fun lagGrunnlagReferanseListe(forskuddGrunnlag: BeregnGrunnlag, resultatFraCore: BeregnetForskuddResultatCore): List<GrunnlagDto> {
+        val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
         val grunnlagReferanseListe =
             resultatFraCore.beregnetForskuddPeriodeListe
                 .flatMap { it.grunnlagsreferanseListe }
@@ -118,7 +116,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
         resultatGrunnlagListe.addAll(
             forskuddGrunnlag.grunnlagListe!!
                 .filter { grunnlagReferanseListe.contains(it.referanse) }
-                .map { Grunnlag(referanse = it.referanse, type = it.type, innhold = it.innhold) },
+                .map { GrunnlagDto(referanse = it.referanse, type = it.type, innhold = it.innhold) },
         )
 
         // Danner grunnlag basert på liste over sjabloner som er brukt i beregningen
@@ -130,7 +128,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
                     map["datoTil"] = it.periode.datoTil.toString()
                     map["sjablonNavn"] = it.navn
                     map["sjablonVerdi"] = it.verdi.toInt()
-                    Grunnlag(referanse = it.referanse, type = Grunnlagstype.SJABLON, innhold = mapper.valueToTree(map))
+                    GrunnlagDto(referanse = it.referanse, type = Grunnlagstype.SJABLON, innhold = POJONode(map))
                 },
         )
 
