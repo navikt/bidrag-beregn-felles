@@ -142,7 +142,7 @@ internal object CoreMapper {
                 }
         } catch (e: Exception) {
             throw IllegalArgumentException(
-                "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.BEREGNING_INNTEKT_RAPPORTERING_PERIODE er ikke gyldig: " +
+                "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE er ikke gyldig: " +
                     e.message,
             )
         }

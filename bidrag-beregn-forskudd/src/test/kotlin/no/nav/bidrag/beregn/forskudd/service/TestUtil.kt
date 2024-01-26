@@ -50,10 +50,6 @@ object TestUtil {
         return byggDummyForskuddGrunnlag("referanse")
     }
 
-    fun byggForskuddGrunnlagUtenType(): BeregnGrunnlag {
-        return byggDummyForskuddGrunnlag("type")
-    }
-
     fun byggForskuddGrunnlagUtenInnhold(): BeregnGrunnlag {
         return byggDummyForskuddGrunnlag("innhold")
     }
@@ -64,10 +60,10 @@ object TestUtil {
         val beregningsperiodeFom = YearMonth.parse("2017-01")
         val beregningsperiodeTil = if (nullVerdi == "beregningsperiodeTil") null else YearMonth.parse("2020-01")
         val referanse = if (nullVerdi == "referanse") "" else "Mottatt_BM_Inntekt_AG_20201201"
-        val type = if (nullVerdi == "type") Grunnlagstype.SJABLON else Grunnlagstype.INNTEKT
+        val type = Grunnlagstype.INNTEKT
         val innhold =
             if (nullVerdi == "innhold") {
-                POJONode("")
+                POJONode(null)
             } else {
                 mapper.valueToTree<JsonNode>(
                     mapOf(

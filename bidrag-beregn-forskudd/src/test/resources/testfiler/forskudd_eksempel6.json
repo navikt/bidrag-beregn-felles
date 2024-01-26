@@ -42,7 +42,7 @@
     },
     {
       "referanse": "BeregningInntektRapportering_Ainntekt_20201201",
-      "type": "BEREGNING_INNTEKT_RAPPORTERING_PERIODE",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
       "grunnlagsreferanseListe": [
         "Person_Bidragsmottaker_20201201"
       ],

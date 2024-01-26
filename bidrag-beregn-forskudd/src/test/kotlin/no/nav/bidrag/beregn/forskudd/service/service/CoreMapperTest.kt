@@ -69,7 +69,7 @@ internal class CoreMapperTest {
     }
 
     @Test
-    @DisplayName("Skal kaste UgyldigInputException når BEREGNING_INNTEKT_RAPPORTERING_PERIODE-objekt inneholder ugyldige data")
+    @DisplayName("Skal kaste UgyldigInputException når INNTEKT_RAPPORTERING_PERIODE-objekt inneholder ugyldige data")
     fun mapInntektPeriodeUgyldig() {
         val mapper = ObjectMapper()
         val innholdPerson = innholdPersonOK(mapper)
@@ -105,7 +105,7 @@ internal class CoreMapperTest {
         assertThatExceptionOfType(IllegalArgumentException::class.java)
             .isThrownBy { CoreMapper.mapGrunnlagTilCore(beregnForskuddGrunnlag = beregnForskuddGrunnlag, sjablontallListe = emptyList()) }
             .withMessageContaining(
-                "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.BEREGNING_INNTEKT_RAPPORTERING_PERIODE er ikke gyldig",
+                "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE er ikke gyldig",
             )
     }
 
