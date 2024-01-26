@@ -20,7 +20,7 @@ internal class DtoTest {
     fun skalKasteIllegalArgumentExceptionNaarGrunnlagListeErNull() {
         val grunnlag = TestUtil.byggForskuddGrunnlagUtenGrunnlagListe()
         Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy { grunnlag.valider() }
-            .withMessage("grunnlagListe kan ikke være null")
+            .withMessage("grunnlagListe kan ikke være tom")
     }
 
     @Test
@@ -28,15 +28,7 @@ internal class DtoTest {
     fun skalKasteIllegalArgumentExceptionNaarReferanseErNull() {
         val grunnlag = TestUtil.byggForskuddGrunnlagUtenReferanse()
         Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy { grunnlag.valider() }
-            .withMessage("referanse kan ikke være null")
-    }
-
-    @Test
-    @DisplayName("Skal kaste IllegalArgumentException når type er null")
-    fun skalKasteIllegalArgumentExceptionNaarTypeErNull() {
-        val grunnlag = TestUtil.byggForskuddGrunnlagUtenType()
-        Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy { grunnlag.valider() }
-            .withMessage("type kan ikke være null")
+            .withMessage("referanse kan ikke være en tom streng")
     }
 
     @Test

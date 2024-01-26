@@ -5,7 +5,7 @@ import no.nav.bidrag.beregn.forskudd.service.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.behandling.beregning.felles.Grunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -22,7 +22,7 @@ internal class CoreMapperTest {
                 søknadsbarnReferanse = "Person_Søknadsbarn",
                 grunnlagListe =
                 listOf(
-                    Grunnlag(
+                    GrunnlagDto(
                         referanse = "Person_Søknadsbarn",
                         type = Grunnlagstype.PERSON,
                         grunnlagsreferanseListe = emptyList(),
@@ -48,13 +48,13 @@ internal class CoreMapperTest {
                 søknadsbarnReferanse = "Person_Søknadsbarn",
                 grunnlagListe =
                 listOf(
-                    Grunnlag(
+                    GrunnlagDto(
                         referanse = "Person_Søknadsbarn",
                         type = Grunnlagstype.PERSON,
                         grunnlagsreferanseListe = emptyList(),
                         innhold = innholdPerson,
                     ),
-                    Grunnlag(
+                    GrunnlagDto(
                         referanse = "Bostatus_Søknadsbarn",
                         type = Grunnlagstype.BOSTATUS_PERIODE,
                         grunnlagsreferanseListe = listOf("Person_Søknadsbarn"),
@@ -69,7 +69,7 @@ internal class CoreMapperTest {
     }
 
     @Test
-    @DisplayName("Skal kaste UgyldigInputException når BEREGNING_INNTEKT_RAPPORTERING_PERIODE-objekt inneholder ugyldige data")
+    @DisplayName("Skal kaste UgyldigInputException når INNTEKT_RAPPORTERING_PERIODE-objekt inneholder ugyldige data")
     fun mapInntektPeriodeUgyldig() {
         val mapper = ObjectMapper()
         val innholdPerson = innholdPersonOK(mapper)
@@ -81,21 +81,21 @@ internal class CoreMapperTest {
                 søknadsbarnReferanse = "Person_Søknadsbarn",
                 grunnlagListe =
                 listOf(
-                    Grunnlag(
+                    GrunnlagDto(
                         referanse = "Person_Søknadsbarn",
                         type = Grunnlagstype.PERSON,
                         grunnlagsreferanseListe = emptyList(),
                         innhold = innholdPerson,
                     ),
-                    Grunnlag(
+                    GrunnlagDto(
                         referanse = "Bostatus_Søknadsbarn",
                         type = Grunnlagstype.BOSTATUS_PERIODE,
                         grunnlagsreferanseListe = listOf("Person_Søknadsbarn"),
                         innhold = innholdBostatus,
                     ),
-                    Grunnlag(
+                    GrunnlagDto(
                         referanse = "BeregningInntektRapportering_Ainntekt",
-                        type = Grunnlagstype.BEREGNING_INNTEKT_RAPPORTERING_PERIODE,
+                        type = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
                         grunnlagsreferanseListe = listOf("Person_Bidragsmottaker"),
                         innhold = innholdInntektMedFeil,
                     ),
@@ -105,7 +105,7 @@ internal class CoreMapperTest {
         assertThatExceptionOfType(IllegalArgumentException::class.java)
             .isThrownBy { CoreMapper.mapGrunnlagTilCore(beregnForskuddGrunnlag = beregnForskuddGrunnlag, sjablontallListe = emptyList()) }
             .withMessageContaining(
-                "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.BEREGNING_INNTEKT_RAPPORTERING_PERIODE er ikke gyldig",
+                "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE er ikke gyldig",
             )
     }
 
@@ -123,25 +123,25 @@ internal class CoreMapperTest {
                 søknadsbarnReferanse = "Person_Søknadsbarn",
                 grunnlagListe =
                 listOf(
-                    Grunnlag(
+                    GrunnlagDto(
                         referanse = "Person_Søknadsbarn",
                         type = Grunnlagstype.PERSON,
                         grunnlagsreferanseListe = emptyList(),
                         innhold = innholdPerson,
                     ),
-                    Grunnlag(
+                    GrunnlagDto(
                         referanse = "Bostatus_Søknadsbarn",
                         type = Grunnlagstype.BOSTATUS_PERIODE,
                         grunnlagsreferanseListe = listOf("Person_Søknadsbarn"),
                         innhold = innholdBostatus,
                     ),
-                    Grunnlag(
+                    GrunnlagDto(
                         referanse = "BeregningInntektRapportering_Ainntekt",
-                        type = Grunnlagstype.BEREGNING_INNTEKT_RAPPORTERING_PERIODE,
+                        type = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
                         grunnlagsreferanseListe = listOf("Person_Bidragsmottaker"),
                         innhold = innholdInntekt,
                     ),
-                    Grunnlag(
+                    GrunnlagDto(
                         referanse = "Sivilstand",
                         type = Grunnlagstype.SIVILSTAND_PERIODE,
                         grunnlagsreferanseListe = listOf("Person_Bidragsmottaker"),

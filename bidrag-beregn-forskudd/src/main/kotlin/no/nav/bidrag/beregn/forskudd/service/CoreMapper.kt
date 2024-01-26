@@ -15,12 +15,12 @@ import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.behandling.beregning.felles.grunnlag.BeregningInntektRapporteringPeriode
-import no.nav.bidrag.transport.behandling.beregning.felles.hentInnholdBasertPåEgenReferanse
-import no.nav.bidrag.transport.behandling.beregning.felles.hentInnholdBasertPåFremmedReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BostatusPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SivilstandPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
+import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåFremmedReferanse
 import java.time.LocalDate
 
 internal object CoreMapper {
@@ -51,15 +51,15 @@ internal object CoreMapper {
 
         val sjablonPeriodeCoreListe =
             mapSjablonVerdier(
-                beregnDatoFra = beregnForskuddGrunnlag.periode!!.fom.atDay(1),
-                beregnDatoTil = beregnForskuddGrunnlag.periode!!.til!!.atDay(1),
+                beregnDatoFra = beregnForskuddGrunnlag.periode.fom.atDay(1),
+                beregnDatoTil = beregnForskuddGrunnlag.periode.til!!.atDay(1),
                 sjablonSjablontallListe = sjablontallListe,
                 sjablontallMap = sjablontallMap,
             )
 
         return BeregnForskuddGrunnlagCore(
-            beregnDatoFra = beregnForskuddGrunnlag.periode!!.fom.atDay(1),
-            beregnDatoTil = beregnForskuddGrunnlag.periode!!.til!!.atDay(1),
+            beregnDatoFra = beregnForskuddGrunnlag.periode.fom.atDay(1),
+            beregnDatoTil = beregnForskuddGrunnlag.periode.til!!.atDay(1),
             soknadBarn = soknadbarnCore!!,
             bostatusPeriodeListe = bostatusPeriodeCoreListe,
             inntektPeriodeListe = inntektPeriodeCoreListe,
@@ -72,10 +72,9 @@ internal object CoreMapper {
     private fun mapSoknadsbarn(beregnForskuddGrunnlag: BeregnGrunnlag): SoknadBarnCore? {
         try {
             val soknadsbarnGrunnlag =
-                beregnForskuddGrunnlag.hentInnholdBasertPåEgenReferanse(
+                beregnForskuddGrunnlag.grunnlagListe.filtrerOgKonverterBasertPåEgenReferanse<Person>(
                     grunnlagType = Grunnlagstype.PERSON,
-                    clazz = Person::class.java,
-                    referanse = beregnForskuddGrunnlag.søknadsbarnReferanse!!,
+                    referanse = beregnForskuddGrunnlag.søknadsbarnReferanse,
                 )
 
             return if (soknadsbarnGrunnlag.isEmpty() || soknadsbarnGrunnlag.count() > 1) {
@@ -96,10 +95,9 @@ internal object CoreMapper {
     private fun mapBostatus(beregnForskuddGrunnlag: BeregnGrunnlag): List<BostatusPeriodeCore> {
         try {
             val bostatusGrunnlag =
-                beregnForskuddGrunnlag.hentInnholdBasertPåFremmedReferanse(
+                beregnForskuddGrunnlag.grunnlagListe.filtrerOgKonverterBasertPåFremmedReferanse<BostatusPeriode>(
                     grunnlagType = Grunnlagstype.BOSTATUS_PERIODE,
-                    clazz = BostatusPeriode::class.java,
-                    referanse = beregnForskuddGrunnlag.søknadsbarnReferanse!!,
+                    referanse = beregnForskuddGrunnlag.søknadsbarnReferanse,
                 )
 
             return bostatusGrunnlag.map {
@@ -123,9 +121,8 @@ internal object CoreMapper {
     private fun mapInntekt(beregnForskuddGrunnlag: BeregnGrunnlag): List<InntektPeriodeCore> {
         try {
             val inntektGrunnlag =
-                beregnForskuddGrunnlag.hentInnholdBasertPåEgenReferanse(
-                    grunnlagType = Grunnlagstype.BEREGNING_INNTEKT_RAPPORTERING_PERIODE,
-                    clazz = BeregningInntektRapporteringPeriode::class.java,
+                beregnForskuddGrunnlag.grunnlagListe.filtrerOgKonverterBasertPåEgenReferanse<InntektsrapporteringPeriode>(
+                    grunnlagType = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
                 )
 
             return inntektGrunnlag
@@ -145,7 +142,7 @@ internal object CoreMapper {
                 }
         } catch (e: Exception) {
             throw IllegalArgumentException(
-                "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.BEREGNING_INNTEKT_RAPPORTERING_PERIODE er ikke gyldig: " +
+                "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE er ikke gyldig: " +
                     e.message,
             )
         }
@@ -154,10 +151,8 @@ internal object CoreMapper {
     private fun mapSivilstand(beregnForskuddGrunnlag: BeregnGrunnlag): List<SivilstandPeriodeCore> {
         try {
             val sivilstandGrunnlag =
-                beregnForskuddGrunnlag.hentInnholdBasertPåEgenReferanse(
-                    grunnlagType = Grunnlagstype.SIVILSTAND_PERIODE,
-                    clazz = SivilstandPeriode::class.java,
-                )
+                beregnForskuddGrunnlag.grunnlagListe
+                    .filtrerOgKonverterBasertPåEgenReferanse<SivilstandPeriode>(Grunnlagstype.SIVILSTAND_PERIODE)
 
             return sivilstandGrunnlag.map {
                 SivilstandPeriodeCore(
@@ -180,10 +175,8 @@ internal object CoreMapper {
     private fun mapBarnIHusstanden(beregnForskuddGrunnlag: BeregnGrunnlag): List<BarnIHusstandenPeriodeCore> {
         try {
             val barnIHusstandenGrunnlag =
-                beregnForskuddGrunnlag.hentInnholdBasertPåEgenReferanse(
-                    grunnlagType = Grunnlagstype.BOSTATUS_PERIODE,
-                    clazz = BostatusPeriode::class.java,
-                )
+                beregnForskuddGrunnlag.grunnlagListe
+                    .filtrerOgKonverterBasertPåEgenReferanse<BostatusPeriode>(Grunnlagstype.BOSTATUS_PERIODE)
 
             return barnIHusstandenGrunnlag
                 .filter { it.innhold.bostatus == Bostatuskode.MED_FORELDER || it.innhold.bostatus == Bostatuskode.DOKUMENTERT_SKOLEGANG }
