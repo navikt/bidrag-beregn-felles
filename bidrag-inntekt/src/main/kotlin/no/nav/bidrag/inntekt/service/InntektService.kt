@@ -10,13 +10,15 @@ import java.math.BigDecimal
 import java.time.YearMonth
 
 class InntektService(
-    val ainntektService: AinntektService = AinntektService(),
-    val skattegrunnlagService: SkattegrunnlagService = SkattegrunnlagService(),
-    val kontantstøtteService: KontantstøtteService = KontantstøtteService(),
-    val utvidetBarnetrygdOgSmåbarnstilleggService: UtvidetBarnetrygdOgSmåbarnstilleggService = UtvidetBarnetrygdOgSmåbarnstilleggService(),
-    val barnetilleggPensjonService: BarnetilleggPensjonService = BarnetilleggPensjonService(),
-    val ytelserService: YtelserService = YtelserService(),
+    private val ainntektService: AinntektService = AinntektService(),
+    private val skattegrunnlagService: SkattegrunnlagService = SkattegrunnlagService(),
+    private val kontantstøtteService: KontantstøtteService = KontantstøtteService(),
+    private val utvidetBarnetrygdService: UtvidetBarnetrygdService = UtvidetBarnetrygdService(),
+    private val småbarnstilleggService: SmåbarnstilleggService = SmåbarnstilleggService(),
+    private val barnetilleggPensjonService: BarnetilleggPensjonService = BarnetilleggPensjonService(),
+    private val ytelserService: YtelserService = YtelserService(),
 ) {
+
     fun transformerInntekter(transformerInntekterRequest: TransformerInntekterRequest): TransformerInntekterResponse {
         val transformerInntekterResponse =
             TransformerInntekterResponse(
@@ -39,11 +41,18 @@ class InntektService(
                             skattegrunnlagListe = transformerInntekterRequest.skattegrunnlagsliste,
                             inntektsrapportering = Inntektsrapportering.KAPITALINNTEKT,
                         ) +
-                        kontantstøtteService.beregnKontantstøtte(transformerInntekterRequest.kontantstøtteliste) +
-                        utvidetBarnetrygdOgSmåbarnstilleggService.beregnUtvidetBarnetrygdOgSmåbarnstillegg(
-                            transformerInntekterRequest.utvidetBarnetrygdOgSmåbarnstilleggliste,
+                        kontantstøtteService.beregnKontantstøtte(
+                            kontantstøttelisteInn = transformerInntekterRequest.kontantstøtteliste,
                         ) +
-                        barnetilleggPensjonService.beregnBarnetilleggPensjon(transformerInntekterRequest.barnetilleggsliste) +
+                        utvidetBarnetrygdService.beregnUtvidetBarnetrygd(
+                            transformerInntekterRequest.utvidetBarnetrygdliste,
+                        ) +
+                        småbarnstilleggService.beregnSmåbarnstillegg(
+                            transformerInntekterRequest.småbarnstilleggliste,
+                        ) +
+                        barnetilleggPensjonService.beregnBarnetilleggPensjon(
+                            barnetilleggslisteInn = transformerInntekterRequest.barnetilleggsliste,
+                        ) +
                         ytelserService.beregnYtelser(
                             ainntektListeInn = transformerInntekterRequest.ainntektsposter,
                             ainntektHentetDato = transformerInntekterRequest.ainntektHentetDato,

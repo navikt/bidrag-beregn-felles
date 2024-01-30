@@ -9,8 +9,8 @@ import no.nav.bidrag.commons.service.KodeverkProvider
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.inntekt.InntektApi
 import no.nav.bidrag.inntekt.TestUtil.Companion.fileToObject
-import no.nav.bidrag.inntekt.tesdata.StubUtils
-import no.nav.bidrag.inntekt.tesdata.StubUtils.Companion.kodeverkUrl
+import no.nav.bidrag.inntekt.testdata.StubUtils
+import no.nav.bidrag.inntekt.testdata.StubUtils.Companion.kodeverkUrl
 import no.nav.bidrag.transport.behandling.inntekt.request.TransformerInntekterRequest
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach

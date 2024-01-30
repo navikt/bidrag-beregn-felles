@@ -1,4 +1,4 @@
-package no.nav.bidrag.inntekt.tesdata
+package no.nav.bidrag.inntekt.testdata
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.tomakehurst.wiremock.WireMockServer

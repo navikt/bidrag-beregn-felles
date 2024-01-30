@@ -8,7 +8,7 @@ import io.kotest.matchers.shouldBe
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.inntekt.InntektApi
 import no.nav.bidrag.inntekt.TestUtil
-import no.nav.bidrag.inntekt.tesdata.StubUtils.Companion.kodeverkUrl
+import no.nav.bidrag.inntekt.testdata.StubUtils.Companion.kodeverkUrl
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
