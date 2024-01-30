@@ -21,7 +21,6 @@ class UtvidetBarnetrygdService {
                 SummertÅrsinntekt(
                     inntektRapportering = Inntektsrapportering.UTVIDET_BARNETRYGD,
                     visningsnavn = Inntektsrapportering.UTVIDET_BARNETRYGD.visningsnavn.intern,
-                    referanse = "",
                     sumInntekt = it.beløp.times(BigDecimal.valueOf(12)),
                     periode =
                     ÅrMånedsperiode(

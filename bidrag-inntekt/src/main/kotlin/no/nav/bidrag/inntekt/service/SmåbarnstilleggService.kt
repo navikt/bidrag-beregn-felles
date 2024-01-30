@@ -22,7 +22,6 @@ class SmåbarnstilleggService {
                 SummertÅrsinntekt(
                     inntektRapportering = Inntektsrapportering.SMÅBARNSTILLEGG,
                     visningsnavn = Inntektsrapportering.SMÅBARNSTILLEGG.visningsnavn.intern,
-                    referanse = "",
                     sumInntekt = it.beløp.times(BigDecimal.valueOf(12)),
                     periode =
                     ÅrMånedsperiode(
