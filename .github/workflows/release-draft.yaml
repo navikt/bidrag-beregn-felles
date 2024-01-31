@@ -23,7 +23,7 @@ jobs:
 
   commit-version-file:
     name: Commit version
-    needs: build-and-release
+    needs: build-release
     if: ${{ needs.build-release.outputs.published == 'true' }}
     uses: ./.github/workflows/commit-version-file.yaml
     with:
