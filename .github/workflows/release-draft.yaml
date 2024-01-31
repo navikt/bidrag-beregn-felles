@@ -20,3 +20,10 @@ jobs:
     secrets: inherit
     with:
       publish: true
+
+  commit-version-file:
+    name: Commit version
+    uses: ./.github/workflows/commit-version-file.yaml
+    with:
+      version: ${{ needs.build-release.outputs.version }}
+    secrets: inherit
