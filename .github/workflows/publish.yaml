@@ -40,4 +40,4 @@ jobs:
           echo ⚙️ Opprettet versjonfil med versjon $APP_VERSION
           git add ${{env.versionfile_path}}
           git commit -m "Oppdater versjonfil til $APP_VERSION"
-          git push origin HEAD:versjon_fil
+          git push origin HEAD:main

@@ -7,6 +7,6 @@ class VersionProviderTest {
 
     @Test
     fun `Skal hente versjon fra fil`() {
-        VersionProvider.APP_VERSJON shouldBe "2024.01.23.3123213123 - ORIGINAL_COMMIT_HASH"
+        VersionProvider.APP_VERSJON shouldBe "2024.01.23.3123213123_ORIGINAL_COMMIT_HASH"
     }
 }
