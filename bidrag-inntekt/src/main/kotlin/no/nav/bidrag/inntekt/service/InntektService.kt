@@ -3,6 +3,7 @@ package no.nav.bidrag.inntekt.service
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.inntekt.util.InntektUtil.Companion.tilJson
+import no.nav.bidrag.inntekt.util.VersionProvider.Companion.APP_VERSJON
 import no.nav.bidrag.transport.behandling.inntekt.request.TransformerInntekterRequest
 import no.nav.bidrag.transport.behandling.inntekt.response.InntektPost
 import no.nav.bidrag.transport.behandling.inntekt.response.TransformerInntekterResponse
@@ -20,7 +21,7 @@ class InntektService(
     fun transformerInntekter(transformerInntekterRequest: TransformerInntekterRequest): TransformerInntekterResponse {
         val transformerInntekterResponse =
             TransformerInntekterResponse(
-                versjon = "",
+                versjon = APP_VERSJON,
                 summertMånedsinntektListe =
                 ainntektService.beregnMaanedsinntekt(
                     ainntektListeInn = transformerInntekterRequest.ainntektsposter,
