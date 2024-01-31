@@ -17,3 +17,12 @@ jobs:
     with:
       version: ${{env.VERSION}}
     secrets: inherit
+
+  commit-version-file:
+    name: Commit version
+    needs: build-and-release
+    if: ${{ needs.build-and-release.outputs.published == 'true' }}
+    uses: ./.github/workflows/commit-version-file.yaml
+    with:
+      version: ${{ needs.build-and-release.outputs.version }}
+    secrets: inherit

@@ -1,0 +1,32 @@
+name: Release maven package
+on:
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
+        description: Versjon på pakken som skal publiseres
+
+jobs:
+  commit-version-file:
+    name: Commit version
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Commit version
+        env:
+          versionfile_path: bidrag-inntekt/src/main/resources/versjon.txt
+        run: |
+          git config user.name "Automatisk versjon comitter"
+          git config user.email "actions@users.noreply.github.com"
+          export GIT_COMMIT_HASH=$(git log -n 1 --pretty=format:'%h')
+          export APP_VERSION=(${{ inputs.version }}_$GIT_COMMIT_HASH)
+          echo $APP_VERSION > ${{env.versionfile_path}}
+          echo ⚙️ Opprettet versjonfil med versjon $APP_VERSION
+          git add ${{env.versionfile_path}}
+          git commit -m "Oppdater versjonfil til $APP_VERSION"
+          git push --force origin HEAD:main

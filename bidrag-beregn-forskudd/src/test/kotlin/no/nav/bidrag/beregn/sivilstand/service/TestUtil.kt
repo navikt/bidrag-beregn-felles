@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.sivilstand.service
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.node.POJONode
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import no.nav.bidrag.beregn.core.dto.AvvikCore
@@ -17,10 +18,10 @@ import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.behandling.beregning.felles.Grunnlag
 import no.nav.bidrag.transport.behandling.beregning.forskudd.BeregnetForskuddResultat
 import no.nav.bidrag.transport.behandling.beregning.forskudd.ResultatBeregning
 import no.nav.bidrag.transport.behandling.beregning.forskudd.ResultatPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -49,10 +50,6 @@ object TestUtil {
         return byggDummyForskuddGrunnlag("referanse")
     }
 
-    fun byggForskuddGrunnlagUtenType(): BeregnGrunnlag {
-        return byggDummyForskuddGrunnlag("type")
-    }
-
     fun byggForskuddGrunnlagUtenInnhold(): BeregnGrunnlag {
         return byggDummyForskuddGrunnlag("innhold")
     }
@@ -62,11 +59,11 @@ object TestUtil {
         val mapper = ObjectMapper()
         val beregningsperiodeFom = YearMonth.parse("2017-01")
         val beregningsperiodeTil = if (nullVerdi == "beregningsperiodeTil") null else YearMonth.parse("2020-01")
-        val referanse = if (nullVerdi == "referanse") null else "Mottatt_BM_Inntekt_AG_20201201"
-        val type = if (nullVerdi == "type") null else Grunnlagstype.INNTEKT
+        val referanse = if (nullVerdi == "referanse") "" else "Mottatt_BM_Inntekt_AG_20201201"
+        val type = Grunnlagstype.INNTEKT
         val innhold =
             if (nullVerdi == "innhold") {
-                null
+                POJONode(null)
             } else {
                 mapper.valueToTree<JsonNode>(
                     mapOf(
@@ -82,10 +79,10 @@ object TestUtil {
             }
         val grunnlagListe =
             if (nullVerdi == "grunnlagListe") {
-                null
+                emptyList()
             } else {
                 listOf(
-                    Grunnlag(
+                    GrunnlagDto(
                         referanse = referanse,
                         type = type,
                         grunnlagsreferanseListe = emptyList(),
@@ -159,10 +156,10 @@ object TestUtil {
 
         val beregningsperiodeFom = YearMonth.parse(periodeFom)
         val beregningsperiodeTil = YearMonth.parse(periodeTil)
-        val grunnlagListe = mutableListOf<Grunnlag>()
+        val grunnlagListe = mutableListOf<GrunnlagDto>()
 
         grunnlagListe.add(
-            Grunnlag(
+            GrunnlagDto(
                 referanse = "Person_Søknadsbarn",
                 type = Grunnlagstype.PERSON,
                 grunnlagsreferanseListe = emptyList(),
@@ -170,7 +167,7 @@ object TestUtil {
             ),
         )
         grunnlagListe.add(
-            Grunnlag(
+            GrunnlagDto(
                 referanse = "Bostatus_20170101",
                 type = Grunnlagstype.BOSTATUS_PERIODE,
                 grunnlagsreferanseListe = listOf("Person_Søknadsbarn"),
@@ -178,15 +175,15 @@ object TestUtil {
             ),
         )
         grunnlagListe.add(
-            Grunnlag(
+            GrunnlagDto(
                 referanse = "BeregningInntektRapportering_Ainntekt_20170101",
-                type = Grunnlagstype.BEREGNING_INNTEKT_RAPPORTERING_PERIODE,
+                type = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
                 grunnlagsreferanseListe = emptyList(),
                 innhold = inntektInnhold,
             ),
         )
         grunnlagListe.add(
-            Grunnlag(
+            GrunnlagDto(
                 referanse = "Sivilstand_20170101",
                 type = Grunnlagstype.SIVILSTAND_PERIODE,
                 grunnlagsreferanseListe = emptyList(),

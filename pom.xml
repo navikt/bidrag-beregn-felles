@@ -7,7 +7,7 @@
     <groupId>no.nav.bidrag</groupId>
     <artifactId>bidrag-beregn-felles</artifactId>
     <name>Bidrag felles</name>
-    <version>${revision}</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -20,8 +20,8 @@
         <kotest.version>5.8.0</kotest.version>
         <swagger.version>2.2.20</swagger.version>
         <ktlint.version>1.1.1</ktlint.version>
-        <bidrag-felles.version>2024.01.19.131059</bidrag-felles.version>
-        <spring-boot.version>3.2.1</spring-boot.version>
+        <bidrag-felles.version>2024.01.26.145406</bidrag-felles.version>
+        <spring-boot.version>3.2.2</spring-boot.version>
         <kotlin-logging-jvm.version>6.0.3</kotlin-logging-jvm.version>
         <mockito-kotlin.version>5.2.1</mockito-kotlin.version>
         <mockk.version>1.13.9</mockk.version>
@@ -229,6 +229,62 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>ktlint</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>${maven-antrun.version}</version>
+                        <executions>
+                            <execution>
+                                <id>ktlint</id>
+                                <phase>verify</phase>
+                                <configuration>
+                                    <target name="ktlint">
+                                        <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true" classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
+                                            <arg value="src/**/*.kt"/>
+                                        </java>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>ktlint-format</id>
+                                <phase>validate</phase>
+                                <configuration>
+                                    <target name="ktlint">
+                                        <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true" classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
+                                            <jvmarg value="--add-opens"/>
+                                            <jvmarg value="java.base/java.lang=ALL-UNNAMED"/>
+                                            <arg value="-F"/>
+                                            <arg value="src/**/*.kt"/>
+                                        </java>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.pinterest.ktlint</groupId>
+                                <artifactId>ktlint-cli</artifactId>
+                                <version>${ktlint.version}</version>
+                            </dependency>
+                            <!-- additional 3rd party ruleset(s) can be specified here -->
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
 
@@ -338,52 +394,6 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>flatten-maven-plugin</artifactId>
                     <version>${flatten-maven.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-antrun-plugin</artifactId>
-                    <version>${maven-antrun.version}</version>
-                    <executions>
-                        <execution>
-                            <id>ktlint</id>
-                            <phase>verify</phase>
-                            <configuration>
-                                <target name="ktlint">
-                                    <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true" classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
-                                        <arg value="src/**/*.kt"/>
-                                    </java>
-                                </target>
-                            </configuration>
-                            <goals>
-                                <goal>run</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>ktlint-format</id>
-                            <phase>validate</phase>
-                            <configuration>
-                                <target name="ktlint">
-                                    <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true" classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
-                                        <jvmarg value="--add-opens"/>
-                                        <jvmarg value="java.base/java.lang=ALL-UNNAMED"/>
-                                        <arg value="-F"/>
-                                        <arg value="src/**/*.kt"/>
-                                    </java>
-                                </target>
-                            </configuration>
-                            <goals>
-                                <goal>run</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <dependencies>
-                        <dependency>
-                            <groupId>com.pinterest.ktlint</groupId>
-                            <artifactId>ktlint-cli</artifactId>
-                            <version>${ktlint.version}</version>
-                        </dependency>
-                        <!-- additional 3rd party ruleset(s) can be specified here -->
-                    </dependencies>
                 </plugin>
             </plugins>
         </pluginManagement>

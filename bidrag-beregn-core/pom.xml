@@ -3,7 +3,7 @@
   <parent>
     <groupId>no.nav.bidrag</groupId>
     <artifactId>bidrag-beregn-felles</artifactId>
-    <version>${revision}</version>
+    <version>1.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>bidrag-beregn-core</artifactId>
