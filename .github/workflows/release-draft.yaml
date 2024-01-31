@@ -40,5 +40,5 @@ jobs:
           echo Opprettet versjon fil med versjon $APP_VERSION
           git add bidrag-inntekt/src/main/resources/versjon.txt
           git commit -m "Oppdater versjon fil til $APP_VERSION"
-          git fetch origin HEAD:versjon_fil
-          git push origin HEAD:versjon_fil
+          git fetch origin/versjon_fil
+          git push origin/versjon_fil
