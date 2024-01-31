@@ -9,6 +9,7 @@ import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.inntekt.InntektApi
 import no.nav.bidrag.inntekt.TestUtil
 import no.nav.bidrag.inntekt.tesdata.StubUtils.Companion.kodeverkUrl
+import no.nav.bidrag.inntekt.util.VersionProvider.Companion.APP_VERSJON
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -28,6 +29,7 @@ class InntektServiceTest : AbstractServiceTest() {
 
         assertSoftly {
             transformerteInntekterResponseDto.shouldNotBeNull()
+            transformerteInntekterResponseDto.versjon shouldBe APP_VERSJON
             transformerteInntekterResponseDto.summertÅrsinntektListe.shouldNotBeEmpty()
             transformerteInntekterResponseDto.summertÅrsinntektListe.shouldHaveSize(23)
 
