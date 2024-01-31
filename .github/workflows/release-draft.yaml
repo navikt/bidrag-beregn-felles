@@ -38,7 +38,7 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           export GIT_COMMIT_HASH=$(git log -n 1 --pretty=format:'%h')
           export APP_VERSION=(${{env.VERSION}}_$GIT_COMMIT_HASH)
-          echo $VERSION > bidrag-inntekt/src/main/resources/versjon.txt
+          echo $APP_VERSION > bidrag-inntekt/src/main/resources/versjon.txt
           echo Opprettet versjon fil med versjon $APP_VERSION
           git add bidrag-inntekt/src/main/resources/versjon.txt
           git commit -m "Oppdater versjon fil til $APP_VERSION"
