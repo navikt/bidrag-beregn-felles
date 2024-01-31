@@ -29,13 +29,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Commit version
+        env:
+          VERSION: TESTVERSJON
         run: |
           git config user.name "Automated Version Committer"
           git config user.email "actions@users.noreply.github.com"
           export GIT_COMMIT_HASH=$(git log -n 1 --pretty=format:'%h')
           export APP_VERSION=(${{env.VERSION}}_$GIT_COMMIT_HASH)
-          echo $VERSION > bidrag-inntekt/src/main/resources/version.txt
+          echo $VERSION > bidrag-inntekt/src/main/resources/versjon.txt
           echo Opprettet versjon fil med versjon $APP_VERSION
-          git add bidrag-inntekt/src/main/resources/version.txt
+          git add bidrag-inntekt/src/main/resources/versjon.txt
           git commit -m "Oppdater versjon fil til $APP_VERSION"
-          git push origin HEAD:versjon_fil
+          git push
