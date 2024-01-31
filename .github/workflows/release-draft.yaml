@@ -28,6 +28,8 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Commit version
         env:
           VERSION: TESTVERSJON
@@ -40,5 +42,4 @@ jobs:
           echo Opprettet versjon fil med versjon $APP_VERSION
           git add bidrag-inntekt/src/main/resources/versjon.txt
           git commit -m "Oppdater versjon fil til $APP_VERSION"
-          git fetch origin/versjon_fil
-          git push origin/versjon_fil
+          git push origin HEAD:versjon_fil
