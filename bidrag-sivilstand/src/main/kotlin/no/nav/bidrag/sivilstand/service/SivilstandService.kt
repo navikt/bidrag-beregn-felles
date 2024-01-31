@@ -1,6 +1,5 @@
 package no.nav.bidrag.sivilstand.service
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import no.nav.bidrag.domene.enums.person.SivilstandskodePDL
 import no.nav.bidrag.sivilstand.response.Sivilstand
@@ -10,22 +9,20 @@ import no.nav.bidrag.sivilstand.response.Status
 import no.nav.bidrag.transport.behandling.grunnlag.response.SivilstandGrunnlagDto
 import java.time.LocalDate
 
-private val logger = KotlinLogging.logger {}
-
 internal class SivilstandService() {
-    fun beregn(sivilstandGrunnlagDtoListe: List<SivilstandGrunnlagDto>): SivilstandBeregnet {
+    fun beregn(virkningstidspunkt: LocalDate, sivilstandGrunnlagDtoListe: List<SivilstandGrunnlagDto>): SivilstandBeregnet {
         var status = Status.OK
 
-        // Tester på innhold i grunnlag.
+        // Tester på innhold i grunnlag, returnerer tom liste og status med feilmelding hvis minst én av testene under slår til.
         // Sjekker først om det finnes en aktiv og gyldig forekomst
-        if (!sivilstandGrunnlagDtoListe.any {
+        if (sivilstandGrunnlagDtoListe.none {
                 it.historisk == false
             }
         ) {
             return SivilstandBeregnet(Status.ALLE_FOREKOMSTER_ER_HISTORISKE, emptyList())
         }
 
-        // Sjekker om det finnes forekomster uten datoinformasjon. For ikke-historiske sjekkes det også om registrert har verdi. Hvis ikke feilmeldes det.
+        // Sjekker om det finnes forekomster uten datoinformasjon. For aktive/ikke-historiske forekomster kan også 'registrert' brukes til å angi periodeFom.
         if (sivilstandGrunnlagDtoListe.any {
                 it.gyldigFom == null && it.bekreftelsesdato == null && it.historisk == true
             } ||
@@ -36,7 +33,7 @@ internal class SivilstandService() {
             return SivilstandBeregnet(Status.MANGLENDE_DATOINFORMASJON, emptyList())
         }
 
-        // Sjekker at sivilstandstype finnes
+        // Sjekker at sivilstandstype er angitt på alle forekomster
         if (sivilstandGrunnlagDtoListe.any {
                 it.type == null
             }
@@ -49,15 +46,21 @@ internal class SivilstandService() {
                 .thenBy { it.bekreftelsesdato }.thenBy { it.registrert }.thenBy { it.type.toString() },
         )
 
-        val sivilstandBoListe = mutableListOf<SivilstandBo>()
-        var antallPerioderFunnet = 0
+        var periodeFom: LocalDate?
+        var periodeTom: LocalDate?
 
-        var periodeTil: LocalDate?
-
-        for (indeks in sortertSivilstandGrunnlagDtoListe.indices) {
-            // Setter periodeTil lik periodeFra for neste forekomst.
+        val sivilstandBoListe = sortertSivilstandGrunnlagDtoListe.mapIndexed { indeks, sivilstand ->
+            periodeFom = if (sivilstand.historisk == true) {
+                sivilstand.gyldigFom
+                    ?: sivilstand.bekreftelsesdato
+            } else {
+                sivilstand.gyldigFom
+                    ?: sivilstand.bekreftelsesdato
+                    ?: sivilstand.registrert?.toLocalDate()
+            }
+            // Setter periodeTom lik periodeFom - 1 dag for neste forekomst.
             // Hvis det ikke finnes en neste forekomst så settes periodeTil lik null. Timestamp registrert brukes bare hvis neste forekomst ikke er historisk
-            periodeTil = if (sortertSivilstandGrunnlagDtoListe.getOrNull(indeks + 1)?.historisk == true) {
+            periodeTom = if (sortertSivilstandGrunnlagDtoListe.getOrNull(indeks + 1)?.historisk == true) {
                 sortertSivilstandGrunnlagDtoListe.getOrNull(indeks + 1)?.gyldigFom
                     ?: sortertSivilstandGrunnlagDtoListe.getOrNull(indeks + 1)?.bekreftelsesdato
             } else {
@@ -66,31 +69,20 @@ internal class SivilstandService() {
                     ?: sortertSivilstandGrunnlagDtoListe.getOrNull(indeks + 1)?.registrert?.toLocalDate()
             }
 
-            sivilstandBoListe.add(
-                SivilstandBo(
-                    periodeFra = sortertSivilstandGrunnlagDtoListe[indeks].gyldigFom,
-                    periodeTil = periodeTil,
-                    sivilstandskodePDL = sortertSivilstandGrunnlagDtoListe[indeks].type,
-                ),
+            return@mapIndexed SivilstandBo(
+                periodeFom = periodeFom!!,
+                periodeTom = periodeTom?.minusDays(1),
+                sivilstandskodePDL = sortertSivilstandGrunnlagDtoListe[indeks].type,
             )
-
-            // Sjekk på logiske verdier i resultatet
-            status = sjekkLogiskeVerdier(sivilstandBoListe)
-
-            antallPerioderFunnet++
         }
 
+        // Sjekk på logiske verdier i sivilstandslistenk, kun perioder som overlapper med eller er etter virkningstidspunktet sjekkes.
+        status = sjekkLogiskeVerdier(
+            sivilstandBoListe.filter { it.periodeTom == null || it.periodeTom.isAfter(virkningstidspunkt.minusDays(1)) },
+        )
+
         if (status == Status.OK) {
-            val sivilstandListe = mutableListOf<Sivilstand>()
-            sivilstandBoListe.forEach { sivilstandBo ->
-                sivilstandListe.add(
-                    Sivilstand(
-                        periodeFra = sivilstandBo.periodeFra,
-                        periodeTil = sivilstandBo.periodeTil,
-                        sivilstandskode = finnSivilstandskode(sivilstandBo.sivilstandskodePDL!!),
-                    ),
-                )
-            }
+            val sivilstandListe = beregnPerioder(virkningstidspunkt, sivilstandBoListe)
             return SivilstandBeregnet(status, sivilstandListe)
         } else {
             return SivilstandBeregnet(status, emptyList())
@@ -102,7 +94,9 @@ internal class SivilstandService() {
         // Sjekken gjøres bare hvis det finnes en forekomst av UGIFT. Hvis UGIFT ikke finnes så er det sannsynlig at personen er innflytter til Norge
         // og det er da vanskelig å gjøre en logisk sjekk på verdiene.
 
-        if (sivilstandBoListe.any { it.sivilstandskodePDL == SivilstandskodePDL.UGIFT }) {
+        if (sivilstandBoListe
+                .any { it.sivilstandskodePDL == SivilstandskodePDL.UGIFT }
+        ) {
             // Melder feil hvis personen er separert/skilt/enke_enkemann uten å ha være registrert som gift. Samme sjekk gjøres for registrerte partnere.
             if ((
                     sivilstandBoListe.any { it.sivilstandskodePDL == SivilstandskodePDL.ENKE_ELLER_ENKEMANN } ||
@@ -110,17 +104,20 @@ internal class SivilstandService() {
                         sivilstandBoListe.any { it.sivilstandskodePDL == SivilstandskodePDL.SEPARERT } ||
                         sivilstandBoListe.any { it.sivilstandskodePDL == SivilstandskodePDL.SKILT }
                     ) &&
-                !sivilstandBoListe.any { it.sivilstandskodePDL == SivilstandskodePDL.GIFT } ||
-                (
-                    sivilstandBoListe.any { it.sivilstandskodePDL == SivilstandskodePDL.SEPARERT_PARTNER } ||
-                        sivilstandBoListe.any { it.sivilstandskodePDL == SivilstandskodePDL.SEPARERT } ||
-                        sivilstandBoListe.any { it.sivilstandskodePDL == SivilstandskodePDL.SKILT_PARTNER }
-                    ) &&
-                !sivilstandBoListe.any { it.sivilstandskodePDL == SivilstandskodePDL.REGISTRERT_PARTNER }
+                sivilstandBoListe.none { it.sivilstandskodePDL == SivilstandskodePDL.GIFT }
             ) {
                 return Status.LOGISK_FEIL_I_TIDSLINJE
             } else {
-                return Status.OK
+                if ((
+                        sivilstandBoListe.any { it.sivilstandskodePDL == SivilstandskodePDL.SEPARERT_PARTNER } ||
+                            sivilstandBoListe.any { it.sivilstandskodePDL == SivilstandskodePDL.SEPARERT_PARTNER } ||
+                            sivilstandBoListe.any { it.sivilstandskodePDL == SivilstandskodePDL.SKILT_PARTNER }
+                        ) &&
+                    sivilstandBoListe.none { it.sivilstandskodePDL == SivilstandskodePDL.REGISTRERT_PARTNER }
+
+                ) {
+                    return Status.LOGISK_FEIL_I_TIDSLINJE
+                }
             }
         }
         return Status.OK
@@ -128,22 +125,94 @@ internal class SivilstandService() {
 
     private fun finnSivilstandskode(type: SivilstandskodePDL): Sivilstandskode {
         return when (type) {
-            SivilstandskodePDL.UGIFT,
-            SivilstandskodePDL.ENKE_ELLER_ENKEMANN,
-            SivilstandskodePDL.SKILT,
-            SivilstandskodePDL.SEPARERT,
-            SivilstandskodePDL.SEPARERT_PARTNER,
-            SivilstandskodePDL.SKILT_PARTNER,
-            -> Sivilstandskode.BOR_ALENE_MED_BARN
-
             SivilstandskodePDL.GIFT,
             SivilstandskodePDL.REGISTRERT_PARTNER,
             -> Sivilstandskode.GIFT_SAMBOER
 
             else -> {
-                logger.warn { "Ukjent sivilstandskode: $type" }
                 return Sivilstandskode.BOR_ALENE_MED_BARN
             }
         }
+    }
+
+    private fun beregnPerioder(virkningstidspunkt: LocalDate, sivilstandBoListe: List<SivilstandBo>): List<Sivilstand> {
+        val sammenslåttSivilstandListe = mutableListOf<Sivilstand>()
+
+        val sivilstandListe = sivilstandBoListe.map {
+            Sivilstand(
+                periodeFom = it.periodeFom,
+                periodeTom = it.periodeTom,
+                sivilstandskode = finnSivilstandskode(it.sivilstandskodePDL!!),
+            )
+        }
+
+        // Justerer datoer. Perioder med 'Bor alene med barn' skal få periodeFra lik første dag i måneden og periodeTil lik siste dag i måneden.
+        val datojustertSivilstandListe = sivilstandListe.map {
+            if (it.sivilstandskode == Sivilstandskode.BOR_ALENE_MED_BARN) {
+                val periodeFom = hentFørsteDagIMåneden(it.periodeFom)
+                val periodeTom = if (it.periodeTom == null) null else hentSisteDagIMåneden(it.periodeTom)
+                Sivilstand(
+                    periodeFom,
+                    periodeTom,
+                    it.sivilstandskode,
+                )
+            } else {
+                val periodeFom = hentFørsteDagINesteMåned(it.periodeFom)
+                val periodeTom = if (it.periodeTom == null) null else hentSisteDagIForrigeMåned(it.periodeTom)
+                Sivilstand(
+                    periodeFom,
+                    periodeTom,
+                    it.sivilstandskode,
+                )
+            }
+        }
+
+        var periodeFom = datojustertSivilstandListe[0].periodeFom
+        // Slår sammen perioder med samme sivilstandskode
+        for (indeks in datojustertSivilstandListe.indices) {
+            if (datojustertSivilstandListe.getOrNull(indeks + 1)?.sivilstandskode != datojustertSivilstandListe[indeks].sivilstandskode) {
+                if (indeks == datojustertSivilstandListe.size - 1) {
+                    // Siste element i listen
+                    sammenslåttSivilstandListe.add(
+                        Sivilstand(
+                            periodeFom = periodeFom,
+                            periodeTom = datojustertSivilstandListe[indeks].periodeTom,
+                            sivilstandskode = datojustertSivilstandListe[indeks].sivilstandskode,
+                        ),
+                    )
+                } else {
+                    // Hvis det er flere elementer i listen så justeres periodeTom lik neste periodeFom - 1 dag for Gift/samboer
+                    sammenslåttSivilstandListe.add(
+                        Sivilstand(
+                            periodeFom = periodeFom,
+                            periodeTom = if (datojustertSivilstandListe[indeks].sivilstandskode == Sivilstandskode.GIFT_SAMBOER) {
+                                datojustertSivilstandListe[indeks + 1].periodeFom.minusDays(1)
+                            } else {
+                                datojustertSivilstandListe[indeks].periodeTom
+                            },
+                            sivilstandskode = datojustertSivilstandListe[indeks].sivilstandskode,
+                        ),
+                    )
+                    periodeFom = datojustertSivilstandListe[indeks + 1].periodeFom
+                }
+            }
+        }
+        return sammenslåttSivilstandListe.filter { it.periodeTom == null || it.periodeTom.isAfter(virkningstidspunkt.minusDays(1)) }
+    }
+
+    private fun hentFørsteDagIMåneden(dato: LocalDate): LocalDate {
+        return LocalDate.of(dato.year, dato.month, 1)
+    }
+
+    private fun hentSisteDagIMåneden(dato: LocalDate): LocalDate {
+        return LocalDate.of(dato.year, dato.month, dato.month.length(dato.isLeapYear))
+    }
+
+    private fun hentSisteDagIForrigeMåned(dato: LocalDate): LocalDate {
+        return LocalDate.of(dato.year, dato.month, dato.month.length(dato.isLeapYear)).minusMonths(1)
+    }
+
+    private fun hentFørsteDagINesteMåned(dato: LocalDate): LocalDate {
+        return LocalDate.of(dato.year, dato.month, 1).plusMonths(1)
     }
 }

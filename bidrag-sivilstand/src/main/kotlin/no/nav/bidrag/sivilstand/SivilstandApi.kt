@@ -4,6 +4,7 @@ import no.nav.bidrag.sivilstand.response.SivilstandBeregnet
 import no.nav.bidrag.sivilstand.service.SivilstandService
 import no.nav.bidrag.transport.behandling.grunnlag.response.SivilstandGrunnlagDto
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 
 /**
  * SivilstandApi eksponerer api for å beregne tidlinje for sivilstand.
@@ -19,6 +20,6 @@ class SivilstandApi {
     private val service = SivilstandService()
 
     fun beregn(sivilstandGrunnlagDtoListe: List<SivilstandGrunnlagDto>): SivilstandBeregnet {
-        return service.beregn(sivilstandGrunnlagDtoListe)
+        return service.beregn(LocalDate.now(), sivilstandGrunnlagDtoListe)
     }
 }

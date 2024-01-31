@@ -4,20 +4,20 @@ import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import no.nav.bidrag.domene.enums.person.SivilstandskodePDL
 import java.time.LocalDate
 
+data class SivilstandBo(
+    val periodeFom: LocalDate,
+    val periodeTom: LocalDate?,
+    val sivilstandskodePDL: SivilstandskodePDL?,
+)
+
 data class SivilstandBeregnet(
     val status: Status,
     val sivilstandListe: List<Sivilstand>,
 )
 
-data class SivilstandBo(
-    val periodeFra: LocalDate?,
-    val periodeTil: LocalDate?,
-    val sivilstandskodePDL: SivilstandskodePDL?,
-)
-
 data class Sivilstand(
-    val periodeFra: LocalDate?,
-    val periodeTil: LocalDate?,
+    val periodeFom: LocalDate,
+    val periodeTom: LocalDate?,
     val sivilstandskode: Sivilstandskode,
 )
 
