@@ -47,6 +47,7 @@
         <module>bidrag-beregn-core</module>
         <module>bidrag-beregn-forskudd</module>
         <module>bidrag-inntekt</module>
+        <module>bidrag-sivilstand</module>
     </modules>
     <repositories>
         <repository>
@@ -159,7 +160,7 @@
         </dependencies>
     </dependencyManagement>
 
-    <profiles>
+  <profiles>
         <profile>
             <id>release</id>
             <activation>

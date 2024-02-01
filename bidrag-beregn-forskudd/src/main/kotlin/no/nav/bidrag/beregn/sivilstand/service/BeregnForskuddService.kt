@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.forskudd.service
+package no.nav.bidrag.beregn.sivilstand.service
 
 import com.fasterxml.jackson.databind.node.POJONode
 import io.github.oshai.kotlinlogging.KotlinLogging

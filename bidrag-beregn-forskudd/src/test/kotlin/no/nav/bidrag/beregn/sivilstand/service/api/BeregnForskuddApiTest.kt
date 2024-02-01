@@ -1,11 +1,11 @@
-package no.nav.bidrag.beregn.forskudd.service.api
+package no.nav.bidrag.beregn.sivilstand.service.api
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.beregn.forskudd.core.ForskuddCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore
-import no.nav.bidrag.beregn.forskudd.service.BeregnForskuddService
-import no.nav.bidrag.beregn.forskudd.service.TestUtil
-import no.nav.bidrag.beregn.forskudd.service.testdata.SjablonApiStub
+import no.nav.bidrag.beregn.sivilstand.service.BeregnForskuddService
+import no.nav.bidrag.beregn.sivilstand.service.TestUtil
+import no.nav.bidrag.beregn.sivilstand.service.testdata.SjablonApiStub
 import no.nav.bidrag.domene.enums.beregning.ResultatkodeForskudd
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import org.assertj.core.api.Assertions.assertThat
