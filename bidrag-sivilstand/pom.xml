@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.bidrag</groupId>
         <artifactId>bidrag-beregn-felles</artifactId>
-        <version>${revision}</version>
+        <version>1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>bidrag-sivilstand</artifactId>
@@ -42,11 +42,6 @@
         <dependency>
             <groupId>io.kotest</groupId>
             <artifactId>kotest-runner-junit5-jvm</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
