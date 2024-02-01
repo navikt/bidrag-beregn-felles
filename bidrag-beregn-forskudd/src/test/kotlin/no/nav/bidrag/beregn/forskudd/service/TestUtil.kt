@@ -161,7 +161,7 @@ object TestUtil {
         grunnlagListe.add(
             GrunnlagDto(
                 referanse = "Person_Søknadsbarn",
-                type = Grunnlagstype.PERSON,
+                type = Grunnlagstype.PERSON_SØKNADSBARN,
                 grunnlagsreferanseListe = emptyList(),
                 innhold = personSøknadsbarnInnhold,
             ),

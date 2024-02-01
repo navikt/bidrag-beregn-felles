@@ -24,7 +24,7 @@ internal class CoreMapperTest {
                 listOf(
                     GrunnlagDto(
                         referanse = "Person_Søknadsbarn",
-                        type = Grunnlagstype.PERSON,
+                        type = Grunnlagstype.PERSON_SØKNADSBARN,
                         grunnlagsreferanseListe = emptyList(),
                         innhold = innholdPersonMedFeil,
                     ),
@@ -50,7 +50,7 @@ internal class CoreMapperTest {
                 listOf(
                     GrunnlagDto(
                         referanse = "Person_Søknadsbarn",
-                        type = Grunnlagstype.PERSON,
+                        type = Grunnlagstype.PERSON_SØKNADSBARN,
                         grunnlagsreferanseListe = emptyList(),
                         innhold = innholdPerson,
                     ),
@@ -83,7 +83,7 @@ internal class CoreMapperTest {
                 listOf(
                     GrunnlagDto(
                         referanse = "Person_Søknadsbarn",
-                        type = Grunnlagstype.PERSON,
+                        type = Grunnlagstype.PERSON_SØKNADSBARN,
                         grunnlagsreferanseListe = emptyList(),
                         innhold = innholdPerson,
                     ),
@@ -125,7 +125,7 @@ internal class CoreMapperTest {
                 listOf(
                     GrunnlagDto(
                         referanse = "Person_Søknadsbarn",
-                        type = Grunnlagstype.PERSON,
+                        type = Grunnlagstype.PERSON_SØKNADSBARN,
                         grunnlagsreferanseListe = emptyList(),
                         innhold = innholdPerson,
                     ),

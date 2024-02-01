@@ -73,7 +73,7 @@ internal object CoreMapper {
         try {
             val soknadsbarnGrunnlag =
                 beregnForskuddGrunnlag.grunnlagListe.filtrerOgKonverterBasertPåEgenReferanse<Person>(
-                    grunnlagType = Grunnlagstype.PERSON,
+                    grunnlagType = Grunnlagstype.PERSON_SØKNADSBARN,
                     referanse = beregnForskuddGrunnlag.søknadsbarnReferanse,
                 )
 
