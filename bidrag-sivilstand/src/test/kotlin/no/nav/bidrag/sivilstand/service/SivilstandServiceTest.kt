@@ -19,13 +19,13 @@ internal class SivilstandServiceTest {
     fun `Test periodisering og sammenslåing av sivilstandsforekomster`() {
         sivilstandService = SivilstandService()
         val mottatteSivilstandsforekomster = TestUtil.byggHentSivilstandResponseTestSortering()
-        val vedtakstidspunkt = LocalDate.of(2010, 9, 21)
-        val resultat = sivilstandService.beregn(vedtakstidspunkt, mottatteSivilstandsforekomster)
+        val virkningstidspunkt = LocalDate.of(2010, 9, 1)
+        val resultat = sivilstandService.beregn(virkningstidspunkt, mottatteSivilstandsforekomster)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
             resultat.sivilstandListe.size shouldBe 3
-            resultat.sivilstandListe[0].periodeFom shouldBe LocalDate.of(2001, 5, 1)
+            resultat.sivilstandListe[0].periodeFom shouldBe LocalDate.of(2010, 9, 1)
             resultat.sivilstandListe[0].periodeTom shouldBe LocalDate.of(2017, 7, 31)
             resultat.sivilstandListe[0].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
 
@@ -40,17 +40,17 @@ internal class SivilstandServiceTest {
     }
 
     @Test
-    fun `Test på at perioder før virkningstidspunkt filtreres bort`() {
+    fun `Test på at perioder før virkningstidspunkt filtreres bort og periodeFom settes lik virkningstidspunkt`() {
         sivilstandService = SivilstandService()
         val mottatteSivilstandsforekomster = TestUtil.byggHentSivilstandResponseTestSortering()
-        val vedtakstidspunkt = LocalDate.of(2017, 9, 21)
-        val resultat = sivilstandService.beregn(vedtakstidspunkt, mottatteSivilstandsforekomster)
+        val virkningstidspunkt = LocalDate.of(2020, 5, 1)
+        val resultat = sivilstandService.beregn(virkningstidspunkt, mottatteSivilstandsforekomster)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
             resultat.sivilstandListe.size shouldBe 2
 
-            resultat.sivilstandListe[0].periodeFom shouldBe LocalDate.of(2017, 8, 1)
+            resultat.sivilstandListe[0].periodeFom shouldBe LocalDate.of(2020, 5, 1)
             resultat.sivilstandListe[0].periodeTom shouldBe LocalDate.of(2021, 8, 31)
             resultat.sivilstandListe[0].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
 
@@ -64,8 +64,8 @@ internal class SivilstandServiceTest {
     fun `Test ingen aktiv status`() {
         sivilstandService = SivilstandService()
         val grunnlagTomListe = TestUtil.byggSivilstandUtenAktivStatus()
-        val vedtakstidspunkt = LocalDate.of(2010, 9, 21)
-        val resultatIngenAktivStatus = sivilstandService.beregn(vedtakstidspunkt, grunnlagTomListe)
+        val virkningstidspunkt = LocalDate.of(2010, 9, 21)
+        val resultatIngenAktivStatus = sivilstandService.beregn(virkningstidspunkt, grunnlagTomListe)
         assertSoftly {
             Assertions.assertNotNull(resultatIngenAktivStatus)
             resultatIngenAktivStatus.sivilstandListe.size shouldBe 0
@@ -77,8 +77,8 @@ internal class SivilstandServiceTest {
     fun `Test ingen datoinformasjon`() {
         sivilstandService = SivilstandService()
         val grunnlagTomListe = TestUtil.byggSivilstandMedPeriodeUtenDatoer()
-        val vedtakstidspunkt = LocalDate.of(2010, 9, 21)
-        val resultat = sivilstandService.beregn(vedtakstidspunkt, grunnlagTomListe)
+        val virkningstidspunkt = LocalDate.of(2010, 9, 21)
+        val resultat = sivilstandService.beregn(virkningstidspunkt, grunnlagTomListe)
         assertSoftly {
             Assertions.assertNotNull(resultat)
             resultat.sivilstandListe.size shouldBe 0
@@ -90,8 +90,8 @@ internal class SivilstandServiceTest {
     fun `Test at dato hentes fra registrert for aktiv status`() {
         sivilstandService = SivilstandService()
         val grunnlagTomListe = TestUtil.byggSivilstandMedAktivForekomstOgKunRegistrert()
-        val vedtakstidspunkt = LocalDate.of(2010, 9, 21)
-        val resultat = sivilstandService.beregn(vedtakstidspunkt, grunnlagTomListe)
+        val virkningstidspunkt = LocalDate.of(2010, 9, 21)
+        val resultat = sivilstandService.beregn(virkningstidspunkt, grunnlagTomListe)
         assertSoftly {
             Assertions.assertNotNull(resultat)
             resultat.sivilstandListe.size shouldBe 2
@@ -109,8 +109,8 @@ internal class SivilstandServiceTest {
     fun `Test med kun én forekomst Bor Alene Med Barn`() {
         sivilstandService = SivilstandService()
         val grunnlagTomListe = TestUtil.byggSivilstandÉnForekomstBorAleneMedBarn()
-        val vedtakstidspunkt = LocalDate.of(2010, 9, 21)
-        val resultat = sivilstandService.beregn(vedtakstidspunkt, grunnlagTomListe)
+        val virkningstidspunkt = LocalDate.of(2010, 9, 21)
+        val resultat = sivilstandService.beregn(virkningstidspunkt, grunnlagTomListe)
         assertSoftly {
             Assertions.assertNotNull(resultat)
             resultat.sivilstandListe.size shouldBe 1
@@ -124,8 +124,8 @@ internal class SivilstandServiceTest {
     fun `Test med kun én forekomst Gift-Samboer`() {
         sivilstandService = SivilstandService()
         val grunnlagTomListe = TestUtil.byggSivilstandÉnForekomstGiftSamboer()
-        val vedtakstidspunkt = LocalDate.of(2010, 9, 21)
-        val resultat = sivilstandService.beregn(vedtakstidspunkt, grunnlagTomListe)
+        val virkningstidspunkt = LocalDate.of(2010, 9, 21)
+        val resultat = sivilstandService.beregn(virkningstidspunkt, grunnlagTomListe)
         assertSoftly {
             Assertions.assertNotNull(resultat)
             resultat.sivilstandListe.size shouldBe 1
@@ -139,12 +139,67 @@ internal class SivilstandServiceTest {
     fun `Test med flere forekomster med Bor Alene Med Barn`() {
         sivilstandService = SivilstandService()
         val grunnlagTomListe = TestUtil.byggSivilstandFlereForekomstBorAleneMedBarn()
-        val vedtakstidspunkt = LocalDate.of(2010, 9, 21)
-        val resultat = sivilstandService.beregn(vedtakstidspunkt, grunnlagTomListe)
+        val virkningstidspunkt = LocalDate.of(2010, 9, 21)
+        val resultat = sivilstandService.beregn(virkningstidspunkt, grunnlagTomListe)
         assertSoftly {
             Assertions.assertNotNull(resultat)
             resultat.sivilstandListe.size shouldBe 1
             resultat.sivilstandListe[0].periodeFom shouldBe LocalDate.of(2017, 3, 1)
+            resultat.sivilstandListe[0].periodeTom shouldBe null
+            resultat.sivilstandListe[0].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+        }
+    }
+
+    @Test
+    fun `Test av sjekk logisk feil i tidslinje, kun perioder etter virkningstidspunkt sjekkes`() {
+        sivilstandService = SivilstandService()
+        val grunnlagTomListe = TestUtil.byggSivilstandMedLogiskFeil()
+        // virkningstidspunkt er satt til før tomdato på ugift-status
+        val virkningstidspunkt = LocalDate.of(2022, 12, 6)
+        val resultat = sivilstandService.beregn(virkningstidspunkt, grunnlagTomListe)
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.sivilstandListe.size shouldBe 0
+            resultat.status shouldBe Status.LOGISK_FEIL_I_TIDSLINJE
+        }
+
+        // virkningstidspunkt er satt til etter tomdato på ugift-status, logisk feil skal da ignoreres
+        val virkningstidspunkt2 = LocalDate.of(2022, 12, 7)
+        val resultat2 = sivilstandService.beregn(virkningstidspunkt2, grunnlagTomListe)
+        assertSoftly {
+            Assertions.assertNotNull(resultat2)
+            resultat2.sivilstandListe.size shouldBe 1
+            resultat2.status shouldBe Status.OK
+        }
+    }
+
+    @Test
+    fun `Test med flere forekomster i samme måned`() {
+        sivilstandService = SivilstandService()
+        val grunnlagTomListe = TestUtil.byggSivilstandFlereForkomsterISammeMåned()
+        // virkningstidspunkt er satt til før tomdato på ugift-status
+        val virkningstidspunkt = LocalDate.of(2017, 3, 1)
+        val resultat = sivilstandService.beregn(virkningstidspunkt, grunnlagTomListe)
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.sivilstandListe.size shouldBe 1
+            resultat.sivilstandListe[0].periodeFom shouldBe LocalDate.of(2017, 3, 1)
+            resultat.sivilstandListe[0].periodeTom shouldBe null
+            resultat.sivilstandListe[0].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+        }
+    }
+
+    @Test
+    fun `Test på at alle forekomster med periodeTom før virkningstidspunkt blir filtrert bort`() {
+        sivilstandService = SivilstandService()
+        val grunnlagTomListe = TestUtil.byggHentSivilstandResponseTestSortering()
+        // virkningstidspunkt er satt til etter periodeTom for alle forekomster
+        val virkningstidspunkt = LocalDate.of(2023, 3, 1)
+        val resultat = sivilstandService.beregn(virkningstidspunkt, grunnlagTomListe)
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.sivilstandListe.size shouldBe 1
+            resultat.sivilstandListe[0].periodeFom shouldBe LocalDate.of(2023, 3, 1)
             resultat.sivilstandListe[0].periodeTom shouldBe null
             resultat.sivilstandListe[0].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
         }

@@ -190,15 +190,54 @@ class TestUtil {
             ),
         )
 
-        fun byggHentSivilstandResponseTestUtenDatoerUtenRegistrertEnForekomstHistorisk() = listOf(
+        fun byggSivilstandMedLogiskFeil() = listOf(
             SivilstandGrunnlagDto(
                 personId = "12345678901",
-                type = SivilstandskodePDL.GIFT,
-                gyldigFom = null,
+                type = SivilstandskodePDL.UGIFT,
+                gyldigFom = LocalDate.of(2017, 3, 7),
                 bekreftelsesdato = null,
                 master = "PDL",
                 registrert = null,
                 historisk = true,
+            ),
+            SivilstandGrunnlagDto(
+                personId = "12345678901",
+                type = SivilstandskodePDL.SEPARERT,
+                gyldigFom = null,
+                bekreftelsesdato = null,
+                master = "PDL",
+                registrert = LocalDateTime.parse("2022-12-07T12:00:00"),
+                historisk = false,
+            ),
+        )
+
+        fun byggSivilstandFlereForkomsterISammeMåned() = listOf(
+            SivilstandGrunnlagDto(
+                personId = "12345678901",
+                type = SivilstandskodePDL.UGIFT,
+                gyldigFom = LocalDate.of(2017, 3, 7),
+                bekreftelsesdato = null,
+                master = "PDL",
+                registrert = null,
+                historisk = true,
+            ),
+            SivilstandGrunnlagDto(
+                personId = "12345678901",
+                type = SivilstandskodePDL.GIFT,
+                gyldigFom = LocalDate.of(2017, 4, 21),
+                bekreftelsesdato = null,
+                master = "PDL",
+                registrert = LocalDateTime.parse("2022-12-07T12:00:00"),
+                historisk = false,
+            ),
+            SivilstandGrunnlagDto(
+                personId = "12345678901",
+                type = SivilstandskodePDL.SEPARERT,
+                gyldigFom = LocalDate.of(2017, 4, 30),
+                bekreftelsesdato = null,
+                master = "PDL",
+                registrert = LocalDateTime.parse("2022-12-07T12:00:00"),
+                historisk = false,
             ),
         )
     }

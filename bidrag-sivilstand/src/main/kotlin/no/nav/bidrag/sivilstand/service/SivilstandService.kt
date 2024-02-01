@@ -8,6 +8,7 @@ import no.nav.bidrag.sivilstand.response.SivilstandBo
 import no.nav.bidrag.sivilstand.response.Status
 import no.nav.bidrag.transport.behandling.grunnlag.response.SivilstandGrunnlagDto
 import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 internal class SivilstandService() {
     fun beregn(virkningstidspunkt: LocalDate, sivilstandGrunnlagDtoListe: List<SivilstandGrunnlagDto>): SivilstandBeregnet {
@@ -159,41 +160,58 @@ internal class SivilstandService() {
             } else {
                 val periodeFom = hentFørsteDagINesteMåned(it.periodeFom)
                 val periodeTom = if (it.periodeTom == null) null else hentSisteDagIForrigeMåned(it.periodeTom)
-                Sivilstand(
-                    periodeFom,
-                    periodeTom,
-                    it.sivilstandskode,
-                )
+                // Forekomster med Gift/Samboer ignoreres hvis perioden er mindre enn én måned. Bor alene med barn skal da gjelde.
+                if (periodeTom != null) {
+                    if (ChronoUnit.MONTHS.between(periodeFom, periodeTom) >= 1) {
+                        Sivilstand(
+                            periodeFom,
+                            periodeTom,
+                            it.sivilstandskode,
+                        )
+                    } else {
+                        null
+                    }
+                } else {
+                    Sivilstand(
+                        periodeFom,
+                        periodeTom,
+                        it.sivilstandskode,
+                    )
+                }
             }
         }
 
-        var periodeFom = datojustertSivilstandListe[0].periodeFom
+        val datojustertSivilstandListeFiltrert = datojustertSivilstandListe.filterNotNull()
+        var periodeFom = datojustertSivilstandListeFiltrert[0].periodeFom
+
         // Slår sammen perioder med samme sivilstandskode
-        for (indeks in datojustertSivilstandListe.indices) {
-            if (datojustertSivilstandListe.getOrNull(indeks + 1)?.sivilstandskode != datojustertSivilstandListe[indeks].sivilstandskode) {
-                if (indeks == datojustertSivilstandListe.size - 1) {
+        for (indeks in datojustertSivilstandListeFiltrert.indices) {
+            if (datojustertSivilstandListeFiltrert.getOrNull(indeks + 1)?.sivilstandskode
+                != datojustertSivilstandListeFiltrert[indeks].sivilstandskode
+            ) {
+                if (indeks == datojustertSivilstandListeFiltrert.size - 1) {
                     // Siste element i listen
                     sammenslåttSivilstandListe.add(
                         Sivilstand(
-                            periodeFom = periodeFom,
-                            periodeTom = datojustertSivilstandListe[indeks].periodeTom,
-                            sivilstandskode = datojustertSivilstandListe[indeks].sivilstandskode,
+                            periodeFom = if (periodeFom.isBefore(virkningstidspunkt)) virkningstidspunkt else periodeFom,
+                            periodeTom = datojustertSivilstandListeFiltrert[indeks].periodeTom,
+                            sivilstandskode = datojustertSivilstandListeFiltrert[indeks].sivilstandskode,
                         ),
                     )
                 } else {
                     // Hvis det er flere elementer i listen så justeres periodeTom lik neste periodeFom - 1 dag for Gift/samboer
                     sammenslåttSivilstandListe.add(
                         Sivilstand(
-                            periodeFom = periodeFom,
-                            periodeTom = if (datojustertSivilstandListe[indeks].sivilstandskode == Sivilstandskode.GIFT_SAMBOER) {
-                                datojustertSivilstandListe[indeks + 1].periodeFom.minusDays(1)
+                            periodeFom = if (periodeFom.isBefore(virkningstidspunkt)) virkningstidspunkt else periodeFom,
+                            periodeTom = if (datojustertSivilstandListeFiltrert[indeks].sivilstandskode == Sivilstandskode.GIFT_SAMBOER) {
+                                datojustertSivilstandListeFiltrert[indeks + 1].periodeFom.minusDays(1)
                             } else {
-                                datojustertSivilstandListe[indeks].periodeTom
+                                datojustertSivilstandListeFiltrert[indeks].periodeTom
                             },
-                            sivilstandskode = datojustertSivilstandListe[indeks].sivilstandskode,
+                            sivilstandskode = datojustertSivilstandListeFiltrert[indeks].sivilstandskode,
                         ),
                     )
-                    periodeFom = datojustertSivilstandListe[indeks + 1].periodeFom
+                    periodeFom = datojustertSivilstandListeFiltrert[indeks + 1].periodeFom
                 }
             }
         }

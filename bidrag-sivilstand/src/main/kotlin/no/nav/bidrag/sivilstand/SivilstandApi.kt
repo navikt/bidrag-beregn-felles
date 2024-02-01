@@ -9,9 +9,9 @@ import java.time.LocalDate
 /**
  * SivilstandApi eksponerer api for å beregne tidlinje for sivilstand.
  *
- * For å ta i bruk beregning apiet må følgende gjøres:
+ * For å ta i bruk beregnings-apiet må følgende gjøres:
  *
- * Legg til Import annotering i konfigurasjonen for å initalisere SivilstandApi-bønnen
+ * Legg til Import-annotering i konfigurasjonen for å initalisere SivilstandApi-bønnen
  * ```kotlin
  * @Import(SivilstandApi::class)
  */
@@ -19,7 +19,7 @@ import java.time.LocalDate
 class SivilstandApi {
     private val service = SivilstandService()
 
-    fun beregn(sivilstandGrunnlagDtoListe: List<SivilstandGrunnlagDto>): SivilstandBeregnet {
-        return service.beregn(LocalDate.now(), sivilstandGrunnlagDtoListe)
+    fun beregn(virkningstidspunkt: LocalDate, sivilstandGrunnlagDtoListe: List<SivilstandGrunnlagDto>): SivilstandBeregnet {
+        return service.beregn(virkningstidspunkt, sivilstandGrunnlagDtoListe)
     }
 }
