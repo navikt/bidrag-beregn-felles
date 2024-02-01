@@ -7,11 +7,8 @@ import no.nav.bidrag.sivilstand.TestUtil
 import no.nav.bidrag.sivilstand.response.Status
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.junit.jupiter.MockitoExtension
 import java.time.LocalDate
 
-@ExtendWith(MockitoExtension::class)
 internal class SivilstandServiceTest {
     private lateinit var sivilstandService: SivilstandService
 
