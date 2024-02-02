@@ -251,33 +251,30 @@
       "barnPersonId": "12345678901"
     }
   ],
-  "utvidetBarnetrygdOgSmåbarnstilleggliste": [
+  "utvidetBarnetrygdliste": [
     {
-      "type": "UTVIDET",
       "periodeFra": "2019-01-01",
       "periodeTil": "2019-10-01",
       "beløp": 1054
     },
     {
-      "type": "UTVIDET",
       "periodeFra": "2020-11-01",
       "periodeTil": "2022-10-01",
       "beløp": 1054
-    },
+    }
+  ],
+  "småbarnstilleggliste": [
     {
-      "type": "SMÅBARNSTILLEGG",
       "periodeFra": "2021-11-01",
       "periodeTil": "2022-04-01",
       "beløp": 660
     },
     {
-      "type": "SMÅBARNSTILLEGG",
       "periodeFra": "2022-06-01",
       "periodeTil": "2022-08-01",
       "beløp": 660
     },
     {
-      "type": "SMÅBARNSTILLEGG",
       "periodeFra": "2022-10-01",
       "periodeTil": null,
       "beløp": 660

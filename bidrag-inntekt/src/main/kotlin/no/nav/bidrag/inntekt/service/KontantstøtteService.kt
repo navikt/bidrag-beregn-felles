@@ -38,7 +38,6 @@ class KontantstøtteService {
                     SummertÅrsinntekt(
                         inntektRapportering = Inntektsrapportering.KONTANTSTØTTE,
                         visningsnavn = Inntektsrapportering.KONTANTSTØTTE.visningsnavn.intern,
-                        referanse = "",
                         sumInntekt = it.beløp.times(BigDecimal.valueOf(12)),
                         periode =
                         ÅrMånedsperiode(
