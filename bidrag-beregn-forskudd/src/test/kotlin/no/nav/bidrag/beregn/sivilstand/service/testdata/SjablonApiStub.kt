@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.forskudd.service.testdata
+package no.nav.bidrag.beregn.sivilstand.service.testdata
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper

@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.forskudd.service
+package no.nav.bidrag.beregn.sivilstand.service
 
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonInnholdCore
