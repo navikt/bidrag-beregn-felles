@@ -3,7 +3,7 @@ package no.nav.bidrag.beregn.forskudd.core.bo
 import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.bo.SjablonPeriode
 import no.nav.bidrag.beregn.core.bo.SjablonPeriodeNavnVerdi
-import no.nav.bidrag.domene.enums.beregning.ResultatkodeForskudd
+import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import java.math.BigDecimal
@@ -75,7 +75,7 @@ data class Bostatus(
 // Resultat beregning
 data class ResultatBeregning(
     val belop: BigDecimal,
-    val kode: ResultatkodeForskudd,
+    val kode: Resultatkode,
     val regel: String,
     val sjablonListe: List<SjablonPeriodeNavnVerdi>,
 )

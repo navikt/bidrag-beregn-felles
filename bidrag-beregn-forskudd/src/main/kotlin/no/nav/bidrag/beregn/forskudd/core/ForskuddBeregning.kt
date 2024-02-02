@@ -7,7 +7,7 @@ import no.nav.bidrag.beregn.core.util.SjablonUtil
 import no.nav.bidrag.beregn.forskudd.core.bo.GrunnlagBeregning
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatBeregning
 import no.nav.bidrag.beregn.forskudd.core.bo.Sjablonverdier
-import no.nav.bidrag.domene.enums.beregning.ResultatkodeForskudd
+import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
@@ -33,7 +33,7 @@ class ForskuddBeregning {
             inntektsIntervallTotal = BigDecimal.ZERO
         }
 
-        val resultatKode: ResultatkodeForskudd
+        val resultatKode: Resultatkode
         val regel: String
 
         // Legger sammen inntektene
@@ -45,7 +45,7 @@ class ForskuddBeregning {
         when {
             // Søknadsbarn er over 18 år (REGEL 1)
             grunnlag.soknadBarnAlder.alder >= 18 -> {
-                resultatKode = ResultatkodeForskudd.AVSLAG
+                resultatKode = Resultatkode.AVSLAG
                 regel = "REGEL 1"
             }
 
@@ -54,16 +54,16 @@ class ForskuddBeregning {
                 grunnlag.soknadBarnBostatus.kode != Bostatuskode.DOKUMENTERT_SKOLEGANG -> {
                 resultatKode =
                     if (grunnlag.soknadBarnAlder.alder >= 11) {
-                        ResultatkodeForskudd.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT
+                        Resultatkode.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT
                     } else {
-                        ResultatkodeForskudd.FORHØYET_FORSKUDD_100_PROSENT
+                        Resultatkode.FORHØYET_FORSKUDD_100_PROSENT
                     }
-                regel = if (resultatKode == ResultatkodeForskudd.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT) "REGEL 2" else "REGEL 3"
+                regel = if (resultatKode == Resultatkode.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT) "REGEL 2" else "REGEL 3"
             }
 
             // Over maks inntektsgrense for forskudd (REGEL 4)
             !erUnderInntektsGrense(maksInntektsgrense, bidragMottakerInntekt) -> {
-                resultatKode = ResultatkodeForskudd.AVSLAG
+                resultatKode = Resultatkode.AVSLAG
                 regel = "REGEL 4"
             }
 
@@ -71,11 +71,11 @@ class ForskuddBeregning {
             erUnderInntektsGrense(sjablonverdier.inntektsgrense100ProsentForskuddBelop, bidragMottakerInntekt) -> {
                 resultatKode =
                     if (grunnlag.soknadBarnAlder.alder >= 11) {
-                        ResultatkodeForskudd.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT
+                        Resultatkode.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT
                     } else {
-                        ResultatkodeForskudd.FORHØYET_FORSKUDD_100_PROSENT
+                        Resultatkode.FORHØYET_FORSKUDD_100_PROSENT
                     }
-                regel = if (resultatKode == ResultatkodeForskudd.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT) "REGEL 5" else "REGEL 6"
+                regel = if (resultatKode == Resultatkode.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT) "REGEL 5" else "REGEL 6"
             }
 
             // Resterende regler (gift/enslig) (REGEL 7/8/9/10/11/12/13/14)
@@ -91,23 +91,23 @@ class ForskuddBeregning {
                             inntekt = bidragMottakerInntekt,
                         )
                     ) {
-                        ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT
+                        Resultatkode.ORDINÆRT_FORSKUDD_75_PROSENT
                     } else {
-                        ResultatkodeForskudd.REDUSERT_FORSKUDD_50_PROSENT
+                        Resultatkode.REDUSERT_FORSKUDD_50_PROSENT
                     }
 
                 regel =
                     if (grunnlag.sivilstand.kode == Sivilstandskode.BOR_ALENE_MED_BARN) {
                         if (antallBarnIHusstanden == 1) {
-                            if (resultatKode == ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT) "REGEL 7" else "REGEL 8"
+                            if (resultatKode == Resultatkode.ORDINÆRT_FORSKUDD_75_PROSENT) "REGEL 7" else "REGEL 8"
                         } else {
-                            if (resultatKode == ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT) "REGEL 9" else "REGEL 10"
+                            if (resultatKode == Resultatkode.ORDINÆRT_FORSKUDD_75_PROSENT) "REGEL 9" else "REGEL 10"
                         }
                     } else {
                         if (antallBarnIHusstanden == 1) {
-                            if (resultatKode == ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT) "REGEL 11" else "REGEL 12"
+                            if (resultatKode == Resultatkode.ORDINÆRT_FORSKUDD_75_PROSENT) "REGEL 11" else "REGEL 12"
                         } else {
-                            if (resultatKode == ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT) "REGEL 13" else "REGEL 14"
+                            if (resultatKode == Resultatkode.ORDINÆRT_FORSKUDD_75_PROSENT) "REGEL 13" else "REGEL 14"
                         }
                     }
             }
@@ -194,17 +194,17 @@ class ForskuddBeregning {
     // Forskudd 75%  = Sjablon 0038
     // Forskudd 100% = Sjablon 0038 * 4/3
     // Forskudd 125% = Sjablon 0038 * 5/3
-    private fun beregnForskudd(resultatKode: ResultatkodeForskudd, forskuddssats75ProsentBelop: BigDecimal) = when (resultatKode) {
-        ResultatkodeForskudd.REDUSERT_FORSKUDD_50_PROSENT ->
+    private fun beregnForskudd(resultatKode: Resultatkode, forskuddssats75ProsentBelop: BigDecimal) = when (resultatKode) {
+        Resultatkode.REDUSERT_FORSKUDD_50_PROSENT ->
             forskuddssats75ProsentBelop.multiply(BigDecimal.valueOf(2))
                 .divide(BigDecimal.valueOf(3), -1, RoundingMode.HALF_UP)
 
-        ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT -> forskuddssats75ProsentBelop
-        ResultatkodeForskudd.FORHØYET_FORSKUDD_100_PROSENT ->
+        Resultatkode.ORDINÆRT_FORSKUDD_75_PROSENT -> forskuddssats75ProsentBelop
+        Resultatkode.FORHØYET_FORSKUDD_100_PROSENT ->
             forskuddssats75ProsentBelop.multiply(BigDecimal.valueOf(4))
                 .divide(BigDecimal.valueOf(3), -1, RoundingMode.HALF_UP)
 
-        ResultatkodeForskudd.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT ->
+        Resultatkode.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT ->
             forskuddssats75ProsentBelop.multiply(BigDecimal.valueOf(5))
                 .divide(BigDecimal.valueOf(3), -1, RoundingMode.HALF_UP)
 
