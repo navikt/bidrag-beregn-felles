@@ -7,8 +7,9 @@ import no.nav.bidrag.transport.behandling.grunnlag.response.SkattegrunnlagspostD
 import no.nav.bidrag.transport.behandling.inntekt.request.Barnetillegg
 import no.nav.bidrag.transport.behandling.inntekt.request.Kontantstøtte
 import no.nav.bidrag.transport.behandling.inntekt.request.SkattegrunnlagForLigningsår
+import no.nav.bidrag.transport.behandling.inntekt.request.Småbarnstillegg
 import no.nav.bidrag.transport.behandling.inntekt.request.TransformerInntekterRequest
-import no.nav.bidrag.transport.behandling.inntekt.request.UtvidetBarnetrygdOgSmåbarnstillegg
+import no.nav.bidrag.transport.behandling.inntekt.request.UtvidetBarnetrygd
 import java.io.File
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
@@ -130,35 +131,31 @@ class TestUtil {
             ),
         )
 
-        fun byggUtvidetBarnetrygdOgSmåbarnstillegg() = listOf(
-            // Utvidet barnetrygd
-            UtvidetBarnetrygdOgSmåbarnstillegg(
-                type = "UTVIDET",
+        fun byggUtvidetBarnetrygd() = listOf(
+            UtvidetBarnetrygd(
                 periodeFra = LocalDate.parse("2019-01-01"),
                 periodeTil = LocalDate.parse("2019-10-01"),
                 beløp = BigDecimal.valueOf(1054),
             ),
-            UtvidetBarnetrygdOgSmåbarnstillegg(
-                type = "UTVIDET",
+            UtvidetBarnetrygd(
                 periodeFra = LocalDate.parse("2020-11-01"),
                 periodeTil = LocalDate.parse("2022-10-01"),
                 beløp = BigDecimal.valueOf(1054),
             ),
-            // Småbarnstillegg
-            UtvidetBarnetrygdOgSmåbarnstillegg(
-                type = "SMÅBARNSTILLEGG",
+        )
+
+        fun byggSmåbarnstillegg() = listOf(
+            Småbarnstillegg(
                 periodeFra = LocalDate.parse("2021-11-01"),
                 periodeTil = LocalDate.parse("2022-04-01"),
                 beløp = BigDecimal.valueOf(660),
             ),
-            UtvidetBarnetrygdOgSmåbarnstillegg(
-                type = "SMÅBARNSTILLEGG",
+            Småbarnstillegg(
                 periodeFra = LocalDate.parse("2022-06-01"),
                 periodeTil = LocalDate.parse("2022-08-01"),
                 beløp = BigDecimal.valueOf(660),
             ),
-            UtvidetBarnetrygdOgSmåbarnstillegg(
-                type = "SMÅBARNSTILLEGG",
+            Småbarnstillegg(
                 periodeFra = LocalDate.parse("2022-10-01"),
                 periodeTil = null,
                 beløp = BigDecimal.valueOf(660),
