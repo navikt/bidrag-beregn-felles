@@ -37,7 +37,6 @@ class BarnetilleggPensjonService {
                     SummertÅrsinntekt(
                         inntektRapportering = Inntektsrapportering.BARNETILLEGG,
                         visningsnavn = Inntektsrapportering.BARNETILLEGG.visningsnavn.intern,
-                        referanse = "",
                         sumInntekt = it.beløp.times(BigDecimal.valueOf(12)),
                         periode =
                         ÅrMånedsperiode(

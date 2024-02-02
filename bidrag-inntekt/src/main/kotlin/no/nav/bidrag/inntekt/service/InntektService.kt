@@ -14,7 +14,8 @@ class InntektService(
     val ainntektService: AinntektService = AinntektService(),
     val skattegrunnlagService: SkattegrunnlagService = SkattegrunnlagService(),
     val kontantstøtteService: KontantstøtteService = KontantstøtteService(),
-    val utvidetBarnetrygdOgSmåbarnstilleggService: UtvidetBarnetrygdOgSmåbarnstilleggService = UtvidetBarnetrygdOgSmåbarnstilleggService(),
+    val utvidetBarnetrygdService: UtvidetBarnetrygdService = UtvidetBarnetrygdService(),
+    val småbarnstilleggService: SmåbarnstilleggService = SmåbarnstilleggService(),
     val barnetilleggPensjonService: BarnetilleggPensjonService = BarnetilleggPensjonService(),
     val ytelserService: YtelserService = YtelserService(),
 ) {
@@ -40,11 +41,18 @@ class InntektService(
                             skattegrunnlagListe = transformerInntekterRequest.skattegrunnlagsliste,
                             inntektsrapportering = Inntektsrapportering.KAPITALINNTEKT,
                         ) +
-                        kontantstøtteService.beregnKontantstøtte(transformerInntekterRequest.kontantstøtteliste) +
-                        utvidetBarnetrygdOgSmåbarnstilleggService.beregnUtvidetBarnetrygdOgSmåbarnstillegg(
-                            transformerInntekterRequest.utvidetBarnetrygdOgSmåbarnstilleggliste,
+                        kontantstøtteService.beregnKontantstøtte(
+                            transformerInntekterRequest.kontantstøtteliste,
                         ) +
-                        barnetilleggPensjonService.beregnBarnetilleggPensjon(transformerInntekterRequest.barnetilleggsliste) +
+                        utvidetBarnetrygdService.beregnUtvidetBarnetrygd(
+                            transformerInntekterRequest.utvidetBarnetrygdliste,
+                        ) +
+                        småbarnstilleggService.beregnSmåbarnstillegg(
+                            transformerInntekterRequest.småbarnstilleggliste,
+                        ) +
+                        barnetilleggPensjonService.beregnBarnetilleggPensjon(
+                            transformerInntekterRequest.barnetilleggsliste,
+                        ) +
                         ytelserService.beregnYtelser(
                             ainntektListeInn = transformerInntekterRequest.ainntektsposter,
                             ainntektHentetDato = transformerInntekterRequest.ainntektHentetDato,

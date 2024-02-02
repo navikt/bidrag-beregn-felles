@@ -49,7 +49,6 @@ class AinntektService {
                             KEY_12MND -> Inntektsrapportering.AINNTEKT_BEREGNET_12MND.visningsnavn.intern
                             else -> Inntektsrapportering.AINNTEKT.visningsnavnIntern(it.value.periodeFra.year)
                         },
-                        referanse = "",
                         sumInntekt =
                         when (it.key) {
                             KEY_3MND -> it.value.sumInntekt.toInt().times(4).toBigDecimal() // Regner om til årsinntekt
