@@ -33,7 +33,7 @@ internal class CoreMapperTest {
 
         assertThatExceptionOfType(IllegalArgumentException::class.java)
             .isThrownBy { CoreMapper.mapGrunnlagTilCore(beregnForskuddGrunnlag = beregnForskuddGrunnlag, sjablontallListe = emptyList()) }
-            .withMessageContaining("Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.PERSON er ikke gyldig")
+            .withMessageContaining("Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.PERSON_SØKNADSBARN er ikke gyldig")
     }
 
     @Test
