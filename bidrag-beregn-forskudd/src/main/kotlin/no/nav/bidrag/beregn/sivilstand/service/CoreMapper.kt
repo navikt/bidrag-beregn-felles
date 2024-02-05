@@ -73,7 +73,6 @@ internal object CoreMapper {
         try {
             val soknadsbarnGrunnlag =
                 beregnForskuddGrunnlag.grunnlagListe.filtrerOgKonverterBasertPåEgenReferanse<Person>(
-                    grunnlagType = Grunnlagstype.PERSON_SØKNADSBARN,
                     referanse = beregnForskuddGrunnlag.søknadsbarnReferanse,
                 )
 
@@ -87,7 +86,7 @@ internal object CoreMapper {
             }
         } catch (e: Exception) {
             throw IllegalArgumentException(
-                "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.PERSON er ikke gyldig: " + e.message,
+                "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.PERSON_SØKNADSBARN er ikke gyldig: " + e.message,
             )
         }
     }
