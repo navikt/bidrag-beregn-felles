@@ -11,7 +11,7 @@ import no.nav.bidrag.beregn.forskudd.core.bo.GrunnlagBeregning
 import no.nav.bidrag.beregn.forskudd.core.bo.Inntekt
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatBeregning
 import no.nav.bidrag.beregn.forskudd.core.bo.Sivilstand
-import no.nav.bidrag.domene.enums.beregning.ResultatkodeForskudd
+import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
@@ -68,7 +68,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isZero() },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.AVSLAG) },
+            Executable { assertThat(resultat.kode).isEqualTo(Resultatkode.AVSLAG) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 1") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
@@ -105,7 +105,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop125Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(Resultatkode.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 2") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
@@ -183,7 +183,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isZero() },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.AVSLAG) },
+            Executable { assertThat(resultat.kode).isEqualTo(Resultatkode.AVSLAG) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 4") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
@@ -223,7 +223,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop125Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(Resultatkode.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 5") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
@@ -263,7 +263,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop100Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.FORHØYET_FORSKUDD_100_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(Resultatkode.FORHØYET_FORSKUDD_100_PROSENT) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 6") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
@@ -304,7 +304,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop75Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(Resultatkode.ORDINÆRT_FORSKUDD_75_PROSENT) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 7") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
@@ -345,7 +345,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop50Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.REDUSERT_FORSKUDD_50_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(Resultatkode.REDUSERT_FORSKUDD_50_PROSENT) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 8") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
@@ -392,7 +392,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop75Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(Resultatkode.ORDINÆRT_FORSKUDD_75_PROSENT) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 9") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
@@ -439,7 +439,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop50Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.REDUSERT_FORSKUDD_50_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(Resultatkode.REDUSERT_FORSKUDD_50_PROSENT) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 10") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
@@ -480,7 +480,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop75Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(Resultatkode.ORDINÆRT_FORSKUDD_75_PROSENT) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 11") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
@@ -521,7 +521,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop50Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.REDUSERT_FORSKUDD_50_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(Resultatkode.REDUSERT_FORSKUDD_50_PROSENT) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 12") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
@@ -568,7 +568,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop75Prosent) },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(Resultatkode.ORDINÆRT_FORSKUDD_75_PROSENT) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 13") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
@@ -614,7 +614,7 @@ internal class ForskuddBeregningTest {
 
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.REDUSERT_FORSKUDD_50_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(Resultatkode.REDUSERT_FORSKUDD_50_PROSENT) },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop50Prosent) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 14") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
@@ -665,7 +665,7 @@ internal class ForskuddBeregningTest {
 
         assertAll(
             Executable { assertThat(resultat).isNotNull() },
-            Executable { assertThat(resultat.kode).isEqualTo(ResultatkodeForskudd.REDUSERT_FORSKUDD_50_PROSENT) },
+            Executable { assertThat(resultat.kode).isEqualTo(Resultatkode.REDUSERT_FORSKUDD_50_PROSENT) },
             Executable { assertThat(resultat.belop).isEqualByComparingTo(forventetResultatBelop50Prosent) },
             Executable { assertThat(resultat.regel).isEqualTo("REGEL 14") },
             Executable { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },

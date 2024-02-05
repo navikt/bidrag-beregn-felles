@@ -6,7 +6,7 @@ import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggForskuddResultat
 import no.nav.bidrag.beregn.forskudd.core.TestUtil.byggSjablonPeriodeListe
 import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriode
 import no.nav.bidrag.domene.enums.beregning.Avvikstype
-import no.nav.bidrag.domene.enums.beregning.ResultatkodeForskudd
+import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Assertions.assertAll
@@ -65,7 +65,7 @@ internal class ForskuddCoreTest {
             },
             Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].resultat.kode)
-                    .isEqualTo(ResultatkodeForskudd.FORHØYET_FORSKUDD_100_PROSENT.toString())
+                    .isEqualTo(Resultatkode.FORHØYET_FORSKUDD_100_PROSENT)
             },
             Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[0].resultat.regel)
@@ -109,7 +109,7 @@ internal class ForskuddCoreTest {
             },
             Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[1].resultat.kode)
-                    .isEqualTo(ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT.toString())
+                    .isEqualTo(Resultatkode.ORDINÆRT_FORSKUDD_75_PROSENT)
             },
             Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[1].resultat.regel)
@@ -129,7 +129,7 @@ internal class ForskuddCoreTest {
             },
             Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[2].resultat.kode)
-                    .isEqualTo(ResultatkodeForskudd.AVSLAG.toString())
+                    .isEqualTo(Resultatkode.AVSLAG)
             },
             Executable {
                 assertThat(beregnForskuddResultatCore.beregnetForskuddPeriodeListe[2].resultat.regel)

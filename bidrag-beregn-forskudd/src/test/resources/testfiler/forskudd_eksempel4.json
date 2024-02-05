@@ -7,7 +7,7 @@
   "grunnlagListe": [
     {
       "referanse": "Person_Søknadsbarn_20201201",
-      "type": "PERSON",
+      "type": "PERSON_SØKNADSBARN",
       "grunnlagsreferanseListe": [],
       "innhold": {
         "ident": "11111111110",
@@ -17,7 +17,7 @@
     },
     {
       "referanse": "Person_Husstandsbarn_01_20201201",
-      "type": "PERSON",
+      "type": "PERSON_HUSSTANDSMEDLEM",
       "grunnlagsreferanseListe": [],
       "innhold": {
         "ident": "11111111111",
@@ -27,7 +27,7 @@
     },
     {
       "referanse": "Person_Bidragsmottaker_20201201",
-      "type": "PERSON",
+      "type": "PERSON_BIDRAGSMOTTAKER",
       "grunnlagsreferanseListe": [],
       "innhold": {
         "ident": "22222222222",

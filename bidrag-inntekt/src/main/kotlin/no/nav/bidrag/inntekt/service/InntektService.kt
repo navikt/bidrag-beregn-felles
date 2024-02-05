@@ -61,7 +61,6 @@ class InntektService(
             )
 
         secureLogger.info { "TransformerInntekterRequestDto: ${tilJson(transformerInntekterRequest.toString())}" }
-        secureLogger.info { "TransformerInntekterResponseDto: ${tilJson(transformerInntekterResponse.toString())}" }
 
         return transformerInntekterResponse
     }
