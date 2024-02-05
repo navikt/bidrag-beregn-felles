@@ -8,7 +8,6 @@ import no.nav.bidrag.beregn.forskudd.core.dto.ResultatPeriodeCore
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
 import no.nav.bidrag.commons.service.sjablon.Sjablontall
 import no.nav.bidrag.commons.util.secureLogger
-import no.nav.bidrag.domene.enums.beregning.ResultatkodeForskudd
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
@@ -95,7 +94,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
             resultat =
             ResultatBeregning(
                 belop = it.resultat.belop,
-                kode = ResultatkodeForskudd.valueOf(it.resultat.kode),
+                kode = it.resultat.kode,
                 regel = it.resultat.regel,
             ),
             grunnlagsreferanseListe = it.grunnlagsreferanseListe,

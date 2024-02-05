@@ -4,6 +4,7 @@ import no.nav.bidrag.beregn.core.dto.AvvikCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonResultatGrunnlagCore
+import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -63,6 +64,6 @@ data class ResultatPeriodeCore(
 
 data class ResultatBeregningCore(
     val belop: BigDecimal,
-    val kode: String,
+    val kode: Resultatkode,
     val regel: String,
 )

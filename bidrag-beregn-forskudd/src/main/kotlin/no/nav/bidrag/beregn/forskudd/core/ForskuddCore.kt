@@ -149,7 +149,7 @@ internal class ForskuddCore(private val forskuddPeriode: ForskuddPeriode = Forsk
             resultatPeriodeCoreListe.add(
                 ResultatPeriodeCore(
                     PeriodeCore(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
-                    ResultatBeregningCore(belop = it.resultat.belop, kode = it.resultat.kode.toString(), regel = it.resultat.regel),
+                    ResultatBeregningCore(belop = it.resultat.belop, kode = it.resultat.kode, regel = it.resultat.regel),
                     mapReferanseListe(it),
                 ),
             )
