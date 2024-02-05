@@ -29,7 +29,7 @@ import no.nav.bidrag.beregn.forskudd.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.SoknadBarnCore
 import no.nav.bidrag.domene.enums.beregning.Avvikstype
-import no.nav.bidrag.domene.enums.beregning.ResultatkodeForskudd
+import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.inntekt.Inntektstype
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.enums.person.Sivilstandskode
@@ -222,7 +222,7 @@ object TestUtil {
                     Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-01-01")),
                     ResultatBeregning(
                         BigDecimal.valueOf(1600),
-                        ResultatkodeForskudd.FORHØYET_FORSKUDD_100_PROSENT,
+                        Resultatkode.FORHØYET_FORSKUDD_100_PROSENT,
                         "REGEL 1",
                         byggSjablonPeriodeNavnVerdiListe(),
                     ),
@@ -244,7 +244,7 @@ object TestUtil {
                     Periode(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")),
                     ResultatBeregning(
                         BigDecimal.valueOf(1200),
-                        ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT,
+                        Resultatkode.ORDINÆRT_FORSKUDD_75_PROSENT,
                         "REGEL 2",
                         byggSjablonPeriodeNavnVerdiListe(),
                     ),
@@ -264,7 +264,7 @@ object TestUtil {
                 ),
                 ResultatPeriode(
                     Periode(LocalDate.parse("2019-01-01"), LocalDate.parse("2020-01-01")),
-                    ResultatBeregning(BigDecimal.valueOf(0), ResultatkodeForskudd.AVSLAG, "REGEL 11", byggSjablonPeriodeNavnVerdiListe()),
+                    ResultatBeregning(BigDecimal.valueOf(0), Resultatkode.AVSLAG, "REGEL 11", byggSjablonPeriodeNavnVerdiListe()),
                     GrunnlagBeregning(
                         listOf(
                             Inntekt(INNTEKT_REFERANSE_3, "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER", BigDecimal.valueOf(500000)),
