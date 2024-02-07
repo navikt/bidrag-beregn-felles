@@ -69,7 +69,6 @@ class SkattegrunnlagService {
                 SummertÅrsinntekt(
                     inntektRapportering = inntektRapportering,
                     visningsnavn = inntektRapportering.visningsnavnIntern(skattegrunnlagForLigningsår.ligningsår),
-                    referanse = "",
                     sumInntekt = sumInntekt,
                     periode =
                     ÅrMånedsperiode(

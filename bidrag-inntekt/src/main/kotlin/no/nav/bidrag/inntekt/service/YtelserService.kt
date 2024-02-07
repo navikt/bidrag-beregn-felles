@@ -64,7 +64,6 @@ class YtelserService {
                     SummertÅrsinntekt(
                         inntektRapportering = ytelse,
                         visningsnavn = ytelse.visningsnavn.intern,
-                        referanse = "",
                         sumInntekt = it.value.sumInntekt,
                         periode = ÅrMånedsperiode(fom = it.value.periodeFra, til = it.value.periodeTil),
                         inntektPostListe = grupperOgSummerDetaljposter(it.value.inntektPostListe),

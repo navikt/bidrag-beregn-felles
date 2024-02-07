@@ -11,7 +11,7 @@ import no.nav.bidrag.beregn.forskudd.core.dto.BeregnetForskuddResultatCore
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatBeregningCore
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatPeriodeCore
 import no.nav.bidrag.commons.service.sjablon.Sjablontall
-import no.nav.bidrag.domene.enums.beregning.ResultatkodeForskudd
+import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.domene.enums.person.Bostatuskode
@@ -161,7 +161,7 @@ object TestUtil {
         grunnlagListe.add(
             GrunnlagDto(
                 referanse = "Person_Søknadsbarn",
-                type = Grunnlagstype.PERSON,
+                type = Grunnlagstype.PERSON_SØKNADSBARN,
                 grunnlagsreferanseListe = emptyList(),
                 innhold = personSøknadsbarnInnhold,
             ),
@@ -207,7 +207,7 @@ object TestUtil {
                 resultat =
                 ResultatBeregningCore(
                     belop = BigDecimal.valueOf(100),
-                    kode = ResultatkodeForskudd.FORHØYET_FORSKUDD_100_PROSENT.name,
+                    kode = Resultatkode.FORHØYET_FORSKUDD_100_PROSENT,
                     regel = "REGEL 1",
                 ),
                 grunnlagsreferanseListe =
@@ -253,7 +253,7 @@ object TestUtil {
                 resultat =
                 ResultatBeregning(
                     belop = BigDecimal.valueOf(100),
-                    kode = ResultatkodeForskudd.FORHØYET_FORSKUDD_100_PROSENT,
+                    kode = Resultatkode.FORHØYET_FORSKUDD_100_PROSENT,
                     regel = "REGEL 1",
                 ),
                 grunnlagsreferanseListe =
