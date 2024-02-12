@@ -49,7 +49,7 @@ class InntektApiTest {
 
         assertSoftly {
             transformerteInntekter.shouldNotBeNull()
-            transformerteInntekter.summertÅrsinntektListe.shouldHaveSize(9)
+            transformerteInntekter.summertÅrsinntektListe.shouldHaveSize(14)
             transformerteInntekter.summertMånedsinntektListe.shouldHaveSize(11)
 
             assertSoftly(transformerteInntekter.summertMånedsinntektListe) {
