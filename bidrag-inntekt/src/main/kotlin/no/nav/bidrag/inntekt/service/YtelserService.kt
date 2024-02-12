@@ -67,6 +67,7 @@ class YtelserService {
                         sumInntekt = it.value.sumInntekt,
                         periode = ÅrMånedsperiode(fom = it.value.periodeFra, til = it.value.periodeTil),
                         inntektPostListe = grupperOgSummerDetaljposter(it.value.inntektPostListe),
+                        grunnlagsreferanseListe = it.value.grunnlagreferanseListe.toList(),
                     ),
                 )
             }
@@ -99,6 +100,7 @@ class YtelserService {
                 utbetalingsperiode = ainntektPost.utbetalingsperiode!!,
                 beskrivelse = ainntektPost.beskrivelse!!,
                 beløp = ainntektPost.beløp,
+                referanse = ainntektPost.referanse,
             ).forEach { periodeMap ->
                 akkumulerPost(ainntektMap, periodeMap.key, periodeMap.value, ainntektHentetDato)
             }
@@ -130,6 +132,7 @@ class YtelserService {
                 periodeFra = periode.periodeFra,
                 periodeTil = periode.periodeTil,
                 inntektPostListe = inntektPostListe,
+                grunnlagreferanseListe = inntektSumPost.grunnlagreferanseListe + value.referanse,
             )
     }
 
@@ -140,6 +143,7 @@ class YtelserService {
         utbetalingsperiode: String,
         beskrivelse: String,
         beløp: BigDecimal,
+        referanse: String,
     ): Map<String, Detaljpost> {
         val periodeFra =
             if (opptjeningsperiodeFra != null) {
@@ -161,11 +165,17 @@ class YtelserService {
             }
 
         // Returner map med en forekomst for hvert år beløpet dekker
-        return kalkulerBeløpForAar(periodeFra = periodeFra, periodeTil = periodeTil, beskrivelse = beskrivelse, beløp = beløp)
+        return kalkulerBeløpForAar(periodeFra = periodeFra, periodeTil = periodeTil, beskrivelse = beskrivelse, beløp = beløp, referanse = referanse)
     }
 
     // Kalkulerer totalt beløp for hvert år forekomsten dekker
-    private fun kalkulerBeløpForAar(periodeFra: YearMonth, periodeTil: YearMonth, beskrivelse: String, beløp: BigDecimal): Map<String, Detaljpost> {
+    private fun kalkulerBeløpForAar(
+        periodeFra: YearMonth,
+        periodeTil: YearMonth,
+        beskrivelse: String,
+        beløp: BigDecimal,
+        referanse: String,
+    ): Map<String, Detaljpost> {
         val periodeMap = mutableMapOf<String, Detaljpost>()
         val antallMndTotalt = ChronoUnit.MONTHS.between(periodeFra, periodeTil).toInt()
         val månedsbeløp = beregneBeløpPerMåned(beløp = beløp, antallMnd = antallMndTotalt)
@@ -182,7 +192,11 @@ class YtelserService {
                 }
             if (antallMndIÅr > 0) {
                 periodeMap[år.toString()] =
-                    Detaljpost(beløp = antallMndIÅr.toBigDecimal().times(månedsbeløp), kode = beskrivelse)
+                    Detaljpost(
+                        beløp = antallMndIÅr.toBigDecimal().times(månedsbeløp),
+                        kode = beskrivelse,
+                        referanse = referanse,
+                    )
             }
         }
 

@@ -46,6 +46,7 @@ class KontantstøtteService {
                         ),
                         gjelderBarnPersonId = barnPersonId,
                         inntektPostListe = emptyList(),
+                        grunnlagsreferanseListe = listOf(it.referanse),
                     ),
                 )
             }

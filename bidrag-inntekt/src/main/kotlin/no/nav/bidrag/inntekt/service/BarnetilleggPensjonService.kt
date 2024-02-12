@@ -45,6 +45,7 @@ class BarnetilleggPensjonService {
                         ),
                         gjelderBarnPersonId = barnPersonId,
                         inntektPostListe = emptyList(),
+                        grunnlagsreferanseListe = listOf(it.referanse),
                     ),
                 )
             }

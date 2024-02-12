@@ -28,6 +28,7 @@ class SmåbarnstilleggService {
                         til = finnPeriodeTil(it.periodeTil),
                     ),
                     inntektPostListe = emptyList(),
+                    grunnlagsreferanseListe = listOf(it.referanse),
                 ),
             )
         }
