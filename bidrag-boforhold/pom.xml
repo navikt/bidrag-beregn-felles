@@ -13,7 +13,6 @@
 
     <properties>
         <revision>1.0-SNAPSHOT</revision>
-        <wiremock.version>2.35.1</wiremock.version>
     </properties>
 
     <dependencies>
@@ -62,7 +61,6 @@
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
             <artifactId>wiremock-jre8-standalone</artifactId>
-            <version>${wiremock.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -75,18 +73,6 @@
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
-                <configuration>
-                    <compilerPlugins>
-                        <plugin>spring</plugin>
-                    </compilerPlugins>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.jetbrains.kotlin</groupId>
-                        <artifactId>kotlin-maven-allopen</artifactId>
-                        <version>${kotlin.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
