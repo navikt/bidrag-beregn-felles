@@ -60,7 +60,7 @@ object TestUtil {
         val beregningsperiodeFom = YearMonth.parse("2017-01")
         val beregningsperiodeTil = if (nullVerdi == "beregningsperiodeTil") null else YearMonth.parse("2020-01")
         val referanse = if (nullVerdi == "referanse") "" else "Mottatt_BM_Inntekt_AG_20201201"
-        val type = Grunnlagstype.INNTEKT
+        val type = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE
         val innhold =
             if (nullVerdi == "innhold") {
                 POJONode(null)
