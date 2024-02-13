@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>bidrag-sivilstand</artifactId>
+    <artifactId>bidrag-boforhold</artifactId>
 
     <properties>
         <revision>1.0-SNAPSHOT</revision>
@@ -61,7 +61,6 @@
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
             <artifactId>wiremock-jre8-standalone</artifactId>
-            <version>${wiremock.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
