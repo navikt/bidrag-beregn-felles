@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.sivilstand.service
+package no.nav.bidrag.beregn.forskudd.service
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -14,13 +14,11 @@ import no.nav.bidrag.commons.service.sjablon.Sjablontall
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
+import no.nav.bidrag.domene.enums.person.AldersgruppeForskudd
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.behandling.beregning.forskudd.BeregnetForskuddResultat
-import no.nav.bidrag.transport.behandling.beregning.forskudd.ResultatBeregning
-import no.nav.bidrag.transport.behandling.beregning.forskudd.ResultatPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
@@ -60,7 +58,7 @@ object TestUtil {
         val beregningsperiodeFom = YearMonth.parse("2017-01")
         val beregningsperiodeTil = if (nullVerdi == "beregningsperiodeTil") null else YearMonth.parse("2020-01")
         val referanse = if (nullVerdi == "referanse") "" else "Mottatt_BM_Inntekt_AG_20201201"
-        val type = Grunnlagstype.INNTEKT
+        val type = Grunnlagstype.BEREGNET_INNTEKT
         val innhold =
             if (nullVerdi == "innhold") {
                 POJONode(null)
@@ -112,6 +110,14 @@ object TestUtil {
                 mapOf(
                     "ident" to "11111111111",
                     "navn" to "Søknadsbarn",
+                    "fødselsdato" to fødselsdato,
+                ),
+            )
+        val personBidragsmottakerInnhold =
+            mapper.valueToTree<JsonNode>(
+                mapOf(
+                    "ident" to "22222222222",
+                    "navn" to "Bidragsmottaker",
                     "fødselsdato" to fødselsdato,
                 ),
             )
@@ -168,6 +174,14 @@ object TestUtil {
         )
         grunnlagListe.add(
             GrunnlagDto(
+                referanse = "Person_Bidragsmottaker",
+                type = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
+                grunnlagsreferanseListe = emptyList(),
+                innhold = personBidragsmottakerInnhold,
+            ),
+        )
+        grunnlagListe.add(
+            GrunnlagDto(
                 referanse = "Bostatus_20170101",
                 type = Grunnlagstype.BOSTATUS_PERIODE,
                 grunnlagsreferanseListe = listOf("Person_Søknadsbarn"),
@@ -179,6 +193,7 @@ object TestUtil {
                 referanse = "BeregningInntektRapportering_Ainntekt_20170101",
                 type = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
                 grunnlagsreferanseListe = emptyList(),
+                gjelderReferanse = "Person_Bidragsmottaker",
                 innhold = inntektInnhold,
             ),
         )
@@ -208,7 +223,8 @@ object TestUtil {
                 ResultatBeregningCore(
                     belop = BigDecimal.valueOf(100),
                     kode = Resultatkode.FORHØYET_FORSKUDD_100_PROSENT,
-                    regel = "REGEL 1",
+                    regel = "REGEL 3",
+                    alder = AldersgruppeForskudd.ALDER_0_10_ÅR,
                 ),
                 grunnlagsreferanseListe =
                 listOf(
@@ -217,6 +233,7 @@ object TestUtil {
                     BARN_REFERANSE_1,
                     SOKNADBARN_REFERANSE,
                     BOSTATUS_REFERANSE_MED_FORELDRE_1,
+                    "Person_Søknadsbarn",
                 ),
             ),
         )
@@ -242,32 +259,6 @@ object TestUtil {
         )
 
         return BeregnetForskuddResultatCore(beregnetForskuddPeriodeListe = emptyList(), sjablonListe = emptyList(), avvikListe = avvikListe)
-    }
-
-    // Bygger opp BeregnForskuddResultat
-    fun dummyForskuddResultat(): BeregnetForskuddResultat {
-        val beregnetForskuddPeriodeListe = mutableListOf<ResultatPeriode>()
-        beregnetForskuddPeriodeListe.add(
-            ResultatPeriode(
-                periode = ÅrMånedsperiode(fom = LocalDate.parse("2017-01-01"), til = LocalDate.parse("2019-01-01")),
-                resultat =
-                ResultatBeregning(
-                    belop = BigDecimal.valueOf(100),
-                    kode = Resultatkode.FORHØYET_FORSKUDD_100_PROSENT,
-                    regel = "REGEL 1",
-                ),
-                grunnlagsreferanseListe =
-                listOf(
-                    INNTEKT_REFERANSE_1,
-                    SIVILSTAND_REFERANSE_ENSLIG,
-                    BARN_REFERANSE_1,
-                    SOKNADBARN_REFERANSE,
-                    BOSTATUS_REFERANSE_MED_FORELDRE_1,
-                ),
-            ),
-        )
-
-        return BeregnetForskuddResultat(beregnetForskuddPeriodeListe = beregnetForskuddPeriodeListe, grunnlagListe = emptyList())
     }
 
     // Bygger opp liste av sjablonverdier

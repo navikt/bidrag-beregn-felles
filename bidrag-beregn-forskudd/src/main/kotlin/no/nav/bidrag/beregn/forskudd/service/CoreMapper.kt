@@ -1,11 +1,13 @@
-package no.nav.bidrag.beregn.sivilstand.service
+package no.nav.bidrag.beregn.forskudd.service
 
+import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonInnholdCore
 import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BarnIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BostatusPeriodeCore
+import no.nav.bidrag.beregn.forskudd.core.dto.DelberegningForskudd
 import no.nav.bidrag.beregn.forskudd.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.SoknadBarnCore
@@ -14,6 +16,7 @@ import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BostatusPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
@@ -21,6 +24,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SivilstandPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåFremmedReferanse
+import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
 import java.time.LocalDate
 
 internal object CoreMapper {
@@ -33,10 +37,15 @@ internal object CoreMapper {
             sjablontallMap[it.id] = it
         }
 
+        val referanseBidragsmottaker = beregnForskuddGrunnlag.grunnlagListe
+            .filter { it.type == Grunnlagstype.PERSON_BIDRAGSMOTTAKER }
+            .map { it.referanse }
+            .firstOrNull() ?: throw NoSuchElementException("Grunnlagstype PERSON_BIDRAGSMOTTAKER mangler i input")
+
         // Mapper grunnlagstyper til input for core
         val soknadbarnCore = mapSoknadsbarn(beregnForskuddGrunnlag)
         val bostatusPeriodeCoreListe = mapBostatus(beregnForskuddGrunnlag)
-        val inntektPeriodeCoreListe = mapInntekt(beregnForskuddGrunnlag)
+        val inntektPeriodeCoreListe = mapInntekt(beregnForskuddGrunnlag, referanseBidragsmottaker)
         val sivilstandPeriodeCoreListe = mapSivilstand(beregnForskuddGrunnlag)
         val barnIHusstandenPeriodeCoreListe = mapBarnIHusstanden(beregnForskuddGrunnlag)
 
@@ -117,28 +126,29 @@ internal object CoreMapper {
         }
     }
 
-    private fun mapInntekt(beregnForskuddGrunnlag: BeregnGrunnlag): List<InntektPeriodeCore> {
+    private fun mapInntekt(beregnForskuddGrunnlag: BeregnGrunnlag, referanseBidragsmottaker: String): List<InntektPeriodeCore> {
         try {
-            val inntektGrunnlag =
-                beregnForskuddGrunnlag.grunnlagListe.filtrerOgKonverterBasertPåEgenReferanse<InntektsrapporteringPeriode>(
-                    grunnlagType = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
-                )
-
-            return inntektGrunnlag
-                .filter { it.innhold.valgt }
-                .filter { it.innhold.gjelderBarn == null || it.innhold.gjelderBarn == beregnForskuddGrunnlag.søknadsbarnReferanse }
-                .map {
-                    InntektPeriodeCore(
-                        referanse = it.referanse,
-                        periode =
-                        PeriodeCore(
-                            datoFom = it.innhold.periode.toDatoperiode().fom,
-                            datoTil = it.innhold.periode.toDatoperiode().til,
-                        ),
-                        type = it.innhold.inntektsrapportering.name,
-                        belop = it.innhold.beløp,
+            val inntektGrunnlagListe =
+                beregnForskuddGrunnlag.grunnlagListe
+                    .filtrerOgKonverterBasertPåFremmedReferanse<InntektsrapporteringPeriode>(
+                        grunnlagType = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
+                        referanse = referanseBidragsmottaker,
                     )
-                }
+                    .filter { it.innhold.valgt }
+                    .filter { it.innhold.gjelderBarn == null || it.innhold.gjelderBarn == beregnForskuddGrunnlag.søknadsbarnReferanse }
+                    .map {
+                        InntektPeriodeCore(
+                            referanse = it.referanse,
+                            periode =
+                            PeriodeCore(
+                                datoFom = it.innhold.periode.toDatoperiode().fom,
+                                datoTil = it.innhold.periode.toDatoperiode().til,
+                            ),
+                            belop = it.innhold.beløp,
+                            grunnlagsreferanseListe = emptyList(),
+                        )
+                    }
+            return akkumulerOgPeriodiser(inntektGrunnlagListe, InntektPeriodeCore::class.java)
         } catch (e: Exception) {
             throw IllegalArgumentException(
                 "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE er ikke gyldig: " +
@@ -151,7 +161,7 @@ internal object CoreMapper {
         try {
             val sivilstandGrunnlag =
                 beregnForskuddGrunnlag.grunnlagListe
-                    .filtrerOgKonverterBasertPåEgenReferanse<SivilstandPeriode>(Grunnlagstype.SIVILSTAND_PERIODE)
+                    .filtrerOgKonverterBasertPåEgenReferanse<SivilstandPeriode>(grunnlagType = Grunnlagstype.SIVILSTAND_PERIODE)
 
             return sivilstandGrunnlag.map {
                 SivilstandPeriodeCore(
@@ -173,22 +183,23 @@ internal object CoreMapper {
 
     private fun mapBarnIHusstanden(beregnForskuddGrunnlag: BeregnGrunnlag): List<BarnIHusstandenPeriodeCore> {
         try {
-            val barnIHusstandenGrunnlag =
+            val barnIHusstandenGrunnlagListe =
                 beregnForskuddGrunnlag.grunnlagListe
                     .filtrerOgKonverterBasertPåEgenReferanse<BostatusPeriode>(Grunnlagstype.BOSTATUS_PERIODE)
-
-            return barnIHusstandenGrunnlag
-                .filter { it.innhold.bostatus == Bostatuskode.MED_FORELDER || it.innhold.bostatus == Bostatuskode.DOKUMENTERT_SKOLEGANG }
-                .map {
-                    BarnIHusstandenPeriodeCore(
-                        referanse = it.referanse,
-                        periode =
-                        PeriodeCore(
-                            datoFom = it.innhold.periode.toDatoperiode().fom,
-                            datoTil = it.innhold.periode.toDatoperiode().til,
-                        ),
-                    )
-                }
+                    .filter { it.innhold.bostatus == Bostatuskode.MED_FORELDER || it.innhold.bostatus == Bostatuskode.DOKUMENTERT_SKOLEGANG }
+                    .map {
+                        BarnIHusstandenPeriodeCore(
+                            referanse = it.referanse,
+                            periode =
+                            PeriodeCore(
+                                datoFom = it.innhold.periode.toDatoperiode().fom,
+                                datoTil = it.innhold.periode.toDatoperiode().til,
+                            ),
+                            antall = 1,
+                            grunnlagsreferanseListe = emptyList(),
+                        )
+                    }
+            return akkumulerOgPeriodiser(barnIHusstandenGrunnlagListe, BarnIHusstandenPeriodeCore::class.java)
         } catch (e: Exception) {
             throw IllegalArgumentException(
                 "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.BOSTATUS_PERIODE er ikke gyldig: " + e.message,
@@ -235,11 +246,11 @@ internal object CoreMapper {
     ): List<SjablonPeriodeCore> {
         return sjablonSjablontallListe
             .filter { !(it.datoFom!!.isAfter(beregnDatoTil) || it.datoTom!!.isBefore(beregnDatoFra)) }
-            .filter { (sjablontallMap.getOrDefault(it.typeSjablon, SjablonTallNavn.DUMMY)).forskudd }
+            .filter { (sjablontallMap.getOrDefault(key = it.typeSjablon, defaultValue = SjablonTallNavn.DUMMY)).forskudd }
             .map {
                 SjablonPeriodeCore(
-                    periode = PeriodeCore(it.datoFom!!, justerTilDato(it.datoTom)),
-                    navn = sjablontallMap.getOrDefault(it.typeSjablon, SjablonTallNavn.DUMMY).navn,
+                    periode = PeriodeCore(datoFom = it.datoFom!!, datoTil = justerTilDato(it.datoTom)),
+                    navn = sjablontallMap.getOrDefault(key = it.typeSjablon, defaultValue = SjablonTallNavn.DUMMY).navn,
                     nokkelListe = emptyList(),
                     innholdListe = listOf(SjablonInnholdCore(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = it.verdi!!)),
                 )
@@ -253,6 +264,84 @@ internal object CoreMapper {
             dato.plusMonths(1).withDayOfMonth(1)
         } else {
             dato
+        }
+    }
+
+    // Lager en gruppert liste hvor grunnlaget er akkumulert pr bruddperiode, med en liste over tilhørende grunnlagsreferanser
+    fun <T : DelberegningForskudd> akkumulerOgPeriodiser(grunnlagListe: List<T>, clazz: Class<T>): List<T> {
+        // Lager unik, sortert liste over alle bruddatoer og legger evt. null-forekomst bakerst
+        val bruddatoListe = grunnlagListe
+            .flatMap { listOf(it.periode.datoFom, it.periode.datoTil) }
+            .distinct()
+            .sortedBy { it }
+            .sortedWith(compareBy { it == null })
+
+        // Slå sammen brudddatoer til en liste med perioder (fom-/til-dato)
+        val periodeListe = bruddatoListe
+            .zipWithNext()
+            .map { Periode(it.first!!, it.second) }
+
+        // Returnerer en gruppert og akkumulert liste, med en liste over tilhørende grunnlagsreferanser, pr bruddperiode
+        return when (clazz) {
+            InntektPeriodeCore::class.java -> {
+                akkumulerOgPeriodiserInntekter(grunnlagListe as List<InntektPeriodeCore>, periodeListe) as List<T>
+            }
+            BarnIHusstandenPeriodeCore::class.java -> {
+                akkumulerOgPeriodiserBarnIHusstanden(grunnlagListe as List<BarnIHusstandenPeriodeCore>, periodeListe) as List<T>
+            }
+            else -> {
+                emptyList()
+            }
+        }
+    }
+
+    // Grupperer og summerer inntekter pr bruddperiode
+    private fun akkumulerOgPeriodiserInntekter(
+        inntektGrunnlagListe: List<InntektPeriodeCore>,
+        periodeListe: List<Periode>,
+    ): List<InntektPeriodeCore> {
+        return periodeListe
+            .map { periode ->
+                val filter = filtrertGrunnlagListe(grunnlagListe = inntektGrunnlagListe, periode = periode)
+
+                InntektPeriodeCore(
+                    referanse = opprettDelberegningreferanse(
+                        type = Grunnlagstype.DELBEREGNING_INNTEKT,
+                        periode = ÅrMånedsperiode(fom = periode.datoFom, til = periode.datoTil),
+                    ),
+                    periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
+                    belop = filter.sumOf { it.belop },
+                    grunnlagsreferanseListe = filter.map { it.referanse },
+                )
+            }
+    }
+
+    // Grupperer og teller antall barn i husstanden pr bruddperiode
+    private fun akkumulerOgPeriodiserBarnIHusstanden(
+        barnIHusstandenGrunnlagListe: List<BarnIHusstandenPeriodeCore>,
+        periodeListe: List<Periode>,
+    ): List<BarnIHusstandenPeriodeCore> {
+        return periodeListe
+            .map { periode ->
+                val filter = filtrertGrunnlagListe(grunnlagListe = barnIHusstandenGrunnlagListe, periode = periode)
+
+                BarnIHusstandenPeriodeCore(
+                    referanse = opprettDelberegningreferanse(
+                        type = Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND,
+                        periode = ÅrMånedsperiode(fom = periode.datoFom, til = periode.datoTil),
+                    ),
+                    periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
+                    antall = filter.sumOf { it.antall },
+                    grunnlagsreferanseListe = filter.map { it.referanse },
+                )
+            }
+    }
+
+    // Filtrerer ut grunnlag som tilhører en gitt periode
+    private fun <T : DelberegningForskudd> filtrertGrunnlagListe(grunnlagListe: List<T>, periode: Periode): List<T> {
+        return grunnlagListe.filter { grunnlag ->
+            (grunnlag.periode.datoTil == null || periode.datoFom.isBefore(grunnlag.periode.datoTil)) &&
+                (periode.datoTil == null || periode.datoTil!!.isAfter(grunnlag.periode.datoFom))
         }
     }
 }

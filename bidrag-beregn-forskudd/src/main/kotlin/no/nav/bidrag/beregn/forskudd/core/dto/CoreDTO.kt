@@ -5,6 +5,7 @@ import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonResultatGrunnlagCore
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
+import no.nav.bidrag.domene.enums.person.AldersgruppeForskudd
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -32,11 +33,11 @@ data class BostatusPeriodeCore(
 )
 
 data class InntektPeriodeCore(
-    val referanse: String,
-    val periode: PeriodeCore,
-    val type: String,
+    override val referanse: String,
+    override val periode: PeriodeCore,
     val belop: BigDecimal,
-)
+    override val grunnlagsreferanseListe: List<String>,
+) : DelberegningForskudd
 
 data class SivilstandPeriodeCore(
     val referanse: String,
@@ -44,10 +45,18 @@ data class SivilstandPeriodeCore(
     val kode: String,
 )
 
+interface DelberegningForskudd {
+    val referanse: String
+    val periode: PeriodeCore
+    val grunnlagsreferanseListe: List<String>
+}
+
 data class BarnIHusstandenPeriodeCore(
-    val referanse: String,
-    val periode: PeriodeCore,
-)
+    override val referanse: String,
+    override val periode: PeriodeCore,
+    val antall: Int,
+    override val grunnlagsreferanseListe: List<String>,
+) : DelberegningForskudd
 
 // Resultat
 data class BeregnetForskuddResultatCore(
@@ -66,4 +75,5 @@ data class ResultatBeregningCore(
     val belop: BigDecimal,
     val kode: Resultatkode,
     val regel: String,
+    val alder: AldersgruppeForskudd,
 )

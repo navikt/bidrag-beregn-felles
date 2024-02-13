@@ -149,18 +149,21 @@ internal class PeriodisererTest {
                     BarnIHusstandenPeriode(
                         referanse = BARN_REFERANSE_1,
                         barnIHusstandenPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = null),
+                        antall = 1,
                     ),
                 )
                 .addBruddpunkter(
                     BarnIHusstandenPeriode(
                         referanse = BARN_REFERANSE_2,
                         barnIHusstandenPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2018-06-16")),
+                        antall = 1,
                     ),
                 )
                 .addBruddpunkter(
                     BarnIHusstandenPeriode(
                         referanse = BARN_REFERANSE_3,
                         barnIHusstandenPeriode = Periode(datoFom = LocalDate.parse("2019-03-31"), datoTil = null),
+                        antall = 1,
                     ),
                 )
                 .addBruddpunkter(

@@ -1,21 +1,27 @@
-package no.nav.bidrag.beregn.sivilstand.service.service
+package no.nav.bidrag.beregn.forskudd.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import no.nav.bidrag.beregn.sivilstand.service.CoreMapper
+import no.nav.bidrag.beregn.core.dto.PeriodeCore
+import no.nav.bidrag.beregn.forskudd.core.dto.BarnIHusstandenPeriodeCore
+import no.nav.bidrag.beregn.forskudd.core.dto.InntektPeriodeCore
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
+import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import java.math.BigDecimal
+import java.time.LocalDate
 
 internal class CoreMapperTest {
     @Test
     @DisplayName("Skal kaste UgyldigInputException når PERSON-objekt inneholder ugyldige data")
     fun mapPersonUgyldig() {
         val mapper = ObjectMapper()
-        val innholdPersonMedFeil = innholdPersonMedFeil(mapper)
+        val innholdSøknadsbarn = innholdSøknadsbarnMedFeil(mapper)
+        val innholdBidragsmottaker = innholdBidragsmottakerOK(mapper)
         val beregnForskuddGrunnlag =
             BeregnGrunnlag(
                 periode = ÅrMånedsperiode(fom = "2020-12", til = "2021-01"),
@@ -26,7 +32,13 @@ internal class CoreMapperTest {
                         referanse = "Person_Søknadsbarn",
                         type = Grunnlagstype.PERSON_SØKNADSBARN,
                         grunnlagsreferanseListe = emptyList(),
-                        innhold = innholdPersonMedFeil,
+                        innhold = innholdSøknadsbarn,
+                    ),
+                    GrunnlagDto(
+                        referanse = "Person_Bidragsmottaker",
+                        type = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
+                        grunnlagsreferanseListe = emptyList(),
+                        innhold = innholdBidragsmottaker,
                     ),
                 ),
             )
@@ -40,7 +52,8 @@ internal class CoreMapperTest {
     @DisplayName("Skal kaste UgyldigInputException når BOSTATUS_PERIODE-objekt inneholder ugyldige data")
     fun mapBostatusPeriodeUgyldig() {
         val mapper = ObjectMapper()
-        val innholdPerson = innholdPersonOK(mapper)
+        val innholdSøknadsbarn = innholdSøknadsbarnOK(mapper)
+        val innholdBidragsmottaker = innholdBidragsmottakerOK(mapper)
         val innholdBostatusMedFeil = innholdBostatusMedFeil(mapper)
         val beregnForskuddGrunnlag =
             BeregnGrunnlag(
@@ -52,12 +65,19 @@ internal class CoreMapperTest {
                         referanse = "Person_Søknadsbarn",
                         type = Grunnlagstype.PERSON_SØKNADSBARN,
                         grunnlagsreferanseListe = emptyList(),
-                        innhold = innholdPerson,
+                        innhold = innholdSøknadsbarn,
+                    ),
+                    GrunnlagDto(
+                        referanse = "Person_Bidragsmottaker",
+                        type = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
+                        grunnlagsreferanseListe = emptyList(),
+                        innhold = innholdBidragsmottaker,
                     ),
                     GrunnlagDto(
                         referanse = "Bostatus_Søknadsbarn",
                         type = Grunnlagstype.BOSTATUS_PERIODE,
-                        grunnlagsreferanseListe = listOf("Person_Søknadsbarn"),
+                        grunnlagsreferanseListe = emptyList(),
+                        gjelderReferanse = "Person_Søknadsbarn",
                         innhold = innholdBostatusMedFeil,
                     ),
                 ),
@@ -72,7 +92,8 @@ internal class CoreMapperTest {
     @DisplayName("Skal kaste UgyldigInputException når INNTEKT_RAPPORTERING_PERIODE-objekt inneholder ugyldige data")
     fun mapInntektPeriodeUgyldig() {
         val mapper = ObjectMapper()
-        val innholdPerson = innholdPersonOK(mapper)
+        val innholdSøknadsbarn = innholdSøknadsbarnOK(mapper)
+        val innholdBidragsmottaker = innholdBidragsmottakerOK(mapper)
         val innholdBostatus = innholdBostatusOK(mapper)
         val innholdInntektMedFeil = innholdInntektMedFeil(mapper)
         val beregnForskuddGrunnlag =
@@ -85,18 +106,26 @@ internal class CoreMapperTest {
                         referanse = "Person_Søknadsbarn",
                         type = Grunnlagstype.PERSON_SØKNADSBARN,
                         grunnlagsreferanseListe = emptyList(),
-                        innhold = innholdPerson,
+                        innhold = innholdSøknadsbarn,
+                    ),
+                    GrunnlagDto(
+                        referanse = "Person_Bidragsmottaker",
+                        type = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
+                        grunnlagsreferanseListe = emptyList(),
+                        innhold = innholdBidragsmottaker,
                     ),
                     GrunnlagDto(
                         referanse = "Bostatus_Søknadsbarn",
                         type = Grunnlagstype.BOSTATUS_PERIODE,
-                        grunnlagsreferanseListe = listOf("Person_Søknadsbarn"),
+                        grunnlagsreferanseListe = emptyList(),
+                        gjelderReferanse = "Person_Søknadsbarn",
                         innhold = innholdBostatus,
                     ),
                     GrunnlagDto(
                         referanse = "BeregningInntektRapportering_Ainntekt",
                         type = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
-                        grunnlagsreferanseListe = listOf("Person_Bidragsmottaker"),
+                        grunnlagsreferanseListe = emptyList(),
+                        gjelderReferanse = "Person_Bidragsmottaker",
                         innhold = innholdInntektMedFeil,
                     ),
                 ),
@@ -113,7 +142,8 @@ internal class CoreMapperTest {
     @DisplayName("Skal kaste UgyldigInputException når SIVILSTAND_PERIODE-objekt inneholder ugyldige data")
     fun mapSivilstandPeriodeUgyldig() {
         val mapper = ObjectMapper()
-        val innholdPerson = innholdPersonOK(mapper)
+        val innholdSøknadsbarn = innholdSøknadsbarnOK(mapper)
+        val innholdBidragsmottaker = innholdBidragsmottakerOK(mapper)
         val innholdBostatus = innholdBostatusOK(mapper)
         val innholdInntekt = innholdInntektOK(mapper)
         val innholdSivilstandMedFeil = innholdSivilstandMedFeil(mapper)
@@ -127,24 +157,33 @@ internal class CoreMapperTest {
                         referanse = "Person_Søknadsbarn",
                         type = Grunnlagstype.PERSON_SØKNADSBARN,
                         grunnlagsreferanseListe = emptyList(),
-                        innhold = innholdPerson,
+                        innhold = innholdSøknadsbarn,
+                    ),
+                    GrunnlagDto(
+                        referanse = "Person_Bidragsmottaker",
+                        type = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
+                        grunnlagsreferanseListe = emptyList(),
+                        innhold = innholdBidragsmottaker,
                     ),
                     GrunnlagDto(
                         referanse = "Bostatus_Søknadsbarn",
                         type = Grunnlagstype.BOSTATUS_PERIODE,
-                        grunnlagsreferanseListe = listOf("Person_Søknadsbarn"),
+                        grunnlagsreferanseListe = emptyList(),
+                        gjelderReferanse = "Person_Søknadsbarn",
                         innhold = innholdBostatus,
                     ),
                     GrunnlagDto(
                         referanse = "BeregningInntektRapportering_Ainntekt",
                         type = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
-                        grunnlagsreferanseListe = listOf("Person_Bidragsmottaker"),
+                        grunnlagsreferanseListe = emptyList(),
+                        gjelderReferanse = "Person_Bidragsmottaker",
                         innhold = innholdInntekt,
                     ),
                     GrunnlagDto(
                         referanse = "Sivilstand",
                         type = Grunnlagstype.SIVILSTAND_PERIODE,
-                        grunnlagsreferanseListe = listOf("Person_Bidragsmottaker"),
+                        grunnlagsreferanseListe = emptyList(),
+                        gjelderReferanse = "Person_Bidragsmottaker",
                         innhold = innholdSivilstandMedFeil,
                     ),
                 ),
@@ -155,11 +194,84 @@ internal class CoreMapperTest {
             .withMessageContaining("Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.SIVILSTAND_PERIODE er ikke gyldig")
     }
 
-    private fun innholdPersonMedFeil(mapper: ObjectMapper) =
+    @Test
+    @DisplayName("Skal summere og periodisere inntekter")
+    fun summerOgPeriodiserInntekterTest() {
+        val inputList = listOf(
+            InntektPeriodeCore(
+                referanse = "ref1",
+                periode = PeriodeCore(datoFom = LocalDate.of(2022, 1, 1), datoTil = LocalDate.of(2022, 1, 10)),
+                belop = BigDecimal(100),
+                grunnlagsreferanseListe = listOf("gr1"),
+            ),
+            InntektPeriodeCore(
+                referanse = "ref2",
+                periode = PeriodeCore(datoFom = LocalDate.of(2022, 1, 5), datoTil = LocalDate.of(2022, 1, 18)),
+                belop = BigDecimal(200),
+                grunnlagsreferanseListe = listOf("gr2"),
+            ),
+            InntektPeriodeCore(
+                referanse = "ref3",
+                periode = PeriodeCore(datoFom = LocalDate.of(2022, 1, 10), datoTil = null),
+                belop = BigDecimal(300),
+                grunnlagsreferanseListe = listOf("gr3"),
+            ),
+            InntektPeriodeCore(
+                referanse = "ref4",
+                periode = PeriodeCore(datoFom = LocalDate.of(2022, 1, 15), datoTil = null),
+                belop = BigDecimal(400),
+                grunnlagsreferanseListe = listOf("gr4"),
+            ),
+        )
+
+        val outputList = CoreMapper.akkumulerOgPeriodiser(inputList, InntektPeriodeCore::class.java)
+
+        assertThat(outputList).isNotNull
+    }
+
+    @Test
+    @DisplayName("Skal telle og periodisere antall barn i husstanden")
+    fun summerOgPeriodiserAntallBarnIHusstandenTest() {
+        val inputList = listOf(
+            BarnIHusstandenPeriodeCore(
+                referanse = "ref1",
+                periode = PeriodeCore(datoFom = LocalDate.of(2022, 1, 1), datoTil = LocalDate.of(2022, 1, 10)),
+                antall = 1,
+                grunnlagsreferanseListe = listOf("gr1"),
+            ),
+            BarnIHusstandenPeriodeCore(
+                referanse = "ref2",
+                periode = PeriodeCore(datoFom = LocalDate.of(2022, 1, 5), datoTil = LocalDate.of(2022, 1, 18)),
+                antall = 1,
+                grunnlagsreferanseListe = listOf("gr2"),
+            ),
+            BarnIHusstandenPeriodeCore(
+                referanse = "ref3",
+                periode = PeriodeCore(datoFom = LocalDate.of(2022, 1, 10), datoTil = null),
+                antall = 1,
+                grunnlagsreferanseListe = listOf("gr3"),
+            ),
+            BarnIHusstandenPeriodeCore(
+                referanse = "ref4",
+                periode = PeriodeCore(datoFom = LocalDate.of(2022, 1, 15), datoTil = null),
+                antall = 1,
+                grunnlagsreferanseListe = listOf("gr4"),
+            ),
+        )
+
+        val outputList = CoreMapper.akkumulerOgPeriodiser(inputList, BarnIHusstandenPeriodeCore::class.java)
+
+        assertThat(outputList).isNotNull
+    }
+
+    private fun innholdSøknadsbarnMedFeil(mapper: ObjectMapper) =
         mapper.readTree("{\"ident\": \"11111111111\"," + "\"navn\": \"Søknadsbarn\"," + "\"fødselsdato\": null}")
 
-    private fun innholdPersonOK(mapper: ObjectMapper) =
+    private fun innholdSøknadsbarnOK(mapper: ObjectMapper) =
         mapper.readTree("{\"ident\": \"11111111111\"," + "\"navn\": \"Søknadsbarn\"," + "\"fødselsdato\": \"2010-01-01\"}")
+
+    private fun innholdBidragsmottakerOK(mapper: ObjectMapper) =
+        mapper.readTree("{\"ident\": \"11111111111\"," + "\"navn\": \"Bidragsmottaker\"," + "\"fødselsdato\": \"1982-01-01\"}")
 
     private fun innholdBostatusMedFeil(mapper: ObjectMapper) = mapper.readTree(
         "{\"periode\":{" + "\"fom\": \"2020-12\"," + "\"til\": \"2021-01\"}," + "\"bostatus\": \"MED_BESTEMOR\"," +

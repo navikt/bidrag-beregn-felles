@@ -1,6 +1,6 @@
 package no.nav.bidrag.beregn.forskudd
 
-import no.nav.bidrag.beregn.sivilstand.service.BeregnForskuddService
+import no.nav.bidrag.beregn.forskudd.service.BeregnForskuddService
 import no.nav.bidrag.commons.service.sjablon.EnableSjablonProvider
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.forskudd.BeregnetForskuddResultat

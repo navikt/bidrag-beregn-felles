@@ -1,12 +1,13 @@
-package no.nav.bidrag.beregn.sivilstand.service.api
+package no.nav.bidrag.beregn.forskudd.api
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.beregn.forskudd.core.ForskuddCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore
-import no.nav.bidrag.beregn.sivilstand.service.BeregnForskuddService
-import no.nav.bidrag.beregn.sivilstand.service.TestUtil
-import no.nav.bidrag.beregn.sivilstand.service.testdata.SjablonApiStub
+import no.nav.bidrag.beregn.forskudd.service.BeregnForskuddService
+import no.nav.bidrag.beregn.forskudd.service.TestUtil
+import no.nav.bidrag.beregn.forskudd.testdata.SjablonApiStub
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
+import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
@@ -15,7 +16,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.junit.jupiter.api.function.Executable
 import org.mockito.ArgumentCaptor
 import org.mockito.Captor
 import org.mockito.Mock
@@ -34,6 +34,7 @@ internal class BeregnForskuddApiTest {
     private var forventetForskuddBelop = 0
     private lateinit var forventetForskuddResultatkode: Resultatkode
     private lateinit var forventetForskuddRegel: String
+    private var forventetAntallDelberegningReferanser: Int = 2
 
     @Mock
     private lateinit var forskuddCoreMock: ForskuddCore
@@ -168,6 +169,7 @@ internal class BeregnForskuddApiTest {
         forventetForskuddBelop = 1250
         forventetForskuddResultatkode = Resultatkode.ORDINÆRT_FORSKUDD_75_PROSENT
         forventetForskuddRegel = "REGEL 13"
+        forventetAntallDelberegningReferanser = 3
         utfoerBeregningerOgEvaluerResultat()
     }
 
@@ -201,6 +203,7 @@ internal class BeregnForskuddApiTest {
         forventetForskuddBelop = 1250
         forventetForskuddResultatkode = Resultatkode.ORDINÆRT_FORSKUDD_75_PROSENT
         forventetForskuddRegel = "REGEL 13"
+        forventetAntallDelberegningReferanser = 4
         utfoerBeregningerOgEvaluerResultat()
     }
 
@@ -212,6 +215,7 @@ internal class BeregnForskuddApiTest {
         forventetForskuddBelop = 1250
         forventetForskuddResultatkode = Resultatkode.ORDINÆRT_FORSKUDD_75_PROSENT
         forventetForskuddRegel = "REGEL 9"
+        forventetAntallDelberegningReferanser = 4
         utfoerBeregningerOgEvaluerResultat()
     }
 
@@ -267,6 +271,7 @@ internal class BeregnForskuddApiTest {
         forventetForskuddBelop = 1250
         forventetForskuddResultatkode = Resultatkode.ORDINÆRT_FORSKUDD_75_PROSENT
         forventetForskuddRegel = "REGEL 7"
+        forventetAntallDelberegningReferanser = 3
         utfoerBeregningerOgEvaluerResultat()
     }
 
@@ -322,6 +327,7 @@ internal class BeregnForskuddApiTest {
         forventetForskuddBelop = 1250
         forventetForskuddResultatkode = Resultatkode.ORDINÆRT_FORSKUDD_75_PROSENT
         forventetForskuddRegel = "REGEL 9"
+        forventetAntallDelberegningReferanser = 3
         utfoerBeregningerOgEvaluerResultat()
     }
 
@@ -333,6 +339,7 @@ internal class BeregnForskuddApiTest {
         forventetForskuddBelop = 1250
         forventetForskuddResultatkode = Resultatkode.ORDINÆRT_FORSKUDD_75_PROSENT
         forventetForskuddRegel = "REGEL 13"
+        forventetAntallDelberegningReferanser = 3
         utfoerBeregningerOgEvaluerResultat()
     }
 
@@ -344,6 +351,7 @@ internal class BeregnForskuddApiTest {
         forventetForskuddBelop = 830
         forventetForskuddResultatkode = Resultatkode.REDUSERT_FORSKUDD_50_PROSENT
         forventetForskuddRegel = "REGEL 14"
+        forventetAntallDelberegningReferanser = 3
         utfoerBeregningerOgEvaluerResultat()
     }
 
@@ -355,6 +363,7 @@ internal class BeregnForskuddApiTest {
         forventetForskuddBelop = 0
         forventetForskuddResultatkode = Resultatkode.AVSLAG
         forventetForskuddRegel = "REGEL 4"
+        forventetAntallDelberegningReferanser = 4
         utfoerBeregningerOgEvaluerResultat()
     }
 
@@ -366,6 +375,7 @@ internal class BeregnForskuddApiTest {
         forventetForskuddBelop = 830
         forventetForskuddResultatkode = Resultatkode.REDUSERT_FORSKUDD_50_PROSENT
         forventetForskuddRegel = "REGEL 14"
+        forventetAntallDelberegningReferanser = 3
         utfoerBeregningerOgEvaluerResultat()
     }
 
@@ -378,34 +388,29 @@ internal class BeregnForskuddApiTest {
         TestUtil.printJson(forskuddResultat)
 
         assertAll(
-            Executable { assertThat(forskuddResultat).isNotNull() },
-            Executable { assertThat(forskuddResultat?.beregnetForskuddPeriodeListe).isNotNull() },
-            Executable { assertThat(forskuddResultat?.beregnetForskuddPeriodeListe).hasSize(1) },
-            Executable { assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.resultat).isNotNull() },
-            Executable {
-                assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.resultat?.belop?.intValueExact())
-                    .isEqualTo(forventetForskuddBelop)
+            { assertThat(forskuddResultat).isNotNull },
+            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe).isNotNull },
+            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe).hasSize(1) },
+            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe.get(0).resultat).isNotNull },
+            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe.get(0).resultat.belop.intValueExact()).isEqualTo(forventetForskuddBelop) },
+            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe.get(0).resultat.kode).isEqualTo(forventetForskuddResultatkode) },
+            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe.get(0).resultat.regel).isEqualTo(forventetForskuddRegel) },
+            {
+                assertThat(forskuddResultat.beregnetForskuddPeriodeListe.get(0).grunnlagsreferanseListe).hasSize(1)
             },
-            Executable {
+            {
                 assertThat(
-                    forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.resultat?.kode,
-                ).isEqualTo(forventetForskuddResultatkode)
+                    forskuddResultat.grunnlagListe
+                        .filter { it.type == Grunnlagstype.SLUTTBEREGNING_FORSKUDD }
+                        .flatMap { it.grunnlagsreferanseListe },
+                ).hasSize(forskuddResultat.grunnlagListe.size.minus(forventetAntallDelberegningReferanser))
             },
-            Executable {
+            {
                 assertThat(
-                    forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.resultat?.regel,
-                ).isEqualTo(forventetForskuddRegel)
-            },
-            Executable {
-                assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.grunnlagsreferanseListe?.distinct()).size().isEqualTo(
-                    forskuddResultat?.grunnlagListe?.size,
-                )
-            },
-            Executable {
-                assertThat(
-                    forskuddResultat?.beregnetForskuddPeriodeListe?.get(
-                        0,
-                    )?.grunnlagsreferanseListe?.count { it.startsWith("Sjablon") }?.toLong(),
+                    forskuddResultat.grunnlagListe
+                        .filter { it.type == Grunnlagstype.SLUTTBEREGNING_FORSKUDD }
+                        .flatMap { it.grunnlagsreferanseListe }
+                        .count { it.startsWith("Sjablon") },
                 ).isEqualTo(7)
             },
         )
