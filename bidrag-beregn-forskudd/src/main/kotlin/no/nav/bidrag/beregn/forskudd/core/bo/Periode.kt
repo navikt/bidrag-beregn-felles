@@ -50,6 +50,7 @@ data class AlderPeriode(
 data class BarnIHusstandenPeriode(
     val referanse: String,
     val barnIHusstandenPeriode: Periode,
+    val antall: Int,
 ) : PeriodisertGrunnlag {
     override fun getPeriode(): Periode {
         return barnIHusstandenPeriode

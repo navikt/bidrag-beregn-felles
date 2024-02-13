@@ -135,7 +135,7 @@ internal class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning 
             val barnIHusstandenListe =
                 grunnlagTilBeregning.barnIHusstandenPeriodeListe
                     .filter { it.getPeriode().overlapperMed(beregningsperiode) }
-                    .map { BarnIHusstanden(referanse = it.referanse) }
+                    .map { BarnIHusstanden(referanse = it.referanse, antall = it.antall) }
 
             val sjablonListe =
                 grunnlagTilBeregning.sjablonPeriodeListe
