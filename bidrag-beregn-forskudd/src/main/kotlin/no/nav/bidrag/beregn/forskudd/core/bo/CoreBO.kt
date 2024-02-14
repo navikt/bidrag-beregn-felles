@@ -60,6 +60,7 @@ data class Sivilstand(
 
 data class BarnIHusstanden(
     val referanse: String,
+    val antall: Int,
 )
 
 data class Alder(

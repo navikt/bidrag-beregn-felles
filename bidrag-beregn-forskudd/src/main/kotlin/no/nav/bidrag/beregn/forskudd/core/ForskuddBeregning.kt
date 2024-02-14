@@ -19,28 +19,19 @@ class ForskuddBeregning {
     fun beregn(grunnlag: GrunnlagBeregning): ResultatBeregning {
         val sjablonverdier = hentSjablonVerdier(grunnlag.sjablonListe)
 
-        val maksInntektsgrense =
-            sjablonverdier.forskuddssats100ProsentBelop.multiply(
-                sjablonverdier.maksInntektForskuddMottakerMultiplikator,
-            )
+        val maksInntektsgrense = sjablonverdier.forskuddssats100ProsentBelop.multiply(sjablonverdier.maksInntektForskuddMottakerMultiplikator)
 
         // Legger sammen antall barn i husstanden
-        val antallBarnIHusstanden = grunnlag.barnIHusstandenListe.count()
+        val antallBarnIHusstanden = grunnlag.barnIHusstandenListe.sumOf { it.antall }
 
         // Inntektsintervall regnes ut med antall barn utover ett
-        var inntektsIntervallTotal = sjablonverdier.inntektsintervallForskuddBelop * BigDecimal(antallBarnIHusstanden - 1)
-        if (inntektsIntervallTotal < BigDecimal.ZERO) {
-            inntektsIntervallTotal = BigDecimal.ZERO
-        }
+        val inntektsIntervallTotal = maxOf(sjablonverdier.inntektsintervallForskuddBelop * BigDecimal(antallBarnIHusstanden - 1), BigDecimal.ZERO)
 
         val resultatKode: Resultatkode
         val regel: String
 
         // Legger sammen inntektene
-        val bidragMottakerInntekt =
-            grunnlag.inntektListe
-                .map { it.belop }
-                .fold(BigDecimal.ZERO, BigDecimal::add)
+        val bidragMottakerInntekt = grunnlag.inntektListe.sumOf { it.belop }
 
         when {
             // Søknadsbarn er over 18 år (REGEL 1)

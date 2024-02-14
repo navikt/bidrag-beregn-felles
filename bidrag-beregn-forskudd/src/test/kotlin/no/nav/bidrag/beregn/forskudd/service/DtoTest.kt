@@ -1,6 +1,5 @@
-package no.nav.bidrag.beregn.sivilstand.service.dto
+package no.nav.bidrag.beregn.forskudd.service
 
-import no.nav.bidrag.beregn.sivilstand.service.TestUtil
 import no.nav.bidrag.transport.behandling.beregning.felles.valider
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.DisplayName

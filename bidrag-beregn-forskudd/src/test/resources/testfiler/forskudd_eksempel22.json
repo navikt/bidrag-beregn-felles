@@ -8,39 +8,39 @@
     {
       "referanse": "Person_Søknadsbarn_20201201",
       "type": "PERSON_SØKNADSBARN",
-      "grunnlagsreferanseListe": [],
       "innhold": {
         "ident": "11111111110",
         "navn": "Trengende Søknadsbarn",
         "fødselsdato": "2015-01-01"
-      }
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
     },
     {
       "referanse": "Person_Husstandsbarn_01_20201201",
       "type": "PERSON_HUSSTANDSMEDLEM",
-      "grunnlagsreferanseListe": [],
       "innhold": {
         "ident": "11111111111",
         "navn": "Hjemmeboende Husstandsbarn",
         "fødselsdato": "2014-05-17"
-      }
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
     },
     {
       "referanse": "Person_Bidragsmottaker_20201201",
       "type": "PERSON_BIDRAGSMOTTAKER",
-      "grunnlagsreferanseListe": [],
       "innhold": {
         "ident": "22222222222",
         "navn": "Søkende Bidragsmottaker",
         "fødselsdato": "1982-05-05"
-      }
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
     },
     {
       "referanse": "Bostatus_Søknadsbarn_20201201",
       "type": "BOSTATUS_PERIODE",
-      "grunnlagsreferanseListe": [
-        "Person_Søknadsbarn_20201201"
-      ],
       "innhold": {
         "periode": {
           "fom": "2020-12",
@@ -48,14 +48,13 @@
         },
         "bostatus": "MED_FORELDER",
         "manueltRegistrert": false
-      }
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Søknadsbarn_20201201"
     },
     {
       "referanse": "Bostatus_Husstandsbarn_01_20201201",
       "type": "BOSTATUS_PERIODE",
-      "grunnlagsreferanseListe": [
-        "Person_Husstandsbarn_20201201"
-      ],
       "innhold": {
         "periode": {
           "fom": "2020-12",
@@ -63,14 +62,13 @@
         },
         "bostatus": "MED_FORELDER",
         "manueltRegistrert": false
-      }
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Husstandsbarn_20201201"
     },
     {
       "referanse": "BeregningInntektRapportering_Ainntekt_20201201",
       "type": "INNTEKT_RAPPORTERING_PERIODE",
-      "grunnlagsreferanseListe": [
-        "Person_Bidragsmottaker_20201201"
-      ],
       "innhold": {
         "periode": {
           "fom": "2020-12",
@@ -81,14 +79,13 @@
         "beløp": 489000,
         "manueltRegistrert": false,
         "valgt": true
-      }
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker_20201201"
     },
     {
       "referanse": "BeregningInntektRapportering_Kapitalinntekt_20201201",
       "type": "INNTEKT_RAPPORTERING_PERIODE",
-      "grunnlagsreferanseListe": [
-        "Person_Bidragsmottaker_20201201"
-      ],
       "innhold": {
         "periode": {
           "fom": "2020-12",
@@ -99,21 +96,22 @@
         "beløp": 60000,
         "manueltRegistrert": false,
         "valgt": true
-      }
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker_20201201"
     },
     {
       "referanse": "Sivilstand_20201201",
       "type": "SIVILSTAND_PERIODE",
-      "grunnlagsreferanseListe": [
-        "Person_Bidragsmottaker_20201201"
-      ],
       "innhold": {
         "periode": {
           "fom": "2020-12",
           "til": "2021-01"
         },
         "sivilstand": "GIFT_SAMBOER"
-      }
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker_20201201"
     }
   ]
 }

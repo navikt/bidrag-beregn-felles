@@ -29,6 +29,7 @@ import no.nav.bidrag.beregn.forskudd.core.dto.ResultatPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.SoknadBarnCore
 import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriode
+import no.nav.bidrag.domene.enums.person.AldersgruppeForskudd
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import java.time.format.DateTimeFormatter
@@ -87,7 +88,7 @@ internal class ForskuddCore(private val forskuddPeriode: ForskuddPeriode = Forsk
                 InntektPeriode(
                     referanse = it.referanse,
                     inntektPeriode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
-                    type = it.type,
+                    type = " ",
                     belop = it.belop,
                 ),
             )
@@ -116,6 +117,7 @@ internal class ForskuddCore(private val forskuddPeriode: ForskuddPeriode = Forsk
                 BarnIHusstandenPeriode(
                     referanse = it.referanse,
                     barnIHusstandenPeriode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
+                    antall = it.antall,
                 ),
             )
         }
@@ -149,12 +151,23 @@ internal class ForskuddCore(private val forskuddPeriode: ForskuddPeriode = Forsk
             resultatPeriodeCoreListe.add(
                 ResultatPeriodeCore(
                     PeriodeCore(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
-                    ResultatBeregningCore(belop = it.resultat.belop, kode = it.resultat.kode, regel = it.resultat.regel),
+                    ResultatBeregningCore(
+                        belop = it.resultat.belop,
+                        kode = it.resultat.kode,
+                        regel = it.resultat.regel,
+                        alder = finnAldersgruppe(it.grunnlag.soknadBarnAlder.alder),
+                    ),
                     mapReferanseListe(it),
                 ),
             )
         }
         return resultatPeriodeCoreListe
+    }
+
+    private fun finnAldersgruppe(alder: Int) = when (alder) {
+        in (0..10) -> AldersgruppeForskudd.ALDER_0_10_ÅR
+        in (11..17) -> AldersgruppeForskudd.ALDER_11_17_ÅR
+        else -> AldersgruppeForskudd.ALDER_18_ÅR_OG_OVER
     }
 
     private fun mapReferanseListe(resultatPeriode: ResultatPeriode): List<String> {

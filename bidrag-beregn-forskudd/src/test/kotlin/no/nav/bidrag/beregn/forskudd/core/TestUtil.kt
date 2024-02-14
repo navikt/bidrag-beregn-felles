@@ -30,7 +30,6 @@ import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.SoknadBarnCore
 import no.nav.bidrag.domene.enums.beregning.Avvikstype
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
-import no.nav.bidrag.domene.enums.inntekt.Inntektstype
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
@@ -173,8 +172,8 @@ object TestUtil {
                 InntektPeriodeCore(
                     INNTEKT_REFERANSE_1,
                     PeriodeCore(LocalDate.parse("2017-01-01"), null),
-                    Inntektstype.LØNNSINNTEKT.toString(),
                     BigDecimal.ZERO,
+                    emptyList(),
                 ),
             )
 
@@ -200,6 +199,8 @@ object TestUtil {
                         LocalDate.parse("2017-01-01"),
                         LocalDate.parse("2020-01-01"),
                     ),
+                    1,
+                    emptyList(),
                 ),
             )
 
@@ -232,8 +233,8 @@ object TestUtil {
                         ),
                         Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, Sivilstandskode.BOR_ALENE_MED_BARN),
                         listOf(
-                            BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1),
-                            BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_2),
+                            BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 1),
+                            BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_2, 1),
                         ),
                         Alder(SOKNADBARN_REFERANSE, 10),
                         Bostatus(BOSTATUS_REFERANSE_MED_FORELDRE_1, Bostatuskode.MED_FORELDER),
@@ -254,8 +255,8 @@ object TestUtil {
                         ),
                         Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, Sivilstandskode.BOR_ALENE_MED_BARN),
                         listOf(
-                            BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1),
-                            BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_2),
+                            BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 1),
+                            BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_2, 1),
                         ),
                         Alder(SOKNADBARN_REFERANSE, 10),
                         Bostatus(BOSTATUS_REFERANSE_MED_FORELDRE_1, Bostatuskode.MED_FORELDER),
@@ -271,8 +272,8 @@ object TestUtil {
                         ),
                         Sivilstand(SIVILSTAND_REFERANSE_ENSLIG, Sivilstandskode.BOR_ALENE_MED_BARN),
                         listOf(
-                            BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1),
-                            BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_2),
+                            BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_1, 1),
+                            BarnIHusstanden(BARN_I_HUSSTANDEN_REFERANSE_2, 1),
                         ),
                         Alder(SOKNADBARN_REFERANSE, 10),
                         Bostatus(BOSTATUS_REFERANSE_MED_FORELDRE_1, Bostatuskode.MED_FORELDER),
@@ -356,22 +357,27 @@ object TestUtil {
                 BarnIHusstandenPeriode(
                     BARN_I_HUSSTANDEN_REFERANSE_1,
                     Periode(LocalDate.parse("2007-01-01"), null),
+                    1,
                 ),
                 BarnIHusstandenPeriode(
                     BARN_I_HUSSTANDEN_REFERANSE_2,
                     Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-09-01")),
+                    1,
                 ),
                 BarnIHusstandenPeriode(
                     BARN_I_HUSSTANDEN_REFERANSE_3,
                     Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-07-01")),
+                    1,
                 ),
                 BarnIHusstandenPeriode(
                     BARN_I_HUSSTANDEN_REFERANSE_4,
                     Periode(LocalDate.parse("2018-12-01"), null),
+                    1,
                 ),
                 BarnIHusstandenPeriode(
                     BARN_I_HUSSTANDEN_REFERANSE_5,
                     Periode(LocalDate.parse("2019-04-01"), null),
+                    1,
                 ),
             )
 
@@ -440,22 +446,27 @@ object TestUtil {
                 BarnIHusstandenPeriode(
                     BARN_I_HUSSTANDEN_REFERANSE_1,
                     Periode(LocalDate.parse("2007-01-01"), LocalDate.parse("2019-04-01")),
+                    1,
                 ),
                 BarnIHusstandenPeriode(
                     BARN_I_HUSSTANDEN_REFERANSE_2,
                     Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-09-01")),
+                    1,
                 ),
                 BarnIHusstandenPeriode(
                     BARN_I_HUSSTANDEN_REFERANSE_3,
                     Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-07-01")),
+                    1,
                 ),
                 BarnIHusstandenPeriode(
                     BARN_I_HUSSTANDEN_REFERANSE_4,
                     Periode(LocalDate.parse("2018-12-01"), LocalDate.parse("2019-04-01")),
+                    1,
                 ),
                 BarnIHusstandenPeriode(
                     BARN_I_HUSSTANDEN_REFERANSE_5,
                     Periode(LocalDate.parse("2019-04-01"), LocalDate.parse("2019-04-01")),
+                    1,
                 ),
             )
 
@@ -538,14 +549,17 @@ object TestUtil {
                 BarnIHusstandenPeriode(
                     BARN_I_HUSSTANDEN_REFERANSE_1,
                     Periode(LocalDate.parse("2017-01-01"), null),
+                    1,
                 ),
                 BarnIHusstandenPeriode(
                     BARN_I_HUSSTANDEN_REFERANSE_2,
                     Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2018-07-01")),
+                    1,
                 ),
                 BarnIHusstandenPeriode(
                     BARN_I_HUSSTANDEN_REFERANSE_3,
                     Periode(LocalDate.parse("2019-04-01"), LocalDate.parse("2018-07-01")),
+                    1,
                 ),
             )
 
@@ -601,6 +615,7 @@ object TestUtil {
                 BarnIHusstandenPeriode(
                     BARN_I_HUSSTANDEN_REFERANSE_1,
                     Periode(LocalDate.parse("2017-01-01"), null),
+                    1,
                 ),
             )
 
@@ -646,10 +661,12 @@ object TestUtil {
                 BarnIHusstandenPeriode(
                     BARN_I_HUSSTANDEN_REFERANSE_1,
                     Periode(LocalDate.parse("2017-01-01"), null),
+                    1,
                 ),
                 BarnIHusstandenPeriode(
                     BARN_I_HUSSTANDEN_REFERANSE_2,
                     Periode(LocalDate.parse("2017-01-01"), null),
+                    1,
                 ),
             )
 
