@@ -10,7 +10,7 @@ import no.nav.bidrag.beregn.forskudd.core.dto.BostatusPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.DelberegningForskudd
 import no.nav.bidrag.beregn.forskudd.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore
-import no.nav.bidrag.beregn.forskudd.core.dto.SoknadBarnCore
+import no.nav.bidrag.beregn.forskudd.core.dto.SøknadsbarnCore
 import no.nav.bidrag.commons.service.sjablon.Sjablontall
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.person.Bostatuskode
@@ -43,7 +43,7 @@ internal object CoreMapper {
             .firstOrNull() ?: throw NoSuchElementException("Grunnlagstype PERSON_BIDRAGSMOTTAKER mangler i input")
 
         // Mapper grunnlagstyper til input for core
-        val soknadbarnCore = mapSoknadsbarn(beregnForskuddGrunnlag)
+        val søknadsbarnCore = mapSøknadsbarn(beregnForskuddGrunnlag)
         val bostatusPeriodeCoreListe = mapBostatus(beregnForskuddGrunnlag)
         val inntektPeriodeCoreListe = mapInntekt(beregnForskuddGrunnlag, referanseBidragsmottaker)
         val sivilstandPeriodeCoreListe = mapSivilstand(beregnForskuddGrunnlag)
@@ -51,7 +51,7 @@ internal object CoreMapper {
 
         // Validerer at alle nødvendige grunnlag er med
         validerGrunnlag(
-            soknadbarnGrunnlag = soknadbarnCore != null,
+            søknadsbarnGrunnlag = søknadsbarnCore != null,
             bostatusGrunnlag = bostatusPeriodeCoreListe.isNotEmpty(),
             inntektGrunnlag = inntektPeriodeCoreListe.isNotEmpty(),
             sivilstandGrunnlag = sivilstandPeriodeCoreListe.isNotEmpty(),
@@ -59,7 +59,7 @@ internal object CoreMapper {
         )
 
         val sjablonPeriodeCoreListe =
-            mapSjablonVerdier(
+            mapSjablonverdier(
                 beregnDatoFra = beregnForskuddGrunnlag.periode.fom.atDay(1),
                 beregnDatoTil = beregnForskuddGrunnlag.periode.til!!.atDay(1),
                 sjablonSjablontallListe = sjablontallListe,
@@ -69,7 +69,7 @@ internal object CoreMapper {
         return BeregnForskuddGrunnlagCore(
             beregnDatoFra = beregnForskuddGrunnlag.periode.fom.atDay(1),
             beregnDatoTil = beregnForskuddGrunnlag.periode.til!!.atDay(1),
-            soknadBarn = soknadbarnCore!!,
+            søknadsbarn = søknadsbarnCore!!,
             bostatusPeriodeListe = bostatusPeriodeCoreListe,
             inntektPeriodeListe = inntektPeriodeCoreListe,
             sivilstandPeriodeListe = sivilstandPeriodeCoreListe,
@@ -78,19 +78,19 @@ internal object CoreMapper {
         )
     }
 
-    private fun mapSoknadsbarn(beregnForskuddGrunnlag: BeregnGrunnlag): SoknadBarnCore? {
+    private fun mapSøknadsbarn(beregnForskuddGrunnlag: BeregnGrunnlag): SøknadsbarnCore? {
         try {
-            val soknadsbarnGrunnlag =
+            val søknadsbarnGrunnlag =
                 beregnForskuddGrunnlag.grunnlagListe.filtrerOgKonverterBasertPåEgenReferanse<Person>(
                     referanse = beregnForskuddGrunnlag.søknadsbarnReferanse,
                 )
 
-            return if (soknadsbarnGrunnlag.isEmpty() || soknadsbarnGrunnlag.count() > 1) {
+            return if (søknadsbarnGrunnlag.isEmpty() || søknadsbarnGrunnlag.count() > 1) {
                 null
             } else {
-                SoknadBarnCore(
-                    referanse = soknadsbarnGrunnlag[0].referanse,
-                    fodselsdato = soknadsbarnGrunnlag[0].innhold.fødselsdato,
+                SøknadsbarnCore(
+                    referanse = søknadsbarnGrunnlag[0].referanse,
+                    fødselsdato = søknadsbarnGrunnlag[0].innhold.fødselsdato,
                 )
             }
         } catch (e: Exception) {
@@ -144,7 +144,7 @@ internal object CoreMapper {
                                 datoFom = it.innhold.periode.toDatoperiode().fom,
                                 datoTil = it.innhold.periode.toDatoperiode().til,
                             ),
-                            belop = it.innhold.beløp,
+                            beløp = it.innhold.beløp,
                             grunnlagsreferanseListe = emptyList(),
                         )
                     }
@@ -208,14 +208,14 @@ internal object CoreMapper {
     }
 
     private fun validerGrunnlag(
-        soknadbarnGrunnlag: Boolean,
+        søknadsbarnGrunnlag: Boolean,
         bostatusGrunnlag: Boolean,
         inntektGrunnlag: Boolean,
         sivilstandGrunnlag: Boolean,
         barnIHusstandenGrunnlag: Boolean,
     ) {
         when {
-            !soknadbarnGrunnlag -> {
+            !søknadsbarnGrunnlag -> {
                 throw IllegalArgumentException("Søknadsbarn mangler i input")
             }
 
@@ -238,7 +238,7 @@ internal object CoreMapper {
     }
 
     // Plukker ut aktuelle sjabloner og flytter inn i inputen til core-modulen
-    private fun mapSjablonVerdier(
+    private fun mapSjablonverdier(
         beregnDatoFra: LocalDate,
         beregnDatoTil: LocalDate,
         sjablonSjablontallListe: List<Sjablontall>,
@@ -268,7 +268,7 @@ internal object CoreMapper {
     }
 
     // Lager en gruppert liste hvor grunnlaget er akkumulert pr bruddperiode, med en liste over tilhørende grunnlagsreferanser
-    fun <T : DelberegningForskudd> akkumulerOgPeriodiser(grunnlagListe: List<T>, clazz: Class<T>): List<T> {
+    private fun <T : DelberegningForskudd> akkumulerOgPeriodiser(grunnlagListe: List<T>, clazz: Class<T>): List<T> {
         // Lager unik, sortert liste over alle bruddatoer og legger evt. null-forekomst bakerst
         val bruddatoListe = grunnlagListe
             .flatMap { listOf(it.periode.datoFom, it.periode.datoTil) }
@@ -310,7 +310,7 @@ internal object CoreMapper {
                         periode = ÅrMånedsperiode(fom = periode.datoFom, til = periode.datoTil),
                     ),
                     periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
-                    belop = filter.sumOf { it.belop },
+                    beløp = filter.sumOf { it.beløp },
                     grunnlagsreferanseListe = filter.map { it.referanse },
                 )
             }

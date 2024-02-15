@@ -45,11 +45,11 @@ internal class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning 
 
         grunnlagTilBeregning.alderPeriodeListe =
             settBarnAlderPerioder(
-                fødselsdato = periodeGrunnlag.soknadBarn.fodselsdato,
+                fødselsdato = periodeGrunnlag.søknadsbarn.fødselsdato,
                 beregnDatoFra = periodeGrunnlag.beregnDatoFra,
                 beregnDatoTil = periodeGrunnlag.beregnDatoTil,
             )
-                .map { AlderPeriode(referanse = periodeGrunnlag.soknadBarn.referanse, alderPeriode = it.alderPeriode, alder = it.alder) }
+                .map { AlderPeriode(referanse = periodeGrunnlag.søknadsbarn.referanse, alderPeriode = it.alderPeriode, alder = it.alder) }
 
         grunnlagTilBeregning.sjablonPeriodeListe = periodeGrunnlag.sjablonPeriodeListe.map { it }
     }
@@ -97,7 +97,7 @@ internal class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning 
             val inntektListe =
                 grunnlagTilBeregning.inntektPeriodeListe
                     .filter { it.getPeriode().overlapperMed(beregningsperiode) }
-                    .map { Inntekt(referanse = it.referanse, type = it.type, belop = it.belop) }
+                    .map { Inntekt(referanse = it.referanse, type = it.type, beløp = it.beløp) }
 
             val sivilstand =
                 grunnlagTilBeregning.sivilstandPeriodeListe.stream()
@@ -146,8 +146,8 @@ internal class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning 
                     inntektListe = inntektListe,
                     sivilstand = sivilstand,
                     barnIHusstandenListe = barnIHusstandenListe,
-                    soknadBarnAlder = alder,
-                    soknadBarnBostatus = bostatus,
+                    søknadsbarnAlder = alder,
+                    søknadsbarnBostatus = bostatus,
                     sjablonListe = sjablonListe,
                 )
 
@@ -165,47 +165,39 @@ internal class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning 
     // Deler opp i aldersperioder med utgangspunkt i fødselsdato
     private fun settBarnAlderPerioder(fødselsdato: LocalDate, beregnDatoFra: LocalDate, beregnDatoTil: LocalDate): List<AlderPeriode> {
         val bruddAlderListe = ArrayList<AlderPeriode>()
-        val barn11AarDato = fødselsdato.plusYears(11).with(firstDayOfMonth())
-        val barn18AarDato = fødselsdato.plusYears(18).with(firstDayOfNextMonth())
+        val barn11ÅrDato = fødselsdato.plusYears(11).with(firstDayOfMonth())
+        val barn18ÅrDato = fødselsdato.plusYears(18).with(firstDayOfNextMonth())
 
         var alderStartPeriode = 0
-        if (!barn11AarDato.isAfter(beregnDatoFra)) {
-            alderStartPeriode = if (!barn18AarDato.isAfter(beregnDatoFra)) 18 else 11
+        if (!barn11ÅrDato.isAfter(beregnDatoFra)) {
+            alderStartPeriode = if (!barn18ÅrDato.isAfter(beregnDatoFra)) 18 else 11
         }
 
         // Barn fyller 11 år i perioden
-        val barn11AarIPerioden = barn11AarDato.isAfter(beregnDatoFra.minusDays(1)) && barn11AarDato.isBefore(beregnDatoTil.plusDays(1))
+        val barn11ÅrIPerioden = barn11ÅrDato.isAfter(beregnDatoFra.minusDays(1)) && barn11ÅrDato.isBefore(beregnDatoTil.plusDays(1))
 
         // Barn fyller 18 år i perioden
-        val barn18AarIPerioden = barn18AarDato.isAfter(beregnDatoFra.minusDays(1)) && barn18AarDato.isBefore(beregnDatoTil.plusDays(1))
-        if (barn11AarIPerioden) {
+        val barn18ÅrIPerioden = barn18ÅrDato.isAfter(beregnDatoFra.minusDays(1)) && barn18ÅrDato.isBefore(beregnDatoTil.plusDays(1))
+        if (barn11ÅrIPerioden) {
             bruddAlderListe.add(
                 AlderPeriode(
                     referanse = "",
-                    alderPeriode =
-                    Periode(
-                        datoFom = beregnDatoFra.with(firstDayOfMonth()),
-                        datoTil = barn11AarDato.with(firstDayOfMonth()),
-                    ),
+                    alderPeriode = Periode(datoFom = beregnDatoFra.with(firstDayOfMonth()), datoTil = barn11ÅrDato.with(firstDayOfMonth())),
                     alder = 0,
                 ),
             )
-            if (barn18AarIPerioden) {
+            if (barn18ÅrIPerioden) {
                 bruddAlderListe.add(
                     AlderPeriode(
                         referanse = "",
-                        alderPeriode =
-                        Periode(
-                            datoFom = barn11AarDato.with(firstDayOfMonth()),
-                            datoTil = barn18AarDato.with(firstDayOfMonth()),
-                        ),
+                        alderPeriode = Periode(datoFom = barn11ÅrDato.with(firstDayOfMonth()), datoTil = barn18ÅrDato.with(firstDayOfMonth())),
                         alder = 11,
                     ),
                 )
                 bruddAlderListe.add(
                     AlderPeriode(
                         referanse = "",
-                        alderPeriode = Periode(datoFom = barn18AarDato.with(firstDayOfMonth()), datoTil = null),
+                        alderPeriode = Periode(datoFom = barn18ÅrDato.with(firstDayOfMonth()), datoTil = null),
                         alder = 18,
                     ),
                 )
@@ -213,28 +205,24 @@ internal class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning 
                 bruddAlderListe.add(
                     AlderPeriode(
                         referanse = "",
-                        alderPeriode = Periode(datoFom = barn11AarDato.with(firstDayOfMonth()), datoTil = null),
+                        alderPeriode = Periode(datoFom = barn11ÅrDato.with(firstDayOfMonth()), datoTil = null),
                         alder = 11,
                     ),
                 )
             }
         } else {
-            if (barn18AarIPerioden) {
+            if (barn18ÅrIPerioden) {
                 bruddAlderListe.add(
                     AlderPeriode(
                         referanse = "",
-                        alderPeriode =
-                        Periode(
-                            datoFom = beregnDatoFra.with(firstDayOfMonth()),
-                            datoTil = barn18AarDato.with(firstDayOfMonth()),
-                        ),
+                        alderPeriode = Periode(datoFom = beregnDatoFra.with(firstDayOfMonth()), datoTil = barn18ÅrDato.with(firstDayOfMonth())),
                         alder = 11,
                     ),
                 )
                 bruddAlderListe.add(
                     AlderPeriode(
                         referanse = "",
-                        alderPeriode = Periode(datoFom = barn18AarDato.with(firstDayOfMonth()), datoTil = null),
+                        alderPeriode = Periode(datoFom = barn18ÅrDato.with(firstDayOfMonth()), datoTil = null),
                         alder = 18,
                     ),
                 )
@@ -295,7 +283,7 @@ internal class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning 
             PeriodeUtil.validerInputDatoer(
                 beregnDatoFom = grunnlag.beregnDatoFra,
                 beregnDatoTil = grunnlag.beregnDatoTil,
-                dataElement = "soknadBarnBostatusPeriodeListe",
+                dataElement = "søknadsbarnBostatusPeriodeListe",
                 periodeListe = grunnlag.bostatusPeriodeListe.map { it.getPeriode() },
                 sjekkOverlappendePerioder = true,
                 sjekkOppholdMellomPerioder = true,

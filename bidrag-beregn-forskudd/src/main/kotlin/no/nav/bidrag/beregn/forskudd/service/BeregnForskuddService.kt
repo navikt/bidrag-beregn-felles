@@ -26,7 +26,7 @@ private val logger = KotlinLogging.logger {}
 
 internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = ForskuddCore()) {
     fun beregn(grunnlag: BeregnGrunnlag): BeregnetForskuddResultat {
-        secureLogger.debug { "Mottatt følgende request: $grunnlag" }
+        secureLogger.info { "Forskuddsberegning - følgende request mottatt: $grunnlag" }
 
         // Kontroll av inputdata
         try {
@@ -36,23 +36,21 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
         }
 
         // Henter sjabloner
-        val sjablonTallListe: List<Sjablontall> = SjablonProvider.hentSjablontall()
+        val sjablontallListe: List<Sjablontall> = SjablonProvider.hentSjablontall()
 
-        if (sjablonTallListe.isEmpty()) {
+        if (sjablontallListe.isEmpty()) {
             logger.error { "Klarte ikke å hente sjabloner" }
             return BeregnetForskuddResultat()
         }
-
-        logger.debug { "Antall sjabloner hentet av type Sjablontall: ${sjablonTallListe.size}" }
 
         // Lager input-grunnlag til core-modulen
         val grunnlagTilCore =
             CoreMapper.mapGrunnlagTilCore(
                 beregnForskuddGrunnlag = grunnlag,
-                sjablontallListe = sjablonTallListe,
+                sjablontallListe = sjablontallListe,
             )
 
-        secureLogger.debug { "Forskudd - grunnlag for beregning: $grunnlagTilCore" }
+        secureLogger.debug { "Forskuddsberegning - grunnlag for beregning: $grunnlagTilCore" }
 
         // Kaller core-modulen for beregning av forskudd
         val resultatFraCore =
@@ -63,35 +61,36 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
             }
 
         if (resultatFraCore.avvikListe.isNotEmpty()) {
-            val avvikTekst = resultatFraCore.avvikListe.joinToString("; ") { it.avvikTekst }
-            logger.warn { "Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: $avvikTekst" }
-            secureLogger.warn { "Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: $avvikTekst" }
+            val avviktekst = resultatFraCore.avvikListe.joinToString("; ") { it.avvikTekst }
+            logger.warn { "Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: $avviktekst" }
+            secureLogger.warn { "Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: $avviktekst" }
             secureLogger.info {
-                "Forskudd - grunnlag for beregning: " + System.lineSeparator() +
+                "Forskuddsberegning - grunnlag for beregning: " + System.lineSeparator() +
                     "beregnDatoFra= " + grunnlagTilCore.beregnDatoFra + System.lineSeparator() +
                     "beregnDatoTil= " + grunnlagTilCore.beregnDatoTil + System.lineSeparator() +
-                    "soknadBarn= " + grunnlagTilCore.soknadBarn + System.lineSeparator() +
+                    "soknadBarn= " + grunnlagTilCore.søknadsbarn + System.lineSeparator() +
                     "barnIHusstandenPeriodeListe= " + grunnlagTilCore.barnIHusstandenPeriodeListe + System.lineSeparator() +
                     "inntektPeriodeListe= " + grunnlagTilCore.inntektPeriodeListe + System.lineSeparator() +
                     "sivilstandPeriodeListe= " + grunnlagTilCore.sivilstandPeriodeListe + System.lineSeparator()
+                "bostatusPeriodeListe= " + grunnlagTilCore.bostatusPeriodeListe + System.lineSeparator()
             }
-            throw IllegalArgumentException("Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: $avvikTekst")
+            throw IllegalArgumentException("Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: $avviktekst")
         }
 
-        secureLogger.debug { "Forskudd - resultat av beregning: ${resultatFraCore.beregnetForskuddPeriodeListe}" }
+        secureLogger.info { "Forskuddberegning - resultat av beregning: ${resultatFraCore.beregnetForskuddPeriodeListe}" }
 
         val grunnlagReferanseListe =
-            lagGrunnlagReferanseListe(forskuddGrunnlag = grunnlag, resultatFraCore = resultatFraCore, grunnlagTilCore = grunnlagTilCore)
+            lagGrunnlagsreferanseListe(forskuddGrunnlag = grunnlag, resultatFraCore = resultatFraCore, grunnlagTilCore = grunnlagTilCore)
 
         val resultatPeriodeListe = lagSluttperiodeOgResultatperioder(resultatFraCore.beregnetForskuddPeriodeListe, grunnlagReferanseListe)
 
         val respons =
             BeregnetForskuddResultat(
                 beregnetForskuddPeriodeListe = resultatPeriodeListe,
-                grunnlagListe = grunnlagReferanseListe.distinct(),
+                grunnlagListe = grunnlagReferanseListe.distinctBy { it.referanse },
             )
 
-        secureLogger.debug { "Returnerer følgende respons: $respons" }
+        secureLogger.info { "Forskuddsberegning - returnerer følgende respons: $respons" }
 
         return respons
     }
@@ -117,9 +116,9 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
                     innhold = POJONode(
                         SluttberegningForskudd(
                             periode = ÅrMånedsperiode(resultatPeriode.periode.datoFom, resultatPeriode.periode.datoTil),
-                            beløp = resultatPeriode.resultat.belop,
-                            resultatKode = resultatPeriode.resultat.kode.toString(),
-                            aldersgruppe = resultatPeriode.resultat.alder,
+                            beløp = resultatPeriode.resultat.beløp,
+                            resultatKode = resultatPeriode.resultat.kode,
+                            aldersgruppe = resultatPeriode.resultat.aldersgruppe,
                         ),
                     ),
                     grunnlagsreferanseListe = resultatPeriode.grunnlagsreferanseListe,
@@ -132,7 +131,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
                 periode = ÅrMånedsperiode(fom = resultatPeriode.periode.datoFom, til = resultatPeriode.periode.datoTil),
                 resultat =
                 ResultatBeregning(
-                    belop = resultatPeriode.resultat.belop,
+                    belop = resultatPeriode.resultat.beløp,
                     kode = resultatPeriode.resultat.kode,
                     regel = resultatPeriode.resultat.regel,
                 ),
@@ -145,7 +144,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
     //   - mottatte grunnlag som er brukt i beregningen
     //   - "delberegninger" som er brukt i beregningen (og mottatte grunnlag som er brukt i delberegningene)
     //   - sjabloner som er brukt i beregningen
-    private fun lagGrunnlagReferanseListe(
+    private fun lagGrunnlagsreferanseListe(
         forskuddGrunnlag: BeregnGrunnlag,
         resultatFraCore: BeregnetForskuddResultatCore,
         grunnlagTilCore: BeregnForskuddGrunnlagCore,
@@ -160,7 +159,15 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
         resultatGrunnlagListe.addAll(
             forskuddGrunnlag.grunnlagListe
                 .filter { grunnlagReferanseListe.contains(it.referanse) }
-                .map { GrunnlagDto(referanse = it.referanse, type = it.type, innhold = it.innhold) },
+                .map {
+                    GrunnlagDto(
+                        referanse = it.referanse,
+                        type = it.type,
+                        innhold = it.innhold,
+                        grunnlagsreferanseListe = it.grunnlagsreferanseListe,
+                        gjelderReferanse = it.gjelderReferanse,
+                    )
+                },
         )
 
         // Filtrerer ut delberegninger som er brukt som grunnlag
@@ -179,7 +186,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
                         innhold = POJONode(
                             DelberegningInntekt(
                                 periode = ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil),
-                                summertBeløp = it.belop,
+                                summertBeløp = it.beløp,
                             ),
                         ),
                         grunnlagsreferanseListe = it.grunnlagsreferanseListe,
@@ -190,9 +197,6 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
         resultatGrunnlagListe.addAll(
             sumAntallBarnListe
                 .map {
-                    val map = LinkedHashMap<String, Any>()
-                    map["periode"] = ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil)
-                    map["antall"] = it.antall
                     GrunnlagDto(
                         referanse = it.referanse,
                         type = bestemGrunnlagstype(it.referanse),
@@ -220,7 +224,15 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
         resultatGrunnlagListe.addAll(
             forskuddGrunnlag.grunnlagListe
                 .filter { it.referanse in delberegningReferanseListe }
-                .map { GrunnlagDto(referanse = it.referanse, type = it.type, innhold = it.innhold) },
+                .map {
+                    GrunnlagDto(
+                        referanse = it.referanse,
+                        type = it.type,
+                        innhold = it.innhold,
+                        grunnlagsreferanseListe = it.grunnlagsreferanseListe,
+                        gjelderReferanse = it.gjelderReferanse,
+                    )
+                },
         )
 
         // Danner grunnlag basert på liste over sjabloner som er brukt i beregningen
@@ -238,11 +250,9 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
         return resultatGrunnlagListe
     }
 
-    private fun bestemGrunnlagstype(referanse: String): Grunnlagstype {
-        return when {
-            referanse.contains(Grunnlagstype.DELBEREGNING_INNTEKT.name) -> Grunnlagstype.DELBEREGNING_INNTEKT
-            referanse.contains(Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND.name) -> Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND
-            else -> throw IllegalArgumentException("Ikke i stand til å utlede grunnlagstype for referanse: $referanse")
-        }
+    private fun bestemGrunnlagstype(referanse: String) = when {
+        referanse.contains(Grunnlagstype.DELBEREGNING_INNTEKT.name) -> Grunnlagstype.DELBEREGNING_INNTEKT
+        referanse.contains(Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND.name) -> Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND
+        else -> throw IllegalArgumentException("Ikke i stand til å utlede grunnlagstype for referanse: $referanse")
     }
 }

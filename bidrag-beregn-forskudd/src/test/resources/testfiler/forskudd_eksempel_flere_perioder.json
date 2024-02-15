@@ -1,0 +1,186 @@
+{
+  "periode": {
+    "fom": "2023-01",
+    "til": "2024-01"
+  },
+  "søknadsbarnReferanse": "Person_Søknadsbarn",
+  "grunnlagListe": [
+    {
+      "referanse": "Person_Søknadsbarn",
+      "type": "PERSON_SØKNADSBARN",
+      "innhold": {
+        "ident": "11111111110",
+        "navn": "Trengende Søknadsbarn",
+        "fødselsdato": "2012-09-01"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Person_Bidragsmottaker",
+      "type": "PERSON_BIDRAGSMOTTAKER",
+      "innhold": {
+        "ident": "22222222222",
+        "navn": "Søkende Bidragsmottaker",
+        "fødselsdato": "1982-05-05"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Person_Husstandsbarn_01",
+      "type": "PERSON_HUSSTANDSMEDLEM",
+      "innhold": {
+        "ident": "11111111111",
+        "navn": "Huustandsbarn 01",
+        "fødselsdato": "2015-05-05"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Person_Husstandsbarn_02",
+      "type": "PERSON_HUSSTANDSMEDLEM",
+      "innhold": {
+        "ident": "11111111112",
+        "navn": "Husstandsbarn 02",
+        "fødselsdato": "2015-05-05"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Bostatus_Søknadsbarn_202301",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2023-01",
+          "til": "2023-08"
+        },
+        "bostatus": "MED_FORELDER",
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Søknadsbarn"
+    },
+    {
+      "referanse": "Bostatus_Søknadsbarn_202309",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2023-08",
+          "til": null
+        },
+        "bostatus": "IKKE_MED_FORELDER",
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Søknadsbarn"
+    },
+    {
+      "referanse": "Bostatus_Husstandsbarn_01_202301",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2023-01",
+          "til": "2023-05"
+        },
+        "bostatus": "MED_FORELDER",
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Husstandsbarn_01"
+    },
+    {
+      "referanse": "Bostatus_Husstandsbarn_02_202301",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2023-01",
+          "til": null
+        },
+        "bostatus": "MED_FORELDER",
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Husstandsbarn_02"
+    },
+    {
+      "referanse": "BeregningInntektRapportering_Ainntekt_202301",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2023-01",
+          "til": "2023-06"
+        },
+        "inntektsrapportering": "AINNTEKT",
+        "gjelderBarn": null,
+        "beløp": 450000,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "BeregningInntektRapportering_Ainntekt_202304",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2023-04",
+          "til": "2023-08"
+        },
+        "inntektsrapportering": "AINNTEKT",
+        "gjelderBarn": null,
+        "beløp": 100000,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "BeregningInntektRapportering_Ainntekt_202305",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2023-05",
+          "til": null
+        },
+        "inntektsrapportering": "AINNTEKT",
+        "gjelderBarn": null,
+        "beløp": 500000,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "Sivilstand_202301",
+      "type": "SIVILSTAND_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2023-01",
+          "til": "2023-11"
+        },
+        "sivilstand": "GIFT_SAMBOER"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "Sivilstand_202311",
+      "type": "SIVILSTAND_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2023-11",
+          "til": null
+        },
+        "sivilstand": "BOR_ALENE_MED_BARN"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    }
+  ]
+}

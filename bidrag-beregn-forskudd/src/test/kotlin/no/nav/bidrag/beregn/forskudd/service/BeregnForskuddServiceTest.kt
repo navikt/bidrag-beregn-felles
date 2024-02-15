@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.forskudd.service
 
 import io.mockk.every
 import io.mockk.mockkObject
+import no.nav.bidrag.beregn.forskudd.TestUtil
 import no.nav.bidrag.beregn.forskudd.core.ForskuddCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
@@ -12,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.junit.jupiter.api.function.Executable
 import org.mockito.ArgumentCaptor
 import org.mockito.Captor
 import org.mockito.Mock
@@ -45,14 +45,14 @@ internal class BeregnForskuddServiceTest {
     fun skalBeregneForskudd() {
         `when`(forskuddCoreMock.beregnForskudd(capture(grunnlagTilCoreCaptor))).thenReturn(TestUtil.dummyForskuddResultatCore())
 
-        val beregnForskuddResultat = beregnForskuddService.beregn(TestUtil.byggForskuddGrunnlag())
+        val beregnForskuddResultat = beregnForskuddService.beregn(TestUtil.byggForskuddBeregnGrunnlag())
         val grunnlagTilCore = grunnlagTilCoreCaptor.value
 
         assertAll(
-            Executable { assertThat(beregnForskuddResultat.beregnetForskuddPeriodeListe).isNotNull() },
-            Executable { assertThat(beregnForskuddResultat.beregnetForskuddPeriodeListe).hasSize(1) },
+            { assertThat(beregnForskuddResultat.beregnetForskuddPeriodeListe).isNotNull() },
+            { assertThat(beregnForskuddResultat.beregnetForskuddPeriodeListe).hasSize(1) },
             // Sjablontyper som ikke er gyldige for forskudd og sjabloner som ikke er innenfor beregn-fra-til-dato filtreres bort
-            Executable { assertThat(grunnlagTilCore.sjablonPeriodeListe).hasSize(21) },
+            { assertThat(grunnlagTilCore.sjablonPeriodeListe).hasSize(21) },
         )
     }
 
@@ -61,7 +61,7 @@ internal class BeregnForskuddServiceTest {
     fun skalKasteUgyldigInputExceptionVedFeilReturFraCore() {
         `when`(forskuddCoreMock.beregnForskudd(any())).thenReturn(TestUtil.dummyForskuddResultatCoreMedAvvik())
         assertThatExceptionOfType(IllegalArgumentException::class.java)
-            .isThrownBy { beregnForskuddService.beregn(TestUtil.byggForskuddGrunnlag()) }
+            .isThrownBy { beregnForskuddService.beregn(TestUtil.byggForskuddBeregnGrunnlag()) }
             .withMessageContaining("beregnDatoFra kan ikke være null")
             .withMessageContaining("periodeDatoTil må være etter periodeDatoFra")
     }

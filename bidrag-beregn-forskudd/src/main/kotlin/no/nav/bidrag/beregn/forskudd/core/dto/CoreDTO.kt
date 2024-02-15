@@ -13,7 +13,7 @@ import java.time.LocalDate
 data class BeregnForskuddGrunnlagCore(
     val beregnDatoFra: LocalDate,
     val beregnDatoTil: LocalDate,
-    val soknadBarn: SoknadBarnCore,
+    val søknadsbarn: SøknadsbarnCore,
     val bostatusPeriodeListe: List<BostatusPeriodeCore>,
     val inntektPeriodeListe: List<InntektPeriodeCore>,
     val sivilstandPeriodeListe: List<SivilstandPeriodeCore>,
@@ -21,9 +21,9 @@ data class BeregnForskuddGrunnlagCore(
     var sjablonPeriodeListe: List<SjablonPeriodeCore>,
 )
 
-data class SoknadBarnCore(
+data class SøknadsbarnCore(
     val referanse: String,
-    val fodselsdato: LocalDate,
+    val fødselsdato: LocalDate,
 )
 
 data class BostatusPeriodeCore(
@@ -35,7 +35,7 @@ data class BostatusPeriodeCore(
 data class InntektPeriodeCore(
     override val referanse: String,
     override val periode: PeriodeCore,
-    val belop: BigDecimal,
+    val beløp: BigDecimal,
     override val grunnlagsreferanseListe: List<String>,
 ) : DelberegningForskudd
 
@@ -72,8 +72,8 @@ data class ResultatPeriodeCore(
 )
 
 data class ResultatBeregningCore(
-    val belop: BigDecimal,
+    val beløp: BigDecimal,
     val kode: Resultatkode,
     val regel: String,
-    val alder: AldersgruppeForskudd,
+    val aldersgruppe: AldersgruppeForskudd,
 )
