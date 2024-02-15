@@ -13,7 +13,7 @@ import java.time.LocalDate
 data class BeregnForskuddGrunnlag(
     val beregnDatoFra: LocalDate,
     val beregnDatoTil: LocalDate,
-    val soknadBarn: SoknadBarn,
+    val søknadsbarn: Søknadsbarn,
     val bostatusPeriodeListe: List<BostatusPeriode>,
     val inntektPeriodeListe: List<InntektPeriode>,
     val sivilstandPeriodeListe: List<SivilstandPeriode>,
@@ -21,9 +21,9 @@ data class BeregnForskuddGrunnlag(
     val sjablonPeriodeListe: List<SjablonPeriode>,
 )
 
-data class SoknadBarn(
+data class Søknadsbarn(
     val referanse: String,
-    val fodselsdato: LocalDate,
+    val fødselsdato: LocalDate,
 )
 
 // Resultat periode
@@ -42,15 +42,15 @@ data class GrunnlagBeregning(
     val inntektListe: List<Inntekt>,
     val sivilstand: Sivilstand,
     val barnIHusstandenListe: List<BarnIHusstanden>,
-    val soknadBarnAlder: Alder,
-    val soknadBarnBostatus: Bostatus,
+    val søknadsbarnAlder: Alder,
+    val søknadsbarnBostatus: Bostatus,
     val sjablonListe: List<SjablonPeriode>,
 )
 
 data class Inntekt(
     val referanse: String,
     val type: String,
-    val belop: BigDecimal,
+    val beløp: BigDecimal,
 )
 
 data class Sivilstand(
@@ -75,7 +75,7 @@ data class Bostatus(
 
 // Resultat beregning
 data class ResultatBeregning(
-    val belop: BigDecimal,
+    val beløp: BigDecimal,
     val kode: Resultatkode,
     val regel: String,
     val sjablonListe: List<SjablonPeriodeNavnVerdi>,
@@ -95,10 +95,10 @@ data class GrunnlagTilBeregning(
 
 data class Sjablonverdier(
     var maksInntektForskuddMottakerMultiplikator: BigDecimal = BigDecimal.ZERO,
-    var inntektsintervallForskuddBelop: BigDecimal = BigDecimal.ZERO,
-    var forskuddssats75ProsentBelop: BigDecimal = BigDecimal.ZERO,
-    var forskuddssats100ProsentBelop: BigDecimal = BigDecimal.ZERO,
-    var inntektsgrense100ProsentForskuddBelop: BigDecimal = BigDecimal.ZERO,
-    var inntektsgrenseEnslig75ProsentForskuddBelop: BigDecimal = BigDecimal.ZERO,
-    var inntektsgrenseGiftSamboer75ProsentForskuddBelop: BigDecimal = BigDecimal.ZERO,
+    var inntektsintervallForskuddBeløp: BigDecimal = BigDecimal.ZERO,
+    var forskuddssats75ProsentBeløp: BigDecimal = BigDecimal.ZERO,
+    var forskuddssats100ProsentBeløp: BigDecimal = BigDecimal.ZERO,
+    var inntektsgrense100ProsentForskuddBeløp: BigDecimal = BigDecimal.ZERO,
+    var inntektsgrenseEnslig75ProsentForskuddBeløp: BigDecimal = BigDecimal.ZERO,
+    var inntektsgrenseGiftSamboer75ProsentForskuddBeløp: BigDecimal = BigDecimal.ZERO,
 )

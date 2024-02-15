@@ -1,7 +1,6 @@
 package no.nav.bidrag.beregn.forskudd.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BarnIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.InntektPeriodeCore
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -10,9 +9,14 @@ import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import java.lang.reflect.Method
 import java.math.BigDecimal
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.time.LocalDate
 
 internal class CoreMapperTest {
@@ -194,74 +198,164 @@ internal class CoreMapperTest {
             .withMessageContaining("Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.SIVILSTAND_PERIODE er ikke gyldig")
     }
 
+    // Tester også at det bare er BMs inntekt som brukes og bare hvis inntekten er valgt og gjelder alle barn eller søknadsbarnet
     @Test
     @DisplayName("Skal summere og periodisere inntekter")
-    fun summerOgPeriodiserInntekterTest() {
-        val inputList = listOf(
-            InntektPeriodeCore(
-                referanse = "ref1",
-                periode = PeriodeCore(datoFom = LocalDate.of(2022, 1, 1), datoTil = LocalDate.of(2022, 1, 10)),
-                belop = BigDecimal(100),
-                grunnlagsreferanseListe = listOf("gr1"),
-            ),
-            InntektPeriodeCore(
-                referanse = "ref2",
-                periode = PeriodeCore(datoFom = LocalDate.of(2022, 1, 5), datoTil = LocalDate.of(2022, 1, 18)),
-                belop = BigDecimal(200),
-                grunnlagsreferanseListe = listOf("gr2"),
-            ),
-            InntektPeriodeCore(
-                referanse = "ref3",
-                periode = PeriodeCore(datoFom = LocalDate.of(2022, 1, 10), datoTil = null),
-                belop = BigDecimal(300),
-                grunnlagsreferanseListe = listOf("gr3"),
-            ),
-            InntektPeriodeCore(
-                referanse = "ref4",
-                periode = PeriodeCore(datoFom = LocalDate.of(2022, 1, 15), datoTil = null),
-                belop = BigDecimal(400),
-                grunnlagsreferanseListe = listOf("gr4"),
-            ),
+    fun mapInntektTest() {
+        val filnavn = "src/test/resources/testfiler/forskudd_test_inntekt.json"
+        val forskuddGrunnlag = lesFilOgByggRequest(filnavn)
+
+        val inntektPeriodeListe =
+            invokePrivateMethod(
+                CoreMapper,
+                "mapInntekt",
+                forskuddGrunnlag,
+                "Person_Bidragsmottaker",
+            ) as List<InntektPeriodeCore>
+
+        assertAll(
+            { assertThat(inntektPeriodeListe).isNotNull },
+
+            { assertThat(inntektPeriodeListe[0].periode.datoFom).isEqualTo(LocalDate.parse("2022-01-01")) },
+            { assertThat(inntektPeriodeListe[0].periode.datoTil).isEqualTo(LocalDate.parse("2022-02-01")) },
+            { assertThat(inntektPeriodeListe[0].beløp).isEqualTo(BigDecimal.valueOf(100000)) },
+            { assertThat(inntektPeriodeListe[0].grunnlagsreferanseListe).containsExactly("BeregningInntektRapportering_Ainntekt_BM_202201") },
+
+            { assertThat(inntektPeriodeListe[1].periode.datoFom).isEqualTo(LocalDate.parse("2022-02-01")) },
+            { assertThat(inntektPeriodeListe[1].periode.datoTil).isEqualTo(LocalDate.parse("2022-03-01")) },
+            { assertThat(inntektPeriodeListe[1].beløp).isEqualTo(BigDecimal.valueOf(300000)) },
+            {
+                assertThat(inntektPeriodeListe[1].grunnlagsreferanseListe).containsExactly(
+                    "BeregningInntektRapportering_Ainntekt_BM_202201",
+                    "BeregningInntektRapportering_Ainntekt_BM_202202",
+                )
+            },
+
+            { assertThat(inntektPeriodeListe[2].periode.datoFom).isEqualTo(LocalDate.parse("2022-03-01")) },
+            { assertThat(inntektPeriodeListe[2].periode.datoTil).isEqualTo(LocalDate.parse("2022-04-01")) },
+            { assertThat(inntektPeriodeListe[2].beløp).isEqualTo(BigDecimal.valueOf(500000)) },
+            {
+                assertThat(inntektPeriodeListe[2].grunnlagsreferanseListe).containsExactly(
+                    "BeregningInntektRapportering_Ainntekt_BM_202202",
+                    "BeregningInntektRapportering_Ainntekt_BM_202203",
+                )
+            },
+
+            { assertThat(inntektPeriodeListe[3].periode.datoFom).isEqualTo(LocalDate.parse("2022-04-01")) },
+            { assertThat(inntektPeriodeListe[3].periode.datoTil).isEqualTo(LocalDate.parse("2022-05-01")) },
+            { assertThat(inntektPeriodeListe[3].beløp).isEqualTo(BigDecimal.valueOf(900000)) },
+            {
+                assertThat(inntektPeriodeListe[3].grunnlagsreferanseListe).containsExactly(
+                    "BeregningInntektRapportering_Ainntekt_BM_202202",
+                    "BeregningInntektRapportering_Ainntekt_BM_202203",
+                    "BeregningInntektRapportering_Ainntekt_BM_202204",
+                )
+            },
+
+            { assertThat(inntektPeriodeListe[4].periode.datoFom).isEqualTo(LocalDate.parse("2022-05-01")) },
+            { assertThat(inntektPeriodeListe[4].periode.datoTil).isNull() },
+            { assertThat(inntektPeriodeListe[4].beløp).isEqualTo(BigDecimal.valueOf(700000)) },
+            {
+                assertThat(inntektPeriodeListe[4].grunnlagsreferanseListe).containsExactly(
+                    "BeregningInntektRapportering_Ainntekt_BM_202203",
+                    "BeregningInntektRapportering_Ainntekt_BM_202204",
+                )
+            },
         )
-
-        val outputList = CoreMapper.akkumulerOgPeriodiser(inputList, InntektPeriodeCore::class.java)
-
-        assertThat(outputList).isNotNull
     }
 
     @Test
     @DisplayName("Skal telle og periodisere antall barn i husstanden")
-    fun summerOgPeriodiserAntallBarnIHusstandenTest() {
-        val inputList = listOf(
-            BarnIHusstandenPeriodeCore(
-                referanse = "ref1",
-                periode = PeriodeCore(datoFom = LocalDate.of(2022, 1, 1), datoTil = LocalDate.of(2022, 1, 10)),
-                antall = 1,
-                grunnlagsreferanseListe = listOf("gr1"),
-            ),
-            BarnIHusstandenPeriodeCore(
-                referanse = "ref2",
-                periode = PeriodeCore(datoFom = LocalDate.of(2022, 1, 5), datoTil = LocalDate.of(2022, 1, 18)),
-                antall = 1,
-                grunnlagsreferanseListe = listOf("gr2"),
-            ),
-            BarnIHusstandenPeriodeCore(
-                referanse = "ref3",
-                periode = PeriodeCore(datoFom = LocalDate.of(2022, 1, 10), datoTil = null),
-                antall = 1,
-                grunnlagsreferanseListe = listOf("gr3"),
-            ),
-            BarnIHusstandenPeriodeCore(
-                referanse = "ref4",
-                periode = PeriodeCore(datoFom = LocalDate.of(2022, 1, 15), datoTil = null),
-                antall = 1,
-                grunnlagsreferanseListe = listOf("gr4"),
-            ),
+    fun mapAntallBarnIHusstandTest() {
+        val filnavn = "src/test/resources/testfiler/forskudd_test_barnihusstand.json"
+        val forskuddGrunnlag = lesFilOgByggRequest(filnavn)
+
+        val inntektPeriodeListe =
+            invokePrivateMethod(
+                CoreMapper,
+                "mapBarnIHusstanden",
+                forskuddGrunnlag,
+            ) as List<BarnIHusstandenPeriodeCore>
+
+        assertAll(
+            { assertThat(inntektPeriodeListe).isNotNull },
+
+            { assertThat(inntektPeriodeListe[0].periode.datoFom).isEqualTo(LocalDate.parse("2022-01-01")) },
+            { assertThat(inntektPeriodeListe[0].periode.datoTil).isEqualTo(LocalDate.parse("2022-02-01")) },
+            { assertThat(inntektPeriodeListe[0].antall).isEqualTo(2) },
+            {
+                assertThat(inntektPeriodeListe[0].grunnlagsreferanseListe).containsExactly(
+                    "Bostatus_Søknadsbarn_202201",
+                    "Bostatus_Husstandsbarn_01_202201",
+                )
+            },
+
+            { assertThat(inntektPeriodeListe[1].periode.datoFom).isEqualTo(LocalDate.parse("2022-02-01")) },
+            { assertThat(inntektPeriodeListe[1].periode.datoTil).isEqualTo(LocalDate.parse("2022-03-01")) },
+            { assertThat(inntektPeriodeListe[1].antall).isEqualTo(3) },
+            {
+                assertThat(inntektPeriodeListe[1].grunnlagsreferanseListe).containsExactly(
+                    "Bostatus_Søknadsbarn_202201",
+                    "Bostatus_Husstandsbarn_01_202201",
+                    "Bostatus_Husstandsbarn_02_202202",
+                )
+            },
+
+            { assertThat(inntektPeriodeListe[2].periode.datoFom).isEqualTo(LocalDate.parse("2022-03-01")) },
+            { assertThat(inntektPeriodeListe[2].periode.datoTil).isEqualTo(LocalDate.parse("2022-04-01")) },
+            { assertThat(inntektPeriodeListe[2].antall).isEqualTo(3) },
+            {
+                assertThat(inntektPeriodeListe[2].grunnlagsreferanseListe).containsExactly(
+                    "Bostatus_Søknadsbarn_202201",
+                    "Bostatus_Husstandsbarn_02_202202",
+                    "Bostatus_Husstandsbarn_03_202203",
+                )
+            },
+
+            { assertThat(inntektPeriodeListe[3].periode.datoFom).isEqualTo(LocalDate.parse("2022-04-01")) },
+            { assertThat(inntektPeriodeListe[3].periode.datoTil).isEqualTo(LocalDate.parse("2022-05-01")) },
+            { assertThat(inntektPeriodeListe[3].antall).isEqualTo(4) },
+            {
+                assertThat(inntektPeriodeListe[3].grunnlagsreferanseListe).containsExactly(
+                    "Bostatus_Søknadsbarn_202201",
+                    "Bostatus_Husstandsbarn_02_202202",
+                    "Bostatus_Husstandsbarn_03_202203",
+                    "Bostatus_Husstandsbarn_04_202204",
+                )
+            },
+
+            { assertThat(inntektPeriodeListe[4].periode.datoFom).isEqualTo(LocalDate.parse("2022-05-01")) },
+            { assertThat(inntektPeriodeListe[4].periode.datoTil).isNull() },
+            { assertThat(inntektPeriodeListe[4].antall).isEqualTo(3) },
+            {
+                assertThat(inntektPeriodeListe[4].grunnlagsreferanseListe).containsExactly(
+                    "Bostatus_Søknadsbarn_202201",
+                    "Bostatus_Husstandsbarn_03_202203",
+                    "Bostatus_Husstandsbarn_04_202204",
+                )
+            },
         )
+    }
 
-        val outputList = CoreMapper.akkumulerOgPeriodiser(inputList, BarnIHusstandenPeriodeCore::class.java)
+    // Bruker reflection for å kalle private metoder
+    private fun invokePrivateMethod(klasse: Any, metode: String, vararg args: Any): Any? {
+        val method: Method = klasse.javaClass.getDeclaredMethod(metode, *args.map { it.javaClass }.toTypedArray())
+        method.isAccessible = true
+        return method.invoke(klasse, *args)
+    }
 
-        assertThat(outputList).isNotNull
+    private fun lesFilOgByggRequest(filnavn: String?): BeregnGrunnlag {
+        var json = ""
+
+        // Les inn fil med request-data (json)
+        try {
+            json = Files.readString(Paths.get(filnavn!!))
+        } catch (e: Exception) {
+            Assertions.fail("Klarte ikke å lese fil: $filnavn")
+        }
+
+        // Lag request
+        return ObjectMapper().findAndRegisterModules().readValue(json, BeregnGrunnlag::class.java)
     }
 
     private fun innholdSøknadsbarnMedFeil(mapper: ObjectMapper) =

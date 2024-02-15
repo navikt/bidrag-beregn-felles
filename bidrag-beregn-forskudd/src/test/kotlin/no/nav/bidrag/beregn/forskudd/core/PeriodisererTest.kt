@@ -10,13 +10,10 @@ import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
-import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.function.Executable
 import java.math.BigDecimal
 import java.time.LocalDate
 
-@DisplayName("PeriodisererTest")
 internal class PeriodisererTest {
     @Test
     fun testPeriodiseringMedGrunnlag() {
@@ -27,7 +24,7 @@ internal class PeriodisererTest {
                         referanse = INNTEKT_REFERANSE_1,
                         inntektPeriode = Periode(datoFom = LocalDate.parse("2019-01-01"), datoTil = LocalDate.parse("2019-03-01")),
                         type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-                        belop = BigDecimal.valueOf(1000),
+                        beløp = BigDecimal.valueOf(1000),
                     ),
                 )
                 .addBruddpunkter(
@@ -40,14 +37,14 @@ internal class PeriodisererTest {
                 .finnPerioder(beregnDatoFom = LocalDate.parse("2000-01-01"), beregnDatoTil = LocalDate.parse("2100-01-01"))
 
         assertAll(
-            Executable { assertThat(perioder).isNotNull() },
-            Executable { assertThat(perioder).hasSize(3) },
-            Executable { assertThat(perioder[0].datoFom).isEqualTo(LocalDate.parse("2019-01-01")) },
-            Executable { assertThat(perioder[0].datoTil).isEqualTo(LocalDate.parse("2019-02-01")) },
-            Executable { assertThat(perioder[1].datoFom).isEqualTo(LocalDate.parse("2019-02-01")) },
-            Executable { assertThat(perioder[1].datoTil).isEqualTo(LocalDate.parse("2019-03-01")) },
-            Executable { assertThat(perioder[2].datoFom).isEqualTo(LocalDate.parse("2019-03-01")) },
-            Executable { assertThat(perioder[2].datoTil).isEqualTo(LocalDate.parse("2019-04-01")) },
+            { assertThat(perioder).isNotNull() },
+            { assertThat(perioder).hasSize(3) },
+            { assertThat(perioder[0].datoFom).isEqualTo(LocalDate.parse("2019-01-01")) },
+            { assertThat(perioder[0].datoTil).isEqualTo(LocalDate.parse("2019-02-01")) },
+            { assertThat(perioder[1].datoFom).isEqualTo(LocalDate.parse("2019-02-01")) },
+            { assertThat(perioder[1].datoTil).isEqualTo(LocalDate.parse("2019-03-01")) },
+            { assertThat(perioder[2].datoFom).isEqualTo(LocalDate.parse("2019-03-01")) },
+            { assertThat(perioder[2].datoTil).isEqualTo(LocalDate.parse("2019-04-01")) },
         )
     }
 
@@ -60,7 +57,7 @@ internal class PeriodisererTest {
                         referanse = INNTEKT_REFERANSE_1,
                         inntektPeriode = Periode(datoFom = LocalDate.parse("2019-01-01"), datoTil = LocalDate.parse("2019-04-01")),
                         type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-                        belop = BigDecimal.valueOf(1000),
+                        beløp = BigDecimal.valueOf(1000),
                     ),
                 )
                 .addBruddpunkter(
@@ -73,17 +70,17 @@ internal class PeriodisererTest {
                 .finnPerioder(LocalDate.parse("2000-01-01"), LocalDate.parse("2100-01-01"))
 
         assertAll(
-            Executable { assertThat(perioder).isNotNull() },
-            Executable { assertThat(perioder).hasSize(2) },
-            Executable { assertThat(perioder[0].datoFom).isEqualTo(LocalDate.parse("2019-01-01")) },
-            Executable { assertThat(perioder[0].datoTil).isEqualTo(LocalDate.parse("2019-02-01")) },
-            Executable { assertThat(perioder[1].datoFom).isEqualTo(LocalDate.parse("2019-02-01")) },
-            Executable { assertThat(perioder[1].datoTil).isEqualTo(LocalDate.parse("2019-04-01")) },
+            { assertThat(perioder).isNotNull() },
+            { assertThat(perioder).hasSize(2) },
+            { assertThat(perioder[0].datoFom).isEqualTo(LocalDate.parse("2019-01-01")) },
+            { assertThat(perioder[0].datoTil).isEqualTo(LocalDate.parse("2019-02-01")) },
+            { assertThat(perioder[1].datoFom).isEqualTo(LocalDate.parse("2019-02-01")) },
+            { assertThat(perioder[1].datoTil).isEqualTo(LocalDate.parse("2019-04-01")) },
         )
     }
 
     @Test
-    fun testPeriodiseringMedGrunnlagOgAapenSlutt() {
+    fun testPeriodiseringMedGrunnlagOgÅpenSlutt() {
         val perioder =
             Periodiserer()
                 .addBruddpunkter(
@@ -96,10 +93,10 @@ internal class PeriodisererTest {
                 .finnPerioder(beregnDatoFom = LocalDate.parse("2000-01-01"), beregnDatoTil = LocalDate.parse("2100-01-01"))
 
         assertAll(
-            Executable { assertThat(perioder).isNotNull() },
-            Executable { assertThat(perioder).hasSize(1) },
-            Executable { assertThat(perioder[0].datoFom).isEqualTo(LocalDate.parse("2019-02-01")) },
-            Executable { assertThat(perioder[0].datoTil).isNull() },
+            { assertThat(perioder).isNotNull() },
+            { assertThat(perioder).hasSize(1) },
+            { assertThat(perioder[0].datoFom).isEqualTo(LocalDate.parse("2019-02-01")) },
+            { assertThat(perioder[0].datoTil).isNull() },
         )
     }
 
@@ -112,7 +109,7 @@ internal class PeriodisererTest {
                         referanse = INNTEKT_REFERANSE_1,
                         inntektPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2018-01-01")),
                         type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-                        belop = BigDecimal.valueOf(250000),
+                        beløp = BigDecimal.valueOf(250000),
                     ),
                 )
                 .addBruddpunkter(
@@ -120,7 +117,7 @@ internal class PeriodisererTest {
                         referanse = INNTEKT_REFERANSE_2,
                         inntektPeriode = Periode(datoFom = LocalDate.parse("2018-01-01"), datoTil = LocalDate.parse("2019-01-01")),
                         type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-                        belop = BigDecimal.valueOf(400000),
+                        beløp = BigDecimal.valueOf(400000),
                     ),
                 )
                 .addBruddpunkter(
@@ -128,7 +125,7 @@ internal class PeriodisererTest {
                         referanse = INNTEKT_REFERANSE_3,
                         inntektPeriode = Periode(datoFom = LocalDate.parse("2019-01-01"), datoTil = null),
                         type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-                        belop = BigDecimal.valueOf(500000),
+                        beløp = BigDecimal.valueOf(500000),
                     ),
                 )
                 .addBruddpunkter(
@@ -190,24 +187,24 @@ internal class PeriodisererTest {
                 .finnPerioder(beregnDatoFom = LocalDate.parse("2000-01-01"), beregnDatoTil = LocalDate.parse("2100-01-01"))
 
         assertAll(
-            Executable { assertThat(perioder).isNotNull() },
-            Executable { assertThat(perioder).hasSize(8) },
-            Executable { assertThat(perioder[0].datoFom).isEqualTo(LocalDate.parse("2017-01-01")) },
-            Executable { assertThat(perioder[0].datoTil).isEqualTo(LocalDate.parse("2018-01-01")) },
-            Executable { assertThat(perioder[1].datoFom).isEqualTo(LocalDate.parse("2018-01-01")) },
-            Executable { assertThat(perioder[1].datoTil).isEqualTo(LocalDate.parse("2018-04-17")) },
-            Executable { assertThat(perioder[2].datoFom).isEqualTo(LocalDate.parse("2018-04-17")) },
-            Executable { assertThat(perioder[2].datoTil).isEqualTo(LocalDate.parse("2018-06-16")) },
-            Executable { assertThat(perioder[3].datoFom).isEqualTo(LocalDate.parse("2018-06-16")) },
-            Executable { assertThat(perioder[3].datoTil).isEqualTo(LocalDate.parse("2018-08-16")) },
-            Executable { assertThat(perioder[4].datoFom).isEqualTo(LocalDate.parse("2018-08-16")) },
-            Executable { assertThat(perioder[4].datoTil).isEqualTo(LocalDate.parse("2018-11-13")) },
-            Executable { assertThat(perioder[5].datoFom).isEqualTo(LocalDate.parse("2018-11-13")) },
-            Executable { assertThat(perioder[5].datoTil).isEqualTo(LocalDate.parse("2019-01-01")) },
-            Executable { assertThat(perioder[6].datoFom).isEqualTo(LocalDate.parse("2019-01-01")) },
-            Executable { assertThat(perioder[6].datoTil).isEqualTo(LocalDate.parse("2019-03-31")) },
-            Executable { assertThat(perioder[7].datoFom).isEqualTo(LocalDate.parse("2019-03-31")) },
-            Executable { assertThat(perioder[7].datoTil).isNull() },
+            { assertThat(perioder).isNotNull() },
+            { assertThat(perioder).hasSize(8) },
+            { assertThat(perioder[0].datoFom).isEqualTo(LocalDate.parse("2017-01-01")) },
+            { assertThat(perioder[0].datoTil).isEqualTo(LocalDate.parse("2018-01-01")) },
+            { assertThat(perioder[1].datoFom).isEqualTo(LocalDate.parse("2018-01-01")) },
+            { assertThat(perioder[1].datoTil).isEqualTo(LocalDate.parse("2018-04-17")) },
+            { assertThat(perioder[2].datoFom).isEqualTo(LocalDate.parse("2018-04-17")) },
+            { assertThat(perioder[2].datoTil).isEqualTo(LocalDate.parse("2018-06-16")) },
+            { assertThat(perioder[3].datoFom).isEqualTo(LocalDate.parse("2018-06-16")) },
+            { assertThat(perioder[3].datoTil).isEqualTo(LocalDate.parse("2018-08-16")) },
+            { assertThat(perioder[4].datoFom).isEqualTo(LocalDate.parse("2018-08-16")) },
+            { assertThat(perioder[4].datoTil).isEqualTo(LocalDate.parse("2018-11-13")) },
+            { assertThat(perioder[5].datoFom).isEqualTo(LocalDate.parse("2018-11-13")) },
+            { assertThat(perioder[5].datoTil).isEqualTo(LocalDate.parse("2019-01-01")) },
+            { assertThat(perioder[6].datoFom).isEqualTo(LocalDate.parse("2019-01-01")) },
+            { assertThat(perioder[6].datoTil).isEqualTo(LocalDate.parse("2019-03-31")) },
+            { assertThat(perioder[7].datoFom).isEqualTo(LocalDate.parse("2019-03-31")) },
+            { assertThat(perioder[7].datoTil).isNull() },
         )
     }
 

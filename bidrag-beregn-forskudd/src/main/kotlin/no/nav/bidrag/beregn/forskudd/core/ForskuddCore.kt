@@ -18,7 +18,7 @@ import no.nav.bidrag.beregn.forskudd.core.bo.BostatusPeriode
 import no.nav.bidrag.beregn.forskudd.core.bo.InntektPeriode
 import no.nav.bidrag.beregn.forskudd.core.bo.ResultatPeriode
 import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode
-import no.nav.bidrag.beregn.forskudd.core.bo.SoknadBarn
+import no.nav.bidrag.beregn.forskudd.core.bo.Søknadsbarn
 import no.nav.bidrag.beregn.forskudd.core.dto.BarnIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnetForskuddResultatCore
@@ -27,7 +27,7 @@ import no.nav.bidrag.beregn.forskudd.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatBeregningCore
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore
-import no.nav.bidrag.beregn.forskudd.core.dto.SoknadBarnCore
+import no.nav.bidrag.beregn.forskudd.core.dto.SøknadsbarnCore
 import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriode
 import no.nav.bidrag.domene.enums.person.AldersgruppeForskudd
 import no.nav.bidrag.domene.enums.person.Bostatuskode
@@ -50,7 +50,7 @@ internal class ForskuddCore(private val forskuddPeriode: ForskuddPeriode = Forsk
     private fun mapTilBusinessObject(grunnlag: BeregnForskuddGrunnlagCore) = BeregnForskuddGrunnlag(
         beregnDatoFra = grunnlag.beregnDatoFra,
         beregnDatoTil = grunnlag.beregnDatoTil,
-        soknadBarn = mapSoknadBarn(grunnlag.soknadBarn),
+        søknadsbarn = mapSøknadsbarn(grunnlag.søknadsbarn),
         bostatusPeriodeListe = mapBostatusPeriodeListe(grunnlag.bostatusPeriodeListe),
         inntektPeriodeListe = mapInntektPeriodeListe(grunnlag.inntektPeriodeListe),
         sivilstandPeriodeListe = mapSivilstandPeriodeListe(grunnlag.sivilstandPeriodeListe),
@@ -64,8 +64,8 @@ internal class ForskuddCore(private val forskuddPeriode: ForskuddPeriode = Forsk
         avvikListe = mapAvvik(avvikListe),
     )
 
-    private fun mapSoknadBarn(soknadBarnCore: SoknadBarnCore) =
-        SoknadBarn(referanse = soknadBarnCore.referanse, fodselsdato = soknadBarnCore.fodselsdato)
+    private fun mapSøknadsbarn(søknadsbarnCore: SøknadsbarnCore) =
+        Søknadsbarn(referanse = søknadsbarnCore.referanse, fødselsdato = søknadsbarnCore.fødselsdato)
 
     private fun mapBostatusPeriodeListe(bostatusPeriodeListeCore: List<BostatusPeriodeCore>): List<BostatusPeriode> {
         val bostatusPeriodeListe = mutableListOf<BostatusPeriode>()
@@ -89,7 +89,7 @@ internal class ForskuddCore(private val forskuddPeriode: ForskuddPeriode = Forsk
                     referanse = it.referanse,
                     inntektPeriode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
                     type = " ",
-                    belop = it.belop,
+                    beløp = it.beløp,
                 ),
             )
         }
@@ -127,10 +127,10 @@ internal class ForskuddCore(private val forskuddPeriode: ForskuddPeriode = Forsk
     private fun mapSjablonPeriodeListe(sjablonPeriodeListeCore: List<SjablonPeriodeCore>): List<SjablonPeriode> {
         val sjablonPeriodeListe = mutableListOf<SjablonPeriode>()
         sjablonPeriodeListeCore.forEach {
-            val sjablonNokkelListe = mutableListOf<SjablonNokkel>()
+            val sjablonNøkkelListe = mutableListOf<SjablonNokkel>()
             val sjablonInnholdListe = mutableListOf<SjablonInnhold>()
             it.nokkelListe!!.forEach { nokkel ->
-                sjablonNokkelListe.add(SjablonNokkel(navn = nokkel.navn, verdi = nokkel.verdi))
+                sjablonNøkkelListe.add(SjablonNokkel(navn = nokkel.navn, verdi = nokkel.verdi))
             }
             it.innholdListe.forEach { innhold ->
                 sjablonInnholdListe.add(SjablonInnhold(navn = innhold.navn, verdi = innhold.verdi))
@@ -138,7 +138,7 @@ internal class ForskuddCore(private val forskuddPeriode: ForskuddPeriode = Forsk
             sjablonPeriodeListe.add(
                 SjablonPeriode(
                     sjablonPeriode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
-                    sjablon = Sjablon(navn = it.navn, nokkelListe = sjablonNokkelListe, innholdListe = sjablonInnholdListe),
+                    sjablon = Sjablon(navn = it.navn, nokkelListe = sjablonNøkkelListe, innholdListe = sjablonInnholdListe),
                 ),
             )
         }
@@ -152,10 +152,10 @@ internal class ForskuddCore(private val forskuddPeriode: ForskuddPeriode = Forsk
                 ResultatPeriodeCore(
                     PeriodeCore(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
                     ResultatBeregningCore(
-                        belop = it.resultat.belop,
+                        beløp = it.resultat.beløp,
                         kode = it.resultat.kode,
                         regel = it.resultat.regel,
-                        alder = finnAldersgruppe(it.grunnlag.soknadBarnAlder.alder),
+                        aldersgruppe = finnAldersgruppe(it.grunnlag.søknadsbarnAlder.alder),
                     ),
                     mapReferanseListe(it),
                 ),
