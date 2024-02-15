@@ -20,7 +20,7 @@ data class InntektPeriode(
     val referanse: String,
     val inntektPeriode: Periode,
     val type: String,
-    val belop: BigDecimal,
+    val beløp: BigDecimal,
 ) : PeriodisertGrunnlag {
     override fun getPeriode(): Periode {
         return inntektPeriode

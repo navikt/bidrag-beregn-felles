@@ -1,0 +1,175 @@
+{
+  "periode": {
+    "fom": "2022-01",
+    "til": null
+  },
+  "søknadsbarnReferanse": "Person_Søknadsbarn",
+  "grunnlagListe": [
+    {
+      "referanse": "Person_Søknadsbarn",
+      "type": "PERSON_SØKNADSBARN",
+      "innhold": {
+        "ident": "11111111110",
+        "navn": "Trengende Søknadsbarn",
+        "fødselsdato": "2006-02-01"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Person_Bidragsmottaker",
+      "type": "PERSON_BIDRAGSMOTTAKER",
+      "innhold": {
+        "ident": "22222222222",
+        "navn": "Søkende Bidragsmottaker",
+        "fødselsdato": "1982-05-05"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Person_Husstandsbarn_01",
+      "type": "PERSON_HUSSTANDSMEDLEM",
+      "innhold": {
+        "ident": "11111111111",
+        "navn": "Husstandsbarn 1",
+        "fødselsdato": "2014-05-17"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Person_Husstandsbarn_02",
+      "type": "PERSON_HUSSTANDSMEDLEM",
+      "innhold": {
+        "ident": "11111111112",
+        "navn": "Husstandsbarn 2",
+        "fødselsdato": "2014-05-17"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Person_Husstandsbarn_03",
+      "type": "PERSON_HUSSTANDSMEDLEM",
+      "innhold": {
+        "ident": "11111111113",
+        "navn": "Husstandsbarn 3",
+        "fødselsdato": "2014-05-17"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Person_Husstandsbarn_04",
+      "type": "PERSON_HUSSTANDSMEDLEM",
+      "innhold": {
+        "ident": "11111111114",
+        "navn": "Husstandsbarn 4",
+        "fødselsdato": "2014-05-17"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Bostatus_Søknadsbarn_202201",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2022-01",
+          "til": null
+        },
+        "bostatus": "MED_FORELDER",
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Søknadsbarn"
+    },
+    {
+      "referanse": "Bostatus_Husstandsbarn_01_202201",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2022-01",
+          "til": "2022-03"
+        },
+        "bostatus": "MED_FORELDER",
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Husstandsbarn_01"
+    },
+    {
+      "referanse": "Bostatus_Husstandsbarn_02_202202",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2022-02",
+          "til": "2022-05"
+        },
+        "bostatus": "MED_FORELDER",
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Husstandsbarn_02"
+    },
+    {
+      "referanse": "Bostatus_Husstandsbarn_03_202203",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2022-03",
+          "til": null
+        },
+        "bostatus": "MED_FORELDER",
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Husstandsbarn_03"
+    },
+    {
+      "referanse": "Bostatus_Husstandsbarn_04_202204",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2022-04",
+          "til": null
+        },
+        "bostatus": "MED_FORELDER",
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Husstandsbarn_04"
+    },
+    {
+      "referanse": "BeregningInntektRapportering_Ainntekt_BM_202201",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2022-01",
+          "til": null
+        },
+        "inntektsrapportering": "AINNTEKT",
+        "gjelderBarn": null,
+        "beløp": 100000,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "Sivilstand_202201",
+      "type": "SIVILSTAND_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2022-01",
+          "til": null
+        },
+        "sivilstand": "GIFT_SAMBOER"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    }
+  ]
+}
