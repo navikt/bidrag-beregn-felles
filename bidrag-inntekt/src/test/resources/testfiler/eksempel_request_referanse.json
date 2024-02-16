@@ -1,0 +1,204 @@
+{
+  "ainntektHentetDato": "2024-02-09",
+  "ainntektsposter": [
+    {
+      "utbetalingsperiode": "2023-02",
+      "opptjeningsperiodeFra": "2023-10-31",
+      "opptjeningsperiodeTil": "2023-12-30",
+      "beskrivelse": "fastloenn",
+      "beløp": 60000,
+      "referanse": "innhentet_ainntekt_20230201"
+    },
+    {
+      "utbetalingsperiode": "2023-03",
+      "opptjeningsperiodeFra": null,
+      "opptjeningsperiodeTil": null,
+      "beskrivelse": "fastloenn",
+      "beløp": 60000,
+      "referanse": "innhentet_ainntekt_20230301"
+    },
+    {
+      "utbetalingsperiode": "2023-04",
+      "opptjeningsperiodeFra": null,
+      "opptjeningsperiodeTil": null,
+      "beskrivelse": "fastloenn",
+      "beløp": 60000,
+      "referanse": "innhentet_ainntekt_20230401"
+    },
+    {
+      "utbetalingsperiode": "2023-05",
+      "opptjeningsperiodeFra": null,
+      "opptjeningsperiodeTil": null,
+      "beskrivelse": "fastloenn",
+      "beløp": 60000,
+      "referanse": "innhentet_ainntekt_20230501"
+    },
+    {
+      "utbetalingsperiode": "2023-06",
+      "opptjeningsperiodeFra": null,
+      "opptjeningsperiodeTil": null,
+      "beskrivelse": "fastloenn",
+      "beløp": 60000,
+      "referanse": "innhentet_ainntekt_20230601"
+    },
+    {
+      "utbetalingsperiode": "2023-07",
+      "opptjeningsperiodeFra": null,
+      "opptjeningsperiodeTil": null,
+      "beskrivelse": "fastloenn",
+      "beløp": 50000,
+      "referanse": "innhentet_ainntekt_20230701"
+    },
+    {
+      "utbetalingsperiode": "2023-08",
+      "opptjeningsperiodeFra": null,
+      "opptjeningsperiodeTil": null,
+      "beskrivelse": "fastloenn",
+      "beløp": 50000,
+      "referanse": "innhentet_ainntekt_20230801"
+    },
+    {
+      "utbetalingsperiode": "2023-09",
+      "opptjeningsperiodeFra": null,
+      "opptjeningsperiodeTil": null,
+      "beskrivelse": "fastloenn",
+      "beløp": 55000,
+      "referanse": "innhentet_ainntekt_20230901"
+    },
+    {
+      "utbetalingsperiode": "2023-10",
+      "opptjeningsperiodeFra": null,
+      "opptjeningsperiodeTil": null,
+      "beskrivelse": "fastloenn",
+      "beløp": 55000,
+      "referanse": "innhentet_ainntekt_20231001"
+    },
+    {
+      "utbetalingsperiode": "2023-11",
+      "opptjeningsperiodeFra": null,
+      "opptjeningsperiodeTil": null,
+      "beskrivelse": "fastloenn",
+      "beløp": 65000,
+      "referanse": "innhentet_ainntekt_20231101"
+    },
+    {
+      "utbetalingsperiode": "2023-11",
+      "opptjeningsperiodeFra": null,
+      "opptjeningsperiodeTil": null,
+      "beskrivelse": "fastloenn",
+      "beløp": 12000,
+      "referanse": "innhentet_ainntekt_20231101"
+    },
+    {
+      "utbetalingsperiode": "2023-12",
+      "opptjeningsperiodeFra": null,
+      "opptjeningsperiodeTil": null,
+      "beskrivelse": "fastloenn",
+      "beløp": 65000,
+      "referanse": "innhentet_ainntekt_20231201"
+    },
+    {
+      "utbetalingsperiode": "2024-01",
+      "opptjeningsperiodeFra": null,
+      "opptjeningsperiodeTil": null,
+      "beskrivelse": "fastloenn",
+      "beløp": 69000,
+      "referanse": "innhentet_ainntekt_20240101"
+    }
+  ],
+  "skattegrunnlagsliste": [
+    {
+      "ligningsår": 2021,
+      "skattegrunnlagsposter": [],
+      "referanse": "innhentet_skattegrunnlag_20210101"
+    },
+    {
+      "ligningsår": 2022,
+      "skattegrunnlagsposter": [
+        {
+          "skattegrunnlagType": "ORDINÆR",
+          "inntektType": "annenSkattepliktigKapitalinntektFraVirtuellValuta",
+          "belop": 40000,
+          "beløp": 40000,
+          "kode": "annenSkattepliktigKapitalinntektFraVirtuellValuta"
+        },
+        {
+          "skattegrunnlagType": "ORDINÆR",
+          "inntektType": "samletLoennsinntektMedTrygdeavgiftspliktOgMedTrekkplikt",
+          "belop": 555000,
+          "beløp": 555000,
+          "kode": "samletLoennsinntektMedTrygdeavgiftspliktOgMedTrekkplikt"
+        }
+      ],
+      "referanse": "innhentet_skattegrunnlag_20220101"
+    },
+    {
+      "ligningsår": 2023,
+      "skattegrunnlagsposter": [
+        {
+          "skattegrunnlagType": "ORDINÆR",
+          "inntektType": "gevinstOgAnnenInntektFraVirtuellEiendel",
+          "belop": 50000,
+          "beløp": 50000,
+          "kode": "gevinstOgAnnenInntektFraVirtuellEiendel"
+        },
+        {
+          "skattegrunnlagType": "ORDINÆR",
+          "inntektType": "samletLoennsinntektMedTrygdeavgiftspliktOgMedTrekkplikt",
+          "belop": 650000,
+          "beløp": 650000,
+          "kode": "samletLoennsinntektMedTrygdeavgiftspliktOgMedTrekkplikt"
+        },
+        {
+          "skattegrunnlagType": "ORDINÆR",
+          "inntektType": "tapVedRealisasjonAvAksjesparekonto",
+          "belop": 40000,
+          "beløp": 40000,
+          "kode": "tapVedRealisasjonAvAksjesparekonto"
+        }
+      ],
+      "referanse": "innhentet_skattegrunnlag_20230101"
+    }
+  ],
+  "kontantstøtteliste": [
+    {
+      "periodeFra": "2023-01-01",
+      "periodeTil": "2023-03-31",
+      "beløp": 1000,
+      "barnPersonId": "12345678910",
+      "referanse": "kontantstøtte_20230101"
+    },
+    {
+      "periodeFra": "2023-04-01",
+      "periodeTil": null,
+      "beløp": 1500,
+      "barnPersonId": "12345678910",
+      "referanse": "kontantstøtte_20230401"
+    }
+  ],
+  "utvidetBarnetrygdliste": [
+    {
+      "periodeFra": "2023-02-01",
+      "periodeTil": null,
+      "beløp": 1000,
+      "referanse": "utvidetBarnetrygd_20230101"
+    }
+  ],
+  "småbarnstilleggliste": [
+    {
+      "periodeFra": "2023-04-01",
+      "periodeTil": null,
+      "beløp": 1000,
+      "referanse": "småbarnstillegg_20230101"
+    }
+  ],
+  "barnetilleggsliste": [
+    {
+      "periodeFra": "2023-04-01",
+      "periodeTil": null,
+      "beløp": 1000,
+      "referanse": "barnetillegg_20230101",
+      "barnPersonId": "12345678910"
+    }
+  ]
+}

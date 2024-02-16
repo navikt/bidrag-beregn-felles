@@ -43,24 +43,27 @@ class SkattegrunnlagService {
         inntektRapportering: Inntektsrapportering,
     ): List<SummertÅrsinntekt> {
         val summertÅrsinntektListe = mutableListOf<SummertÅrsinntekt>()
+        val grunnlagListe = mutableSetOf<String>()
 
         skattegrunnlagListe.forEach { skattegrunnlagForLigningsår ->
             val inntektPostListe = mutableListOf<InntektPost>()
             var sumInntekt = BigDecimal.ZERO
+
             skattegrunnlagForLigningsår.skattegrunnlagsposter.forEach { post ->
-                val match = mapping.find { it.fulltNavnInntektspost == post.inntektType }
+                val match = mapping.find { it.fulltNavnInntektspost == post.kode }
                 if (match != null) {
                     if (match.plussMinus == PlussMinus.PLUSS) {
-                        sumInntekt += post.belop
+                        sumInntekt += post.beløp
                     } else {
-                        sumInntekt -= post.belop
+                        sumInntekt -= post.beløp
                     }
 
+                    grunnlagListe.add(skattegrunnlagForLigningsår.referanse)
                     inntektPostListe.add(
                         InntektPost(
                             kode = match.fulltNavnInntektspost,
                             visningsnavn = finnVisningsnavn(match.fulltNavnInntektspost),
-                            beløp = post.belop,
+                            beløp = post.beløp,
                         ),
                     )
                 }
@@ -76,6 +79,7 @@ class SkattegrunnlagService {
                         til = YearMonth.of(skattegrunnlagForLigningsår.ligningsår, Month.DECEMBER),
                     ),
                     inntektPostListe = inntektPostListe,
+                    grunnlagsreferanseListe = listOf(skattegrunnlagForLigningsår.referanse),
                 ),
             )
         }
