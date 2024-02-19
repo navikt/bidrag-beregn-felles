@@ -374,7 +374,7 @@ internal class CoreMapperTest {
 
     private fun innholdBostatusOK(mapper: ObjectMapper) = mapper.readTree(
         "{\"periode\":{" + "\"fom\": \"2020-12\"," + "\"til\": \"2021-01\"}," + "\"bostatus\": \"MED_FORELDER\"," +
-            "\"manueltRegistrert\": false}",
+            "\"manueltRegistrert\": false, \"relatertTilPart\": \"Person_Bidragsmottaker\"}",
     )
 
     private fun innholdInntektMedFeil(mapper: ObjectMapper) = mapper.readTree(
