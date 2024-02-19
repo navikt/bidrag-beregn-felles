@@ -2,16 +2,16 @@ package no.nav.bidrag.sivilstand.service
 
 import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import no.nav.bidrag.domene.enums.person.SivilstandskodePDL
-import no.nav.bidrag.sivilstand.response.Sivilstand
 import no.nav.bidrag.sivilstand.response.SivilstandBeregnet
+import no.nav.bidrag.sivilstand.response.SivilstandBeregnetPeriode
+import no.nav.bidrag.sivilstand.response.SivilstandBeregningGrunnlagDto
 import no.nav.bidrag.sivilstand.response.SivilstandBo
 import no.nav.bidrag.sivilstand.response.Status
-import no.nav.bidrag.transport.behandling.grunnlag.response.SivilstandGrunnlagDto
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
 internal class SivilstandService() {
-    fun beregn(virkningstidspunkt: LocalDate, sivilstandGrunnlagDtoListe: List<SivilstandGrunnlagDto>): SivilstandBeregnet {
+    fun beregn(virkningstidspunkt: LocalDate, sivilstandGrunnlagDtoListe: List<SivilstandBeregningGrunnlagDto>): SivilstandBeregnet {
         var status = Status.OK
 
         // Tester på innhold i grunnlag, returnerer tom liste og status med feilmelding hvis minst én av testene under slår til.
@@ -43,7 +43,7 @@ internal class SivilstandService() {
         }
 
         val sortertSivilstandGrunnlagDtoListe = sivilstandGrunnlagDtoListe.sortedWith(
-            compareByDescending<SivilstandGrunnlagDto> { it.historisk }.thenBy { it.gyldigFom }
+            compareByDescending<SivilstandBeregningGrunnlagDto> { it.historisk }.thenBy { it.gyldigFom }
                 .thenBy { it.bekreftelsesdato }.thenBy { it.registrert }.thenBy { it.type.toString() },
         )
 
@@ -74,6 +74,7 @@ internal class SivilstandService() {
                 periodeFom = periodeFom!!,
                 periodeTom = periodeTom?.minusDays(1),
                 sivilstandskodePDL = sortertSivilstandGrunnlagDtoListe[indeks].type,
+                grunnlagsreferanse = sivilstand.grunnlagsreferanse,
             )
         }
 
@@ -136,14 +137,19 @@ internal class SivilstandService() {
         }
     }
 
-    private fun beregnPerioder(virkningstidspunkt: LocalDate, sivilstandBoListe: List<SivilstandBo>): List<Sivilstand> {
-        val sammenslåttSivilstandListe = mutableListOf<Sivilstand>()
+    private fun beregnPerioder(virkningstidspunkt: LocalDate, sivilstandBoListe: List<SivilstandBo>): List<SivilstandBeregnetPeriode> {
+        val sammenslåttSivilstandListe = mutableListOf<SivilstandBeregnetPeriode>()
 
         val sivilstandListe = sivilstandBoListe.map {
-            Sivilstand(
+            SivilstandBeregnetPeriode(
                 periodeFom = it.periodeFom,
                 periodeTom = it.periodeTom,
                 sivilstandskode = finnSivilstandskode(it.sivilstandskodePDL!!),
+                grunnlagsreferanser = if (it.grunnlagsreferanse.isNullOrEmpty()) {
+                    emptyList()
+                } else {
+                    arrayListOf(it.grunnlagsreferanse)
+                },
             )
         }
 
@@ -152,10 +158,11 @@ internal class SivilstandService() {
             if (it.sivilstandskode == Sivilstandskode.BOR_ALENE_MED_BARN) {
                 val periodeFom = hentFørsteDagIMåneden(it.periodeFom)
                 val periodeTom = if (it.periodeTom == null) null else hentSisteDagIMåneden(it.periodeTom)
-                Sivilstand(
+                SivilstandBeregnetPeriode(
                     periodeFom,
                     periodeTom,
                     it.sivilstandskode,
+                    grunnlagsreferanser = it.grunnlagsreferanser,
                 )
             } else {
                 val periodeFom = hentFørsteDagINesteMåned(it.periodeFom)
@@ -163,19 +170,21 @@ internal class SivilstandService() {
                 // Forekomster med Gift/Samboer ignoreres hvis perioden er mindre enn én måned. Bor alene med barn skal da gjelde.
                 if (periodeTom != null) {
                     if (ChronoUnit.MONTHS.between(periodeFom, periodeTom) >= 1) {
-                        Sivilstand(
+                        SivilstandBeregnetPeriode(
                             periodeFom,
                             periodeTom,
                             it.sivilstandskode,
+                            grunnlagsreferanser = it.grunnlagsreferanser,
                         )
                     } else {
                         null
                     }
                 } else {
-                    Sivilstand(
+                    SivilstandBeregnetPeriode(
                         periodeFom,
                         periodeTom,
                         it.sivilstandskode,
+                        grunnlagsreferanser = it.grunnlagsreferanser,
                     )
                 }
             }
@@ -186,32 +195,38 @@ internal class SivilstandService() {
 
         // Slår sammen perioder med samme sivilstandskode
         for (indeks in datojustertSivilstandListeFiltrert.indices) {
-            if (datojustertSivilstandListeFiltrert.getOrNull(indeks + 1)?.sivilstandskode
-                != datojustertSivilstandListeFiltrert[indeks].sivilstandskode
-            ) {
+            val sivilstand = datojustertSivilstandListeFiltrert[indeks]
+            val sivilstandNeste = datojustertSivilstandListeFiltrert.getOrNull(indeks + 1)
+            if (sivilstandNeste?.sivilstandskode != sivilstand.sivilstandskode) {
                 if (indeks == datojustertSivilstandListeFiltrert.size - 1) {
                     // Siste element i listen
                     sammenslåttSivilstandListe.add(
-                        Sivilstand(
+                        SivilstandBeregnetPeriode(
                             periodeFom = if (periodeFom.isBefore(virkningstidspunkt)) virkningstidspunkt else periodeFom,
-                            periodeTom = datojustertSivilstandListeFiltrert[indeks].periodeTom,
-                            sivilstandskode = datojustertSivilstandListeFiltrert[indeks].sivilstandskode,
+                            periodeTom = sivilstand.periodeTom,
+                            sivilstandskode = sivilstand.sivilstandskode,
+                            grunnlagsreferanser = sivilstand.grunnlagsreferanser,
                         ),
                     )
                 } else {
                     // Hvis det er flere elementer i listen så justeres periodeTom lik neste periodeFom - 1 dag for Gift/samboer
                     sammenslåttSivilstandListe.add(
-                        Sivilstand(
+                        SivilstandBeregnetPeriode(
                             periodeFom = if (periodeFom.isBefore(virkningstidspunkt)) virkningstidspunkt else periodeFom,
-                            periodeTom = if (datojustertSivilstandListeFiltrert[indeks].sivilstandskode == Sivilstandskode.GIFT_SAMBOER) {
-                                datojustertSivilstandListeFiltrert[indeks + 1].periodeFom.minusDays(1)
+                            periodeTom = if (sivilstand.sivilstandskode == Sivilstandskode.GIFT_SAMBOER) {
+                                sivilstandNeste!!.periodeFom.minusDays(1)
                             } else {
-                                datojustertSivilstandListeFiltrert[indeks].periodeTom
+                                sivilstand.periodeTom
                             },
-                            sivilstandskode = datojustertSivilstandListeFiltrert[indeks].sivilstandskode,
+                            sivilstandskode = sivilstand.sivilstandskode,
+                            grunnlagsreferanser = sivilstand.grunnlagsreferanser,
                         ),
                     )
-                    periodeFom = datojustertSivilstandListeFiltrert[indeks + 1].periodeFom
+                    periodeFom = sivilstandNeste!!.periodeFom
+                }
+            } else {
+                sivilstand.grunnlagsreferanser.forEach {
+                    sivilstandNeste.grunnlagsreferanser.addLast(it)
                 }
             }
         }

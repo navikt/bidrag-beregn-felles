@@ -2,7 +2,7 @@ package no.nav.bidrag.sivilstand
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.domene.enums.person.SivilstandskodePDL
-import no.nav.bidrag.transport.behandling.grunnlag.response.SivilstandGrunnlagDto
+import no.nav.bidrag.sivilstand.response.SivilstandBeregningGrunnlagDto
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -14,7 +14,7 @@ class TestUtil {
         }
 
         fun byggHentSivilstandResponseTestSortering() = listOf(
-            SivilstandGrunnlagDto(
+            SivilstandBeregningGrunnlagDto(
                 personId = "12345678901",
                 type = SivilstandskodePDL.GIFT,
                 gyldigFom = LocalDate.parse("2017-07-17"),
@@ -22,8 +22,9 @@ class TestUtil {
                 master = "PDL",
                 registrert = LocalDateTime.now(),
                 historisk = true,
+                grunnlagsreferanse = "ref_GIFT",
             ),
-            SivilstandGrunnlagDto(
+            SivilstandBeregningGrunnlagDto(
                 personId = "12345678901",
                 type = SivilstandskodePDL.SKILT,
                 gyldigFom = null,
@@ -31,8 +32,9 @@ class TestUtil {
                 master = "PDL",
                 registrert = LocalDateTime.parse("2022-03-12T12:00:00"),
                 historisk = false,
+                grunnlagsreferanse = "ref_SKILT",
             ),
-            SivilstandGrunnlagDto(
+            SivilstandBeregningGrunnlagDto(
                 personId = "12345678901",
                 type = SivilstandskodePDL.UGIFT,
                 gyldigFom = null,
@@ -40,8 +42,9 @@ class TestUtil {
                 master = "PDL",
                 registrert = LocalDateTime.now(),
                 historisk = true,
+                grunnlagsreferanse = "ref_UGIFT",
             ),
-            SivilstandGrunnlagDto(
+            SivilstandBeregningGrunnlagDto(
                 personId = "12345678901",
                 type = SivilstandskodePDL.UOPPGITT,
                 gyldigFom = null,
@@ -49,8 +52,9 @@ class TestUtil {
                 master = "PDL",
                 registrert = LocalDateTime.now(),
                 historisk = true,
+                grunnlagsreferanse = "ref_UOPPGITT",
             ),
-            SivilstandGrunnlagDto(
+            SivilstandBeregningGrunnlagDto(
                 personId = "12345678901",
                 type = SivilstandskodePDL.SEPARERT,
                 gyldigFom = LocalDate.parse("2021-09-21"),
@@ -58,11 +62,12 @@ class TestUtil {
                 master = "PDL",
                 registrert = LocalDateTime.parse("2021-03-01T12:00:00"),
                 historisk = true,
+                grunnlagsreferanse = "ref_SEPARERT",
             ),
         )
 
         fun byggSivilstandUtenAktivStatus() = listOf(
-            SivilstandGrunnlagDto(
+            SivilstandBeregningGrunnlagDto(
                 personId = "12345678901",
                 type = SivilstandskodePDL.SKILT,
                 gyldigFom = null,
@@ -70,8 +75,9 @@ class TestUtil {
                 master = "PDL",
                 registrert = null,
                 historisk = true,
+                grunnlagsreferanse = "ref_SKILT",
             ),
-            SivilstandGrunnlagDto(
+            SivilstandBeregningGrunnlagDto(
                 personId = "12345678901",
                 type = SivilstandskodePDL.GIFT,
                 gyldigFom = null,
@@ -79,11 +85,12 @@ class TestUtil {
                 master = "PDL",
                 registrert = null,
                 historisk = true,
+                grunnlagsreferanse = "ref_GIFT",
             ),
         )
 
         fun byggSivilstandMedPeriodeUtenDatoer() = listOf(
-            SivilstandGrunnlagDto(
+            SivilstandBeregningGrunnlagDto(
                 personId = "12345678901",
                 type = SivilstandskodePDL.SKILT,
                 gyldigFom = null,
@@ -91,8 +98,9 @@ class TestUtil {
                 master = "PDL",
                 registrert = LocalDateTime.parse("2020-05-12T11:30:00"),
                 historisk = false,
+                grunnlagsreferanse = "ref_SKILT",
             ),
-            SivilstandGrunnlagDto(
+            SivilstandBeregningGrunnlagDto(
                 personId = "12345678901",
                 type = SivilstandskodePDL.GIFT,
                 gyldigFom = null,
@@ -100,11 +108,12 @@ class TestUtil {
                 master = "PDL",
                 registrert = LocalDateTime.parse("2017-03-01T12:00:00"),
                 historisk = true,
+                grunnlagsreferanse = "ref_GIFT",
             ),
         )
 
         fun byggSivilstandÉnForekomstBorAleneMedBarn() = listOf(
-            SivilstandGrunnlagDto(
+            SivilstandBeregningGrunnlagDto(
                 personId = "12345678901",
                 type = SivilstandskodePDL.SKILT,
                 gyldigFom = null,
@@ -112,11 +121,12 @@ class TestUtil {
                 master = "PDL",
                 registrert = LocalDateTime.parse("2020-05-12T11:30:00"),
                 historisk = false,
+                grunnlagsreferanse = "ref_SKILT",
             ),
         )
 
         fun byggSivilstandFlereForekomstBorAleneMedBarn() = listOf(
-            SivilstandGrunnlagDto(
+            SivilstandBeregningGrunnlagDto(
                 personId = "12345678901",
                 type = SivilstandskodePDL.SKILT,
                 gyldigFom = null,
@@ -124,8 +134,9 @@ class TestUtil {
                 master = "PDL",
                 registrert = LocalDateTime.parse("2020-05-12T11:30:00"),
                 historisk = false,
+                grunnlagsreferanse = "ref_SKILT_1",
             ),
-            SivilstandGrunnlagDto(
+            SivilstandBeregningGrunnlagDto(
                 personId = "12345678901",
                 type = SivilstandskodePDL.SKILT,
                 gyldigFom = LocalDate.of(2019, 7, 12),
@@ -133,8 +144,9 @@ class TestUtil {
                 master = "PDL",
                 registrert = LocalDateTime.parse("2020-05-12T11:30:00"),
                 historisk = true,
+                grunnlagsreferanse = "ref_SKILT_2",
             ),
-            SivilstandGrunnlagDto(
+            SivilstandBeregningGrunnlagDto(
                 personId = "12345678901",
                 type = SivilstandskodePDL.SKILT,
                 gyldigFom = null,
@@ -142,11 +154,12 @@ class TestUtil {
                 master = "PDL",
                 registrert = LocalDateTime.parse("2020-05-12T11:30:00"),
                 historisk = true,
+                grunnlagsreferanse = "ref_SKILT_3",
             ),
         )
 
         fun byggSivilstandÉnForekomstGiftSamboer() = listOf(
-            SivilstandGrunnlagDto(
+            SivilstandBeregningGrunnlagDto(
                 personId = "12345678901",
                 type = SivilstandskodePDL.GIFT,
                 gyldigFom = null,
@@ -154,11 +167,12 @@ class TestUtil {
                 master = "PDL",
                 registrert = LocalDateTime.parse("2020-05-12T11:30:00"),
                 historisk = false,
+                grunnlagsreferanse = "ref_GIFT",
             ),
         )
 
         fun byggHentSivilstandResponseTestUtenDatoerMedRegistrertEnForekomstHistorisk() = listOf(
-            SivilstandGrunnlagDto(
+            SivilstandBeregningGrunnlagDto(
                 personId = "12345678901",
                 type = SivilstandskodePDL.GIFT,
                 gyldigFom = null,
@@ -166,20 +180,22 @@ class TestUtil {
                 master = "PDL",
                 registrert = LocalDateTime.parse("2017-03-01T12:00:00"),
                 historisk = true,
+                grunnlagsreferanse = "ref_GIFT",
             ),
         )
 
         fun byggSivilstandMedAktivForekomstOgKunRegistrert() = listOf(
-            SivilstandGrunnlagDto(
+            SivilstandBeregningGrunnlagDto(
                 personId = "12345678901",
                 type = SivilstandskodePDL.GIFT,
                 gyldigFom = LocalDate.of(2017, 3, 7),
                 bekreftelsesdato = null,
                 master = "PDL",
                 registrert = null,
+                grunnlagsreferanse = "ref_GIFT",
                 historisk = true,
             ),
-            SivilstandGrunnlagDto(
+            SivilstandBeregningGrunnlagDto(
                 personId = "12345678901",
                 type = SivilstandskodePDL.SEPARERT,
                 gyldigFom = null,
@@ -187,11 +203,12 @@ class TestUtil {
                 master = "PDL",
                 registrert = LocalDateTime.parse("2022-12-07T12:00:00"),
                 historisk = false,
+                grunnlagsreferanse = "ref_SEPARERT",
             ),
         )
 
         fun byggSivilstandMedLogiskFeil() = listOf(
-            SivilstandGrunnlagDto(
+            SivilstandBeregningGrunnlagDto(
                 personId = "12345678901",
                 type = SivilstandskodePDL.UGIFT,
                 gyldigFom = LocalDate.of(2017, 3, 7),
@@ -199,8 +216,9 @@ class TestUtil {
                 master = "PDL",
                 registrert = null,
                 historisk = true,
+                grunnlagsreferanse = "ref_UGIFT",
             ),
-            SivilstandGrunnlagDto(
+            SivilstandBeregningGrunnlagDto(
                 personId = "12345678901",
                 type = SivilstandskodePDL.SEPARERT,
                 gyldigFom = null,
@@ -208,11 +226,12 @@ class TestUtil {
                 master = "PDL",
                 registrert = LocalDateTime.parse("2022-12-07T12:00:00"),
                 historisk = false,
+                grunnlagsreferanse = "ref_SEPARERT",
             ),
         )
 
         fun byggSivilstandFlereForkomsterISammeMåned() = listOf(
-            SivilstandGrunnlagDto(
+            SivilstandBeregningGrunnlagDto(
                 personId = "12345678901",
                 type = SivilstandskodePDL.UGIFT,
                 gyldigFom = LocalDate.of(2017, 3, 7),
@@ -220,8 +239,9 @@ class TestUtil {
                 master = "PDL",
                 registrert = null,
                 historisk = true,
+                grunnlagsreferanse = "ref_UGIFT",
             ),
-            SivilstandGrunnlagDto(
+            SivilstandBeregningGrunnlagDto(
                 personId = "12345678901",
                 type = SivilstandskodePDL.GIFT,
                 gyldigFom = LocalDate.of(2017, 4, 21),
@@ -229,8 +249,9 @@ class TestUtil {
                 master = "PDL",
                 registrert = LocalDateTime.parse("2022-12-07T12:00:00"),
                 historisk = false,
+                grunnlagsreferanse = "ref_GIFT",
             ),
-            SivilstandGrunnlagDto(
+            SivilstandBeregningGrunnlagDto(
                 personId = "12345678901",
                 type = SivilstandskodePDL.SEPARERT,
                 gyldigFom = LocalDate.of(2017, 4, 30),
@@ -238,6 +259,7 @@ class TestUtil {
                 master = "PDL",
                 registrert = LocalDateTime.parse("2022-12-07T12:00:00"),
                 historisk = false,
+                grunnlagsreferanse = "ref_SEPARERT",
             ),
         )
     }

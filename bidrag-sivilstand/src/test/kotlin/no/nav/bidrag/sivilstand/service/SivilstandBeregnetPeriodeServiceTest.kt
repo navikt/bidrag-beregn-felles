@@ -1,6 +1,8 @@
 package no.nav.bidrag.sivilstand.service
 
 import io.kotest.assertions.assertSoftly
+import io.kotest.matchers.collections.shouldContainAll
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import no.nav.bidrag.sivilstand.TestUtil
@@ -9,7 +11,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
-internal class SivilstandServiceTest {
+internal class SivilstandBeregnetPeriodeServiceTest {
     private lateinit var sivilstandService: SivilstandService
 
     @Test
@@ -144,6 +146,25 @@ internal class SivilstandServiceTest {
             resultat.sivilstandListe[0].periodeFom shouldBe LocalDate.of(2017, 3, 1)
             resultat.sivilstandListe[0].periodeTom shouldBe null
             resultat.sivilstandListe[0].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat.sivilstandListe[0].grunnlagsreferanser shouldHaveSize 3
+            resultat.sivilstandListe[0].grunnlagsreferanser shouldContainAll listOf("ref_SKILT_1", "ref_SKILT_2", "ref_SKILT_3")
+        }
+    }
+
+    @Test
+    fun `Test med flere forekomster med Bor Alene Med Barn hvor grunnlagsreferanser er null`() {
+        sivilstandService = SivilstandService()
+        val grunnlagTomListe = TestUtil.byggSivilstandFlereForekomstBorAleneMedBarn().map {
+            it.copy(
+                grunnlagsreferanse = null,
+            )
+        }
+        val virkningstidspunkt = LocalDate.of(2010, 9, 21)
+        val resultat = sivilstandService.beregn(virkningstidspunkt, grunnlagTomListe)
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.sivilstandListe.size shouldBe 1
+            resultat.sivilstandListe[0].grunnlagsreferanser shouldHaveSize 0
         }
     }
 
@@ -183,6 +204,8 @@ internal class SivilstandServiceTest {
             resultat.sivilstandListe[0].periodeFom shouldBe LocalDate.of(2017, 3, 1)
             resultat.sivilstandListe[0].periodeTom shouldBe null
             resultat.sivilstandListe[0].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat.sivilstandListe[0].grunnlagsreferanser shouldHaveSize 2
+            resultat.sivilstandListe[0].grunnlagsreferanser shouldContainAll listOf("ref_GIFT", "ref_SEPARERT")
         }
     }
 
@@ -199,6 +222,8 @@ internal class SivilstandServiceTest {
             resultat.sivilstandListe[0].periodeFom shouldBe LocalDate.of(2023, 3, 1)
             resultat.sivilstandListe[0].periodeTom shouldBe null
             resultat.sivilstandListe[0].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat.sivilstandListe[0].grunnlagsreferanser shouldHaveSize 2
+            resultat.sivilstandListe[0].grunnlagsreferanser shouldContainAll listOf("ref_SKILT", "ref_SEPARERT")
         }
     }
 }

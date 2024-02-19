@@ -1,10 +1,16 @@
 package no.nav.bidrag.boforhold.service
 
 import no.nav.bidrag.boforhold.response.BoforholdBeregnet
-import no.nav.bidrag.boforhold.response.Bostatus
+import no.nav.bidrag.boforhold.response.BorISammeHusstandBeregningDto
 import no.nav.bidrag.boforhold.response.RelatertPerson
+import no.nav.bidrag.domene.enums.person.Bostatuskode
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
+
+fun List<BorISammeHusstandBeregningDto>.tilReferanseListe(periodeFom: LocalDate, periodeTom: LocalDate? = null) =
+    filter { it.periodeFra == null || it.periodeFra >= periodeFom && (periodeTom == null || it.periodeFra < periodeTom) }
+        .filter { it.periodeTil == null || periodeTom == null || it.periodeTil <= periodeTom }
+        .mapNotNull { it.grunnlagsreferanse }.toMutableSet()
 
 internal class BoforholdService() {
     fun beregnEgneBarn(virkningstidspunkt: LocalDate, boforholdGrunnlagListe: List<RelatertPerson>): List<BoforholdBeregnet> {
@@ -30,7 +36,8 @@ internal class BoforholdService() {
                     relatertPersonPersonId = relatertPerson.relatertPersonPersonId,
                     periodeFom = virkningstidspunkt,
                     periodeTom = null,
-                    bostatus = Bostatus.REGNES_IKKE_SOM_BARN,
+                    bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                    grunnlagsreferanseListe = mutableSetOf(),
                 ),
             )
             return boforholdBeregnetListe
@@ -45,7 +52,8 @@ internal class BoforholdService() {
                         relatertPersonPersonId = relatertPerson.relatertPersonPersonId,
                         periodeFom = virkningstidspunkt,
                         periodeTom = null,
-                        bostatus = Bostatus.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        grunnlagsreferanseListe = mutableSetOf(),
                     ),
                 )
             } else {
@@ -56,17 +64,20 @@ internal class BoforholdService() {
                             relatertPersonPersonId = relatertPerson.relatertPersonPersonId,
                             periodeFom = virkningstidspunkt,
                             periodeTom = beregnetAttenårFraDato(relatertPerson.fødselsdato).minusDays(1),
-                            bostatus = Bostatus.REGNES_IKKE_SOM_BARN,
+                            bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                            grunnlagsreferanseListe = mutableSetOf(),
                         ),
                     )
                 } else {
                     // Barnet har ikke fyllt 18 år før virkningstidspunktet og det må lages to perioder, én før og én etter 18årsdagen
+                    val periodeTom = attenårFraDato.minusDays(1)
                     boforholdBeregnetListe.add(
                         BoforholdBeregnet(
                             relatertPersonPersonId = relatertPerson.relatertPersonPersonId,
                             periodeFom = virkningstidspunkt,
-                            periodeTom = attenårFraDato.minusDays(1),
-                            bostatus = Bostatus.IKKE_MED_FORELDER,
+                            periodeTom = periodeTom,
+                            bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                            grunnlagsreferanseListe = mutableSetOf(),
                         ),
                     )
                     boforholdBeregnetListe.add(
@@ -74,7 +85,8 @@ internal class BoforholdService() {
                             relatertPersonPersonId = relatertPerson.relatertPersonPersonId,
                             periodeFom = attenårFraDato,
                             periodeTom = null,
-                            bostatus = Bostatus.REGNES_IKKE_SOM_BARN,
+                            bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                            grunnlagsreferanseListe = mutableSetOf(),
                         ),
                     )
                 }
@@ -85,11 +97,14 @@ internal class BoforholdService() {
         val justertBorISammeHusstandDtoListe = relatertPerson.borISammeHusstandDtoListe
             .filter { (it.periodeTil == null || it.periodeTil!!.isAfter(virkningstidspunkt)) }
             .map {
+                val periodeTom = it.periodeTil?.plusMonths(1)?.withDayOfMonth(1)?.minusDays(1)
+                val periodeFom = if (it.periodeFra == null) virkningstidspunkt else it.periodeFra!!.withDayOfMonth(1)
                 BoforholdBeregnet(
                     relatertPersonPersonId = relatertPerson.relatertPersonPersonId,
-                    periodeFom = if (it.periodeFra == null) virkningstidspunkt else it.periodeFra!!.withDayOfMonth(1),
-                    periodeTom = it.periodeTil?.plusMonths(1)?.withDayOfMonth(1)?.minusDays(1),
-                    bostatus = Bostatus.MED_FORELDER,
+                    periodeFom = periodeFom,
+                    periodeTom = periodeTom,
+                    bostatus = Bostatuskode.MED_FORELDER,
+                    grunnlagsreferanseListe = relatertPerson.borISammeHusstandDtoListe.tilReferanseListe(periodeFom, periodeTom),
                 )
             }
 
@@ -114,6 +129,9 @@ internal class BoforholdService() {
                     if (periodeFom == null) {
                         periodeFom = liste[indeks].periodeFom
                     }
+                    liste[indeks].grunnlagsreferanseListe.forEach {
+                        liste[indeks + 1].grunnlagsreferanseListe.add(it)
+                    }
                 } else {
                     // perioden overlapper ikke og skal legges til i sammenslåttListe
                     if (periodeFom != null) {
@@ -122,7 +140,8 @@ internal class BoforholdService() {
                                 relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                                 periodeFom = periodeFom,
                                 periodeTom = liste[indeks].periodeTom,
-                                bostatus = Bostatus.MED_FORELDER,
+                                bostatus = Bostatuskode.MED_FORELDER,
+                                grunnlagsreferanseListe = liste[indeks].grunnlagsreferanseListe,
                             ),
                         )
                         periodeFom = null
@@ -132,7 +151,8 @@ internal class BoforholdService() {
                                 relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                                 periodeFom = liste[indeks].periodeFom,
                                 periodeTom = liste[indeks].periodeTom,
-                                bostatus = Bostatus.MED_FORELDER,
+                                bostatus = Bostatuskode.MED_FORELDER,
+                                grunnlagsreferanseListe = liste[indeks].grunnlagsreferanseListe,
                             ),
                         )
                     }
@@ -144,7 +164,8 @@ internal class BoforholdService() {
                         relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                         periodeFom = liste[indeks].periodeFom,
                         periodeTom = liste[indeks].periodeTom,
-                        bostatus = Bostatus.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        grunnlagsreferanseListe = liste[indeks].grunnlagsreferanseListe,
                     ),
                 )
             }
@@ -164,7 +185,8 @@ internal class BoforholdService() {
                             relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                             periodeFom = virkningstidspunkt,
                             periodeTom = liste[indeks].periodeFom.minusDays(1),
-                            bostatus = Bostatus.IKKE_MED_FORELDER,
+                            bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                            grunnlagsreferanseListe = mutableSetOf(),
                         ),
                     )
                     sammenhengendePerioderListe.add(
@@ -173,6 +195,7 @@ internal class BoforholdService() {
                             periodeFom = liste[indeks].periodeFom,
                             periodeTom = liste[indeks].periodeTom,
                             bostatus = liste[indeks].bostatus,
+                            grunnlagsreferanseListe = liste[indeks].grunnlagsreferanseListe,
                         ),
                     )
                 } else {
@@ -182,6 +205,7 @@ internal class BoforholdService() {
                             periodeFom = virkningstidspunkt,
                             periodeTom = liste[indeks].periodeTom,
                             bostatus = liste[indeks].bostatus,
+                            grunnlagsreferanseListe = liste[indeks].grunnlagsreferanseListe,
                         ),
                     )
                 }
@@ -194,7 +218,8 @@ internal class BoforholdService() {
                             relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                             periodeFom = liste[indeks - 1].periodeTom!!.plusDays(1),
                             periodeTom = liste[indeks].periodeFom.minusDays(1),
-                            bostatus = Bostatus.IKKE_MED_FORELDER,
+                            bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                            grunnlagsreferanseListe = mutableSetOf(),
                         ),
                     )
                 }
@@ -205,6 +230,7 @@ internal class BoforholdService() {
                         periodeFom = liste[indeks].periodeFom,
                         periodeTom = liste[indeks].periodeTom,
                         bostatus = liste[indeks].bostatus,
+                        grunnlagsreferanseListe = liste[indeks].grunnlagsreferanseListe,
                     ),
                 )
 
@@ -216,7 +242,8 @@ internal class BoforholdService() {
                                 relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                                 periodeFom = liste[indeks].periodeTom!!.plusDays(1),
                                 periodeTom = null,
-                                bostatus = Bostatus.IKKE_MED_FORELDER,
+                                bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                                grunnlagsreferanseListe = mutableSetOf(),
                             ),
                         )
                     }
@@ -236,6 +263,7 @@ internal class BoforholdService() {
                         periodeFom = liste[indeks].periodeFom,
                         periodeTom = attenårFraDato.minusDays(1),
                         bostatus = liste[indeks].bostatus,
+                        grunnlagsreferanseListe = liste[indeks].grunnlagsreferanseListe,
                     ),
                 )
             } else {
@@ -246,6 +274,7 @@ internal class BoforholdService() {
                             periodeFom = liste[indeks].periodeFom,
                             periodeTom = attenårFraDato.minusDays(1),
                             bostatus = liste[indeks].bostatus,
+                            grunnlagsreferanseListe = liste[indeks].grunnlagsreferanseListe,
                         ),
                     )
                     listeJustertMotAttenårsdag.add(
@@ -253,7 +282,8 @@ internal class BoforholdService() {
                             relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                             periodeFom = attenårFraDato,
                             periodeTom = null,
-                            bostatus = Bostatus.REGNES_IKKE_SOM_BARN,
+                            bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                            grunnlagsreferanseListe = liste[indeks].grunnlagsreferanseListe,
                         ),
                     )
                 } else {
@@ -263,6 +293,7 @@ internal class BoforholdService() {
                             periodeFom = liste[indeks].periodeFom,
                             periodeTom = liste[indeks].periodeTom,
                             bostatus = liste[indeks].bostatus,
+                            grunnlagsreferanseListe = liste[indeks].grunnlagsreferanseListe,
                         ),
                     )
                 }

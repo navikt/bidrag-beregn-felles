@@ -6,7 +6,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 
-internal class SivilstandApiTest {
+internal class SivilstandBeregnetPeriodeApiTest {
 
     @Mock
     private lateinit var sivilstandService: SivilstandService
