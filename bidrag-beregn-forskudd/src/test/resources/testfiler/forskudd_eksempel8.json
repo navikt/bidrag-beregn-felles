@@ -58,7 +58,9 @@
           "til": "2021-01"
         },
         "bostatus": "MED_FORELDER",
-        "manueltRegistrert": false
+        "manueltRegistrert": false,
+        "relatertTilPart": "Person_Bidragsmottaker"
+
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Søknadsbarn_20201201"
@@ -72,7 +74,9 @@
           "til": "2021-01"
         },
         "bostatus": "MED_FORELDER",
-        "manueltRegistrert": false
+        "manueltRegistrert": false,
+        "relatertTilPart": "Person_Bidragsmottaker"
+
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Husstandsbarn_01_20201201"
@@ -86,7 +90,8 @@
           "til": "2021-01"
         },
         "bostatus": "MED_FORELDER",
-        "manueltRegistrert": false
+        "manueltRegistrert": false,
+        "relatertTilPart": "Person_Bidragsmottaker"
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Husstandsbarn_02_20201201"

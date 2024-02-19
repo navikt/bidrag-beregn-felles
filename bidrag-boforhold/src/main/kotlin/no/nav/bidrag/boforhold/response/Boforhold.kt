@@ -1,5 +1,6 @@
 package no.nav.bidrag.boforhold.response
 
+import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.transport.behandling.grunnlag.response.BorISammeHusstandDto
 import java.time.LocalDate
 
@@ -18,11 +19,5 @@ data class BoforholdBeregnet(
     val relatertPersonPersonId: String?,
     val periodeFom: LocalDate,
     val periodeTom: LocalDate?,
-    val bostatus: Bostatus,
+    val bostatus: Bostatuskode,
 )
-
-enum class Bostatus {
-    MED_FORELDER,
-    IKKE_MED_FORELDER,
-    REGNES_IKKE_SOM_BARN,
-}
