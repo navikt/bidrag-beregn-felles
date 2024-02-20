@@ -44,7 +44,7 @@ class TestUtil {
             ),
         )
 
-        fun byggFlereSammenhengendeForekomster() = listOf(
+        fun byggFlereSammenhengendeForekomsterMedBrudd() = listOf(
             RelatertPerson(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2017, 3, 17),
@@ -65,6 +65,29 @@ class TestUtil {
                     BorISammeHusstandDto(
                         periodeFra = LocalDate.of(2023, 7, 2),
                         periodeTil = null,
+                    ),
+                ),
+            ),
+
+        )
+
+        fun byggFlereSammenhengendeForekomster() = listOf(
+            RelatertPerson(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2017, 3, 17),
+                erBarnAvBmBp = true,
+                borISammeHusstandDtoListe = listOf(
+                    BorISammeHusstandDto(
+                        periodeFra = LocalDate.of(2019, 4, 2),
+                        periodeTil = LocalDate.of(2019, 4, 7),
+                    ),
+                    BorISammeHusstandDto(
+                        periodeFra = LocalDate.of(2019, 4, 10),
+                        periodeTil = LocalDate.of(2019, 4, 17),
+                    ),
+                    BorISammeHusstandDto(
+                        periodeFra = LocalDate.of(2019, 5, 2),
+                        periodeTil = LocalDate.of(2019, 7, 28),
                     ),
                 ),
             ),
@@ -96,6 +119,34 @@ class TestUtil {
                 ),
             ),
 
+        )
+
+        fun byggPeriodeFraFørVirkningstidspunkt() = listOf(
+            RelatertPerson(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2014, 3, 17),
+                erBarnAvBmBp = true,
+                borISammeHusstandDtoListe = listOf(
+                    BorISammeHusstandDto(
+                        periodeFra = LocalDate.of(2022, 1, 12),
+                        periodeTil = null,
+                    ),
+                ),
+            ),
+        )
+
+        fun byggPeriodeTomEtterAttenårsdag() = listOf(
+            RelatertPerson(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2004, 3, 17),
+                erBarnAvBmBp = true,
+                borISammeHusstandDtoListe = listOf(
+                    BorISammeHusstandDto(
+                        periodeFra = LocalDate.of(2022, 1, 12),
+                        periodeTil = LocalDate.of(2022, 12, 27),
+                    ),
+                ),
+            ),
         )
     }
 }
