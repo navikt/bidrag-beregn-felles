@@ -3,10 +3,10 @@
     "fom": "2020-12",
     "til": "2021-01"
   },
-  "søknadsbarnReferanse": "Person_Søknadsbarn_20201201",
+  "søknadsbarnReferanse": "Person_Søknadsbarn",
   "grunnlagListe": [
     {
-      "referanse": "Person_Søknadsbarn_20201201",
+      "referanse": "Person_Søknadsbarn",
       "type": "PERSON_SØKNADSBARN",
       "innhold": {
         "ident": "11111111110",
@@ -17,7 +17,7 @@
       "gjelderReferanse": null
     },
     {
-      "referanse": "Person_Bidragsmottaker_20201201",
+      "referanse": "Person_Bidragsmottaker",
       "type": "PERSON_BIDRAGSMOTTAKER",
       "innhold": {
         "ident": "22222222222",
@@ -28,7 +28,7 @@
       "gjelderReferanse": null
     },
     {
-      "referanse": "Bostatus_Søknadsbarn_20201201",
+      "referanse": "Bostatus_Søknadsbarn_202012",
       "type": "BOSTATUS_PERIODE",
       "innhold": {
         "periode": {
@@ -40,10 +40,10 @@
         "relatertTilPart": "Person_Bidragsmottaker"
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Søknadsbarn_20201201"
+      "gjelderReferanse": "Person_Søknadsbarn"
     },
     {
-      "referanse": "BeregningInntektRapportering_Ainntekt_20201201",
+      "referanse": "BeregningInntektRapportering_Ainntekt_202012",
       "type": "INNTEKT_RAPPORTERING_PERIODE",
       "innhold": {
         "periode": {
@@ -57,10 +57,10 @@
         "valgt": true
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Bidragsmottaker_20201201"
+      "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {
-      "referanse": "Sivilstand_20201201",
+      "referanse": "Sivilstand_202012",
       "type": "SIVILSTAND_PERIODE",
       "innhold": {
         "periode": {
@@ -70,7 +70,7 @@
         "sivilstand": "GIFT_SAMBOER"
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Bidragsmottaker_20201201"
+      "gjelderReferanse": "Person_Bidragsmottaker"
     }
   ]
 }

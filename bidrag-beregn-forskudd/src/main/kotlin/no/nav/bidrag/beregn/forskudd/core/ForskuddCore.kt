@@ -188,7 +188,7 @@ internal class ForskuddCore(private val forskuddPeriode: ForskuddPeriode = Forsk
     }
 
     private fun lagSjablonReferanse(sjablon: SjablonPeriodeNavnVerdi) =
-        "Sjablon_${sjablon.navn}_${sjablon.periode.datoFom.format(DateTimeFormatter.ofPattern("yyyyMMdd"))}"
+        "Sjablon_${sjablon.navn}_${sjablon.periode.datoFom.format(DateTimeFormatter.ofPattern("yyyyMM"))}"
 
     private fun mapSjablonGrunnlagListe(periodeResultatListe: List<ResultatPeriode>) = periodeResultatListe.stream()
         .map { mapSjablonListe(it.resultat.sjablonListe) }
