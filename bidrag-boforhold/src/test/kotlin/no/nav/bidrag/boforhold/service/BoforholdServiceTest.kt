@@ -185,4 +185,43 @@ internal class BoforholdServiceTest {
             resultat[2].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
         }
     }
+
+    @Test
+    fun `TestOppholdPerioderHusstandsmedlemskapOgAttenår`() {
+        boforholdService = BoforholdService()
+        val mottatteBoforhold = TestUtil.byggOppholdPerioderHusstandsmedlemskapOgAttenår()
+        val virkningstidspunkt = LocalDate.of(2021, 9, 1)
+        val resultat = boforholdService.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            resultat.size shouldBe 7
+            resultat[0].periodeFom shouldBe LocalDate.of(2021, 9, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2021, 12, 31)
+            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2022, 1, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2022, 7, 31)
+            resultat[1].bostatus shouldBe Bostatuskode.MED_FORELDER
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2022, 8, 1)
+            resultat[2].periodeTom shouldBe LocalDate.of(2022, 9, 30)
+            resultat[2].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+
+            resultat[3].periodeFom shouldBe LocalDate.of(2022, 10, 1)
+            resultat[3].periodeTom shouldBe LocalDate.of(2022, 12, 31)
+            resultat[3].bostatus shouldBe Bostatuskode.MED_FORELDER
+
+            resultat[4].periodeFom shouldBe LocalDate.of(2023, 1, 1)
+            resultat[4].periodeTom shouldBe LocalDate.of(2023, 1, 31)
+            resultat[4].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+
+            resultat[5].periodeFom shouldBe LocalDate.of(2023, 2, 1)
+            resultat[5].periodeTom shouldBe LocalDate.of(2023, 8, 31)
+            resultat[5].bostatus shouldBe Bostatuskode.MED_FORELDER
+
+            resultat[6].periodeFom shouldBe LocalDate.of(2023, 9, 1)
+            resultat[6].periodeTom shouldBe null
+            resultat[6].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
+        }
+    }
 }

@@ -148,5 +148,27 @@ class TestUtil {
                 ),
             ),
         )
+
+        fun byggOppholdPerioderHusstandsmedlemskapOgAttenår() = listOf(
+            RelatertPerson(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2005, 8, 17),
+                erBarnAvBmBp = true,
+                borISammeHusstandDtoListe = listOf(
+                    BorISammeHusstandDto(
+                        periodeFra = LocalDate.of(2022, 1, 12),
+                        periodeTil = LocalDate.of(2022, 7, 27),
+                    ),
+                    BorISammeHusstandDto(
+                        periodeFra = LocalDate.of(2022, 10, 12),
+                        periodeTil = LocalDate.of(2022, 12, 27),
+                    ),
+                    BorISammeHusstandDto(
+                        periodeFra = LocalDate.of(2023, 2, 9),
+                        periodeTil = null,
+                    ),
+                ),
+            ),
+        )
     }
 }
