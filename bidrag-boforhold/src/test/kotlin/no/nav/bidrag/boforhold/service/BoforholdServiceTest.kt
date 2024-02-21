@@ -3,7 +3,7 @@ package no.nav.bidrag.boforhold.service
 import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.shouldBe
 import no.nav.bidrag.boforhold.TestUtil
-import no.nav.bidrag.boforhold.response.Bostatus
+import no.nav.bidrag.domene.enums.person.Bostatuskode
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -23,7 +23,7 @@ internal class BoforholdServiceTest {
             resultat.size shouldBe 1
             resultat[0].periodeFom shouldBe LocalDate.of(2020, 9, 1)
             resultat[0].periodeTom shouldBe null
-            resultat[0].bostatus shouldBe Bostatus.REGNES_IKKE_SOM_BARN
+            resultat[0].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
         }
     }
 
@@ -39,11 +39,11 @@ internal class BoforholdServiceTest {
             resultat.size shouldBe 2
             resultat[0].periodeFom shouldBe LocalDate.of(2022, 9, 1)
             resultat[0].periodeTom shouldBe LocalDate.of(2023, 3, 31)
-            resultat[0].bostatus shouldBe Bostatus.IKKE_MED_FORELDER
+            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
 
             resultat[1].periodeFom shouldBe LocalDate.of(2023, 4, 1)
             resultat[1].periodeTom shouldBe null
-            resultat[1].bostatus shouldBe Bostatus.REGNES_IKKE_SOM_BARN
+            resultat[1].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
         }
     }
 
@@ -59,7 +59,7 @@ internal class BoforholdServiceTest {
             resultat.size shouldBe 1
             resultat[0].periodeFom shouldBe LocalDate.of(2022, 9, 1)
             resultat[0].periodeTom shouldBe null
-            resultat[0].bostatus shouldBe Bostatus.REGNES_IKKE_SOM_BARN
+            resultat[0].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
         }
     }
 
@@ -75,19 +75,19 @@ internal class BoforholdServiceTest {
             resultat.size shouldBe 4
             resultat[0].periodeFom shouldBe LocalDate.of(2018, 9, 1)
             resultat[0].periodeTom shouldBe LocalDate.of(2019, 3, 31)
-            resultat[0].bostatus shouldBe Bostatus.IKKE_MED_FORELDER
+            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
 
             resultat[1].periodeFom shouldBe LocalDate.of(2019, 4, 1)
             resultat[1].periodeTom shouldBe LocalDate.of(2019, 7, 31)
-            resultat[1].bostatus shouldBe Bostatus.MED_FORELDER
+            resultat[1].bostatus shouldBe Bostatuskode.MED_FORELDER
 
             resultat[2].periodeFom shouldBe LocalDate.of(2019, 8, 1)
             resultat[2].periodeTom shouldBe LocalDate.of(2023, 6, 30)
-            resultat[2].bostatus shouldBe Bostatus.IKKE_MED_FORELDER
+            resultat[2].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
 
             resultat[3].periodeFom shouldBe LocalDate.of(2023, 7, 1)
             resultat[3].periodeTom shouldBe null
-            resultat[3].bostatus shouldBe Bostatus.MED_FORELDER
+            resultat[3].bostatus shouldBe Bostatuskode.MED_FORELDER
         }
     }
 
@@ -103,15 +103,15 @@ internal class BoforholdServiceTest {
             resultat.size shouldBe 3
             resultat[0].periodeFom shouldBe LocalDate.of(2018, 9, 1)
             resultat[0].periodeTom shouldBe LocalDate.of(2019, 3, 31)
-            resultat[0].bostatus shouldBe Bostatus.IKKE_MED_FORELDER
+            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
 
             resultat[1].periodeFom shouldBe LocalDate.of(2019, 4, 1)
             resultat[1].periodeTom shouldBe LocalDate.of(2019, 7, 31)
-            resultat[1].bostatus shouldBe Bostatus.MED_FORELDER
+            resultat[1].bostatus shouldBe Bostatuskode.MED_FORELDER
 
             resultat[2].periodeFom shouldBe LocalDate.of(2019, 8, 1)
             resultat[2].periodeTom shouldBe null
-            resultat[2].bostatus shouldBe Bostatus.IKKE_MED_FORELDER
+            resultat[2].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
         }
     }
 
@@ -127,23 +127,23 @@ internal class BoforholdServiceTest {
             resultat.size shouldBe 5
             resultat[0].periodeFom shouldBe LocalDate.of(2018, 9, 1)
             resultat[0].periodeTom shouldBe LocalDate.of(2019, 3, 31)
-            resultat[0].bostatus shouldBe Bostatus.IKKE_MED_FORELDER
+            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
 
             resultat[1].periodeFom shouldBe LocalDate.of(2019, 4, 1)
             resultat[1].periodeTom shouldBe LocalDate.of(2019, 7, 31)
-            resultat[1].bostatus shouldBe Bostatus.MED_FORELDER
+            resultat[1].bostatus shouldBe Bostatuskode.MED_FORELDER
 
             resultat[2].periodeFom shouldBe LocalDate.of(2019, 8, 1)
             resultat[2].periodeTom shouldBe LocalDate.of(2021, 6, 30)
-            resultat[2].bostatus shouldBe Bostatus.IKKE_MED_FORELDER
+            resultat[2].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
 
             resultat[3].periodeFom shouldBe LocalDate.of(2021, 7, 1)
             resultat[3].periodeTom shouldBe LocalDate.of(2022, 3, 31)
-            resultat[3].bostatus shouldBe Bostatus.MED_FORELDER
+            resultat[3].bostatus shouldBe Bostatuskode.MED_FORELDER
 
             resultat[4].periodeFom shouldBe LocalDate.of(2022, 4, 1)
             resultat[4].periodeTom shouldBe null
-            resultat[4].bostatus shouldBe Bostatus.REGNES_IKKE_SOM_BARN
+            resultat[4].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
         }
     }
 
@@ -159,7 +159,7 @@ internal class BoforholdServiceTest {
             resultat.size shouldBe 1
             resultat[0].periodeFom shouldBe LocalDate.of(2022, 9, 1)
             resultat[0].periodeTom shouldBe null
-            resultat[0].bostatus shouldBe Bostatus.MED_FORELDER
+            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
         }
     }
 
@@ -174,15 +174,15 @@ internal class BoforholdServiceTest {
             resultat.size shouldBe 3
             resultat[0].periodeFom shouldBe LocalDate.of(2021, 9, 1)
             resultat[0].periodeTom shouldBe LocalDate.of(2021, 12, 31)
-            resultat[0].bostatus shouldBe Bostatus.IKKE_MED_FORELDER
+            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
 
             resultat[1].periodeFom shouldBe LocalDate.of(2022, 1, 1)
             resultat[1].periodeTom shouldBe LocalDate.of(2022, 3, 31)
-            resultat[1].bostatus shouldBe Bostatus.MED_FORELDER
+            resultat[1].bostatus shouldBe Bostatuskode.MED_FORELDER
 
             resultat[2].periodeFom shouldBe LocalDate.of(2022, 4, 1)
             resultat[2].periodeTom shouldBe null
-            resultat[2].bostatus shouldBe Bostatus.REGNES_IKKE_SOM_BARN
+            resultat[2].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
         }
     }
 }

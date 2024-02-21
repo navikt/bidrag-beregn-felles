@@ -1,8 +1,8 @@
 package no.nav.bidrag.boforhold.service
 
 import no.nav.bidrag.boforhold.response.BoforholdBeregnet
-import no.nav.bidrag.boforhold.response.Bostatus
 import no.nav.bidrag.boforhold.response.RelatertPerson
+import no.nav.bidrag.domene.enums.person.Bostatuskode
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
@@ -30,7 +30,7 @@ internal class BoforholdService() {
                     relatertPersonPersonId = relatertPerson.relatertPersonPersonId,
                     periodeFom = virkningstidspunkt,
                     periodeTom = null,
-                    bostatus = Bostatus.REGNES_IKKE_SOM_BARN,
+                    bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
                 ),
             )
             return boforholdBeregnetListe
@@ -46,7 +46,7 @@ internal class BoforholdService() {
                         relatertPersonPersonId = relatertPerson.relatertPersonPersonId,
                         periodeFom = virkningstidspunkt,
                         periodeTom = null,
-                        bostatus = Bostatus.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                     ),
                 )
             } else {
@@ -56,7 +56,7 @@ internal class BoforholdService() {
                         relatertPersonPersonId = relatertPerson.relatertPersonPersonId,
                         periodeFom = virkningstidspunkt,
                         periodeTom = attenårFraDato.minusDays(1),
-                        bostatus = Bostatus.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                     ),
                 )
                 boforholdBeregnetListe.add(
@@ -64,7 +64,7 @@ internal class BoforholdService() {
                         relatertPersonPersonId = relatertPerson.relatertPersonPersonId,
                         periodeFom = attenårFraDato,
                         periodeTom = null,
-                        bostatus = Bostatus.REGNES_IKKE_SOM_BARN,
+                        bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
                     ),
                 )
             }
@@ -78,7 +78,7 @@ internal class BoforholdService() {
                     relatertPersonPersonId = relatertPerson.relatertPersonPersonId,
                     periodeFom = if (it.periodeFra == null) virkningstidspunkt else it.periodeFra!!.withDayOfMonth(1),
                     periodeTom = it.periodeTil?.plusMonths(1)?.withDayOfMonth(1)?.minusDays(1),
-                    bostatus = Bostatus.MED_FORELDER,
+                    bostatus = Bostatuskode.MED_FORELDER,
                 )
             }
 
@@ -111,7 +111,7 @@ internal class BoforholdService() {
                                 relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                                 periodeFom = periodeFom,
                                 periodeTom = liste[indeks].periodeTom,
-                                bostatus = Bostatus.MED_FORELDER,
+                                bostatus = Bostatuskode.MED_FORELDER,
                             ),
                         )
                         periodeFom = null
@@ -121,7 +121,7 @@ internal class BoforholdService() {
                                 relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                                 periodeFom = liste[indeks].periodeFom,
                                 periodeTom = liste[indeks].periodeTom,
-                                bostatus = Bostatus.MED_FORELDER,
+                                bostatus = Bostatuskode.MED_FORELDER,
                             ),
                         )
                     }
@@ -133,7 +133,7 @@ internal class BoforholdService() {
                         relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                         periodeFom = periodeFom ?: liste[indeks].periodeFom,
                         periodeTom = liste[indeks].periodeTom,
-                        bostatus = Bostatus.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                     ),
                 )
             }
@@ -153,7 +153,7 @@ internal class BoforholdService() {
                             relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                             periodeFom = virkningstidspunkt,
                             periodeTom = liste[indeks].periodeFom.minusDays(1),
-                            bostatus = Bostatus.IKKE_MED_FORELDER,
+                            bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         ),
                     )
                     sammenhengendePerioderListe.add(
@@ -183,7 +183,7 @@ internal class BoforholdService() {
                             relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                             periodeFom = liste[indeks - 1].periodeTom!!.plusDays(1),
                             periodeTom = liste[indeks].periodeFom.minusDays(1),
-                            bostatus = Bostatus.IKKE_MED_FORELDER,
+                            bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         ),
                     )
                 }
@@ -206,7 +206,7 @@ internal class BoforholdService() {
                             relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                             periodeFom = liste[indeks].periodeTom!!.plusDays(1),
                             periodeTom = null,
-                            bostatus = Bostatus.IKKE_MED_FORELDER,
+                            bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         ),
                     )
                 }
@@ -232,7 +232,7 @@ internal class BoforholdService() {
                         relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                         periodeFom = attenårFraDato,
                         periodeTom = null,
-                        bostatus = Bostatus.REGNES_IKKE_SOM_BARN,
+                        bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
                     ),
                 )
             } else {
@@ -250,7 +250,7 @@ internal class BoforholdService() {
                             relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                             periodeFom = attenårFraDato,
                             periodeTom = null,
-                            bostatus = Bostatus.REGNES_IKKE_SOM_BARN,
+                            bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
                         ),
                     )
                 } else {

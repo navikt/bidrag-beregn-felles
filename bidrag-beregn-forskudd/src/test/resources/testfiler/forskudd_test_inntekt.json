@@ -36,7 +36,8 @@
           "til": null
         },
         "bostatus": "MED_FORELDER",
-        "manueltRegistrert": false
+        "manueltRegistrert": false,
+        "relatertTilPart": "Person_Bidragsmottaker"
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Søknadsbarn"

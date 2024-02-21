@@ -80,7 +80,8 @@
           "til": null
         },
         "bostatus": "MED_FORELDER",
-        "manueltRegistrert": false
+        "manueltRegistrert": false,
+        "relatertTilPart": "Person_Bidragsmottaker"
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Søknadsbarn"
@@ -94,7 +95,8 @@
           "til": "2022-03"
         },
         "bostatus": "MED_FORELDER",
-        "manueltRegistrert": false
+        "manueltRegistrert": false,
+        "relatertTilPart": "Person_Bidragsmottaker"
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Husstandsbarn_01"
@@ -108,7 +110,8 @@
           "til": "2022-05"
         },
         "bostatus": "MED_FORELDER",
-        "manueltRegistrert": false
+        "manueltRegistrert": false,
+        "relatertTilPart": "Person_Bidragsmottaker"
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Husstandsbarn_02"
@@ -122,7 +125,8 @@
           "til": null
         },
         "bostatus": "MED_FORELDER",
-        "manueltRegistrert": false
+        "manueltRegistrert": false,
+        "relatertTilPart": "Person_Bidragsmottaker"
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Husstandsbarn_03"
@@ -136,7 +140,8 @@
           "til": null
         },
         "bostatus": "MED_FORELDER",
-        "manueltRegistrert": false
+        "manueltRegistrert": false,
+        "relatertTilPart": "Person_Bidragsmottaker"
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Husstandsbarn_04"

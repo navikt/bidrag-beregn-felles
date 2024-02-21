@@ -810,6 +810,7 @@ object TestUtil {
                         ),
                     "bostatus" to Bostatuskode.MED_FORELDER.name,
                     "manueltRegistrert" to false,
+                    "relatertTilPart" to "Person_Bidragsmottaker",
                 ),
             )
         val inntektInnhold =
