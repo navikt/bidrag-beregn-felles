@@ -10,6 +10,7 @@ import no.nav.bidrag.commons.service.sjablon.SjablonProvider
 import no.nav.bidrag.commons.service.sjablon.Sjablontall
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
+import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.felles.valider
@@ -19,6 +20,7 @@ import no.nav.bidrag.transport.behandling.beregning.forskudd.ResultatPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBarnIHusstand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningInntekt
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningForskudd
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettSluttberegningreferanse
 
@@ -71,8 +73,8 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
                     "soknadBarn= " + grunnlagTilCore.søknadsbarn + System.lineSeparator() +
                     "barnIHusstandenPeriodeListe= " + grunnlagTilCore.barnIHusstandenPeriodeListe + System.lineSeparator() +
                     "inntektPeriodeListe= " + grunnlagTilCore.inntektPeriodeListe + System.lineSeparator() +
-                    "sivilstandPeriodeListe= " + grunnlagTilCore.sivilstandPeriodeListe + System.lineSeparator()
-                "bostatusPeriodeListe= " + grunnlagTilCore.bostatusPeriodeListe + System.lineSeparator()
+                    "sivilstandPeriodeListe= " + grunnlagTilCore.sivilstandPeriodeListe + System.lineSeparator() +
+                    "bostatusPeriodeListe= " + grunnlagTilCore.bostatusPeriodeListe + System.lineSeparator()
             }
             throw IllegalArgumentException("Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: $avviktekst")
         }
@@ -239,11 +241,17 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
         resultatGrunnlagListe.addAll(
             resultatFraCore.sjablonListe
                 .map {
-                    val map = LinkedHashMap<String, Any>()
-                    map["periode"] = ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil)
-                    map["sjablonNavn"] = it.navn
-                    map["sjablonVerdi"] = it.verdi.toInt()
-                    GrunnlagDto(referanse = it.referanse, type = Grunnlagstype.SJABLON, innhold = POJONode(map))
+                    GrunnlagDto(
+                        referanse = it.referanse,
+                        type = Grunnlagstype.SJABLON,
+                        innhold = POJONode(
+                            SjablonGrunnlag(
+                                periode = ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil),
+                                sjablon = SjablonTallNavn.from(it.navn),
+                                verdi = it.verdi,
+                            ),
+                        ),
+                    )
                 },
         )
 

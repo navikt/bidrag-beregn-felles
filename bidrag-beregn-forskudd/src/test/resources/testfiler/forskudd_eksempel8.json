@@ -3,10 +3,10 @@
     "fom": "2020-12",
     "til": "2021-01"
   },
-  "søknadsbarnReferanse": "Person_Søknadsbarn_20201201",
+  "søknadsbarnReferanse": "Person_Søknadsbarn",
   "grunnlagListe": [
     {
-      "referanse": "Person_Søknadsbarn_20201201",
+      "referanse": "Person_Søknadsbarn",
       "type": "PERSON_SØKNADSBARN",
       "innhold": {
         "ident": "11111111110",
@@ -17,7 +17,7 @@
       "gjelderReferanse": null
     },
     {
-      "referanse": "Person_Husstandsbarn_01_20201201",
+      "referanse": "Person_Husstandsbarn_01",
       "type": "PERSON_HUSSTANDSMEDLEM",
       "innhold": {
         "ident": "11111111111",
@@ -28,7 +28,7 @@
       "gjelderReferanse": null
     },
     {
-      "referanse": "Person_Husstandsbarn_02_20201201",
+      "referanse": "Person_Husstandsbarn_02",
       "type": "PERSON_HUSSTANDSMEDLEM",
       "innhold": {
         "ident": "11111111112",
@@ -39,7 +39,7 @@
       "gjelderReferanse": null
     },
     {
-      "referanse": "Person_Bidragsmottaker_20201201",
+      "referanse": "Person_Bidragsmottaker",
       "type": "PERSON_BIDRAGSMOTTAKER",
       "innhold": {
         "ident": "22222222222",
@@ -50,7 +50,7 @@
       "gjelderReferanse": null
     },
     {
-      "referanse": "Bostatus_Søknadsbarn_20201201",
+      "referanse": "Bostatus_Søknadsbarn_202012",
       "type": "BOSTATUS_PERIODE",
       "innhold": {
         "periode": {
@@ -63,10 +63,10 @@
 
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Søknadsbarn_20201201"
+      "gjelderReferanse": "Person_Søknadsbarn"
     },
     {
-      "referanse": "Bostatus_Husstandsbarn_01_20201201",
+      "referanse": "Bostatus_Husstandsbarn_01_202012",
       "type": "BOSTATUS_PERIODE",
       "innhold": {
         "periode": {
@@ -79,10 +79,10 @@
 
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Husstandsbarn_01_20201201"
+      "gjelderReferanse": "Person_Husstandsbarn_01"
     },
     {
-      "referanse": "Bostatus_Husstandsbarn_02_20201201",
+      "referanse": "Bostatus_Husstandsbarn_02_202012",
       "type": "BOSTATUS_PERIODE",
       "innhold": {
         "periode": {
@@ -94,10 +94,10 @@
         "relatertTilPart": "Person_Bidragsmottaker"
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Husstandsbarn_02_20201201"
+      "gjelderReferanse": "Person_Husstandsbarn_02"
     },
     {
-      "referanse": "BeregningInntektRapportering_Ainntekt_20201201",
+      "referanse": "BeregningInntektRapportering_Ainntekt_202012",
       "type": "INNTEKT_RAPPORTERING_PERIODE",
       "innhold": {
         "periode": {
@@ -111,10 +111,10 @@
         "valgt": true
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Bidragsmottaker_20201201"
+      "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {
-      "referanse": "Sivilstand_20201201",
+      "referanse": "Sivilstand_202012",
       "type": "SIVILSTAND_PERIODE",
       "innhold": {
         "periode": {
@@ -124,7 +124,7 @@
         "sivilstand": "BOR_ALENE_MED_BARN"
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Bidragsmottaker_20201201"
+      "gjelderReferanse": "Person_Bidragsmottaker"
     }
   ]
 }
