@@ -30,6 +30,13 @@ class SjablonApiStub {
                 "\"brukerid\": \"A100364 \"," +
                 "\"tidspktEndret\": \"2020-05-17T14:13:16.999\"}," +
 
+                "{\"typeSjablon\": \"0006\"," +
+                "\"datoFom\": \"2003-01-01\"," +
+                "\"datoTom\": \"9999-12-31\"," +
+                "\"verdi\": 10000," +
+                "\"brukerid\": \"A100364 \"," +
+                "\"tidspktEndret\": \"2020-05-17T14:13:16.999\"}," +
+
                 "{\"typeSjablon\": \"0013\"," +
                 "\"datoFom\": \"2003-01-01\"," +
                 "\"datoTom\": \"2023-06-30\"," +

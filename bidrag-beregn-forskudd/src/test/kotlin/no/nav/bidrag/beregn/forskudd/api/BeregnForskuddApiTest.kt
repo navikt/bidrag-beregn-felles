@@ -351,7 +351,7 @@ internal class BeregnForskuddApiTest {
         forventetForskuddBeløp = 0
         forventetForskuddResultatkode = Resultatkode.AVSLAG
         forventetForskuddRegel = "REGEL 4"
-        forventetAntallDelberegningReferanser = 4
+        forventetAntallDelberegningReferanser = 5
         utførBeregningerOgEvaluerResultat()
     }
 
@@ -372,6 +372,13 @@ internal class BeregnForskuddApiTest {
     fun skalKalleCoreOgReturnereEtResultat_EksempelMedFlerePerioder() {
         filnavn = "src/test/resources/testfiler/forskudd_eksempel_flere_perioder.json"
         utførBeregningerOgEvaluerResultatFlerePerioder()
+    }
+
+    @Test
+    @DisplayName("skal kalle core og returnere et resultat - eksempel med mange inntektstyper")
+    fun skalKalleCoreOgReturnereEtResultat_EksempelMedMangeInntektstyper() {
+        filnavn = "src/test/resources/testfiler/forskudd_eksempel_mange_inntektstyper.json"
+        utførBeregningerOgEvaluerResultatMangeInntektstyper()
     }
 
     private fun utførBeregningerOgEvaluerResultat() {
@@ -405,7 +412,7 @@ internal class BeregnForskuddApiTest {
                     forskuddResultat.grunnlagListe
                         .filter { it.type == Grunnlagstype.SLUTTBEREGNING_FORSKUDD }
                         .flatMap { it.grunnlagsreferanseListe }
-                        .count { it.startsWith("Sjablon") },
+                        .count { it.startsWith("sjablon") },
                 ).isEqualTo(7)
             },
         )
@@ -471,6 +478,45 @@ internal class BeregnForskuddApiTest {
                 ).isEqualTo(Resultatkode.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT)
             },
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[7].resultat.regel).isEqualTo("REGEL 2") },
+        )
+    }
+
+    private fun utførBeregningerOgEvaluerResultatMangeInntektstyper() {
+        val request = lesFilOgByggRequest(filnavn)
+
+        // Kall rest-API for forskudd
+        val forskuddResultat = beregnForskuddService.beregn(request)
+
+        TestUtil.printJson(forskuddResultat)
+
+        assertAll(
+            { assertThat(forskuddResultat).isNotNull },
+            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe).isNotNull },
+            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe).hasSize(1) },
+
+            { assertThat(forskuddResultat.grunnlagListe).hasSize(24) },
+            {
+                assertThat(
+                    forskuddResultat.grunnlagListe
+                        .filter { it.type == Grunnlagstype.DELBEREGNING_SUM_INNTEKT }
+                        .first()
+                        .grunnlagsreferanseListe,
+                ).hasSize(11)
+            },
+            {
+                assertThat(
+                    forskuddResultat.grunnlagListe
+                        .filter { it.type == Grunnlagstype.DELBEREGNING_SUM_INNTEKT }
+                        .first()
+                        .grunnlagsreferanseListe,
+                ).anySatisfy { it.startsWith("sjablon_InnslagKapitalInntektBeløp") }
+            },
+            {
+                assertThat(
+                    forskuddResultat.grunnlagListe
+                        .filter { it.referanse.startsWith("sjablon_InnslagKapitalInntektBeløp") },
+                ).hasSizeGreaterThan(0)
+            },
         )
     }
 

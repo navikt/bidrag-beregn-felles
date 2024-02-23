@@ -994,6 +994,14 @@ object TestUtil {
         )
         sjablonSjablontallListe.add(
             Sjablontall(
+                typeSjablon = "0006",
+                datoFom = LocalDate.parse("2003-01-01"),
+                datoTom = LocalDate.parse("9999-12-31"),
+                verdi = BigDecimal.valueOf(10000),
+            ),
+        )
+        sjablonSjablontallListe.add(
+            Sjablontall(
                 typeSjablon = "0013",
                 datoFom = LocalDate.parse("2003-01-01"),
                 datoTom = LocalDate.parse("9999-12-31"),

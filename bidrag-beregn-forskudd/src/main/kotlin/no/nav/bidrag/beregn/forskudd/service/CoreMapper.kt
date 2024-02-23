@@ -4,6 +4,8 @@ import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonInnholdCore
 import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
+import no.nav.bidrag.beregn.core.util.InntektUtil.erKapitalinntekt
+import no.nav.bidrag.beregn.core.util.InntektUtil.justerKapitalinntekt
 import no.nav.bidrag.beregn.forskudd.core.dto.BarnIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BostatusPeriodeCore
@@ -25,6 +27,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.SivilstandPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåFremmedReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
+import java.math.BigDecimal
 import java.time.LocalDate
 
 internal object CoreMapper {
@@ -37,6 +40,11 @@ internal object CoreMapper {
             sjablontallMap[it.id] = it
         }
 
+        // Henter sjablonverdi for kapitalinntekt
+        // TODO Pt ligger det bare en gyldig sjablonverdi (uforandret siden 2003). Logikken her må utvides hvis det legges inn nye sjablonverdier
+        val innslagKapitalinntektSjablonverdi =
+            sjablontallListe.firstOrNull { it.typeSjablon == SjablonTallNavn.INNSLAG_KAPITALINNTEKT_BELØP.id }?.verdi ?: BigDecimal.ZERO
+
         val referanseBidragsmottaker = beregnForskuddGrunnlag.grunnlagListe
             .filter { it.type == Grunnlagstype.PERSON_BIDRAGSMOTTAKER }
             .map { it.referanse }
@@ -45,7 +53,7 @@ internal object CoreMapper {
         // Mapper grunnlagstyper til input for core
         val søknadsbarnCore = mapSøknadsbarn(beregnForskuddGrunnlag)
         val bostatusPeriodeCoreListe = mapBostatus(beregnForskuddGrunnlag)
-        val inntektPeriodeCoreListe = mapInntekt(beregnForskuddGrunnlag, referanseBidragsmottaker)
+        val inntektPeriodeCoreListe = mapInntekt(beregnForskuddGrunnlag, referanseBidragsmottaker, innslagKapitalinntektSjablonverdi)
         val sivilstandPeriodeCoreListe = mapSivilstand(beregnForskuddGrunnlag)
         val barnIHusstandenPeriodeCoreListe = mapBarnIHusstanden(beregnForskuddGrunnlag)
 
@@ -126,7 +134,11 @@ internal object CoreMapper {
         }
     }
 
-    private fun mapInntekt(beregnForskuddGrunnlag: BeregnGrunnlag, referanseBidragsmottaker: String): List<InntektPeriodeCore> {
+    private fun mapInntekt(
+        beregnForskuddGrunnlag: BeregnGrunnlag,
+        referanseBidragsmottaker: String,
+        innslagKapitalinntektSjablonverdi: BigDecimal,
+    ): List<InntektPeriodeCore> {
         try {
             val inntektGrunnlagListe =
                 beregnForskuddGrunnlag.grunnlagListe
@@ -144,7 +156,14 @@ internal object CoreMapper {
                                 datoFom = it.innhold.periode.toDatoperiode().fom,
                                 datoTil = it.innhold.periode.toDatoperiode().til,
                             ),
-                            beløp = it.innhold.beløp,
+                            beløp = if (erKapitalinntekt(it.innhold.inntektsrapportering)) {
+                                justerKapitalinntekt(
+                                    beløp = it.innhold.beløp,
+                                    innslagKapitalinntektSjablonverdi = innslagKapitalinntektSjablonverdi,
+                                )
+                            } else {
+                                it.innhold.beløp
+                            },
                             grunnlagsreferanseListe = emptyList(),
                         )
                     }
@@ -286,9 +305,11 @@ internal object CoreMapper {
             InntektPeriodeCore::class.java -> {
                 akkumulerOgPeriodiserInntekter(grunnlagListe as List<InntektPeriodeCore>, periodeListe) as List<T>
             }
+
             BarnIHusstandenPeriodeCore::class.java -> {
                 akkumulerOgPeriodiserBarnIHusstanden(grunnlagListe as List<BarnIHusstandenPeriodeCore>, periodeListe) as List<T>
             }
+
             else -> {
                 emptyList()
             }
@@ -302,16 +323,16 @@ internal object CoreMapper {
     ): List<InntektPeriodeCore> {
         return periodeListe
             .map { periode ->
-                val filter = filtrertGrunnlagListe(grunnlagListe = inntektGrunnlagListe, periode = periode)
+                val filtrertGrunnlagsliste = filtrerGrunnlagsliste(grunnlagsliste = inntektGrunnlagListe, periode = periode)
 
                 InntektPeriodeCore(
                     referanse = opprettDelberegningreferanse(
-                        type = Grunnlagstype.DELBEREGNING_INNTEKT,
+                        type = Grunnlagstype.DELBEREGNING_SUM_INNTEKT,
                         periode = ÅrMånedsperiode(fom = periode.datoFom, til = periode.datoTil),
                     ),
                     periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
-                    beløp = filter.sumOf { it.beløp },
-                    grunnlagsreferanseListe = filter.map { it.referanse },
+                    beløp = filtrertGrunnlagsliste.sumOf { it.beløp },
+                    grunnlagsreferanseListe = filtrertGrunnlagsliste.map { it.referanse },
                 )
             }
     }
@@ -323,7 +344,7 @@ internal object CoreMapper {
     ): List<BarnIHusstandenPeriodeCore> {
         return periodeListe
             .map { periode ->
-                val filter = filtrertGrunnlagListe(grunnlagListe = barnIHusstandenGrunnlagListe, periode = periode)
+                val filtrertGrunnlagsliste = filtrerGrunnlagsliste(grunnlagsliste = barnIHusstandenGrunnlagListe, periode = periode)
 
                 BarnIHusstandenPeriodeCore(
                     referanse = opprettDelberegningreferanse(
@@ -331,15 +352,15 @@ internal object CoreMapper {
                         periode = ÅrMånedsperiode(fom = periode.datoFom, til = periode.datoTil),
                     ),
                     periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
-                    antall = filter.sumOf { it.antall },
-                    grunnlagsreferanseListe = filter.map { it.referanse },
+                    antall = filtrertGrunnlagsliste.sumOf { it.antall },
+                    grunnlagsreferanseListe = filtrertGrunnlagsliste.map { it.referanse },
                 )
             }
     }
 
     // Filtrerer ut grunnlag som tilhører en gitt periode
-    private fun <T : DelberegningForskudd> filtrertGrunnlagListe(grunnlagListe: List<T>, periode: Periode): List<T> {
-        return grunnlagListe.filter { grunnlag ->
+    private fun <T : DelberegningForskudd> filtrerGrunnlagsliste(grunnlagsliste: List<T>, periode: Periode): List<T> {
+        return grunnlagsliste.filter { grunnlag ->
             (grunnlag.periode.datoTil == null || periode.datoFom.isBefore(grunnlag.periode.datoTil)) &&
                 (periode.datoTil == null || periode.datoTil!!.isAfter(grunnlag.periode.datoFom))
         }
