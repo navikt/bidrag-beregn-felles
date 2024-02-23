@@ -1,0 +1,229 @@
+{
+  "periode": {
+    "fom": "2020-12",
+    "til": "2021-01"
+  },
+  "søknadsbarnReferanse": "Person_Søknadsbarn",
+  "grunnlagListe": [
+    {
+      "referanse": "Person_Søknadsbarn",
+      "type": "PERSON_SØKNADSBARN",
+      "innhold": {
+        "ident": "11111111110",
+        "navn": "Trengende Søknadsbarn",
+        "fødselsdato": "2006-02-01"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Person_Bidragsmottaker",
+      "type": "PERSON_BIDRAGSMOTTAKER",
+      "innhold": {
+        "ident": "22222222222",
+        "navn": "Søkende Bidragsmottaker",
+        "fødselsdato": "1982-05-05"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Bostatus_Søknadsbarn_202012",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2020-12",
+          "til": "2021-01"
+        },
+        "bostatus": "MED_FORELDER",
+        "manueltRegistrert": false,
+        "relatertTilPart": "Person_Bidragsmottaker"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Søknadsbarn"
+    },
+    {
+      "referanse": "BeregningInntektRapportering_Ainntekt_202012",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2020-12",
+          "til": "2021-01"
+        },
+        "inntektsrapportering": "AINNTEKT",
+        "gjelderBarn": null,
+        "beløp": 160000,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "BeregningInntektRapportering_Pensjon_202012",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2020-12",
+          "til": "2021-01"
+        },
+        "inntektsrapportering": "PENSJON",
+        "gjelderBarn": null,
+        "beløp": 100000,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "BeregningInntektRapportering_Kapitalinntekt_202012",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2020-12",
+          "til": "2021-01"
+        },
+        "inntektsrapportering": "KAPITALINNTEKT",
+        "gjelderBarn": null,
+        "beløp": -15000,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "BeregningInntektRapportering_KapitalinntektEgneOpplysninger_202012",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2020-12",
+          "til": "2021-01"
+        },
+        "inntektsrapportering": "KAPITALINNTEKT_EGNE_OPPLYSNINGER",
+        "gjelderBarn": null,
+        "beløp": 80000,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "BeregningInntektRapportering_Kontantstøtte_202012",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2020-12",
+          "til": "2021-01"
+        },
+        "inntektsrapportering": "KONTANTSTØTTE",
+        "gjelderBarn": null,
+        "beløp": 10000,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "BeregningInntektRapportering_Barnetillegg1_202012",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2020-12",
+          "til": "2021-01"
+        },
+        "inntektsrapportering": "BARNETILLEGG",
+        "gjelderBarn": null,
+        "beløp": 6000,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "BeregningInntektRapportering_Barnetillegg2_202012",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2020-12",
+          "til": "2021-01"
+        },
+        "inntektsrapportering": "BARNETILLEGG",
+        "gjelderBarn": null,
+        "beløp": 9000,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "BeregningInntektRapportering_UtvidetBarnetrygd_202012",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2020-12",
+          "til": "2021-01"
+        },
+        "inntektsrapportering": "UTVIDET_BARNETRYGD",
+        "gjelderBarn": null,
+        "beløp": 15000,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "BeregningInntektRapportering_Småbarnstillegg_202012",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2020-12",
+          "til": "2021-01"
+        },
+        "inntektsrapportering": "SMÅBARNSTILLEGG",
+        "gjelderBarn": null,
+        "beløp": 20000,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "BeregningInntektRapportering_YtelseFraOffentligManueltBeregnet_202012",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2020-12",
+          "til": "2021-01"
+        },
+        "inntektsrapportering": "YTELSE_FRA_OFFENTLIG_MANUELT_BEREGNET",
+        "gjelderBarn": null,
+        "beløp": 70000,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "Sivilstand_202012",
+      "type": "SIVILSTAND_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2020-12",
+          "til": "2021-01"
+        },
+        "sivilstand": "BOR_ALENE_MED_BARN"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    }
+  ]
+}

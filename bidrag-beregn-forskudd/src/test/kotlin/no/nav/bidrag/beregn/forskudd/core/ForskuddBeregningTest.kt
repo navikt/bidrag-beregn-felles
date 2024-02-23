@@ -718,6 +718,13 @@ internal class ForskuddBeregningTest {
                 finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.FORSKUDDSSATS_BELØP),
         )
         println(
+            "0006 Innslag kapitalinntekt:                         " +
+                finnSjablonVerdi(
+                    sjablonPeriodeListe,
+                    SjablonTallNavn.INNSLAG_KAPITALINNTEKT_BELØP,
+                ),
+        )
+        println(
             "0013 Multiplikator:                                  " +
                 finnSjablonVerdi(
                     sjablonPeriodeListe,

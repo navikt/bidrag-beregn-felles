@@ -7,7 +7,9 @@ import no.nav.bidrag.beregn.core.inntekt.InntektPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.inntekt.InntektPeriodeGrunnlagUtenInntektType
 import no.nav.bidrag.beregn.core.inntekt.PeriodisertInntekt
 import no.nav.bidrag.beregn.core.periode.Periodiserer
+import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.domene.enums.inntekt.Inntektstype
+import no.nav.bidrag.domene.enums.inntekt.Inntektstype.Companion.inngårIInntektRapporteringer
 import no.nav.bidrag.domene.enums.rolle.Rolle
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import no.nav.bidrag.domene.enums.vedtak.Formål
@@ -464,4 +466,14 @@ object InntektUtil {
 
     private fun lagReferanse(inntektType: Inntektstype, datoFom: LocalDate) =
         "Beregnet_Inntekt_" + inntektType.name + "_" + datoFom.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+
+    // Verdi fra sjablon 0006 skal trekkes fra kapitalinntekt. Hvis nettobeløpet blir mindre enn 0, settes det til 0
+    fun justerKapitalinntekt(beløp: BigDecimal, innslagKapitalinntektSjablonverdi: BigDecimal): BigDecimal {
+        val kapitalinntekt = beløp - innslagKapitalinntektSjablonverdi
+        return if (kapitalinntekt < BigDecimal.ZERO) BigDecimal.ZERO else kapitalinntekt
+    }
+
+    // Sjekker om inntekten er kapitalinntekt
+    fun erKapitalinntekt(inntektsrapportering: Inntektsrapportering) =
+        inntektsrapportering in Inntektstype.KAPITALINNTEKT.inngårIInntektRapporteringer()
 }

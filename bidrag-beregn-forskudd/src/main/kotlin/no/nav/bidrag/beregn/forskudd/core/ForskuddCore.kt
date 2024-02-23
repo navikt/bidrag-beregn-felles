@@ -32,7 +32,8 @@ import no.nav.bidrag.beregn.forskudd.core.periode.ForskuddPeriode
 import no.nav.bidrag.domene.enums.person.AldersgruppeForskudd
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.enums.person.Sivilstandskode
-import java.time.format.DateTimeFormatter
+import no.nav.bidrag.domene.tid.ÅrMånedsperiode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettSjablonreferanse
 
 internal class ForskuddCore(private val forskuddPeriode: ForskuddPeriode = ForskuddPeriode()) {
     fun beregnForskudd(grunnlag: BeregnForskuddGrunnlagCore): BeregnetForskuddResultatCore {
@@ -183,12 +184,16 @@ internal class ForskuddCore(private val forskuddPeriode: ForskuddPeriode = Forsk
         }
         referanseListe.add(soknadBarnAlder.referanse)
         referanseListe.add(soknadBarnBostatus.referanse)
-        referanseListe.addAll(sjablonListe.map { lagSjablonReferanse(it) }.distinct())
+        referanseListe.addAll(
+            sjablonListe.map {
+                opprettSjablonreferanse(
+                    navn = it.navn,
+                    periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
+                )
+            }.distinct(),
+        )
         return referanseListe.distinct().sorted()
     }
-
-    private fun lagSjablonReferanse(sjablon: SjablonPeriodeNavnVerdi) =
-        "Sjablon_${sjablon.navn}_${sjablon.periode.datoFom.format(DateTimeFormatter.ofPattern("yyyyMM"))}"
 
     private fun mapSjablonGrunnlagListe(periodeResultatListe: List<ResultatPeriode>) = periodeResultatListe.stream()
         .map { mapSjablonListe(it.resultat.sjablonListe) }
@@ -199,7 +204,7 @@ internal class ForskuddCore(private val forskuddPeriode: ForskuddPeriode = Forsk
     private fun mapSjablonListe(sjablonListe: List<SjablonPeriodeNavnVerdi>) = sjablonListe
         .map {
             SjablonResultatGrunnlagCore(
-                referanse = lagSjablonReferanse(it),
+                referanse = opprettSjablonreferanse(navn = it.navn, periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil)),
                 periode = PeriodeCore(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
                 navn = it.navn,
                 verdi = it.verdi,

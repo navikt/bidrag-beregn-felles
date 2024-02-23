@@ -211,6 +211,7 @@ internal class CoreMapperTest {
                 "mapInntekt",
                 forskuddGrunnlag,
                 "Person_Bidragsmottaker",
+                BigDecimal.valueOf(10000),
             ) as List<InntektPeriodeCore>
 
         assertAll(
