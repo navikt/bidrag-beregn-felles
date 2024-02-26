@@ -380,7 +380,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
                                 )
                             } else {
                                 it.innhold.beløp
-                            }
+                            },
                         )
                     }
                 } else {

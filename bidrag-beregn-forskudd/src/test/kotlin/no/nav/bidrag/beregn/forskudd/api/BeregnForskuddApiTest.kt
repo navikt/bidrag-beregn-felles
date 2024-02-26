@@ -498,16 +498,14 @@ internal class BeregnForskuddApiTest {
             {
                 assertThat(
                     forskuddResultat.grunnlagListe
-                        .filter { it.type == Grunnlagstype.DELBEREGNING_SUM_INNTEKT }
-                        .first()
+                        .first { it.type == Grunnlagstype.DELBEREGNING_SUM_INNTEKT }
                         .grunnlagsreferanseListe,
                 ).hasSize(11)
             },
             {
                 assertThat(
                     forskuddResultat.grunnlagListe
-                        .filter { it.type == Grunnlagstype.DELBEREGNING_SUM_INNTEKT }
-                        .first()
+                        .first { it.type == Grunnlagstype.DELBEREGNING_SUM_INNTEKT }
                         .grunnlagsreferanseListe,
                 ).anySatisfy { it.startsWith("sjablon_InnslagKapitalInntektBeløp") }
             },

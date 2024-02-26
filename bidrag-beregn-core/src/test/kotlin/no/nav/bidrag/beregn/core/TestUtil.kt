@@ -1,5 +1,8 @@
 package no.nav.bidrag.beregn.core
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.bo.Sjablon
 import no.nav.bidrag.beregn.core.bo.SjablonInnhold
@@ -12,6 +15,7 @@ import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonNøkkelNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import java.math.BigDecimal
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 
 object TestUtil {
@@ -1169,5 +1173,14 @@ object TestUtil {
             ),
         )
         return sjablontallPeriodeListe
+    }
+
+    fun <T> printJson(json: T) {
+        val objectMapper = ObjectMapper()
+        objectMapper.registerKotlinModule()
+        objectMapper.registerModule(JavaTimeModule())
+        objectMapper.dateFormat = SimpleDateFormat("yyyy-MM-dd")
+
+        println(objectMapper.writeValueAsString(json))
     }
 }
