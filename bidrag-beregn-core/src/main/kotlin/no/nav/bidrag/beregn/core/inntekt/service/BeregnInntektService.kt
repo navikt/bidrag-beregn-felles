@@ -75,6 +75,12 @@ internal class BeregnInntektService {
         val inntektPerBarnListe = mutableListOf<InntektPerBarn>()
 
         grunnlag.barnIdentListe.forEach { barnIdent ->
+
+            // Skal ikke summere inntekter for barnet hvis det ikke er noen inntekter som gjelder spesifikt for barnet
+            if (grunnlag.grunnlagListe.none { it.inntektGjelderBarnIdent == barnIdent }) {
+                return@forEach
+            }
+
             val barnInntekterListe = grunnlag.grunnlagListe
                 .filter { it.inntektEiesAvIdent == bidragsmottakerIdent }
                 .filter { it.inntektGjelderBarnIdent.let { barn -> barn == barnIdent || barn == null } }
