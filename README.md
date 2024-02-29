@@ -11,6 +11,7 @@ For å skru på debug logging, legg til følgende i `application.yaml`:
 ```yaml
 logging:
   level:
+    secureLogger: DEBUG // For logging av sikker logg som har nivå DEBUG
     no.nav.bidrag.inntekt: DEBUG
     no.nav.bidrag.beregn.beregn.forskudd: DEBUG
 ```
