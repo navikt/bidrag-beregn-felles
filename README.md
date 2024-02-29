@@ -4,6 +4,17 @@ Felles biblioteker for beregning av bidrag/forskudd/særtilskudd og diverse bibl
 [![Release Drafter](https://github.com/navikt/bidrag-beregn-felles/actions/workflows/release-draft.yaml/badge.svg?branch=main)](https://github.com/navikt/bidrag-beregn-felles/actions/workflows/release-draft.yaml)
 [![Publish](https://github.com/navikt/bidrag-beregn-felles/actions/workflows/publish.yaml/badge.svg?branch=main)](https://github.com/navikt/bidrag-beregn-felles/actions/workflows/publish.yaml)
 
+### Skru på debug logging
+
+For å skru på debug logging, legg til følgende i `application.yaml`:
+
+```yaml
+logging:
+  level:
+    secureLogger: DEBUG // For logging av sikker logg som har nivå DEBUG
+    no.nav.bidrag.inntekt: DEBUG
+    no.nav.bidrag.beregn.beregn.forskudd: DEBUG
+```
 
 
 [![Publish button]][Release draft]

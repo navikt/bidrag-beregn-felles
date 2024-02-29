@@ -38,7 +38,7 @@ private val logger = KotlinLogging.logger {}
 
 internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = ForskuddCore()) {
     fun beregn(grunnlag: BeregnGrunnlag): BeregnetForskuddResultat {
-        secureLogger.info { "Forskuddsberegning - følgende request mottatt: $grunnlag" }
+        secureLogger.debug { "Forskuddsberegning - følgende request mottatt: $grunnlag" }
 
         // Kontroll av inputdata
         try {
@@ -76,7 +76,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
             val avviktekst = resultatFraCore.avvikListe.joinToString("; ") { it.avvikTekst }
             logger.warn { "Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: $avviktekst" }
             secureLogger.warn { "Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: $avviktekst" }
-            secureLogger.info {
+            secureLogger.debug {
                 "Forskuddsberegning - grunnlag for beregning: " + System.lineSeparator() +
                     "beregnDatoFra= " + grunnlagTilCore.beregnDatoFra + System.lineSeparator() +
                     "beregnDatoTil= " + grunnlagTilCore.beregnDatoTil + System.lineSeparator() +
@@ -89,7 +89,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
             throw IllegalArgumentException("Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: $avviktekst")
         }
 
-        secureLogger.info { "Forskuddberegning - resultat av beregning: ${resultatFraCore.beregnetForskuddPeriodeListe}" }
+        secureLogger.debug { "Forskuddberegning - resultat av beregning: ${resultatFraCore.beregnetForskuddPeriodeListe}" }
 
         // Henter sjablonverdi for kapitalinntekt
         // TODO Pt ligger det bare en gyldig sjablonverdi (uforandret siden 2003). Logikken her må utvides hvis det legges inn nye sjablonverdier
@@ -112,7 +112,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
                 grunnlagListe = grunnlagsliste.distinctBy { it.referanse },
             )
 
-        secureLogger.info { "Forskuddsberegning - returnerer følgende respons: $respons" }
+        secureLogger.debug { "Forskuddsberegning - returnerer følgende respons: $respons" }
 
         return respons
     }
