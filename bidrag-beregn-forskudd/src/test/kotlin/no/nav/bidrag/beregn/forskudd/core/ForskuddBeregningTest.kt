@@ -73,7 +73,7 @@ internal class ForskuddBeregningTest {
 
     @Test
     @Order(2)
-    @DisplayName("Regel 2: Søknadsbarn alder er høyere enn eller lik 11 år og bostedsstatus er IKKE_MED_FORELDER")
+    @DisplayName("Regel 2: Bostedsstatus er IKKE_MED_FORELDER")
     fun skalGi125ProsentBorIkkeMedForelder() {
         val inntektListe =
             listOf(
@@ -98,44 +98,9 @@ internal class ForskuddBeregningTest {
 
         assertAll(
             { assertThat(resultat).isNotNull() },
-            { assertThat(resultat.beløp).isEqualByComparingTo(forventetResultatBelop125Prosent) },
-            { assertThat(resultat.kode).isEqualTo(Resultatkode.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT) },
+            { assertThat(resultat.beløp).isZero },
+            { assertThat(resultat.kode).isEqualTo(Resultatkode.AVSLAG) },
             { assertThat(resultat.regel).isEqualTo("REGEL 2") },
-            { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
-        )
-
-        printGrunnlagResultat(resultat, "   **")
-    }
-
-    @Test
-    @Order(3)
-    @DisplayName("Regel 3: Søknadsbarn alder er lavere enn 11 år og bostedsstatus er IKKE_MED_FORELDER")
-    fun skalGi100ProsentBorIkkeMedForelder() {
-        val inntektListe =
-            listOf(
-                Inntekt(
-                    referanse = INNTEKT_REFERANSE_1,
-                    type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-                    beløp = BigDecimal.ZERO,
-                ),
-            )
-        val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.BOR_ALENE_MED_BARN)
-        val barnIHusstandenListe = listOf(BarnIHusstanden(referanse = BARN_I_HUSSTANDEN_REFERANSE_1, antall = 1))
-        val alder = Alder(referanse = SØKNADSBARN_REFERANSE, alder = 10)
-        val bostatus = Bostatus(referanse = BOSTATUS_REFERANSE, kode = Bostatuskode.IKKE_MED_FORELDER)
-        lagGrunnlag(
-            inntekt = inntektListe,
-            sivilstand = sivilstand,
-            barnIHusstanden = barnIHusstandenListe,
-            alder = alder,
-            bostatus = bostatus,
-        )
-        val resultat = forskuddBeregning.beregn(grunnlag!!)
-
-        assertAll(
-            { assertThat(resultat).isNotNull() },
-            { assertThat(resultat.beløp).isEqualByComparingTo(forventetResultatBelop100Prosent) },
-            { assertThat(resultat.regel).isEqualTo("REGEL 3") },
             { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
 

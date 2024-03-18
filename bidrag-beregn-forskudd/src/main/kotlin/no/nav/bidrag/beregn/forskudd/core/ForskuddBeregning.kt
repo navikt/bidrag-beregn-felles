@@ -40,16 +40,14 @@ class ForskuddBeregning {
                 regel = "REGEL 1"
             }
 
-            // Søknadsbarn bor alene eller ikke med foreldre (REGEL 2/3)
+            // Søknadsbarn bor alene eller ikke med foreldre (REGEL 2)
+            // Setter avslagskode (gjelder hvis det er BM som har søkt).
+            // Hvis det er andre som har søkt på vegne av barnet vil det resultere i forhøyet forskudd, men dette
+            // håndteres pt. på utsiden av denne modulen
             grunnlag.søknadsbarnBostatus.kode != Bostatuskode.MED_FORELDER &&
                 grunnlag.søknadsbarnBostatus.kode != Bostatuskode.DOKUMENTERT_SKOLEGANG -> {
-                resultatkode =
-                    if (grunnlag.søknadsbarnAlder.alder >= 11) {
-                        Resultatkode.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT
-                    } else {
-                        Resultatkode.FORHØYET_FORSKUDD_100_PROSENT
-                    }
-                regel = if (resultatkode == Resultatkode.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT) "REGEL 2" else "REGEL 3"
+                resultatkode = Resultatkode.AVSLAG
+                regel = "REGEL 2"
             }
 
             // Over maks inntektsgrense for forskudd (REGEL 4)

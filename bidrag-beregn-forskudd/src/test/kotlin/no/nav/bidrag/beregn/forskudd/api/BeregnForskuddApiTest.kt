@@ -44,14 +44,8 @@ internal class BeregnForskuddApiTest {
       Resultatkode	AVSLAG
 
       REGEL 2
-      Betingelse 1	Søknadsbarn alder er høyere enn eller lik 11 år
-      Betingelse 2	Søknadsbarn bostedsstatus er BOR_IKKE_MED_FORELDRE
-      Resultatkode	FORHØYET_FORSKUDD_11_ÅR_125_PROSENT
-
-      REGEL 3
-      Betingelse 1	Søknadsbarn alder er lavere enn 11 år
-      Betingelse 2	Søknadsbarn bostedsstatus er BOR_IKKE_MED_FORELDRE
-      Resultatkode	FORHØYET_FORSKUDD_100_PROSENT
+      Betingelse 1	Søknadsbarn bostedsstatus er ikke MED_FORELDER og ikke DOKUMENTERT_SKOLEGANG
+      Resultatkode	AVSLAG
 
       REGEL 4
       Betingelse 1	Bidragsmottakers inntekt er høyere enn 0005 x 0013
@@ -69,49 +63,49 @@ internal class BeregnForskuddApiTest {
 
       REGEL 7
       Betingelse 1	Bidragsmottakers inntekt er lavere enn eller lik 0034
-      Betingelse 2	Bidragsmottakers sivilstand er ENSLIG
+      Betingelse 2	Bidragsmottakers sivilstand er BOR_ALENE_MED_BARN
       Betingelse 3	Antall barn i husstand er 1
       Resultatkode	ORDINÆRT_FORSKUDD_75_PROSENT
 
       REGEL 8
       Betingelse 1	Bidragsmottakers inntekt er høyere enn 0034
-      Betingelse 2	Bidragsmottakers sivilstand er ENSLIG
+      Betingelse 2	Bidragsmottakers sivilstand er BOR_ALENE_MED_BARN
       Betingelse 3	Antall barn i husstand er 1
       Resultatkode	REDUSERT_FORSKUDD_50_PROSENT
 
       REGEL 9
       Betingelse 1	Bidragsmottakers inntekt er lavere enn eller lik 0034 + (0036 x antall barn utover ett)
-      Betingelse 2	Bidragsmottakers sivilstand er ENSLIG
+      Betingelse 2	Bidragsmottakers sivilstand er BOR_ALENE_MED_BARN
       Betingelse 3	Antall barn i husstand er mer enn 1
       Resultatkode	ORDINÆRT_FORSKUDD_75_PROSENT
 
       REGEL 10
       Betingelse 1	Bidragsmottakers inntekt er høyere enn 0034 + (0036 x antall barn utover ett)
-      Betingelse 2	Bidragsmottakers sivilstand er ENSLIG
+      Betingelse 2	Bidragsmottakers sivilstand er BOR_ALENE_MED_BARN
       Betingelse 3	Antall barn i husstand er mer enn 1
       Resultatkode	REDUSERT_FORSKUDD_50_PROSENT
 
       REGEL 11
       Betingelse 1	Bidragsmottakers inntekt er lavere enn eller lik 0035
-      Betingelse 2	Bidragsmottakers sivilstand er GIFT
+      Betingelse 2	Bidragsmottakers sivilstand er GIFT_SAMBOER
       Betingelse 3	Antall barn i husstand er 1
       Resultatkode	ORDINÆRT_FORSKUDD_75_PROSENT
 
       REGEL 12
       Betingelse 1	Bidragsmottakers inntekt er høyere enn 0035
-      Betingelse 2	Bidragsmottakers sivilstand er GIFT
+      Betingelse 2	Bidragsmottakers sivilstand er GIFT_SAMBOER
       Betingelse 3	Antall barn i husstand er 1
       Resultatkode	REDUSERT_FORSKUDD_50_PROSENT
 
       REGEL 13
       Betingelse 1	Bidragsmottakers inntekt er lavere enn eller lik 0035 + (0036 x antall barn utover ett)
-      Betingelse 2	Bidragsmottakers sivilstand er GIFT
+      Betingelse 2	Bidragsmottakers sivilstand er GIFT_SAMBOER
       Betingelse 3	Antall barn i husstand er mer enn 1
       Resultatkode	ORDINÆRT_FORSKUDD_75_PROSENT
 
       REGEL 14
       Betingelse 1	Bidragsmottakers inntekt er høyere enn 0035 + (0036 x antall barn utover ett)
-      Betingelse 2	Bidragsmottakers sivilstand er GIFT
+      Betingelse 2	Bidragsmottakers sivilstand er GIFT_SAMBOER
       Betingelse 3	Antall barn i husstand er mer enn 1
       Resultatkode	REDUSERT_FORSKUDD_50_PROSENT
      */
@@ -457,26 +451,18 @@ internal class BeregnForskuddApiTest {
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[4].resultat.regel).isEqualTo("REGEL 14") },
 
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[5].resultat).isNotNull },
-            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[5].resultat.belop.intValueExact()).isEqualTo(1880) },
-            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[5].resultat.kode).isEqualTo(Resultatkode.FORHØYET_FORSKUDD_100_PROSENT) },
-            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[5].resultat.regel).isEqualTo("REGEL 3") },
+            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[5].resultat.belop.intValueExact()).isEqualTo(0) },
+            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[5].resultat.kode).isEqualTo(Resultatkode.AVSLAG) },
+            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[5].resultat.regel).isEqualTo("REGEL 2") },
 
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[6].resultat).isNotNull },
-            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[6].resultat.belop.intValueExact()).isEqualTo(2350) },
-            {
-                assertThat(
-                    forskuddResultat.beregnetForskuddPeriodeListe[6].resultat.kode,
-                ).isEqualTo(Resultatkode.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT)
-            },
+            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[6].resultat.belop.intValueExact()).isEqualTo(0) },
+            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[6].resultat.kode).isEqualTo(Resultatkode.AVSLAG) },
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[6].resultat.regel).isEqualTo("REGEL 2") },
 
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[7].resultat).isNotNull },
-            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[7].resultat.belop.intValueExact()).isEqualTo(2350) },
-            {
-                assertThat(
-                    forskuddResultat.beregnetForskuddPeriodeListe[7].resultat.kode,
-                ).isEqualTo(Resultatkode.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT)
-            },
+            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[7].resultat.belop.intValueExact()).isEqualTo(0) },
+            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[7].resultat.kode).isEqualTo(Resultatkode.AVSLAG) },
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[7].resultat.regel).isEqualTo("REGEL 2") },
         )
     }

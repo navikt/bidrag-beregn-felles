@@ -286,8 +286,8 @@ internal object CoreMapper {
         }
     }
 
-    //TODO Bør det lages delberegninger uansett om det ikke er inntekter og/eller hjemmboende barn i en periode (i så fall mappe ut 0 eller null)?
-    //TODO Søknadsbarnet vil f.eks. alltid ha en bostatus selv om det ikke bor hjemme
+    // TODO Bør det lages delberegninger uansett om det ikke er inntekter og/eller hjemmboende barn i en periode (i så fall mappe ut 0 eller null)?
+    // TODO Søknadsbarnet vil f.eks. alltid ha en bostatus selv om det ikke bor hjemme
 
     // Lager en gruppert liste hvor grunnlaget er akkumulert pr bruddperiode, med en liste over tilhørende grunnlagsreferanser
     private fun <T : DelberegningForskudd> akkumulerOgPeriodiser(grunnlagListe: List<T>, clazz: Class<T>): List<T> {
