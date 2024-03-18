@@ -23,30 +23,32 @@ internal class BoforholdService() {
     private fun beregnPerioderEgneBarn(virkningstidspunkt: LocalDate, relatertPerson: RelatertPerson): List<BoforholdBeregnet> {
         val boforholdBeregnetListe = mutableListOf<BoforholdBeregnet>()
 
-        // Barn som har fyllt 18 år på virkningstidspunket skal få én periode med bostatus REGNES_IKKE_SOM_BARN
-        if (personenHarFyllt18År(relatertPerson.fødselsdato!!, virkningstidspunkt)) {
+        // Barn som har fylt 18 år på virkningstidspunket skal få én periode med bostatus REGNES_IKKE_SOM_BARN
+        if (personenHarFylt18År(relatertPerson.fødselsdato!!, virkningstidspunkt)) {
             boforholdBeregnetListe.add(
                 BoforholdBeregnet(
                     relatertPersonPersonId = relatertPerson.relatertPersonPersonId,
                     periodeFom = virkningstidspunkt,
                     periodeTom = null,
                     bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                    fødselsdato = relatertPerson.fødselsdato,
                 ),
             )
             return boforholdBeregnetListe
         }
 
-        val attenårFraDato = beregnetAttenårFraDato(relatertPerson.fødselsdato)
+        val attenårFraDato = beregnetAttenÅrFraDato(relatertPerson.fødselsdato)
 
         // Behandler først barn uten husstandsmedlemskap
         if (relatertPerson.borISammeHusstandDtoListe.isEmpty()) {
-            if (!personenHarFyllt18År(relatertPerson.fødselsdato, LocalDate.now())) {
+            if (!personenHarFylt18År(relatertPerson.fødselsdato, LocalDate.now())) {
                 boforholdBeregnetListe.add(
                     BoforholdBeregnet(
                         relatertPersonPersonId = relatertPerson.relatertPersonPersonId,
                         periodeFom = virkningstidspunkt,
                         periodeTom = null,
                         bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        fødselsdato = relatertPerson.fødselsdato,
                     ),
                 )
             } else {
@@ -57,6 +59,7 @@ internal class BoforholdService() {
                         periodeFom = virkningstidspunkt,
                         periodeTom = attenårFraDato.minusDays(1),
                         bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        fødselsdato = relatertPerson.fødselsdato,
                     ),
                 )
                 boforholdBeregnetListe.add(
@@ -65,6 +68,7 @@ internal class BoforholdService() {
                         periodeFom = attenårFraDato,
                         periodeTom = null,
                         bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                        fødselsdato = relatertPerson.fødselsdato,
                     ),
                 )
             }
@@ -79,6 +83,7 @@ internal class BoforholdService() {
                     periodeFom = if (it.periodeFra == null) virkningstidspunkt else it.periodeFra!!.withDayOfMonth(1),
                     periodeTom = it.periodeTil?.plusMonths(1)?.withDayOfMonth(1)?.minusDays(1),
                     bostatus = Bostatuskode.MED_FORELDER,
+                    fødselsdato = relatertPerson.fødselsdato,
                 )
             }
 
@@ -112,6 +117,7 @@ internal class BoforholdService() {
                                 periodeFom = periodeFom,
                                 periodeTom = liste[indeks].periodeTom,
                                 bostatus = Bostatuskode.MED_FORELDER,
+                                fødselsdato = liste[indeks].fødselsdato,
                             ),
                         )
                         periodeFom = null
@@ -122,6 +128,7 @@ internal class BoforholdService() {
                                 periodeFom = liste[indeks].periodeFom,
                                 periodeTom = liste[indeks].periodeTom,
                                 bostatus = Bostatuskode.MED_FORELDER,
+                                fødselsdato = liste[indeks].fødselsdato,
                             ),
                         )
                     }
@@ -134,6 +141,7 @@ internal class BoforholdService() {
                         periodeFom = periodeFom ?: liste[indeks].periodeFom,
                         periodeTom = liste[indeks].periodeTom,
                         bostatus = Bostatuskode.MED_FORELDER,
+                        fødselsdato = liste[indeks].fødselsdato,
                     ),
                 )
             }
@@ -154,6 +162,7 @@ internal class BoforholdService() {
                             periodeFom = virkningstidspunkt,
                             periodeTom = liste[indeks].periodeFom.minusDays(1),
                             bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                            fødselsdato = liste[indeks].fødselsdato,
                         ),
                     )
                     sammenhengendePerioderListe.add(
@@ -162,6 +171,7 @@ internal class BoforholdService() {
                             periodeFom = liste[indeks].periodeFom,
                             periodeTom = liste[indeks].periodeTom,
                             bostatus = liste[indeks].bostatus,
+                            fødselsdato = liste[indeks].fødselsdato,
                         ),
                     )
                 } else {
@@ -171,6 +181,7 @@ internal class BoforholdService() {
                             periodeFom = virkningstidspunkt,
                             periodeTom = liste[indeks].periodeTom,
                             bostatus = liste[indeks].bostatus,
+                            fødselsdato = liste[indeks].fødselsdato,
                         ),
                     )
                 }
@@ -184,6 +195,7 @@ internal class BoforholdService() {
                             periodeFom = liste[indeks - 1].periodeTom!!.plusDays(1),
                             periodeTom = liste[indeks].periodeFom.minusDays(1),
                             bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                            fødselsdato = liste[indeks].fødselsdato,
                         ),
                     )
                 }
@@ -194,22 +206,22 @@ internal class BoforholdService() {
                         periodeFom = liste[indeks].periodeFom,
                         periodeTom = liste[indeks].periodeTom,
                         bostatus = liste[indeks].bostatus,
+                        fødselsdato = liste[indeks].fødselsdato,
                     ),
                 )
             }
 
-            if (indeks == liste.size - 1) {
-                // Siste forekomst
-                if (liste[indeks].periodeTom != null) {
-                    sammenhengendePerioderListe.add(
-                        BoforholdBeregnet(
-                            relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
-                            periodeFom = liste[indeks].periodeTom!!.plusDays(1),
-                            periodeTom = null,
-                            bostatus = Bostatuskode.IKKE_MED_FORELDER,
-                        ),
-                    )
-                }
+            // Siste forekomst
+            if (indeks == liste.size - 1 && liste[indeks].periodeTom != null) {
+                sammenhengendePerioderListe.add(
+                    BoforholdBeregnet(
+                        relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
+                        periodeFom = liste[indeks].periodeTom!!.plusDays(1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        fødselsdato = liste[indeks].fødselsdato,
+                    ),
+                )
             }
         }
         return sammenhengendePerioderListe
@@ -225,6 +237,7 @@ internal class BoforholdService() {
                         periodeFom = liste[indeks].periodeFom,
                         periodeTom = attenårFraDato.minusDays(1),
                         bostatus = liste[indeks].bostatus,
+                        fødselsdato = liste[indeks].fødselsdato,
                     ),
                 )
                 listeJustertMotAttenårsdag.add(
@@ -233,6 +246,7 @@ internal class BoforholdService() {
                         periodeFom = attenårFraDato,
                         periodeTom = null,
                         bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                        fødselsdato = liste[indeks].fødselsdato,
                     ),
                 )
             } else {
@@ -243,6 +257,7 @@ internal class BoforholdService() {
                             periodeFom = liste[indeks].periodeFom,
                             periodeTom = attenårFraDato.minusDays(1),
                             bostatus = liste[indeks].bostatus,
+                            fødselsdato = liste[indeks].fødselsdato,
                         ),
                     )
                     listeJustertMotAttenårsdag.add(
@@ -251,6 +266,7 @@ internal class BoforholdService() {
                             periodeFom = attenårFraDato,
                             periodeTom = null,
                             bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                            fødselsdato = liste[indeks].fødselsdato,
                         ),
                     )
                 } else {
@@ -260,6 +276,7 @@ internal class BoforholdService() {
                             periodeFom = liste[indeks].periodeFom,
                             periodeTom = liste[indeks].periodeTom,
                             bostatus = liste[indeks].bostatus,
+                            fødselsdato = liste[indeks].fødselsdato,
                         ),
                     )
                 }
@@ -268,11 +285,11 @@ internal class BoforholdService() {
         return listeJustertMotAttenårsdag
     }
 
-    private fun personenHarFyllt18År(fødselsdato: LocalDate, dato: LocalDate): Boolean {
+    private fun personenHarFylt18År(fødselsdato: LocalDate, dato: LocalDate): Boolean {
         return ChronoUnit.YEARS.between(fødselsdato.plusMonths(1).withDayOfMonth(1), dato) >= 18
     }
 
-    private fun beregnetAttenårFraDato(fødselsdato: LocalDate): LocalDate {
+    private fun beregnetAttenÅrFraDato(fødselsdato: LocalDate): LocalDate {
         return fødselsdato.plusYears(18).plusMonths(1).withDayOfMonth(1)
     }
 }

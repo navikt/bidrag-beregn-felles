@@ -20,4 +20,5 @@ data class BoforholdBeregnet(
     val periodeFom: LocalDate,
     val periodeTom: LocalDate?,
     val bostatus: Bostatuskode,
+    val fødselsdato: LocalDate?,
 )
