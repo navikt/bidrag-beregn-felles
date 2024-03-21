@@ -20,9 +20,10 @@ open class InntektUtil {
         const val SUMMERT_SKATTEGRUNNLAG = "Summert skattegrunnlag"
         const val LOENNSBESKRIVELSE = "Loennsbeskrivelse"
 
-        fun tilJson(json: String): String {
+        fun tilJson(json: Any): String {
             val objectMapper = ObjectMapper()
             objectMapper.registerKotlinModule()
+            objectMapper.writerWithDefaultPrettyPrinter()
             objectMapper.registerModule(JavaTimeModule())
             objectMapper.dateFormat = SimpleDateFormat("yyyy-MM-dd")
             return objectMapper.writeValueAsString(json)
