@@ -60,8 +60,8 @@ class InntektService(
                     ),
             )
 
-        secureLogger.debug { "TransformerInntekterRequestDto: ${tilJson(transformerInntekterRequest.toString())}" }
-        secureLogger.debug { "TransformerInntekterResponseDto: ${tilJson(transformerInntekterResponse.toString())}" }
+        secureLogger.debug { "TransformerInntekterRequestDto: ${tilJson(transformerInntekterRequest)}" }
+        secureLogger.debug { "TransformerInntekterResponseDto: ${tilJson(transformerInntekterResponse)}" }
 
         return transformerInntekterResponse
     }
