@@ -77,9 +77,10 @@ internal class BeregnInntektService {
         grunnlag.barnIdentListe.forEach { barnIdent ->
 
             // Skal ikke summere inntekter for barnet hvis det ikke er noen inntekter som gjelder spesifikt for barnet
-            if (grunnlag.grunnlagListe.none { it.inntektGjelderBarnIdent == barnIdent }) {
-                return@forEach
-            }
+            // Kommenterer ut denne sjekken da det er forventet at det beregnes inntekter for hvert barn selv om de ikke har noe spesifikke inntekter
+//            if (grunnlag.grunnlagListe.none { it.inntektGjelderBarnIdent == barnIdent }) {
+//                return@forEach
+//            }
 
             val barnInntekterListe = grunnlag.grunnlagListe
                 .filter { it.inntektEiesAvIdent == bidragsmottakerIdent }
