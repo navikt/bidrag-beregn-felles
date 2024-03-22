@@ -2,12 +2,15 @@ package no.nav.bidrag.boforhold.service
 
 import no.nav.bidrag.boforhold.response.BoforholdBeregnet
 import no.nav.bidrag.boforhold.response.RelatertPerson
+import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
 internal class BoforholdService() {
     fun beregnEgneBarn(virkningstidspunkt: LocalDate, boforholdGrunnlagListe: List<RelatertPerson>): List<BoforholdBeregnet> {
+        secureLogger.info { "Beregner bostatus for BMs egne barn. Input: $virkningstidspunkt $boforholdGrunnlagListe" }
+
         val resultat = mutableListOf<BoforholdBeregnet>()
         boforholdGrunnlagListe
             .filter { it.erBarnAvBmBp }
@@ -16,6 +19,8 @@ internal class BoforholdService() {
             ).forEach { barn ->
                 resultat.addAll(beregnPerioderEgneBarn(virkningstidspunkt, barn))
             }
+
+        secureLogger.info { "Resultat av beregning bostatus for BMs egne barn: $resultat" }
 
         return resultat
     }
