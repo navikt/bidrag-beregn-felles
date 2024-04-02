@@ -10,8 +10,8 @@ import no.nav.bidrag.commons.service.KodeverkProvider
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.inntekt.InntektApi
 import no.nav.bidrag.inntekt.TestUtil.Companion.fileToObject
-import no.nav.bidrag.inntekt.tesdata.StubUtils
-import no.nav.bidrag.inntekt.tesdata.StubUtils.Companion.kodeverkUrl
+import no.nav.bidrag.inntekt.testdata.StubUtils
+import no.nav.bidrag.inntekt.testdata.StubUtils.Companion.kodeverkUrl
 import no.nav.bidrag.transport.behandling.inntekt.request.TransformerInntekterRequest
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -50,16 +50,15 @@ class InntektApiTest {
         assertSoftly {
             transformerteInntekter.shouldNotBeNull()
             transformerteInntekter.summertÅrsinntektListe.shouldHaveSize(14)
-            transformerteInntekter.summertMånedsinntektListe.shouldHaveSize(11)
+            transformerteInntekter.summertMånedsinntektListe.shouldHaveSize(12)
 
             assertSoftly(transformerteInntekter.summertMånedsinntektListe) {
-                shouldHaveSize(11)
+                shouldHaveSize(12)
                 assertSoftly(find { it.gjelderÅrMåned == YearMonth.of(2023, 11) }) {
                     shouldNotBeNull()
                     inntektPostListe.shouldHaveSize(1)
-                    grunnlagsreferanseListe.shouldHaveSize(2)
+                    grunnlagsreferanseListe.shouldHaveSize(1)
                     grunnlagsreferanseListe.shouldContainAll(
-                        "innhentet_ainntekt_20230201",
                         "innhentet_ainntekt_20231101",
                     )
                 }
@@ -86,7 +85,7 @@ class InntektApiTest {
         assertSoftly {
             transformerteInntekter.shouldNotBeNull()
             transformerteInntekter.summertÅrsinntektListe.shouldHaveSize(14)
-            transformerteInntekter.summertMånedsinntektListe.shouldHaveSize(11)
+            transformerteInntekter.summertMånedsinntektListe.shouldHaveSize(12)
 
             assertSoftly(transformerteInntekter.summertÅrsinntektListe) {
                 shouldHaveSize(14)
@@ -122,9 +121,8 @@ class InntektApiTest {
                 assertSoftly(find { it.inntektRapportering == Inntektsrapportering.AINNTEKT_BEREGNET_3MND }) {
                     shouldNotBeNull()
                     inntektPostListe.shouldHaveSize(1)
-                    grunnlagsreferanseListe.shouldHaveSize(4)
+                    grunnlagsreferanseListe.shouldHaveSize(3)
                     grunnlagsreferanseListe.shouldContainAll(
-                        "innhentet_ainntekt_20230201",
                         "innhentet_ainntekt_20231101",
                         "innhentet_ainntekt_20231201",
                         "innhentet_ainntekt_20240101",
@@ -182,12 +180,12 @@ class InntektApiTest {
         assertSoftly {
             transformerteInntekter.shouldNotBeNull()
             transformerteInntekter.summertÅrsinntektListe.shouldNotBeEmpty()
-            transformerteInntekter.summertÅrsinntektListe.shouldHaveSize(23)
+            transformerteInntekter.summertÅrsinntektListe.shouldHaveSize(22)
 
             transformerteInntekter.summertÅrsinntektListe
-                .filter { it.inntektRapportering == Inntektsrapportering.AINNTEKT }.size.shouldBe(2)
-            transformerteInntekter.summertÅrsinntektListe[0].inntektPostListe[0].kode shouldBe "overtidsgodtgjoerelse"
-            transformerteInntekter.summertÅrsinntektListe[0].inntektPostListe[0].visningsnavn shouldBe "Overtidsgodtgjørelse"
+                .filter { it.inntektRapportering == Inntektsrapportering.AINNTEKT }.size.shouldBe(1)
+            transformerteInntekter.summertÅrsinntektListe[0].inntektPostListe[0].kode shouldBe "fastloenn"
+            transformerteInntekter.summertÅrsinntektListe[0].inntektPostListe[0].visningsnavn shouldBe "Fastlønn"
 
             transformerteInntekter.summertÅrsinntektListe
                 .filter { it.inntektRapportering == Inntektsrapportering.AINNTEKT_BEREGNET_3MND }.size.shouldBe(1)
@@ -211,11 +209,11 @@ class InntektApiTest {
                 .filter { it.inntektRapportering == Inntektsrapportering.BARNETILLEGG }.size shouldBe 5
 
             transformerteInntekter.summertMånedsinntektListe.shouldNotBeEmpty()
-            transformerteInntekter.summertMånedsinntektListe.shouldHaveSize(20)
+            transformerteInntekter.summertMånedsinntektListe.shouldHaveSize(15)
             transformerteInntekter.summertMånedsinntektListe
-                .filter { it.gjelderÅrMåned.year == 2021 }.sumOf { it.sumInntekt.toInt() }.shouldBe(4000)
+                .filter { it.gjelderÅrMåned.year == 2021 }.sumOf { it.sumInntekt.toInt() }.shouldBe(0)
             transformerteInntekter.summertMånedsinntektListe
-                .filter { it.gjelderÅrMåned.year == 2022 }.sumOf { it.sumInntekt.toInt() }.shouldBe(446000)
+                .filter { it.gjelderÅrMåned.year == 2022 }.sumOf { it.sumInntekt.toInt() }.shouldBe(450000)
             transformerteInntekter.summertMånedsinntektListe
                 .filter { it.gjelderÅrMåned.year == 2023 }.sumOf { it.sumInntekt.toInt() }.shouldBe(468000)
         }
