@@ -6,115 +6,134 @@
       "opptjeningsperiodeFra": "2022-05-01",
       "opptjeningsperiodeTil": null,
       "beskrivelse": "fastloenn",
-      "beløp": 50000
+      "beløp": 50000,
+      "referanse": "A1"
     },
     {
       "utbetalingsperiode": "2022-05",
       "opptjeningsperiodeFra": "2021-11-01",
       "opptjeningsperiodeTil": "2022-04-01",
       "beskrivelse": "overtidsgodtgjoerelse",
-      "beløp": 10000
+      "beløp": 10000,
+      "referanse": "A2"
     },
     {
       "utbetalingsperiode": "2022-05",
       "opptjeningsperiodeFra": "2022-05-01",
       "opptjeningsperiodeTil": "2022-06-01",
       "beskrivelse": "bonus",
-      "beløp": 15000
+      "beløp": 15000,
+      "referanse": "A3"
     },
     {
       "utbetalingsperiode": "2022-06",
       "opptjeningsperiodeFra": "2022-06-01",
       "opptjeningsperiodeTil": "2022-07-01",
       "beskrivelse": "fastloenn",
-      "beløp": 50000
+      "beløp": 50000,
+      "referanse": "A4"
     },
     {
       "utbetalingsperiode": "2022-07",
       "opptjeningsperiodeFra": "2022-07-01",
       "opptjeningsperiodeTil": "2022-08-01",
       "beskrivelse": "fastloenn",
-      "beløp": 50000
+      "beløp": 50000,
+      "referanse": "A5"
     },
     {
       "utbetalingsperiode": "2022-08",
       "beskrivelse": "fastloenn",
-      "beløp": 55000.789
+      "beløp": 55000.789,
+      "referanse": "A6"
     },
     {
       "utbetalingsperiode": "2022-09",
       "beskrivelse": "fastloenn",
-      "beløp": 55000
+      "beløp": 55000,
+      "referanse": "A7"
     },
     {
       "utbetalingsperiode": "2022-10",
       "beskrivelse": "fastloenn",
-      "beløp": 55000
+      "beløp": 55000,
+      "referanse": "A8"
     },
     {
       "utbetalingsperiode": "2022-11",
       "beskrivelse": "fastloenn",
-      "beløp": 55000
+      "beløp": 55000,
+      "referanse": "A9"
     },
     {
       "utbetalingsperiode": "2022-12",
       "beskrivelse": "fastloenn",
-      "beløp": 55000
+      "beløp": 55000,
+      "referanse": "A10"
     },
     {
       "utbetalingsperiode": "2023-01",
       "opptjeningsperiodeFra": "2023-01-01",
       "opptjeningsperiodeTil": "2023-02-01",
       "beskrivelse": "fastloenn",
-      "beløp": 60000
+      "beløp": 60000,
+      "referanse": "A11"
     },
     {
       "utbetalingsperiode": "2023-02",
       "opptjeningsperiodeFra": "2023-02-01",
       "opptjeningsperiodeTil": "2023-03-01",
       "beskrivelse": "fastloenn",
-      "beløp": 60000.33
+      "beløp": 60000.33,
+      "referanse": "A12"
     },
     {
       "utbetalingsperiode": "2023-03",
       "opptjeningsperiodeFra": "2023-03-01",
       "opptjeningsperiodeTil": "2023-04-01",
       "beskrivelse": "fastloenn",
-      "beløp": 60000
+      "beløp": 60000,
+      "referanse": "A13"
     },
     {
       "utbetalingsperiode": "2023-04",
       "opptjeningsperiodeFra": "2023-04-01",
       "opptjeningsperiodeTil": "2023-05-01",
       "beskrivelse": "fastloenn",
-      "beløp": 60000
+      "beløp": 60000,
+      "referanse": "A14"
     },
     {
       "utbetalingsperiode": "2023-05",
       "beskrivelse": "fastloenn",
-      "beløp": 60000
+      "beløp": 60000,
+      "referanse": "A15"
     },
     {
       "utbetalingsperiode": "2023-06",
       "opptjeningsperiodeFra": "2023-04-15",
       "opptjeningsperiodeTil": "2023-05-01",
       "beskrivelse": "overtidsgodtgjoerelse",
-      "beløp": 8000
+      "beløp": 8000,
+      "referanse": "A16"
     },
     {
       "utbetalingsperiode": "2023-06",
       "beskrivelse": "fastloenn",
-      "beløp": 60000
+      "beløp": 60000,
+      "referanse": "A17"
     },
     {
       "utbetalingsperiode": "2023-06",
       "beskrivelse": "bonus",
-      "beløp": 15000
+      "beløp": 15000,
+      "referanse": "A18"
     },
     {
       "utbetalingsperiode": "2023-07",
       "beskrivelse": "feriepenger",
-      "beløp": 85000
+      "beløp": 85000,
+      "referanse": "A19"
     }
   ],
   "skattegrunnlagsliste": [
@@ -161,7 +180,8 @@
           "inntektType": "samletOverskuddPaaUtgiftsgodtgjoerelse",
           "belop": 7890.178
         }
-      ]
+      ],
+      "referanse": "S1"
     },
     {
       "ligningsår": "2021",
@@ -216,7 +236,8 @@
           "inntektType": "personinntektFraKompensasjonsytelseUtbetaltAvNavInnenBarnepassIBarnepasserensHjem",
           "belop": 1390.15
         }
-      ]
+      ],
+      "referanse": "S2"
     }
   ],
   "kontantstøtteliste": [
@@ -224,60 +245,70 @@
       "periodeFra": "2022-09-01",
       "periodeTil": "2023-01-01",
       "beløp": 7500,
-      "barnPersonId": "98765432109"
+      "barnPersonId": "98765432109",
+      "referanse": "K1"
     },
     {
       "periodeFra": "2023-05-01",
       "periodeTil": null,
       "beløp": 7500,
-      "barnPersonId": "98765432109"
+      "barnPersonId": "98765432109",
+      "referanse": "K2"
     },
     {
       "periodeFra": "2021-11-01",
       "periodeTil": "2022-07-01",
       "beløp": 7500,
-      "barnPersonId": "12345678901"
+      "barnPersonId": "12345678901",
+      "referanse": "K3"
     },
     {
       "periodeFra": "2022-10-01",
       "periodeTil": "2023-02-01",
       "beløp": 7500,
-      "barnPersonId": "12345678901"
+      "barnPersonId": "12345678901",
+      "referanse": "K4"
     },
     {
       "periodeFra": "2023-05-01",
       "periodeTil": "2023-08-01",
       "beløp": 7500,
-      "barnPersonId": "12345678901"
+      "barnPersonId": "12345678901",
+      "referanse": "K5"
     }
   ],
   "utvidetBarnetrygdliste": [
     {
       "periodeFra": "2019-01-01",
       "periodeTil": "2019-10-01",
-      "beløp": 1054
+      "beløp": 1054,
+      "referanse": "UB1"
     },
     {
       "periodeFra": "2020-11-01",
       "periodeTil": "2022-10-01",
-      "beløp": 1054
+      "beløp": 1054,
+      "referanse": "UB2"
     }
   ],
   "småbarnstilleggliste": [
     {
       "periodeFra": "2021-11-01",
       "periodeTil": "2022-04-01",
-      "beløp": 660
+      "beløp": 660,
+      "referanse": "ST1"
     },
     {
       "periodeFra": "2022-06-01",
       "periodeTil": "2022-08-01",
-      "beløp": 660
+      "beløp": 660,
+      "referanse": "ST2"
     },
     {
       "periodeFra": "2022-10-01",
       "periodeTil": null,
-      "beløp": 660
+      "beløp": 660,
+      "referanse": "ST3"
     }
   ],
   "barnetilleggsliste": [
@@ -285,31 +316,36 @@
       "periodeFra": "2022-09-01",
       "periodeTil": "2023-01-01",
       "beløp": 7500,
-      "barnPersonId": "98765432109"
+      "barnPersonId": "98765432109",
+      "referanse": "BT1"
     },
     {
       "periodeFra": "2023-05-01",
       "periodeTil": null,
       "beløp": 7500,
-      "barnPersonId": "98765432109"
+      "barnPersonId": "98765432109",
+      "referanse": "BT2"
     },
     {
       "periodeFra": "2021-11-01",
       "periodeTil": "2022-07-01",
       "beløp": 7500,
-      "barnPersonId": "12345678901"
+      "barnPersonId": "12345678901",
+      "referanse": "BT3"
     },
     {
       "periodeFra": "2022-10-01",
       "periodeTil": "2023-02-01",
       "beløp": 7500,
-      "barnPersonId": "12345678901"
+      "barnPersonId": "12345678901",
+      "referanse": "BT4"
     },
     {
       "periodeFra": "2023-05-01",
       "periodeTil": "2023-08-01",
       "beløp": 7500,
-      "barnPersonId": "12345678901"
+      "barnPersonId": "12345678901",
+      "referanse": "BT5"
     }
   ]
 }
