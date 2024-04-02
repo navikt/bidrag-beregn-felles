@@ -8,7 +8,7 @@ import io.kotest.matchers.shouldBe
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.inntekt.InntektApi
 import no.nav.bidrag.inntekt.TestUtil
-import no.nav.bidrag.inntekt.tesdata.StubUtils.Companion.kodeverkUrl
+import no.nav.bidrag.inntekt.testdata.StubUtils.Companion.kodeverkUrl
 import no.nav.bidrag.inntekt.util.VersionProvider.Companion.APP_VERSJON
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -31,12 +31,12 @@ class InntektServiceTest : AbstractServiceTest() {
             transformerteInntekterResponseDto.shouldNotBeNull()
             transformerteInntekterResponseDto.versjon shouldBe APP_VERSJON
             transformerteInntekterResponseDto.summertÅrsinntektListe.shouldNotBeEmpty()
-            transformerteInntekterResponseDto.summertÅrsinntektListe.shouldHaveSize(23)
+            transformerteInntekterResponseDto.summertÅrsinntektListe.shouldHaveSize(22)
 
             transformerteInntekterResponseDto.summertÅrsinntektListe
-                .filter { it.inntektRapportering == Inntektsrapportering.AINNTEKT }.size shouldBe 2
-            transformerteInntekterResponseDto.summertÅrsinntektListe[0].inntektPostListe[0].kode shouldBe "overtidsgodtgjoerelse"
-            transformerteInntekterResponseDto.summertÅrsinntektListe[0].inntektPostListe[0].visningsnavn shouldBe "Overtidsgodtgjørelse"
+                .filter { it.inntektRapportering == Inntektsrapportering.AINNTEKT }.size shouldBe 1
+            transformerteInntekterResponseDto.summertÅrsinntektListe[0].inntektPostListe[0].kode shouldBe "fastloenn"
+            transformerteInntekterResponseDto.summertÅrsinntektListe[0].inntektPostListe[0].visningsnavn shouldBe "Fastlønn"
 
             transformerteInntekterResponseDto.summertÅrsinntektListe
                 .filter { it.inntektRapportering == Inntektsrapportering.AINNTEKT_BEREGNET_3MND }.size shouldBe 1
@@ -63,11 +63,11 @@ class InntektServiceTest : AbstractServiceTest() {
                 .filter { it.inntektRapportering == Inntektsrapportering.BARNETILLEGG }.size shouldBe 5
 
             transformerteInntekterResponseDto.summertMånedsinntektListe.shouldNotBeEmpty()
-            transformerteInntekterResponseDto.summertMånedsinntektListe.shouldHaveSize(20)
+            transformerteInntekterResponseDto.summertMånedsinntektListe.shouldHaveSize(15)
             transformerteInntekterResponseDto.summertMånedsinntektListe
-                .filter { it.gjelderÅrMåned.year == 2021 }.sumOf { it.sumInntekt.toInt() }.shouldBe(4000)
+                .filter { it.gjelderÅrMåned.year == 2021 }.sumOf { it.sumInntekt.toInt() }.shouldBe(0)
             transformerteInntekterResponseDto.summertMånedsinntektListe
-                .filter { it.gjelderÅrMåned.year == 2022 }.sumOf { it.sumInntekt.toInt() }.shouldBe(446000)
+                .filter { it.gjelderÅrMåned.year == 2022 }.sumOf { it.sumInntekt.toInt() }.shouldBe(450000)
             transformerteInntekterResponseDto.summertMånedsinntektListe
                 .filter { it.gjelderÅrMåned.year == 2023 }.sumOf { it.sumInntekt.toInt() }.shouldBe(468000)
         }

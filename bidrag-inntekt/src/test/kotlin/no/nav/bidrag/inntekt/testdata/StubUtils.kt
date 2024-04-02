@@ -1,4 +1,4 @@
-package no.nav.bidrag.inntekt.tesdata
+package no.nav.bidrag.inntekt.testdata
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.tomakehurst.wiremock.WireMockServer
@@ -20,8 +20,6 @@ class StubUtils {
         val wiremockPort = 1233
         val wireMockServer = WireMockServer(wiremockPort)
         val kodeverkUrl = "http://localhost:$wiremockPort/kodeverk"
-        val filnavnKodeverkLoennsbeskrivelser = "src/test/resources/__files/respons_kodeverk_loennsbeskrivelser.json"
-        val filnavnKodeverkSummertSkattegrunnlag = "src/test/resources/__files/respons_kodeverk_summert_skattegrunnlag.json"
 
         private fun createGenericResponse() = WireMock.aResponse().withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
             .withStatus(HttpStatus.OK.value())

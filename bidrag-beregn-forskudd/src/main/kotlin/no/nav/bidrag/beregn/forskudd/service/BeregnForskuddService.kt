@@ -120,7 +120,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
     // Oppretter resultatperioder som refererer til sluttberegning, som igjen refererer til delberegninger og grunnlag
     private fun lagSluttperiodeOgResultatperioder(
         resultatPeriodeCoreListe: List<ResultatPeriodeCore>,
-        grunnlagReferanseListe: List<GrunnlagDto>,
+        grunnlagReferanseListe: MutableList<GrunnlagDto>,
     ): List<ResultatPeriode> {
         return resultatPeriodeCoreListe.map { resultatPeriode ->
 
@@ -131,7 +131,8 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
             )
 
             // Oppretter sluttberegning, som legges til i grunnlagslista
-            grunnlagReferanseListe.addFirst(
+            grunnlagReferanseListe.add(
+                0,
                 GrunnlagDto(
                     referanse = sluttberegningReferanse,
                     type = Grunnlagstype.SLUTTBEREGNING_FORSKUDD,
@@ -171,7 +172,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
         resultatFraCore: BeregnetForskuddResultatCore,
         grunnlagTilCore: BeregnForskuddGrunnlagCore,
         innslagKapitalinntektSjablon: Sjablontall?,
-    ): List<GrunnlagDto> {
+    ): MutableList<GrunnlagDto> {
         val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
         val grunnlagReferanseListe =
             resultatFraCore.beregnetForskuddPeriodeListe
