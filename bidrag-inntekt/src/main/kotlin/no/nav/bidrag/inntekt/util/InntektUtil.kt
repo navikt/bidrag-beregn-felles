@@ -3,6 +3,9 @@ package no.nav.bidrag.inntekt.util
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import de.focus_shift.jollyday.core.HolidayCalendar
+import de.focus_shift.jollyday.core.HolidayManager
+import de.focus_shift.jollyday.core.ManagerParameters
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -16,9 +19,6 @@ open class InntektUtil {
         const val KEY_12MND = "12MND"
         const val PERIODE_AAR = "AAR"
         const val PERIODE_MAANED = "MND"
-        const val CUT_OFF_DATO = 6
-        const val SUMMERT_SKATTEGRUNNLAG = "Summert skattegrunnlag"
-        const val LOENNSBESKRIVELSE = "Loennsbeskrivelse"
 
         fun tilJson(json: Any): String {
             val objectMapper = ObjectMapper()
@@ -31,7 +31,12 @@ open class InntektUtil {
 
         // Finner siste hele år som skal rapporteres
         fun finnSisteAarSomSkalRapporteres(ainntektHentetTidspunkt: LocalDate): Int {
-            return if ((ainntektHentetTidspunkt.month == Month.JANUARY) && (ainntektHentetTidspunkt.dayOfMonth <= CUT_OFF_DATO)) {
+            return if ((ainntektHentetTidspunkt.month == Month.JANUARY) && (
+                    ainntektHentetTidspunkt.dayOfMonth <= finnCutOffDag(
+                        ainntektHentetTidspunkt,
+                    )
+                    )
+            ) {
                 ainntektHentetTidspunkt.year.minus(2)
             } else {
                 ainntektHentetTidspunkt.year.minus(1)
@@ -59,6 +64,20 @@ open class InntektUtil {
 
                 else -> ChronoUnit.MONTHS.between(periodeFra, periodeTil).toInt()
             }
+        }
+
+        // Finner ut hvilken dato i måneden ainntekt ble hentet som er fristen arbeidsgiver har for å levere a-meldingen for forrige måned.
+        // Denne datoen brukes til å styre hvilke inntekter som skal returneres (hvis ainntektHentetDato er før fristen går vi en måned lengre tilbake).
+        // Følgende regelverk gjelder (se https://www.skatteetaten.no/bedrift-og-organisasjon/arbeidsgiver/a-meldingen/frister-og-betaling-i-a-meldingen/:
+        // - Fristen for å levere a-meldingen er den 5. i hver måned
+        // - Hvis den 5. er helg eller helligdag, er fristen første påfølgende hverdag
+        fun finnCutOffDag(ainntektHentetDato: LocalDate): Int {
+            val holidayManager = HolidayManager.getInstance(ManagerParameters.create(HolidayCalendar.NORWAY))
+            var cutOffDato = LocalDate.of(ainntektHentetDato.year, ainntektHentetDato.month, 5)
+            while (holidayManager.isHoliday(cutOffDato) || cutOffDato.dayOfWeek.value > 5) {
+                cutOffDato = cutOffDato.plusDays(1)
+            }
+            return cutOffDato.dayOfMonth
         }
     }
 }
