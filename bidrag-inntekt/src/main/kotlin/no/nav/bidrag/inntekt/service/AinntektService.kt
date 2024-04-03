@@ -5,12 +5,12 @@ import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.visningsnavn
 import no.nav.bidrag.domene.util.visningsnavnIntern
-import no.nav.bidrag.inntekt.util.InntektUtil.Companion.CUT_OFF_DATO
 import no.nav.bidrag.inntekt.util.InntektUtil.Companion.KEY_12MND
 import no.nav.bidrag.inntekt.util.InntektUtil.Companion.KEY_3MND
 import no.nav.bidrag.inntekt.util.InntektUtil.Companion.PERIODE_AAR
 import no.nav.bidrag.inntekt.util.InntektUtil.Companion.PERIODE_MAANED
 import no.nav.bidrag.inntekt.util.InntektUtil.Companion.finnAntallMndOverlapp
+import no.nav.bidrag.inntekt.util.InntektUtil.Companion.finnCutOffDag
 import no.nav.bidrag.inntekt.util.InntektUtil.Companion.finnSisteAarSomSkalRapporteres
 import no.nav.bidrag.inntekt.util.beregneBeløpPerMåned
 import no.nav.bidrag.inntekt.util.isNumeric
@@ -321,9 +321,8 @@ class AinntektService {
     ): Map<String, Detaljpost> {
         val periodeMap = mutableMapOf<String, Detaljpost>()
 
-        // TODO Bør CUT_OFF_DATO være dynamisk? (se https://www.skatteetaten.no/bedrift-og-organisasjon/arbeidsgiver/a-meldingen/frister-og-betaling-i-a-meldingen/)
         val sistePeriodeIIntervall =
-            if (ainntektHentetDato.dayOfMonth > CUT_OFF_DATO) {
+            if (ainntektHentetDato.dayOfMonth > finnCutOffDag(ainntektHentetDato)) {
                 YearMonth.of(ainntektHentetDato.year, ainntektHentetDato.month)
             } else {
                 YearMonth.of(ainntektHentetDato.year, ainntektHentetDato.month).minusMonths(1)
@@ -372,10 +371,8 @@ class AinntektService {
             periodeTil = periodeFra
             // Intervall
         } else {
-//            val dagensDato = LocalDate.now()
-            // TODO Bør CUT_OFF_DATO være dynamisk? (se https://www.skatteetaten.no/bedrift-og-organisasjon/arbeidsgiver/a-meldingen/frister-og-betaling-i-a-meldingen/)
             periodeTil =
-                if (ainntektHentetDato.dayOfMonth > CUT_OFF_DATO) {
+                if (ainntektHentetDato.dayOfMonth > finnCutOffDag(ainntektHentetDato)) {
                     YearMonth.of(ainntektHentetDato.year, ainntektHentetDato.month).minusMonths(1)
                 } else {
                     YearMonth.of(ainntektHentetDato.year, ainntektHentetDato.month).minusMonths(2)
