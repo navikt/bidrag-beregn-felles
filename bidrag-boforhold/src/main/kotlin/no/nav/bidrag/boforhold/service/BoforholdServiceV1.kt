@@ -7,7 +7,7 @@ import no.nav.bidrag.domene.enums.person.Bostatuskode
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
-internal class BoforholdService() {
+internal class BoforholdServiceV1() {
     fun beregnEgneBarn(virkningstidspunkt: LocalDate, boforholdGrunnlagListe: List<RelatertPerson>): List<BoforholdBeregnet> {
         secureLogger.info { "Beregner bostatus for BMs egne barn. Input: $virkningstidspunkt $boforholdGrunnlagListe" }
 
