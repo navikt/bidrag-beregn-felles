@@ -46,7 +46,6 @@ class TestUtil {
             ),
         )
 
-
         fun byggBarnAttenÅrIPeriodenUtenHusstandsmedlemskap() = listOf(
             RelatertPerson(
                 relatertPersonPersonId = "98765432109",
@@ -429,7 +428,6 @@ class TestUtil {
             ),
         )
 
-
         fun flereManuelleOgOffentligePerioder() = listOf(
             BoforholdRequest(
                 relatertPersonPersonId = "98765432109",
@@ -487,6 +485,5 @@ class TestUtil {
                 ),
             ),
         )
-
     }
 }

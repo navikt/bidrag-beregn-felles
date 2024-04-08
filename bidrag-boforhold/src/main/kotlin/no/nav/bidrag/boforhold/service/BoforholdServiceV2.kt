@@ -48,7 +48,6 @@ internal class BoforholdServiceV2() {
                 )
             }
 
-
         val manuelleOpplysninger = bostatuslisteRelevantePerioder
             .filter { it.kilde == Kilde.MANUELL }.map {
                 BoforholdResponse(
@@ -88,7 +87,7 @@ internal class BoforholdServiceV2() {
                             bostatus = Bostatuskode.IKKE_MED_FORELDER,
                             fødselsdato = boforholdRequest.fødselsdato,
                             kilde = Kilde.OFFENTLIG,
-                        )
+                        ),
                     )
                     genererteOffentligePerioder.add(
                         BoforholdResponse(
@@ -98,7 +97,7 @@ internal class BoforholdServiceV2() {
                             bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
                             fødselsdato = boforholdRequest.fødselsdato,
                             kilde = Kilde.OFFENTLIG,
-                        )
+                        ),
                     )
                 } else {
                     boforholdResponseListe.add(
@@ -110,7 +109,7 @@ internal class BoforholdServiceV2() {
                             fødselsdato = boforholdRequest.fødselsdato,
                             kilde = Kilde.OFFENTLIG,
 
-                            ),
+                        ),
                     )
                 }
             }
@@ -131,7 +130,6 @@ internal class BoforholdServiceV2() {
         } else {
             slåSammenManuelleOgOffentligePerioder(manuelleOpplysninger, offentligePerioderJustertMotAttenårsdag)
         }
-
     }
 
     private fun slåSammenManuelleOgOffentligePerioder(
@@ -170,8 +168,8 @@ internal class BoforholdServiceV2() {
                             overlappendePerioder.add(manuellPeriode)
                         }
                     } else {
-                        if (manuellPeriode.periodeFom.isBefore(offentligPeriode.periodeTom.plusDays(1))
-                            && manuellPeriode.periodeTom.plusDays(1)
+                        if (manuellPeriode.periodeFom.isBefore(offentligPeriode.periodeTom.plusDays(1)) &&
+                            manuellPeriode.periodeTom.plusDays(1)
                                 ?.isAfter(offentligPeriode.periodeFom) == true
                         ) {
                             overlappendePerioder.add(manuellPeriode)
@@ -206,7 +204,7 @@ internal class BoforholdServiceV2() {
             if (indeks == 0) {
                 if (overlappendePerioder[indeks].periodeFom.isBefore(offentligePeriode.periodeFom.plusDays(1))) {
                     if (overlappendePerioder[indeks].periodeTom == null || overlappendePerioder[indeks].periodeTom?.isAfter(
-                            offentligePeriode.periodeTom?.plusDays(1)
+                            offentligePeriode.periodeTom?.plusDays(1),
                         ) == true
                     ) {
                         // Den manuelle perioden dekker hele den offentlige perioden
@@ -218,7 +216,6 @@ internal class BoforholdServiceV2() {
                 } else {
                     // Den manuelle perioden overlapper etter starten på den offentlige perioden og periodeTom må forskyves på den offentlige perioden
                     periodeTom = overlappendePerioder[indeks].periodeFom.minusDays(1)
-
                 }
             }
             if (indeks < overlappendePerioder.size - 1) {
@@ -314,7 +311,7 @@ internal class BoforholdServiceV2() {
                                 fødselsdato = liste[indeks].fødselsdato,
                                 kilde = liste[indeks].kilde,
 
-                                ),
+                            ),
                         )
                         periodeFom = null
                     } else {
@@ -327,7 +324,7 @@ internal class BoforholdServiceV2() {
                                 fødselsdato = liste[indeks].fødselsdato,
                                 kilde = liste[indeks].kilde,
 
-                                ),
+                            ),
                         )
                     }
                 }
@@ -342,17 +339,14 @@ internal class BoforholdServiceV2() {
                         fødselsdato = liste[indeks].fødselsdato,
                         kilde = liste[indeks].kilde,
 
-                        ),
+                    ),
                 )
             }
         }
         return sammenslåttListe
     }
 
-    private fun fyllUtMedPerioderBarnetIkkeBorIHusstanden(
-        virkningstidspunkt: LocalDate,
-        liste: List<BoforholdResponse>
-    ): List<BoforholdResponse> {
+    private fun fyllUtMedPerioderBarnetIkkeBorIHusstanden(virkningstidspunkt: LocalDate, liste: List<BoforholdResponse>): List<BoforholdResponse> {
         val sammenhengendePerioderListe = mutableListOf<BoforholdResponse>()
 
         for (indeks in liste.indices) {
@@ -368,7 +362,7 @@ internal class BoforholdServiceV2() {
                             fødselsdato = liste[indeks].fødselsdato,
                             kilde = liste[indeks].kilde,
 
-                            ),
+                        ),
                     )
                     sammenhengendePerioderListe.add(
                         BoforholdResponse(
@@ -379,7 +373,7 @@ internal class BoforholdServiceV2() {
                             fødselsdato = liste[indeks].fødselsdato,
                             kilde = liste[indeks].kilde,
 
-                            ),
+                        ),
                     )
                 } else {
                     sammenhengendePerioderListe.add(
@@ -391,7 +385,7 @@ internal class BoforholdServiceV2() {
                             fødselsdato = liste[indeks].fødselsdato,
                             kilde = liste[indeks].kilde,
 
-                            ),
+                        ),
                     )
                 }
             } else {
@@ -407,7 +401,7 @@ internal class BoforholdServiceV2() {
                             fødselsdato = liste[indeks].fødselsdato,
                             kilde = liste[indeks].kilde,
 
-                            ),
+                        ),
                     )
                 }
 
@@ -420,7 +414,7 @@ internal class BoforholdServiceV2() {
                         fødselsdato = liste[indeks].fødselsdato,
                         kilde = liste[indeks].kilde,
 
-                        ),
+                    ),
                 )
             }
 
@@ -435,7 +429,7 @@ internal class BoforholdServiceV2() {
                         fødselsdato = liste[indeks].fødselsdato,
                         kilde = liste[indeks].kilde,
 
-                        ),
+                    ),
                 )
             }
         }
@@ -455,7 +449,7 @@ internal class BoforholdServiceV2() {
                         fødselsdato = liste[indeks].fødselsdato,
                         kilde = liste[indeks].kilde,
 
-                        ),
+                    ),
                 )
                 listeJustertMotAttenårsdag.add(
                     BoforholdResponse(
@@ -466,7 +460,7 @@ internal class BoforholdServiceV2() {
                         fødselsdato = liste[indeks].fødselsdato,
                         kilde = liste[indeks].kilde,
 
-                        ),
+                    ),
                 )
             } else {
                 if (liste[indeks].periodeTom == null && attenårFraDato.isBefore(LocalDate.now())) {
@@ -479,7 +473,7 @@ internal class BoforholdServiceV2() {
                             fødselsdato = liste[indeks].fødselsdato,
                             kilde = liste[indeks].kilde,
 
-                            ),
+                        ),
                     )
                     listeJustertMotAttenårsdag.add(
                         BoforholdResponse(
@@ -490,7 +484,7 @@ internal class BoforholdServiceV2() {
                             fødselsdato = liste[indeks].fødselsdato,
                             kilde = liste[indeks].kilde,
 
-                            ),
+                        ),
                     )
                 } else {
                     listeJustertMotAttenårsdag.add(
@@ -502,7 +496,7 @@ internal class BoforholdServiceV2() {
                             fødselsdato = liste[indeks].fødselsdato,
                             kilde = liste[indeks].kilde,
 
-                            ),
+                        ),
                     )
                 }
             }
@@ -519,7 +513,8 @@ internal class BoforholdServiceV2() {
     }
 
     private fun manuellPeriodeErIdentiskMedOffentligPeriode(
-        manuellPeriode: BoforholdResponse, offentligePerioder: List<BoforholdResponse>,
+        manuellPeriode: BoforholdResponse,
+        offentligePerioder: List<BoforholdResponse>,
     ): Boolean {
         return offentligePerioder.any { offentligPeriode ->
             manuellPeriode.periodeFom == offentligPeriode.periodeFom && manuellPeriode.periodeTom == offentligPeriode.periodeTom &&

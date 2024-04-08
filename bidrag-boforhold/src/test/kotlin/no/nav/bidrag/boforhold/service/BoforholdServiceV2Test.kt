@@ -439,5 +439,4 @@ internal class BoforholdServiceV2Test {
             resultat[13].kilde shouldBe Kilde.OFFENTLIG
         }
     }
-
 }
