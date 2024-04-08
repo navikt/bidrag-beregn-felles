@@ -11,13 +11,14 @@ import java.math.BigDecimal
 import java.time.YearMonth
 
 class InntektService(
-    val ainntektService: AinntektService = AinntektService(),
-    val skattegrunnlagService: SkattegrunnlagService = SkattegrunnlagService(),
-    val kontantstøtteService: KontantstøtteService = KontantstøtteService(),
-    val utvidetBarnetrygdService: UtvidetBarnetrygdService = UtvidetBarnetrygdService(),
-    val småbarnstilleggService: SmåbarnstilleggService = SmåbarnstilleggService(),
-    val barnetilleggPensjonService: BarnetilleggPensjonService = BarnetilleggPensjonService(),
-    val ytelserService: YtelserService = YtelserService(),
+    private val ainntektService: AinntektService = AinntektService(),
+    private val skattegrunnlagService: SkattegrunnlagService = SkattegrunnlagService(),
+    private val kontantstøtteService: KontantstøtteService = KontantstøtteService(),
+    private val utvidetBarnetrygdService: UtvidetBarnetrygdService = UtvidetBarnetrygdService(),
+    private val småbarnstilleggService: SmåbarnstilleggService = SmåbarnstilleggService(),
+    private val barnetilleggPensjonService: BarnetilleggPensjonService = BarnetilleggPensjonService(),
+    private val ytelserService: YtelserService = YtelserService(),
+    private val ytelserServiceOvergangsstønad: YtelserServiceOvergangsstønad = YtelserServiceOvergangsstønad(),
 ) {
     fun transformerInntekter(transformerInntekterRequest: TransformerInntekterRequest): TransformerInntekterResponse {
         val transformerInntekterResponse =
@@ -54,6 +55,10 @@ class InntektService(
                             transformerInntekterRequest.barnetilleggsliste,
                         ) +
                         ytelserService.beregnYtelser(
+                            ainntektListeInn = transformerInntekterRequest.ainntektsposter,
+                            ainntektHentetDato = transformerInntekterRequest.ainntektHentetDato,
+                        ) +
+                        ytelserServiceOvergangsstønad.beregnYtelser(
                             ainntektListeInn = transformerInntekterRequest.ainntektsposter,
                             ainntektHentetDato = transformerInntekterRequest.ainntektHentetDato,
                         )

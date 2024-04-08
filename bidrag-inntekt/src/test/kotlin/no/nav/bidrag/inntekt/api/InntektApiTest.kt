@@ -9,6 +9,7 @@ import io.kotest.matchers.shouldBe
 import no.nav.bidrag.commons.service.KodeverkProvider
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.inntekt.InntektApi
+import no.nav.bidrag.inntekt.TestUtil
 import no.nav.bidrag.inntekt.TestUtil.Companion.fileToObject
 import no.nav.bidrag.inntekt.testdata.StubUtils
 import no.nav.bidrag.inntekt.testdata.StubUtils.Companion.kodeverkUrl
@@ -32,6 +33,7 @@ class InntektApiTest {
         StubUtils.stubKodeverkYtelsesbeskrivelser()
         StubUtils.stubKodeverkPensjonsbeskrivelser()
         StubUtils.stubKodeverkNaeringsinntektsbeskrivelser()
+        StubUtils.stubKodeverkSpesifisertSkattegrunnlag()
     }
 
     @AfterEach
@@ -46,6 +48,8 @@ class InntektApiTest {
         val transformerteInntekter = inntektApi.transformerInntekter(
             fileToObject<TransformerInntekterRequest>(filnavnEksempelRequest).copy(ainntektHentetDato = LocalDate.parse("2024-02-11")),
         )
+
+        TestUtil.printJson(transformerteInntekter)
 
         assertSoftly {
             transformerteInntekter.shouldNotBeNull()
@@ -81,6 +85,8 @@ class InntektApiTest {
         val transformerteInntekter = inntektApi.transformerInntekter(
             fileToObject<TransformerInntekterRequest>(filnavnEksempelRequest).copy(ainntektHentetDato = LocalDate.parse("2024-02-11")),
         )
+
+        TestUtil.printJson(transformerteInntekter)
 
         assertSoftly {
             transformerteInntekter.shouldNotBeNull()
@@ -176,6 +182,8 @@ class InntektApiTest {
         val transformerteInntekter = inntektApi.transformerInntekter(
             fileToObject<TransformerInntekterRequest>(filnavnEksempelRequest).copy(ainntektHentetDato = ainntektHentetDato),
         )
+
+        TestUtil.printJson(transformerteInntekter)
 
         assertSoftly {
             transformerteInntekter.shouldNotBeNull()

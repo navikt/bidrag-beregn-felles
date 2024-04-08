@@ -1,24 +1,27 @@
 package no.nav.bidrag.inntekt.util
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import de.focus_shift.jollyday.core.HolidayCalendar
 import de.focus_shift.jollyday.core.HolidayManager
 import de.focus_shift.jollyday.core.ManagerParameters
-import java.math.BigDecimal
+import no.nav.bidrag.inntekt.service.Beskrivelser
+import no.nav.bidrag.inntekt.service.YtelserService
+import no.nav.bidrag.transport.behandling.inntekt.request.Ainntektspost
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.Month
-import java.time.YearMonth
-import java.time.temporal.ChronoUnit
 
 open class InntektUtil {
     companion object {
         const val KEY_3MND = "3MND"
         const val KEY_12MND = "12MND"
-        const val PERIODE_AAR = "AAR"
-        const val PERIODE_MAANED = "MND"
+        const val PERIODE_ÅR = "ÅR"
+        const val PERIODE_MÅNED = "MND"
+        const val BRUDD_MÅNED_OVERGANSSTØNAD = 5
 
         fun tilJson(json: Any): String {
             val objectMapper = ObjectMapper()
@@ -31,38 +34,12 @@ open class InntektUtil {
 
         // Finner siste hele år som skal rapporteres
         fun finnSisteAarSomSkalRapporteres(ainntektHentetTidspunkt: LocalDate): Int {
-            return if ((ainntektHentetTidspunkt.month == Month.JANUARY) && (
-                    ainntektHentetTidspunkt.dayOfMonth <= finnCutOffDag(
-                        ainntektHentetTidspunkt,
-                    )
-                    )
+            return if ((ainntektHentetTidspunkt.month == Month.JANUARY) &&
+                (ainntektHentetTidspunkt.dayOfMonth <= finnCutOffDag(ainntektHentetTidspunkt))
             ) {
                 ainntektHentetTidspunkt.year.minus(2)
             } else {
                 ainntektHentetTidspunkt.year.minus(1)
-            }
-        }
-
-        // Finner antall måneder som overlapper med angitt periode
-        fun finnAntallMndOverlapp(
-            periodeFra: YearMonth,
-            periodeTil: YearMonth,
-            forstePeriodeIIntervall: YearMonth,
-            sistePeriodeIIntervall: YearMonth,
-        ): Int {
-            return when {
-                !(periodeTil.isAfter(forstePeriodeIIntervall)) -> 0
-                !(periodeFra.isBefore(sistePeriodeIIntervall)) -> 0
-                !(periodeFra.isAfter(forstePeriodeIIntervall)) && !(periodeTil.isBefore(sistePeriodeIIntervall)) ->
-                    ChronoUnit.MONTHS.between(forstePeriodeIIntervall, sistePeriodeIIntervall).toInt()
-
-                !(periodeFra.isAfter(forstePeriodeIIntervall)) && (periodeTil.isBefore(sistePeriodeIIntervall)) ->
-                    ChronoUnit.MONTHS.between(forstePeriodeIIntervall, periodeTil).toInt()
-
-                (periodeFra.isAfter(forstePeriodeIIntervall)) && !(periodeTil.isBefore(sistePeriodeIIntervall)) ->
-                    ChronoUnit.MONTHS.between(periodeFra, sistePeriodeIIntervall).toInt()
-
-                else -> ChronoUnit.MONTHS.between(periodeFra, periodeTil).toInt()
             }
         }
 
@@ -79,17 +56,21 @@ open class InntektUtil {
             }
             return cutOffDato.dayOfMonth
         }
+
+        fun filtrerInntekterPåYtelse(ainntektListeInn: List<Ainntektspost>, beskrivelserListe: List<String>) = ainntektListeInn.filter {
+            it.beskrivelse in beskrivelserListe
+        }
+
+        // les innhold fra fil mapping_ytelser.yaml og returner dette som en map
+        fun hentMappingYtelser(): Map<String, Beskrivelser> {
+            val objectmapper = ObjectMapper(YAMLFactory()).findAndRegisterModules().registerKotlinModule()
+            val fil = YtelserService::class.java.getResource("/files/mapping_ytelser.yaml")
+                ?: throw RuntimeException("Fant ingen fil på sti mapping_ytelser.yaml")
+            return objectmapper.readValue(fil)
+        }
     }
 }
 
 fun String.isNumeric(): Boolean {
     return this.all { it.isDigit() }
-}
-
-fun beregneBeløpPerMåned(beløp: BigDecimal, antallMnd: Int): BigDecimal {
-    return if (antallMnd == 0) {
-        BigDecimal.valueOf(0)
-    } else {
-        beløp.div(antallMnd.toBigDecimal())
-    }
 }

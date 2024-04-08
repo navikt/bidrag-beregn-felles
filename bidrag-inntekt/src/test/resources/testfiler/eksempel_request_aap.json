@@ -48,8 +48,6 @@
     },
     {
       "utbetalingsperiode": "2022-05",
-      "opptjeningsperiodeFra": "2022-05-01",
-      "opptjeningsperiodeTil": null,
       "beskrivelse": "fastloenn",
       "beløp": 50500
     },
@@ -60,8 +58,6 @@
     },
     {
       "utbetalingsperiode": "2022-05",
-      "opptjeningsperiodeFra": "2021-01-01",
-      "opptjeningsperiodeTil": "2022-01-01",
       "beskrivelse": "bonus",
       "beløp": 15000
     },
@@ -137,8 +133,6 @@
     },
     {
       "utbetalingsperiode": "2023-06",
-      "opptjeningsperiodeFra": "2023-04-15",
-      "opptjeningsperiodeTil": "2023-05-01",
       "beskrivelse": "overtidsgodtgjoerelse",
       "beløp": 8000
     },
