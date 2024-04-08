@@ -30,6 +30,6 @@ data class BoforholdResponse(
 )
 
 enum class Kilde {
-    MANUELT,
+    MANUELL,
     OFFENTLIG,
 }
