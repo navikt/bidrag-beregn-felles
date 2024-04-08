@@ -3,40 +3,30 @@
   "ainntektsposter": [
     {
       "utbetalingsperiode": "2022-05",
-      "opptjeningsperiodeFra": "2022-05-01",
-      "opptjeningsperiodeTil": null,
       "beskrivelse": "fastloenn",
       "beløp": 50000,
       "referanse": "A1"
     },
     {
       "utbetalingsperiode": "2022-05",
-      "opptjeningsperiodeFra": "2021-11-01",
-      "opptjeningsperiodeTil": "2022-04-01",
       "beskrivelse": "overtidsgodtgjoerelse",
       "beløp": 10000,
       "referanse": "A2"
     },
     {
       "utbetalingsperiode": "2022-05",
-      "opptjeningsperiodeFra": "2022-05-01",
-      "opptjeningsperiodeTil": "2022-06-01",
       "beskrivelse": "bonus",
       "beløp": 15000,
       "referanse": "A3"
     },
     {
       "utbetalingsperiode": "2022-06",
-      "opptjeningsperiodeFra": "2022-06-01",
-      "opptjeningsperiodeTil": "2022-07-01",
       "beskrivelse": "fastloenn",
       "beløp": 50000,
       "referanse": "A4"
     },
     {
       "utbetalingsperiode": "2022-07",
-      "opptjeningsperiodeFra": "2022-07-01",
-      "opptjeningsperiodeTil": "2022-08-01",
       "beskrivelse": "fastloenn",
       "beløp": 50000,
       "referanse": "A5"
@@ -73,32 +63,24 @@
     },
     {
       "utbetalingsperiode": "2023-01",
-      "opptjeningsperiodeFra": "2023-01-01",
-      "opptjeningsperiodeTil": "2023-02-01",
       "beskrivelse": "fastloenn",
       "beløp": 60000,
       "referanse": "A11"
     },
     {
       "utbetalingsperiode": "2023-02",
-      "opptjeningsperiodeFra": "2023-02-01",
-      "opptjeningsperiodeTil": "2023-03-01",
       "beskrivelse": "fastloenn",
       "beløp": 60000.33,
       "referanse": "A12"
     },
     {
       "utbetalingsperiode": "2023-03",
-      "opptjeningsperiodeFra": "2023-03-01",
-      "opptjeningsperiodeTil": "2023-04-01",
       "beskrivelse": "fastloenn",
       "beløp": 60000,
       "referanse": "A13"
     },
     {
       "utbetalingsperiode": "2023-04",
-      "opptjeningsperiodeFra": "2023-04-01",
-      "opptjeningsperiodeTil": "2023-05-01",
       "beskrivelse": "fastloenn",
       "beløp": 60000,
       "referanse": "A14"
@@ -111,8 +93,6 @@
     },
     {
       "utbetalingsperiode": "2023-06",
-      "opptjeningsperiodeFra": "2023-04-15",
-      "opptjeningsperiodeTil": "2023-05-01",
       "beskrivelse": "overtidsgodtgjoerelse",
       "beløp": 8000,
       "referanse": "A16"

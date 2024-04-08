@@ -3,104 +3,78 @@
   "ainntektsposter": [
     {
       "utbetalingsperiode": "2023-02",
-      "opptjeningsperiodeFra": "2023-10-31",
-      "opptjeningsperiodeTil": "2023-12-30",
       "beskrivelse": "fastloenn",
       "beløp": 60000,
       "referanse": "innhentet_ainntekt_20230201"
     },
     {
       "utbetalingsperiode": "2023-03",
-      "opptjeningsperiodeFra": null,
-      "opptjeningsperiodeTil": null,
       "beskrivelse": "fastloenn",
       "beløp": 60000,
       "referanse": "innhentet_ainntekt_20230301"
     },
     {
       "utbetalingsperiode": "2023-04",
-      "opptjeningsperiodeFra": null,
-      "opptjeningsperiodeTil": null,
       "beskrivelse": "fastloenn",
       "beløp": 60000,
       "referanse": "innhentet_ainntekt_20230401"
     },
     {
       "utbetalingsperiode": "2023-05",
-      "opptjeningsperiodeFra": null,
-      "opptjeningsperiodeTil": null,
       "beskrivelse": "fastloenn",
       "beløp": 60000,
       "referanse": "innhentet_ainntekt_20230501"
     },
     {
       "utbetalingsperiode": "2023-06",
-      "opptjeningsperiodeFra": null,
-      "opptjeningsperiodeTil": null,
       "beskrivelse": "fastloenn",
       "beløp": 60000,
       "referanse": "innhentet_ainntekt_20230601"
     },
     {
       "utbetalingsperiode": "2023-07",
-      "opptjeningsperiodeFra": null,
-      "opptjeningsperiodeTil": null,
       "beskrivelse": "fastloenn",
       "beløp": 50000,
       "referanse": "innhentet_ainntekt_20230701"
     },
     {
       "utbetalingsperiode": "2023-08",
-      "opptjeningsperiodeFra": null,
-      "opptjeningsperiodeTil": null,
       "beskrivelse": "fastloenn",
       "beløp": 50000,
       "referanse": "innhentet_ainntekt_20230801"
     },
     {
       "utbetalingsperiode": "2023-09",
-      "opptjeningsperiodeFra": null,
-      "opptjeningsperiodeTil": null,
       "beskrivelse": "fastloenn",
       "beløp": 55000,
       "referanse": "innhentet_ainntekt_20230901"
     },
     {
       "utbetalingsperiode": "2023-10",
-      "opptjeningsperiodeFra": null,
-      "opptjeningsperiodeTil": null,
       "beskrivelse": "fastloenn",
       "beløp": 55000,
       "referanse": "innhentet_ainntekt_20231001"
     },
     {
       "utbetalingsperiode": "2023-11",
-      "opptjeningsperiodeFra": null,
-      "opptjeningsperiodeTil": null,
       "beskrivelse": "fastloenn",
       "beløp": 65000,
       "referanse": "innhentet_ainntekt_20231101"
     },
     {
       "utbetalingsperiode": "2023-11",
-      "opptjeningsperiodeFra": null,
-      "opptjeningsperiodeTil": null,
       "beskrivelse": "fastloenn",
       "beløp": 12000,
       "referanse": "innhentet_ainntekt_20231101"
     },
     {
       "utbetalingsperiode": "2023-12",
-      "opptjeningsperiodeFra": null,
-      "opptjeningsperiodeTil": null,
       "beskrivelse": "fastloenn",
       "beløp": 65000,
       "referanse": "innhentet_ainntekt_20231201"
     },
     {
       "utbetalingsperiode": "2024-01",
-      "opptjeningsperiodeFra": null,
-      "opptjeningsperiodeTil": null,
       "beskrivelse": "fastloenn",
       "beløp": 69000,
       "referanse": "innhentet_ainntekt_20240101"
