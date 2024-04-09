@@ -25,6 +25,8 @@ class YtelserServiceOvergangsstønad {
     // - Året strekker seg ikke over et kalenderår, men går fom. mai tom. april neste år
     // - Det skal rapporteres helt tom. "inneværende år", selv om "året" ikke er sluttført (det beregnes da for resten av året basert på snittet av
     //   inntektene som er rapportert)
+    // - Det beregnes en årsinntekt ved å summere alle inntekter i perioden, dele på antall måneder det er rapportert overgangsstønad for og så gange
+    //   med 12 (for andre ytelser gjøres det bare en summering av rapporterte inntekter i perioden)
     fun beregnYtelser(ainntektListeInn: List<Ainntektspost>, ainntektHentetDato: LocalDate): List<SummertÅrsinntekt> {
         val beskrivelserListe =
             hentMappingYtelser().filter { it.key == Inntektsrapportering.OVERGANGSSTØNAD.toString() }.flatMap { it.value.beskrivelser }
