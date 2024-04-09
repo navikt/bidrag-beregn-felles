@@ -164,12 +164,12 @@ class YtelserServiceTest : AbstractServiceTest() {
                     periode.til shouldBe YearMonth.of(2023, 4)
                     gjelderBarnPersonId shouldBe ""
                     inntektPostListe.size shouldBe 1
-                    inntektPostListe.sumOf { it.beløp } shouldBe BigDecimal.valueOf(83608)
+                    inntektPostListe.sumOf { it.beløp } shouldBe BigDecimal.valueOf(250824)
 
                     with(inntektPostListe[0]) {
                         kode shouldBe "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere"
                         visningsnavn shouldBe "Overgangsstønad til enslig mor eller far som begynte å løpe 1. april 2014 eller senere"
-                        beløp shouldBe BigDecimal.valueOf(83608)
+                        beløp shouldBe BigDecimal.valueOf(250824)
                     }
                 }
 
@@ -180,13 +180,19 @@ class YtelserServiceTest : AbstractServiceTest() {
                     periode.fom shouldBe YearMonth.of(2023, 5)
                     periode.til shouldBe YearMonth.of(2024, 4)
                     gjelderBarnPersonId shouldBe ""
-                    inntektPostListe.size shouldBe 1
-                    inntektPostListe.sumOf { it.beløp } shouldBe BigDecimal.valueOf(207669)
+                    inntektPostListe.size shouldBe 2
+                    inntektPostListe.sumOf { it.beløp } shouldBe BigDecimal.valueOf(249202)
 
                     with(inntektPostListe[0]) {
                         kode shouldBe "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere"
                         visningsnavn shouldBe "Overgangsstønad til enslig mor eller far som begynte å løpe 1. april 2014 eller senere"
-                        beløp shouldBe BigDecimal.valueOf(207669)
+                        beløp shouldBe BigDecimal.valueOf(195824)
+                    }
+
+                    with(inntektPostListe[1]) {
+                        kode shouldBe "overgangsstoenadTilGjenlevendeEktefelle"
+                        visningsnavn shouldBe "Overgangsstønad til gjenlevende ektefelle"
+                        beløp shouldBe BigDecimal.valueOf(53378)
                     }
                 }
             }

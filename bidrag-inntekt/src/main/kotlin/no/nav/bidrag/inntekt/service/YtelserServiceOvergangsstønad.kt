@@ -49,7 +49,13 @@ class YtelserServiceOvergangsstønad {
                             periodeTil = it.value.periodeTil!!,
                         ),
                         periode = ÅrMånedsperiode(fom = it.value.periodeFra, til = it.value.periodeTil),
-                        inntektPostListe = grupperOgSummerDetaljposter(it.value.inntektPostListe),
+                        inntektPostListe = grupperOgSummerDetaljposter(
+                            it.value.inntektPostListe,
+                            sisteRapportertePeriode,
+                            periodeListe,
+                            it.value.periodeFra,
+                            it.value.periodeTil!!
+                        ),
                         grunnlagsreferanseListe = it.value.grunnlagreferanseListe.toList(),
                     ),
                 )
@@ -70,40 +76,58 @@ class YtelserServiceOvergangsstønad {
         }
     }
 
-    // Henter ut alle unike perioder det er levert data for for en spesifikk ytelse. For overgangsstønad brukes etterbetalingsperiode hvis
-    // den er satt, ellers brukes utbetalingsperiode. Det forutsettes her at etterbetalingsperiode strekker seg over kun en måned og perioden
-    // varer fra den første til den siste i måneden. I eksemplene som er gjennomgått er etterbetalingsperiode satt på denne måneden for ytelser,
-    // men i teorien kan etterbetalingsperiode gå over flere måneder og starte og slutte på en annen dato enn den første i måneden. Hvis det
-    // finnes eksempler på dette må denne logikken revurderes.
-    private fun hentPerioder(ainntektListe: List<Ainntektspost>): List<YearMonth> {
-        val periodeListe = mutableListOf<YearMonth>()
-        ainntektListe.forEach {
-            if (it.etterbetalingsperiodeFra == null) {
-                periodeListe.add(YearMonth.of(it.utbetalingsperiode!!.substring(0, 4).toInt(), it.utbetalingsperiode!!.substring(5, 7).toInt()))
+    // Henter ut alle unike perioder det er levert data for for en spesifikk ytelse/beskrivelse. For overgangsstønad brukes
+    // etterbetalingsperiode hvis den er satt, ellers brukes utbetalingsperiode. Det forutsettes her at etterbetalingsperiode strekker seg
+    // over kun en måned og perioden varer fra den første til den siste i måneden. I eksemplene som er gjennomgått er etterbetalingsperiode
+    // satt på denne måten for ytelser, men i teorien kan etterbetalingsperiode gå over flere måneder og starte og slutte på en annen dato
+    // enn den første i måneden. Hvis det finnes eksempler på dette må denne logikken revurderes.
+    private fun hentPerioder(ainntektListe: List<Ainntektspost>): Map<String, Set<YearMonth>> {
+        val periodeListe = mutableMapOf<String, MutableSet<YearMonth>>()
+
+        ainntektListe.forEach { ainntektspost ->
+            val periode = if (ainntektspost.etterbetalingsperiodeFra != null) {
+                YearMonth.of(ainntektspost.etterbetalingsperiodeFra!!.year, ainntektspost.etterbetalingsperiodeFra!!.monthValue)
             } else {
-                periodeListe.add(YearMonth.of(it.etterbetalingsperiodeFra!!.year, it.etterbetalingsperiodeFra!!.monthValue))
+                YearMonth.of(
+                    ainntektspost.utbetalingsperiode!!.substring(0, 4).toInt(),
+                    ainntektspost.utbetalingsperiode!!.substring(5, 7).toInt()
+                )
             }
+
+            periodeListe.getOrPut(ainntektspost.beskrivelse!!) { mutableSetOf() }.add(periode)
         }
-        return periodeListe.distinct()
+
+        return periodeListe
     }
 
-    // Beregner inntekt for et "år"
+    // Beregner inntekt for et "år". Finner antall unike perioder som har data på tvers av postene, deler summert inntekt med antall
+    // måneder og ganger med 12 for å regne om til årsinntekt.
     private fun beregnInntekt(
         sisteRapportertePeriode: YearMonth,
-        periodeListe: List<YearMonth>,
+        periodeListe: Map<String, Set<YearMonth>>,
         sumInntekt: BigDecimal,
         periodeFra: YearMonth,
         periodeTil: YearMonth,
     ): BigDecimal {
+        val unikPeriodeListe = periodeListe.values.flatten().toSet()
         val periodeTilJustert = if (sisteRapportertePeriode.isBefore(periodeTil)) sisteRapportertePeriode else periodeTil
-        val antallMånederMedDataIPerioden = periodeListe.count { it in periodeFra..periodeTilJustert }.toLong()
+        val antallMånederMedDataIPerioden = unikPeriodeListe.count { it in periodeFra..periodeTilJustert }.toLong()
 
-        return sumInntekt.divide(BigDecimal.valueOf(antallMånederMedDataIPerioden)).multiply(BigDecimal.valueOf(12)).setScale(0, RoundingMode.HALF_UP)
+        return sumInntekt
+            .divide(BigDecimal.valueOf(antallMånederMedDataIPerioden))
+            .multiply(BigDecimal.valueOf(12))
+            .setScale(0, RoundingMode.HALF_UP)
     }
 
-    // Grupperer og summerer poster som har samme kode/beskrivelse
-    private fun grupperOgSummerDetaljposter(inntektPostListe: List<InntektPost>): List<InntektPost> {
-        return inntektPostListe
+    // Grupperer og summerer poster som har samme kode/beskrivelse. Bruker samme prinsipp for å regne om til årsinntekt som i beregnInntekt.
+    private fun grupperOgSummerDetaljposter(
+        inntektPostListe: List<InntektPost>,
+        sisteRapportertePeriode: YearMonth,
+        periodeListe: Map<String, Set<YearMonth>>,
+        periodeFra: YearMonth,
+        periodeTil: YearMonth
+    ): List<InntektPost> {
+        val summertInntektPostListe = inntektPostListe
             .groupBy(InntektPost::kode)
             .map {
                 InntektPost(
@@ -112,7 +136,28 @@ class YtelserServiceOvergangsstønad {
                     beløp = it.value.sumOf(InntektPost::beløp),
                 )
             }
+
+        val unikPeriodeListe = periodeListe.values.flatten().toSet()
+        val periodeTilJustert = if (sisteRapportertePeriode.isBefore(periodeTil)) sisteRapportertePeriode else periodeTil
+        val antallMånederMedDataIPerioden = unikPeriodeListe.count { it in periodeFra..periodeTilJustert }.toLong()
+
+        val summertInntektPostListeTilÅrsinntekt = mutableListOf<InntektPost>()
+        summertInntektPostListe.forEach { inntektPost ->
+            summertInntektPostListeTilÅrsinntekt.add(
+                InntektPost(
+                    kode = inntektPost.kode,
+                    visningsnavn = inntektPost.visningsnavn,
+                    beløp = inntektPost.beløp
+                        .divide(BigDecimal.valueOf(antallMånederMedDataIPerioden))
+                        .multiply(BigDecimal.valueOf(12))
+                        .setScale(0, RoundingMode.HALF_UP),
+                ),
+            )
+        }
+
+        return summertInntektPostListeTilÅrsinntekt
     }
+
 
     // Summerer og grupperer ainntekter pr år
     private fun summerAarsinntekter(ainntektsposter: List<Ainntektspost>, sisteRapportertePeriode: YearMonth): Map<String, InntektSumPost> {
