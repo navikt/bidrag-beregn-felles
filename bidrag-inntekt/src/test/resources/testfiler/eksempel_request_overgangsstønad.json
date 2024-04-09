@@ -6,88 +6,104 @@
       "etterbetalingsperiodeFra": "2023-01-01",
       "etterbetalingsperiodeTil": "2023-02-01",
       "beskrivelse": "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere",
-      "beløp": 20902
+      "beløp": 20902,
+      "referanse": "2023-01_001"
     },
     {
       "utbetalingsperiode": "2023-03",
       "etterbetalingsperiodeFra": "2023-02-01",
       "etterbetalingsperiodeTil": "2023-03-01",
       "beskrivelse": "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere",
-      "beløp": 20902
+      "beløp": 20902,
+      "referanse": "2023-02_001"
     },
     {
       "utbetalingsperiode": "2023-03",
       "beskrivelse": "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere",
-      "beløp": 20902
+      "beløp": 20902,
+      "referanse": "2023-03_001"
     },
     {
       "utbetalingsperiode": "2023-05",
       "beskrivelse": "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere",
-      "beløp": 20902
+      "beløp": 20902,
+      "referanse": "2023-05_001"
     },
     {
       "utbetalingsperiode": "2023-06",
       "beskrivelse": "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere",
-      "beløp": 22241
+      "beløp": 22241,
+      "referanse": "2023-06_001"
     },
     {
       "utbetalingsperiode": "2023-06",
       "etterbetalingsperiodeFra": "2023-05-01",
       "etterbetalingsperiodeTil": "2023-06-01",
       "beskrivelse": "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere",
-      "beløp": 1339
+      "beløp": 1339,
+      "referanse": "2023-05_002"
     },
     {
       "utbetalingsperiode": "2023-06",
       "etterbetalingsperiodeFra": "2023-04-01",
       "etterbetalingsperiodeTil": "2023-05-01",
       "beskrivelse": "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere",
-      "beløp": 20902
+      "beløp": 20902,
+      "referanse": "2023-04_001"
     },
     {
       "utbetalingsperiode": "2023-07",
       "beskrivelse": "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere",
-      "beløp": 22241
+      "beløp": 22241,
+      "referanse": "2023-07_001"
     },
     {
       "utbetalingsperiode": "2023-08",
       "beskrivelse": "overgangsstoenadTilGjenlevendeEktefelle",
-      "beløp": 22241
+      "beløp": 22241,
+      "referanse": "2023-08_001"
     },
     {
       "utbetalingsperiode": "2023-09",
       "beskrivelse": "overgangsstoenadTilGjenlevendeEktefelle",
-      "beløp": 22241
+      "beløp": 22241,
+      "referanse": "2023-09_001"
     },
     {
       "utbetalingsperiode": "2023-10",
       "beskrivelse": "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere",
-      "beløp": 22241
+      "beløp": 22241,
+      "referanse": "2023-10_001"
     },
     {
       "utbetalingsperiode": "2023-11",
       "beskrivelse": "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere",
-      "beløp": 22241
+      "beløp": 22241,
+      "referanse": "2023-11_001"
     },
     {
       "utbetalingsperiode": "2023-12",
       "beskrivelse": "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere",
-      "beløp": 22241
+      "beløp": 22241,
+      "referanse": "2023-12_001"
     },
     {
       "utbetalingsperiode": "2024-01",
       "beskrivelse": "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere",
-      "beløp": 7500
+      "beløp": 7500,
+      "referanse": "2024-01_001"
     },
     {
       "utbetalingsperiode": "2024-02",
       "beskrivelse": "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere",
-      "beløp": 22241
+      "beløp": 22241,
+      "referanse": "2024-02_001"
     },
     {
       "utbetalingsperiode": "2024-03",
       "beskrivelse": "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere",
-      "beløp": 7500
+      "beløp": 7500,
+      "referanse": "2024-03_001"
     }
   ]
 }
