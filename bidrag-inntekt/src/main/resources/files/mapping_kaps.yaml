@@ -1,3 +1,8 @@
+andelAvUnderskuddFraTidligereAarVedDriftAvVaaningshusSomAnvendesIAaret:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2021
+    tom: 9999
 andelIFellesTapVedSalgAvAndelISDF:
   - plussMinus: MINUS
     sekkepost: NEI
@@ -7,7 +12,7 @@ andreFradragsberettigedeKostnader:
   - plussMinus: MINUS
     sekkepost: NEI
     fom: 2015
-    tom: 9999
+    tom: 2022
 annenSkattepliktigKapitalinntektFraAnnetFinansprodukt:
   - plussMinus: PLUSS
     sekkepost: NEI
@@ -17,12 +22,32 @@ annenSkattepliktigKapitalinntektFraVirtuellValuta:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2019
+    tom: 2022
+annetInntektsfradrag:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2022
+    tom: 9999
+betalteForsinkelsesrenter:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2022
+    tom: 9999
+dagpengerForFisker:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2022
+    tom: 9999
+dagpengerForNaeringsdrivende:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2022
     tom: 9999
 dagpengerForNaeringsdrivendeOgFisker:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2015
-    tom: 9999
+    tom: 2022
 dagpengerVedSykehusoppholdMvFraBarneforsikring:
   - plussMinus: PLUSS
     sekkepost: NEI
@@ -32,7 +57,7 @@ fortsettelsesforsikring:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2019
-    tom: 9999
+    tom: 2021
 forvaltningskostnaderFinans:
   - plussMinus: MINUS
     sekkepost: NEI
@@ -67,6 +92,11 @@ fradragsberettigetTapVedRealisasjonAvFastEiendomIUtlandet:
   - plussMinus: MINUS
     sekkepost: NEI
     fom: 2017
+    tom: 2022
+gevinstOgAnnenInntektFraVirtuellEiendel:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2022
     tom: 9999
 gevinstValutalaan:
   - plussMinus: PLUSS
@@ -82,7 +112,7 @@ gevinstVedRealisasjonAvAksjeOgVerdipapirfondAksjedel:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2017
-    tom: 9999
+    tom: 2022
 gevinstVedRealisasjonAvAksjesparekonto:
   - plussMinus: PLUSS
     sekkepost: NEI
@@ -112,7 +142,7 @@ gevinstVedRealisasjonAvFastEiendomMvIUtlandet:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2017
-    tom: 9999
+    tom: 2022
 gevinstVedRealisasjonAvObligasjonerSertifikaterMv:
   - plussMinus: PLUSS
     sekkepost: NEI
@@ -122,7 +152,7 @@ gevinstVedRealisasjonAvObligasjonVerdipapirfondRentedelMv:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2017
-    tom: 9999
+    tom: 2021
 gevinstVedRealisasjonAvOgUttakFraAksjedelIFondskonto:
   - plussMinus: PLUSS
     sekkepost: NEI
@@ -137,7 +167,7 @@ gevinstVedRealisasjonAvVerdipapirfondsandelIKombifondKnyttetTilAksjedel:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2017
-    tom: 9999
+    tom: 2022
 gevinstVedRealisasjonAvVerdipapirfondsandelKnyttetTilAksjedel:
   - plussMinus: PLUSS
     sekkepost: NEI
@@ -147,7 +177,7 @@ gevinstVedRealisasjonAvVirtuellValuta:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2019
-    tom: 9999
+    tom: 2021
 gevinstVedSalgAvAndelINOKUS:
   - plussMinus: PLUSS
     sekkepost: NEI
@@ -167,7 +197,7 @@ inntektFraLottEllerPartTilFiskerOgFangstmann:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2018
-    tom: 9999
+    tom: 2021
 inntektsfoeringAvNegativSaldo:
   - plussMinus: PLUSS
     sekkepost: NEI
@@ -183,11 +213,16 @@ inntektsfradragAvRentefordelPaaLaanIPensjonsforhold:
     sekkepost: NEI
     fom: 2020
     tom: 9999
+inntektsfradragFraGevinstOgTapskonto:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2022
+    tom: 9999
 inntektVedUtleieAvFritidseiendomSomSkattepliktigeHarBrukt:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2018
-    tom: 9999
+    tom: 2021
 investeringIOppstartsselskap:
   - plussMinus: MINUS
     sekkepost: NEI
@@ -202,6 +237,26 @@ kapitalkostnadFraSkogbruk:
   - plussMinus: MINUS
     sekkepost: NEI
     fom: 2017
+    tom: 9999
+latentEllerRealisertGevinstPaaAksjeAndelMvVedUtflytting:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2022
+    tom: 9999
+latentEllerRealisertGevinstPaaAnnetFinansproduktMvVedUtflytting:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2022
+    tom: 9999
+latentEllerRealisertTapPaaAksjeAndelMvVedUtflytting:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2022
+    tom: 9999
+latentEllerRealisertTapPaaAksjeAnnetFinansproduktMvVedUtflytting:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2022
     tom: 9999
 livrenterIArbeidsforhold:
   - plussMinus: PLUSS
@@ -232,6 +287,11 @@ naeringsinntektFraKompensasjonsytelseUtbetaltAvNavInnenFiskeOgFangst:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2020
+    tom: 2022
+nettoinntektVedUtleieAvFastEiendomMv:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2022
     tom: 9999
 oevrigInntekt:
   - plussMinus: PLUSS
@@ -242,6 +302,11 @@ opptjenteRenterFraPrivatUtestaaendeFordring:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2020
+    tom: 9999
+opptjenteRenterFraUtestaaendeFordring:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2021
     tom: 9999
 overskuddAvEnkeltpersonforetakInnenJordbrukGartneriPelsdyrMv:
   - plussMinus: PLUSS
@@ -263,20 +328,10 @@ overskuddAvEnkeltpersonforetakInnenSkogbruk:
     sekkepost: NEI
     fom: 2017
     tom: 9999
-personinntektFraKompensasjonsytelseUtbetaltAvNavInnenAnnenNaering:
-  - plussMinus: MINUS
+overskuddAvSDF:
+  - plussMinus: PLUSS
     sekkepost: NEI
-    fom: 2020
-    tom: 9999
-personinntektFraKompensasjonsytelseUtbetaltAvNavInnenBarnepassIBarnepasserensHjem:
-  - plussMinus: MINUS
-    sekkepost: NEI
-    fom: 2020
-    tom: 9999
-personinntektFraKompensasjonsytelseUtbetaltAvNavInnenFiskeOgFangst:
-  - plussMinus: MINUS
-    sekkepost: NEI
-    fom: 2020
+    fom: 2022
     tom: 9999
 personinntektFraSDFInnenAnnenNaering:
   - plussMinus: MINUS
@@ -288,15 +343,15 @@ personinntektFraSDFInnenFiskeEllerBarnepassIBarnepasserensHjem:
     sekkepost: NEI
     fom: 2018
     tom: 9999
-personinntektFraSkattefriLottMedTrygdeavgiftspliktForUtenlandskFisker:
-  - plussMinus: MINUS
-    sekkepost: NEI
-    fom: 2019
-    tom: 9999
 positivPersoninntektFraEnkeltpersonforetakPaaSvalbard:
   - plussMinus: MINUS
     sekkepost: NEI
     fom: 2017
+    tom: 9999
+paaloepteRenterFraAnnenGjeld:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2021
     tom: 9999
 paaloepteRenterFraInkassoselskap:
   - plussMinus: MINUS
@@ -307,7 +362,7 @@ paaloepteRenterFraPrivatGjeld:
   - plussMinus: MINUS
     sekkepost: NEI
     fom: 2020
-    tom: 9999
+    tom: 2021
 renteinntektAvAnnetFinansprodukt:
   - plussMinus: PLUSS
     sekkepost: NEI
@@ -327,12 +382,12 @@ renteinntektAvObligasjonVerdipapirfondRentedelMv:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2017
-    tom: 9999
+    tom: 2022
 renteinntektAvObligasjonVerdipapirfondRentedelMvIUtlandet:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2017
-    tom: 9999
+    tom: 2021
 renteinntektAvSkadeforsikring:
   - plussMinus: PLUSS
     sekkepost: NEI
@@ -372,12 +427,12 @@ samledeAndreOpptjenteRenter:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2020
-    tom: 9999
+    tom: 2021
 samledeAndrePaaloepteRenter:
   - plussMinus: MINUS
     sekkepost: NEI
     fom: 2020
-    tom: 9999
+    tom: 2022
 samledeOpptjenteRenterIInnenlandskeBanker:
   - plussMinus: PLUSS
     sekkepost: NEI
@@ -387,7 +442,7 @@ samledeOpptjenteRenterIUtenlandskeBanker:
   - plussMinus: PLUSS
     sekkepost: JA
     fom: 2018
-    tom: 9999
+    tom: 2022
 samledePaaloepteRenter:
   - plussMinus: MINUS
     sekkepost: NEI
@@ -402,12 +457,12 @@ samledePaaloepteRenterPaaGjeldIUtlandet:
   - plussMinus: MINUS
     sekkepost: NEI
     fom: 2017
-    tom: 9999
+    tom: 2021
 samledeUfoererenterOgLivrenter:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2017
-    tom: 9999
+    tom: 2022
 samledeUnderholdsbidrag:
   - plussMinus: PLUSS
     sekkepost: NEI
@@ -442,7 +497,7 @@ samletFradragsberettigetUnderskuddVedUtleieAvFastEiendom:
   - plussMinus: MINUS
     sekkepost: NEI
     fom: 2015
-    tom: 9999
+    tom: 2022
 samletFremfoerbartUnderskuddFraTidligereAar:
   - plussMinus: MINUS
     sekkepost: NEI
@@ -517,12 +572,12 @@ samletOverskuddAvSDFInnenAnnenNaering:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2018
-    tom: 9999
+    tom: 2021
 samletOverskuddAvSDFInnenFiskeEllerFamiliebarnehage:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2018
-    tom: 9999
+    tom: 2021
 samletPensjonsinnbetalingTilIndividuellPensjonsordning:
   - plussMinus: PLUSS
     sekkepost: NEI
@@ -567,7 +622,7 @@ samletSkattepliktigGevinstVedRealisasjonAvObligasjonEllerVerdipapirfondsandel:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2017
-    tom: 2018
+    tom: 2017
 samletSkattepliktigGevinstVedSalgAvAndelerIKNANSNOKUS:
   - plussMinus: PLUSS
     sekkepost: NEI
@@ -587,12 +642,12 @@ samletSkattepliktigOverskuddFraUtleieAvFastEiendom:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2015
-    tom: 9999
+    tom: 2022
 samletSkattepliktigOverskuddFraUtleieAvFastEiendomIUtlandet:
   - plussMinus: PLUSS
     sekkepost: JA
     fom: 2015
-    tom: 9999
+    tom: 2021
 samletSkattepliktigUtbyttePaaAksjerIkkeRegistrertIVerdipapirsentralen:
   - plussMinus: PLUSS
     sekkepost: JA
@@ -637,7 +692,7 @@ samletUnderskuddAvSDF:
   - plussMinus: MINUS
     sekkepost: JA
     fom: 2019
-    tom: 9999
+    tom: 2021
 samletUnderskuddAvSDFPaaSvalbard:
   - plussMinus: MINUS
     sekkepost: NEI
@@ -657,12 +712,17 @@ skattepliktigAksjegevinst:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2017
-    tom: 2018
+    tom: 2017
 skattepliktigAvkastningEllerKundeutbytte:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2017
     tom: 9999
+skattepliktigEtterloennOgEtterpensjon:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2021
+    tom: 2022
 skattepliktigUnderholdsbidragUfoererenterOgLivrenter:
   - plussMinus: PLUSS
     sekkepost: NEI
@@ -672,17 +732,17 @@ skattepliktigUtbytteFraAksjeIkkeRegistrertIVerdipapirsentralen:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2017
-    tom: 9999
+    tom: 2021
 skattepliktigUtbytteFraAksjeINOKUSIkkeRegistrertIVerdipapirsentralen:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2017
-    tom: 9999
+    tom: 2021
 skattepliktigUtbytteFraAksjeOgVerdipapirfondAksjedel:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2019
-    tom: 9999
+    tom: 2021
 skattepliktigUtbytteFraAksjerRegistrertIVerdipapirsentralen:
   - plussMinus: PLUSS
     sekkepost: NEI
@@ -703,6 +763,16 @@ skjermingsfradrag:
     sekkepost: NEI
     fom: 2018
     tom: 9999
+supplerendeStoenadTilUfoerFlyktning:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2021
+    tom: 9999
+tapOgAnnenKostnadFraVirtuellEiendel:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2022
+    tom: 9999
 tapValutalaan:
   - plussMinus: MINUS
     sekkepost: NEI
@@ -722,7 +792,7 @@ tapVedRealisasjonAvAksjeOgVerdipapirfondAksjedel:
   - plussMinus: MINUS
     sekkepost: NEI
     fom: 2017
-    tom: 9999
+    tom: 2021
 tapVedRealisasjonAvAksjesparekonto:
   - plussMinus: MINUS
     sekkepost: NEI
@@ -752,7 +822,7 @@ tapVedRealisasjonAvObligasjonVerdipapirfondRentedelMv:
   - plussMinus: MINUS
     sekkepost: NEI
     fom: 2017
-    tom: 9999
+    tom: 2021
 tapVedRealisasjonAvOgUttakFraRentedelIFondskonto:
   - plussMinus: MINUS
     sekkepost: NEI
@@ -762,7 +832,7 @@ tapVedRealisasjonAvVerdipapirfondsandelIKombifondKnyttetTilAksjedel:
   - plussMinus: MINUS
     sekkepost: NEI
     fom: 2017
-    tom: 9999
+    tom: 2021
 tapVedRealisasjonAvVerdipapirfondsandelKnyttetTilAksjedel:
   - plussMinus: MINUS
     sekkepost: NEI
@@ -772,7 +842,7 @@ tapVedRealisasjonAvVirtuellValuta:
   - plussMinus: MINUS
     sekkepost: NEI
     fom: 2019
-    tom: 9999
+    tom: 2021
 tapVedSalgAvAndelINOKUS:
   - plussMinus: MINUS
     sekkepost: NEI
@@ -803,10 +873,20 @@ underskuddAvEnkeltpersonforetakPaaSvalbard:
     sekkepost: NEI
     fom: 2017
     tom: 9999
+underskuddFraSDF:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2022
+    tom: 9999
 underskuddOverfoertFraBarnOgFordelt:
   - plussMinus: MINUS
     sekkepost: NEI
     fom: 2017
+    tom: 9999
+underskuddVedUtleieMvAvFastEiendomUtenforNaering:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2022
     tom: 9999
 utbytteFraAksje:
   - plussMinus: PLUSS
