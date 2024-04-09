@@ -1,12 +1,22 @@
+alderspensjonFraFolketrygden:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2022
+    tom: 9999
 alderspensjonFraIPAOgIPS:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2019
     tom: 9999
-andelAvUnderskuddFraTidligereAarVedDriftAvVaaningshusSomAnvendesIAaret:
+alminneligInntektFraEnkeltpersonforetakPaaSvalbard:
   - plussMinus: PLUSS
     sekkepost: NEI
-    fom: 2021
+    fom: 2023
+    tom: 9999
+alminneligInntektFraSelskapMedDeltakerfastsettingPaaSvalbard:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2023
     tom: 9999
 annenArbeidsinntekt:
   - plussMinus: PLUSS
@@ -63,6 +73,16 @@ etterlattepensjonFraFolketrygden:
     sekkepost: NEI
     fom: 2017
     tom: 9999
+foederaad:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2022
+    tom: 9999
+godtgjoerelseEtterSaeravtaleIUtenrikstjenesten:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2023
+    tom: 9999
 introduksjonsstoenad:
   - plussMinus: PLUSS
     sekkepost: NEI
@@ -88,15 +108,20 @@ loennsinntektTilBarn:
     sekkepost: NEI
     fom: 2018
     tom: 9999
+loennsinntektUtenTrygdeavgiftspliktOgMedTrekkplikt:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2022
+    tom: 9999
 loennsinntektUtenTrygdeavgiftspliktOmfattetAvLoennstrekkordningen:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2015
     tom: 9999
-opptjenteRenterFraUtestaaendeFordring:
+nettoLoennsinntektFraArbeidINorge:
   - plussMinus: PLUSS
     sekkepost: NEI
-    fom: 2021
+    fom: 2022
     tom: 9999
 overgangsstoenadTilEnsligForelder:
   - plussMinus: PLUSS
@@ -128,21 +153,6 @@ pensjonsinntektOmfattetAvLoennstrekkordningen:
     sekkepost: NEI
     fom: 2015
     tom: 9999
-personinntektFraKompensasjonsytelseUtbetaltAvNavInnenAnnenNaering:
-  - plussMinus: PLUSS
-    sekkepost: NEI
-    fom: 2020
-    tom: 9999
-personinntektFraKompensasjonsytelseUtbetaltAvNavInnenBarnepassIBarnepasserensHjem:
-  - plussMinus: PLUSS
-    sekkepost: NEI
-    fom: 2020
-    tom: 9999
-personinntektFraKompensasjonsytelseUtbetaltAvNavInnenFiskeOgFangst:
-  - plussMinus: PLUSS
-    sekkepost: NEI
-    fom: 2020
-    tom: 9999
 personinntektFraSDFInnenAnnenNaering:
   - plussMinus: PLUSS
     sekkepost: NEI
@@ -153,21 +163,11 @@ personinntektFraSDFInnenFiskeEllerBarnepassIBarnepasserensHjem:
     sekkepost: NEI
     fom: 2018
     tom: 9999
-personinntektFraSkattefriLottMedTrygdeavgiftspliktForUtenlandskFisker:
-  - plussMinus: PLUSS
-    sekkepost: NEI
-    fom: 2019
-    tom: 9999
-paaloepteRenterFraAnnenGjeld:
-  - plussMinus: PLUSS
-    sekkepost: NEI
-    fom: 2021
-    tom: 9999
 samledeUfoererenterOgLivrenter:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2017
-    tom: 9999
+    tom: 2022
 samledeUnderholdsbidrag:
   - plussMinus: PLUSS
     sekkepost: NEI
@@ -197,7 +197,7 @@ samletAnnenPensjonUtenTrekkplikt:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2018
-    tom: 9999
+    tom: 2022
 samletAnnenTrekkpliktigPensjon:
   - plussMinus: PLUSS
     sekkepost: NEI
@@ -217,7 +217,7 @@ samletBarnepensjonOgLivrenteTilBarn:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2018
-    tom: 9999
+    tom: 2022
 samletBarnepensjonOgLivrenteTilBarnUnderSyttenAar:
   - plussMinus: PLUSS
     sekkepost: NEI
@@ -227,7 +227,7 @@ samletInntektSomGirRettTilSaerskiltFradragForSjoefolk:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2015
-    tom: 9999
+    tom: 2022
 samletLoennsinntekt :
   - plussMinus: PLUSS
     sekkepost: NEI
@@ -257,12 +257,12 @@ samletLoennsinntektUtenTrygdeavgiftspliktOgMedTrekkplikt:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2017
-    tom: 9999
+    tom: 2022
 samletLoennsinntektUtenTrygdeavgiftspliktOgUtenTrekkplikt:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2017
-    tom: 9999
+    tom: 2021
 samletOvergangsstoenadTilEnsligOgEtterlatt:
   - plussMinus: PLUSS
     sekkepost: NEI
@@ -282,7 +282,7 @@ samletPensjonFraFolketrygden:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2017
-    tom: 9999
+    tom: 2022
 samletPersoninntektFraDeltakerlignetSelskapInnenAnnenNaering :
   - plussMinus: PLUSS
     sekkepost: NEI
@@ -358,10 +358,15 @@ skattefriLoennsinntektMedTrygdeavgiftspliktOgMedTrekkplikt:
     sekkepost: NEI
     fom: 2017
     tom: 9999
-skattepliktigEtterloennOgEtterpensjon:
+skattepliktigTilfeldigInntektFraSpillLotteriMv:
   - plussMinus: PLUSS
     sekkepost: NEI
-    fom: 2021
+    fom: 2023
+    tom: 9999
+skjermingstilleggTilAlderspensjon:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2022
     tom: 9999
 slitertillegg:
   - plussMinus: PLUSS
@@ -378,10 +383,10 @@ supplerendeStoenad:
     sekkepost: NEI
     fom: 2018
     tom: 9999
-supplerendeStoenadTilUfoerFlyktning:
+ufoererenterOgLivrenterUtenforArbeidsforhold:
   - plussMinus: PLUSS
     sekkepost: NEI
-    fom: 2021
+    fom: 2022
     tom: 9999
 ufoeretrygdFoerAlderspensjon:
   - plussMinus: PLUSS

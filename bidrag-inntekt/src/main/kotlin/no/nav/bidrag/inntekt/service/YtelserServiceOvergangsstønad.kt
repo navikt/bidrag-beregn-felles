@@ -54,7 +54,7 @@ class YtelserServiceOvergangsstønad {
                             sisteRapportertePeriode,
                             periodeListe,
                             it.value.periodeFra,
-                            it.value.periodeTil!!
+                            it.value.periodeTil!!,
                         ),
                         grunnlagsreferanseListe = it.value.grunnlagreferanseListe.toList(),
                     ),
@@ -90,7 +90,7 @@ class YtelserServiceOvergangsstønad {
             } else {
                 YearMonth.of(
                     ainntektspost.utbetalingsperiode!!.substring(0, 4).toInt(),
-                    ainntektspost.utbetalingsperiode!!.substring(5, 7).toInt()
+                    ainntektspost.utbetalingsperiode!!.substring(5, 7).toInt(),
                 )
             }
 
@@ -125,7 +125,7 @@ class YtelserServiceOvergangsstønad {
         sisteRapportertePeriode: YearMonth,
         periodeListe: Map<String, Set<YearMonth>>,
         periodeFra: YearMonth,
-        periodeTil: YearMonth
+        periodeTil: YearMonth,
     ): List<InntektPost> {
         val summertInntektPostListe = inntektPostListe
             .groupBy(InntektPost::kode)
@@ -157,7 +157,6 @@ class YtelserServiceOvergangsstønad {
 
         return summertInntektPostListeTilÅrsinntekt
     }
-
 
     // Summerer og grupperer ainntekter pr år
     private fun summerAarsinntekter(ainntektsposter: List<Ainntektspost>, sisteRapportertePeriode: YearMonth): Map<String, InntektSumPost> {
