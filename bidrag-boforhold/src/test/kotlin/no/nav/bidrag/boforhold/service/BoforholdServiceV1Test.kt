@@ -8,15 +8,15 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
-internal class BoforholdServiceTest {
-    private lateinit var boforholdService: BoforholdService
+internal class BoforholdServiceV1Test {
+    private lateinit var boforholdServiceV1: BoforholdServiceV1
 
     @Test
     fun `Test barn over 18 år hele perioden`() {
-        boforholdService = BoforholdService()
+        boforholdServiceV1 = BoforholdServiceV1()
         val mottatteBoforhold = TestUtil.byggBarnHusstandsmedlemAttenÅr()
         val virkningstidspunkt = LocalDate.of(2020, 9, 1)
-        val resultat = boforholdService.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdServiceV1.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -30,10 +30,10 @@ internal class BoforholdServiceTest {
 
     @Test
     fun `Test ingen perioder som husstandsmedlem, over 18 år i siste del av perioden`() {
-        boforholdService = BoforholdService()
+        boforholdServiceV1 = BoforholdServiceV1()
         val mottatteBoforhold = TestUtil.byggBarnAttenÅrIPeriodenUtenHusstandsmedlemskap()
         val virkningstidspunkt = LocalDate.of(2022, 9, 1)
-        val resultat = boforholdService.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdServiceV1.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -52,10 +52,10 @@ internal class BoforholdServiceTest {
 
     @Test
     fun `Test ingen perioder som husstandsmedlem, over 18 år i hele perioden`() {
-        boforholdService = BoforholdService()
+        boforholdServiceV1 = BoforholdServiceV1()
         val mottatteBoforhold = TestUtil.byggBarnAttenÅrIHelePeriodenUtenHusstandsmedlemskap()
         val virkningstidspunkt = LocalDate.of(2022, 9, 1)
-        val resultat = boforholdService.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdServiceV1.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -69,10 +69,10 @@ internal class BoforholdServiceTest {
 
     @Test
     fun `Test at overlappende perioder med brudd slås sammen og at det genereres perioder for når barnet ikke bor i husstanden`() {
-        boforholdService = BoforholdService()
+        boforholdServiceV1 = BoforholdServiceV1()
         val mottatteBoforhold = TestUtil.byggFlereSammenhengendeForekomsterMedBrudd()
         val virkningstidspunkt = LocalDate.of(2018, 9, 1)
-        val resultat = boforholdService.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdServiceV1.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -101,10 +101,10 @@ internal class BoforholdServiceTest {
 
     @Test
     fun `Test at overlappende perioder slås sammen og at det genereres perioder for når barnet ikke bor i husstanden`() {
-        boforholdService = BoforholdService()
+        boforholdServiceV1 = BoforholdServiceV1()
         val mottatteBoforhold = TestUtil.byggFlereSammenhengendeForekomster()
         val virkningstidspunkt = LocalDate.of(2018, 9, 1)
-        val resultat = boforholdService.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdServiceV1.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -128,10 +128,10 @@ internal class BoforholdServiceTest {
 
     @Test
     fun `Test at overlappende perioder slås sammen og at det genereres perioder for når barnet ikke bor i husstanden med 18 år`() {
-        boforholdService = BoforholdService()
+        boforholdServiceV1 = BoforholdServiceV1()
         val mottatteBoforhold = TestUtil.byggSammenhengendeForekomsterMed18År()
         val virkningstidspunkt = LocalDate.of(2018, 9, 1)
-        val resultat = boforholdService.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdServiceV1.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -165,10 +165,10 @@ internal class BoforholdServiceTest {
 
     @Test
     fun `Test at periodeFra før virkningstidspunkt blir justert til virkningstidspunkt`() {
-        boforholdService = BoforholdService()
+        boforholdServiceV1 = BoforholdServiceV1()
         val mottatteBoforhold = TestUtil.byggPeriodeFraFørVirkningstidspunkt()
         val virkningstidspunkt = LocalDate.of(2022, 9, 1)
-        val resultat = boforholdService.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdServiceV1.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -182,10 +182,10 @@ internal class BoforholdServiceTest {
 
     @Test
     fun `Test at periodeTom blir justert tilbake til 18årsdag`() {
-        boforholdService = BoforholdService()
+        boforholdServiceV1 = BoforholdServiceV1()
         val mottatteBoforhold = TestUtil.byggPeriodeTomEtterAttenårsdag()
         val virkningstidspunkt = LocalDate.of(2021, 9, 1)
-        val resultat = boforholdService.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdServiceV1.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             resultat.size shouldBe 3
@@ -208,10 +208,10 @@ internal class BoforholdServiceTest {
 
     @Test
     fun `TestOppholdPerioderHusstandsmedlemskapOgAttenår`() {
-        boforholdService = BoforholdService()
+        boforholdServiceV1 = BoforholdServiceV1()
         val mottatteBoforhold = TestUtil.byggOppholdPerioderHusstandsmedlemskapOgAttenår()
         val virkningstidspunkt = LocalDate.of(2021, 9, 1)
-        val resultat = boforholdService.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdServiceV1.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             resultat.size shouldBe 7
