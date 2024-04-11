@@ -1,6 +1,9 @@
 package no.nav.bidrag.beregn.forskudd.service
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.POJONode
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.bidrag.beregn.core.util.InntektUtil.erKapitalinntekt
 import no.nav.bidrag.beregn.core.util.InntektUtil.justerKapitalinntekt
@@ -33,12 +36,13 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBase
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettSjablonreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettSluttberegningreferanse
 import java.math.BigDecimal
+import java.text.SimpleDateFormat
 
 private val logger = KotlinLogging.logger {}
 
 internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = ForskuddCore()) {
     fun beregn(grunnlag: BeregnGrunnlag): BeregnetForskuddResultat {
-        secureLogger.debug { "Forskuddsberegning - følgende request mottatt: $grunnlag" }
+        secureLogger.debug { "Forskuddsberegning - følgende request mottatt: ${tilJson(grunnlag)}" }
 
         // Kontroll av inputdata
         try {
@@ -62,7 +66,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
                 sjablontallListe = sjablontallListe,
             )
 
-        secureLogger.debug { "Forskuddsberegning - grunnlag for beregning: $grunnlagTilCore" }
+        secureLogger.debug { "Forskuddsberegning - grunnlag for beregning: ${tilJson(grunnlagTilCore)}" }
 
         // Kaller core-modulen for beregning av forskudd
         val resultatFraCore =
@@ -74,22 +78,11 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
 
         if (resultatFraCore.avvikListe.isNotEmpty()) {
             val avviktekst = resultatFraCore.avvikListe.joinToString("; ") { it.avvikTekst }
-            logger.warn { "Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: $avviktekst" }
             secureLogger.warn { "Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: $avviktekst" }
-            secureLogger.debug {
-                "Forskuddsberegning - grunnlag for beregning: " + System.lineSeparator() +
-                    "beregnDatoFra= " + grunnlagTilCore.beregnDatoFra + System.lineSeparator() +
-                    "beregnDatoTil= " + grunnlagTilCore.beregnDatoTil + System.lineSeparator() +
-                    "soknadBarn= " + grunnlagTilCore.søknadsbarn + System.lineSeparator() +
-                    "barnIHusstandenPeriodeListe= " + grunnlagTilCore.barnIHusstandenPeriodeListe + System.lineSeparator() +
-                    "inntektPeriodeListe= " + grunnlagTilCore.inntektPeriodeListe + System.lineSeparator() +
-                    "sivilstandPeriodeListe= " + grunnlagTilCore.sivilstandPeriodeListe + System.lineSeparator() +
-                    "bostatusPeriodeListe= " + grunnlagTilCore.bostatusPeriodeListe + System.lineSeparator()
-            }
             throw IllegalArgumentException("Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: $avviktekst")
         }
 
-        secureLogger.debug { "Forskuddberegning - resultat av beregning: ${resultatFraCore.beregnetForskuddPeriodeListe}" }
+        secureLogger.debug { "Forskuddberegning - resultat av beregning: ${tilJson(resultatFraCore.beregnetForskuddPeriodeListe)}" }
 
         // Henter sjablonverdi for kapitalinntekt
         // TODO Pt ligger det bare en gyldig sjablonverdi (uforandret siden 2003). Logikken her må utvides hvis det legges inn nye sjablonverdier
@@ -112,7 +105,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
                 grunnlagListe = grunnlagsliste.distinctBy { it.referanse },
             )
 
-        secureLogger.debug { "Forskuddsberegning - returnerer følgende respons: $respons" }
+        secureLogger.debug { "Forskuddsberegning - returnerer følgende respons: ${tilJson(respons)}" }
 
         return respons
     }
@@ -395,5 +388,14 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
         referanse.contains(Grunnlagstype.DELBEREGNING_SUM_INNTEKT.name) -> Grunnlagstype.DELBEREGNING_SUM_INNTEKT
         referanse.contains(Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND.name) -> Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND
         else -> throw IllegalArgumentException("Ikke i stand til å utlede grunnlagstype for referanse: $referanse")
+    }
+
+    fun tilJson(json: Any): String {
+        val objectMapper = ObjectMapper()
+        objectMapper.registerKotlinModule()
+        objectMapper.writerWithDefaultPrettyPrinter()
+        objectMapper.registerModule(JavaTimeModule())
+        objectMapper.dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        return objectMapper.writeValueAsString(json)
     }
 }

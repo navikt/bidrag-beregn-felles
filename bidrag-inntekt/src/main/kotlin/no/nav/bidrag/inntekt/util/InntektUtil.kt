@@ -45,7 +45,7 @@ open class InntektUtil {
 
         // Finner ut hvilken dato i måneden ainntekt ble hentet som er fristen arbeidsgiver har for å levere a-meldingen for forrige måned.
         // Denne datoen brukes til å styre hvilke inntekter som skal returneres (hvis ainntektHentetDato er før fristen går vi en måned lengre tilbake).
-        // Følgende regelverk gjelder (se https://www.skatteetaten.no/bedrift-og-organisasjon/arbeidsgiver/a-meldingen/frister-og-betaling-i-a-meldingen/:
+        // Følgende regelverk gjelder (se https://www.skatteetaten.no/bedrift-og-organisasjon/arbeidsgiver/a-meldingen/frister-og-betaling-i-a-meldingen/):
         // - Fristen for å levere a-meldingen er den 5. i hver måned
         // - Hvis den 5. er helg eller helligdag, er fristen første påfølgende hverdag
         fun finnCutOffDag(ainntektHentetDato: LocalDate): Int {

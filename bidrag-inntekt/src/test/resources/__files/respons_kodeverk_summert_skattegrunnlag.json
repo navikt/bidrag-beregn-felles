@@ -3456,6 +3456,18 @@
         }
       }
     ],
+    "samletLoennsinntekt": [
+      {
+        "gyldigFra": "2015-01-01",
+        "gyldigTil": "9999-12-31",
+        "beskrivelser": {
+          "nb": {
+            "tekst": "Samlet lønnsinntekt",
+            "term": "Samlet lønnsinntekt"
+          }
+        }
+      }
+    ],
     "fradragsberettigetTapVedRealisasjonAvFastEiendomIUtlandet": [
       {
         "gyldigFra": "2017-01-01",
