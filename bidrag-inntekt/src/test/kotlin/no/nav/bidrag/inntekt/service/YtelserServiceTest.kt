@@ -176,23 +176,23 @@ class YtelserServiceTest : AbstractServiceTest() {
                 with(transformerteInntekter[1]) {
                     inntektRapportering shouldBe Inntektsrapportering.OVERGANGSSTØNAD
                     visningsnavn shouldBe Inntektsrapportering.OVERGANGSSTØNAD.visningsnavnIntern(2023)
-                    sumInntekt shouldBe BigDecimal.valueOf(249203)
+                    sumInntekt shouldBe BigDecimal.valueOf(266892)
                     periode.fom shouldBe YearMonth.of(2023, 5)
                     periode.til shouldBe YearMonth.of(2024, 4)
                     gjelderBarnPersonId shouldBe ""
                     inntektPostListe.size shouldBe 2
-                    inntektPostListe.sumOf { it.beløp } shouldBe BigDecimal.valueOf(249202)
+                    inntektPostListe.sumOf { it.beløp } shouldBe BigDecimal.valueOf(266892)
 
                     with(inntektPostListe[0]) {
                         kode shouldBe "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere"
                         visningsnavn shouldBe "Overgangsstønad til enslig mor eller far som begynte å løpe 1. april 2014 eller senere"
-                        beløp shouldBe BigDecimal.valueOf(195824)
+                        beløp shouldBe BigDecimal.valueOf(207588)
                     }
 
                     with(inntektPostListe[1]) {
                         kode shouldBe "overgangsstoenadTilGjenlevendeEktefelle"
                         visningsnavn shouldBe "Overgangsstønad til gjenlevende ektefelle"
-                        beløp shouldBe BigDecimal.valueOf(53378)
+                        beløp shouldBe BigDecimal.valueOf(59304)
                     }
                 }
             }
