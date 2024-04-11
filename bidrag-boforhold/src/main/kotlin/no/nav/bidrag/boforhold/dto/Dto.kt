@@ -26,7 +26,7 @@ data class BoforholdResponse(
     val periodeTom: LocalDate?,
     val bostatus: Bostatuskode,
     val fødselsdato: LocalDate,
-    val kilde: Kilde,
+    val kilde: Kilde = Kilde.OFFENTLIG,
 )
 
 enum class Kilde {
