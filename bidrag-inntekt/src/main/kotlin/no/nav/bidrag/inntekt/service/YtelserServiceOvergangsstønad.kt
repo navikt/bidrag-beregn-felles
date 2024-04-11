@@ -87,6 +87,11 @@ class YtelserServiceOvergangsstønad {
         val periodeListe = mutableMapOf<String, MutableSet<YearMonth>>()
 
         ainntektListe.forEach { ainntektspost ->
+            // Ignorerer poster med beløp lik 0
+            if (ainntektspost.beløp == BigDecimal.ZERO) {
+                return@forEach // Går videre til neste forekomst
+            }
+
             val periode = if (ainntektspost.etterbetalingsperiodeFra != null) {
                 YearMonth.of(ainntektspost.etterbetalingsperiodeFra!!.year, ainntektspost.etterbetalingsperiodeFra!!.monthValue)
             } else {
@@ -113,12 +118,9 @@ class YtelserServiceOvergangsstønad {
     ): BigDecimal {
         val unikPeriodeListe = periodeListe.values.flatten().toSet()
         val periodeTilJustert = if (sisteRapportertePeriode.isBefore(periodeTil)) sisteRapportertePeriode else periodeTil
-        val antallMånederMedDataIPerioden = unikPeriodeListe.count { it in periodeFra..periodeTilJustert }.toLong()
+        val antallMånederMedDataIPerioden = unikPeriodeListe.count { it in periodeFra..periodeTilJustert }
 
-        return sumInntekt
-            .divide(BigDecimal.valueOf(antallMånederMedDataIPerioden))
-            .multiply(BigDecimal.valueOf(12))
-            .setScale(0, RoundingMode.HALF_UP)
+        return beregnInntektOmgjortTilÅrsbeløp(sumInntekt, antallMånederMedDataIPerioden)
     }
 
     // Grupperer og summerer poster som har samme kode/beskrivelse. Bruker samme prinsipp for å regne om til årsinntekt som i beregnInntekt.
@@ -141,7 +143,7 @@ class YtelserServiceOvergangsstønad {
 
         val unikPeriodeListe = periodeListe.values.flatten().toSet()
         val periodeTilJustert = if (sisteRapportertePeriode.isBefore(periodeTil)) sisteRapportertePeriode else periodeTil
-        val antallMånederMedDataIPerioden = unikPeriodeListe.count { it in periodeFra..periodeTilJustert }.toLong()
+        val antallMånederMedDataIPerioden = unikPeriodeListe.count { it in periodeFra..periodeTilJustert }
 
         val summertInntektPostListeTilÅrsinntekt = mutableListOf<InntektPost>()
         summertInntektPostListe.forEach { inntektPost ->
@@ -149,15 +151,23 @@ class YtelserServiceOvergangsstønad {
                 InntektPost(
                     kode = inntektPost.kode,
                     visningsnavn = inntektPost.visningsnavn,
-                    beløp = inntektPost.beløp
-                        .divide(BigDecimal.valueOf(antallMånederMedDataIPerioden))
-                        .multiply(BigDecimal.valueOf(12))
-                        .setScale(0, RoundingMode.HALF_UP),
+                    beløp = beregnInntektOmgjortTilÅrsbeløp(inntektPost.beløp, antallMånederMedDataIPerioden),
                 ),
             )
         }
 
         return summertInntektPostListeTilÅrsinntekt
+    }
+
+    private fun beregnInntektOmgjortTilÅrsbeløp(beløp: BigDecimal, antallMånederMedDataIPerioden: Int): BigDecimal {
+        return if (antallMånederMedDataIPerioden == 0) {
+            BigDecimal.ZERO
+        } else {
+            beløp
+                .divide(BigDecimal.valueOf(antallMånederMedDataIPerioden.toLong(), 0), RoundingMode.HALF_UP)
+                .multiply(BigDecimal.valueOf(12))
+                .setScale(0, RoundingMode.HALF_UP)
+        }
     }
 
     // Summerer og grupperer ainntekter pr år
