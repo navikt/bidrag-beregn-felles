@@ -17,6 +17,7 @@ KVALIFISERINGSSTØNAD:
     - "kvalifiseringstoenad"
 OVERGANGSSTØNAD:
   beskrivelser:
+    - "overgangsstoenad"
     - "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere"
     - "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe31Mars2014EllerTidligere"
     - "overgangsstoenadTilGjenlevendeEktefelle"
