@@ -163,10 +163,10 @@ class YtelserServiceOvergangsstønad {
         return if (antallMånederMedDataIPerioden == 0) {
             BigDecimal.ZERO
         } else {
-            beløp
-                .divide(BigDecimal.valueOf(antallMånederMedDataIPerioden.toLong(), 0), RoundingMode.HALF_UP)
-                .multiply(BigDecimal.valueOf(12))
-                .setScale(0, RoundingMode.HALF_UP)
+            val skalertBeløp = beløp.setScale(10) // Øker scale for bedre prsisjon
+            val månedligInntekt = skalertBeløp.divide(BigDecimal.valueOf(antallMånederMedDataIPerioden.toLong()), 10, RoundingMode.HALF_UP)
+            val årligInntekt = månedligInntekt.multiply(BigDecimal.valueOf(12))
+            årligInntekt.setScale(0, RoundingMode.HALF_UP)
         }
     }
 

@@ -186,13 +186,13 @@ class YtelserServiceTest : AbstractServiceTest() {
                     with(inntektPostListe[0]) {
                         kode shouldBe "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere"
                         visningsnavn shouldBe "Overgangsstønad til enslig mor eller far som begynte å løpe 1. april 2014 eller senere"
-                        beløp shouldBe BigDecimal.valueOf(207588)
+                        beløp shouldBe BigDecimal.valueOf(207583)
                     }
 
                     with(inntektPostListe[1]) {
                         kode shouldBe "overgangsstoenadTilGjenlevendeEktefelle"
                         visningsnavn shouldBe "Overgangsstønad til gjenlevende ektefelle"
-                        beløp shouldBe BigDecimal.valueOf(59304)
+                        beløp shouldBe BigDecimal.valueOf(59309)
                     }
                 }
             }
