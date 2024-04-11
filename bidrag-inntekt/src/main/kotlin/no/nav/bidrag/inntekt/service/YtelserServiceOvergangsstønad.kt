@@ -161,7 +161,7 @@ class YtelserServiceOvergangsstønad {
 
     private fun beregnInntektOmgjortTilÅrsbeløp(beløp: BigDecimal, antallMånederMedDataIPerioden: Int): BigDecimal {
         return if (antallMånederMedDataIPerioden == 0) {
-            beløp
+            BigDecimal.ZERO
         } else {
             beløp
                 .divide(BigDecimal.valueOf(antallMånederMedDataIPerioden.toLong(), 0), RoundingMode.HALF_UP)
