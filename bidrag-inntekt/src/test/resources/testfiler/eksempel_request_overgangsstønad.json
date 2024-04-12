@@ -2,6 +2,12 @@
   "ainntektHentetDato": "2024-04-05",
   "ainntektsposter": [
     {
+      "utbetalingsperiode": "2022-12",
+      "beskrivelse": "ufoereTrygd",
+      "beløp": 10000,
+      "referanse": "2022-12_001"
+    },
+    {
       "utbetalingsperiode": "2023-03",
       "etterbetalingsperiodeFra": "2023-01-01",
       "etterbetalingsperiodeTil": "2023-02-01",

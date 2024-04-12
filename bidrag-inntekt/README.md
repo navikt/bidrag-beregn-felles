@@ -80,3 +80,4 @@ Følgende forekomster leveres:
   - Det beregnes helt fram tom. april i den årsperioden man er inne i (ved innhenting av inntekter i januar 2024 vil det f.eks. beregnes for perioden 2023-05 - 2024-04, selv om vi ikke har inntekter for 2024 enda) (for andre ytelser beregnes det bare tom. foregående år, dvs. 2023 i dette eksemplet)
   - Det beregnes en årsinntekt ved å summere alle inntekter i perioden, dele på antall måneder det er rapportert overgangsstønad for (måneder hvor det er rapportert 0 telles ikke med) og så gange med 12 (for andre ytelser gjøres det bare en summering av rapporterte inntekter i perioden)
   - Selv om en person har overgangsstønad som eneste inntekt (rapportert fra a-ordningen) vil det med denne løsningen kunne vises forskjellige inntekter for ainntekt (lønn og trekk) og overgangsstønad, selv om de bygger på de samme grunnlagsdataene
+  - Perioder før bruddmåned i det første "året" det skal beregnes for skal ikke inkluderes

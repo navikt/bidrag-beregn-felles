@@ -27,15 +27,22 @@ class YtelserServiceOvergangsstønad {
     //   inntektene som er rapportert)
     // - Det beregnes en årsinntekt ved å summere alle inntekter i perioden, dele på antall måneder det er rapportert overgangsstønad for og så gange
     //   med 12 (for andre ytelser gjøres det bare en summering av rapporterte inntekter i perioden)
+    // - Perioder før bruddmåned i det første "året" det skal beregnes for skal ikke inkluderes
     fun beregnYtelser(ainntektListeInn: List<Ainntektspost>, ainntektHentetDato: LocalDate): List<SummertÅrsinntekt> {
         val beskrivelserListe =
             hentMappingYtelser().filter { it.key == Inntektsrapportering.OVERGANGSSTØNAD.toString() }.flatMap { it.value.beskrivelser }
         val ainntektListeFiltrert = filtrerInntekterPåYtelse(ainntektListeInn = ainntektListeInn, beskrivelserListe = beskrivelserListe)
         val periodeListe = hentPerioder(ainntektListeFiltrert)
+        val periodeListeAlleInntekter = hentPerioder(ainntektListeInn)
         val sisteRapportertePeriode = finnSisteRapportertePeriode(ainntektHentetDato)
+        val førstePeriodeSomSkalBeregnes = YearMonth.of(periodeListeAlleInntekter.values.flatten().minOrNull()!!.year, BRUDD_MÅNED_OVERGANSSTØNAD)
 
         return if (ainntektListeFiltrert.isNotEmpty()) {
-            val ytelseMap = summerAarsinntekter(ainntektsposter = ainntektListeFiltrert, sisteRapportertePeriode = sisteRapportertePeriode)
+            val ytelseMap = summerAarsinntekter(
+                ainntektsposter = ainntektListeFiltrert,
+                sisteRapportertePeriode = sisteRapportertePeriode,
+                førstePeriodeSomSkalBeregnes = førstePeriodeSomSkalBeregnes,
+            )
             val ytelseListeUt = mutableListOf<SummertÅrsinntekt>()
 
             ytelseMap.forEach {
@@ -171,7 +178,11 @@ class YtelserServiceOvergangsstønad {
     }
 
     // Summerer og grupperer ainntekter pr år
-    private fun summerAarsinntekter(ainntektsposter: List<Ainntektspost>, sisteRapportertePeriode: YearMonth): Map<String, InntektSumPost> {
+    private fun summerAarsinntekter(
+        ainntektsposter: List<Ainntektspost>,
+        sisteRapportertePeriode: YearMonth,
+        førstePeriodeSomSkalBeregnes: YearMonth,
+    ): Map<String, InntektSumPost> {
         val ainntektMap = mutableMapOf<String, InntektSumPost>()
         ainntektsposter.forEach { ainntektPost ->
             kalkulerbeløpForPeriode(
@@ -181,6 +192,7 @@ class YtelserServiceOvergangsstønad {
                 beløp = ainntektPost.beløp,
                 referanse = ainntektPost.referanse,
                 sisteRapportertePeriode = sisteRapportertePeriode,
+                førstePeriodeSomSkalBeregnes = førstePeriodeSomSkalBeregnes,
             ).forEach { periodeMap ->
                 akkumulerPost(ainntektMap = ainntektMap, key = periodeMap.key, value = periodeMap.value)
             }
@@ -224,6 +236,7 @@ class YtelserServiceOvergangsstønad {
         beløp: BigDecimal,
         referanse: String,
         sisteRapportertePeriode: YearMonth,
+        førstePeriodeSomSkalBeregnes: YearMonth,
     ): Map<String, Detaljpost> {
         val periode =
             if (etterbetalingsperiodeFra != null) {
@@ -234,6 +247,11 @@ class YtelserServiceOvergangsstønad {
 
         // Siste rapporterte periode skal ikke inkluderes hvis den er etter siste fullt rapporterte periode (ihht. frister i a-ordningen)
         if (sisteRapportertePeriode.isBefore(periode)) {
+            return emptyMap()
+        }
+
+        // Perioder som er før brudd-måned i det første "året" det skal beregnes for skal ikke inkluderes
+        if (førstePeriodeSomSkalBeregnes.isAfter(periode)) {
             return emptyMap()
         }
 
