@@ -32,47 +32,49 @@ class YtelserServiceOvergangsstønad {
         val beskrivelserListe =
             hentMappingYtelser().filter { it.key == Inntektsrapportering.OVERGANGSSTØNAD.toString() }.flatMap { it.value.beskrivelser }
         val ainntektListeFiltrert = filtrerInntekterPåYtelse(ainntektListeInn = ainntektListeInn, beskrivelserListe = beskrivelserListe)
+
+        if (ainntektListeFiltrert.isEmpty()) {
+            return emptyList()
+        }
+
         val periodeListe = hentPerioder(ainntektListeFiltrert)
         val periodeListeAlleInntekter = hentPerioder(ainntektListeInn)
         val sisteRapportertePeriode = finnSisteRapportertePeriode(ainntektHentetDato)
         val førstePeriodeSomSkalBeregnes = YearMonth.of(periodeListeAlleInntekter.values.flatten().minOrNull()!!.year, BRUDD_MÅNED_OVERGANSSTØNAD)
 
-        return if (ainntektListeFiltrert.isNotEmpty()) {
-            val ytelseMap = summerAarsinntekter(
-                ainntektsposter = ainntektListeFiltrert,
-                sisteRapportertePeriode = sisteRapportertePeriode,
-                førstePeriodeSomSkalBeregnes = førstePeriodeSomSkalBeregnes,
-            )
-            val ytelseListeUt = mutableListOf<SummertÅrsinntekt>()
+        val ytelseMap = summerAarsinntekter(
+            ainntektsposter = ainntektListeFiltrert,
+            sisteRapportertePeriode = sisteRapportertePeriode,
+            førstePeriodeSomSkalBeregnes = førstePeriodeSomSkalBeregnes,
+        )
+        val ytelseListeUt = mutableListOf<SummertÅrsinntekt>()
 
-            ytelseMap.forEach {
-                ytelseListeUt.add(
-                    SummertÅrsinntekt(
-                        inntektRapportering = Inntektsrapportering.OVERGANGSSTØNAD,
-                        visningsnavn = Inntektsrapportering.OVERGANGSSTØNAD.visningsnavnIntern(it.value.periodeFra.year),
-                        sumInntekt = beregnInntekt(
-                            sisteRapportertePeriode = sisteRapportertePeriode,
-                            periodeListe = periodeListe,
-                            sumInntekt = it.value.sumInntekt,
-                            periodeFra = it.value.periodeFra,
-                            periodeTil = it.value.periodeTil!!,
-                        ),
-                        periode = ÅrMånedsperiode(fom = it.value.periodeFra, til = it.value.periodeTil),
-                        inntektPostListe = grupperOgSummerDetaljposter(
-                            it.value.inntektPostListe,
-                            sisteRapportertePeriode,
-                            periodeListe,
-                            it.value.periodeFra,
-                            it.value.periodeTil!!,
-                        ),
-                        grunnlagsreferanseListe = it.value.grunnlagreferanseListe.toList(),
+        ytelseMap.forEach {
+            ytelseListeUt.add(
+                SummertÅrsinntekt(
+                    inntektRapportering = Inntektsrapportering.OVERGANGSSTØNAD,
+                    visningsnavn = Inntektsrapportering.OVERGANGSSTØNAD.visningsnavnIntern(it.value.periodeFra.year),
+                    sumInntekt = beregnInntekt(
+                        sisteRapportertePeriode = sisteRapportertePeriode,
+                        periodeListe = periodeListe,
+                        sumInntekt = it.value.sumInntekt,
+                        periodeFra = it.value.periodeFra,
+                        periodeTil = it.value.periodeTil!!,
                     ),
-                )
-            }
-            ytelseListeUt.sortedWith(compareBy({ it.inntektRapportering.toString() }, { it.periode.fom }))
-        } else {
-            emptyList()
+                    periode = ÅrMånedsperiode(fom = it.value.periodeFra, til = it.value.periodeTil),
+                    inntektPostListe = grupperOgSummerDetaljposter(
+                        it.value.inntektPostListe,
+                        sisteRapportertePeriode,
+                        periodeListe,
+                        it.value.periodeFra,
+                        it.value.periodeTil!!,
+                    ),
+                    grunnlagsreferanseListe = it.value.grunnlagreferanseListe.toList(),
+                ),
+            )
         }
+
+        return ytelseListeUt.sortedWith(compareBy({ it.inntektRapportering.toString() }, { it.periode.fom }))
     }
 
     // Finner siste periode som er rapportert i ainntekt ihht. frister i a-ordningen
