@@ -64,7 +64,6 @@ internal object CoreMapper {
             bostatusGrunnlag = bostatusPeriodeCoreListe.isNotEmpty(),
             inntektGrunnlag = inntektPeriodeCoreListe.isNotEmpty(),
             sivilstandGrunnlag = sivilstandPeriodeCoreListe.isNotEmpty(),
-            barnIHusstandenGrunnlag = barnIHusstandenPeriodeCoreListe.isNotEmpty(),
         )
 
         val sjablonPeriodeCoreListe =
@@ -231,13 +230,7 @@ internal object CoreMapper {
         }
     }
 
-    private fun validerGrunnlag(
-        søknadsbarnGrunnlag: Boolean,
-        bostatusGrunnlag: Boolean,
-        inntektGrunnlag: Boolean,
-        sivilstandGrunnlag: Boolean,
-        barnIHusstandenGrunnlag: Boolean,
-    ) {
+    private fun validerGrunnlag(søknadsbarnGrunnlag: Boolean, bostatusGrunnlag: Boolean, inntektGrunnlag: Boolean, sivilstandGrunnlag: Boolean) {
         when {
             !søknadsbarnGrunnlag -> {
                 throw IllegalArgumentException("Søknadsbarn mangler i input")
@@ -253,10 +246,6 @@ internal object CoreMapper {
 
             !sivilstandGrunnlag -> {
                 throw IllegalArgumentException("Sivilstand mangler i input")
-            }
-
-            !barnIHusstandenGrunnlag -> {
-                throw IllegalArgumentException("Barn i husstanden mangler i input")
             }
         }
     }
@@ -291,7 +280,7 @@ internal object CoreMapper {
         }
     }
 
-    // TODO Bør det lages delberegninger uansett om det ikke er inntekter og/eller hjemmboende barn i en periode (i så fall mappe ut 0 eller null)?
+    // TODO Bør det lages delberegninger uansett om det ikke er inntekter og/eller hjemmeboende barn i en periode (i så fall mappe ut 0 eller null)?
     // TODO Søknadsbarnet vil f.eks. alltid ha en bostatus selv om det ikke bor hjemme
 
     // Lager en gruppert liste hvor grunnlaget er akkumulert pr bruddperiode, med en liste over tilhørende grunnlagsreferanser
