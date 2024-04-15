@@ -21,6 +21,7 @@ import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BostatusPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SivilstandPeriode
@@ -167,7 +168,7 @@ internal object CoreMapper {
                             grunnlagsreferanseListe = emptyList(),
                         )
                     }
-            return akkumulerOgPeriodiser(inntektGrunnlagListe, InntektPeriodeCore::class.java)
+            return akkumulerOgPeriodiser(inntektGrunnlagListe, beregnForskuddGrunnlag.søknadsbarnReferanse, InntektPeriodeCore::class.java)
         } catch (e: Exception) {
             throw IllegalArgumentException(
                 "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE er ikke gyldig: " +
@@ -218,7 +219,11 @@ internal object CoreMapper {
                             grunnlagsreferanseListe = emptyList(),
                         )
                     }
-            return akkumulerOgPeriodiser(barnIHusstandenGrunnlagListe, BarnIHusstandenPeriodeCore::class.java)
+            return akkumulerOgPeriodiser(
+                barnIHusstandenGrunnlagListe,
+                beregnForskuddGrunnlag.søknadsbarnReferanse,
+                BarnIHusstandenPeriodeCore::class.java,
+            )
         } catch (e: Exception) {
             throw IllegalArgumentException(
                 "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.BOSTATUS_PERIODE er ikke gyldig: " + e.message,
@@ -290,7 +295,7 @@ internal object CoreMapper {
     // TODO Søknadsbarnet vil f.eks. alltid ha en bostatus selv om det ikke bor hjemme
 
     // Lager en gruppert liste hvor grunnlaget er akkumulert pr bruddperiode, med en liste over tilhørende grunnlagsreferanser
-    private fun <T : DelberegningForskudd> akkumulerOgPeriodiser(grunnlagListe: List<T>, clazz: Class<T>): List<T> {
+    private fun <T : DelberegningForskudd> akkumulerOgPeriodiser(grunnlagListe: List<T>, søknadsbarnReferanse: String, clazz: Class<T>): List<T> {
         // Lager unik, sortert liste over alle bruddatoer og legger evt. null-forekomst bakerst
         val bruddatoListe = grunnlagListe
             .flatMap { listOf(it.periode.datoFom, it.periode.datoTil) }
@@ -306,11 +311,11 @@ internal object CoreMapper {
         // Returnerer en gruppert og akkumulert liste, med en liste over tilhørende grunnlagsreferanser, pr bruddperiode
         return when (clazz) {
             InntektPeriodeCore::class.java -> {
-                akkumulerOgPeriodiserInntekter(grunnlagListe as List<InntektPeriodeCore>, periodeListe) as List<T>
+                akkumulerOgPeriodiserInntekter(grunnlagListe as List<InntektPeriodeCore>, periodeListe, søknadsbarnReferanse) as List<T>
             }
 
             BarnIHusstandenPeriodeCore::class.java -> {
-                akkumulerOgPeriodiserBarnIHusstanden(grunnlagListe as List<BarnIHusstandenPeriodeCore>, periodeListe) as List<T>
+                akkumulerOgPeriodiserBarnIHusstanden(grunnlagListe as List<BarnIHusstandenPeriodeCore>, periodeListe, søknadsbarnReferanse) as List<T>
             }
 
             else -> {
@@ -323,6 +328,7 @@ internal object CoreMapper {
     private fun akkumulerOgPeriodiserInntekter(
         inntektGrunnlagListe: List<InntektPeriodeCore>,
         periodeListe: List<Periode>,
+        søknadsbarnReferanse: Grunnlagsreferanse,
     ): List<InntektPeriodeCore> {
         return periodeListe
             .map { periode ->
@@ -332,6 +338,7 @@ internal object CoreMapper {
                     referanse = opprettDelberegningreferanse(
                         type = Grunnlagstype.DELBEREGNING_SUM_INNTEKT,
                         periode = ÅrMånedsperiode(fom = periode.datoFom, til = periode.datoTil),
+                        søknadsbarnReferanse = søknadsbarnReferanse,
                     ),
                     periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
                     beløp = filtrertGrunnlagsliste.sumOf { it.beløp },
@@ -344,6 +351,7 @@ internal object CoreMapper {
     private fun akkumulerOgPeriodiserBarnIHusstanden(
         barnIHusstandenGrunnlagListe: List<BarnIHusstandenPeriodeCore>,
         periodeListe: List<Periode>,
+        søknadsbarnReferanse: Grunnlagsreferanse,
     ): List<BarnIHusstandenPeriodeCore> {
         return periodeListe
             .map { periode ->
@@ -353,6 +361,7 @@ internal object CoreMapper {
                     referanse = opprettDelberegningreferanse(
                         type = Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND,
                         periode = ÅrMånedsperiode(fom = periode.datoFom, til = periode.datoTil),
+                        søknadsbarnReferanse = søknadsbarnReferanse,
                     ),
                     periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
                     antall = filtrertGrunnlagsliste.sumOf { it.antall },
