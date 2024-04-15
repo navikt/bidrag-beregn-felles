@@ -1,6 +1,7 @@
 package no.nav.bidrag.inntekt.service
 
 import io.kotest.assertions.assertSoftly
+import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -22,6 +23,8 @@ class InntektServiceTest : AbstractServiceTest() {
     private val inntektRequest = TestUtil.byggInntektRequest(filnavnEksempelRequest)
     private val filnavnEksempelRequestAlleYtelser = "src/test/resources/testfiler/eksempel_request_alle_ytelser.json"
     private val inntektRequestAlleYtelser = TestUtil.byggInntektRequest(filnavnEksempelRequestAlleYtelser)
+    private val filnavnEksempelRequestUtenInntekter = "src/test/resources/testfiler/eksempel_request_uten_inntekter.json"
+    private val inntektRequestUtenInntekter = TestUtil.byggInntektRequest(filnavnEksempelRequestUtenInntekter)
 
     @Test
     fun `skal transformere inntekter`() {
@@ -151,6 +154,21 @@ class InntektServiceTest : AbstractServiceTest() {
                 .filter { it.gjelderÅrMåned.year == 2021 }.sumOf { it.sumInntekt.toInt() }.shouldBe(7000)
             transformerteInntekterResponseDto.summertMånedsinntektListe
                 .filter { it.gjelderÅrMåned.year == 2022 }.sumOf { it.sumInntekt.toInt() }.shouldBe(30000)
+        }
+    }
+
+    @Test
+    fun `skal returnere tom respons hvis request ikke inneholder data`() {
+        val transformerteInntekterResponseDto =
+            inntektService.transformerInntekter(inntektRequestUtenInntekter.copy(ainntektHentetDato = ainntektHentetDato))
+
+        TestUtil.printJson(transformerteInntekterResponseDto)
+
+        assertSoftly {
+            transformerteInntekterResponseDto.shouldNotBeNull()
+            transformerteInntekterResponseDto.versjon shouldBe APP_VERSJON
+            transformerteInntekterResponseDto.summertÅrsinntektListe.shouldBeEmpty()
+            transformerteInntekterResponseDto.summertMånedsinntektListe.shouldBeEmpty()
         }
     }
 }
