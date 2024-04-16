@@ -132,153 +132,6 @@ internal class BoforholdServiceV2() {
         }
     }
 
-    private fun slåSammenManuelleOgOffentligePerioder(
-        manuellePerioder: List<BoforholdResponse>,
-        offentligePerioder: List<BoforholdResponse>,
-    ): List<BoforholdResponse> {
-        val resultatliste = mutableListOf<BoforholdResponse>()
-
-        // Skriver alle manuelle perioder til resultatet. Perioder med identisk informasjon som en offentlig periode skrives med kilde = Offentlig
-        manuellePerioder.forEach { manuellPeriode ->
-            resultatliste.add(
-                BoforholdResponse(
-                    relatertPersonPersonId = manuellPeriode.relatertPersonPersonId,
-                    periodeFom = manuellPeriode.periodeFom,
-                    periodeTom = manuellPeriode.periodeTom,
-                    bostatus = manuellPeriode.bostatus,
-                    fødselsdato = manuellPeriode.fødselsdato,
-                    kilde = if (manuellPeriodeErIdentiskMedOffentligPeriode(manuellPeriode, offentligePerioder)) Kilde.OFFENTLIG else Kilde.MANUELL,
-                ),
-            )
-        }
-
-        // Sjekker offentlige perioder og justerer periodeFom og periodeTom der disse overlapper med manuelle perioder
-        // Offentlige perioder som helt dekkes av manuelle perioder skrives ikke til resultatet
-        offentligePerioder.forEach { offentligPeriode ->
-            // Finner manuelle perioder som overlapper med den offentlige perioden
-            val overlappendePerioder = mutableListOf<BoforholdResponse>()
-            manuellePerioder.forEach { manuellPeriode ->
-                if (offentligPeriode.periodeTom == null) {
-                    if (manuellPeriode.periodeTom == null || manuellPeriode.periodeTom.isAfter(offentligPeriode.periodeFom) == true) {
-                        overlappendePerioder.add(manuellPeriode)
-                    }
-                } else {
-                    if (manuellPeriode.periodeTom == null) {
-                        if (manuellPeriode.periodeFom.isBefore(offentligPeriode.periodeTom.plusDays(1))) {
-                            overlappendePerioder.add(manuellPeriode)
-                        }
-                    } else {
-                        if (manuellPeriode.periodeFom.isBefore(offentligPeriode.periodeTom.plusDays(1)) &&
-                            manuellPeriode.periodeTom.plusDays(1)
-                                ?.isAfter(offentligPeriode.periodeFom) == true
-                        ) {
-                            overlappendePerioder.add(manuellPeriode)
-                        }
-                    }
-                }
-            }
-
-            val justertOffentligPeriode = justerPeriodeOffentligOpplysning(offentligPeriode, overlappendePerioder.sortedBy { it.periodeFom })
-            if (justertOffentligPeriode != null) {
-                resultatliste.addAll(justertOffentligPeriode)
-            }
-        }
-
-        return resultatliste.sortedBy { it.periodeFom }
-    }
-
-    // Offentlig periode sjekkes mot manuelle perioder og justeres til å ikke overlappe med disse. En offentlig periode kan overlappe med 0 til
-    // mange manuelle perioder. Hvis en offentlig periode dekkes helt av manuelle perioder returneres null, ellers returneres en liste. Hvis
-    // en offentlig perioder overlappes av flere enn to manuelle perioder så vil responsen bestå av flere offentlige perioder som dekker
-    // oppholdet mellom de ulike manuelle periodene.
-    private fun justerPeriodeOffentligOpplysning(
-        offentligePeriode: BoforholdResponse,
-        overlappendePerioder: List<BoforholdResponse>,
-    ): List<BoforholdResponse>? {
-        var periodeFom: LocalDate? = null
-        var periodeTom: LocalDate? = null
-        val justertOffentligPeriodeListe = mutableListOf<BoforholdResponse>()
-
-        if (overlappendePerioder.isNullOrEmpty()) {
-            return listOf(offentligePeriode)
-        }
-
-        for (indeks in overlappendePerioder.indices) {
-            // Sjekker først om den første manuelle perioden dekker starten, og eventuelt hele den offentlige perioden
-            if (indeks == 0) {
-                if (overlappendePerioder[indeks].periodeFom.isBefore(offentligePeriode.periodeFom.plusDays(1))) {
-                    if (overlappendePerioder[indeks].periodeTom == null || overlappendePerioder[indeks].periodeTom?.isAfter(
-                            offentligePeriode.periodeTom?.plusDays(1),
-                        ) == true
-                    ) {
-                        // Den manuelle perioden dekker hele den offentlige perioden
-                        return null
-                    } else {
-                        // Den manuelle perioden dekker starten på den offentlige perioden og periodeFom må forskyves
-                        periodeFom = overlappendePerioder[indeks].periodeTom!!.plusDays(1)
-                    }
-                } else {
-                    // Den manuelle perioden overlapper etter starten på den offentlige perioden og periodeTom må forskyves på den offentlige perioden
-                    periodeTom = overlappendePerioder[indeks].periodeFom.minusDays(1)
-                }
-                if (periodeTom != null) {
-                    // Første manuelle periode starter etter offentlig periode. Den offentlige perioden skrives med justert tomdato. Senere i logikken
-                    // må det sjekkes på om den offentlige perioden må splittes i mer enn én periode.
-                    justertOffentligPeriodeListe.add(
-                        BoforholdResponse(
-                            relatertPersonPersonId = offentligePeriode.relatertPersonPersonId,
-                            periodeFom = offentligePeriode.periodeFom,
-                            periodeTom = periodeTom,
-                            bostatus = offentligePeriode.bostatus,
-                            fødselsdato = offentligePeriode.fødselsdato,
-                            kilde = offentligePeriode.kilde,
-                        ),
-                    )
-                    periodeFom = null
-                    periodeTom = null
-                }
-            }
-            if (indeks < overlappendePerioder.size - 1) {
-                if (overlappendePerioder[indeks + 1].periodeFom.isAfter(overlappendePerioder[indeks].periodeTom)) {
-                    // Det er en åpen tidsperiode mellom to manuelle perioder, og den offentlige perioden skal fylle denne tidsperioden
-//                    periodeFom = overlappendePerioder[indeks].periodeTom!!.plusDays(1)
-                    periodeTom = overlappendePerioder[indeks + 1].periodeFom.minusDays(1)
-                    justertOffentligPeriodeListe.add(
-                        BoforholdResponse(
-                            relatertPersonPersonId = offentligePeriode.relatertPersonPersonId,
-                            // periodeFom er satt hvis første manuelle periode overlapper startdato for offentlig periode
-                            periodeFom = periodeFom ?: overlappendePerioder[indeks].periodeTom!!.plusDays(1),
-                            periodeTom = periodeTom,
-                            bostatus = offentligePeriode.bostatus,
-                            fødselsdato = offentligePeriode.fødselsdato,
-                            kilde = offentligePeriode.kilde,
-                        ),
-                    )
-                    periodeFom = null
-                    periodeTom = null
-                }
-            } else {
-                // Siste manuelle periode
-                if (overlappendePerioder[indeks].periodeTom != null) {
-                    if (offentligePeriode.periodeTom == null || offentligePeriode.periodeTom.isAfter(overlappendePerioder[indeks].periodeTom)) {
-                        justertOffentligPeriodeListe.add(
-                            BoforholdResponse(
-                                relatertPersonPersonId = offentligePeriode.relatertPersonPersonId,
-                                periodeFom = overlappendePerioder[indeks].periodeTom!!.plusDays(1),
-                                periodeTom = offentligePeriode.periodeTom,
-                                bostatus = offentligePeriode.bostatus,
-                                fødselsdato = offentligePeriode.fødselsdato,
-                                kilde = offentligePeriode.kilde,
-                            ),
-                        )
-                    }
-                }
-            }
-        }
-
-        return justertOffentligPeriodeListe
-    }
-
     private fun slåSammenOverlappendeOffentligePerioder(liste: List<BoforholdResponse>): List<BoforholdResponse> {
         var periodeFom: LocalDate? = null
         val sammenslåttListe = mutableListOf<BoforholdResponse>()
@@ -493,6 +346,153 @@ internal class BoforholdServiceV2() {
             }
         }
         return listeJustertMotAttenårsdag
+    }
+
+    private fun slåSammenManuelleOgOffentligePerioder(
+        manuellePerioder: List<BoforholdResponse>,
+        offentligePerioder: List<BoforholdResponse>,
+    ): List<BoforholdResponse> {
+        val resultatliste = mutableListOf<BoforholdResponse>()
+
+        // Skriver alle manuelle perioder til resultatet. Perioder med identisk informasjon som en offentlig periode skrives med kilde = Offentlig
+        manuellePerioder.forEach { manuellPeriode ->
+            resultatliste.add(
+                BoforholdResponse(
+                    relatertPersonPersonId = manuellPeriode.relatertPersonPersonId,
+                    periodeFom = manuellPeriode.periodeFom,
+                    periodeTom = manuellPeriode.periodeTom,
+                    bostatus = manuellPeriode.bostatus,
+                    fødselsdato = manuellPeriode.fødselsdato,
+                    kilde = if (manuellPeriodeErIdentiskMedOffentligPeriode(manuellPeriode, offentligePerioder)) Kilde.OFFENTLIG else Kilde.MANUELL,
+                ),
+            )
+        }
+
+        // Sjekker offentlige perioder og justerer periodeFom og periodeTom der disse overlapper med manuelle perioder
+        // Offentlige perioder som helt dekkes av manuelle perioder skrives ikke til resultatet
+        offentligePerioder.forEach { offentligPeriode ->
+            // Finner manuelle perioder som overlapper med den offentlige perioden
+            val overlappendePerioder = mutableListOf<BoforholdResponse>()
+            manuellePerioder.forEach { manuellPeriode ->
+                if (offentligPeriode.periodeTom == null) {
+                    if (manuellPeriode.periodeTom == null || manuellPeriode.periodeTom.isAfter(offentligPeriode.periodeFom) == true) {
+                        overlappendePerioder.add(manuellPeriode)
+                    }
+                } else {
+                    if (manuellPeriode.periodeTom == null) {
+                        if (manuellPeriode.periodeFom.isBefore(offentligPeriode.periodeTom.plusDays(1))) {
+                            overlappendePerioder.add(manuellPeriode)
+                        }
+                    } else {
+                        if (manuellPeriode.periodeFom.isBefore(offentligPeriode.periodeTom.plusDays(1)) &&
+                            manuellPeriode.periodeTom.plusDays(1)
+                                ?.isAfter(offentligPeriode.periodeFom) == true
+                        ) {
+                            overlappendePerioder.add(manuellPeriode)
+                        }
+                    }
+                }
+            }
+
+            val justertOffentligPeriode = justerPeriodeOffentligOpplysning(offentligPeriode, overlappendePerioder.sortedBy { it.periodeFom })
+            if (justertOffentligPeriode != null) {
+                resultatliste.addAll(justertOffentligPeriode)
+            }
+        }
+
+        return resultatliste.sortedBy { it.periodeFom }
+    }
+
+    // Offentlig periode sjekkes mot manuelle perioder og justeres til å ikke overlappe med disse. En offentlig periode kan overlappe med 0 til
+    // mange manuelle perioder. Hvis en offentlig periode dekkes helt av manuelle perioder returneres null, ellers returneres en liste. Hvis
+    // en offentlig perioder overlappes av flere enn to manuelle perioder så vil responsen bestå av flere offentlige perioder som dekker
+    // oppholdet mellom de ulike manuelle periodene.
+    private fun justerPeriodeOffentligOpplysning(
+        offentligePeriode: BoforholdResponse,
+        overlappendePerioder: List<BoforholdResponse>,
+    ): List<BoforholdResponse>? {
+        var periodeFom: LocalDate? = null
+        var periodeTom: LocalDate? = null
+        val justertOffentligPeriodeListe = mutableListOf<BoforholdResponse>()
+
+        if (overlappendePerioder.isNullOrEmpty()) {
+            return listOf(offentligePeriode)
+        }
+
+        for (indeks in overlappendePerioder.indices) {
+            // Sjekker først om den første manuelle perioden dekker starten, og eventuelt hele den offentlige perioden
+            if (indeks == 0) {
+                if (overlappendePerioder[indeks].periodeFom.isBefore(offentligePeriode.periodeFom.plusDays(1))) {
+                    if (overlappendePerioder[indeks].periodeTom == null || overlappendePerioder[indeks].periodeTom?.isAfter(
+                            offentligePeriode.periodeTom?.plusDays(1),
+                        ) == true
+                    ) {
+                        // Den manuelle perioden dekker hele den offentlige perioden
+                        return null
+                    } else {
+                        // Den manuelle perioden dekker starten på den offentlige perioden og periodeFom må forskyves
+                        periodeFom = overlappendePerioder[indeks].periodeTom!!.plusDays(1)
+                    }
+                } else {
+                    // Den manuelle perioden overlapper etter starten på den offentlige perioden og periodeTom må forskyves på den offentlige perioden
+                    periodeTom = overlappendePerioder[indeks].periodeFom.minusDays(1)
+                }
+                if (periodeTom != null) {
+                    // Første manuelle periode starter etter offentlig periode. Den offentlige perioden skrives med justert tomdato. Senere i logikken
+                    // må det sjekkes på om den offentlige perioden må splittes i mer enn én periode.
+                    justertOffentligPeriodeListe.add(
+                        BoforholdResponse(
+                            relatertPersonPersonId = offentligePeriode.relatertPersonPersonId,
+                            periodeFom = offentligePeriode.periodeFom,
+                            periodeTom = periodeTom,
+                            bostatus = offentligePeriode.bostatus,
+                            fødselsdato = offentligePeriode.fødselsdato,
+                            kilde = offentligePeriode.kilde,
+                        ),
+                    )
+                    periodeFom = null
+                    periodeTom = null
+                }
+            }
+            if (indeks < overlappendePerioder.size - 1) {
+                if (overlappendePerioder[indeks + 1].periodeFom.isAfter(overlappendePerioder[indeks].periodeTom)) {
+                    // Det er en åpen tidsperiode mellom to manuelle perioder, og den offentlige perioden skal fylle denne tidsperioden
+//                    periodeFom = overlappendePerioder[indeks].periodeTom!!.plusDays(1)
+                    periodeTom = overlappendePerioder[indeks + 1].periodeFom.minusDays(1)
+                    justertOffentligPeriodeListe.add(
+                        BoforholdResponse(
+                            relatertPersonPersonId = offentligePeriode.relatertPersonPersonId,
+                            // periodeFom er satt hvis første manuelle periode overlapper startdato for offentlig periode
+                            periodeFom = periodeFom ?: overlappendePerioder[indeks].periodeTom!!.plusDays(1),
+                            periodeTom = periodeTom,
+                            bostatus = offentligePeriode.bostatus,
+                            fødselsdato = offentligePeriode.fødselsdato,
+                            kilde = offentligePeriode.kilde,
+                        ),
+                    )
+                    periodeFom = null
+                    periodeTom = null
+                }
+            } else {
+                // Siste manuelle periode
+                if (overlappendePerioder[indeks].periodeTom != null) {
+                    if (offentligePeriode.periodeTom == null || offentligePeriode.periodeTom.isAfter(overlappendePerioder[indeks].periodeTom)) {
+                        justertOffentligPeriodeListe.add(
+                            BoforholdResponse(
+                                relatertPersonPersonId = offentligePeriode.relatertPersonPersonId,
+                                periodeFom = overlappendePerioder[indeks].periodeTom!!.plusDays(1),
+                                periodeTom = offentligePeriode.periodeTom,
+                                bostatus = offentligePeriode.bostatus,
+                                fødselsdato = offentligePeriode.fødselsdato,
+                                kilde = offentligePeriode.kilde,
+                            ),
+                        )
+                    }
+                }
+            }
+        }
+
+        return justertOffentligPeriodeListe
     }
 
     private fun personenHarFylt18År(fødselsdato: LocalDate, dato: LocalDate): Boolean {

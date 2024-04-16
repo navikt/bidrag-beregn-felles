@@ -486,7 +486,7 @@ class TestUtil {
             ),
         )
 
-        fun barnManuellePerioderFør18Årsdag() = listOf(
+        fun barnManuellePerioderMedOppholdFør18Årsdag() = listOf(
             BoforholdRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 2, 17),
@@ -501,6 +501,28 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 2, 1),
                         periodeTom = null,
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+            ),
+        )
+
+        fun barnManuellePeriodeOverlapperPeriodeTomOffentligPeriodeMed18År() = listOf(
+            BoforholdRequest(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2005, 10, 7),
+                erBarnAvBmBp = true,
+                bostatusListe = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2021, 4, 1),
+                        periodeTom = LocalDate.of(2021, 12, 31),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2022, 2, 1),
+                        periodeTom = LocalDate.of(2023, 1, 31),
                         bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
