@@ -1,6 +1,7 @@
 package no.nav.bidrag.inntekt.service
 
 import io.kotest.assertions.assertSoftly
+import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.ints.shouldBeExactly
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -27,13 +28,13 @@ class AinntektServiceTest : AbstractServiceTest() {
     internal inner class BeregnÅrsinntekt {
         @Test
         @Suppress("NonAsciiCharacters")
-        fun `skal transformere årsinntekter når dagens dato er 2023-01-01`() {
+        fun `skal transformere årsinntekter når ainntektHentetDato er 2023-01-01`() {
             val ainntektHentetDato = LocalDate.of(2023, 1, 1)
 
             val ainntektService = AinntektService()
 
             val transformerteInntekter =
-                ainntektService.beregnAarsinntekt(inntektRequest.ainntektsposter, ainntektHentetDato)
+                ainntektService.beregnAarsinntekt(ainntektListeInn = inntektRequest.ainntektsposter, ainntektHentetDato = ainntektHentetDato)
 
             TestUtil.printJson(transformerteInntekter)
 
@@ -71,13 +72,13 @@ class AinntektServiceTest : AbstractServiceTest() {
 
         @Test
         @Suppress("NonAsciiCharacters")
-        fun `skal transformere årsinntekter når dagens dato er 2023-01-10`() {
+        fun `skal transformere årsinntekter når ainntektHentetDato er 2023-01-10`() {
             val ainntektHentetDato = LocalDate.of(2023, 1, 10)
 
             val ainntektService = AinntektService()
 
             val transformerteInntekter =
-                ainntektService.beregnAarsinntekt(inntektRequest.ainntektsposter, ainntektHentetDato)
+                ainntektService.beregnAarsinntekt(ainntektListeInn = inntektRequest.ainntektsposter, ainntektHentetDato = ainntektHentetDato)
 
             TestUtil.printJson(transformerteInntekter)
 
@@ -126,13 +127,13 @@ class AinntektServiceTest : AbstractServiceTest() {
 
         @Test
         @Suppress("NonAsciiCharacters")
-        fun `skal transformere årsinntekter når dagens dato er 2023-09-01`() {
+        fun `skal transformere årsinntekter når ainntektHentetDato er 2023-09-01`() {
             val ainntektHentetDato = LocalDate.of(2023, 9, 1)
 
             val ainntektService = AinntektService()
 
             val transformerteInntekter =
-                ainntektService.beregnAarsinntekt(inntektRequest.ainntektsposter, ainntektHentetDato)
+                ainntektService.beregnAarsinntekt(ainntektListeInn = inntektRequest.ainntektsposter, ainntektHentetDato = ainntektHentetDato)
 
             TestUtil.printJson(transformerteInntekter)
 
@@ -175,6 +176,137 @@ class AinntektServiceTest : AbstractServiceTest() {
                 }
             }
         }
+
+        @Test
+        @Suppress("NonAsciiCharacters")
+        fun `skal transformere årsinntekter når ainntektHentetDato er 2023-09-01 og vedtakstidspunktOpprinneligVedtak er 2023-07-07`() {
+            val ainntektHentetDato = LocalDate.of(2023, 9, 1)
+            val vedtakstidspunktOpprinneligVedtak = LocalDate.of(2023, 7, 7)
+
+            val ainntektService = AinntektService()
+
+            val transformerteInntekter =
+                ainntektService.beregnAarsinntekt(
+                    ainntektListeInn = inntektRequest.ainntektsposter,
+                    ainntektHentetDato = ainntektHentetDato,
+                    vedtakstidspunktOpprinneligVedtak = vedtakstidspunktOpprinneligVedtak,
+                )
+
+            TestUtil.printJson(transformerteInntekter)
+
+            assertSoftly {
+                transformerteInntekter.shouldNotBeNull()
+                transformerteInntekter.shouldNotBeEmpty()
+                transformerteInntekter.size shouldBe 5
+
+                with(transformerteInntekter[0]) {
+                    inntektRapportering shouldBe Inntektsrapportering.AINNTEKT
+                    visningsnavn shouldBe "${Inntektsrapportering.AINNTEKT.visningsnavn.intern} 2022"
+                    sumInntekt shouldBe BigDecimal.valueOf(450000.789)
+                    periode.fom shouldBe YearMonth.of(2022, 1)
+                    periode.til shouldBe YearMonth.of(2022, 12)
+                    gjelderBarnPersonId shouldBe ""
+                    inntektPostListe.size shouldBe 3
+                    inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 450000
+                    grunnlagsreferanseListe.shouldContainAll(
+                        listOf(
+                            "A1",
+                            "A2",
+                            "A3",
+                            "A4",
+                            "A5",
+                            "A6",
+                            "A7",
+                            "A8",
+                            "A9",
+                            "A10",
+                        ),
+                    )
+                }
+
+                with(transformerteInntekter[1]) {
+                    inntektRapportering shouldBe Inntektsrapportering.AINNTEKT_BEREGNET_12MND
+                    visningsnavn shouldBe Inntektsrapportering.AINNTEKT_BEREGNET_12MND.visningsnavn.intern
+                    sumInntekt shouldBe BigDecimal.valueOf(743001.119)
+                    periode.fom shouldBe YearMonth.of(2022, 8)
+                    periode.til shouldBe YearMonth.of(2023, 7)
+                    gjelderBarnPersonId shouldBe ""
+                    inntektPostListe.size shouldBe 4
+                    inntektPostListe.sumOf { it.beløp } shouldBe BigDecimal.valueOf(743001)
+                    grunnlagsreferanseListe.shouldContainAll(
+                        listOf(
+                            "A6",
+                            "A7",
+                            "A8",
+                            "A9",
+                            "A10",
+                            "A11",
+                            "A12",
+                            "A13",
+                            "A14",
+                            "A15",
+                            "A16",
+                            "A17",
+                            "A18",
+                            "A19",
+                        ),
+                    )
+                }
+
+                with(transformerteInntekter[2]) {
+                    inntektRapportering shouldBe Inntektsrapportering.AINNTEKT_BEREGNET_12MND_FRA_OPPRINNELIG_VEDTAKSTIDSPUNKT
+                    visningsnavn shouldBe Inntektsrapportering.AINNTEKT_BEREGNET_12MND_FRA_OPPRINNELIG_VEDTAKSTIDSPUNKT.visningsnavn.intern
+                    sumInntekt shouldBe BigDecimal.valueOf(708001.119)
+                    periode.fom shouldBe YearMonth.of(2022, 7)
+                    periode.til shouldBe YearMonth.of(2023, 6)
+                    gjelderBarnPersonId shouldBe ""
+                    inntektPostListe.size shouldBe 3
+                    inntektPostListe.sumOf { it.beløp } shouldBe BigDecimal.valueOf(708001)
+                    grunnlagsreferanseListe.shouldContainAll(
+                        listOf(
+                            "A5",
+                            "A6",
+                            "A7",
+                            "A8",
+                            "A9",
+                            "A10",
+                            "A11",
+                            "A12",
+                            "A13",
+                            "A14",
+                            "A15",
+                            "A16",
+                            "A17",
+                            "A18",
+                        ),
+                    )
+                }
+
+                with(transformerteInntekter[3]) {
+                    inntektRapportering shouldBe Inntektsrapportering.AINNTEKT_BEREGNET_3MND
+                    visningsnavn shouldBe Inntektsrapportering.AINNTEKT_BEREGNET_3MND.visningsnavn.intern
+                    sumInntekt shouldBe BigDecimal.valueOf(912000)
+                    periode.fom shouldBe YearMonth.of(2023, 5)
+                    periode.til shouldBe YearMonth.of(2023, 7)
+                    gjelderBarnPersonId shouldBe ""
+                    inntektPostListe.size shouldBe 4
+                    inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 912000
+                    grunnlagsreferanseListe.shouldContainAll(listOf("A15", "A16", "A17", "A18", "A19"))
+                }
+
+                with(transformerteInntekter[4]) {
+                    inntektRapportering shouldBe Inntektsrapportering.AINNTEKT_BEREGNET_3MND_FRA_OPPRINNELIG_VEDTAKSTIDSPUNKT
+                    visningsnavn shouldBe Inntektsrapportering.AINNTEKT_BEREGNET_3MND_FRA_OPPRINNELIG_VEDTAKSTIDSPUNKT.visningsnavn.intern
+                    sumInntekt shouldBe BigDecimal.valueOf(812000)
+                    periode.fom shouldBe YearMonth.of(2023, 4)
+                    periode.til shouldBe YearMonth.of(2023, 6)
+                    gjelderBarnPersonId shouldBe ""
+                    inntektPostListe.size shouldBe 3
+                    inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 812000
+                    grunnlagsreferanseListe.shouldContainAll(listOf("A14", "A15", "A16", "A17", "A18"))
+                }
+            }
+        }
     }
 
     @Nested
@@ -185,7 +317,7 @@ class AinntektServiceTest : AbstractServiceTest() {
             val ainntektService = AinntektService()
 
             val transformerteInntekter =
-                ainntektService.beregnMaanedsinntekt(inntektRequest.ainntektsposter, ainntektHentetDato)
+                ainntektService.beregnMaanedsinntekt(ainntektListeInn = inntektRequest.ainntektsposter, ainntektHentetDato = ainntektHentetDato)
 
             TestUtil.printJson(transformerteInntekter)
 

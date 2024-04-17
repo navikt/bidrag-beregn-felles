@@ -26,6 +26,7 @@ Modulen leverer tilbake følgende lister:
 For alle beregninger av inntekter rapportert via a-inntekt brukes utbetalingsperiode for å bestemme hvilken periode inntektsposten skal tilhøre. Utbetalingsperiode dekker alltid en kalendermåned. Unntaket er overgangsstønad, hvor etterbetalingsperiode brukes hvis den er utfylt. Hvis den ikke er utfylt brukes utbetalingsperiode.
 
 #### Cut-off dato
+- Input-parameter aInntektHentetDato er en dato som angir når inntektene ble hentet fra a-ordningen. Den brukes som utgangspunkt for å beregne perioder for inntektene.
 - Inneholder fristen Skatteetaten har satt for å levere a-melding i foregående måned, basert på hvilken dato a-inntekt ble hentet (= aInntektHentetDato i requesten).
 - Denne datoen brukes til å styre hvilke inntekter som skal returneres (hvis ainntektHentetDato er før fristen går vi en måned lengre tilbake).
 - Følgende regelverk gjelder for å bestemme cut-off dato (se https://www.skatteetaten.no/bedrift-og-organisasjon/arbeidsgiver/a-meldingen/frister-og-betaling-i-a-meldingen/):
@@ -43,6 +44,7 @@ Følgende forekomster leveres:
 - En summert liste for de siste 3 månedene. Her summeres inntekter for de siste 3 (komplette) månedene og det ganges deretter med 4 for å finne en beregnet årsinntekt. Hvis inntekter er hentet før cut-off-datoen skyves 3-månedersperioden 1 måned bakover i tid (siste måned blir satt til inneværende måned - 2).
 - En summert liste for de siste 12 månedene. Her summeres inntekter for de siste 12 (komplette) månedene. Hvis inntekter er hentet før cut-off-datoen skyves 12-månedersperioden 1 måned bakover i tid (siste måned blir satt til inneværende måned - 2).
 - I tillegg vil det for alle listene bli levert en liste av tilhørende inntektsposter (summert pr kode/beskrivelse).
+- Hvis input parameter vedtakstidspunktOpprinneligVedtak er satt, lages det en summert liste over 3 og 12 måneder også med utgangspunkt i denne datoen (i tillegg til de ordinære 3/12 måneders listene). Denne blir typisk satt hvis det er en klage og det i tillegg skal summeres inntekter basert på vedtaksdatoen i det opprinnelige vedtaket.
 
 ### Beregning av Skattegrunnlag
 Følgende forekomster leveres:
