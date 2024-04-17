@@ -35,6 +35,7 @@ internal class BoforholdServiceV2() {
         val bostatuslisteRelevantePerioder = boforholdRequest.bostatusListe
             .filter { (it.periodeTom == null || it.periodeTom.isAfter(virkningstidspunkt)) }
 
+        // Justerer offentlige perioder slik at de starter på første dag i måneden og slutter på siste dag i måneden
         val justerteOffentligePerioder = bostatuslisteRelevantePerioder
             .filter { it.kilde == Kilde.OFFENTLIG }
             .map {
@@ -60,9 +61,11 @@ internal class BoforholdServiceV2() {
                 )
             }
 
+        // Finner 18-årsdagen til barnet, settes lik første dag i måneden etter 18-årsdagen
         val attenårFraDato = beregnetAttenÅrFraDato(boforholdRequest.fødselsdato)
 
-        // Behandler først barn uten husstandsmedlemskap i offentlige opplysninger
+        // Behandler først barn uten husstandsmedlemskap i offentlige opplysninger. Genererer offentlige perioder som dekker perioden fra
+        // virkningstidspunktet til dagens dato. Hvis barnet fyller 18 år i perioden genereres to perioder, én før og én etter 18-årsdagen.
         val genererteOffentligePerioder = mutableListOf<BoforholdResponse>()
         if (justerteOffentligePerioder.isEmpty()) {
             if (personenHarFylt18År(boforholdRequest.fødselsdato, virkningstidspunkt)) {
@@ -113,22 +116,21 @@ internal class BoforholdServiceV2() {
                     )
                 }
             }
-        }
-
-        // Sammenhengende offentlige perioder slås sammen
-        val sammenslåttListeOffentligePerioder = slåSammenOverlappendeOffentligePerioder(justerteOffentligePerioder)
-
-        // Fyller ut perioder der det ikke finnes informasjon om barnet i offentlige opplysninger
-        val komplettTidslinjeListe = fyllUtMedPerioderBarnetIkkeBorIHusstanden(virkningstidspunkt, sammenslåttListeOffentligePerioder)
-
-        // Justerer offentlige perioder mot 18-årsdager og lager bruddperiode hvis barnet fyllet 18 år i perioden bor i husstanden
-        val offentligePerioderJustertMotAttenårsdag =
-            justerMotAttenårsdag(attenårFraDato, komplettTidslinjeListe.filter { it.periodeFom.isBefore(attenårFraDato) })
-
-        return if (genererteOffentligePerioder.isNotEmpty()) {
-            slåSammenManuelleOgOffentligePerioder(manuelleOpplysninger, genererteOffentligePerioder)
+            return slåSammenManuelleOgOffentligePerioder(manuelleOpplysninger, genererteOffentligePerioder)
         } else {
-            slåSammenManuelleOgOffentligePerioder(manuelleOpplysninger, offentligePerioderJustertMotAttenårsdag)
+            // Det finnes offentlige perioder og disse behandles under.
+
+            // Sammenhengende offentlige perioder slås sammen
+            val sammenslåttListeOffentligePerioder = slåSammenOverlappendeOffentligePerioder(justerteOffentligePerioder)
+
+            // Fyller ut perioder der det ikke finnes informasjon om barnet i offentlige opplysninger
+            val komplettTidslinjeListe = fyllUtMedPerioderBarnetIkkeBorIHusstanden(virkningstidspunkt, sammenslåttListeOffentligePerioder)
+
+            // Justerer offentlige perioder mot 18-årsdager og lager bruddperiode hvis barnet fyllet 18 år i perioden bor i husstanden
+            val offentligePerioderJustertMotAttenårsdag =
+                justerMotAttenårsdag(attenårFraDato, komplettTidslinjeListe.filter { it.periodeFom.isBefore(attenårFraDato) })
+
+            return slåSammenManuelleOgOffentligePerioder(manuelleOpplysninger, offentligePerioderJustertMotAttenårsdag)
         }
     }
 

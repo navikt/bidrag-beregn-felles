@@ -2,15 +2,15 @@ package no.nav.bidrag.sivilstand.service
 
 import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import no.nav.bidrag.domene.enums.person.SivilstandskodePDL
-import no.nav.bidrag.sivilstand.response.Sivilstand
 import no.nav.bidrag.sivilstand.response.SivilstandBeregnet
 import no.nav.bidrag.sivilstand.response.SivilstandBo
+import no.nav.bidrag.sivilstand.response.SivilstandV1
 import no.nav.bidrag.sivilstand.response.Status
 import no.nav.bidrag.transport.behandling.grunnlag.response.SivilstandGrunnlagDto
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
-internal class SivilstandService() {
+internal class SivilstandServiceV1() {
     fun beregn(virkningstidspunkt: LocalDate, sivilstandGrunnlagDtoListe: List<SivilstandGrunnlagDto>): SivilstandBeregnet {
         var status = Status.OK
 
@@ -136,11 +136,11 @@ internal class SivilstandService() {
         }
     }
 
-    private fun beregnPerioder(virkningstidspunkt: LocalDate, sivilstandBoListe: List<SivilstandBo>): List<Sivilstand> {
-        val sammenslåttSivilstandListe = mutableListOf<Sivilstand>()
+    private fun beregnPerioder(virkningstidspunkt: LocalDate, sivilstandBoListe: List<SivilstandBo>): List<SivilstandV1> {
+        val sammenslåttSivilstandV1Liste = mutableListOf<SivilstandV1>()
 
-        val sivilstandListe = sivilstandBoListe.map {
-            Sivilstand(
+        val sivilstandV1Liste = sivilstandBoListe.map {
+            SivilstandV1(
                 periodeFom = it.periodeFom,
                 periodeTom = it.periodeTom,
                 sivilstandskode = finnSivilstandskode(it.sivilstandskodePDL!!),
@@ -148,11 +148,11 @@ internal class SivilstandService() {
         }
 
         // Justerer datoer. Perioder med 'Bor alene med barn' skal få periodeFra lik første dag i måneden og periodeTil lik siste dag i måneden.
-        val datojustertSivilstandListe = sivilstandListe.map {
+        val datojustertSivilstandV1Listes = sivilstandV1Liste.map {
             if (it.sivilstandskode == Sivilstandskode.BOR_ALENE_MED_BARN) {
                 val periodeFom = hentFørsteDagIMåneden(it.periodeFom)
                 val periodeTom = if (it.periodeTom == null) null else hentSisteDagIMåneden(it.periodeTom)
-                Sivilstand(
+                SivilstandV1(
                     periodeFom,
                     periodeTom,
                     it.sivilstandskode,
@@ -163,7 +163,7 @@ internal class SivilstandService() {
                 // Forekomster med Gift/Samboer ignoreres hvis perioden er mindre enn én måned. Bor alene med barn skal da gjelde.
                 if (periodeTom != null) {
                     if (ChronoUnit.MONTHS.between(periodeFom, periodeTom) >= 1) {
-                        Sivilstand(
+                        SivilstandV1(
                             periodeFom,
                             periodeTom,
                             it.sivilstandskode,
@@ -172,7 +172,7 @@ internal class SivilstandService() {
                         null
                     }
                 } else {
-                    Sivilstand(
+                    SivilstandV1(
                         periodeFom,
                         periodeTom,
                         it.sivilstandskode,
@@ -181,7 +181,7 @@ internal class SivilstandService() {
             }
         }
 
-        val datojustertSivilstandListeFiltrert = datojustertSivilstandListe.filterNotNull()
+        val datojustertSivilstandListeFiltrert = datojustertSivilstandV1Listes.filterNotNull()
         var periodeFom = datojustertSivilstandListeFiltrert[0].periodeFom
 
         // Slår sammen perioder med samme sivilstandskode
@@ -191,8 +191,8 @@ internal class SivilstandService() {
             ) {
                 if (indeks == datojustertSivilstandListeFiltrert.size - 1) {
                     // Siste element i listen
-                    sammenslåttSivilstandListe.add(
-                        Sivilstand(
+                    sammenslåttSivilstandV1Liste.add(
+                        SivilstandV1(
                             periodeFom = if (periodeFom.isBefore(virkningstidspunkt)) virkningstidspunkt else periodeFom,
                             periodeTom = datojustertSivilstandListeFiltrert[indeks].periodeTom,
                             sivilstandskode = datojustertSivilstandListeFiltrert[indeks].sivilstandskode,
@@ -200,8 +200,8 @@ internal class SivilstandService() {
                     )
                 } else {
                     // Hvis det er flere elementer i listen så justeres periodeTom lik neste periodeFom - 1 dag for Gift/samboer
-                    sammenslåttSivilstandListe.add(
-                        Sivilstand(
+                    sammenslåttSivilstandV1Liste.add(
+                        SivilstandV1(
                             periodeFom = if (periodeFom.isBefore(virkningstidspunkt)) virkningstidspunkt else periodeFom,
                             periodeTom = if (datojustertSivilstandListeFiltrert[indeks].sivilstandskode == Sivilstandskode.GIFT_SAMBOER) {
                                 datojustertSivilstandListeFiltrert[indeks + 1].periodeFom.minusDays(1)
@@ -215,7 +215,7 @@ internal class SivilstandService() {
                 }
             }
         }
-        return sammenslåttSivilstandListe.filter { it.periodeTom == null || it.periodeTom.isAfter(virkningstidspunkt.minusDays(1)) }
+        return sammenslåttSivilstandV1Liste.filter { it.periodeTom == null || it.periodeTom.isAfter(virkningstidspunkt.minusDays(1)) }
     }
 
     private fun hentFørsteDagIMåneden(dato: LocalDate): LocalDate {

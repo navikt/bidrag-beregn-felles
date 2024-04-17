@@ -1,7 +1,10 @@
 package no.nav.bidrag.sivilstand
 
+import no.nav.bidrag.sivilstand.dto.Sivilstand
+import no.nav.bidrag.sivilstand.dto.SivilstandRequest
 import no.nav.bidrag.sivilstand.response.SivilstandBeregnet
-import no.nav.bidrag.sivilstand.service.SivilstandService
+import no.nav.bidrag.sivilstand.service.SivilstandServiceV1
+import no.nav.bidrag.sivilstand.service.SivilstandServiceV2
 import no.nav.bidrag.transport.behandling.grunnlag.response.SivilstandGrunnlagDto
 import java.time.LocalDate
 
@@ -11,9 +14,13 @@ import java.time.LocalDate
  */
 class SivilstandApi {
     companion object {
-        private val service = SivilstandService()
-        fun beregn(virkningstidspunkt: LocalDate, sivilstandGrunnlagDtoListe: List<SivilstandGrunnlagDto>): SivilstandBeregnet {
-            return service.beregn(virkningstidspunkt, sivilstandGrunnlagDtoListe)
+        private val serviceV1 = SivilstandServiceV1()
+        fun beregnV1(virkningstidspunkt: LocalDate, sivilstandGrunnlagDtoListe: List<SivilstandGrunnlagDto>): SivilstandBeregnet {
+            return serviceV1.beregn(virkningstidspunkt, sivilstandGrunnlagDtoListe)
+        }
+        private val serviceV2 = SivilstandServiceV2()
+        fun beregnV2(virkningstidspunkt: LocalDate, sivilstandRequest: SivilstandRequest): List<Sivilstand> {
+            return serviceV2.beregn(virkningstidspunkt, sivilstandRequest)
         }
     }
 }
