@@ -1,7 +1,10 @@
 package no.nav.bidrag.sivilstand
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import no.nav.bidrag.domene.enums.person.SivilstandskodePDL
+import no.nav.bidrag.sivilstand.dto.Kilde
+import no.nav.bidrag.sivilstand.dto.Sivilstand
 import no.nav.bidrag.sivilstand.dto.SivilstandRequest
 import no.nav.bidrag.transport.behandling.grunnlag.response.SivilstandGrunnlagDto
 import java.time.LocalDate
@@ -483,6 +486,77 @@ class TestUtil {
                 ),
             ),
             emptyList(),
+        )
+
+        fun manuellOgOffentligPeriodeErIdentisk() = SivilstandRequest(
+            listOf(
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.UGIFT,
+                    gyldigFom = LocalDate.of(2017, 3, 7),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = null,
+                    historisk = false,
+                ),
+            ),
+            listOf(
+                Sivilstand(
+                    periodeFom = LocalDate.of(2020, 9, 1),
+                    periodeTom = null,
+                    sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
+                    kilde = Kilde.MANUELL,
+                ),
+            ),
+        )
+
+        fun flereManuelleOgOffentligePerioder() = SivilstandRequest(
+            listOf(
+                SivilstandGrunnlagDto(
+                    personId = "98765432109",
+                    type = SivilstandskodePDL.UGIFT,
+                    gyldigFom = LocalDate.of(2020, 4, 12),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = null,
+                    historisk = true,
+                ),
+                SivilstandGrunnlagDto(
+                    personId = "98765432109",
+                    type = SivilstandskodePDL.GIFT,
+                    gyldigFom = LocalDate.of(2021, 2, 17),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = null,
+                    historisk = false,
+                ),
+            ),
+            listOf(
+                Sivilstand(
+                    periodeFom = LocalDate.of(2021, 7, 1),
+                    periodeTom = LocalDate.of(2021, 12, 31),
+                    sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
+                    kilde = Kilde.MANUELL,
+                ),
+                Sivilstand(
+                    periodeFom = LocalDate.of(2023, 4, 1),
+                    periodeTom = LocalDate.of(2023, 8, 31),
+                    sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
+                    kilde = Kilde.MANUELL,
+                ),
+            ),
+        )
+
+        fun kunManuellPeriode() = SivilstandRequest(
+            emptyList(),
+            listOf(
+                Sivilstand(
+                    periodeFom = LocalDate.of(2010, 7, 1),
+                    periodeTom = LocalDate.of(2023, 8, 31),
+                    sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
+                    kilde = Kilde.MANUELL,
+                ),
+            ),
         )
     }
 }

@@ -14,12 +14,130 @@ internal class SivilstandServiceV2() {
     fun beregn(virkningstidspunkt: LocalDate, sivilstandRequest: SivilstandRequest): List<Sivilstand> {
         val beregnedeOffentligePerioder = behandleOffentligePerioder(virkningstidspunkt, sivilstandRequest)
         val sammenslåttePerioder =
-            slåSammenManuelleOgOffentligePerioder(sivilstandRequest.manuellePerioder, beregnedeOffentligePerioder)
+            slåSammenManuelleOgOffentligePerioder(virkningstidspunkt, sivilstandRequest.manuellePerioder, beregnedeOffentligePerioder)
 
         return sammenslåttePerioder
     }
 
+    private fun behandleOffentligePerioder(virkningstidspunkt: LocalDate, sivilstandRequest: SivilstandRequest): List<Sivilstand> {
+        val offentligePerioder = sivilstandRequest.offentligePerioder
+
+        val beregnedeOffentligePerioder = mutableListOf<Sivilstand>()
+
+        // Tester på innhold i offentlig grunnlag. Der det mangler informasjon eller det er ugyldige data returneres en liste med én forekomst
+        // med Sivilstandskode = UKJENT
+
+        // Sjekker først om det finnes en aktiv og gyldig forekomst.
+        var ukjentSivilstandskode = false
+        if (offentligePerioder.none {
+                it.historisk == false
+            }
+        ) {
+            ukjentSivilstandskode = true
+        }
+
+        // Sjekker om det finnes forekomster uten datoinformasjon. For aktive/ikke-historiske forekomster kan også 'registrert' brukes
+        // til å angi periodeFom.
+        if (offentligePerioder.any {
+                it.gyldigFom == null && it.bekreftelsesdato == null && it.historisk == true
+            } ||
+            offentligePerioder.any {
+                it.gyldigFom == null && it.bekreftelsesdato == null && it.registrert == null && it.historisk == false
+            }
+        ) {
+            ukjentSivilstandskode = true
+        }
+
+        // Sjekker at sivilstandstype er angitt på alle forekomster
+        if (offentligePerioder.any {
+                it.type == null
+            }
+        ) {
+            ukjentSivilstandskode = true
+        }
+
+        if (offentligePerioder.isEmpty()) {
+            ukjentSivilstandskode = true
+        }
+
+        if (ukjentSivilstandskode) {
+            return listOf(
+                Sivilstand(
+                    periodeFom = virkningstidspunkt,
+                    periodeTom = null,
+                    sivilstandskode = Sivilstandskode.UKJENT,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+            )
+        }
+
+        val sortertSivilstandGrunnlagDtoListe = offentligePerioder.sortedWith(
+            compareByDescending<SivilstandGrunnlagDto> { it.historisk }.thenBy { it.gyldigFom }
+                .thenBy { it.bekreftelsesdato }.thenBy { it.registrert }.thenBy { it.type.toString() },
+        )
+
+        var periodeFom: LocalDate?
+        var periodeTom: LocalDate?
+
+        val sivilstandPDLBoListe = sortertSivilstandGrunnlagDtoListe.mapIndexed { indeks, sivilstand ->
+//            val fradato = if (sivilstand.historisk == true) {
+            val periodeFom = if (sivilstand.historisk == true) {
+                sivilstand.gyldigFom
+                    ?: sivilstand.bekreftelsesdato
+            } else {
+                sivilstand.gyldigFom
+                    ?: sivilstand.bekreftelsesdato
+                    ?: sivilstand.registrert?.toLocalDate()
+            }
+
+//            periodeFom = if (fradato == null || fradato.isBefore(virkningstidspunkt)) {
+//                virkningstidspunkt
+//            } else {
+//                fradato
+//            }
+            // Setter periodeTom lik periodeFom - 1 dag for neste forekomst.
+            // Hvis det ikke finnes en neste forekomst så settes periodeTil lik null. Timestamp registrert brukes bare hvis neste forekomst ikke er historisk
+            periodeTom = if (sortertSivilstandGrunnlagDtoListe.getOrNull(indeks + 1)?.historisk == true) {
+                sortertSivilstandGrunnlagDtoListe.getOrNull(indeks + 1)?.gyldigFom
+                    ?: sortertSivilstandGrunnlagDtoListe.getOrNull(indeks + 1)?.bekreftelsesdato
+            } else {
+                sortertSivilstandGrunnlagDtoListe.getOrNull(indeks + 1)?.gyldigFom
+                    ?: sortertSivilstandGrunnlagDtoListe.getOrNull(indeks + 1)?.bekreftelsesdato
+                    ?: sortertSivilstandGrunnlagDtoListe.getOrNull(indeks + 1)?.registrert?.toLocalDate()
+            }
+
+            return@mapIndexed SivilstandPDLBo(
+                periodeFom = periodeFom!!,
+                periodeTom = periodeTom?.minusDays(1),
+                sivilstandskodePDL = sortertSivilstandGrunnlagDtoListe[indeks].type!!,
+                kilde = Kilde.OFFENTLIG,
+            )
+        }
+
+        val filtrertSivilstandPDLBoListe =
+            sivilstandPDLBoListe.filter { it.periodeTom == null || it.periodeTom.isAfter(virkningstidspunkt.minusDays(1)) }
+
+        // Sjekk på logiske verdier i sivilstandslisten, kun perioder som overlapper med eller er etter virkningstidspunktet sjekkes.
+        val logiskeVerdierErOK = sjekkLogiskeVerdier(filtrertSivilstandPDLBoListe)
+
+        if (logiskeVerdierErOK) {
+            val sivilstandListe = beregnPerioder(virkningstidspunkt, filtrertSivilstandPDLBoListe)
+            beregnedeOffentligePerioder.addAll(sivilstandListe)
+            return beregnedeOffentligePerioder
+        } else {
+            return listOf(
+                Sivilstand(
+                    periodeFom = virkningstidspunkt,
+                    periodeTom = null,
+                    sivilstandskode = Sivilstandskode.UKJENT,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+            )
+        }
+    }
+
     private fun slåSammenManuelleOgOffentligePerioder(
+        virkningstidspunkt: LocalDate,
         manuellePerioder: List<Sivilstand>,
         beregnedeOffentligePerioder: List<Sivilstand>,
     ): List<Sivilstand> {
@@ -29,7 +147,11 @@ internal class SivilstandServiceV2() {
         manuellePerioder.forEach { manuellPeriode ->
             resultatliste.add(
                 Sivilstand(
-                    periodeFom = manuellPeriode.periodeFom,
+                    periodeFom = if (manuellPeriode.periodeFom.isBefore(virkningstidspunkt)) {
+                        virkningstidspunkt
+                    } else {
+                        manuellPeriode.periodeFom
+                    },
                     periodeTom = manuellPeriode.periodeTom,
                     sivilstandskode = manuellPeriode.sivilstandskode,
                     kilde = if (manuellPeriodeErIdentiskMedOffentligPeriode(
@@ -80,7 +202,7 @@ internal class SivilstandServiceV2() {
     }
 
     // Offentlig periode sjekkes mot manuelle perioder og justeres til å ikke overlappe med disse. En offentlig periode kan overlappe med 0 til
-    // mange manuelle perioder. Hvis en offentlig periode dekkes helt av manuelle perioder returneres null, ellers returneres en liste. Hvis
+    // mange manuelle perioder. Hvis en offentlig periode dekkes helt av manuelle perioder returnere metoden null, ellers returneres en liste. Hvis
     // en offentlig perioder overlappes av flere enn to manuelle perioder så vil responsen bestå av flere offentlige perioder som dekker
     // oppholdet mellom de ulike manuelle periodene.
     private fun justerPeriodeOffentligOpplysning(offentligePeriode: Sivilstand, overlappendePerioder: List<Sivilstand>): List<Sivilstand>? {
@@ -88,7 +210,7 @@ internal class SivilstandServiceV2() {
         var periodeTom: LocalDate? = null
         val justertOffentligPeriodeListe = mutableListOf<Sivilstand>()
 
-        if (overlappendePerioder.isNullOrEmpty()) {
+        if (overlappendePerioder.isEmpty()) {
             return listOf(offentligePeriode)
         }
 
@@ -96,15 +218,20 @@ internal class SivilstandServiceV2() {
             // Sjekker først om den første manuelle perioden dekker starten, og eventuelt hele den offentlige perioden
             if (indeks == 0) {
                 if (overlappendePerioder[indeks].periodeFom.isBefore(offentligePeriode.periodeFom.plusDays(1))) {
-                    if (overlappendePerioder[indeks].periodeTom == null || overlappendePerioder[indeks].periodeTom?.isAfter(
-                            offentligePeriode.periodeTom?.plusDays(1),
-                        ) == true
-                    ) {
+                    if (overlappendePerioder[indeks].periodeTom == null) {
                         // Den manuelle perioden dekker hele den offentlige perioden
                         return null
                     } else {
-                        // Den manuelle perioden dekker starten på den offentlige perioden og periodeFom må forskyves
-                        periodeFom = overlappendePerioder[indeks].periodeTom!!.plusDays(1)
+                        if (offentligePeriode.periodeTom != null && overlappendePerioder[indeks].periodeTom?.isAfter(
+                                offentligePeriode.periodeTom.plusDays(1),
+                            ) == true
+                        ) {
+                            // Den manuelle perioden dekker hele den offentlige perioden
+                            return null
+                        } else {
+                            // Den manuelle perioden dekker starten på den offentlige perioden og periodeFom må forskyves
+                            periodeFom = overlappendePerioder[indeks].periodeTom!!.plusDays(1)
+                        }
                     }
                 } else {
                     // Den manuelle perioden overlapper etter starten på den offentlige perioden og periodeTom må forskyves på den offentlige perioden
@@ -167,116 +294,6 @@ internal class SivilstandServiceV2() {
         }
     }
 
-    private fun behandleOffentligePerioder(virkningstidspunkt: LocalDate, sivilstandRequest: SivilstandRequest): List<Sivilstand> {
-        val offentligePerioder = sivilstandRequest.offentligePerioder
-        val manuellePerioder = sivilstandRequest.manuellePerioder
-
-        val beregnedeOffentligePerioder = mutableListOf<Sivilstand>()
-
-        // Tester på innhold i offentlig grunnlag. Der det mangler informasjon eller det er ugyldige data returneres en liste med én forekomst
-        // med Sivilstandskode = UKJENT
-
-        // Sjekker først om det finnes en aktiv og gyldig forekomst.
-        var ukjentSivilstandskode = false
-        if (offentligePerioder.none {
-                it.historisk == false
-            }
-        ) {
-            ukjentSivilstandskode = true
-        }
-
-        // Sjekker om det finnes forekomster uten datoinformasjon. For aktive/ikke-historiske forekomster kan også 'registrert' brukes
-        // til å angi periodeFom.
-        if (offentligePerioder.any {
-                it.gyldigFom == null && it.bekreftelsesdato == null && it.historisk == true
-            } ||
-            offentligePerioder.any {
-                it.gyldigFom == null && it.bekreftelsesdato == null && it.registrert == null && it.historisk == false
-            }
-        ) {
-            ukjentSivilstandskode = true
-        }
-
-        // Sjekker at sivilstandstype er angitt på alle forekomster
-        if (offentligePerioder.any {
-                it.type == null
-            }
-        ) {
-            ukjentSivilstandskode = true
-        }
-
-        if (offentligePerioder.isEmpty()) {
-            ukjentSivilstandskode = true
-        }
-
-        if (ukjentSivilstandskode) {
-            return listOf(
-                Sivilstand(
-                    periodeFom = virkningstidspunkt,
-                    periodeTom = null,
-                    sivilstandskode = Sivilstandskode.UKJENT,
-                    kilde = Kilde.OFFENTLIG,
-                ),
-            )
-        }
-
-        val sortertSivilstandGrunnlagDtoListe = offentligePerioder.sortedWith(
-            compareByDescending<SivilstandGrunnlagDto> { it.historisk }.thenBy { it.gyldigFom }
-                .thenBy { it.bekreftelsesdato }.thenBy { it.registrert }.thenBy { it.type.toString() },
-        )
-
-        var periodeFom: LocalDate?
-        var periodeTom: LocalDate?
-
-        val sivilstandPDLBoListe = sortertSivilstandGrunnlagDtoListe.mapIndexed { indeks, sivilstand ->
-            periodeFom = if (sivilstand.historisk == true) {
-                sivilstand.gyldigFom
-                    ?: sivilstand.bekreftelsesdato
-            } else {
-                sivilstand.gyldigFom
-                    ?: sivilstand.bekreftelsesdato
-                    ?: sivilstand.registrert?.toLocalDate()
-            }
-            // Setter periodeTom lik periodeFom - 1 dag for neste forekomst.
-            // Hvis det ikke finnes en neste forekomst så settes periodeTil lik null. Timestamp registrert brukes bare hvis neste forekomst ikke er historisk
-            periodeTom = if (sortertSivilstandGrunnlagDtoListe.getOrNull(indeks + 1)?.historisk == true) {
-                sortertSivilstandGrunnlagDtoListe.getOrNull(indeks + 1)?.gyldigFom
-                    ?: sortertSivilstandGrunnlagDtoListe.getOrNull(indeks + 1)?.bekreftelsesdato
-            } else {
-                sortertSivilstandGrunnlagDtoListe.getOrNull(indeks + 1)?.gyldigFom
-                    ?: sortertSivilstandGrunnlagDtoListe.getOrNull(indeks + 1)?.bekreftelsesdato
-                    ?: sortertSivilstandGrunnlagDtoListe.getOrNull(indeks + 1)?.registrert?.toLocalDate()
-            }
-
-            return@mapIndexed SivilstandPDLBo(
-                periodeFom = periodeFom!!,
-                periodeTom = periodeTom?.minusDays(1),
-                sivilstandskodePDL = sortertSivilstandGrunnlagDtoListe[indeks].type!!,
-                kilde = Kilde.OFFENTLIG,
-            )
-        }
-
-        // Sjekk på logiske verdier i sivilstandslisten, kun perioder som overlapper med eller er etter virkningstidspunktet sjekkes.
-        val logiskeVerdierErOK = sjekkLogiskeVerdier(
-            sivilstandPDLBoListe.filter { it.periodeTom == null || it.periodeTom.isAfter(virkningstidspunkt.minusDays(1)) },
-        )
-
-        if (logiskeVerdierErOK) {
-            val sivilstandListe = beregnPerioder(virkningstidspunkt, sivilstandPDLBoListe)
-            beregnedeOffentligePerioder.addAll(sivilstandListe)
-            return beregnedeOffentligePerioder
-        } else {
-            return listOf(
-                Sivilstand(
-                    periodeFom = virkningstidspunkt,
-                    periodeTom = null,
-                    sivilstandskode = Sivilstandskode.UKJENT,
-                    kilde = Kilde.OFFENTLIG,
-                ),
-            )
-        }
-    }
-
     private fun sjekkLogiskeVerdier(sivilstandPDLBoListe: List<SivilstandPDLBo>): Boolean {
         // Sjekker om det finnes en status GIFT/REGISTRERT_partner hvis det finnes en status ENKE_ELLER_ENKEMANN, SKILT, SEPARERT eller SEPARERT_PARTNER
         // Sjekken gjøres bare hvis det finnes en forekomst av UGIFT. Hvis UGIFT ikke finnes så er det sannsynlig at personen er innflytter til Norge
@@ -313,13 +330,9 @@ internal class SivilstandServiceV2() {
 
     private fun finnSivilstandskode(type: SivilstandskodePDL): Sivilstandskode {
         return when (type) {
-            SivilstandskodePDL.GIFT,
-            SivilstandskodePDL.REGISTRERT_PARTNER,
-            -> Sivilstandskode.GIFT_SAMBOER
-
-            else -> {
-                return Sivilstandskode.BOR_ALENE_MED_BARN
-            }
+            SivilstandskodePDL.GIFT, SivilstandskodePDL.REGISTRERT_PARTNER -> Sivilstandskode.GIFT_SAMBOER
+            SivilstandskodePDL.UOPPGITT -> Sivilstandskode.UKJENT
+            else -> Sivilstandskode.BOR_ALENE_MED_BARN
         }
     }
 
@@ -328,7 +341,11 @@ internal class SivilstandServiceV2() {
 
         val sivilstandListe = sivilstandPDLBoListe.map {
             Sivilstand(
-                periodeFom = it.periodeFom,
+                periodeFom = if (it.periodeFom.isBefore(virkningstidspunkt)) {
+                    virkningstidspunkt
+                } else {
+                    it.periodeFom
+                },
                 periodeTom = it.periodeTom,
                 sivilstandskode = finnSivilstandskode(it.sivilstandskodePDL),
                 kilde = it.kilde,
@@ -336,6 +353,7 @@ internal class SivilstandServiceV2() {
         }
 
         // Justerer datoer. Perioder med 'Bor alene med barn' skal få periodeFra lik første dag i måneden og periodeTil lik siste dag i måneden.
+        // Justerer ikke frem periodeFom hvis første periode har status GIFT/SAMBOER eller UKJENT og periodeFom = virkningstidpunkt.
         val datojustertSivilstandListe = sivilstandListe.map {
             if (it.sivilstandskode == Sivilstandskode.BOR_ALENE_MED_BARN) {
                 val periodeFom = hentFørsteDagIMåneden(it.periodeFom)
@@ -347,7 +365,11 @@ internal class SivilstandServiceV2() {
                     it.kilde,
                 )
             } else {
-                val periodeFom = hentFørsteDagINesteMåned(it.periodeFom)
+                val periodeFom = if (it.periodeFom == virkningstidspunkt) {
+                    it.periodeFom
+                } else {
+                    hentFørsteDagINesteMåned(it.periodeFom)
+                }
                 val periodeTom = if (it.periodeTom == null) null else hentSisteDagIForrigeMåned(it.periodeTom)
                 // Forekomster med Gift/Samboer ignoreres hvis perioden er mindre enn én måned. Bor alene med barn skal da gjelde.
                 if (periodeTom != null) {
@@ -420,7 +442,7 @@ internal class SivilstandServiceV2() {
     }
 
     private fun hentSisteDagIForrigeMåned(dato: LocalDate): LocalDate {
-        return LocalDate.of(dato.year, dato.month, dato.month.length(dato.isLeapYear)).minusMonths(1)
+        return LocalDate.of(dato.year, dato.month.minus(1), dato.month.minus(1).length(dato.isLeapYear))
     }
 
     private fun hentFørsteDagINesteMåned(dato: LocalDate): LocalDate {

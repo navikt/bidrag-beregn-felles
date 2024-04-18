@@ -425,15 +425,20 @@ internal class BoforholdServiceV2() {
             // Sjekker først om den første manuelle perioden dekker starten, og eventuelt hele den offentlige perioden
             if (indeks == 0) {
                 if (overlappendePerioder[indeks].periodeFom.isBefore(offentligePeriode.periodeFom.plusDays(1))) {
-                    if (overlappendePerioder[indeks].periodeTom == null || overlappendePerioder[indeks].periodeTom?.isAfter(
-                            offentligePeriode.periodeTom?.plusDays(1),
-                        ) == true
-                    ) {
+                    if (overlappendePerioder[indeks].periodeTom == null) {
                         // Den manuelle perioden dekker hele den offentlige perioden
                         return null
                     } else {
-                        // Den manuelle perioden dekker starten på den offentlige perioden og periodeFom må forskyves
-                        periodeFom = overlappendePerioder[indeks].periodeTom!!.plusDays(1)
+                        if (offentligePeriode.periodeTom != null && overlappendePerioder[indeks].periodeTom?.isAfter(
+                                offentligePeriode.periodeTom.plusDays(1),
+                            ) == true
+                        ) {
+                            // Den manuelle perioden dekker hele den offentlige perioden
+                            return null
+                        } else {
+                            // Den manuelle perioden dekker starten på den offentlige perioden og periodeFom må forskyves
+                            periodeFom = overlappendePerioder[indeks].periodeTom!!.plusDays(1)
+                        }
                     }
                 } else {
                     // Den manuelle perioden overlapper etter starten på den offentlige perioden og periodeTom må forskyves på den offentlige perioden

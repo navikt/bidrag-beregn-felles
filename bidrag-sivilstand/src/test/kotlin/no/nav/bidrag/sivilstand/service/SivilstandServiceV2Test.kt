@@ -21,18 +21,22 @@ internal class SivilstandServiceV2Test {
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
-            resultat.size shouldBe 3
+            resultat.size shouldBe 4
             resultat[0].periodeFom shouldBe LocalDate.of(2010, 9, 1)
-            resultat[0].periodeTom shouldBe LocalDate.of(2017, 7, 31)
-            resultat[0].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat[0].periodeTom shouldBe LocalDate.of(2011, 1, 31)
+            resultat[0].sivilstandskode shouldBe Sivilstandskode.UKJENT
 
-            resultat[1].periodeFom shouldBe LocalDate.of(2017, 8, 1)
-            resultat[1].periodeTom shouldBe LocalDate.of(2021, 8, 31)
-            resultat[1].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
+            resultat[1].periodeFom shouldBe LocalDate.of(2011, 2, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2017, 7, 31)
+            resultat[1].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
 
-            resultat[2].periodeFom shouldBe LocalDate.of(2021, 9, 1)
-            resultat[2].periodeTom shouldBe null
-            resultat[2].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat[2].periodeFom shouldBe LocalDate.of(2017, 8, 1)
+            resultat[2].periodeTom shouldBe LocalDate.of(2021, 8, 31)
+            resultat[2].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
+
+            resultat[3].periodeFom shouldBe LocalDate.of(2021, 9, 1)
+            resultat[3].periodeTom shouldBe null
+            resultat[3].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
         }
     }
 
@@ -211,6 +215,91 @@ internal class SivilstandServiceV2Test {
             resultat[0].periodeFom shouldBe LocalDate.of(2023, 3, 1)
             resultat[0].periodeTom shouldBe null
             resultat[0].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+        }
+    }
+
+    @Test
+    fun `Test at manuell periode som har en identisk offentlig periode endres til kilde = Offentlig `() {
+        sivilstandServiceV2 = SivilstandServiceV2()
+        val mottatteBoforhold = TestUtil.manuellOgOffentligPeriodeErIdentisk()
+        val virkningstidspunkt = LocalDate.of(2020, 9, 1)
+        val resultat = sivilstandServiceV2.beregn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 1
+            resultat[0].periodeFom shouldBe LocalDate.of(2020, 9, 1)
+            resultat[0].periodeTom shouldBe null
+            resultat[0].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
+
+    @Test
+    fun `Test periodisering med flere manuelle og offentlige perioder og perioder uten status `() {
+        sivilstandServiceV2 = SivilstandServiceV2()
+        val mottatteBoforhold = TestUtil.flereManuelleOgOffentligePerioder()
+        val virkningstidspunkt = LocalDate.of(2020, 9, 1)
+        val resultat = sivilstandServiceV2.beregn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 6
+            // Offentlig periode der periodeFom forskyves frem til virkningstidspunkt
+            resultat[0].periodeFom shouldBe LocalDate.of(2020, 9, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2021, 2, 28)
+            resultat[0].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            // Offentlig periode som ligger med null i preiodeTom. Perioden splittes opp i de underliggende offentlige periodene for å dekke
+            // oppholdet mellom manuelle perioder.
+            resultat[1].periodeFom shouldBe LocalDate.of(2021, 3, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2021, 6, 30)
+            resultat[1].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
+            resultat[1].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2021, 7, 1)
+            resultat[2].periodeTom shouldBe LocalDate.of(2021, 12, 31)
+            resultat[2].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat[2].kilde shouldBe Kilde.MANUELL
+
+            resultat[3].periodeFom shouldBe LocalDate.of(2022, 1, 1)
+            resultat[3].periodeTom shouldBe LocalDate.of(2023, 3, 31)
+            resultat[3].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
+            resultat[3].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[4].periodeFom shouldBe LocalDate.of(2023, 4, 1)
+            resultat[4].periodeTom shouldBe LocalDate.of(2023, 8, 31)
+            resultat[4].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat[4].kilde shouldBe Kilde.MANUELL
+
+            resultat[5].periodeFom shouldBe LocalDate.of(2023, 9, 1)
+            resultat[5].periodeTom shouldBe null
+            resultat[5].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
+            resultat[5].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
+
+    @Test
+    fun `Test kun manuell periode med periodeTom satt`() {
+        sivilstandServiceV2 = SivilstandServiceV2()
+        val mottatteBoforhold = TestUtil.kunManuellPeriode()
+        val virkningstidspunkt = LocalDate.of(2020, 9, 1)
+        val resultat = sivilstandServiceV2.beregn(virkningstidspunkt, mottatteBoforhold)
+
+        // Det genereres en offentlig periode med Sivilstandskode = UKJENT for etter den manuelle perioden.
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 2
+            resultat[0].periodeFom shouldBe LocalDate.of(2020, 9, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2023, 8, 31)
+            resultat[0].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat[0].kilde shouldBe Kilde.MANUELL
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2023, 9, 1)
+            resultat[1].periodeTom shouldBe null
+            resultat[1].sivilstandskode shouldBe Sivilstandskode.UKJENT
+            resultat[1].kilde shouldBe Kilde.OFFENTLIG
         }
     }
 }
