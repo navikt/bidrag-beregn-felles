@@ -12,10 +12,10 @@ data class SivilstandBo(
 
 data class SivilstandBeregnet(
     val status: Status,
-    val sivilstandListe: List<Sivilstand>,
+    val sivilstandListe: List<SivilstandV1>,
 )
 
-data class Sivilstand(
+data class SivilstandV1(
     val periodeFom: LocalDate,
     val periodeTom: LocalDate?,
     val sivilstandskode: Sivilstandskode,

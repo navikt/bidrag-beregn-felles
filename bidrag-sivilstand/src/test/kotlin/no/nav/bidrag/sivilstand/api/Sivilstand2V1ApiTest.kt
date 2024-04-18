@@ -1,19 +1,19 @@
 package no.nav.bidrag.sivilstand.api
 
-import no.nav.bidrag.sivilstand.service.SivilstandService
+import no.nav.bidrag.sivilstand.service.SivilstandServiceV1
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 
-internal class SivilstandApiTest {
+internal class Sivilstand2V1ApiTest {
 
     @Mock
-    private lateinit var sivilstandService: SivilstandService
+    private lateinit var sivilstandServiceV1: SivilstandServiceV1
 
     @BeforeEach
     fun initMock() {
-        sivilstandService = SivilstandService()
+        sivilstandServiceV1 = SivilstandServiceV1()
     }
 
     @Test
