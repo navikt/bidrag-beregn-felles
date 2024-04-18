@@ -1,8 +1,8 @@
 package no.nav.bidrag.sivilstand.service
 
+import no.nav.bidrag.domene.enums.diverse.Kilde
 import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import no.nav.bidrag.domene.enums.person.SivilstandskodePDL
-import no.nav.bidrag.sivilstand.dto.Kilde
 import no.nav.bidrag.sivilstand.dto.Sivilstand
 import no.nav.bidrag.sivilstand.dto.SivilstandPDLBo
 import no.nav.bidrag.sivilstand.dto.SivilstandRequest

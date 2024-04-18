@@ -1,5 +1,6 @@
 package no.nav.bidrag.boforhold.dto
 
+import no.nav.bidrag.domene.enums.diverse.Kilde
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import java.time.LocalDate
 
@@ -28,8 +29,3 @@ data class BoforholdResponse(
     val fødselsdato: LocalDate,
     val kilde: Kilde = Kilde.OFFENTLIG,
 )
-
-enum class Kilde {
-    MANUELL,
-    OFFENTLIG,
-}

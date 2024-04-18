@@ -3,8 +3,8 @@ package no.nav.bidrag.boforhold
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.boforhold.dto.BoforholdRequest
 import no.nav.bidrag.boforhold.dto.Bostatus
-import no.nav.bidrag.boforhold.dto.Kilde
 import no.nav.bidrag.boforhold.response.RelatertPerson
+import no.nav.bidrag.domene.enums.diverse.Kilde
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.transport.behandling.grunnlag.response.BorISammeHusstandDto
 import java.time.LocalDate
