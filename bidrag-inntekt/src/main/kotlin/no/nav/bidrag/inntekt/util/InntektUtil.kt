@@ -19,6 +19,8 @@ open class InntektUtil {
     companion object {
         const val KEY_3MND = "3MND"
         const val KEY_12MND = "12MND"
+        const val KEY_3MND_OV = "3MND_OV"
+        const val KEY_12MND_OV = "12MND_OV"
         const val PERIODE_ÅR = "ÅR"
         const val PERIODE_MÅNED = "MND"
         const val BRUDD_MÅNED_OVERGANSSTØNAD = 5
