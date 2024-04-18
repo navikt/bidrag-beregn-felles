@@ -2,8 +2,8 @@ package no.nav.bidrag.boforhold.service
 
 import no.nav.bidrag.boforhold.dto.BoforholdRequest
 import no.nav.bidrag.boforhold.dto.BoforholdResponse
-import no.nav.bidrag.boforhold.dto.Kilde
 import no.nav.bidrag.commons.util.secureLogger
+import no.nav.bidrag.domene.enums.diverse.Kilde
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit

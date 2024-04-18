@@ -1,5 +1,6 @@
 package no.nav.bidrag.sivilstand.dto
 
+import no.nav.bidrag.domene.enums.diverse.Kilde
 import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import no.nav.bidrag.domene.enums.person.SivilstandskodePDL
 import no.nav.bidrag.transport.behandling.grunnlag.response.SivilstandGrunnlagDto
@@ -23,8 +24,3 @@ data class SivilstandPDLBo(
     val sivilstandskodePDL: SivilstandskodePDL,
     val kilde: Kilde,
 )
-
-enum class Kilde {
-    MANUELL,
-    OFFENTLIG,
-}
