@@ -53,7 +53,7 @@ class InntektApiTest {
 
         assertSoftly {
             transformerteInntekter.shouldNotBeNull()
-            transformerteInntekter.summertÅrsinntektListe.shouldHaveSize(14)
+            transformerteInntekter.summertÅrsinntektListe.shouldHaveSize(12)
             transformerteInntekter.summertMånedsinntektListe.shouldHaveSize(12)
 
             assertSoftly(transformerteInntekter.summertMånedsinntektListe) {
@@ -90,11 +90,11 @@ class InntektApiTest {
 
         assertSoftly {
             transformerteInntekter.shouldNotBeNull()
-            transformerteInntekter.summertÅrsinntektListe.shouldHaveSize(14)
+            transformerteInntekter.summertÅrsinntektListe.shouldHaveSize(12)
             transformerteInntekter.summertMånedsinntektListe.shouldHaveSize(12)
 
             assertSoftly(transformerteInntekter.summertÅrsinntektListe) {
-                shouldHaveSize(14)
+                shouldHaveSize(12)
                 assertSoftly(filter { it.inntektRapportering == Inntektsrapportering.KONTANTSTØTTE }) {
                     shouldHaveSize(2)
                     it[0].grunnlagsreferanseListe.shouldHaveSize(1)
@@ -135,18 +135,13 @@ class InntektApiTest {
                     )
                 }
                 assertSoftly(filter { it.inntektRapportering == Inntektsrapportering.LIGNINGSINNTEKT }) {
-                    shouldHaveSize(3)
+                    shouldHaveSize(2)
                     assertSoftly(it[0]) {
-                        periode.fom.shouldBe(YearMonth.parse("2021-01"))
-                        grunnlagsreferanseListe.shouldHaveSize(1)
-                        grunnlagsreferanseListe.shouldContainAll("innhentet_skattegrunnlag_20210101")
-                    }
-                    assertSoftly(it[1]) {
                         periode.fom.shouldBe(YearMonth.parse("2022-01"))
                         grunnlagsreferanseListe.shouldHaveSize(1)
                         grunnlagsreferanseListe.shouldContainAll("innhentet_skattegrunnlag_20220101")
                     }
-                    assertSoftly(it[2]) {
+                    assertSoftly(it[1]) {
                         periode.fom.shouldBe(YearMonth.parse("2023-01"))
                         grunnlagsreferanseListe.shouldHaveSize(1)
                         grunnlagsreferanseListe.shouldContainAll("innhentet_skattegrunnlag_20230101")
