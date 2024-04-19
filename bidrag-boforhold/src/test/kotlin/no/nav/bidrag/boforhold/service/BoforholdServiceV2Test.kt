@@ -334,7 +334,8 @@ internal class BoforholdServiceV2Test {
         assertSoftly {
             Assertions.assertNotNull(resultat)
             resultat.size shouldBe 2
-            resultat[0].periodeFom shouldBe LocalDate.of(2020, 9, 1)
+            // fødselsdato er etter virkningstidspunkt og periodeFom settes lik første dag i fødselsmåned
+            resultat[0].periodeFom shouldBe LocalDate.of(2020, 12, 1)
             resultat[0].periodeTom shouldBe LocalDate.of(2022, 3, 31)
             resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
             resultat[0].fødselsdato shouldBe mottatteBoforhold[0].fødselsdato
@@ -358,8 +359,8 @@ internal class BoforholdServiceV2Test {
         assertSoftly {
             Assertions.assertNotNull(resultat)
             resultat.size shouldBe 14
-            // Offentlig periode der periodeFom forskyves frem til virkningstidspunkt
-            resultat[0].periodeFom shouldBe LocalDate.of(2020, 9, 1)
+            // Offentlig periode der periodeFom forskyves frem til første dag i fødselsmåned
+            resultat[0].periodeFom shouldBe LocalDate.of(2020, 12, 1)
             resultat[0].periodeTom shouldBe LocalDate.of(2020, 12, 31)
             resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
             resultat[0].fødselsdato shouldBe mottatteBoforhold[0].fødselsdato
@@ -508,6 +509,123 @@ internal class BoforholdServiceV2Test {
             resultat[5].periodeTom shouldBe null
             resultat[5].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
             resultat[5].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
+
+    @Test
+    fun `Test periodeTom = null både manuell og offentlig periode `() {
+        boforholdServiceV2 = BoforholdServiceV2()
+        val mottatteBoforhold = TestUtil.manuelleOgOffentligPeriodeMedNullIPeriodeTom()
+        val virkningstidspunkt = LocalDate.of(2022, 1, 1)
+        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 4
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2022, 1, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2022, 12, 31)
+            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2023, 1, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2023, 5, 31)
+            resultat[1].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2023, 6, 1)
+            resultat[2].periodeTom shouldBe LocalDate.of(2023, 7, 31)
+            resultat[2].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[2].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[3].periodeFom shouldBe LocalDate.of(2023, 8, 1)
+            resultat[3].periodeTom shouldBe null
+            resultat[3].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[3].kilde shouldBe Kilde.MANUELL
+        }
+    }
+
+    @Test
+    fun `Test periodeTom = null både manuell og offentlig periode - virkningsdato 2018 `() {
+        boforholdServiceV2 = BoforholdServiceV2()
+        val mottatteBoforhold = TestUtil.manuellOgOffentligPeriodeMedNullIPeriodeTom2018()
+        val virkningstidspunkt = LocalDate.of(2018, 5, 1)
+        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 4
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2020, 3, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2021, 12, 31)
+            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2022, 1, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2022, 12, 31)
+            resultat[1].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.MANUELL
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2023, 1, 1)
+            resultat[2].periodeTom shouldBe LocalDate.of(2023, 5, 31)
+            resultat[2].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[2].kilde shouldBe Kilde.MANUELL
+
+            resultat[3].periodeFom shouldBe LocalDate.of(2023, 6, 1)
+            resultat[3].periodeTom shouldBe null
+            resultat[3].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[3].kilde shouldBe Kilde.MANUELL
+        }
+    }
+
+    @Test
+    fun `Test sammenhengende offentlige og manuelle perioder med lik status slås sammen som Manuell `() {
+        boforholdServiceV2 = BoforholdServiceV2()
+        val mottatteBoforhold = TestUtil.manuellOgOffentligPeriodeMedLikStatus()
+        val virkningstidspunkt = LocalDate.of(2020, 5, 1)
+        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 3
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2020, 5, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2022, 11, 30)
+            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2022, 12, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2024, 3, 31)
+            resultat[1].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.MANUELL
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2024, 4, 1)
+            resultat[2].periodeTom shouldBe null
+            resultat[2].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[2].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
+
+    @Test
+    fun `Test sammenhengende offentlige og manuelle perioder med lik status slås sammen som Manuell med null i periodeTom `() {
+        boforholdServiceV2 = BoforholdServiceV2()
+        val mottatteBoforhold = TestUtil.manuellOgOffentligPeriodeMedLikStatusPeriodeTomErNull()
+        val virkningstidspunkt = LocalDate.of(2020, 5, 1)
+        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 2
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2020, 5, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2022, 11, 30)
+            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2022, 12, 1)
+            resultat[1].periodeTom shouldBe null
+            resultat[1].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.MANUELL
         }
     }
 }
