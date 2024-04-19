@@ -137,7 +137,7 @@ internal class ForskuddPeriodeTest {
             { assertThat(resultat.beregnetForskuddPeriodeListe[5].periode.datoTil).isEqualTo(LocalDate.parse("2018-12-01")) },
             {
                 assertThat(resultat.beregnetForskuddPeriodeListe[5].resultat.kode)
-                    .isEqualTo(Resultatkode.AVSLAG)
+                    .isEqualTo(Resultatkode.AVSLAG_IKKE_REGISTRERT_PÅ_ADRESSE)
             },
             { assertThat(resultat.beregnetForskuddPeriodeListe[5].resultat.regel).isEqualTo("REGEL 2") },
             { assertThat(resultat.beregnetForskuddPeriodeListe[6].periode.datoFom).isEqualTo(LocalDate.parse("2018-12-01")) },

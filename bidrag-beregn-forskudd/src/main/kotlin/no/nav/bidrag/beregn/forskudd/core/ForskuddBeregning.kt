@@ -36,7 +36,7 @@ class ForskuddBeregning {
         when {
             // Søknadsbarn er over 18 år (REGEL 1)
             grunnlag.søknadsbarnAlder.alder >= 18 -> {
-                resultatkode = Resultatkode.AVSLAG
+                resultatkode = Resultatkode.AVSLAG_OVER_18_ÅR
                 regel = "REGEL 1"
             }
 
@@ -46,13 +46,13 @@ class ForskuddBeregning {
             // håndteres pt. på utsiden av denne modulen
             grunnlag.søknadsbarnBostatus.kode != Bostatuskode.MED_FORELDER &&
                 grunnlag.søknadsbarnBostatus.kode != Bostatuskode.DOKUMENTERT_SKOLEGANG -> {
-                resultatkode = Resultatkode.AVSLAG
+                resultatkode = Resultatkode.AVSLAG_IKKE_REGISTRERT_PÅ_ADRESSE
                 regel = "REGEL 2"
             }
 
             // Over maks inntektsgrense for forskudd (REGEL 4)
             !erUnderInntektsgrense(maksInntektsgrense, bidragsmottakerInntekt) -> {
-                resultatkode = Resultatkode.AVSLAG
+                resultatkode = Resultatkode.AVSLAG_HØY_INNTEKT
                 regel = "REGEL 4"
             }
 
