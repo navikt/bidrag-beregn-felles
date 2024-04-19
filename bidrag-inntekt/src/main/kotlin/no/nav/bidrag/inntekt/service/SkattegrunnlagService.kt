@@ -46,6 +46,10 @@ class SkattegrunnlagService {
         val grunnlagListe = mutableSetOf<String>()
 
         skattegrunnlagListe.forEach { skattegrunnlagForLigningsår ->
+            if (skattegrunnlagForLigningsår.skattegrunnlagsposter.isEmpty()) {
+                return@forEach
+            }
+
             val inntektPostListe = mutableListOf<InntektPost>()
             var sumInntekt = BigDecimal.ZERO
 

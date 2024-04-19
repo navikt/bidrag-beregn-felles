@@ -52,6 +52,7 @@ Følgende forekomster leveres:
 - En summert liste over kapitalinntekter pr kalenderår
 - Hvilke inntektsposter som defineres som hhv. ligningsinntekter og kapitalinntekter, og om de skal legges til eller trekkes fra, er definert i filene `mapping_ligs.yaml` og `mapping_kaps.yaml`.
 - I tillegg vil det for begge listene bli levert en liste av tilhørende inntektsposter (summert pr kode/beskrivelse).
+- Hvis input er en tom liste over skattegrunnlagsposter for et gitt år, vil det ikke bli lagt ut ligningsinntekt eler kapitalinntekt i responsen for det året.
 
 ### Beregning av kontantstøtte, utvidet barnetrygd, småbarnstillegg og barnetillegg fra pensjon
 - Input er et månedsbeløp som kan strekke seg over en periode på flere måneder
