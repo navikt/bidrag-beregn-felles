@@ -218,7 +218,7 @@ internal class BeregnForskuddApiTest {
         // Avslag: SB alder > 11 år; BM inntekt 540000; BM antall barn egen husstand 1; BM sivilstatus enslig
         filnavn = "src/test/resources/testfiler/forskudd_eksempel10.json"
         forventetForskuddBeløp = 0
-        forventetForskuddResultatkode = Resultatkode.AVSLAG
+        forventetForskuddResultatkode = Resultatkode.AVSLAG_HØY_INNTEKT
         forventetForskuddRegel = "REGEL 4"
         utførBeregningerOgEvaluerResultat()
     }
@@ -229,7 +229,7 @@ internal class BeregnForskuddApiTest {
         // Avslag: SB alder > 11 år; BM inntekt 540000; BM antall barn egen husstand 1; BM sivilstatus gift
         filnavn = "src/test/resources/testfiler/forskudd_eksempel11.json"
         forventetForskuddBeløp = 0
-        forventetForskuddResultatkode = Resultatkode.AVSLAG
+        forventetForskuddResultatkode = Resultatkode.AVSLAG_HØY_INNTEKT
         forventetForskuddRegel = "REGEL 4"
         utførBeregningerOgEvaluerResultat()
     }
@@ -343,7 +343,7 @@ internal class BeregnForskuddApiTest {
         // Avslag: SB alder < 11 år; BM inntekt 489000+60000; BM antall barn egen husstand 2; BM sivilstatus gift
         filnavn = "src/test/resources/testfiler/forskudd_eksempel22.json"
         forventetForskuddBeløp = 0
-        forventetForskuddResultatkode = Resultatkode.AVSLAG
+        forventetForskuddResultatkode = Resultatkode.AVSLAG_HØY_INNTEKT
         forventetForskuddRegel = "REGEL 4"
         forventetAntallDelberegningReferanser = 5
         utførBeregningerOgEvaluerResultat()
@@ -432,17 +432,17 @@ internal class BeregnForskuddApiTest {
 
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[1].resultat).isNotNull },
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[1].resultat.belop.intValueExact()).isEqualTo(0) },
-            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[1].resultat.kode).isEqualTo(Resultatkode.AVSLAG) },
+            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[1].resultat.kode).isEqualTo(Resultatkode.AVSLAG_HØY_INNTEKT) },
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[1].resultat.regel).isEqualTo("REGEL 4") },
 
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[2].resultat).isNotNull },
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[2].resultat.belop.intValueExact()).isEqualTo(0) },
-            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[2].resultat.kode).isEqualTo(Resultatkode.AVSLAG) },
+            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[2].resultat.kode).isEqualTo(Resultatkode.AVSLAG_HØY_INNTEKT) },
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[2].resultat.regel).isEqualTo("REGEL 4") },
 
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[3].resultat).isNotNull },
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[3].resultat.belop.intValueExact()).isEqualTo(0) },
-            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[3].resultat.kode).isEqualTo(Resultatkode.AVSLAG) },
+            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[3].resultat.kode).isEqualTo(Resultatkode.AVSLAG_HØY_INNTEKT) },
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[3].resultat.regel).isEqualTo("REGEL 4") },
 
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[4].resultat).isNotNull },
@@ -452,17 +452,17 @@ internal class BeregnForskuddApiTest {
 
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[5].resultat).isNotNull },
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[5].resultat.belop.intValueExact()).isEqualTo(0) },
-            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[5].resultat.kode).isEqualTo(Resultatkode.AVSLAG) },
+            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[5].resultat.kode).isEqualTo(Resultatkode.AVSLAG_IKKE_REGISTRERT_PÅ_ADRESSE) },
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[5].resultat.regel).isEqualTo("REGEL 2") },
 
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[6].resultat).isNotNull },
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[6].resultat.belop.intValueExact()).isEqualTo(0) },
-            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[6].resultat.kode).isEqualTo(Resultatkode.AVSLAG) },
+            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[6].resultat.kode).isEqualTo(Resultatkode.AVSLAG_IKKE_REGISTRERT_PÅ_ADRESSE) },
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[6].resultat.regel).isEqualTo("REGEL 2") },
 
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[7].resultat).isNotNull },
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[7].resultat.belop.intValueExact()).isEqualTo(0) },
-            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[7].resultat.kode).isEqualTo(Resultatkode.AVSLAG) },
+            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[7].resultat.kode).isEqualTo(Resultatkode.AVSLAG_IKKE_REGISTRERT_PÅ_ADRESSE) },
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[7].resultat.regel).isEqualTo("REGEL 2") },
         )
     }

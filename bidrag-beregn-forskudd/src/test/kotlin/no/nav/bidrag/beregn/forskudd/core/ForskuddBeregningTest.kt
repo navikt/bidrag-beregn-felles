@@ -63,7 +63,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             { assertThat(resultat).isNotNull() },
             { assertThat(resultat.beløp).isZero() },
-            { assertThat(resultat.kode).isEqualTo(Resultatkode.AVSLAG) },
+            { assertThat(resultat.kode).isEqualTo(Resultatkode.AVSLAG_OVER_18_ÅR) },
             { assertThat(resultat.regel).isEqualTo("REGEL 1") },
             { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
@@ -99,7 +99,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             { assertThat(resultat).isNotNull() },
             { assertThat(resultat.beløp).isZero },
-            { assertThat(resultat.kode).isEqualTo(Resultatkode.AVSLAG) },
+            { assertThat(resultat.kode).isEqualTo(Resultatkode.AVSLAG_IKKE_REGISTRERT_PÅ_ADRESSE) },
             { assertThat(resultat.regel).isEqualTo("REGEL 2") },
             { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )
@@ -142,7 +142,7 @@ internal class ForskuddBeregningTest {
         assertAll(
             { assertThat(resultat).isNotNull() },
             { assertThat(resultat.beløp).isZero() },
-            { assertThat(resultat.kode).isEqualTo(Resultatkode.AVSLAG) },
+            { assertThat(resultat.kode).isEqualTo(Resultatkode.AVSLAG_HØY_INNTEKT) },
             { assertThat(resultat.regel).isEqualTo("REGEL 4") },
             { assertThat(resultat.sjablonListe).isEqualTo(sjablonPeriodeNavnVerdiListe) },
         )

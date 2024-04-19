@@ -20,10 +20,10 @@
         <kotest.version>5.8.1</kotest.version>
         <swagger.version>2.2.21</swagger.version>
         <ktlint.version>1.2.1</ktlint.version>
-        <bidrag-felles.version>2024.04.18.152335</bidrag-felles.version>
+        <bidrag-felles.version>2024.04.19.124657</bidrag-felles.version>
         <spring-boot.version>3.2.4</spring-boot.version>
         <kotlin-logging-jvm.version>6.0.9</kotlin-logging-jvm.version>
-        <mockito-kotlin.version>5.2.1</mockito-kotlin.version>
+        <mockito-kotlin.version>5.3.1</mockito-kotlin.version>
         <mockk.version>1.13.10</mockk.version>
         <wiremock.version>2.35.2</wiremock.version>
 
@@ -36,7 +36,7 @@
         <maven-resources.version>3.3.1</maven-resources.version>
         <maven-release.version>3.0.1</maven-release.version>
         <maven-antrun.version>3.1.0</maven-antrun.version>
-        <maven-jar.version>3.3.0</maven-jar.version>
+        <maven-jar.version>3.4.0</maven-jar.version>
         <flatten-maven.version>1.6.0</flatten-maven.version>
         <build-helper-maven.version>3.5.0</build-helper-maven.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
