@@ -225,6 +225,12 @@ class TestUtil {
                 erBarnAvBmBp = true,
                 bostatusListe = listOf(
                     Bostatus(
+                        periodeFom = LocalDate.of(2017, 4, 2),
+                        periodeTom = LocalDate.of(2019, 1, 7),
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 2),
                         periodeTom = LocalDate.of(2019, 4, 7),
                         bostatus = null,
@@ -523,6 +529,149 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 2, 1),
                         periodeTom = LocalDate.of(2023, 1, 31),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+            ),
+        )
+
+        fun manuelleOgOffentligPeriodeMedNullIPeriodeTom() = listOf(
+            BoforholdRequest(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2015, 10, 7),
+                erBarnAvBmBp = true,
+                bostatusListe = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2022, 1, 1),
+                        periodeTom = LocalDate.of(2022, 12, 31),
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 1, 1),
+                        periodeTom = LocalDate.of(2023, 5, 31),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 6, 1),
+                        periodeTom = null,
+//                        periodeTom = LocalDate.of(2023, 7, 31),
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 8, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+            ),
+        )
+
+        fun manuellOgOffentligPeriodeMedNullIPeriodeTom2018() = listOf(
+            BoforholdRequest(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2020, 3, 1),
+                erBarnAvBmBp = true,
+                bostatusListe = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2018, 5, 1),
+                        periodeTom = LocalDate.of(2020, 2, 29),
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2020, 3, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2022, 1, 1),
+                        periodeTom = LocalDate.of(2022, 12, 31),
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 1, 1),
+                        periodeTom = LocalDate.of(2023, 5, 31),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 6, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+            ),
+        )
+
+        fun manuellOgOffentligPeriodeMedLikStatus() = listOf(
+            BoforholdRequest(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2020, 3, 1),
+                erBarnAvBmBp = true,
+                bostatusListe = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2022, 12, 1),
+                        periodeTom = LocalDate.of(2023, 4, 30),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 5, 1),
+                        periodeTom = LocalDate.of(2023, 11, 30),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 12, 1),
+                        periodeTom = LocalDate.of(2024, 1, 31),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2024, 2, 1),
+                        periodeTom = LocalDate.of(2024, 3, 31),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2024, 4, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                ),
+            ),
+        )
+
+        fun manuellOgOffentligPeriodeMedLikStatusPeriodeTomErNull() = listOf(
+            BoforholdRequest(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2020, 3, 1),
+                erBarnAvBmBp = true,
+                bostatusListe = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2022, 12, 1),
+                        periodeTom = LocalDate.of(2023, 4, 30),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 5, 1),
+                        periodeTom = LocalDate.of(2023, 11, 30),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 12, 1),
+                        periodeTom = null,
                         bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
