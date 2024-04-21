@@ -302,7 +302,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
         )
 
         // Lager grunnlag for sjablon 0006 hvis kapitalinntekt er brukt i beregningen
-        if (delberegningReferanseListe.any { it.contains("Kapitalinntekt") } && innslagKapitalinntektSjablon != null) {
+        if (delberegningReferanseListe.any { it.contains("kapitalinntekt", ignoreCase = true) } && innslagKapitalinntektSjablon != null) {
             resultatGrunnlagListe.add(
                 GrunnlagDto(
                     referanse = opprettSjablonreferanse(
@@ -329,7 +329,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
         grunnlagsreferanseliste: List<String>,
         innslagKapitalinntektSjablon: Sjablontall?,
     ): List<Grunnlagsreferanse> {
-        return if (grunnlagsreferanseliste.any { it.contains("Kapitalinntekt") }) {
+        return if (grunnlagsreferanseliste.any { it.contains("kapitalinntekt", ignoreCase = true) }) {
             if (innslagKapitalinntektSjablon != null) {
                 grunnlagsreferanseliste + opprettSjablonreferanse(
                     navn = SjablonTallNavn.fromId(innslagKapitalinntektSjablon.typeSjablon!!).navn,
