@@ -6,6 +6,7 @@ import no.nav.bidrag.domene.util.visningsnavn
 import no.nav.bidrag.transport.behandling.inntekt.request.Barnetillegg
 import no.nav.bidrag.transport.behandling.inntekt.response.SummertÅrsinntekt
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -37,7 +38,7 @@ class BarnetilleggPensjonService {
                     SummertÅrsinntekt(
                         inntektRapportering = Inntektsrapportering.BARNETILLEGG,
                         visningsnavn = Inntektsrapportering.BARNETILLEGG.visningsnavn.intern,
-                        sumInntekt = it.beløp.times(BigDecimal.valueOf(12)),
+                        sumInntekt = it.beløp.times(BigDecimal.valueOf(12)).setScale(0, RoundingMode.HALF_UP),
                         periode =
                         ÅrMånedsperiode(
                             fom = YearMonth.of(it.periodeFra.year, it.periodeFra.month),

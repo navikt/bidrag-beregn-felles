@@ -11,6 +11,7 @@ import no.nav.bidrag.transport.behandling.inntekt.request.Ainntektspost
 import no.nav.bidrag.transport.behandling.inntekt.response.InntektPost
 import no.nav.bidrag.transport.behandling.inntekt.response.SummertÅrsinntekt
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -61,7 +62,7 @@ class YtelserService {
                     SummertÅrsinntekt(
                         inntektRapportering = ytelse,
                         visningsnavn = ytelse.visningsnavnIntern(it.value.periodeFra.year),
-                        sumInntekt = it.value.sumInntekt,
+                        sumInntekt = it.value.sumInntekt.setScale(0, RoundingMode.HALF_UP),
                         periode = ÅrMånedsperiode(fom = it.value.periodeFra, til = it.value.periodeTil),
                         inntektPostListe = grupperOgSummerDetaljposter(it.value.inntektPostListe),
                         grunnlagsreferanseListe = it.value.grunnlagreferanseListe.toList(),
@@ -82,7 +83,7 @@ class YtelserService {
                 InntektPost(
                     kode = it.key,
                     visningsnavn = finnVisningsnavn(it.key),
-                    beløp = it.value.sumOf(InntektPost::beløp),
+                    beløp = it.value.sumOf(InntektPost::beløp).setScale(0, RoundingMode.HALF_UP),
                 )
             }
     }
@@ -134,7 +135,7 @@ class YtelserService {
     // Kalkulerer beløp for periode (måned, år eller intervall)
     private fun kalkulerbeløpForÅr(utbetalingsperiode: String, beskrivelse: String, beløp: BigDecimal, referanse: String): Map<String, Detaljpost> {
         val år = utbetalingsperiode.substring(0, 4)
-        return mapOf(år to Detaljpost(beløp = beløp, kode = beskrivelse, referanse = referanse))
+        return mapOf(år to Detaljpost(beløp = beløp.setScale(0, RoundingMode.HALF_UP), kode = beskrivelse, referanse = referanse))
     }
 }
 

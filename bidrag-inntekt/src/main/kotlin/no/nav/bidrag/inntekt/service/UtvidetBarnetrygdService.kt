@@ -7,6 +7,7 @@ import no.nav.bidrag.transport.behandling.inntekt.request.UtvidetBarnetrygd
 import no.nav.bidrag.transport.behandling.inntekt.response.SummertÅrsinntekt
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -21,7 +22,7 @@ class UtvidetBarnetrygdService {
                 SummertÅrsinntekt(
                     inntektRapportering = Inntektsrapportering.UTVIDET_BARNETRYGD,
                     visningsnavn = Inntektsrapportering.UTVIDET_BARNETRYGD.visningsnavn.intern,
-                    sumInntekt = it.beløp.times(BigDecimal.valueOf(12)),
+                    sumInntekt = it.beløp.times(BigDecimal.valueOf(12)).setScale(0, RoundingMode.HALF_UP),
                     periode =
                     ÅrMånedsperiode(
                         fom = YearMonth.of(it.periodeFra.year, it.periodeFra.month),

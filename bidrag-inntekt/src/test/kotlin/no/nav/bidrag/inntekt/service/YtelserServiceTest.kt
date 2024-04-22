@@ -58,17 +58,17 @@ class YtelserServiceTest : AbstractServiceTest() {
                 with(transformerteInntekter[1]) {
                     inntektRapportering shouldBe Inntektsrapportering.AAP
                     visningsnavn shouldBe Inntektsrapportering.AAP.visningsnavnIntern(2022)
-                    sumInntekt shouldBe BigDecimal.valueOf(78500.789)
+                    sumInntekt shouldBe BigDecimal.valueOf(78501)
                     periode.fom shouldBe YearMonth.of(2022, 1)
                     periode.til shouldBe YearMonth.of(2022, 12)
                     gjelderBarnPersonId shouldBe ""
                     inntektPostListe.size shouldBe 1
-                    inntektPostListe.sumOf { it.beløp } shouldBe BigDecimal.valueOf(78500.789)
+                    inntektPostListe.sumOf { it.beløp } shouldBe BigDecimal.valueOf(78501)
 
                     with(inntektPostListe[0]) {
                         kode shouldBe "arbeidsavklaringspenger"
                         visningsnavn shouldBe "Arbeidsavklaringspenger"
-                        beløp shouldBe BigDecimal.valueOf(78500.789)
+                        beløp shouldBe BigDecimal.valueOf(78501)
                     }
                 }
             }

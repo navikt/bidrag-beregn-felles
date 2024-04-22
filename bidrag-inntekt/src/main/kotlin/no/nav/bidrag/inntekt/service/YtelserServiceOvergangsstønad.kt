@@ -60,7 +60,7 @@ class YtelserServiceOvergangsstønad {
                         sumInntekt = it.value.sumInntekt,
                         periodeFra = it.value.periodeFra,
                         periodeTil = it.value.periodeTil!!,
-                    ),
+                    ).setScale(0, RoundingMode.HALF_UP),
                     periode = ÅrMånedsperiode(fom = it.value.periodeFra, til = it.value.periodeTil),
                     inntektPostListe = grupperOgSummerDetaljposter(
                         it.value.inntektPostListe,
@@ -146,7 +146,7 @@ class YtelserServiceOvergangsstønad {
                 InntektPost(
                     kode = it.key,
                     visningsnavn = finnVisningsnavn(it.key),
-                    beløp = it.value.sumOf(InntektPost::beløp),
+                    beløp = it.value.sumOf(InntektPost::beløp).setScale(0, RoundingMode.HALF_UP),
                 )
             }
 
@@ -160,7 +160,7 @@ class YtelserServiceOvergangsstønad {
                 InntektPost(
                     kode = inntektPost.kode,
                     visningsnavn = inntektPost.visningsnavn,
-                    beløp = beregnInntektOmgjortTilÅrsbeløp(inntektPost.beløp, antallMånederMedDataIPerioden),
+                    beløp = beregnInntektOmgjortTilÅrsbeløp(inntektPost.beløp, antallMånederMedDataIPerioden).setScale(0, RoundingMode.HALF_UP),
                 ),
             )
         }
@@ -260,7 +260,7 @@ class YtelserServiceOvergangsstønad {
         return kalkulerBeløpForÅr(
             periode = periode,
             beskrivelse = beskrivelse,
-            beløp = beløp,
+            beløp = beløp.setScale(0, RoundingMode.HALF_UP),
             referanse = referanse,
         )
     }
@@ -268,6 +268,6 @@ class YtelserServiceOvergangsstønad {
     // Kalkulerer totalt beløp for hvert år forekomsten dekker
     private fun kalkulerBeløpForÅr(periode: YearMonth, beskrivelse: String, beløp: BigDecimal, referanse: String): Map<String, Detaljpost> {
         val år = if (periode.monthValue < BRUDD_MÅNED_OVERGANSSTØNAD) periode.year - 1 else periode.year
-        return mapOf(år.toString() to Detaljpost(beløp = beløp, kode = beskrivelse, referanse = referanse))
+        return mapOf(år.toString() to Detaljpost(beløp = beløp.setScale(0, RoundingMode.HALF_UP), kode = beskrivelse, referanse = referanse))
     }
 }

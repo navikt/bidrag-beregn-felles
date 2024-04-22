@@ -14,6 +14,7 @@ import no.nav.bidrag.transport.behandling.inntekt.response.SummertÅrsinntekt
 import org.springframework.core.io.ClassPathResource
 import java.io.IOException
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.time.Month
 import java.time.Year
 import java.time.YearMonth
@@ -67,7 +68,7 @@ class SkattegrunnlagService {
                         InntektPost(
                             kode = match.fulltNavnInntektspost,
                             visningsnavn = finnVisningsnavn(match.fulltNavnInntektspost),
-                            beløp = post.beløp,
+                            beløp = post.beløp.setScale(0, RoundingMode.HALF_UP),
                         ),
                     )
                 }
@@ -76,7 +77,7 @@ class SkattegrunnlagService {
                 SummertÅrsinntekt(
                     inntektRapportering = inntektRapportering,
                     visningsnavn = inntektRapportering.visningsnavnIntern(skattegrunnlagForLigningsår.ligningsår),
-                    sumInntekt = sumInntekt,
+                    sumInntekt = sumInntekt.setScale(0, RoundingMode.HALF_UP),
                     periode =
                     ÅrMånedsperiode(
                         fom = YearMonth.of(skattegrunnlagForLigningsår.ligningsår, Month.JANUARY),
