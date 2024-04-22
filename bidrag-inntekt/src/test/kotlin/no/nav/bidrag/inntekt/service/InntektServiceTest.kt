@@ -72,7 +72,7 @@ class InntektServiceTest : AbstractServiceTest() {
             transformerteInntekterResponseDto.summertMånedsinntektListe
                 .filter { it.gjelderÅrMåned.year == 2021 }.sumOf { it.sumInntekt.toInt() }.shouldBe(0)
             transformerteInntekterResponseDto.summertMånedsinntektListe
-                .filter { it.gjelderÅrMåned.year == 2022 }.sumOf { it.sumInntekt.toInt() }.shouldBe(450000)
+                .filter { it.gjelderÅrMåned.year == 2022 }.sumOf { it.sumInntekt.toInt() }.shouldBe(450001)
             transformerteInntekterResponseDto.summertMånedsinntektListe
                 .filter { it.gjelderÅrMåned.year == 2023 }.sumOf { it.sumInntekt.toInt() }.shouldBe(468000)
         }

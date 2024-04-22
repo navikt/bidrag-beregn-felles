@@ -46,12 +46,12 @@ class AinntektServiceTest : AbstractServiceTest() {
                 with(transformerteInntekter[0]) {
                     inntektRapportering shouldBe Inntektsrapportering.AINNTEKT_BEREGNET_12MND
                     visningsnavn shouldBe Inntektsrapportering.AINNTEKT_BEREGNET_12MND.visningsnavn.intern
-                    sumInntekt shouldBe BigDecimal.valueOf(395000.789)
+                    sumInntekt shouldBe BigDecimal.valueOf(395001)
                     periode.fom shouldBe YearMonth.of(2021, 12)
                     periode.til shouldBe YearMonth.of(2022, 11)
                     gjelderBarnPersonId shouldBe ""
                     inntektPostListe.size shouldBe 3
-                    inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 395000
+                    inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 395001
                 }
 
                 with(transformerteInntekter[1]) {
@@ -90,23 +90,23 @@ class AinntektServiceTest : AbstractServiceTest() {
                 with(transformerteInntekter[0]) {
                     inntektRapportering shouldBe Inntektsrapportering.AINNTEKT
                     visningsnavn shouldBe "${Inntektsrapportering.AINNTEKT.visningsnavn.intern} 2022"
-                    sumInntekt shouldBe BigDecimal.valueOf(450000.789)
+                    sumInntekt shouldBe BigDecimal.valueOf(450001)
                     periode.fom shouldBe YearMonth.of(2022, 1)
                     periode.til shouldBe YearMonth.of(2022, 12)
                     gjelderBarnPersonId shouldBe ""
                     inntektPostListe.size shouldBe 3
-                    inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 450000
+                    inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 450001
                 }
 
                 with(transformerteInntekter[1]) {
                     inntektRapportering shouldBe Inntektsrapportering.AINNTEKT_BEREGNET_12MND
                     visningsnavn shouldBe Inntektsrapportering.AINNTEKT_BEREGNET_12MND.visningsnavn.intern
-                    sumInntekt shouldBe BigDecimal.valueOf(450000.789)
+                    sumInntekt shouldBe BigDecimal.valueOf(450001)
                     periode.fom shouldBe YearMonth.of(2022, 1)
                     periode.til shouldBe YearMonth.of(2022, 12)
                     gjelderBarnPersonId shouldBe ""
                     inntektPostListe.size shouldBe 3
-                    inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 450000
+                    inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 450001
                 }
 
                 with(transformerteInntekter[2]) {
@@ -145,18 +145,18 @@ class AinntektServiceTest : AbstractServiceTest() {
                 with(transformerteInntekter[0]) {
                     inntektRapportering shouldBe Inntektsrapportering.AINNTEKT
                     visningsnavn shouldBe "${Inntektsrapportering.AINNTEKT.visningsnavn.intern} 2022"
-                    sumInntekt shouldBe BigDecimal.valueOf(450000.789)
+                    sumInntekt shouldBe BigDecimal.valueOf(450001)
                     periode.fom shouldBe YearMonth.of(2022, 1)
                     periode.til shouldBe YearMonth.of(2022, 12)
                     gjelderBarnPersonId shouldBe ""
                     inntektPostListe.size shouldBe 3
-                    inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 450000
+                    inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 450001
                 }
 
                 with(transformerteInntekter[1]) {
                     inntektRapportering shouldBe Inntektsrapportering.AINNTEKT_BEREGNET_12MND
                     visningsnavn shouldBe Inntektsrapportering.AINNTEKT_BEREGNET_12MND.visningsnavn.intern
-                    sumInntekt shouldBe BigDecimal.valueOf(743001.119)
+                    sumInntekt shouldBe BigDecimal.valueOf(743001)
                     periode.fom shouldBe YearMonth.of(2022, 8)
                     periode.til shouldBe YearMonth.of(2023, 7)
                     gjelderBarnPersonId shouldBe ""
@@ -202,12 +202,12 @@ class AinntektServiceTest : AbstractServiceTest() {
                 with(transformerteInntekter[0]) {
                     inntektRapportering shouldBe Inntektsrapportering.AINNTEKT
                     visningsnavn shouldBe "${Inntektsrapportering.AINNTEKT.visningsnavn.intern} 2022"
-                    sumInntekt shouldBe BigDecimal.valueOf(450000.789)
+                    sumInntekt shouldBe BigDecimal.valueOf(450001)
                     periode.fom shouldBe YearMonth.of(2022, 1)
                     periode.til shouldBe YearMonth.of(2022, 12)
                     gjelderBarnPersonId shouldBe ""
                     inntektPostListe.size shouldBe 3
-                    inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 450000
+                    inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 450001
                     grunnlagsreferanseListe.shouldContainAll(
                         listOf(
                             "A1",
@@ -227,7 +227,7 @@ class AinntektServiceTest : AbstractServiceTest() {
                 with(transformerteInntekter[1]) {
                     inntektRapportering shouldBe Inntektsrapportering.AINNTEKT_BEREGNET_12MND
                     visningsnavn shouldBe Inntektsrapportering.AINNTEKT_BEREGNET_12MND.visningsnavn.intern
-                    sumInntekt shouldBe BigDecimal.valueOf(743001.119)
+                    sumInntekt shouldBe BigDecimal.valueOf(743001)
                     periode.fom shouldBe YearMonth.of(2022, 8)
                     periode.til shouldBe YearMonth.of(2023, 7)
                     gjelderBarnPersonId shouldBe ""
@@ -256,7 +256,7 @@ class AinntektServiceTest : AbstractServiceTest() {
                 with(transformerteInntekter[2]) {
                     inntektRapportering shouldBe Inntektsrapportering.AINNTEKT_BEREGNET_12MND_FRA_OPPRINNELIG_VEDTAKSTIDSPUNKT
                     visningsnavn shouldBe Inntektsrapportering.AINNTEKT_BEREGNET_12MND_FRA_OPPRINNELIG_VEDTAKSTIDSPUNKT.visningsnavn.intern
-                    sumInntekt shouldBe BigDecimal.valueOf(708001.119)
+                    sumInntekt shouldBe BigDecimal.valueOf(708001)
                     periode.fom shouldBe YearMonth.of(2022, 7)
                     periode.til shouldBe YearMonth.of(2023, 6)
                     gjelderBarnPersonId shouldBe ""
@@ -332,7 +332,7 @@ class AinntektServiceTest : AbstractServiceTest() {
 
                 transformerteInntekter
                     .filter { it.gjelderÅrMåned.year == 2022 }
-                    .sumOf { it.sumInntekt.toInt() } shouldBeExactly 450000
+                    .sumOf { it.sumInntekt.toInt() } shouldBeExactly 450001
 
                 transformerteInntekter
                     .filter { it.gjelderÅrMåned.year == 2023 }
