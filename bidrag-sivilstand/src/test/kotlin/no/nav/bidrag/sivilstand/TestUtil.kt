@@ -558,5 +558,29 @@ class TestUtil {
                 ),
             ),
         )
+
+        fun manuellOgOffentligPerioderLikSivilstandskode() = SivilstandRequest(
+            emptyList(),
+            listOf(
+                Sivilstand(
+                    periodeFom = LocalDate.of(2010, 7, 1),
+                    periodeTom = LocalDate.of(2023, 8, 31),
+                    sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
+                    kilde = Kilde.MANUELL,
+                ),
+                Sivilstand(
+                    periodeFom = LocalDate.of(2023, 9, 1),
+                    periodeTom = LocalDate.of(2023, 12, 31),
+                    sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+                Sivilstand(
+                    periodeFom = LocalDate.of(2024, 1, 1),
+                    periodeTom = null,
+                    sivilstandskode = Sivilstandskode.GIFT_SAMBOER,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+            ),
+        )
     }
 }
