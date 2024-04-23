@@ -54,7 +54,7 @@ internal class BoforholdServiceV2() {
                     fødselsdato = boforholdRequest.fødselsdato,
                     kilde = Kilde.OFFENTLIG,
                 )
-            }
+            }.sortedBy { it.periodeFom }
 
         val manuelleOpplysninger = bostatuslisteRelevantePerioder
             .filter { it.kilde == Kilde.MANUELL }.map {

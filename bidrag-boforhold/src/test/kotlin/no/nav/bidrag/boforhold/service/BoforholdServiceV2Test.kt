@@ -628,4 +628,37 @@ internal class BoforholdServiceV2Test {
             resultat[1].kilde shouldBe Kilde.MANUELL
         }
     }
+
+    @Test
+    fun `Test sortering av perioder`() {
+        boforholdServiceV2 = BoforholdServiceV2()
+        val mottatteBoforhold = TestUtil.sorteringAvPerioder()
+        val virkningstidspunkt = LocalDate.of(2022, 1, 1)
+        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 4
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2022, 1, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2022, 12, 31)
+            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2023, 1, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2023, 5, 31)
+            resultat[1].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2023, 6, 1)
+            resultat[2].periodeTom shouldBe LocalDate.of(2023, 7, 31)
+            resultat[2].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[2].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[3].periodeFom shouldBe LocalDate.of(2023, 8, 1)
+            resultat[3].periodeTom shouldBe null
+            resultat[3].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[3].kilde shouldBe Kilde.MANUELL
+        }
+    }
 }
