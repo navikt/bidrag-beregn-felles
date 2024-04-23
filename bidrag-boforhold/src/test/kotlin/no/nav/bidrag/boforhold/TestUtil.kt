@@ -712,5 +712,55 @@ class TestUtil {
                 ),
             ),
         )
+
+        fun flerePersonerIGrunnlagUtenOffentligePerioder() = listOf(
+            BoforholdRequest(
+                relatertPersonPersonId = "12345678901",
+                fødselsdato = LocalDate.of(2010, 3, 1),
+                erBarnAvBmBp = true,
+                bostatusListe = emptyList(),
+            ),
+            BoforholdRequest(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2020, 3, 1),
+                erBarnAvBmBp = true,
+                bostatusListe = emptyList(),
+            ),
+        )
+
+        fun flerePersonerIGrunnlagMedOffentligePerioder() = listOf(
+            BoforholdRequest(
+                relatertPersonPersonId = "12345678901",
+                fødselsdato = LocalDate.of(2010, 3, 1),
+                erBarnAvBmBp = true,
+                bostatusListe = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2022, 12, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                ),
+            ),
+            BoforholdRequest(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2020, 3, 1),
+                erBarnAvBmBp = true,
+                bostatusListe = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2021, 12, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 12, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+            ),
+        )
     }
 }
