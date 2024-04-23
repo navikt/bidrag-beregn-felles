@@ -178,7 +178,7 @@ internal class SivilstandServiceV2Test {
         sivilstandServiceV2 = SivilstandServiceV2()
         val grunnlag = TestUtil.byggSivilstandMedLogiskFeilV2()
         // virkningstidspunkt er satt til før tomdato på ugift-status
-        val virkningstidspunkt = LocalDate.of(2022, 12, 6)
+        val virkningstidspunkt = LocalDate.of(2022, 11, 1)
         val resultat = sivilstandServiceV2.beregn(virkningstidspunkt, grunnlag)
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -190,7 +190,7 @@ internal class SivilstandServiceV2Test {
         }
 
         // virkningstidspunkt er satt til etter tomdato på ugift-status, logisk feil skal da ignoreres
-        val virkningstidspunkt2 = LocalDate.of(2022, 12, 7)
+        val virkningstidspunkt2 = LocalDate.of(2023, 1, 1)
         val resultat2 = sivilstandServiceV2.beregn(virkningstidspunkt2, grunnlag)
         assertSoftly {
             Assertions.assertNotNull(resultat2)
@@ -331,14 +331,53 @@ internal class SivilstandServiceV2Test {
             resultat.size shouldBe 2
 
             resultat[0].periodeFom shouldBe LocalDate.of(2020, 9, 1)
-            resultat[0].periodeTom shouldBe LocalDate.of(2023, 12, 31)
-            resultat[0].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
-            resultat[0].kilde shouldBe Kilde.MANUELL
+            resultat[0].periodeTom shouldBe LocalDate.of(2021, 3, 31)
+            resultat[0].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
 
-            resultat[1].periodeFom shouldBe LocalDate.of(2024, 1, 1)
+            resultat[1].periodeFom shouldBe LocalDate.of(2021, 4, 1)
             resultat[1].periodeTom shouldBe null
-            resultat[1].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
-            resultat[1].kilde shouldBe Kilde.OFFENTLIG
+            resultat[1].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat[1].kilde shouldBe Kilde.MANUELL
+        }
+    }
+
+    @Test
+    fun `Test kun manuelle perioder`() {
+        sivilstandServiceV2 = SivilstandServiceV2()
+        val mottatteBoforhold = TestUtil.flereManuellePerioder()
+        val virkningstidspunkt = LocalDate.of(2020, 9, 1)
+        val resultat = sivilstandServiceV2.beregn(virkningstidspunkt, mottatteBoforhold)
+
+        // Det genereres en offentlig periode med Sivilstandskode = UKJENT for etter den manuelle perioden.
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 5
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2020, 9, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2021, 6, 30)
+            resultat[0].sivilstandskode shouldBe Sivilstandskode.UKJENT
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2021, 7, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2021, 8, 31)
+            resultat[1].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat[1].kilde shouldBe Kilde.MANUELL
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2021, 9, 1)
+            resultat[2].periodeTom shouldBe LocalDate.of(2021, 12, 31)
+            resultat[2].sivilstandskode shouldBe Sivilstandskode.UKJENT
+            resultat[2].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[3].periodeFom shouldBe LocalDate.of(2022, 1, 1)
+            resultat[3].periodeTom shouldBe LocalDate.of(2023, 8, 31)
+            resultat[3].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat[3].kilde shouldBe Kilde.MANUELL
+
+            resultat[4].periodeFom shouldBe LocalDate.of(2023, 9, 1)
+            resultat[4].periodeTom shouldBe null
+            resultat[4].sivilstandskode shouldBe Sivilstandskode.UKJENT
+            resultat[4].kilde shouldBe Kilde.OFFENTLIG
         }
     }
 }

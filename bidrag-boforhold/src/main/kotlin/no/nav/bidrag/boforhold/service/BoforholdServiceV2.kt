@@ -110,7 +110,7 @@ internal class BoforholdServiceV2() {
                         ),
                     )
                 } else {
-                    boforholdResponseListe.add(
+                    genererteOffentligePerioder.add(
                         BoforholdResponse(
                             relatertPersonPersonId = boforholdRequest.relatertPersonPersonId,
                             periodeFom = startdatoBeregning,
@@ -131,14 +131,11 @@ internal class BoforholdServiceV2() {
             val komplettTidslinjeListe = fyllUtMedPerioderBarnetIkkeBorIHusstanden(startdatoBeregning, justerteOffentligePerioder)
 
 //            // Sammenhengende offentlige perioder med lik Bostatuskode slås sammen
-//            val sammenslåttListeOffentligePerioder = slåSammenSammenhengendePerioderMedLikBostatuskode(komplettTidslinjeListe)
 
             // Justerer offentlige perioder mot 18-årsdager og lager bruddperiode hvis barnet fyllet 18 år i perioden bor i husstanden
             val offentligePerioderJustertMotAttenårsdag =
                 justerMotAttenårsdag(attenårFraDato, komplettTidslinjeListe.filter { it.periodeFom.isBefore(attenårFraDato) })
-//                justerMotAttenårsdag(attenårFraDato, sammenslåttListeOffentligePerioder.filter { it.periodeFom.isBefore(attenårFraDato) })
 
-//            return slåSammenManuelleOgOffentligePerioder(manuelleOpplysninger, offentligePerioderJustertMotAttenårsdag)
             val sammenslåtteManuelleOgOffentligePerioder =
                 slåSammenManuelleOgOffentligePerioder(manuelleOpplysninger, offentligePerioderJustertMotAttenårsdag)
 
@@ -484,7 +481,6 @@ internal class BoforholdServiceV2() {
             if (indeks < overlappendePerioder.size - 1) {
                 if (overlappendePerioder[indeks + 1].periodeFom.isAfter(overlappendePerioder[indeks].periodeTom!!.plusDays(1))) {
                     // Det er en åpen tidsperiode mellom to manuelle perioder, og den offentlige perioden skal fylle denne tidsperioden
-//                    periodeFom = overlappendePerioder[indeks].periodeTom!!.plusDays(1)
                     periodeTom = overlappendePerioder[indeks + 1].periodeFom.minusDays(1)
                     justertOffentligPeriodeListe.add(
                         BoforholdResponse(
@@ -518,52 +514,8 @@ internal class BoforholdServiceV2() {
                 }
             }
         }
-
         return justertOffentligPeriodeListe
     }
-
-/*    private fun slåSammenSammenhengendePerioderMedLikBostatuskodde(liste: List<BoforholdResponse>): List<BoforholdResponse> {
-        val sammenslåttListe = mutableListOf<BoforholdResponse>()
-        var periodeFom: LocalDate? = null
-        var periodeTom: LocalDate? = null
-
-        for (indeks in liste.indices) {
-            if (indeks == 0) {
-                periodeFom = liste[indeks].periodeFom
-                periodeTom = liste[indeks].periodeTom
-            } else {
-                if (liste[indeks].periodeFom.isBefore(periodeTom?.plusDays(1))) {
-                    periodeTom = liste[indeks].periodeTom
-                } else {
-                    sammenslåttListe.add(
-                        BoforholdResponse(
-                            relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
-                            periodeFom = periodeFom,
-                            periodeTom = periodeTom,
-                            bostatus = liste[indeks].bostatus,
-                            fødselsdato = liste[indeks].fødselsdato,
-                            kilde = liste[indeks].kilde,
-                        ),
-                    )
-                    periodeFom = liste[indeks].periodeFom
-                    periodeTom = liste[indeks].periodeTom
-                }
-            }
-            if (indeks == liste.size - 1) {
-                sammenslåttListe.add(
-                    BoforholdResponse(
-                        relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
-                        periodeFom = periodeFom,
-                        periodeTom = periodeTom,
-                        bostatus = liste[indeks].bostatus,
-                        fødselsdato = liste[indeks].fødselsdato,
-                        kilde = liste[indeks].kilde,
-                    ),
-                )
-            }
-        }
-        return sammenslåttListe
-    }*/
 
     private fun personenHarFylt18År(fødselsdato: LocalDate, dato: LocalDate): Boolean {
         return ChronoUnit.YEARS.between(fødselsdato.plusMonths(1).withDayOfMonth(1), dato) >= 18

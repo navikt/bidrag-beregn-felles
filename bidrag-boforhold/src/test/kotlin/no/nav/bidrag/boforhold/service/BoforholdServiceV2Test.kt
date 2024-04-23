@@ -661,4 +661,60 @@ internal class BoforholdServiceV2Test {
             resultat[3].kilde shouldBe Kilde.MANUELL
         }
     }
+
+    @Test
+    fun `Test flere personer i grunnlag uten offentlige perioder`() {
+        boforholdServiceV2 = BoforholdServiceV2()
+        val mottatteBoforhold = TestUtil.flerePersonerIGrunnlagUtenOffentligePerioder()
+        val virkningstidspunkt = LocalDate.of(2022, 1, 1)
+        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 2
+
+            resultat[0].relatertPersonPersonId shouldBe "12345678901"
+            resultat[0].periodeFom shouldBe LocalDate.of(2022, 1, 1)
+            resultat[0].periodeTom shouldBe null
+            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[1].relatertPersonPersonId shouldBe "98765432109"
+            resultat[1].periodeFom shouldBe LocalDate.of(2022, 1, 1)
+            resultat[1].periodeTom shouldBe null
+            resultat[1].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
+
+    @Test
+    fun `Test flere personer i grunnlag med offentlige perioder`() {
+        boforholdServiceV2 = BoforholdServiceV2()
+        val mottatteBoforhold = TestUtil.flerePersonerIGrunnlagMedOffentligePerioder()
+        val virkningstidspunkt = LocalDate.of(2023, 2, 1)
+        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 3
+
+            resultat[0].relatertPersonPersonId shouldBe "12345678901"
+            resultat[0].periodeFom shouldBe LocalDate.of(2023, 2, 1)
+            resultat[0].periodeTom shouldBe null
+            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[1].relatertPersonPersonId shouldBe "98765432109"
+            resultat[1].periodeFom shouldBe LocalDate.of(2023, 2, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2023, 11, 30)
+            resultat[1].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[2].relatertPersonPersonId shouldBe "98765432109"
+            resultat[2].periodeFom shouldBe LocalDate.of(2023, 12, 1)
+            resultat[2].periodeTom shouldBe null
+            resultat[2].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[2].kilde shouldBe Kilde.MANUELL
+        }
+    }
 }

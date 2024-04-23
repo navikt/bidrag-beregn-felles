@@ -422,9 +422,59 @@ internal class SivilstandServiceV2() {
         val resultat = mutableListOf<Sivilstand>()
         var kilde: Kilde? = null
 
-        var periodeFom = sivilstandsperioder[0].periodeFom
+        var periodeFom: LocalDate? = null
 
-        // Slår sammen perioder med samme sivilstandskode
+        for (indeks in sivilstandsperioder.indices) {
+            if (indeks < sivilstandsperioder.size - 1) {
+                if (sivilstandsperioder[indeks + 1].periodeFom.isBefore(sivilstandsperioder[indeks].periodeTom?.plusDays(2)) &&
+                    sivilstandsperioder[indeks + 1].sivilstandskode == sivilstandsperioder[indeks].sivilstandskode
+                ) {
+                    // perioden overlapper og skal slås sammen
+                    if (periodeFom == null) {
+                        periodeFom = sivilstandsperioder[indeks].periodeFom
+                    }
+                    if (sivilstandsperioder[indeks].kilde == Kilde.MANUELL) {
+                        kilde = Kilde.MANUELL
+                    }
+                } else {
+                    // neste periode overlapper ikke og det skal lages ny forekomst i sammenslåttListe
+                    if (periodeFom != null) {
+                        resultat.add(
+                            Sivilstand(
+                                periodeFom = periodeFom,
+                                periodeTom = sivilstandsperioder[indeks].periodeTom,
+                                sivilstandskode = sivilstandsperioder[indeks].sivilstandskode,
+                                kilde = sivilstandsperioder[indeks].kilde,
+                            ),
+                        )
+                        periodeFom = null
+                        kilde = null
+                    } else {
+                        resultat.add(
+                            Sivilstand(
+                                periodeFom = sivilstandsperioder[indeks].periodeFom,
+                                periodeTom = sivilstandsperioder[indeks].periodeTom,
+                                sivilstandskode = sivilstandsperioder[indeks].sivilstandskode,
+                                kilde = sivilstandsperioder[indeks].kilde,
+                            ),
+                        )
+                    }
+                }
+            } else {
+                // Siste forekomst
+                resultat.add(
+                    Sivilstand(
+                        periodeFom = periodeFom ?: sivilstandsperioder[indeks].periodeFom,
+                        periodeTom = sivilstandsperioder[indeks].periodeTom,
+                        sivilstandskode = sivilstandsperioder[indeks].sivilstandskode,
+                        kilde = kilde ?: sivilstandsperioder[indeks].kilde,
+
+                    ),
+                )
+            }
+        }
+
+/*        // Slår sammen perioder med samme sivilstandskode
         for (indeks in sivilstandsperioder.indices) {
             if (sivilstandsperioder.getOrNull(indeks + 1)?.sivilstandskode
                 != sivilstandsperioder[indeks].sivilstandskode
@@ -457,7 +507,7 @@ internal class SivilstandServiceV2() {
                     kilde = Kilde.MANUELL
                 }
             }
-        }
+        }*/
         return resultat.filter { it.periodeTom == null || it.periodeTom.isAfter(virkningstidspunkt.minusDays(1)) }
     }
 
