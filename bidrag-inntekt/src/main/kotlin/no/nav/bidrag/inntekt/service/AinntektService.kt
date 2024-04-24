@@ -1,10 +1,7 @@
 package no.nav.bidrag.inntekt.service
 
-import no.nav.bidrag.commons.service.finnVisningsnavn
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
-import no.nav.bidrag.domene.util.visningsnavn
-import no.nav.bidrag.domene.util.visningsnavnIntern
 import no.nav.bidrag.inntekt.util.InntektUtil.Companion.KEY_12MND
 import no.nav.bidrag.inntekt.util.InntektUtil.Companion.KEY_12MND_OV
 import no.nav.bidrag.inntekt.util.InntektUtil.Companion.KEY_3MND
@@ -30,13 +27,13 @@ class AinntektService {
     fun beregnAarsinntekt(
         ainntektListeInn: List<Ainntektspost>,
         ainntektHentetDato: LocalDate,
-        vedtakstidspunktOpprinneligVedtak: LocalDate? = null,
+        vedtakstidspunktOpprinneligeVedtak: List<LocalDate> = emptyList(),
     ): List<SummertÅrsinntekt> {
         return if (ainntektListeInn.isNotEmpty()) {
             val ainntektMap = summerAarsinntekter(
                 ainntektsposter = ainntektListeInn,
                 ainntektHentetDato = ainntektHentetDato,
-                vedtakstidspunktOpprinneligVedtak = vedtakstidspunktOpprinneligVedtak,
+                vedtakstidspunktOpprinneligeVedtak = vedtakstidspunktOpprinneligeVedtak,
             )
             val ainntektListeUt = mutableListOf<SummertÅrsinntekt>()
 
@@ -47,39 +44,35 @@ class AinntektService {
                 ainntektListeUt.add(
                     SummertÅrsinntekt(
                         inntektRapportering =
-                        when (it.key) {
-                            KEY_3MND -> Inntektsrapportering.AINNTEKT_BEREGNET_3MND
-                            KEY_12MND -> Inntektsrapportering.AINNTEKT_BEREGNET_12MND
-                            KEY_3MND_OV -> Inntektsrapportering.AINNTEKT_BEREGNET_3MND_FRA_OPPRINNELIG_VEDTAKSTIDSPUNKT
-                            KEY_12MND_OV -> Inntektsrapportering.AINNTEKT_BEREGNET_12MND_FRA_OPPRINNELIG_VEDTAKSTIDSPUNKT
+                        when {
+                            it.key == KEY_3MND -> Inntektsrapportering.AINNTEKT_BEREGNET_3MND
+                            it.key == KEY_12MND -> Inntektsrapportering.AINNTEKT_BEREGNET_12MND
+                            it.key.startsWith(KEY_3MND_OV) -> Inntektsrapportering.AINNTEKT_BEREGNET_3MND_FRA_OPPRINNELIG_VEDTAKSTIDSPUNKT
+                            it.key.startsWith(KEY_12MND_OV) -> Inntektsrapportering.AINNTEKT_BEREGNET_12MND_FRA_OPPRINNELIG_VEDTAKSTIDSPUNKT
                             else -> Inntektsrapportering.AINNTEKT
                         },
-                        visningsnavn =
-                        when (it.key) {
-                            KEY_3MND -> Inntektsrapportering.AINNTEKT_BEREGNET_3MND.visningsnavn.intern
-                            KEY_12MND -> Inntektsrapportering.AINNTEKT_BEREGNET_12MND.visningsnavn.intern
-                            KEY_3MND_OV -> Inntektsrapportering.AINNTEKT_BEREGNET_3MND_FRA_OPPRINNELIG_VEDTAKSTIDSPUNKT.visningsnavn.intern
-                            KEY_12MND_OV -> Inntektsrapportering.AINNTEKT_BEREGNET_12MND_FRA_OPPRINNELIG_VEDTAKSTIDSPUNKT.visningsnavn.intern
-                            else -> Inntektsrapportering.AINNTEKT.visningsnavnIntern(it.value.periodeFra.year)
-                        },
                         sumInntekt =
-                        when (it.key) {
-                            KEY_3MND -> it.value.sumInntekt.toInt().times(4).toBigDecimal() // Regner om til årsinntekt
-                            KEY_3MND_OV -> it.value.sumInntekt.toInt().times(4).toBigDecimal() // Regner om til årsinntekt
+                        when {
+                            it.key.startsWith(KEY_3MND) -> it.value.sumInntekt.toInt().times(4).toBigDecimal() // Regner om til årsinntekt
                             else -> it.value.sumInntekt
                         }.setScale(0, RoundingMode.HALF_UP),
                         periode = ÅrMånedsperiode(fom = it.value.periodeFra, til = it.value.periodeTil),
                         inntektPostListe =
-                        when (it.key) {
-                            KEY_3MND -> grupperOgSummerDetaljposter(inntektPostListe = it.value.inntektPostListe, multiplikator = 4)
-                            KEY_3MND_OV -> grupperOgSummerDetaljposter(inntektPostListe = it.value.inntektPostListe, multiplikator = 4)
+                        when {
+                            it.key.startsWith(KEY_3MND) -> grupperOgSummerDetaljposter(
+                                inntektPostListe = it.value.inntektPostListe,
+                                multiplikator = 4,
+                            )
+
                             else -> grupperOgSummerDetaljposter(inntektPostListe = it.value.inntektPostListe)
                         },
                         grunnlagsreferanseListe = it.value.grunnlagreferanseListe.toList(),
                     ),
                 )
             }
-            ainntektListeUt.sortedWith(compareBy({ it.inntektRapportering.toString() }, { it.periode.fom }))
+            ainntektListeUt
+                .sortedWith(compareBy({ it.inntektRapportering.toString() }, { it.periode.fom }))
+                .distinctBy { Pair(it.inntektRapportering.toString(), it.periode.fom) }
         } else {
             emptyList()
         }
@@ -115,7 +108,6 @@ class AinntektService {
             .map {
                 InntektPost(
                     kode = it.key,
-                    visningsnavn = finnVisningsnavn(it.key),
                     beløp = it.value.sumOf(InntektPost::beløp).toInt().times(multiplikator).toBigDecimal().setScale(0, RoundingMode.HALF_UP),
                 )
             }
@@ -125,7 +117,7 @@ class AinntektService {
     private fun summerAarsinntekter(
         ainntektsposter: List<Ainntektspost>,
         ainntektHentetDato: LocalDate,
-        vedtakstidspunktOpprinneligVedtak: LocalDate?,
+        vedtakstidspunktOpprinneligeVedtak: List<LocalDate>,
     ): Map<String, InntektSumPost> {
         val ainntektMap = mutableMapOf<String, InntektSumPost>()
         ainntektsposter.forEach { ainntektPost ->
@@ -135,7 +127,7 @@ class AinntektService {
                 beløp = ainntektPost.beløp,
                 beregningsperiode = PERIODE_ÅR,
                 ainntektHentetDato = ainntektHentetDato,
-                vedtakstidspunktOpprinneligVedtak = vedtakstidspunktOpprinneligVedtak,
+                vedtakstidspunktOpprinneligeVedtak = vedtakstidspunktOpprinneligeVedtak,
                 referanse = ainntektPost.referanse,
             ).forEach { periodeMap ->
                 akkumulerPost(
@@ -143,7 +135,6 @@ class AinntektService {
                     key = periodeMap.key,
                     value = periodeMap.value,
                     ainntektHentetDato = ainntektHentetDato,
-                    vedtakstidspunktOpprinneligVedtak = vedtakstidspunktOpprinneligVedtak,
                 )
             }
         }
@@ -172,32 +163,6 @@ class AinntektService {
                 )
         }
 
-        if (vedtakstidspunktOpprinneligVedtak != null) {
-            // Lager map for 3 mnd med beløp 0 hvis det ikke finnes poster som matcher
-            if (!ainntektMap.containsKey(KEY_3MND_OV)) {
-                val periode = bestemPeriode(KEY_3MND_OV, vedtakstidspunktOpprinneligVedtak)
-                ainntektMap[KEY_3MND_OV] =
-                    InntektSumPost(
-                        sumInntekt = BigDecimal.ZERO,
-                        periodeFra = periode.periodeFra,
-                        periodeTil = periode.periodeTil,
-                        inntektPostListe = mutableListOf(),
-                    )
-            }
-
-            // Lager map for 12 mnd med beløp 0 hvis det ikke finnes poster som matcher
-            if (!ainntektMap.containsKey(KEY_12MND_OV)) {
-                val periode = bestemPeriode(KEY_12MND_OV, vedtakstidspunktOpprinneligVedtak)
-                ainntektMap[KEY_12MND_OV] =
-                    InntektSumPost(
-                        sumInntekt = BigDecimal.ZERO,
-                        periodeFra = periode.periodeFra,
-                        periodeTil = periode.periodeTil,
-                        inntektPostListe = mutableListOf(),
-                    )
-            }
-        }
-
         return ainntektMap.toMap()
     }
 
@@ -211,7 +176,7 @@ class AinntektService {
                 beløp = ainntektPost.beløp,
                 beregningsperiode = PERIODE_MÅNED,
                 ainntektHentetDato = ainntektHentetDato,
-                vedtakstidspunktOpprinneligVedtak = null,
+                vedtakstidspunktOpprinneligeVedtak = emptyList(),
                 referanse = ainntektPost.referanse,
             ).forEach { periodeMap ->
                 akkumulerPost(ainntektMap = ainntektMap, key = periodeMap.key, value = periodeMap.value, ainntektHentetDato = ainntektHentetDato)
@@ -221,18 +186,12 @@ class AinntektService {
     }
 
     // Summerer inntekter og legger til detaljposter til map
-    private fun akkumulerPost(
-        ainntektMap: MutableMap<String, InntektSumPost>,
-        key: String,
-        value: Detaljpost,
-        ainntektHentetDato: LocalDate,
-        vedtakstidspunktOpprinneligVedtak: LocalDate? = null,
-    ) {
+    private fun akkumulerPost(ainntektMap: MutableMap<String, InntektSumPost>, key: String, value: Detaljpost, ainntektHentetDato: LocalDate) {
         val beregnFraDato =
-            if (key == KEY_3MND || key == KEY_12MND || vedtakstidspunktOpprinneligVedtak == null) {
-                ainntektHentetDato
+            if (key.startsWith(KEY_3MND_OV) || key.startsWith(KEY_12MND_OV)) {
+                LocalDate.parse(key.substringAfterLast('_'))
             } else {
-                vedtakstidspunktOpprinneligVedtak
+                ainntektHentetDato
             }
         val periode = bestemPeriode(periodeVerdi = key, beregnFraDato = beregnFraDato)
         val inntektSumPost =
@@ -266,7 +225,7 @@ class AinntektService {
         beløp: BigDecimal,
         beregningsperiode: String,
         ainntektHentetDato: LocalDate,
-        vedtakstidspunktOpprinneligVedtak: LocalDate?,
+        vedtakstidspunktOpprinneligeVedtak: List<LocalDate>,
         referanse: String,
     ): Map<String, Detaljpost> {
         val periodeMap = mutableMapOf<String, Detaljpost>()
@@ -305,14 +264,14 @@ class AinntektService {
                     ),
                 )
 
-                if (vedtakstidspunktOpprinneligVedtak != null) {
+                vedtakstidspunktOpprinneligeVedtak.forEach {
                     periodeMap.putAll(
                         kalkulerBeløpForIntervall(
                             periode = periode,
                             beskrivelse = beskrivelse,
                             beløp = beløp.setScale(0, RoundingMode.HALF_UP),
-                            beregningsperiode = KEY_3MND_OV,
-                            beregnFraDato = vedtakstidspunktOpprinneligVedtak,
+                            beregningsperiode = KEY_3MND_OV + "_" + it.toString(),
+                            beregnFraDato = it,
                             referanse = referanse,
                         ),
                     )
@@ -322,8 +281,8 @@ class AinntektService {
                             periode = periode,
                             beskrivelse = beskrivelse,
                             beløp = beløp.setScale(0, RoundingMode.HALF_UP),
-                            beregningsperiode = KEY_12MND_OV,
-                            beregnFraDato = vedtakstidspunktOpprinneligVedtak,
+                            beregningsperiode = KEY_12MND_OV + "_" + it.toString(),
+                            beregnFraDato = it,
                             referanse = referanse,
                         ),
                     )
@@ -352,7 +311,7 @@ class AinntektService {
                 YearMonth.of(beregnFraDato.year, beregnFraDato.month).minusMonths(1)
             }
         val forstePeriodeIIntervall =
-            if (beregningsperiode == KEY_3MND || beregningsperiode == KEY_3MND_OV) {
+            if (beregningsperiode == KEY_3MND || beregningsperiode.startsWith(KEY_3MND_OV)) {
                 sistePeriodeIIntervall.minusMonths(3)
             } else {
                 sistePeriodeIIntervall.minusMonths(12)
@@ -391,7 +350,7 @@ class AinntektService {
                 } else {
                     YearMonth.of(beregnFraDato.year, beregnFraDato.month).minusMonths(2)
                 }
-            periodeFra = if (periodeVerdi == KEY_3MND || periodeVerdi == KEY_3MND_OV) periodeTil.minusMonths(2) else periodeTil.minusMonths(11)
+            periodeFra = if (periodeVerdi.startsWith(KEY_3MND)) periodeTil.minusMonths(2) else periodeTil.minusMonths(11)
         }
 
         return Periode(periodeFra = periodeFra, periodeTil = periodeTil)

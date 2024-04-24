@@ -1,9 +1,7 @@
 package no.nav.bidrag.inntekt.service
 
-import no.nav.bidrag.commons.service.finnVisningsnavn
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
-import no.nav.bidrag.domene.util.visningsnavnIntern
 import no.nav.bidrag.inntekt.util.InntektUtil.Companion.BRUDD_MÅNED_OVERGANSSTØNAD
 import no.nav.bidrag.inntekt.util.InntektUtil.Companion.filtrerInntekterPåYtelse
 import no.nav.bidrag.inntekt.util.InntektUtil.Companion.finnCutOffDag
@@ -53,7 +51,6 @@ class YtelserServiceOvergangsstønad {
             ytelseListeUt.add(
                 SummertÅrsinntekt(
                     inntektRapportering = Inntektsrapportering.OVERGANGSSTØNAD,
-                    visningsnavn = Inntektsrapportering.OVERGANGSSTØNAD.visningsnavnIntern(it.value.periodeFra.year),
                     sumInntekt = beregnInntekt(
                         sisteRapportertePeriode = sisteRapportertePeriode,
                         periodeListe = periodeListe,
@@ -145,7 +142,6 @@ class YtelserServiceOvergangsstønad {
             .map {
                 InntektPost(
                     kode = it.key,
-                    visningsnavn = finnVisningsnavn(it.key),
                     beløp = it.value.sumOf(InntektPost::beløp).setScale(0, RoundingMode.HALF_UP),
                 )
             }
@@ -159,7 +155,6 @@ class YtelserServiceOvergangsstønad {
             summertInntektPostListeTilÅrsinntekt.add(
                 InntektPost(
                     kode = inntektPost.kode,
-                    visningsnavn = inntektPost.visningsnavn,
                     beløp = beregnInntektOmgjortTilÅrsbeløp(inntektPost.beløp, antallMånederMedDataIPerioden).setScale(0, RoundingMode.HALF_UP),
                 ),
             )

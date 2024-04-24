@@ -28,7 +28,12 @@ class InntektServiceTest : AbstractServiceTest() {
 
     @Test
     fun `skal transformere inntekter`() {
-        val transformerteInntekterResponseDto = inntektService.transformerInntekter(inntektRequest.copy(ainntektHentetDato = ainntektHentetDato))
+        val transformerteInntekterResponseDto = inntektService.transformerInntekter(
+            inntektRequest.copy(
+                ainntektHentetDato = ainntektHentetDato,
+                vedtakstidspunktOpprinneligeVedtak = emptyList(),
+            ),
+        )
 
         TestUtil.printJson(transformerteInntekterResponseDto)
 
@@ -41,7 +46,6 @@ class InntektServiceTest : AbstractServiceTest() {
             transformerteInntekterResponseDto.summertÅrsinntektListe
                 .filter { it.inntektRapportering == Inntektsrapportering.AINNTEKT }.size shouldBe 1
             transformerteInntekterResponseDto.summertÅrsinntektListe[0].inntektPostListe[0].kode shouldBe "fastloenn"
-            transformerteInntekterResponseDto.summertÅrsinntektListe[0].inntektPostListe[0].visningsnavn shouldBe "Fastlønn"
 
             transformerteInntekterResponseDto.summertÅrsinntektListe
                 .filter { it.inntektRapportering == Inntektsrapportering.AINNTEKT_BEREGNET_3MND }.size shouldBe 1
@@ -81,7 +85,12 @@ class InntektServiceTest : AbstractServiceTest() {
     @Test
     fun `skal transformere inntekter inkludert ytelser`() {
         val transformerteInntekterResponseDto =
-            inntektService.transformerInntekter(inntektRequestAlleYtelser.copy(ainntektHentetDato = ainntektHentetDato))
+            inntektService.transformerInntekter(
+                inntektRequestAlleYtelser.copy(
+                    ainntektHentetDato = ainntektHentetDato,
+                    vedtakstidspunktOpprinneligeVedtak = emptyList(),
+                ),
+            )
 
         TestUtil.printJson(transformerteInntekterResponseDto)
 
@@ -94,7 +103,6 @@ class InntektServiceTest : AbstractServiceTest() {
             transformerteInntekterResponseDto.summertÅrsinntektListe
                 .filter { it.inntektRapportering == Inntektsrapportering.AINNTEKT }.size shouldBe 2
             transformerteInntekterResponseDto.summertÅrsinntektListe[0].inntektPostListe[0].kode shouldBe "arbeidsavklaringspenger"
-            transformerteInntekterResponseDto.summertÅrsinntektListe[0].inntektPostListe[0].visningsnavn shouldBe "Arbeidsavklaringspenger"
 
             transformerteInntekterResponseDto.summertÅrsinntektListe
                 .filter { it.inntektRapportering == Inntektsrapportering.AINNTEKT_BEREGNET_3MND }.size shouldBe 1
@@ -143,10 +151,6 @@ class InntektServiceTest : AbstractServiceTest() {
 
             transformerteInntekterResponseDto.summertÅrsinntektListe
                 .filter { it.inntektRapportering == Inntektsrapportering.OVERGANGSSTØNAD }.size shouldBe 2
-            transformerteInntekterResponseDto.summertÅrsinntektListe
-                .filter { it.inntektRapportering == Inntektsrapportering.OVERGANGSSTØNAD }[0].visningsnavn shouldBe "Overgangsstønad 2021"
-            transformerteInntekterResponseDto.summertÅrsinntektListe
-                .filter { it.inntektRapportering == Inntektsrapportering.OVERGANGSSTØNAD }[1].visningsnavn shouldBe "Overgangsstønad 2022"
 
             transformerteInntekterResponseDto.summertMånedsinntektListe.shouldNotBeEmpty()
             transformerteInntekterResponseDto.summertMånedsinntektListe.shouldHaveSize(17)
@@ -160,7 +164,12 @@ class InntektServiceTest : AbstractServiceTest() {
     @Test
     fun `skal returnere tom respons hvis request ikke inneholder data`() {
         val transformerteInntekterResponseDto =
-            inntektService.transformerInntekter(inntektRequestUtenInntekter.copy(ainntektHentetDato = ainntektHentetDato))
+            inntektService.transformerInntekter(
+                inntektRequestUtenInntekter.copy(
+                    ainntektHentetDato = ainntektHentetDato,
+                    vedtakstidspunktOpprinneligeVedtak = emptyList(),
+                ),
+            )
 
         TestUtil.printJson(transformerteInntekterResponseDto)
 

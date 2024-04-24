@@ -46,7 +46,10 @@ class InntektApiTest {
         val filnavnEksempelRequest = "/testfiler/eksempel_request_referanse.json"
 
         val transformerteInntekter = inntektApi.transformerInntekter(
-            fileToObject<TransformerInntekterRequest>(filnavnEksempelRequest).copy(ainntektHentetDato = LocalDate.parse("2024-02-11")),
+            fileToObject<TransformerInntekterRequest>(filnavnEksempelRequest).copy(
+                ainntektHentetDato = LocalDate.parse("2024-02-11"),
+                vedtakstidspunktOpprinneligeVedtak = emptyList(),
+            ),
         )
 
         TestUtil.printJson(transformerteInntekter)
@@ -83,7 +86,10 @@ class InntektApiTest {
         val filnavnEksempelRequest = "/testfiler/eksempel_request_referanse.json"
 
         val transformerteInntekter = inntektApi.transformerInntekter(
-            fileToObject<TransformerInntekterRequest>(filnavnEksempelRequest).copy(ainntektHentetDato = LocalDate.parse("2024-02-11")),
+            fileToObject<TransformerInntekterRequest>(filnavnEksempelRequest).copy(
+                ainntektHentetDato = LocalDate.parse("2024-02-11"),
+                vedtakstidspunktOpprinneligeVedtak = emptyList(),
+            ),
         )
 
         TestUtil.printJson(transformerteInntekter)
@@ -175,7 +181,10 @@ class InntektApiTest {
         val filnavnEksempelRequest = "/testfiler/eksempel_request.json"
 
         val transformerteInntekter = inntektApi.transformerInntekter(
-            fileToObject<TransformerInntekterRequest>(filnavnEksempelRequest).copy(ainntektHentetDato = ainntektHentetDato),
+            fileToObject<TransformerInntekterRequest>(filnavnEksempelRequest).copy(
+                ainntektHentetDato = ainntektHentetDato,
+                vedtakstidspunktOpprinneligeVedtak = emptyList(),
+            ),
         )
 
         TestUtil.printJson(transformerteInntekter)
@@ -188,7 +197,6 @@ class InntektApiTest {
             transformerteInntekter.summertÅrsinntektListe
                 .filter { it.inntektRapportering == Inntektsrapportering.AINNTEKT }.size.shouldBe(1)
             transformerteInntekter.summertÅrsinntektListe[0].inntektPostListe[0].kode shouldBe "fastloenn"
-            transformerteInntekter.summertÅrsinntektListe[0].inntektPostListe[0].visningsnavn shouldBe "Fastlønn"
 
             transformerteInntekter.summertÅrsinntektListe
                 .filter { it.inntektRapportering == Inntektsrapportering.AINNTEKT_BEREGNET_3MND }.size.shouldBe(1)

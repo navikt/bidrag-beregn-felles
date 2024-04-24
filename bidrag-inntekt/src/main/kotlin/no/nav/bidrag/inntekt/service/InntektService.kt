@@ -33,7 +33,7 @@ class InntektService(
                     ainntektService.beregnAarsinntekt(
                         ainntektListeInn = transformerInntekterRequest.ainntektsposter,
                         ainntektHentetDato = transformerInntekterRequest.ainntektHentetDato,
-                        vedtakstidspunktOpprinneligVedtak = transformerInntekterRequest.vedtakstidspunktOpprinneligVedtak,
+                        vedtakstidspunktOpprinneligeVedtak = transformerInntekterRequest.vedtakstidspunktOpprinneligeVedtak,
                     ) +
                         skattegrunnlagService.beregnSkattegrunnlag(
                             skattegrunnlagListe = transformerInntekterRequest.skattegrunnlagsliste,

@@ -1,9 +1,7 @@
 package no.nav.bidrag.inntekt.service
 
-import no.nav.bidrag.commons.service.finnVisningsnavn
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
-import no.nav.bidrag.domene.util.visningsnavnIntern
 import no.nav.bidrag.inntekt.util.InntektUtil.Companion.filtrerInntekterPåYtelse
 import no.nav.bidrag.inntekt.util.InntektUtil.Companion.finnSisteAarSomSkalRapporteres
 import no.nav.bidrag.inntekt.util.InntektUtil.Companion.hentMappingYtelser
@@ -61,7 +59,6 @@ class YtelserService {
                 ytelseListeUt.add(
                     SummertÅrsinntekt(
                         inntektRapportering = ytelse,
-                        visningsnavn = ytelse.visningsnavnIntern(it.value.periodeFra.year),
                         sumInntekt = it.value.sumInntekt.setScale(0, RoundingMode.HALF_UP),
                         periode = ÅrMånedsperiode(fom = it.value.periodeFra, til = it.value.periodeTil),
                         inntektPostListe = grupperOgSummerDetaljposter(it.value.inntektPostListe),
@@ -82,7 +79,6 @@ class YtelserService {
             .map {
                 InntektPost(
                     kode = it.key,
-                    visningsnavn = finnVisningsnavn(it.key),
                     beløp = it.value.sumOf(InntektPost::beløp).setScale(0, RoundingMode.HALF_UP),
                 )
             }

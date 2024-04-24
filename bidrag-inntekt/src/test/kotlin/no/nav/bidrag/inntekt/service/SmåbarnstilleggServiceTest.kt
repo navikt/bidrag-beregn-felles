@@ -4,7 +4,6 @@ import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
-import no.nav.bidrag.domene.util.visningsnavn
 import no.nav.bidrag.inntekt.TestUtil
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
@@ -25,7 +24,6 @@ class SmåbarnstilleggServiceTest : AbstractServiceTest() {
 
             with(beregnetSmåbarnstillegg[0]) {
                 inntektRapportering shouldBe Inntektsrapportering.SMÅBARNSTILLEGG
-                visningsnavn shouldBe Inntektsrapportering.SMÅBARNSTILLEGG.visningsnavn.intern
                 sumInntekt shouldBe BigDecimal.valueOf(7920)
                 periode.fom shouldBe YearMonth.parse("2021-11")
                 periode.til shouldBe YearMonth.parse("2022-03")
@@ -34,7 +32,6 @@ class SmåbarnstilleggServiceTest : AbstractServiceTest() {
 
             with(beregnetSmåbarnstillegg[1]) {
                 inntektRapportering shouldBe Inntektsrapportering.SMÅBARNSTILLEGG
-                visningsnavn shouldBe Inntektsrapportering.SMÅBARNSTILLEGG.visningsnavn.intern
                 sumInntekt shouldBe BigDecimal.valueOf(7920)
                 periode.fom shouldBe YearMonth.parse("2022-06")
                 periode.til shouldBe YearMonth.parse("2022-07")
@@ -43,7 +40,6 @@ class SmåbarnstilleggServiceTest : AbstractServiceTest() {
 
             with(beregnetSmåbarnstillegg[2]) {
                 inntektRapportering shouldBe Inntektsrapportering.SMÅBARNSTILLEGG
-                visningsnavn shouldBe Inntektsrapportering.SMÅBARNSTILLEGG.visningsnavn.intern
                 sumInntekt shouldBe BigDecimal.valueOf(7920)
                 periode.fom shouldBe YearMonth.parse("2022-10")
                 periode.til.shouldBeNull()
