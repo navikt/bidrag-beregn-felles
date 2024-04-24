@@ -3,7 +3,6 @@ package no.nav.bidrag.inntekt.service
 import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.shouldBe
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
-import no.nav.bidrag.domene.util.visningsnavnIntern
 import no.nav.bidrag.inntekt.TestUtil
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -40,7 +39,6 @@ class YtelserServiceTest : AbstractServiceTest() {
 
                 with(transformerteInntekter[0]) {
                     inntektRapportering shouldBe Inntektsrapportering.AAP
-                    visningsnavn shouldBe Inntektsrapportering.AAP.visningsnavnIntern(2021)
                     sumInntekt shouldBe BigDecimal.valueOf(50000)
                     periode.fom shouldBe YearMonth.of(2021, 1)
                     periode.til shouldBe YearMonth.of(2021, 12)
@@ -50,14 +48,12 @@ class YtelserServiceTest : AbstractServiceTest() {
 
                     with(inntektPostListe[0]) {
                         kode shouldBe "arbeidsavklaringspenger"
-                        visningsnavn shouldBe "Arbeidsavklaringspenger"
                         beløp shouldBe BigDecimal.valueOf(50000)
                     }
                 }
 
                 with(transformerteInntekter[1]) {
                     inntektRapportering shouldBe Inntektsrapportering.AAP
-                    visningsnavn shouldBe Inntektsrapportering.AAP.visningsnavnIntern(2022)
                     sumInntekt shouldBe BigDecimal.valueOf(78501)
                     periode.fom shouldBe YearMonth.of(2022, 1)
                     periode.til shouldBe YearMonth.of(2022, 12)
@@ -67,7 +63,6 @@ class YtelserServiceTest : AbstractServiceTest() {
 
                     with(inntektPostListe[0]) {
                         kode shouldBe "arbeidsavklaringspenger"
-                        visningsnavn shouldBe "Arbeidsavklaringspenger"
                         beløp shouldBe BigDecimal.valueOf(78501)
                     }
                 }
@@ -96,7 +91,6 @@ class YtelserServiceTest : AbstractServiceTest() {
 
                 with(transformerteInntekter[0]) {
                     inntektRapportering shouldBe Inntektsrapportering.DAGPENGER
-                    visningsnavn shouldBe Inntektsrapportering.DAGPENGER.visningsnavnIntern(2021)
                     sumInntekt shouldBe BigDecimal.valueOf(50000)
                     periode.fom shouldBe YearMonth.of(2021, 1)
                     periode.til shouldBe YearMonth.of(2021, 12)
@@ -106,20 +100,17 @@ class YtelserServiceTest : AbstractServiceTest() {
 
                     with(inntektPostListe[0]) {
                         kode shouldBe "dagpengerTilFiskerSomBareHarHyre"
-                        visningsnavn shouldBe "Dagpenger til fisker som bare har hyre"
                         beløp shouldBe BigDecimal.valueOf(30000)
                     }
 
                     with(inntektPostListe[1]) {
                         kode shouldBe "dagpengerVedArbeidsloeshet"
-                        visningsnavn shouldBe "Dagpenger ved arbeidsløshet"
                         beløp shouldBe BigDecimal.valueOf(20000)
                     }
                 }
 
                 with(transformerteInntekter[1]) {
                     inntektRapportering shouldBe Inntektsrapportering.DAGPENGER
-                    visningsnavn shouldBe Inntektsrapportering.DAGPENGER.visningsnavnIntern(2022)
                     sumInntekt shouldBe BigDecimal.valueOf(1000)
                     periode.fom shouldBe YearMonth.of(2022, 1)
                     periode.til shouldBe YearMonth.of(2022, 12)
@@ -129,7 +120,6 @@ class YtelserServiceTest : AbstractServiceTest() {
 
                     with(inntektPostListe[0]) {
                         kode shouldBe "dagpengerVedArbeidsloeshet"
-                        visningsnavn shouldBe "Dagpenger ved arbeidsløshet"
                         beløp shouldBe BigDecimal.valueOf(1000)
                     }
                 }
@@ -158,7 +148,6 @@ class YtelserServiceTest : AbstractServiceTest() {
 
                 with(transformerteInntekter[0]) {
                     inntektRapportering shouldBe Inntektsrapportering.OVERGANGSSTØNAD
-                    visningsnavn shouldBe Inntektsrapportering.OVERGANGSSTØNAD.visningsnavnIntern(2022)
                     sumInntekt shouldBe BigDecimal.valueOf(250824)
                     periode.fom shouldBe YearMonth.of(2022, 5)
                     periode.til shouldBe YearMonth.of(2023, 4)
@@ -168,14 +157,12 @@ class YtelserServiceTest : AbstractServiceTest() {
 
                     with(inntektPostListe[0]) {
                         kode shouldBe "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere"
-                        visningsnavn shouldBe "Overgangsstønad"
                         beløp shouldBe BigDecimal.valueOf(250824)
                     }
                 }
 
                 with(transformerteInntekter[1]) {
                     inntektRapportering shouldBe Inntektsrapportering.OVERGANGSSTØNAD
-                    visningsnavn shouldBe Inntektsrapportering.OVERGANGSSTØNAD.visningsnavnIntern(2023)
                     sumInntekt shouldBe BigDecimal.valueOf(266892)
                     periode.fom shouldBe YearMonth.of(2023, 5)
                     periode.til shouldBe YearMonth.of(2024, 4)
@@ -185,13 +172,11 @@ class YtelserServiceTest : AbstractServiceTest() {
 
                     with(inntektPostListe[0]) {
                         kode shouldBe "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere"
-                        visningsnavn shouldBe "Overgangsstønad"
                         beløp shouldBe BigDecimal.valueOf(207583)
                     }
 
                     with(inntektPostListe[1]) {
                         kode shouldBe "overgangsstoenadTilGjenlevendeEktefelle"
-                        visningsnavn shouldBe "Overgangsstønad"
                         beløp shouldBe BigDecimal.valueOf(59309)
                     }
                 }

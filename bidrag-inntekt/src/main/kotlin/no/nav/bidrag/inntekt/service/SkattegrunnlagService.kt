@@ -3,11 +3,9 @@ package no.nav.bidrag.inntekt.service
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.readValue
-import no.nav.bidrag.commons.service.finnVisningsnavn
 import no.nav.bidrag.domene.enums.diverse.PlussMinus
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
-import no.nav.bidrag.domene.util.visningsnavnIntern
 import no.nav.bidrag.transport.behandling.inntekt.request.SkattegrunnlagForLigningsår
 import no.nav.bidrag.transport.behandling.inntekt.response.InntektPost
 import no.nav.bidrag.transport.behandling.inntekt.response.SummertÅrsinntekt
@@ -67,7 +65,6 @@ class SkattegrunnlagService {
                     inntektPostListe.add(
                         InntektPost(
                             kode = match.fulltNavnInntektspost,
-                            visningsnavn = finnVisningsnavn(match.fulltNavnInntektspost),
                             beløp = post.beløp.setScale(0, RoundingMode.HALF_UP),
                         ),
                     )
@@ -76,7 +73,6 @@ class SkattegrunnlagService {
             summertÅrsinntektListe.add(
                 SummertÅrsinntekt(
                     inntektRapportering = inntektRapportering,
-                    visningsnavn = inntektRapportering.visningsnavnIntern(skattegrunnlagForLigningsår.ligningsår),
                     sumInntekt = sumInntekt.setScale(0, RoundingMode.HALF_UP),
                     periode =
                     ÅrMånedsperiode(

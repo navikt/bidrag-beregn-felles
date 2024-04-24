@@ -2,7 +2,6 @@ package no.nav.bidrag.inntekt.service
 
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
-import no.nav.bidrag.domene.util.visningsnavn
 import no.nav.bidrag.transport.behandling.inntekt.request.Kontantstøtte
 import no.nav.bidrag.transport.behandling.inntekt.response.SummertÅrsinntekt
 import java.math.BigDecimal
@@ -38,7 +37,6 @@ class KontantstøtteService {
                 kontantstøtteListeUt.add(
                     SummertÅrsinntekt(
                         inntektRapportering = Inntektsrapportering.KONTANTSTØTTE,
-                        visningsnavn = Inntektsrapportering.KONTANTSTØTTE.visningsnavn.intern,
                         sumInntekt = it.beløp.times(BigDecimal.valueOf(12)).setScale(0, RoundingMode.HALF_UP),
                         periode =
                         ÅrMånedsperiode(

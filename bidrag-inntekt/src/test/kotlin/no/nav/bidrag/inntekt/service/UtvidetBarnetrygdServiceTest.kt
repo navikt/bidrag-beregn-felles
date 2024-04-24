@@ -3,7 +3,6 @@ package no.nav.bidrag.inntekt.service
 import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.shouldBe
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
-import no.nav.bidrag.domene.util.visningsnavn
 import no.nav.bidrag.inntekt.TestUtil
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
@@ -24,7 +23,6 @@ class UtvidetBarnetrygdServiceTest : AbstractServiceTest() {
 
             with(beregnetUtvidetBarnetrygd[0]) {
                 inntektRapportering shouldBe Inntektsrapportering.UTVIDET_BARNETRYGD
-                visningsnavn shouldBe Inntektsrapportering.UTVIDET_BARNETRYGD.visningsnavn.intern
                 sumInntekt shouldBe BigDecimal.valueOf(12648)
                 periode.fom shouldBe YearMonth.parse("2019-01")
                 periode.til shouldBe YearMonth.parse("2019-09")
@@ -33,7 +31,6 @@ class UtvidetBarnetrygdServiceTest : AbstractServiceTest() {
 
             with(beregnetUtvidetBarnetrygd[1]) {
                 inntektRapportering shouldBe Inntektsrapportering.UTVIDET_BARNETRYGD
-                visningsnavn shouldBe Inntektsrapportering.UTVIDET_BARNETRYGD.visningsnavn.intern
                 sumInntekt shouldBe BigDecimal.valueOf(12648)
                 periode.fom shouldBe YearMonth.parse("2020-11")
                 periode.til shouldBe YearMonth.parse("2022-09")

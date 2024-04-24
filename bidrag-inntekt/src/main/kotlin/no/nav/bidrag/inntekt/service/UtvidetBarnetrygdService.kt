@@ -2,7 +2,6 @@ package no.nav.bidrag.inntekt.service
 
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
-import no.nav.bidrag.domene.util.visningsnavn
 import no.nav.bidrag.transport.behandling.inntekt.request.UtvidetBarnetrygd
 import no.nav.bidrag.transport.behandling.inntekt.response.SummertÅrsinntekt
 import org.springframework.stereotype.Service
@@ -21,7 +20,6 @@ class UtvidetBarnetrygdService {
             utvidetBarnetrygdListeUt.add(
                 SummertÅrsinntekt(
                     inntektRapportering = Inntektsrapportering.UTVIDET_BARNETRYGD,
-                    visningsnavn = Inntektsrapportering.UTVIDET_BARNETRYGD.visningsnavn.intern,
                     sumInntekt = it.beløp.times(BigDecimal.valueOf(12)).setScale(0, RoundingMode.HALF_UP),
                     periode =
                     ÅrMånedsperiode(

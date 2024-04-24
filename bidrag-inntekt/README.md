@@ -44,7 +44,7 @@ Følgende forekomster leveres:
 - En summert liste for de siste 3 månedene. Her summeres inntekter for de siste 3 (komplette) månedene og det ganges deretter med 4 for å finne en beregnet årsinntekt. Hvis inntekter er hentet før cut-off-datoen skyves 3-månedersperioden 1 måned bakover i tid (siste måned blir satt til inneværende måned - 2).
 - En summert liste for de siste 12 månedene. Her summeres inntekter for de siste 12 (komplette) månedene. Hvis inntekter er hentet før cut-off-datoen skyves 12-månedersperioden 1 måned bakover i tid (siste måned blir satt til inneværende måned - 2).
 - I tillegg vil det for alle listene bli levert en liste av tilhørende inntektsposter (summert pr kode/beskrivelse).
-- Hvis input parameter vedtakstidspunktOpprinneligVedtak er satt, lages det en summert liste over 3 og 12 måneder også med utgangspunkt i denne datoen (i tillegg til de ordinære 3/12 måneders listene). Denne blir typisk satt hvis det er en klage og det i tillegg skal summeres inntekter basert på vedtaksdatoen i det opprinnelige vedtaket.
+- Hvis input parameter vedtakstidspunktOpprinneligeVedtak inneholder data, lages det summerte lister over 3 og 12 måneder også med utgangspunkt i disse datoene (i tillegg til de ordinære 3/12 måneders listene). Evt. duplikater fjernes. Disse blir typisk satt hvis det er en klage (eller klage på klage) og det i tillegg skal summeres inntekter basert på vedtaksdatoene i de opprinnelige vedtakene.
 
 ### Beregning av Skattegrunnlag
 Følgende forekomster leveres:
