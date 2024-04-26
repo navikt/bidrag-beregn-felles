@@ -1,9 +1,13 @@
 package no.nav.bidrag.beregn.core.inntekt.service
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.util.InntektUtil.erKapitalinntekt
 import no.nav.bidrag.beregn.core.util.InntektUtil.justerKapitalinntekt
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
+import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.inntekt.Inntektstype
 import no.nav.bidrag.domene.enums.inntekt.Inntektstype.Companion.inngårIInntektRapporteringer
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
@@ -14,9 +18,12 @@ import no.nav.bidrag.transport.behandling.beregning.felles.InntektPerBarn
 import no.nav.bidrag.transport.behandling.beregning.felles.InntektsgrunnlagPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSumInntekt
 import java.math.BigDecimal
+import java.text.SimpleDateFormat
 
 internal class BeregnInntektService {
     fun beregn(grunnlag: BeregnValgteInntekterGrunnlag): BeregnValgteInntekterResultat {
+        secureLogger.debug { "Beregning av inntekt - følgende request mottatt: ${tilJson(grunnlag)}" }
+
         // Henter sjablonverdi for kapitalinntekt
         // TODO Pt ligger det bare en gyldig sjablonverdi (uforandret siden 2003). Logikken her må utvides hvis det legges inn nye sjablonverdier
         val innslagKapitalinntektSjablonverdi =
@@ -27,7 +34,11 @@ internal class BeregnInntektService {
         beregnetInntektListe.addAll(summerOgPeriodiserFellesInntekter(grunnlag, innslagKapitalinntektSjablonverdi))
         beregnetInntektListe.addAll(summerOgPeriodiserInntekterPerBarn(grunnlag, innslagKapitalinntektSjablonverdi))
 
-        return BeregnValgteInntekterResultat(beregnetInntektListe)
+        val respons = BeregnValgteInntekterResultat(beregnetInntektListe)
+
+        secureLogger.debug { "Beregning av inntekt - returnerer følgende respons: ${tilJson(respons)}" }
+
+        return respons
     }
 
     // Kategoriserer, periodiserer og summerer felles inntekter (dvs. inntekter som ikke gjelder et spesifikt barn)
@@ -180,5 +191,14 @@ internal class BeregnInntektService {
             (grunnlag.periode.til == null || periode.datoFom.isBefore(grunnlag.periode.til!!.atDay(1))) &&
                 (periode.datoTil == null || periode.datoTil.isAfter(grunnlag.periode.fom.atDay(1)))
         }
+    }
+
+    private fun tilJson(json: Any): String {
+        val objectMapper = ObjectMapper()
+        objectMapper.registerKotlinModule()
+        objectMapper.writerWithDefaultPrettyPrinter()
+        objectMapper.registerModule(JavaTimeModule())
+        objectMapper.dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        return objectMapper.writeValueAsString(json)
     }
 }
