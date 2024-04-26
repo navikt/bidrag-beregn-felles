@@ -390,7 +390,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
         else -> throw IllegalArgumentException("Ikke i stand til å utlede grunnlagstype for referanse: $referanse")
     }
 
-    fun tilJson(json: Any): String {
+    private fun tilJson(json: Any): String {
         val objectMapper = ObjectMapper()
         objectMapper.registerKotlinModule()
         objectMapper.writerWithDefaultPrettyPrinter()
