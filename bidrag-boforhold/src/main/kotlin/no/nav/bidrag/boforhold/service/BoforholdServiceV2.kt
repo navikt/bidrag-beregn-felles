@@ -29,8 +29,6 @@ internal class BoforholdServiceV2() {
     }
 
     private fun beregnPerioderForBarn(virkningstidspunkt: LocalDate, boforholdRequest: BoforholdRequest): List<BoforholdResponse> {
-        val boforholdResponseListe = mutableListOf<BoforholdResponse>()
-
         // Bruker fødselsdato som startdato for beregning hvis barnet er født etter virkningstidspunkt
         val startdatoBeregning = if (virkningstidspunkt.isBefore(boforholdRequest.fødselsdato)) {
             boforholdRequest.fødselsdato.withDayOfMonth(1)
@@ -41,6 +39,7 @@ internal class BoforholdServiceV2() {
         // Filterer først bort alle perioder som avsluttes før startdatoBeregning
         val bostatuslisteRelevantePerioder = boforholdRequest.bostatusListe
             .filter { (it.periodeTom == null || it.periodeTom.isAfter(startdatoBeregning)) }
+            .sortedBy { it.periodeFom }
 
         // Justerer offentlige perioder slik at de starter på første dag i måneden og slutter på siste dag i måneden
         val justerteOffentligePerioder = bostatuslisteRelevantePerioder
@@ -54,10 +53,10 @@ internal class BoforholdServiceV2() {
                     fødselsdato = boforholdRequest.fødselsdato,
                     kilde = Kilde.OFFENTLIG,
                 )
-            }.sortedBy { it.periodeFom }
+            }
 
         val manuelleOpplysninger = bostatuslisteRelevantePerioder
-            .filter { it.kilde == Kilde.MANUELL }.map {
+            .filter { it.kilde == Kilde.MANUELL }.sortedBy { it.periodeFom }.map {
                 BoforholdResponse(
                     relatertPersonPersonId = boforholdRequest.relatertPersonPersonId,
                     periodeFom = if (it.periodeFom!!.isBefore(startdatoBeregning)) startdatoBeregning else it.periodeFom,
@@ -67,6 +66,11 @@ internal class BoforholdServiceV2() {
                     kilde = it.kilde,
                 )
             }
+
+        // Leser gjennom manuelle perioder og slår sammen sammenhengende perioder med lik Bostatuskode. Hvis det er flere perioder med
+        // periodeTom = null så slås disse sammen til én periode hvis de har lik Bostatuskode. Hvis ikke så settes periodeTom lik neste periodes
+        // periodeFom minus én dag.
+        val justerteManuellePerioder = slåSammenSammenhengendePerioderMedLikBostatuskode(manuelleOpplysninger)
 
         // Finner 18-årsdagen til barnet, settes lik første dag i måneden etter 18-årsdagen
         val attenårFraDato = beregnetAttenÅrFraDato(boforholdRequest.fødselsdato)
@@ -130,14 +134,15 @@ internal class BoforholdServiceV2() {
             // Fyller ut perioder der det ikke finnes informasjon om barnet i offentlige opplysninger
             val komplettTidslinjeListe = fyllUtMedPerioderBarnetIkkeBorIHusstanden(startdatoBeregning, justerteOffentligePerioder)
 
-//            // Sammenhengende offentlige perioder med lik Bostatuskode slås sammen
-
             // Justerer offentlige perioder mot 18-årsdager og lager bruddperiode hvis barnet fyllet 18 år i perioden bor i husstanden
             val offentligePerioderJustertMotAttenårsdag =
-                justerMotAttenårsdag(attenårFraDato, komplettTidslinjeListe.filter { it.periodeFom.isBefore(attenårFraDato) })
+                justerMotAttenårsdag(
+                    attenårFraDato,
+                    komplettTidslinjeListe,
+                )
 
             val sammenslåtteManuelleOgOffentligePerioder =
-                slåSammenManuelleOgOffentligePerioder(manuelleOpplysninger, offentligePerioderJustertMotAttenårsdag)
+                slåSammenManuelleOgOffentligePerioder(justerteManuellePerioder, offentligePerioderJustertMotAttenårsdag)
 
             // Slår sammen sammenhengende perioder med lik Bostatuskode og setter kilde = Manuell
             return slåSammenSammenhengendePerioderMedLikBostatuskode(sammenslåtteManuelleOgOffentligePerioder)
@@ -146,12 +151,20 @@ internal class BoforholdServiceV2() {
 
     private fun slåSammenSammenhengendePerioderMedLikBostatuskode(liste: List<BoforholdResponse>): List<BoforholdResponse> {
         var periodeFom: LocalDate? = null
+        var periodeTom: LocalDate? = null
         var kilde: Kilde? = null
         val sammenslåttListe = mutableListOf<BoforholdResponse>()
 
         for (indeks in liste.indices) {
             if (indeks < liste.size - 1) {
-                if (liste[indeks + 1].periodeFom.isBefore(liste[indeks].periodeTom?.plusDays(2)) &&
+                // Hvis et element som ikke er siste element i listen har periodeTom = null så endres denne til neste periodes periodeFom minus én dag
+                periodeTom = if (liste[indeks].periodeTom == null) {
+                    liste[indeks + 1].periodeFom.minusDays(1)
+                } else {
+                    liste[indeks].periodeTom
+                }
+
+                if (liste[indeks + 1].periodeFom.isBefore(periodeTom!!.plusDays(2)) &&
                     liste[indeks + 1].bostatus == liste[indeks].bostatus
                 ) {
                     // perioden overlapper og skal slås sammen
@@ -162,13 +175,15 @@ internal class BoforholdServiceV2() {
                         kilde = Kilde.MANUELL
                     }
                 } else {
-                    // neste periode overlapper ikke og det skal lages ny forekomst i sammenslåttListe
+                    // Neste periode overlapper ikke og det skal lages ny forekomst i sammenslåttListe. PeriodeTom overstyres siden det er flere
+                    // perioder i listen. Kun siste element skal kunne ha periodeTom = null.
                     if (periodeFom != null) {
+                        // Det er overlappende perioder og periodeFom settes lik periodeFom for første overlappende periode.
                         sammenslåttListe.add(
                             BoforholdResponse(
                                 relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                                 periodeFom = periodeFom,
-                                periodeTom = liste[indeks].periodeTom,
+                                periodeTom = liste[indeks].periodeTom ?: periodeTom,
                                 bostatus = liste[indeks].bostatus,
                                 fødselsdato = liste[indeks].fødselsdato,
                                 kilde = kilde ?: liste[indeks].kilde,
@@ -182,7 +197,7 @@ internal class BoforholdServiceV2() {
                             BoforholdResponse(
                                 relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                                 periodeFom = liste[indeks].periodeFom,
-                                periodeTom = liste[indeks].periodeTom,
+                                periodeTom = liste[indeks].periodeTom ?: periodeTom,
                                 bostatus = liste[indeks].bostatus,
                                 fødselsdato = liste[indeks].fødselsdato,
                                 kilde = liste[indeks].kilde,
@@ -281,7 +296,8 @@ internal class BoforholdServiceV2() {
                 )
             }
 
-            // Siste forekomst
+            // Siste forekomst. Hvis periodeTom er satt så dannes det en ny periode som dekker perioden fra periodeTom på forrige forekomst
+            // og med åpen periodeTom.
             if (indeks == liste.size - 1 && liste[indeks].periodeTom != null) {
                 sammenhengendePerioderListe.add(
                     BoforholdResponse(
@@ -301,66 +317,52 @@ internal class BoforholdServiceV2() {
 
     private fun justerMotAttenårsdag(attenårFraDato: LocalDate, liste: List<BoforholdResponse>): List<BoforholdResponse> {
         val listeJustertMotAttenårsdag = mutableListOf<BoforholdResponse>()
-        for (indeks in liste.indices) {
-            if (liste[indeks].periodeTom != null && liste[indeks].periodeTom!!.isAfter(attenårFraDato)) {
-                listeJustertMotAttenårsdag.add(
-                    BoforholdResponse(
-                        relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
-                        periodeFom = liste[indeks].periodeFom,
-                        periodeTom = attenårFraDato.minusDays(1),
-                        bostatus = liste[indeks].bostatus,
-                        fødselsdato = liste[indeks].fødselsdato,
-                        kilde = liste[indeks].kilde,
 
-                    ),
-                )
-                listeJustertMotAttenårsdag.add(
-                    BoforholdResponse(
-                        relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
-                        periodeFom = attenårFraDato,
-                        periodeTom = null,
-                        bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
-                        fødselsdato = liste[indeks].fødselsdato,
-                        kilde = liste[indeks].kilde,
-
-                    ),
-                )
-            } else {
-                if (liste[indeks].periodeTom == null && attenårFraDato.isBefore(LocalDate.now())) {
-                    listeJustertMotAttenårsdag.add(
-                        BoforholdResponse(
-                            relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
-                            periodeFom = liste[indeks].periodeFom,
-                            periodeTom = attenårFraDato.minusDays(1),
-                            bostatus = liste[indeks].bostatus,
-                            fødselsdato = liste[indeks].fødselsdato,
-                            kilde = liste[indeks].kilde,
-
-                        ),
-                    )
-                    listeJustertMotAttenårsdag.add(
-                        BoforholdResponse(
-                            relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
-                            periodeFom = attenårFraDato,
-                            periodeTom = null,
-                            bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
-                            fødselsdato = liste[indeks].fødselsdato,
-                            kilde = liste[indeks].kilde,
-
-                        ),
-                    )
+        if (attenårFraDato.isAfter(LocalDate.now())) {
+            // Barnet har ikke fyllt 18 og listen returneres uendret.
+            return liste
+        } else {
+            for (indeks in liste.indices) {
+                // Perioder som avsluttes før 18årsdag skrives til returliste.
+                if (liste[indeks].periodeTom != null && liste[indeks].periodeTom!!.isBefore(attenårFraDato)) {
+                    listeJustertMotAttenårsdag.add(liste[indeks])
                 } else {
-                    listeJustertMotAttenårsdag.add(
-                        BoforholdResponse(
-                            relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
-                            periodeFom = liste[indeks].periodeFom,
-                            periodeTom = liste[indeks].periodeTom,
-                            bostatus = liste[indeks].bostatus,
-                            fødselsdato = liste[indeks].fødselsdato,
-                            kilde = liste[indeks].kilde,
+                    if (liste[indeks].periodeFom.isBefore(attenårFraDato)) {
+                        // Perioden starter før 18-årsdagen, det må lages en ekstra periode etter 18årsdagen.
+                        listeJustertMotAttenårsdag.add(
+                            BoforholdResponse(
+                                relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
+                                periodeFom = liste[indeks].periodeFom,
+                                periodeTom = attenårFraDato.minusDays(1),
+                                bostatus = liste[indeks].bostatus,
+                                fødselsdato = liste[indeks].fødselsdato,
+                                kilde = liste[indeks].kilde,
 
-                        ),
-                    )
+                            ),
+                        )
+                        listeJustertMotAttenårsdag.add(
+                            BoforholdResponse(
+                                relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
+                                periodeFom = attenårFraDato,
+                                periodeTom = liste[indeks].periodeTom,
+                                bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                                fødselsdato = liste[indeks].fødselsdato,
+                                kilde = liste[indeks].kilde,
+
+                            ),
+                        )
+                    } else {
+                        listeJustertMotAttenårsdag.add(
+                            BoforholdResponse(
+                                relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
+                                periodeFom = liste[indeks].periodeFom,
+                                periodeTom = liste[indeks].periodeTom,
+                                bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                                fødselsdato = liste[indeks].fødselsdato,
+                                kilde = liste[indeks].kilde,
+                            ),
+                        )
+                    }
                 }
             }
         }

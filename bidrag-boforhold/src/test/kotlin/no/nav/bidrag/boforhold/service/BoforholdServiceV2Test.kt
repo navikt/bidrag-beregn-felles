@@ -717,4 +717,115 @@ internal class BoforholdServiceV2Test {
             resultat[2].kilde shouldBe Kilde.MANUELL
         }
     }
+
+    @Test
+    fun `Test med offentlig og manuell periode med opphold mellom`() {
+        boforholdServiceV2 = BoforholdServiceV2()
+        val mottatteBoforhold = TestUtil.flereOffentligOgManuellPeriodeMedOppholdMellom()
+        val virkningstidspunkt = LocalDate.of(2022, 1, 1)
+        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 3
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2022, 1, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2023, 9, 30)
+            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2023, 10, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2023, 10, 31)
+            resultat[1].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
+            resultat[1].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2023, 11, 1)
+            resultat[2].periodeTom shouldBe null
+            resultat[2].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[2].kilde shouldBe Kilde.MANUELL
+        }
+    }
+
+    @Test
+    fun `Test med flere perioder med periodeTom = null og lik status`() {
+        boforholdServiceV2 = BoforholdServiceV2()
+        val mottatteBoforhold = TestUtil.flereFlereManuellePerioderMedPeriodeTomNullLikStatus()
+        val virkningstidspunkt = LocalDate.of(2022, 1, 1)
+        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 3
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2022, 1, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2022, 12, 31)
+            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2023, 1, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2023, 10, 31)
+            resultat[1].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2023, 11, 1)
+            resultat[2].periodeTom shouldBe null
+            resultat[2].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[2].kilde shouldBe Kilde.MANUELL
+        }
+    }
+
+    @Test
+    fun `Test med flere perioder med periodeTom = null og ulik status`() {
+        boforholdServiceV2 = BoforholdServiceV2()
+        val mottatteBoforhold = TestUtil.flereFlereManuellePerioderMedPeriodeTomNullUlikStatus()
+        val virkningstidspunkt = LocalDate.of(2022, 1, 1)
+        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 4
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2022, 1, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2022, 12, 31)
+            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2023, 1, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2023, 10, 31)
+            resultat[1].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2023, 11, 1)
+            resultat[2].periodeTom shouldBe LocalDate.of(2023, 11, 30)
+            resultat[2].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[2].kilde shouldBe Kilde.MANUELL
+
+            resultat[3].periodeFom shouldBe LocalDate.of(2023, 12, 1)
+            resultat[3].periodeTom shouldBe null
+            resultat[3].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[3].kilde shouldBe Kilde.MANUELL
+        }
+    }
+
+    @Test
+    fun `Test at overlappende perioder med lik Bostatuskode slås sammen`() {
+        boforholdServiceV2 = BoforholdServiceV2()
+        val mottatteBoforhold = TestUtil.byggFlereSammenhengendeForekomsterMedBostatuskode()
+        val virkningstidspunkt = LocalDate.of(2019, 6, 1)
+        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 2
+            resultat[0].periodeFom shouldBe LocalDate.of(2019, 6, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2019, 12, 31)
+            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2020, 1, 1)
+            resultat[1].periodeTom shouldBe null
+            resultat[1].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
 }
