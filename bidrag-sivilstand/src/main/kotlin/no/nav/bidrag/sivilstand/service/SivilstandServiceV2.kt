@@ -473,41 +473,6 @@ internal class SivilstandServiceV2() {
                 )
             }
         }
-
-/*        // Slår sammen perioder med samme sivilstandskode
-        for (indeks in sivilstandsperioder.indices) {
-            if (sivilstandsperioder.getOrNull(indeks + 1)?.sivilstandskode
-                != sivilstandsperioder[indeks].sivilstandskode
-            ) {
-                if (indeks == sivilstandsperioder.size - 1) {
-                    // Siste element i listen
-                    resultat.add(
-                        Sivilstand(
-                            periodeFom = if (periodeFom.isBefore(virkningstidspunkt)) virkningstidspunkt else periodeFom,
-                            periodeTom = sivilstandsperioder[indeks].periodeTom,
-                            sivilstandskode = sivilstandsperioder[indeks].sivilstandskode,
-                            kilde = kilde ?: sivilstandsperioder[indeks].kilde,
-                        ),
-                    )
-                } else {
-                    // Hvis det er flere elementer i listen så justeres periodeTom lik neste periodeFom - 1 dag for Gift/samboer
-                    resultat.add(
-                        Sivilstand(
-                            periodeFom = if (periodeFom.isBefore(virkningstidspunkt)) virkningstidspunkt else periodeFom,
-                            periodeTom = sivilstandsperioder[indeks].periodeTom,
-                            sivilstandskode = sivilstandsperioder[indeks].sivilstandskode,
-                            kilde = kilde ?: sivilstandsperioder[indeks].kilde,
-                        ),
-                    )
-                    periodeFom = sivilstandsperioder[indeks + 1].periodeFom
-                    kilde = null
-                }
-            } else {
-                if (sivilstandsperioder[indeks].kilde == Kilde.MANUELL) {
-                    kilde = Kilde.MANUELL
-                }
-            }
-        }*/
         return resultat.filter { it.periodeTom == null || it.periodeTom.isAfter(virkningstidspunkt.minusDays(1)) }
     }
 
