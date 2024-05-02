@@ -828,4 +828,26 @@ internal class BoforholdServiceV2Test {
             resultat[1].kilde shouldBe Kilde.OFFENTLIG
         }
     }
+
+    @Test
+    fun `Test at overlappende perioder med ulik Bostatuskode justeres`() {
+        boforholdServiceV2 = BoforholdServiceV2()
+        val mottatteBoforhold = TestUtil.byggFlereOverlappendeManuellePerioderMedUlikBostatuskode()
+        val virkningstidspunkt = LocalDate.of(2023, 1, 1)
+        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 2
+            resultat[0].periodeFom shouldBe LocalDate.of(2023, 1, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2024, 2, 29)
+            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.MANUELL
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2024, 3, 1)
+            resultat[1].periodeTom shouldBe null
+            resultat[1].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.MANUELL
+        }
+    }
 }
