@@ -53,7 +53,7 @@ class AinntektService {
                         },
                         sumInntekt =
                         when {
-                            it.key.startsWith(KEY_3MND) -> it.value.sumInntekt.toInt().times(4).toBigDecimal() // Regner om til årsinntekt
+                            it.key.startsWith(KEY_3MND) -> it.value.sumInntekt.multiply(BigDecimal.valueOf(4)) // Regner om til årsinntekt
                             else -> it.value.sumInntekt
                         }.setScale(0, RoundingMode.HALF_UP),
                         periode = ÅrMånedsperiode(fom = it.value.periodeFra, til = it.value.periodeTil),
@@ -87,8 +87,8 @@ class AinntektService {
             ainntektListeUt.add(
                 SummertMånedsinntekt(
                     gjelderÅrMåned = YearMonth.of(it.key.substring(0, 4).toInt(), it.key.substring(4, 6).toInt()),
-                    sumInntekt = it.value.sumInntekt.setScale(0, RoundingMode.HALF_UP),
-                    inntektPostListe = grupperOgSummerDetaljposter(it.value.inntektPostListe),
+                    sumInntekt = it.value.sumInntekt.setScale(2, RoundingMode.HALF_UP),
+                    inntektPostListe = grupperOgSummerDetaljposter(inntektPostListe = it.value.inntektPostListe, scale = 2),
                     grunnlagsreferanseListe = it.value.grunnlagreferanseListe.toList(),
                 ),
             )
@@ -102,13 +102,15 @@ class AinntektService {
         inntektPostListe: List<InntektPost>,
         // Avviker fra default hvis beløp skal regnes om til årsverdi
         multiplikator: Int = 1,
+        scale: Int = 0,
     ): List<InntektPost> {
         return inntektPostListe
             .groupBy(InntektPost::kode)
             .map {
                 InntektPost(
                     kode = it.key,
-                    beløp = it.value.sumOf(InntektPost::beløp).toInt().times(multiplikator).toBigDecimal().setScale(0, RoundingMode.HALF_UP),
+                    beløp = it.value.sumOf(InntektPost::beløp).multiply(BigDecimal.valueOf(multiplikator.toLong()))
+                        .setScale(scale, RoundingMode.HALF_UP),
                 )
             }
     }
@@ -236,17 +238,17 @@ class AinntektService {
         when (beregningsperiode) {
             PERIODE_MÅNED ->
                 periodeMap[periode.year.toString() + periode.toString().substring(5, 7)] =
-                    Detaljpost(beløp = beløp.setScale(0, RoundingMode.HALF_UP), kode = beskrivelse, referanse = referanse)
+                    Detaljpost(beløp = beløp, kode = beskrivelse, referanse = referanse)
 
             else -> {
                 periodeMap[periode.year.toString()] =
-                    Detaljpost(beløp = beløp.setScale(0, RoundingMode.HALF_UP), kode = beskrivelse, referanse = referanse)
+                    Detaljpost(beløp = beløp, kode = beskrivelse, referanse = referanse)
 
                 periodeMap.putAll(
                     kalkulerBeløpForIntervall(
                         periode = periode,
                         beskrivelse = beskrivelse,
-                        beløp = beløp.setScale(0, RoundingMode.HALF_UP),
+                        beløp = beløp,
                         beregningsperiode = KEY_3MND,
                         beregnFraDato = ainntektHentetDato,
                         referanse = referanse,
@@ -257,7 +259,7 @@ class AinntektService {
                     kalkulerBeløpForIntervall(
                         periode = periode,
                         beskrivelse = beskrivelse,
-                        beløp = beløp.setScale(0, RoundingMode.HALF_UP),
+                        beløp = beløp,
                         beregningsperiode = KEY_12MND,
                         beregnFraDato = ainntektHentetDato,
                         referanse = referanse,
@@ -269,7 +271,7 @@ class AinntektService {
                         kalkulerBeløpForIntervall(
                             periode = periode,
                             beskrivelse = beskrivelse,
-                            beløp = beløp.setScale(0, RoundingMode.HALF_UP),
+                            beløp = beløp,
                             beregningsperiode = KEY_3MND_OV + "_" + it.toString(),
                             beregnFraDato = it,
                             referanse = referanse,
@@ -280,7 +282,7 @@ class AinntektService {
                         kalkulerBeløpForIntervall(
                             periode = periode,
                             beskrivelse = beskrivelse,
-                            beløp = beløp.setScale(0, RoundingMode.HALF_UP),
+                            beløp = beløp,
                             beregningsperiode = KEY_12MND_OV + "_" + it.toString(),
                             beregnFraDato = it,
                             referanse = referanse,
@@ -320,7 +322,7 @@ class AinntektService {
         if ((!periode.isBefore(forstePeriodeIIntervall)) && (periode.isBefore(sistePeriodeIIntervall))) {
             periodeMap[beregningsperiode] =
                 Detaljpost(
-                    beløp = beløp.setScale(0, RoundingMode.HALF_UP),
+                    beløp = beløp,
                     kode = beskrivelse,
                     referanse = referanse,
                 )

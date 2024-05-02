@@ -14,12 +14,12 @@
     {
       "utbetalingsperiode": "2021-10",
       "beskrivelse": "arbeidsavklaringspenger",
-      "beløp": 10000
+      "beløp": 10000.33
     },
     {
       "utbetalingsperiode": "2021-11",
       "beskrivelse": "arbeidsavklaringspenger",
-      "beløp": 11000
+      "beløp": 11000.33
     },
     {
       "utbetalingsperiode": "2021-12",

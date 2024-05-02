@@ -25,6 +25,9 @@ Modulen leverer tilbake følgende lister:
 #### Fastsettelse av periode
 For alle beregninger av inntekter rapportert via a-inntekt brukes utbetalingsperiode for å bestemme hvilken periode inntektsposten skal tilhøre. Utbetalingsperiode dekker alltid en kalendermåned. Unntaket er overgangsstønad, hvor etterbetalingsperiode brukes hvis den er utfylt. Hvis den ikke er utfylt brukes utbetalingsperiode.
 
+#### Avrundingsregler
+Totalbeløpene avrundes til heltall når summeringen blir gjort (RoundingMode.HALF_UP). Det samme blir gjort ved summeringen/grupperingen av inntektspostene. Unntaket er beregning av månedsinntekter (A-inntekt). Her beregnes summen med to desimaler.
+
 #### Cut-off dato
 - Input-parameter aInntektHentetDato er en dato som angir når inntektene ble hentet fra a-ordningen. Den brukes som utgangspunkt for å beregne perioder for inntektene.
 - Inneholder fristen Skatteetaten har satt for å levere a-melding i foregående måned, basert på hvilken dato a-inntekt ble hentet (= aInntektHentetDato i requesten).

@@ -14,6 +14,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -49,7 +50,7 @@ class AinntektServiceTest : AbstractServiceTest() {
                     periode.til shouldBe YearMonth.of(2022, 11)
                     gjelderBarnPersonId shouldBe ""
                     inntektPostListe.size shouldBe 3
-                    inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 395001
+                    inntektPostListe.sumOf { it.beløp }.toInt() shouldBe 395001
                 }
 
                 with(transformerteInntekter[1]) {
@@ -59,7 +60,7 @@ class AinntektServiceTest : AbstractServiceTest() {
                     periode.til shouldBe YearMonth.of(2022, 11)
                     gjelderBarnPersonId shouldBe ""
                     inntektPostListe.size shouldBe 1
-                    inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 660000
+                    inntektPostListe.sumOf { it.beløp }.toInt() shouldBe 660000
                     inntektPostListe[0].kode shouldBe "fastloenn"
                     inntektPostListe[0].beløp.toInt() shouldBe 660000
                 }
@@ -90,7 +91,7 @@ class AinntektServiceTest : AbstractServiceTest() {
                     periode.til shouldBe YearMonth.of(2022, 12)
                     gjelderBarnPersonId shouldBe ""
                     inntektPostListe.size shouldBe 3
-                    inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 450001
+                    inntektPostListe.sumOf { it.beløp }.toInt() shouldBe 450001
                 }
 
                 with(transformerteInntekter[1]) {
@@ -100,7 +101,7 @@ class AinntektServiceTest : AbstractServiceTest() {
                     periode.til shouldBe YearMonth.of(2022, 12)
                     gjelderBarnPersonId shouldBe ""
                     inntektPostListe.size shouldBe 3
-                    inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 450001
+                    inntektPostListe.sumOf { it.beløp }.toInt() shouldBe 450001
                 }
 
                 with(transformerteInntekter[2]) {
@@ -110,7 +111,7 @@ class AinntektServiceTest : AbstractServiceTest() {
                     periode.til shouldBe YearMonth.of(2022, 12)
                     gjelderBarnPersonId shouldBe ""
                     inntektPostListe.size shouldBe 1
-                    inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 660000
+                    inntektPostListe.sumOf { it.beløp }.toInt() shouldBe 660000
                     inntektPostListe[0].kode shouldBe "fastloenn"
                     inntektPostListe[0].beløp.toInt() shouldBe 660000
                 }
@@ -141,7 +142,7 @@ class AinntektServiceTest : AbstractServiceTest() {
                     periode.til shouldBe YearMonth.of(2022, 12)
                     gjelderBarnPersonId shouldBe ""
                     inntektPostListe.size shouldBe 3
-                    inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 450001
+                    inntektPostListe.sumOf { it.beløp }.toInt() shouldBe 450001
                 }
 
                 with(transformerteInntekter[1]) {
@@ -161,7 +162,7 @@ class AinntektServiceTest : AbstractServiceTest() {
                     periode.til shouldBe YearMonth.of(2023, 7)
                     gjelderBarnPersonId shouldBe ""
                     inntektPostListe.size shouldBe 4
-                    inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 912000
+                    inntektPostListe.sumOf { it.beløp }.toInt() shouldBe 912000
                 }
             }
         }
@@ -195,7 +196,7 @@ class AinntektServiceTest : AbstractServiceTest() {
                     periode.til shouldBe YearMonth.of(2022, 12)
                     gjelderBarnPersonId shouldBe ""
                     inntektPostListe.size shouldBe 3
-                    inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 450001
+                    inntektPostListe.sumOf { it.beløp }.toInt() shouldBe 450001
                     grunnlagsreferanseListe.shouldContainAll(
                         listOf(
                             "A1",
@@ -275,7 +276,7 @@ class AinntektServiceTest : AbstractServiceTest() {
                     periode.til shouldBe YearMonth.of(2023, 7)
                     gjelderBarnPersonId shouldBe ""
                     inntektPostListe.size shouldBe 4
-                    inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 912000
+                    inntektPostListe.sumOf { it.beløp }.toInt() shouldBe 912000
                     grunnlagsreferanseListe.shouldContainAll(listOf("A15", "A16", "A17", "A18", "A19"))
                 }
 
@@ -286,7 +287,7 @@ class AinntektServiceTest : AbstractServiceTest() {
                     periode.til shouldBe YearMonth.of(2023, 6)
                     gjelderBarnPersonId shouldBe ""
                     inntektPostListe.size shouldBe 3
-                    inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 812000
+                    inntektPostListe.sumOf { it.beløp }.toInt() shouldBe 812000
                     grunnlagsreferanseListe.shouldContainAll(listOf("A14", "A15", "A16", "A17", "A18"))
                 }
             }
@@ -322,7 +323,7 @@ class AinntektServiceTest : AbstractServiceTest() {
                 periode.til shouldBe YearMonth.of(2022, 12)
                 gjelderBarnPersonId shouldBe ""
                 inntektPostListe.size shouldBe 3
-                inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 450001
+                inntektPostListe.sumOf { it.beløp }.toInt() shouldBe 450001
                 grunnlagsreferanseListe.shouldContainAll(
                     listOf(
                         "A1",
@@ -428,7 +429,7 @@ class AinntektServiceTest : AbstractServiceTest() {
                 periode.til shouldBe YearMonth.of(2023, 7)
                 gjelderBarnPersonId shouldBe ""
                 inntektPostListe.size shouldBe 4
-                inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 912000
+                inntektPostListe.sumOf { it.beløp }.toInt() shouldBe 912000
                 grunnlagsreferanseListe.shouldContainAll(listOf("A15", "A16", "A17", "A18", "A19"))
             }
 
@@ -439,7 +440,7 @@ class AinntektServiceTest : AbstractServiceTest() {
                 periode.til shouldBe YearMonth.of(2023, 5)
                 gjelderBarnPersonId shouldBe ""
                 inntektPostListe.size shouldBe 1
-                inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 720000
+                inntektPostListe.sumOf { it.beløp }.toInt() shouldBe 720000
                 grunnlagsreferanseListe.shouldContainAll(listOf("A13", "A14", "A15"))
             }
 
@@ -450,7 +451,7 @@ class AinntektServiceTest : AbstractServiceTest() {
                 periode.til shouldBe YearMonth.of(2023, 6)
                 gjelderBarnPersonId shouldBe ""
                 inntektPostListe.size shouldBe 3
-                inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 812000
+                inntektPostListe.sumOf { it.beløp }.toInt() shouldBe 812000
                 grunnlagsreferanseListe.shouldContainAll(listOf("A14", "A15", "A16", "A17", "A18"))
             }
         }
@@ -485,7 +486,7 @@ class AinntektServiceTest : AbstractServiceTest() {
                 periode.til shouldBe YearMonth.of(2022, 12)
                 gjelderBarnPersonId shouldBe ""
                 inntektPostListe.size shouldBe 3
-                inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 450001
+                inntektPostListe.sumOf { it.beløp }.toInt() shouldBe 450001
                 grunnlagsreferanseListe.shouldContainAll(
                     listOf(
                         "A1",
@@ -563,7 +564,7 @@ class AinntektServiceTest : AbstractServiceTest() {
                 periode.til shouldBe YearMonth.of(2023, 7)
                 gjelderBarnPersonId shouldBe ""
                 inntektPostListe.size shouldBe 4
-                inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 912000
+                inntektPostListe.sumOf { it.beløp }.toInt() shouldBe 912000
                 grunnlagsreferanseListe.shouldContainAll(listOf("A15", "A16", "A17", "A18", "A19"))
             }
 
@@ -574,7 +575,7 @@ class AinntektServiceTest : AbstractServiceTest() {
                 periode.til shouldBe YearMonth.of(2023, 5)
                 gjelderBarnPersonId shouldBe ""
                 inntektPostListe.size shouldBe 1
-                inntektPostListe.sumOf { it.beløp.toInt() } shouldBe 720000
+                inntektPostListe.sumOf { it.beløp }.toInt() shouldBe 720000
                 grunnlagsreferanseListe.shouldContainAll(listOf("A13", "A14", "A15"))
             }
         }
@@ -599,50 +600,26 @@ class AinntektServiceTest : AbstractServiceTest() {
                 // Assertions for total sum of income in each year
                 transformerteInntekter
                     .filter { it.gjelderÅrMåned.year == 2021 }
-                    .sumOf { it.sumInntekt.toInt() } shouldBeExactly 0
+                    .sumOf { it.sumInntekt }.setScale(0, RoundingMode.HALF_UP).toInt() shouldBeExactly 0
 
                 transformerteInntekter
                     .filter { it.gjelderÅrMåned.year == 2022 }
-                    .sumOf { it.sumInntekt.toInt() } shouldBeExactly 450001
+                    .sumOf { it.sumInntekt }.setScale(0, RoundingMode.HALF_UP).toInt() shouldBeExactly 450001
 
                 transformerteInntekter
                     .filter { it.gjelderÅrMåned.year == 2023 }
-                    .sumOf { it.sumInntekt.toInt() } shouldBeExactly 468000
+                    .sumOf { it.sumInntekt }.setScale(0, RoundingMode.HALF_UP).toInt() shouldBeExactly 468000
 
                 // Assertions for første element
                 with(transformerteInntekter[0]) {
                     gjelderÅrMåned shouldBe YearMonth.of(2022, 5)
-                    sumInntekt shouldBe BigDecimal.valueOf(75000)
+                    sumInntekt shouldBe BigDecimal.valueOf(75000.00).setScale(2)
                     inntektPostListe.size shouldBeExactly 3
-                    inntektPostListe.sumOf { it.beløp.toInt() } shouldBeExactly 75000
+                    inntektPostListe.sumOf { it.beløp }.toInt() shouldBeExactly 75000
                     inntektPostListe[0].kode shouldBe "fastloenn"
-                    inntektPostListe[0].beløp.toInt() shouldBeExactly 50000
+                    inntektPostListe[0].beløp shouldBe BigDecimal.valueOf(50000.00).setScale(2)
                 }
             }
-        }
-
-        @Test
-        fun `skal runde beregnet månedsinntekt opp hvis den er et desimaltall med minst fem tideler`() {
-            val periodeIMnd: Long = 3
-            val tremånederslønnInt = 1234565
-            val tremånederslønn = BigDecimal(tremånederslønnInt)
-            val månedslønnInt = tremånederslønnInt.div(3)
-            val månedslønn = tremånederslønn.div(BigDecimal(periodeIMnd))
-
-            // Verifisere at BigDecimal månedslønn er rundet opp til nærmeste heltall
-            assertTrue(månedslønn.toInt() - månedslønnInt == 1)
-        }
-
-        @Test
-        fun `skal runde beregnet månedsinntekt ned hvis den er et desimaltall med færre enn fem tideler`() {
-            val periodeIMnd: Long = 3
-            val tremånederslønnInt = 1234561
-            val tremånederslønn = BigDecimal(tremånederslønnInt)
-            val månedslønnInt = tremånederslønnInt.div(3)
-            val månedslønn = tremånederslønn.div(BigDecimal(periodeIMnd))
-
-            // Verifisere at BigDecimal månedslønn er rundet ned til nærmeste heltall tilsvarende som for Int
-            assertTrue(månedslønn.toInt() - månedslønnInt == 0)
         }
     }
 }
