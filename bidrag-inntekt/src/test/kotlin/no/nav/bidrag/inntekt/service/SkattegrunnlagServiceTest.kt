@@ -20,6 +20,8 @@ class SkattegrunnlagServiceTest : AbstractServiceTest() {
         val beregnedeKapsinntekter =
             skattegrunnlagService.beregnSkattegrunnlag(skattegrunnlagDto, Inntektsrapportering.KAPITALINNTEKT)
 
+        TestUtil.printJson(beregnedeKapsinntekter)
+
         assertSoftly {
             assertNotNull(beregnedeKapsinntekter)
             beregnedeKapsinntekter.size shouldBe 2
@@ -28,7 +30,7 @@ class SkattegrunnlagServiceTest : AbstractServiceTest() {
                 periode.fom shouldBe YearMonth.parse("2021-01")
                 periode.til shouldBe YearMonth.parse("2021-12")
                 inntektRapportering shouldBe Inntektsrapportering.KAPITALINNTEKT
-                sumInntekt shouldBe BigDecimal.valueOf(1700)
+                sumInntekt shouldBe BigDecimal.valueOf(1699)
                 gjelderBarnPersonId shouldBe ""
                 inntektPostListe.size shouldBe 4
 
@@ -39,12 +41,12 @@ class SkattegrunnlagServiceTest : AbstractServiceTest() {
 
                 with(inntektPostListe[1]) {
                     kode shouldBe "andreFradragsberettigedeKostnader"
-                    beløp shouldBe BigDecimal.valueOf(500)
+                    beløp shouldBe BigDecimal.valueOf(501)
                 }
 
                 with(inntektPostListe[2]) {
                     kode shouldBe "annenSkattepliktigKapitalinntektFraAnnetFinansprodukt"
-                    beløp shouldBe BigDecimal.valueOf(1500)
+                    beløp shouldBe BigDecimal.valueOf(1501)
                 }
 
                 with(inntektPostListe[3]) {
@@ -57,7 +59,7 @@ class SkattegrunnlagServiceTest : AbstractServiceTest() {
                 periode.fom shouldBe YearMonth.parse("2022-01")
                 periode.til shouldBe YearMonth.parse("2022-12")
                 inntektRapportering shouldBe Inntektsrapportering.KAPITALINNTEKT
-                sumInntekt shouldBe BigDecimal.valueOf(1700)
+                sumInntekt shouldBe BigDecimal.valueOf(1699)
                 gjelderBarnPersonId shouldBe ""
                 inntektPostListe.size shouldBe 4
 
@@ -68,12 +70,12 @@ class SkattegrunnlagServiceTest : AbstractServiceTest() {
 
                 with(inntektPostListe[1]) {
                     kode shouldBe "andreFradragsberettigedeKostnader"
-                    beløp shouldBe BigDecimal.valueOf(500)
+                    beløp shouldBe BigDecimal.valueOf(501)
                 }
 
                 with(inntektPostListe[2]) {
                     kode shouldBe "annenSkattepliktigKapitalinntektFraAnnetFinansprodukt"
-                    beløp shouldBe BigDecimal.valueOf(1500)
+                    beløp shouldBe BigDecimal.valueOf(1501)
                 }
 
                 with(inntektPostListe[3]) {
@@ -89,6 +91,8 @@ class SkattegrunnlagServiceTest : AbstractServiceTest() {
         val skattegrunnlagDto = TestUtil.byggSkattegrunnlagDto()
         val beregnedeLigsinntekter =
             skattegrunnlagService.beregnSkattegrunnlag(skattegrunnlagDto, Inntektsrapportering.LIGNINGSINNTEKT)
+
+        TestUtil.printJson(beregnedeLigsinntekter)
 
         assertSoftly {
             with(beregnedeLigsinntekter[0]) {

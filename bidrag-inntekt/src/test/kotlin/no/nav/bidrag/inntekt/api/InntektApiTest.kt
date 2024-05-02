@@ -17,6 +17,7 @@ import no.nav.bidrag.transport.behandling.inntekt.request.TransformerInntekterRe
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.math.RoundingMode
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -222,11 +223,11 @@ class InntektApiTest {
             transformerteInntekter.summertMånedsinntektListe.shouldNotBeEmpty()
             transformerteInntekter.summertMånedsinntektListe.shouldHaveSize(15)
             transformerteInntekter.summertMånedsinntektListe
-                .filter { it.gjelderÅrMåned.year == 2021 }.sumOf { it.sumInntekt.toInt() }.shouldBe(0)
+                .filter { it.gjelderÅrMåned.year == 2021 }.sumOf { it.sumInntekt }.setScale(0, RoundingMode.HALF_UP).toInt().shouldBe(0)
             transformerteInntekter.summertMånedsinntektListe
-                .filter { it.gjelderÅrMåned.year == 2022 }.sumOf { it.sumInntekt.toInt() }.shouldBe(450001)
+                .filter { it.gjelderÅrMåned.year == 2022 }.sumOf { it.sumInntekt }.setScale(0, RoundingMode.HALF_UP).toInt().shouldBe(450001)
             transformerteInntekter.summertMånedsinntektListe
-                .filter { it.gjelderÅrMåned.year == 2023 }.sumOf { it.sumInntekt.toInt() }.shouldBe(468000)
+                .filter { it.gjelderÅrMåned.year == 2023 }.sumOf { it.sumInntekt }.setScale(0, RoundingMode.HALF_UP).toInt().shouldBe(468000)
         }
     }
 }

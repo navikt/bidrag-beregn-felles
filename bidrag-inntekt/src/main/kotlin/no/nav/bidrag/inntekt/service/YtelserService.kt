@@ -131,7 +131,7 @@ class YtelserService {
     // Kalkulerer beløp for periode (måned, år eller intervall)
     private fun kalkulerbeløpForÅr(utbetalingsperiode: String, beskrivelse: String, beløp: BigDecimal, referanse: String): Map<String, Detaljpost> {
         val år = utbetalingsperiode.substring(0, 4)
-        return mapOf(år to Detaljpost(beløp = beløp.setScale(0, RoundingMode.HALF_UP), kode = beskrivelse, referanse = referanse))
+        return mapOf(år to Detaljpost(beløp = beløp, kode = beskrivelse, referanse = referanse))
     }
 }
 

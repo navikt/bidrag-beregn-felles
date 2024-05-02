@@ -39,25 +39,25 @@ class TestUtil {
                 skattegrunnlagType = "Ordinær",
                 // KAPS, MINUS, NEI
                 inntektType = "andelIFellesTapVedSalgAvAndelISDF",
-                belop = BigDecimal.valueOf(1000),
+                belop = BigDecimal.valueOf(1000.44),
             ),
             SkattegrunnlagspostDto(
                 skattegrunnlagType = "Ordinær",
                 // KAPS, MINUS, NEI
                 inntektType = "andreFradragsberettigedeKostnader",
-                belop = BigDecimal.valueOf(500),
+                belop = BigDecimal.valueOf(500.88),
             ),
             SkattegrunnlagspostDto(
                 skattegrunnlagType = "Ordinær",
                 // KAPS, PLUSS, NEI
                 inntektType = "annenSkattepliktigKapitalinntektFraAnnetFinansprodukt",
-                belop = BigDecimal.valueOf(1500),
+                belop = BigDecimal.valueOf(1500.66),
             ),
             SkattegrunnlagspostDto(
                 skattegrunnlagType = "Ordinær",
                 // KAPS, PLUSS, JA
                 inntektType = "samledeOpptjenteRenterIUtenlandskeBanker",
-                belop = BigDecimal.valueOf(1700),
+                belop = BigDecimal.valueOf(1700.11),
             ),
             SkattegrunnlagspostDto(
                 skattegrunnlagType = "Ordinær",

@@ -167,10 +167,10 @@ class YtelserServiceOvergangsstønad {
         return if (antallMånederMedDataIPerioden == 0) {
             BigDecimal.ZERO
         } else {
-            val skalertBeløp = beløp.setScale(10, RoundingMode.HALF_UP) // Øker scale for bedre prsisjon
+            val skalertBeløp = beløp.setScale(10, RoundingMode.HALF_UP) // Øker scale for bedre presisjon
             val månedligInntekt = skalertBeløp.divide(BigDecimal.valueOf(antallMånederMedDataIPerioden.toLong()), 10, RoundingMode.HALF_UP)
             val årligInntekt = månedligInntekt.multiply(BigDecimal.valueOf(12))
-            årligInntekt.setScale(0, RoundingMode.HALF_UP)
+            årligInntekt
         }
     }
 
@@ -255,7 +255,7 @@ class YtelserServiceOvergangsstønad {
         return kalkulerBeløpForÅr(
             periode = periode,
             beskrivelse = beskrivelse,
-            beløp = beløp.setScale(0, RoundingMode.HALF_UP),
+            beløp = beløp,
             referanse = referanse,
         )
     }
@@ -263,6 +263,6 @@ class YtelserServiceOvergangsstønad {
     // Kalkulerer totalt beløp for hvert år forekomsten dekker
     private fun kalkulerBeløpForÅr(periode: YearMonth, beskrivelse: String, beløp: BigDecimal, referanse: String): Map<String, Detaljpost> {
         val år = if (periode.monthValue < BRUDD_MÅNED_OVERGANSSTØNAD) periode.year - 1 else periode.year
-        return mapOf(år.toString() to Detaljpost(beløp = beløp.setScale(0, RoundingMode.HALF_UP), kode = beskrivelse, referanse = referanse))
+        return mapOf(år.toString() to Detaljpost(beløp = beløp, kode = beskrivelse, referanse = referanse))
     }
 }

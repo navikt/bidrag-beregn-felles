@@ -39,16 +39,16 @@ class YtelserServiceTest : AbstractServiceTest() {
 
                 with(transformerteInntekter[0]) {
                     inntektRapportering shouldBe Inntektsrapportering.AAP
-                    sumInntekt shouldBe BigDecimal.valueOf(50000)
+                    sumInntekt shouldBe BigDecimal.valueOf(50001)
                     periode.fom shouldBe YearMonth.of(2021, 1)
                     periode.til shouldBe YearMonth.of(2021, 12)
                     gjelderBarnPersonId shouldBe ""
                     inntektPostListe.size shouldBe 1
-                    inntektPostListe.sumOf { it.beløp } shouldBe BigDecimal.valueOf(50000)
+                    inntektPostListe.sumOf { it.beløp } shouldBe BigDecimal.valueOf(50001)
 
                     with(inntektPostListe[0]) {
                         kode shouldBe "arbeidsavklaringspenger"
-                        beløp shouldBe BigDecimal.valueOf(50000)
+                        beløp shouldBe BigDecimal.valueOf(50001)
                     }
                 }
 
@@ -91,7 +91,7 @@ class YtelserServiceTest : AbstractServiceTest() {
 
                 with(transformerteInntekter[0]) {
                     inntektRapportering shouldBe Inntektsrapportering.DAGPENGER
-                    sumInntekt shouldBe BigDecimal.valueOf(50000)
+                    sumInntekt shouldBe BigDecimal.valueOf(50001)
                     periode.fom shouldBe YearMonth.of(2021, 1)
                     periode.til shouldBe YearMonth.of(2021, 12)
                     gjelderBarnPersonId shouldBe ""
@@ -163,21 +163,21 @@ class YtelserServiceTest : AbstractServiceTest() {
 
                 with(transformerteInntekter[1]) {
                     inntektRapportering shouldBe Inntektsrapportering.OVERGANGSSTØNAD
-                    sumInntekt shouldBe BigDecimal.valueOf(266892)
+                    sumInntekt shouldBe BigDecimal.valueOf(266896)
                     periode.fom shouldBe YearMonth.of(2023, 5)
                     periode.til shouldBe YearMonth.of(2024, 4)
                     gjelderBarnPersonId shouldBe ""
                     inntektPostListe.size shouldBe 2
-                    inntektPostListe.sumOf { it.beløp } shouldBe BigDecimal.valueOf(266892)
+                    inntektPostListe.sumOf { it.beløp } shouldBe BigDecimal.valueOf(266896)
 
                     with(inntektPostListe[0]) {
                         kode shouldBe "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere"
-                        beløp shouldBe BigDecimal.valueOf(207583)
+                        beløp shouldBe BigDecimal.valueOf(207585)
                     }
 
                     with(inntektPostListe[1]) {
                         kode shouldBe "overgangsstoenadTilGjenlevendeEktefelle"
-                        beløp shouldBe BigDecimal.valueOf(59309)
+                        beløp shouldBe BigDecimal.valueOf(59311)
                     }
                 }
             }

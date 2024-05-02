@@ -13,6 +13,7 @@ import no.nav.bidrag.inntekt.testdata.StubUtils.Companion.kodeverkUrl
 import no.nav.bidrag.inntekt.util.VersionProvider.Companion.APP_VERSJON
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import java.math.RoundingMode
 import java.time.LocalDate
 
 @DisplayName("InntektServiceTest")
@@ -74,11 +75,11 @@ class InntektServiceTest : AbstractServiceTest() {
             transformerteInntekterResponseDto.summertMånedsinntektListe.shouldNotBeEmpty()
             transformerteInntekterResponseDto.summertMånedsinntektListe.shouldHaveSize(15)
             transformerteInntekterResponseDto.summertMånedsinntektListe
-                .filter { it.gjelderÅrMåned.year == 2021 }.sumOf { it.sumInntekt.toInt() }.shouldBe(0)
+                .filter { it.gjelderÅrMåned.year == 2021 }.sumOf { it.sumInntekt }.setScale(0, RoundingMode.HALF_UP).toInt().shouldBe(0)
             transformerteInntekterResponseDto.summertMånedsinntektListe
-                .filter { it.gjelderÅrMåned.year == 2022 }.sumOf { it.sumInntekt.toInt() }.shouldBe(450001)
+                .filter { it.gjelderÅrMåned.year == 2022 }.sumOf { it.sumInntekt }.setScale(0, RoundingMode.HALF_UP).toInt().shouldBe(450001)
             transformerteInntekterResponseDto.summertMånedsinntektListe
-                .filter { it.gjelderÅrMåned.year == 2023 }.sumOf { it.sumInntekt.toInt() }.shouldBe(468000)
+                .filter { it.gjelderÅrMåned.year == 2023 }.sumOf { it.sumInntekt }.setScale(0, RoundingMode.HALF_UP).toInt().shouldBe(468000)
         }
     }
 
@@ -155,9 +156,9 @@ class InntektServiceTest : AbstractServiceTest() {
             transformerteInntekterResponseDto.summertMånedsinntektListe.shouldNotBeEmpty()
             transformerteInntekterResponseDto.summertMånedsinntektListe.shouldHaveSize(17)
             transformerteInntekterResponseDto.summertMånedsinntektListe
-                .filter { it.gjelderÅrMåned.year == 2021 }.sumOf { it.sumInntekt.toInt() }.shouldBe(7000)
+                .filter { it.gjelderÅrMåned.year == 2021 }.sumOf { it.sumInntekt }.toInt().shouldBe(7000)
             transformerteInntekterResponseDto.summertMånedsinntektListe
-                .filter { it.gjelderÅrMåned.year == 2022 }.sumOf { it.sumInntekt.toInt() }.shouldBe(30000)
+                .filter { it.gjelderÅrMåned.year == 2022 }.sumOf { it.sumInntekt }.toInt().shouldBe(30000)
         }
     }
 
