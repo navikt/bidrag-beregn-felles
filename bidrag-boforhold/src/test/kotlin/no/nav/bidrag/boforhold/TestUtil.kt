@@ -880,5 +880,33 @@ class TestUtil {
                 ),
             ),
         )
+
+        fun byggFlereOverlappendeManuellePerioderMedUlikBostatuskode() = listOf(
+            BoforholdRequest(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2017, 3, 17),
+                erBarnAvBmBp = true,
+                bostatusListe = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 1, 1),
+                        periodeTom = LocalDate.of(2024, 2, 29),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2024, 1, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2024, 3, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+            ),
+        )
     }
 }

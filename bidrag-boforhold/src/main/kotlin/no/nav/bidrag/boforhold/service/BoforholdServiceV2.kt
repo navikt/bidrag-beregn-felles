@@ -127,7 +127,7 @@ internal class BoforholdServiceV2() {
                     )
                 }
             }
-            return slåSammenManuelleOgOffentligePerioder(manuelleOpplysninger, genererteOffentligePerioder)
+            return slåSammenManuelleOgOffentligePerioder(justerteManuellePerioder, genererteOffentligePerioder)
         } else {
             // Det finnes offentlige perioder og disse behandles under.
 
