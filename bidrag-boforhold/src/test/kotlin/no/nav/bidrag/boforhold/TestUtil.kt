@@ -38,8 +38,8 @@ class TestUtil {
                 bostatusListe = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 12),
-                        periodeTom = LocalDate.of(2020, 2, 11),
-                        bostatus = null,
+                        periodeTom = null,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -521,6 +521,12 @@ class TestUtil {
                 erBarnAvBmBp = true,
                 bostatusListe = listOf(
                     Bostatus(
+                        periodeFom = LocalDate.of(2005, 4, 17),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
                         periodeFom = LocalDate.of(2021, 4, 1),
                         periodeTom = LocalDate.of(2021, 12, 31),
                         bostatus = Bostatuskode.MED_FORELDER,
@@ -766,7 +772,7 @@ class TestUtil {
         fun flereOffentligOgManuellPeriodeMedOppholdMellom() = listOf(
             BoforholdRequest(
                 relatertPersonPersonId = "12345678901",
-                fødselsdato = LocalDate.of(2005, 9, 1),
+                fødselsdato = LocalDate.of(2005, 9, 17),
                 erBarnAvBmBp = true,
                 bostatusListe = listOf(
                     Bostatus(
@@ -903,6 +909,156 @@ class TestUtil {
                         periodeFom = LocalDate.of(2024, 3, 1),
                         periodeTom = null,
                         bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+            ),
+        )
+
+        fun byggManuellPeriodeMed18År() = listOf(
+            BoforholdRequest(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2005, 3, 17),
+                erBarnAvBmBp = true,
+                bostatusListe = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2021, 1, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+            ),
+        )
+
+        fun byggManuellePerioderMedOpphold() = listOf(
+            BoforholdRequest(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2005, 3, 17),
+                erBarnAvBmBp = true,
+                bostatusListe = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2021, 1, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2022, 3, 1),
+                        periodeTom = LocalDate.of(2022, 12, 31),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 3, 1),
+                        periodeTom = LocalDate.of(2023, 9, 30),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2024, 3, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+            ),
+        )
+
+        fun byggManuellePerioderMedOppholdPlussOffentligPeriode() = listOf(
+            BoforholdRequest(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2005, 3, 17),
+                erBarnAvBmBp = true,
+                bostatusListe = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2021, 1, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2022, 3, 1),
+                        periodeTom = LocalDate.of(2022, 12, 31),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 1, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 3, 1),
+                        periodeTom = LocalDate.of(2023, 9, 30),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2024, 3, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+            ),
+        )
+
+        fun byggUtenPeriodeEtter18årsdagManuell() = listOf(
+            BoforholdRequest(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2005, 3, 17),
+                erBarnAvBmBp = true,
+                bostatusListe = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2021, 1, 1),
+                        periodeTom = LocalDate.of(2022, 1, 31),
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+            ),
+        )
+
+        fun byggUtenPeriodeEtter18årsdagOffentlig() = listOf(
+            BoforholdRequest(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2005, 3, 17),
+                erBarnAvBmBp = true,
+                bostatusListe = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2021, 1, 1),
+                        periodeTom = LocalDate.of(2022, 1, 31),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                ),
+            ),
+        )
+
+        fun byggUtenPeriodeEtter18årsdagOffentligOgManuell() = listOf(
+            BoforholdRequest(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2005, 3, 17),
+                erBarnAvBmBp = true,
+                bostatusListe = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2021, 7, 1),
+                        periodeTom = LocalDate.of(2022, 1, 31),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 6, 1),
+                        periodeTom = LocalDate.of(2024, 1, 31),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2024, 2, 1),
+                        periodeTom = LocalDate.of(2024, 4, 30),
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),

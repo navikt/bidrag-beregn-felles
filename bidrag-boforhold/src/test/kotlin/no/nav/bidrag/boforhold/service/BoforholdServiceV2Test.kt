@@ -40,18 +40,7 @@ internal class BoforholdServiceV2Test {
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
-            resultat.size shouldBe 2
-            resultat[0].periodeFom shouldBe LocalDate.of(2022, 9, 1)
-            resultat[0].periodeTom shouldBe LocalDate.of(2023, 3, 31)
-            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
-            resultat[0].fødselsdato shouldBe mottatteBoforhold[0].fødselsdato
-            resultat[0].kilde shouldBe Kilde.OFFENTLIG
-
-            resultat[1].periodeFom shouldBe LocalDate.of(2023, 4, 1)
-            resultat[1].periodeTom shouldBe null
-            resultat[1].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
-            resultat[1].fødselsdato shouldBe mottatteBoforhold[0].fødselsdato
-            resultat[1].kilde shouldBe Kilde.OFFENTLIG
+            resultat.size shouldBe 0
         }
     }
 
@@ -64,12 +53,7 @@ internal class BoforholdServiceV2Test {
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
-            resultat.size shouldBe 1
-            resultat[0].periodeFom shouldBe LocalDate.of(2022, 9, 1)
-            resultat[0].periodeTom shouldBe null
-            resultat[0].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
-            resultat[0].fødselsdato shouldBe mottatteBoforhold[0].fødselsdato
-            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+            resultat.size shouldBe 0
         }
     }
 
@@ -314,7 +298,7 @@ internal class BoforholdServiceV2Test {
             resultat[0].periodeTom shouldBe LocalDate.of(2022, 1, 31)
             resultat[0].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
             resultat[0].fødselsdato shouldBe mottatteBoforhold[0].fødselsdato
-            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+            resultat[0].kilde shouldBe Kilde.MANUELL
 
             resultat[1].periodeFom shouldBe LocalDate.of(2022, 2, 1)
             resultat[1].periodeTom shouldBe null
@@ -442,7 +426,7 @@ internal class BoforholdServiceV2Test {
     }
 
     @Test
-    fun `Test manuelle perioder under 18 år, suppleres med genererte offentlige perioder `() {
+    fun `Test manuelle perioder under 18 år`() {
         boforholdServiceV2 = BoforholdServiceV2()
         val mottatteBoforhold = TestUtil.barnManuellePerioderMedOppholdFør18Årsdag()
         val virkningstidspunkt = LocalDate.of(2020, 9, 1)
@@ -450,7 +434,7 @@ internal class BoforholdServiceV2Test {
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
-            resultat.size shouldBe 3
+            resultat.size shouldBe 4
 
             resultat[0].periodeFom shouldBe LocalDate.of(2020, 9, 1)
             resultat[0].periodeTom shouldBe LocalDate.of(2021, 2, 28)
@@ -460,12 +444,17 @@ internal class BoforholdServiceV2Test {
             resultat[1].periodeFom shouldBe LocalDate.of(2021, 3, 1)
             resultat[1].periodeTom shouldBe LocalDate.of(2022, 1, 31)
             resultat[1].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
-            resultat[1].kilde shouldBe Kilde.OFFENTLIG
+            resultat[1].kilde shouldBe Kilde.MANUELL
 
             resultat[2].periodeFom shouldBe LocalDate.of(2022, 2, 1)
-            resultat[2].periodeTom shouldBe null
+            resultat[2].periodeTom shouldBe LocalDate.of(2023, 2, 28)
             resultat[2].bostatus shouldBe Bostatuskode.MED_FORELDER
             resultat[2].kilde shouldBe Kilde.MANUELL
+
+            resultat[3].periodeFom shouldBe LocalDate.of(2023, 3, 1)
+            resultat[3].periodeTom shouldBe null
+            resultat[3].bostatus shouldBe Bostatuskode.DOKUMENTERT_SKOLEGANG
+            resultat[3].kilde shouldBe Kilde.MANUELL
         }
     }
 
@@ -671,19 +660,7 @@ internal class BoforholdServiceV2Test {
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
-            resultat.size shouldBe 2
-
-            resultat[0].relatertPersonPersonId shouldBe "12345678901"
-            resultat[0].periodeFom shouldBe LocalDate.of(2022, 1, 1)
-            resultat[0].periodeTom shouldBe null
-            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
-            resultat[0].kilde shouldBe Kilde.OFFENTLIG
-
-            resultat[1].relatertPersonPersonId shouldBe "98765432109"
-            resultat[1].periodeFom shouldBe LocalDate.of(2022, 1, 1)
-            resultat[1].periodeTom shouldBe null
-            resultat[1].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
-            resultat[1].kilde shouldBe Kilde.OFFENTLIG
+            resultat.size shouldBe 0
         }
     }
 
@@ -741,7 +718,7 @@ internal class BoforholdServiceV2Test {
 
             resultat[2].periodeFom shouldBe LocalDate.of(2023, 11, 1)
             resultat[2].periodeTom shouldBe null
-            resultat[2].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[2].bostatus shouldBe Bostatuskode.DOKUMENTERT_SKOLEGANG
             resultat[2].kilde shouldBe Kilde.MANUELL
         }
     }
@@ -848,6 +825,233 @@ internal class BoforholdServiceV2Test {
             resultat[1].periodeTom shouldBe null
             resultat[1].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
             resultat[1].kilde shouldBe Kilde.MANUELL
+        }
+    }
+
+    @Test
+    fun `Test at det genereres periode for 18 år med manuell periode med periodeTom = null`() {
+        boforholdServiceV2 = BoforholdServiceV2()
+        val mottatteBoforhold = TestUtil.byggManuellPeriodeMed18År()
+        val virkningstidspunkt = LocalDate.of(2023, 1, 1)
+        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 2
+            resultat[0].periodeFom shouldBe LocalDate.of(2023, 1, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2023, 3, 31)
+            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.MANUELL
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2023, 4, 1)
+            resultat[1].periodeTom shouldBe null
+            resultat[1].bostatus shouldBe Bostatuskode.DOKUMENTERT_SKOLEGANG
+            resultat[1].kilde shouldBe Kilde.MANUELL
+        }
+    }
+
+    @Test
+    fun `Test at det genereres IKKE_MED_FORELDER-perioder der det er opphold, kun manuelle perioder`() {
+        boforholdServiceV2 = BoforholdServiceV2()
+        val mottatteBoforhold = TestUtil.byggManuellePerioderMedOpphold()
+        val virkningstidspunkt = LocalDate.of(2021, 5, 1)
+        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 7
+            // Periode 1 i input, avkortes til periodeFom neste periode minus 1 dag
+            resultat[0].periodeFom shouldBe LocalDate.of(2021, 5, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2022, 2, 28)
+            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.MANUELL
+
+            // Periode 2 i input
+            resultat[1].periodeFom shouldBe LocalDate.of(2022, 3, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2022, 12, 31)
+            resultat[1].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.MANUELL
+
+            // Generert periode pga opphold i inputperioder
+            resultat[2].periodeFom shouldBe LocalDate.of(2023, 1, 1)
+            resultat[2].periodeTom shouldBe LocalDate.of(2023, 2, 28)
+            resultat[2].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[2].kilde shouldBe Kilde.MANUELL
+
+            // Periode 3 i input. Avkortes pga barnet fyller 18 år 01.04.2023
+            resultat[3].periodeFom shouldBe LocalDate.of(2023, 3, 1)
+            resultat[3].periodeTom shouldBe LocalDate.of(2023, 3, 31)
+            resultat[3].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[3].kilde shouldBe Kilde.MANUELL
+
+            // Basert på periode 3 i input, barnet har fyllt 18 år.
+            resultat[4].periodeFom shouldBe LocalDate.of(2023, 4, 1)
+            resultat[4].periodeTom shouldBe LocalDate.of(2023, 9, 30)
+            resultat[4].bostatus shouldBe Bostatuskode.DOKUMENTERT_SKOLEGANG
+            resultat[4].kilde shouldBe Kilde.MANUELL
+
+            // Generert periode pga opphold i inputperioder
+            resultat[5].periodeFom shouldBe LocalDate.of(2023, 10, 1)
+            resultat[5].periodeTom shouldBe LocalDate.of(2024, 2, 29)
+            resultat[5].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
+            resultat[5].kilde shouldBe Kilde.MANUELL
+
+            // Periode 4 i input, bostatuskode endret pga 18 år.
+            resultat[6].periodeFom shouldBe LocalDate.of(2024, 3, 1)
+            resultat[6].periodeTom shouldBe null
+            resultat[6].bostatus shouldBe Bostatuskode.DOKUMENTERT_SKOLEGANG
+            resultat[6].kilde shouldBe Kilde.MANUELL
+        }
+    }
+
+    @Test
+    fun `Test at det genereres IKKE_MED_FORELDER-perioder der det er opphold, manuelle og offentlige perioder`() {
+        boforholdServiceV2 = BoforholdServiceV2()
+        val mottatteBoforhold = TestUtil.byggManuellePerioderMedOppholdPlussOffentligPeriode()
+        val virkningstidspunkt = LocalDate.of(2021, 5, 1)
+        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 7
+            // Periode 1 i input, avkortes til periodeFom neste periode minus 1 dag
+            resultat[0].periodeFom shouldBe LocalDate.of(2021, 5, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2022, 2, 28)
+            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.MANUELL
+
+            // Periode 2 i input
+            resultat[1].periodeFom shouldBe LocalDate.of(2022, 3, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2022, 12, 31)
+            resultat[1].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.MANUELL
+
+            // Periode 3 i input, offentlig.
+            resultat[2].periodeFom shouldBe LocalDate.of(2023, 1, 1)
+            resultat[2].periodeTom shouldBe LocalDate.of(2023, 2, 28)
+            resultat[2].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[2].kilde shouldBe Kilde.OFFENTLIG
+
+            // Periode 4 i input. Avkortes pga barnet fyller 18 år 01.04.2023
+            resultat[3].periodeFom shouldBe LocalDate.of(2023, 3, 1)
+            resultat[3].periodeTom shouldBe LocalDate.of(2023, 3, 31)
+            resultat[3].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[3].kilde shouldBe Kilde.MANUELL
+
+            // Basert på periode 4 i input, barnet har fyllt 18 år.
+            resultat[4].periodeFom shouldBe LocalDate.of(2023, 4, 1)
+            resultat[4].periodeTom shouldBe LocalDate.of(2023, 9, 30)
+            resultat[4].bostatus shouldBe Bostatuskode.DOKUMENTERT_SKOLEGANG
+            resultat[4].kilde shouldBe Kilde.MANUELL
+
+            // Generert periode pga opphold i inputperioder
+            resultat[5].periodeFom shouldBe LocalDate.of(2023, 10, 1)
+            resultat[5].periodeTom shouldBe LocalDate.of(2024, 2, 29)
+            resultat[5].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
+            resultat[5].kilde shouldBe Kilde.OFFENTLIG
+
+            // Periode 4 i input, bostatuskode endret pga 18 år.
+            resultat[6].periodeFom shouldBe LocalDate.of(2024, 3, 1)
+            resultat[6].periodeTom shouldBe null
+            resultat[6].bostatus shouldBe Bostatuskode.DOKUMENTERT_SKOLEGANG
+            resultat[6].kilde shouldBe Kilde.MANUELL
+        }
+    }
+
+    @Test
+    fun `Test at det genereres periode med riktig status for 18 åring - manuell periode`() {
+        boforholdServiceV2 = BoforholdServiceV2()
+        val mottatteBoforhold = TestUtil.byggUtenPeriodeEtter18årsdagManuell()
+        val virkningstidspunkt = LocalDate.of(2021, 5, 1)
+        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 2
+            //
+            resultat[0].periodeFom shouldBe LocalDate.of(2021, 5, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2023, 3, 31)
+            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.MANUELL
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2023, 4, 1)
+            resultat[1].periodeTom shouldBe null
+            resultat[1].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
+            resultat[1].kilde shouldBe Kilde.MANUELL
+        }
+    }
+
+    @Test
+    fun `Test at det genereres periode med riktig status for 18 åring - offentlig periode`() {
+        boforholdServiceV2 = BoforholdServiceV2()
+        val mottatteBoforhold = TestUtil.byggUtenPeriodeEtter18årsdagOffentlig()
+        val virkningstidspunkt = LocalDate.of(2021, 5, 1)
+        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 3
+            //
+            resultat[0].periodeFom shouldBe LocalDate.of(2021, 5, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2022, 1, 31)
+            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2022, 2, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2023, 3, 31)
+            resultat[1].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2023, 4, 1)
+            resultat[2].periodeTom shouldBe null
+            resultat[2].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
+            resultat[2].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
+
+    @Test
+    fun `Test at det genereres periode med riktig status for 18 åring - offentlig og manuell periode`() {
+        boforholdServiceV2 = BoforholdServiceV2()
+        val mottatteBoforhold = TestUtil.byggUtenPeriodeEtter18årsdagOffentligOgManuell()
+        val virkningstidspunkt = LocalDate.of(2021, 5, 1)
+        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 6
+            // Generert periode for tidsrom mellom virkningstidspunkt og periodeFom for første periode i input.
+            resultat[0].periodeFom shouldBe LocalDate.of(2021, 5, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2021, 6, 30)
+            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            // Periode 1 i input
+            resultat[1].periodeFom shouldBe LocalDate.of(2021, 7, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2022, 1, 31)
+            resultat[1].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.MANUELL
+
+            // Generert periode for tidsrom mellom periode 1 og attenårsdag.
+            resultat[2].periodeFom shouldBe LocalDate.of(2022, 2, 1)
+            resultat[2].periodeTom shouldBe LocalDate.of(2023, 3, 31)
+            resultat[2].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[2].kilde shouldBe Kilde.OFFENTLIG
+
+            // Barnet har fyllt 18 år. Offentlig periode med MED_FORELDER får bostatuskode REGNES_IKKE_SOM_BARN.
+            resultat[3].periodeFom shouldBe LocalDate.of(2023, 4, 1)
+            resultat[3].periodeTom shouldBe LocalDate.of(2024, 1, 31)
+            resultat[3].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
+            resultat[3].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[4].periodeFom shouldBe LocalDate.of(2024, 2, 1)
+            resultat[4].periodeTom shouldBe LocalDate.of(2024, 4, 30)
+            resultat[4].bostatus shouldBe Bostatuskode.DOKUMENTERT_SKOLEGANG
+            resultat[4].kilde shouldBe Kilde.MANUELL
+
+            resultat[5].periodeFom shouldBe LocalDate.of(2024, 5, 1)
+            resultat[5].periodeTom shouldBe null
+            resultat[5].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
+            resultat[5].kilde shouldBe Kilde.OFFENTLIG
         }
     }
 }
