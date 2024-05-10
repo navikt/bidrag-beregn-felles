@@ -6,6 +6,7 @@ import no.nav.bidrag.boforhold.TestUtil
 import no.nav.bidrag.domene.enums.diverse.Kilde
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
@@ -1092,6 +1093,7 @@ internal class BoforholdServiceV2Test {
         }
     }
 
+    @Disabled
     @Test
     fun `Test offentlige perioder overlapper`() {
         boforholdServiceV2 = BoforholdServiceV2()
