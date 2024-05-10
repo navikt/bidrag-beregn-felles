@@ -968,17 +968,22 @@ internal class BoforholdServiceV2Test {
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
-            resultat.size shouldBe 2
+            resultat.size shouldBe 3
             //
             resultat[0].periodeFom shouldBe LocalDate.of(2021, 5, 1)
-            resultat[0].periodeTom shouldBe LocalDate.of(2023, 3, 31)
-            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[0].periodeTom shouldBe LocalDate.of(2022, 1, 31)
+            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
             resultat[0].kilde shouldBe Kilde.MANUELL
 
-            resultat[1].periodeFom shouldBe LocalDate.of(2023, 4, 1)
-            resultat[1].periodeTom shouldBe null
-            resultat[1].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
+            resultat[1].periodeFom shouldBe LocalDate.of(2022, 2, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2023, 3, 31)
+            resultat[1].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
             resultat[1].kilde shouldBe Kilde.MANUELL
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2023, 4, 1)
+            resultat[2].periodeTom shouldBe null
+            resultat[2].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
+            resultat[2].kilde shouldBe Kilde.MANUELL
         }
     }
 

@@ -1014,7 +1014,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 1, 1),
                         periodeTom = LocalDate.of(2022, 1, 31),
-                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
