@@ -1064,5 +1064,96 @@ class TestUtil {
                 ),
             ),
         )
+
+        // Tester fra front-end
+        fun byggManuellPeriodeOverlapperAlleOffentlige() = listOf(
+            BoforholdRequest(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2015, 3, 17),
+                erBarnAvBmBp = true,
+                bostatusListe = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2022, 4, 1),
+                        periodeTom = LocalDate.of(2022, 4, 30),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2022, 5, 1),
+                        periodeTom = LocalDate.of(2022, 5, 31),
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2022, 6, 1),
+                        periodeTom = LocalDate.of(2022, 6, 30),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2022, 7, 1),
+                        periodeTom = LocalDate.of(2022, 7, 31),
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2022, 8, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2022, 5, 1),
+                        periodeTom = LocalDate.of(2022, 7, 31),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+            ),
+        )
+
+        fun byggKunManuellIkkeMedForelder() = listOf(
+            BoforholdRequest(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2015, 3, 17),
+                erBarnAvBmBp = true,
+                bostatusListe = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2022, 5, 1),
+                        periodeTom = LocalDate.of(2022, 7, 31),
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+            ),
+        )
+
+        fun byggOffentligePerioderOverlapper() = listOf(
+            BoforholdRequest(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2015, 3, 17),
+                erBarnAvBmBp = true,
+                bostatusListe = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2021, 4, 1),
+                        periodeTom = LocalDate.of(2021, 8, 31),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2021, 8, 1),
+                        periodeTom = LocalDate.of(2021, 12, 31),
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2022, 4, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                ),
+            ),
+        )
     }
 }
