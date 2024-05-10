@@ -6,6 +6,7 @@ import no.nav.bidrag.boforhold.TestUtil
 import no.nav.bidrag.domene.enums.diverse.Kilde
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
@@ -213,7 +214,7 @@ internal class BoforholdServiceV2Test {
     }
 
     @Test
-    fun `TestOppholdPerioderHusstandsmedlemskapOgAttenår`() {
+    fun `Test opphold perioder husstandsmedlemskap og 18 år`() {
         boforholdServiceV2 = BoforholdServiceV2()
         val mottatteBoforhold = TestUtil.byggOppholdPerioderHusstandsmedlemskapOgAttenårV2()
         val virkningstidspunkt = LocalDate.of(2021, 9, 1)
@@ -967,17 +968,22 @@ internal class BoforholdServiceV2Test {
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
-            resultat.size shouldBe 2
+            resultat.size shouldBe 3
             //
             resultat[0].periodeFom shouldBe LocalDate.of(2021, 5, 1)
-            resultat[0].periodeTom shouldBe LocalDate.of(2023, 3, 31)
-            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[0].periodeTom shouldBe LocalDate.of(2022, 1, 31)
+            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
             resultat[0].kilde shouldBe Kilde.MANUELL
 
-            resultat[1].periodeFom shouldBe LocalDate.of(2023, 4, 1)
-            resultat[1].periodeTom shouldBe null
-            resultat[1].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
+            resultat[1].periodeFom shouldBe LocalDate.of(2022, 2, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2023, 3, 31)
+            resultat[1].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
             resultat[1].kilde shouldBe Kilde.MANUELL
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2023, 4, 1)
+            resultat[2].periodeTom shouldBe null
+            resultat[2].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
+            resultat[2].kilde shouldBe Kilde.MANUELL
         }
     }
 
@@ -1052,6 +1058,62 @@ internal class BoforholdServiceV2Test {
             resultat[5].periodeTom shouldBe null
             resultat[5].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
             resultat[5].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
+
+    // Tester fra front-end
+    @Test
+    fun `Test med manuell periode som overlapper alle offentlige perioder`() {
+        boforholdServiceV2 = BoforholdServiceV2()
+        val mottatteBoforhold = TestUtil.byggManuellPeriodeOverlapperAlleOffentlige()
+        val virkningstidspunkt = LocalDate.of(2022, 4, 1)
+        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 1
+            // Generert periode for tidsrom mellom virkningstidspunkt og periodeFom for første periode i input.
+            resultat[0].periodeFom shouldBe LocalDate.of(2022, 4, 1)
+            resultat[0].periodeTom shouldBe null
+            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.MANUELL
+        }
+    }
+
+    @Test
+    fun `Test med kun lukket manuell periode IKKE_MED_FORELDER`() {
+        boforholdServiceV2 = BoforholdServiceV2()
+        val mottatteBoforhold = TestUtil.byggKunManuellIkkeMedForelder()
+        val virkningstidspunkt = LocalDate.of(2022, 4, 1)
+        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 1
+            // Generert periode for tidsrom mellom virkningstidspunkt og periodeFom for første periode i input.
+            resultat[0].periodeFom shouldBe LocalDate.of(2022, 5, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2022, 7, 31)
+            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.MANUELL
+        }
+    }
+
+    @Disabled
+    @Test
+    fun `Test offentlige perioder overlapper`() {
+        boforholdServiceV2 = BoforholdServiceV2()
+        val mottatteBoforhold = TestUtil.byggOffentligePerioderOverlapper()
+        val virkningstidspunkt = LocalDate.of(2022, 4, 1)
+        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 3
+            // Generert periode for tidsrom mellom virkningstidspunkt og periodeFom for første periode i input.
+            resultat[0].periodeFom shouldBe LocalDate.of(2022, 5, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2022, 7, 31)
+            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.MANUELL
         }
     }
 }

@@ -83,7 +83,10 @@ internal class BoforholdServiceV2() {
             // periodeFom minus én dag.
             val justerteManuellePerioder = slåSammenPerioderOgJusterPeriodeTom(manuelleOpplysninger)
             // Fyller ut perioder der det ikke finnes informasjon om barnet i manuelle opplysninger. Bostatuskode settes lik IKKE_MED_FORELDER og
-            // kilde = MANUELL.
+            // kilde = MANUELL. Hvis det kun finnes manuelle perioder med IKKE_MED_FORELDER så returneres disse uendret.
+            if (justerteManuellePerioder.all { it.bostatus == Bostatuskode.IKKE_MED_FORELDER }) {
+                return justerteManuellePerioder
+            }
             val komplettManuellTidslinje = fyllUtMedPerioderBarnetIkkeBorIHusstanden(startdatoBeregning, justerteManuellePerioder)
             // Gjør en ny sammenslåing av sammenhengende perioder med lik bostatus for å få med perioder generert i komplettManuellTidslinje.
             val sammenslåttManuellTidslinje = slåSammenPerioderOgJusterPeriodeTom(komplettManuellTidslinje)
@@ -197,7 +200,7 @@ internal class BoforholdServiceV2() {
                         periodeTom = liste[indeks].periodeTom,
                         bostatus = liste[indeks].bostatus,
                         fødselsdato = liste[indeks].fødselsdato,
-                        kilde = liste[indeks].kilde,
+                        kilde = kilde ?: liste[indeks].kilde,
 
                     ),
                 )
