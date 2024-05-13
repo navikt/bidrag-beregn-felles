@@ -192,7 +192,7 @@ class TestUtil {
             ),
         )
 
-        fun byggSammenhengendeForekomsterMed18År() = listOf(
+        fun byggSammenhengendeForekomsterMedAttenÅr() = listOf(
             RelatertPerson(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2004, 3, 17),
@@ -218,7 +218,7 @@ class TestUtil {
             ),
         )
 
-        fun byggSammenhengendeForekomsterMed18ÅrV2() = listOf(
+        fun byggSammenhengendeForekomsterMedAttenÅrV2() = listOf(
             BoforholdRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2004, 3, 17),
@@ -390,7 +390,7 @@ class TestUtil {
             ),
         )
 
-        fun barnAttenÅrManuellPeriodeEtter18ÅrsdagDokumentertSkolegang() = listOf(
+        fun barnAttenÅrManuellPeriodeEtterAttenårsdagDokumentertSkolegang() = listOf(
             BoforholdRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2000, 2, 17),
@@ -492,7 +492,7 @@ class TestUtil {
             ),
         )
 
-        fun barnManuellePerioderMedOppholdFør18Årsdag() = listOf(
+        fun barnManuellePerioderMedOppholdFørAttenårsdag() = listOf(
             BoforholdRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 2, 17),
@@ -514,7 +514,7 @@ class TestUtil {
             ),
         )
 
-        fun barnManuellePeriodeOverlapperPeriodeTomOffentligPeriodeMed18År() = listOf(
+        fun barnManuellePeriodeOverlapperPeriodeTomOffentligPeriodeMedAttenÅr() = listOf(
             BoforholdRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 10, 7),
@@ -563,7 +563,6 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 6, 1),
                         periodeTom = null,
-//                        periodeTom = LocalDate.of(2023, 7, 31),
                         bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
@@ -915,7 +914,7 @@ class TestUtil {
             ),
         )
 
-        fun byggManuellPeriodeMed18År() = listOf(
+        fun byggManuellPeriodeMedAttenÅr() = listOf(
             BoforholdRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 3, 17),
@@ -1005,7 +1004,7 @@ class TestUtil {
             ),
         )
 
-        fun byggUtenPeriodeEtter18årsdagManuell() = listOf(
+        fun byggUtenPeriodeEtterAttenårsdagManuell() = listOf(
             BoforholdRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 3, 17),
@@ -1021,7 +1020,7 @@ class TestUtil {
             ),
         )
 
-        fun byggUtenPeriodeEtter18årsdagOffentlig() = listOf(
+        fun byggUtenPeriodeEtterAttenårsdagOffentlig() = listOf(
             BoforholdRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 3, 17),
@@ -1037,7 +1036,7 @@ class TestUtil {
             ),
         )
 
-        fun byggUtenPeriodeEtter18årsdagOffentligOgManuell() = listOf(
+        fun byggUtenPeriodeEtterAttenårsdagOffentligOgManuell() = listOf(
             BoforholdRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 3, 17),
