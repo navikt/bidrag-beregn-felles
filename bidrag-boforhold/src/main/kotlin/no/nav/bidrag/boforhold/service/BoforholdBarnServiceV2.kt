@@ -1,20 +1,20 @@
 package no.nav.bidrag.boforhold.service
 
-import no.nav.bidrag.boforhold.dto.BoforholdRequest
+import no.nav.bidrag.boforhold.dto.BoforholdBarnRequest
 import no.nav.bidrag.boforhold.dto.BoforholdResponse
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.diverse.Kilde
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import java.time.LocalDate
 
-internal class BoforholdServiceV2() {
-    fun beregnEgneBarn(virkningstidspunkt: LocalDate, boforholdGrunnlagListe: List<BoforholdRequest>): List<BoforholdResponse> {
+internal class BoforholdBarnServiceV2() {
+    fun beregnBoforholdBarn(virkningstidspunkt: LocalDate, boforholdGrunnlagListe: List<BoforholdBarnRequest>): List<BoforholdResponse> {
         secureLogger.info { "Beregner bostatus for BMs egne barn V2. Input: $virkningstidspunkt $boforholdGrunnlagListe" }
 
         val resultat = mutableListOf<BoforholdResponse>()
         boforholdGrunnlagListe
             .filter { relatertPerson ->
-                relatertPerson.erBarnAvBmBp || relatertPerson.bostatusListe.any { it.kilde == Kilde.MANUELL }
+                relatertPerson.erBarnAvBmBp || relatertPerson.manuelleBostatusopplysninger.any { it.kilde == Kilde.MANUELL }
             }
             .sortedWith(
                 compareBy { it.relatertPersonPersonId },
@@ -27,41 +27,40 @@ internal class BoforholdServiceV2() {
         return resultat
     }
 
-    private fun beregnPerioderForBarn(virkningstidspunkt: LocalDate, boforholdRequest: BoforholdRequest): List<BoforholdResponse> {
+    private fun beregnPerioderForBarn(virkningstidspunkt: LocalDate, boforholdBarnRequest: BoforholdBarnRequest): List<BoforholdResponse> {
         // Bruker fødselsdato som startdato for beregning hvis barnet er født etter virkningstidspunkt
-        val startdatoBeregning = if (virkningstidspunkt.isBefore(boforholdRequest.fødselsdato)) {
-            boforholdRequest.fødselsdato.withDayOfMonth(1)
+        val startdatoBeregning = if (virkningstidspunkt.isBefore(boforholdBarnRequest.fødselsdato)) {
+            boforholdBarnRequest.fødselsdato.withDayOfMonth(1)
         } else {
             virkningstidspunkt
         }
 
         // Filterer først bort alle perioder som avsluttes før startdatoBeregning
-        val bostatuslisteRelevantePerioder = boforholdRequest.bostatusListe
+        // Justerer offentlige perioder slik at de starter på første dag i måneden og slutter på siste dag i måneden
+        val justerteOffentligePerioder = boforholdBarnRequest.innhentedeOffentligeOpplysninger
             .filter { (it.periodeTom == null || it.periodeTom.isAfter(startdatoBeregning)) }
             .sortedBy { it.periodeFom }
-
-        // Justerer offentlige perioder slik at de starter på første dag i måneden og slutter på siste dag i måneden
-        val justerteOffentligePerioder = bostatuslisteRelevantePerioder
-            .filter { it.kilde == Kilde.OFFENTLIG }
             .map {
                 BoforholdResponse(
-                    relatertPersonPersonId = boforholdRequest.relatertPersonPersonId,
+                    relatertPersonPersonId = boforholdBarnRequest.relatertPersonPersonId,
                     periodeFom = if (it.periodeFom == null) startdatoBeregning else it.periodeFom.withDayOfMonth(1),
                     periodeTom = it.periodeTom?.plusMonths(1)?.withDayOfMonth(1)?.minusDays(1),
                     bostatus = it.bostatus ?: Bostatuskode.MED_FORELDER,
-                    fødselsdato = boforholdRequest.fødselsdato,
+                    fødselsdato = boforholdBarnRequest.fødselsdato,
                     kilde = Kilde.OFFENTLIG,
                 )
             }
 
-        val manuelleOpplysninger = bostatuslisteRelevantePerioder
+        // Filterer først bort alle perioder som avsluttes før startdatoBeregning
+        val manuelleOpplysninger = boforholdBarnRequest.manuelleBostatusopplysninger
+            .filter { (it.periodeTom == null || it.periodeTom.isAfter(startdatoBeregning)) }
             .filter { it.kilde == Kilde.MANUELL }.sortedBy { it.periodeFom }.map {
                 BoforholdResponse(
-                    relatertPersonPersonId = boforholdRequest.relatertPersonPersonId,
+                    relatertPersonPersonId = boforholdBarnRequest.relatertPersonPersonId,
                     periodeFom = if (it.periodeFom!!.isBefore(startdatoBeregning)) startdatoBeregning else it.periodeFom,
                     periodeTom = it.periodeTom,
                     bostatus = it.bostatus!!,
-                    fødselsdato = boforholdRequest.fødselsdato,
+                    fødselsdato = boforholdBarnRequest.fødselsdato,
                     kilde = it.kilde,
                 )
             }
@@ -74,7 +73,7 @@ internal class BoforholdServiceV2() {
         }
 
         // Finner 18-årsdagen til barnet, settes lik første dag i måneden etter 18-årsdagen
-        val attenårFraDato = beregnetAttenÅrFraDato(boforholdRequest.fødselsdato)
+        val attenårFraDato = beregnetAttenÅrFraDato(boforholdBarnRequest.fødselsdato)
 
         // Hvis det ikke finnes offentlige perioder skal det bygges en tidslinje med bare manuelle perioder. Perioder uten data i input genereres.
         if (justerteOffentligePerioder.isEmpty()) {

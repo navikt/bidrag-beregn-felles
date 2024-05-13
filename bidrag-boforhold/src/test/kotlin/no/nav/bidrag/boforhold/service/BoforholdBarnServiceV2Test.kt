@@ -10,16 +10,16 @@ import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
-internal class BoforholdServiceV2Test {
-    private lateinit var boforholdServiceV2: BoforholdServiceV2
+internal class BoforholdBarnServiceV2Test {
+    private lateinit var boforholdBarnServiceV2: BoforholdBarnServiceV2
 
     // Tester med kun offentlige perioder
     @Test
     fun `Test barn over 18 år hele perioden`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.byggBarnHusstandsmedlemAttenÅrV2()
         val virkningstidspunkt = LocalDate.of(2020, 9, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -34,10 +34,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test ingen perioder som husstandsmedlem, over 18 år i siste del av perioden`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.byggBarnAttenÅrIPeriodenUtenHusstandsmedlemskapV2()
         val virkningstidspunkt = LocalDate.of(2022, 9, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -47,10 +47,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test ingen perioder som husstandsmedlem, over 18 år i hele perioden`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.byggBarnAttenÅrIHelePeriodenUtenHusstandsmedlemskapV2()
         val virkningstidspunkt = LocalDate.of(2022, 9, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -60,10 +60,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test at overlappende perioder med brudd slås sammen og at det genereres perioder for når barnet ikke bor i husstanden`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.byggFlereSammenhengendeForekomsterMedBruddV2()
         val virkningstidspunkt = LocalDate.of(2018, 9, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -96,10 +96,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test at overlappende perioder slås sammen og at det genereres perioder for når barnet ikke bor i husstanden`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.byggFlereSammenhengendeForekomsterV2()
         val virkningstidspunkt = LocalDate.of(2018, 9, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -126,10 +126,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test at overlappende perioder slås sammen og at det genereres perioder for når barnet ikke bor i husstanden med 18 år`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.byggSammenhengendeForekomsterMedAttenÅrV2()
         val virkningstidspunkt = LocalDate.of(2018, 9, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -168,10 +168,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test at periodeFra før virkningstidspunkt blir justert til virkningstidspunkt`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.byggPeriodeFraFørVirkningstidspunktV2()
         val virkningstidspunkt = LocalDate.of(2022, 9, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -186,10 +186,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test at periodeTom blir justert tilbake til 18årsdag`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.byggPeriodeTomEtterAttenårsdagV2()
         val virkningstidspunkt = LocalDate.of(2021, 9, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             resultat.size shouldBe 3
@@ -215,10 +215,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test opphold perioder husstandsmedlemskap og 18 år`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.byggOppholdPerioderHusstandsmedlemskapOgAttenårV2()
         val virkningstidspunkt = LocalDate.of(2021, 9, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             resultat.size shouldBe 7
@@ -269,10 +269,10 @@ internal class BoforholdServiceV2Test {
     // Tester med manuell periode der og offentlig periode er før virkningstidspunkt
     @Test
     fun `Test barn over 18 år hele perioden, manuell periode Dokumentert skolegang fra virkningstidspunkt `() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.barnAttenÅrManuellPeriodeDokumentertSkolegang()
         val virkningstidspunkt = LocalDate.of(2020, 9, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -287,10 +287,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test barn over 18 år hele perioden, manuell periode Dokumentert skolegang deler av perioden `() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.barnAttenÅrManuellPeriodeEtterAttenårsdagDokumentertSkolegang()
         val virkningstidspunkt = LocalDate.of(2020, 9, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -311,10 +311,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test at manuell periode som har en identisk offentlig periode endres til kilde = Offentlig `() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.manuellOgOffentligPeriodeErIdentisk()
         val virkningstidspunkt = LocalDate.of(2020, 9, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -336,10 +336,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test periodisering med flere manuelle og offentlige perioder og perioder uten status `() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.flereManuelleOgOffentligePerioder()
         val virkningstidspunkt = LocalDate.of(2020, 9, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -428,10 +428,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test manuelle perioder under 18 år`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.barnManuellePerioderMedOppholdFørAttenårsdag()
         val virkningstidspunkt = LocalDate.of(2020, 9, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -461,10 +461,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test manuelle perioder overlapper periodeTom på offentlig periode `() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.barnManuellePeriodeOverlapperPeriodeTomOffentligPeriodeMedAttenÅr()
         val virkningstidspunkt = LocalDate.of(2020, 9, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -504,10 +504,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test periodeTom = null både manuell og offentlig periode `() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.manuelleOgOffentligPeriodeMedNullIPeriodeTom()
         val virkningstidspunkt = LocalDate.of(2022, 1, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -537,10 +537,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test periodeTom = null både manuell og offentlig periode - virkningsdato 2018 `() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.manuellOgOffentligPeriodeMedNullIPeriodeTom2018()
         val virkningstidspunkt = LocalDate.of(2018, 5, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -570,10 +570,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test sammenhengende offentlige og manuelle perioder med lik status slås sammen som Manuell `() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.manuellOgOffentligPeriodeMedLikStatus()
         val virkningstidspunkt = LocalDate.of(2020, 5, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -598,10 +598,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test sammenhengende offentlige og manuelle perioder med lik status slås sammen som Manuell med null i periodeTom `() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.manuellOgOffentligPeriodeMedLikStatusPeriodeTomErNull()
         val virkningstidspunkt = LocalDate.of(2020, 5, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -621,10 +621,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test sortering av perioder`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.sorteringAvPerioder()
         val virkningstidspunkt = LocalDate.of(2022, 1, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -654,10 +654,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test flere personer i grunnlag uten offentlige perioder`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.flerePersonerIGrunnlagUtenOffentligePerioder()
         val virkningstidspunkt = LocalDate.of(2022, 1, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -667,10 +667,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test flere personer i grunnlag med offentlige perioder`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.flerePersonerIGrunnlagMedOffentligePerioder()
         val virkningstidspunkt = LocalDate.of(2023, 2, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -698,10 +698,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test med offentlig og manuell periode med opphold mellom`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.flereOffentligOgManuellPeriodeMedOppholdMellom()
         val virkningstidspunkt = LocalDate.of(2022, 1, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -726,10 +726,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test med flere perioder med periodeTom = null og lik status`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.flereFlereManuellePerioderMedPeriodeTomNullLikStatus()
         val virkningstidspunkt = LocalDate.of(2022, 1, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -754,10 +754,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test med flere perioder med periodeTom = null og ulik status`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.flereFlereManuellePerioderMedPeriodeTomNullUlikStatus()
         val virkningstidspunkt = LocalDate.of(2022, 1, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -787,10 +787,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test at overlappende perioder med lik Bostatuskode slås sammen`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.byggFlereSammenhengendeForekomsterMedBostatuskode()
         val virkningstidspunkt = LocalDate.of(2019, 6, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -809,10 +809,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test at overlappende perioder med ulik Bostatuskode justeres`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.byggFlereOverlappendeManuellePerioderMedUlikBostatuskode()
         val virkningstidspunkt = LocalDate.of(2023, 1, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -831,10 +831,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test at det genereres periode for 18 år med manuell periode med periodeTom = null`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.byggManuellPeriodeMedAttenÅr()
         val virkningstidspunkt = LocalDate.of(2023, 1, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -853,10 +853,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test at det genereres IKKE_MED_FORELDER-perioder der det er opphold, kun manuelle perioder`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.byggManuellePerioderMedOpphold()
         val virkningstidspunkt = LocalDate.of(2021, 5, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -907,10 +907,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test at det genereres IKKE_MED_FORELDER-perioder der det er opphold, manuelle og offentlige perioder`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.byggManuellePerioderMedOppholdPlussOffentligPeriode()
         val virkningstidspunkt = LocalDate.of(2021, 5, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -961,10 +961,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test at det genereres periode med riktig status for 18 åring - manuell periode`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.byggUtenPeriodeEtterAttenårsdagManuell()
         val virkningstidspunkt = LocalDate.of(2021, 5, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -989,10 +989,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test at det genereres periode med riktig status for 18 åring - offentlig periode`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.byggUtenPeriodeEtterAttenårsdagOffentlig()
         val virkningstidspunkt = LocalDate.of(2021, 5, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -1017,10 +1017,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test at det genereres periode med riktig status for 18 åring - offentlig og manuell periode`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.byggUtenPeriodeEtterAttenårsdagOffentligOgManuell()
         val virkningstidspunkt = LocalDate.of(2021, 5, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -1064,10 +1064,10 @@ internal class BoforholdServiceV2Test {
     // Tester fra front-end
     @Test
     fun `Test med manuell periode som overlapper alle offentlige perioder`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.byggManuellPeriodeOverlapperAlleOffentlige()
         val virkningstidspunkt = LocalDate.of(2022, 4, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -1082,10 +1082,10 @@ internal class BoforholdServiceV2Test {
 
     @Test
     fun `Test med kun lukket manuell periode IKKE_MED_FORELDER`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.byggKunManuellIkkeMedForelder()
         val virkningstidspunkt = LocalDate.of(2022, 4, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -1101,10 +1101,10 @@ internal class BoforholdServiceV2Test {
     @Disabled
     @Test
     fun `Test offentlige perioder overlapper`() {
-        boforholdServiceV2 = BoforholdServiceV2()
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.byggOffentligePerioderOverlapper()
         val virkningstidspunkt = LocalDate.of(2022, 4, 1)
-        val resultat = boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)

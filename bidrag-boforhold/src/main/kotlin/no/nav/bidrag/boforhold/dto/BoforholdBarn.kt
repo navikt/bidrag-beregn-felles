@@ -4,14 +4,16 @@ import no.nav.bidrag.domene.enums.diverse.Kilde
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import java.time.LocalDate
 
-data class BoforholdRequest(
-//   Personid til relatert person. Dette er husstandsmedlem eller barn av BM/BP
+data class BoforholdBarnRequest(
+    // Personid til barn av BM
     val relatertPersonPersonId: String?,
     val fødselsdato: LocalDate,
-//   Angir om den relaterte personen er barn av BM/BP
+    // Angir om den relaterte personen er barn av BM/BP
     val erBarnAvBmBp: Boolean,
-//   Periodisert liste over en persons bostatus, relatert til BM/BP
-    val bostatusListe: List<Bostatus>,
+    // Periodisert liste med offentlige bostatus-opplysninger hentet fra PDL
+    val innhentedeOffentligeOpplysninger: List<Bostatus>,
+    // Manuelle bostatusopplysninger
+    val manuelleBostatusopplysninger: List<Bostatus>,
 )
 
 data class Bostatus(

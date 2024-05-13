@@ -1,7 +1,7 @@
 package no.nav.bidrag.boforhold
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import no.nav.bidrag.boforhold.dto.BoforholdRequest
+import no.nav.bidrag.boforhold.dto.BoforholdBarnRequest
 import no.nav.bidrag.boforhold.dto.Bostatus
 import no.nav.bidrag.boforhold.response.RelatertPerson
 import no.nav.bidrag.domene.enums.diverse.Kilde
@@ -31,11 +31,11 @@ class TestUtil {
         )
 
         fun byggBarnHusstandsmedlemAttenÅrV2() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2000, 2, 17),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 12),
                         periodeTom = null,
@@ -43,6 +43,7 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
+                manuelleBostatusopplysninger = emptyList(),
             ),
         )
 
@@ -56,11 +57,13 @@ class TestUtil {
         )
 
         fun byggBarnAttenÅrIPeriodenUtenHusstandsmedlemskapV2() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 3, 17),
                 erBarnAvBmBp = true,
-                bostatusListe = emptyList(),
+                innhentedeOffentligeOpplysninger = emptyList(),
+                manuelleBostatusopplysninger = emptyList(),
+
             ),
         )
 
@@ -74,11 +77,13 @@ class TestUtil {
         )
 
         fun byggBarnAttenÅrIHelePeriodenUtenHusstandsmedlemskapV2() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2000, 3, 17),
                 erBarnAvBmBp = true,
-                bostatusListe = emptyList(),
+                innhentedeOffentligeOpplysninger = emptyList(),
+                manuelleBostatusopplysninger = emptyList(),
+
             ),
         )
 
@@ -109,11 +114,11 @@ class TestUtil {
         )
 
         fun byggFlereSammenhengendeForekomsterMedBruddV2() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2017, 3, 17),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 2),
                         periodeTom = LocalDate.of(2019, 4, 7),
@@ -139,6 +144,7 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
+                manuelleBostatusopplysninger = emptyList(),
             ),
         )
 
@@ -165,11 +171,11 @@ class TestUtil {
         )
 
         fun byggFlereSammenhengendeForekomsterV2() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2017, 3, 17),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 2),
                         periodeTom = LocalDate.of(2019, 4, 7),
@@ -189,6 +195,7 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
+                manuelleBostatusopplysninger = emptyList(),
             ),
         )
 
@@ -219,11 +226,11 @@ class TestUtil {
         )
 
         fun byggSammenhengendeForekomsterMedAttenÅrV2() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2004, 3, 17),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2017, 4, 2),
                         periodeTom = LocalDate.of(2019, 1, 7),
@@ -255,6 +262,7 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
+                manuelleBostatusopplysninger = emptyList(),
             ),
         )
 
@@ -273,11 +281,11 @@ class TestUtil {
         )
 
         fun byggPeriodeFraFørVirkningstidspunktV2() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2014, 3, 17),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 12),
                         periodeTom = null,
@@ -285,6 +293,7 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
+                manuelleBostatusopplysninger = emptyList(),
             ),
         )
 
@@ -303,11 +312,11 @@ class TestUtil {
         )
 
         fun byggPeriodeTomEtterAttenårsdagV2() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2004, 3, 17),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 12),
                         periodeTom = LocalDate.of(2022, 12, 27),
@@ -315,6 +324,7 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
+                manuelleBostatusopplysninger = emptyList(),
             ),
         )
 
@@ -341,11 +351,11 @@ class TestUtil {
         )
 
         fun byggOppholdPerioderHusstandsmedlemskapOgAttenårV2() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 8, 17),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 12),
                         periodeTom = LocalDate.of(2022, 7, 27),
@@ -365,21 +375,24 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
+                manuelleBostatusopplysninger = emptyList(),
             ),
         )
 
         fun barnAttenÅrManuellPeriodeDokumentertSkolegang() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2000, 2, 17),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 12),
                         periodeTom = LocalDate.of(2020, 2, 11),
                         bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
+                ),
+                manuelleBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 9, 1),
                         periodeTom = null,
@@ -391,17 +404,19 @@ class TestUtil {
         )
 
         fun barnAttenÅrManuellPeriodeEtterAttenårsdagDokumentertSkolegang() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2000, 2, 17),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 12),
                         periodeTom = LocalDate.of(2020, 2, 11),
                         bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
+                ),
+                manuelleBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 2, 1),
                         periodeTom = null,
@@ -413,17 +428,19 @@ class TestUtil {
         )
 
         fun manuellOgOffentligPeriodeErIdentisk() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2020, 12, 17),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 4, 1),
                         periodeTom = null,
                         bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
+                ),
+                manuelleBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 4, 1),
                         periodeTom = null,
@@ -435,11 +452,11 @@ class TestUtil {
         )
 
         fun flereManuelleOgOffentligePerioder() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2020, 12, 17),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 4, 12),
                         periodeTom = LocalDate.of(2020, 12, 3),
@@ -453,12 +470,6 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
-                        periodeFom = LocalDate.of(2021, 6, 1),
-                        periodeTom = LocalDate.of(2021, 12, 31),
-                        bostatus = Bostatuskode.MED_FORELDER,
-                        kilde = Kilde.MANUELL,
-                    ),
-                    Bostatus(
                         periodeFom = LocalDate.of(2021, 8, 17),
                         periodeTom = LocalDate.of(2021, 11, 17),
                         bostatus = Bostatuskode.MED_FORELDER,
@@ -469,6 +480,14 @@ class TestUtil {
                         periodeTom = LocalDate.of(2023, 5, 4),
                         bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
+                    ),
+                ),
+                manuelleBostatusopplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2021, 6, 1),
+                        periodeTom = LocalDate.of(2021, 12, 31),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 4, 1),
@@ -493,11 +512,12 @@ class TestUtil {
         )
 
         fun barnManuellePerioderMedOppholdFørAttenårsdag() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 2, 17),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = emptyList(),
+                manuelleBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 1),
                         periodeTom = LocalDate.of(2021, 2, 28),
@@ -515,17 +535,20 @@ class TestUtil {
         )
 
         fun barnManuellePeriodeOverlapperPeriodeTomOffentligPeriodeMedAttenÅr() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 10, 7),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2005, 4, 17),
                         periodeTom = null,
                         bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
+                ),
+
+                manuelleBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 4, 1),
                         periodeTom = LocalDate.of(2021, 12, 31),
@@ -543,17 +566,11 @@ class TestUtil {
         )
 
         fun manuelleOgOffentligPeriodeMedNullIPeriodeTom() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 10, 7),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
-                    Bostatus(
-                        periodeFom = LocalDate.of(2022, 1, 1),
-                        periodeTom = LocalDate.of(2022, 12, 31),
-                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
-                        kilde = Kilde.MANUELL,
-                    ),
+                innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = LocalDate.of(2023, 5, 31),
@@ -566,6 +583,15 @@ class TestUtil {
                         bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
+                ),
+                manuelleBostatusopplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2022, 1, 1),
+                        periodeTom = LocalDate.of(2022, 12, 31),
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 8, 1),
                         periodeTom = null,
@@ -577,11 +603,11 @@ class TestUtil {
         )
 
         fun manuellOgOffentligPeriodeMedNullIPeriodeTom2018() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2020, 3, 1),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2018, 5, 1),
                         periodeTom = LocalDate.of(2020, 2, 29),
@@ -594,6 +620,9 @@ class TestUtil {
                         bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
+                ),
+                manuelleBostatusopplysninger = listOf(
+
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 1),
                         periodeTom = LocalDate.of(2022, 12, 31),
@@ -617,28 +646,16 @@ class TestUtil {
         )
 
         fun manuellOgOffentligPeriodeMedLikStatus() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2020, 3, 1),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
-                    Bostatus(
-                        periodeFom = LocalDate.of(2022, 12, 1),
-                        periodeTom = LocalDate.of(2023, 4, 30),
-                        bostatus = Bostatuskode.MED_FORELDER,
-                        kilde = Kilde.MANUELL,
-                    ),
+                innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 5, 1),
                         periodeTom = LocalDate.of(2023, 11, 30),
                         bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
-                    ),
-                    Bostatus(
-                        periodeFom = LocalDate.of(2023, 12, 1),
-                        periodeTom = LocalDate.of(2024, 1, 31),
-                        bostatus = Bostatuskode.MED_FORELDER,
-                        kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2024, 2, 1),
@@ -653,15 +670,7 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-            ),
-        )
-
-        fun manuellOgOffentligPeriodeMedLikStatusPeriodeTomErNull() = listOf(
-            BoforholdRequest(
-                relatertPersonPersonId = "98765432109",
-                fødselsdato = LocalDate.of(2020, 3, 1),
-                erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                manuelleBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 12, 1),
                         periodeTom = LocalDate.of(2023, 4, 30),
@@ -669,10 +678,34 @@ class TestUtil {
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
+                        periodeFom = LocalDate.of(2023, 12, 1),
+                        periodeTom = LocalDate.of(2024, 1, 31),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+            ),
+        )
+
+        fun manuellOgOffentligPeriodeMedLikStatusPeriodeTomErNull() = listOf(
+            BoforholdBarnRequest(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2020, 3, 1),
+                erBarnAvBmBp = true,
+                innhentedeOffentligeOpplysninger = listOf(
+                    Bostatus(
                         periodeFom = LocalDate.of(2023, 5, 1),
                         periodeTom = LocalDate.of(2023, 11, 30),
                         bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
+                    ),
+                ),
+                manuelleBostatusopplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2022, 12, 1),
+                        periodeTom = LocalDate.of(2023, 4, 30),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 12, 1),
@@ -685,28 +718,16 @@ class TestUtil {
         )
 
         fun sorteringAvPerioder() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2020, 3, 1),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
-                    Bostatus(
-                        periodeFom = LocalDate.of(2022, 1, 1),
-                        periodeTom = LocalDate.of(2022, 12, 31),
-                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
-                        kilde = Kilde.MANUELL,
-                    ),
+                innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 6, 1),
                         periodeTom = null,
                         bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
-                    ),
-                    Bostatus(
-                        periodeFom = LocalDate.of(2023, 8, 1),
-                        periodeTom = null,
-                        bostatus = Bostatuskode.MED_FORELDER,
-                        kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
@@ -715,30 +736,47 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
+                manuelleBostatusopplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2022, 1, 1),
+                        periodeTom = LocalDate.of(2022, 12, 31),
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 8, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+
+                ),
             ),
         )
 
         fun flerePersonerIGrunnlagUtenOffentligePerioder() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "12345678901",
                 fødselsdato = LocalDate.of(2010, 3, 1),
                 erBarnAvBmBp = true,
-                bostatusListe = emptyList(),
+                innhentedeOffentligeOpplysninger = emptyList(),
+                manuelleBostatusopplysninger = emptyList(),
             ),
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2020, 3, 1),
                 erBarnAvBmBp = true,
-                bostatusListe = emptyList(),
+                innhentedeOffentligeOpplysninger = emptyList(),
+                manuelleBostatusopplysninger = emptyList(),
             ),
         )
 
         fun flerePersonerIGrunnlagMedOffentligePerioder() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "12345678901",
                 fødselsdato = LocalDate.of(2010, 3, 1),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 12, 1),
                         periodeTom = null,
@@ -746,18 +784,23 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
+
+                manuelleBostatusopplysninger = emptyList(),
             ),
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2020, 3, 1),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 12, 1),
                         periodeTom = null,
                         bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
+                ),
+                manuelleBostatusopplysninger = listOf(
+
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 12, 1),
                         periodeTom = null,
@@ -769,17 +812,19 @@ class TestUtil {
         )
 
         fun flereOffentligOgManuellPeriodeMedOppholdMellom() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "12345678901",
                 fødselsdato = LocalDate.of(2005, 9, 17),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 1),
                         periodeTom = LocalDate.of(2023, 8, 31),
                         bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
+                ),
+                manuelleBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 11, 1),
                         periodeTom = null,
@@ -791,11 +836,11 @@ class TestUtil {
         )
 
         fun flereFlereManuellePerioderMedPeriodeTomNullLikStatus() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "12345678901",
                 fødselsdato = LocalDate.of(2017, 9, 1),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 1),
                         periodeTom = LocalDate.of(2022, 12, 31),
@@ -808,6 +853,8 @@ class TestUtil {
                         bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
+                ),
+                manuelleBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 11, 1),
                         periodeTom = null,
@@ -825,11 +872,11 @@ class TestUtil {
         )
 
         fun flereFlereManuellePerioderMedPeriodeTomNullUlikStatus() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "12345678901",
                 fødselsdato = LocalDate.of(2017, 9, 1),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 1),
                         periodeTom = LocalDate.of(2022, 12, 31),
@@ -842,6 +889,8 @@ class TestUtil {
                         bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
+                ),
+                manuelleBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 11, 1),
                         periodeTom = null,
@@ -859,11 +908,11 @@ class TestUtil {
         )
 
         fun byggFlereSammenhengendeForekomsterMedBostatuskode() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2017, 3, 17),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 1),
                         periodeTom = LocalDate.of(2019, 8, 31),
@@ -883,15 +932,17 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
+                manuelleBostatusopplysninger = emptyList(),
             ),
         )
 
         fun byggFlereOverlappendeManuellePerioderMedUlikBostatuskode() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2017, 3, 17),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = emptyList(),
+                manuelleBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = LocalDate.of(2024, 2, 29),
@@ -915,11 +966,12 @@ class TestUtil {
         )
 
         fun byggManuellPeriodeMedAttenÅr() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 3, 17),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = emptyList(),
+                manuelleBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 1, 1),
                         periodeTom = null,
@@ -931,11 +983,13 @@ class TestUtil {
         )
 
         fun byggManuellePerioderMedOpphold() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 3, 17),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = emptyList(),
+
+                manuelleBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 1, 1),
                         periodeTom = null,
@@ -965,11 +1019,19 @@ class TestUtil {
         )
 
         fun byggManuellePerioderMedOppholdPlussOffentligPeriode() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 3, 17),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 1, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                ),
+                manuelleBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 1, 1),
                         periodeTom = null,
@@ -982,12 +1044,7 @@ class TestUtil {
                         bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
-                    Bostatus(
-                        periodeFom = LocalDate.of(2023, 1, 1),
-                        periodeTom = null,
-                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
-                        kilde = Kilde.OFFENTLIG,
-                    ),
+
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = LocalDate.of(2023, 9, 30),
@@ -1005,11 +1062,12 @@ class TestUtil {
         )
 
         fun byggUtenPeriodeEtterAttenårsdagManuell() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 3, 17),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = emptyList(),
+                manuelleBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 1, 1),
                         periodeTom = LocalDate.of(2022, 1, 31),
@@ -1021,11 +1079,11 @@ class TestUtil {
         )
 
         fun byggUtenPeriodeEtterAttenårsdagOffentlig() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 3, 17),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 1, 1),
                         periodeTom = LocalDate.of(2022, 1, 31),
@@ -1033,26 +1091,29 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
+                manuelleBostatusopplysninger = emptyList(),
             ),
         )
 
         fun byggUtenPeriodeEtterAttenårsdagOffentligOgManuell() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 3, 17),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
-                    Bostatus(
-                        periodeFom = LocalDate.of(2021, 7, 1),
-                        periodeTom = LocalDate.of(2022, 1, 31),
-                        bostatus = Bostatuskode.MED_FORELDER,
-                        kilde = Kilde.MANUELL,
-                    ),
+                innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 6, 1),
                         periodeTom = LocalDate.of(2024, 1, 31),
                         bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
+                    ),
+                ),
+                manuelleBostatusopplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2021, 7, 1),
+                        periodeTom = LocalDate.of(2022, 1, 31),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2024, 2, 1),
@@ -1066,11 +1127,11 @@ class TestUtil {
 
         // Tester fra front-end
         fun byggManuellPeriodeOverlapperAlleOffentlige() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 4, 1),
                         periodeTom = LocalDate.of(2022, 4, 30),
@@ -1101,6 +1162,8 @@ class TestUtil {
                         bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
+                ),
+                manuelleBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 5, 1),
                         periodeTom = LocalDate.of(2022, 7, 31),
@@ -1112,11 +1175,12 @@ class TestUtil {
         )
 
         fun byggKunManuellIkkeMedForelder() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = emptyList(),
+                manuelleBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 5, 1),
                         periodeTom = LocalDate.of(2022, 7, 31),
@@ -1128,11 +1192,11 @@ class TestUtil {
         )
 
         fun byggOffentligePerioderOverlapper() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
                 erBarnAvBmBp = true,
-                bostatusListe = listOf(
+                innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 4, 1),
                         periodeTom = LocalDate.of(2021, 8, 31),
@@ -1152,6 +1216,7 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
+                manuelleBostatusopplysninger = emptyList(),
             ),
         )
     }
