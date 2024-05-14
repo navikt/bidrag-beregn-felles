@@ -12,8 +12,10 @@ data class BoforholdBarnRequest(
     val erBarnAvBmBp: Boolean,
     // Periodisert liste med offentlige bostatus-opplysninger hentet fra PDL
     val innhentedeOffentligeOpplysninger: List<Bostatus>,
-    // Manuelle bostatusopplysninger
-    val manuelleBostatusopplysninger: List<Bostatus>,
+    // Behandlede bostatusopplysninger
+    val behandledeBostatusopplysninger: List<Bostatus>,
+    // Endret bostatus
+    val endreBostatus: EndreBostatus?,
 )
 
 data class Bostatus(
@@ -22,6 +24,20 @@ data class Bostatus(
     val bostatus: Bostatuskode?,
     val kilde: Kilde,
 )
+
+data class EndreBostatus(
+    val typeEndring: TypeEndring,
+    // Periode etter endring endret/ny periode. Er null ved slett.
+    val nyBostatus: Bostatus?,
+    // Periode som har blitt endret/slettet.
+    val originalBostatus: Bostatus?,
+)
+
+enum class TypeEndring {
+    NY,
+    ENDRET,
+    SLETTET,
+}
 
 data class BoforholdResponse(
     val relatertPersonPersonId: String?,

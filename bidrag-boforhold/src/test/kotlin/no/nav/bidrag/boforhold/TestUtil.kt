@@ -43,7 +43,8 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                manuelleBostatusopplysninger = emptyList(),
+                behandledeBostatusopplysninger = emptyList(),
+                endreBostatus = null,
             ),
         )
 
@@ -62,8 +63,8 @@ class TestUtil {
                 fødselsdato = LocalDate.of(2005, 3, 17),
                 erBarnAvBmBp = true,
                 innhentedeOffentligeOpplysninger = emptyList(),
-                manuelleBostatusopplysninger = emptyList(),
-
+                behandledeBostatusopplysninger = emptyList(),
+                endreBostatus = null,
             ),
         )
 
@@ -82,8 +83,8 @@ class TestUtil {
                 fødselsdato = LocalDate.of(2000, 3, 17),
                 erBarnAvBmBp = true,
                 innhentedeOffentligeOpplysninger = emptyList(),
-                manuelleBostatusopplysninger = emptyList(),
-
+                behandledeBostatusopplysninger = emptyList(),
+                endreBostatus = null,
             ),
         )
 
@@ -144,7 +145,8 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                manuelleBostatusopplysninger = emptyList(),
+                behandledeBostatusopplysninger = emptyList(),
+                endreBostatus = null,
             ),
         )
 
@@ -195,7 +197,8 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                manuelleBostatusopplysninger = emptyList(),
+                behandledeBostatusopplysninger = emptyList(),
+                endreBostatus = null,
             ),
         )
 
@@ -262,7 +265,8 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                manuelleBostatusopplysninger = emptyList(),
+                behandledeBostatusopplysninger = emptyList(),
+                endreBostatus = null,
             ),
         )
 
@@ -293,7 +297,8 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                manuelleBostatusopplysninger = emptyList(),
+                behandledeBostatusopplysninger = emptyList(),
+                endreBostatus = null,
             ),
         )
 
@@ -324,7 +329,8 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                manuelleBostatusopplysninger = emptyList(),
+                behandledeBostatusopplysninger = emptyList(),
+                endreBostatus = null,
             ),
         )
 
@@ -375,7 +381,8 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                manuelleBostatusopplysninger = emptyList(),
+                behandledeBostatusopplysninger = emptyList(),
+                endreBostatus = null,
             ),
         )
 
@@ -392,7 +399,7 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                manuelleBostatusopplysninger = listOf(
+                behandledeBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 9, 1),
                         periodeTom = null,
@@ -400,6 +407,7 @@ class TestUtil {
                         kilde = Kilde.MANUELL,
                     ),
                 ),
+                endreBostatus = null,
             ),
         )
 
@@ -416,7 +424,7 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                manuelleBostatusopplysninger = listOf(
+                behandledeBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 2, 1),
                         periodeTom = null,
@@ -424,6 +432,7 @@ class TestUtil {
                         kilde = Kilde.MANUELL,
                     ),
                 ),
+                endreBostatus = null,
             ),
         )
 
@@ -440,7 +449,7 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                manuelleBostatusopplysninger = listOf(
+                behandledeBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 4, 1),
                         periodeTom = null,
@@ -448,6 +457,7 @@ class TestUtil {
                         kilde = Kilde.MANUELL,
                     ),
                 ),
+                endreBostatus = null,
             ),
         )
 
@@ -482,7 +492,7 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                manuelleBostatusopplysninger = listOf(
+                behandledeBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 6, 1),
                         periodeTom = LocalDate.of(2021, 12, 31),
@@ -508,6 +518,7 @@ class TestUtil {
                         kilde = Kilde.MANUELL,
                     ),
                 ),
+                endreBostatus = null,
             ),
         )
 
@@ -517,7 +528,7 @@ class TestUtil {
                 fødselsdato = LocalDate.of(2005, 2, 17),
                 erBarnAvBmBp = true,
                 innhentedeOffentligeOpplysninger = emptyList(),
-                manuelleBostatusopplysninger = listOf(
+                behandledeBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 1),
                         periodeTom = LocalDate.of(2021, 2, 28),
@@ -531,6 +542,7 @@ class TestUtil {
                         kilde = Kilde.MANUELL,
                     ),
                 ),
+                endreBostatus = null,
             ),
         )
 
@@ -548,7 +560,7 @@ class TestUtil {
                     ),
                 ),
 
-                manuelleBostatusopplysninger = listOf(
+                behandledeBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 4, 1),
                         periodeTom = LocalDate.of(2021, 12, 31),
@@ -562,6 +574,7 @@ class TestUtil {
                         kilde = Kilde.MANUELL,
                     ),
                 ),
+                endreBostatus = null,
             ),
         )
 
@@ -584,7 +597,7 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                manuelleBostatusopplysninger = listOf(
+                behandledeBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 1),
                         periodeTom = LocalDate.of(2022, 12, 31),
@@ -599,6 +612,7 @@ class TestUtil {
                         kilde = Kilde.MANUELL,
                     ),
                 ),
+                endreBostatus = null,
             ),
         )
 
@@ -621,7 +635,7 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                manuelleBostatusopplysninger = listOf(
+                behandledeBostatusopplysninger = listOf(
 
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 1),
@@ -642,6 +656,7 @@ class TestUtil {
                         kilde = Kilde.MANUELL,
                     ),
                 ),
+                endreBostatus = null,
             ),
         )
 
@@ -670,7 +685,7 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                manuelleBostatusopplysninger = listOf(
+                behandledeBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 12, 1),
                         periodeTom = LocalDate.of(2023, 4, 30),
@@ -684,6 +699,7 @@ class TestUtil {
                         kilde = Kilde.MANUELL,
                     ),
                 ),
+                endreBostatus = null,
             ),
         )
 
@@ -700,7 +716,7 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                manuelleBostatusopplysninger = listOf(
+                behandledeBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 12, 1),
                         periodeTom = LocalDate.of(2023, 4, 30),
@@ -714,6 +730,7 @@ class TestUtil {
                         kilde = Kilde.MANUELL,
                     ),
                 ),
+                endreBostatus = null,
             ),
         )
 
@@ -736,7 +753,7 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                manuelleBostatusopplysninger = listOf(
+                behandledeBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 1),
                         periodeTom = LocalDate.of(2022, 12, 31),
@@ -749,8 +766,8 @@ class TestUtil {
                         bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
-
                 ),
+                endreBostatus = null,
             ),
         )
 
@@ -760,14 +777,16 @@ class TestUtil {
                 fødselsdato = LocalDate.of(2010, 3, 1),
                 erBarnAvBmBp = true,
                 innhentedeOffentligeOpplysninger = emptyList(),
-                manuelleBostatusopplysninger = emptyList(),
+                behandledeBostatusopplysninger = emptyList(),
+                endreBostatus = null,
             ),
             BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2020, 3, 1),
                 erBarnAvBmBp = true,
                 innhentedeOffentligeOpplysninger = emptyList(),
-                manuelleBostatusopplysninger = emptyList(),
+                behandledeBostatusopplysninger = emptyList(),
+                endreBostatus = null,
             ),
         )
 
@@ -784,8 +803,8 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-
-                manuelleBostatusopplysninger = emptyList(),
+                behandledeBostatusopplysninger = emptyList(),
+                endreBostatus = null,
             ),
             BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
@@ -799,8 +818,7 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                manuelleBostatusopplysninger = listOf(
-
+                behandledeBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 12, 1),
                         periodeTom = null,
@@ -808,6 +826,7 @@ class TestUtil {
                         kilde = Kilde.MANUELL,
                     ),
                 ),
+                endreBostatus = null,
             ),
         )
 
@@ -824,7 +843,7 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                manuelleBostatusopplysninger = listOf(
+                behandledeBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 11, 1),
                         periodeTom = null,
@@ -832,6 +851,7 @@ class TestUtil {
                         kilde = Kilde.MANUELL,
                     ),
                 ),
+                endreBostatus = null,
             ),
         )
 
@@ -854,7 +874,7 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                manuelleBostatusopplysninger = listOf(
+                behandledeBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 11, 1),
                         periodeTom = null,
@@ -868,6 +888,7 @@ class TestUtil {
                         kilde = Kilde.MANUELL,
                     ),
                 ),
+                endreBostatus = null,
             ),
         )
 
@@ -890,7 +911,7 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                manuelleBostatusopplysninger = listOf(
+                behandledeBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 11, 1),
                         periodeTom = null,
@@ -904,6 +925,7 @@ class TestUtil {
                         kilde = Kilde.MANUELL,
                     ),
                 ),
+                endreBostatus = null,
             ),
         )
 
@@ -932,7 +954,8 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                manuelleBostatusopplysninger = emptyList(),
+                behandledeBostatusopplysninger = emptyList(),
+                endreBostatus = null,
             ),
         )
 
@@ -942,7 +965,7 @@ class TestUtil {
                 fødselsdato = LocalDate.of(2017, 3, 17),
                 erBarnAvBmBp = true,
                 innhentedeOffentligeOpplysninger = emptyList(),
-                manuelleBostatusopplysninger = listOf(
+                behandledeBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = LocalDate.of(2024, 2, 29),
@@ -962,6 +985,7 @@ class TestUtil {
                         kilde = Kilde.MANUELL,
                     ),
                 ),
+                endreBostatus = null,
             ),
         )
 
@@ -971,7 +995,7 @@ class TestUtil {
                 fødselsdato = LocalDate.of(2005, 3, 17),
                 erBarnAvBmBp = true,
                 innhentedeOffentligeOpplysninger = emptyList(),
-                manuelleBostatusopplysninger = listOf(
+                behandledeBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 1, 1),
                         periodeTom = null,
@@ -979,6 +1003,7 @@ class TestUtil {
                         kilde = Kilde.MANUELL,
                     ),
                 ),
+                endreBostatus = null,
             ),
         )
 
@@ -988,8 +1013,7 @@ class TestUtil {
                 fødselsdato = LocalDate.of(2005, 3, 17),
                 erBarnAvBmBp = true,
                 innhentedeOffentligeOpplysninger = emptyList(),
-
-                manuelleBostatusopplysninger = listOf(
+                behandledeBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 1, 1),
                         periodeTom = null,
@@ -1015,6 +1039,7 @@ class TestUtil {
                         kilde = Kilde.MANUELL,
                     ),
                 ),
+                endreBostatus = null,
             ),
         )
 
@@ -1031,7 +1056,7 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                manuelleBostatusopplysninger = listOf(
+                behandledeBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 1, 1),
                         periodeTom = null,
@@ -1058,6 +1083,7 @@ class TestUtil {
                         kilde = Kilde.MANUELL,
                     ),
                 ),
+                endreBostatus = null,
             ),
         )
 
@@ -1067,7 +1093,7 @@ class TestUtil {
                 fødselsdato = LocalDate.of(2005, 3, 17),
                 erBarnAvBmBp = true,
                 innhentedeOffentligeOpplysninger = emptyList(),
-                manuelleBostatusopplysninger = listOf(
+                behandledeBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 1, 1),
                         periodeTom = LocalDate.of(2022, 1, 31),
@@ -1075,6 +1101,7 @@ class TestUtil {
                         kilde = Kilde.MANUELL,
                     ),
                 ),
+                endreBostatus = null,
             ),
         )
 
@@ -1091,7 +1118,8 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                manuelleBostatusopplysninger = emptyList(),
+                behandledeBostatusopplysninger = emptyList(),
+                endreBostatus = null,
             ),
         )
 
@@ -1108,7 +1136,7 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                manuelleBostatusopplysninger = listOf(
+                behandledeBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 7, 1),
                         periodeTom = LocalDate.of(2022, 1, 31),
@@ -1122,6 +1150,7 @@ class TestUtil {
                         kilde = Kilde.MANUELL,
                     ),
                 ),
+                endreBostatus = null,
             ),
         )
 
@@ -1163,7 +1192,7 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                manuelleBostatusopplysninger = listOf(
+                behandledeBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 5, 1),
                         periodeTom = LocalDate.of(2022, 7, 31),
@@ -1171,6 +1200,7 @@ class TestUtil {
                         kilde = Kilde.MANUELL,
                     ),
                 ),
+                endreBostatus = null,
             ),
         )
 
@@ -1180,7 +1210,7 @@ class TestUtil {
                 fødselsdato = LocalDate.of(2015, 3, 17),
                 erBarnAvBmBp = true,
                 innhentedeOffentligeOpplysninger = emptyList(),
-                manuelleBostatusopplysninger = listOf(
+                behandledeBostatusopplysninger = listOf(
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 5, 1),
                         periodeTom = LocalDate.of(2022, 7, 31),
@@ -1188,6 +1218,7 @@ class TestUtil {
                         kilde = Kilde.MANUELL,
                     ),
                 ),
+                endreBostatus = null,
             ),
         )
 
@@ -1216,7 +1247,33 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                manuelleBostatusopplysninger = emptyList(),
+                behandledeBostatusopplysninger = emptyList(),
+                endreBostatus = null,
+            ),
+        )
+
+        fun byggEndrePeriodeFomOffentligPeriode() = listOf(
+            BoforholdBarnRequest(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2015, 3, 17),
+                erBarnAvBmBp = true,
+                innhentedeOffentligeOpplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 1, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                ),
+                behandledeBostatusopplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 3, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+                endreBostatus = null,
             ),
         )
     }

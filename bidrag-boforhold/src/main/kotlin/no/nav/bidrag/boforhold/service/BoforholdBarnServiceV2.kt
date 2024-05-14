@@ -9,12 +9,12 @@ import java.time.LocalDate
 
 internal class BoforholdBarnServiceV2() {
     fun beregnBoforholdBarn(virkningstidspunkt: LocalDate, boforholdGrunnlagListe: List<BoforholdBarnRequest>): List<BoforholdResponse> {
-        secureLogger.info { "Beregner bostatus for BMs egne barn V2. Input: $virkningstidspunkt $boforholdGrunnlagListe" }
+        secureLogger.info { "Beregner bostatus for BM/BPs egne barn V2. Input: $virkningstidspunkt $boforholdGrunnlagListe" }
 
         val resultat = mutableListOf<BoforholdResponse>()
         boforholdGrunnlagListe
             .filter { relatertPerson ->
-                relatertPerson.erBarnAvBmBp || relatertPerson.manuelleBostatusopplysninger.any { it.kilde == Kilde.MANUELL }
+                relatertPerson.erBarnAvBmBp || relatertPerson.behandledeBostatusopplysninger.any { it.kilde == Kilde.MANUELL }
             }
             .sortedWith(
                 compareBy { it.relatertPersonPersonId },
@@ -22,7 +22,7 @@ internal class BoforholdBarnServiceV2() {
                 resultat.addAll(beregnPerioderForBarn(virkningstidspunkt, barn))
             }
 
-        secureLogger.info { "Resultat av beregning bostatus for BMs egne barn V2: $resultat" }
+        secureLogger.info { "Resultat av beregning bostatus for BM/BPs egne barn V2: $resultat" }
 
         return resultat
     }
@@ -52,7 +52,7 @@ internal class BoforholdBarnServiceV2() {
             }
 
         // Filterer først bort alle perioder som avsluttes før startdatoBeregning
-        val manuelleOpplysninger = boforholdBarnRequest.manuelleBostatusopplysninger
+        val manuelleOpplysninger = boforholdBarnRequest.behandledeBostatusopplysninger
             .filter { (it.periodeTom == null || it.periodeTom.isAfter(startdatoBeregning)) }
             .filter { it.kilde == Kilde.MANUELL }.sortedBy { it.periodeFom }.map {
                 BoforholdResponse(
@@ -497,8 +497,7 @@ internal class BoforholdBarnServiceV2() {
                             periodeTom = periodeTom,
                             bostatus = offentligePeriode.bostatus,
                             fødselsdato = offentligePeriode.fødselsdato,
-                            kilde = Kilde.MANUELL,
-//                            kilde = offentligePeriode.kilde,
+                            kilde = offentligePeriode.kilde,
                         ),
                     )
                     periodeFom = null
@@ -517,8 +516,7 @@ internal class BoforholdBarnServiceV2() {
                             periodeTom = periodeTom,
                             bostatus = offentligePeriode.bostatus,
                             fødselsdato = offentligePeriode.fødselsdato,
-                            kilde = Kilde.MANUELL,
-//                            kilde = offentligePeriode.kilde,
+                            kilde = offentligePeriode.kilde,
                         ),
                     )
                     periodeFom = null
@@ -537,8 +535,7 @@ internal class BoforholdBarnServiceV2() {
                                 periodeTom = offentligePeriode.periodeTom,
                                 bostatus = offentligePeriode.bostatus,
                                 fødselsdato = offentligePeriode.fødselsdato,
-                                kilde = Kilde.MANUELL,
-//                            kilde = offentligePeriode.kilde,
+                                kilde = offentligePeriode.kilde,
                             ),
                         )
                     }
