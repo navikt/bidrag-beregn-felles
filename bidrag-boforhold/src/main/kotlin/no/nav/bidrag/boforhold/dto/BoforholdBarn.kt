@@ -21,7 +21,7 @@ data class BoforholdBarnRequest(
 data class Bostatus(
     val periodeFom: LocalDate?,
     val periodeTom: LocalDate?,
-    val bostatus: Bostatuskode?,
+    val bostatusKode: Bostatuskode?,
     val kilde: Kilde,
 )
 
@@ -41,9 +41,9 @@ enum class TypeEndring {
 
 data class BoforholdResponse(
     val relatertPersonPersonId: String?,
+    val fødselsdato: LocalDate,
     val periodeFom: LocalDate,
     val periodeTom: LocalDate?,
-    val bostatus: Bostatuskode,
-    val fødselsdato: LocalDate,
+    val bostatuskode: Bostatuskode,
     val kilde: Kilde = Kilde.OFFENTLIG,
 )
