@@ -1626,5 +1626,49 @@ class TestUtil {
                 endreBostatus = null,
             ),
         )
+
+        fun byggNyPeriodeIngenOffentligePerioder() = listOf(
+            BoforholdBarnRequest(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2015, 3, 17),
+                erBarnAvBmBp = true,
+                innhentedeOffentligeOpplysninger = emptyList(),
+                behandledeBostatusopplysninger = emptyList(),
+                endreBostatus = EndreBostatus(
+                    typeEndring = TypeEndring.NY,
+                    nyBostatus = Bostatus(
+                        periodeFom = LocalDate.of(2023, 1, 1),
+                        periodeTom = null,
+                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    originalBostatus = null,
+                ),
+            ),
+            BoforholdBarnRequest(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2015, 3, 17),
+                erBarnAvBmBp = true,
+                innhentedeOffentligeOpplysninger = emptyList(),
+                behandledeBostatusopplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 3, 1),
+                        periodeTom = null,
+                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+                endreBostatus = EndreBostatus(
+                    typeEndring = TypeEndring.NY,
+                    nyBostatus = Bostatus(
+                        periodeFom = LocalDate.of(2023, 9, 1),
+                        periodeTom = null,
+                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    originalBostatus = null,
+                ),
+            ),
+        )
     }
 }
