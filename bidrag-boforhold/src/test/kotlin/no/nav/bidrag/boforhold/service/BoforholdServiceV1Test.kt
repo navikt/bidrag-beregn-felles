@@ -129,7 +129,7 @@ internal class BoforholdServiceV1Test {
     @Test
     fun `Test at overlappende perioder slås sammen og at det genereres perioder for når barnet ikke bor i husstanden med 18 år`() {
         boforholdServiceV1 = BoforholdServiceV1()
-        val mottatteBoforhold = TestUtil.byggSammenhengendeForekomsterMed18År()
+        val mottatteBoforhold = TestUtil.byggSammenhengendeForekomsterMedAttenÅr()
         val virkningstidspunkt = LocalDate.of(2018, 9, 1)
         val resultat = boforholdServiceV1.beregnEgneBarn(virkningstidspunkt, mottatteBoforhold)
 

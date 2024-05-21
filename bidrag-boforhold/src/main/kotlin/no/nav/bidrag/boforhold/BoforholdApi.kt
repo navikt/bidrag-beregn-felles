@@ -1,11 +1,11 @@
 package no.nav.bidrag.boforhold
 
-import no.nav.bidrag.boforhold.dto.BoforholdRequest
+import no.nav.bidrag.boforhold.dto.BoforholdBarnRequest
 import no.nav.bidrag.boforhold.dto.BoforholdResponse
 import no.nav.bidrag.boforhold.response.BoforholdBeregnet
 import no.nav.bidrag.boforhold.response.RelatertPerson
+import no.nav.bidrag.boforhold.service.BoforholdBarnServiceV2
 import no.nav.bidrag.boforhold.service.BoforholdServiceV1
-import no.nav.bidrag.boforhold.service.BoforholdServiceV2
 import java.time.LocalDate
 
 /**
@@ -18,9 +18,9 @@ class BoforholdApi {
         fun beregnV1(virkningstidspunkt: LocalDate, boforholdGrunnlagDtoListe: List<RelatertPerson>): List<BoforholdBeregnet> {
             return boforholdServiceV1.beregnEgneBarn(virkningstidspunkt, boforholdGrunnlagDtoListe)
         }
-        private val boforholdServiceV2 = BoforholdServiceV2()
-        fun beregnV2(virkningstidspunkt: LocalDate, boforholdRequestListe: List<BoforholdRequest>): List<BoforholdResponse> {
-            return boforholdServiceV2.beregnEgneBarn(virkningstidspunkt, boforholdRequestListe)
+        private val boforholdBarnServiceV2 = BoforholdBarnServiceV2()
+        fun beregnBoforholdBarnV2(virkningstidspunkt: LocalDate, boforholdBarnRequestListe: List<BoforholdBarnRequest>): List<BoforholdResponse> {
+            return boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, boforholdBarnRequestListe)
         }
     }
 }
