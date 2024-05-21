@@ -636,7 +636,10 @@ internal class BoforholdBarnServiceV2() {
             TypeEndring.SLETTET -> {
                 if (originalBostatus == null) {
                     // Hvis det ikke finnes original bostatuskode så skal det ikke være mulig å slette en periode
-                    secureLogger.info { "Periode som skal slettes må være angitt som originalBostatus i input. endreBostatus: ${boforholdBarnRequest.endreBostatus} " }
+                    secureLogger.info {
+                        "Periode som skal slettes må være angitt som originalBostatus i input. endreBostatus: " +
+                            "${boforholdBarnRequest.endreBostatus} "
+                    }
                     throw IllegalStateException("Periode som skal slettes må være angitt som originalBostatus i input")
                 }
                 // Returnerer en periode med samme periodeFom og periodeTom som original periode med motsatt bostatuskode
@@ -656,7 +659,10 @@ internal class BoforholdBarnServiceV2() {
             TypeEndring.NY -> {
                 if (nyBostatus == null) {
                     // Hvis det ikke finnes en ny bostatus så kan det ikke leges til ny periode
-                    secureLogger.info { "Periode som skal legges til må være angitt som nyBostatus i input. endreBostatus: ${boforholdBarnRequest.endreBostatus} " }
+                    secureLogger.info {
+                        "Periode som skal legges til må være angitt som nyBostatus i input. endreBostatus: " +
+                            "${boforholdBarnRequest.endreBostatus} "
+                    }
                     throw IllegalStateException("Periode som skal legges til mangler i input")
                 }
                 endredePerioder.add(
