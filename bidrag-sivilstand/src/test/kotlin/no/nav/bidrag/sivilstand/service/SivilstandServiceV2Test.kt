@@ -17,6 +17,7 @@ internal class SivilstandServiceV2Test {
         sivilstandServiceV2 = SivilstandServiceV2()
         val mottatteSivilstandsforekomster = TestUtil.byggHentSivilstandResponseTestSorteringV2()
         val virkningstidspunkt = LocalDate.of(2010, 9, 1)
+
         val resultat = sivilstandServiceV2.beregn(virkningstidspunkt, mottatteSivilstandsforekomster)
 
         assertSoftly {
