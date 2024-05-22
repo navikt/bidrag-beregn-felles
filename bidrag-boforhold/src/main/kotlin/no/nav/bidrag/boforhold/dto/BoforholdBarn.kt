@@ -44,6 +44,6 @@ data class BoforholdResponse(
     val fødselsdato: LocalDate,
     val periodeFom: LocalDate,
     val periodeTom: LocalDate?,
-    val bostatuskode: Bostatuskode,
+    val bostatus: Bostatuskode,
     val kilde: Kilde = Kilde.OFFENTLIG,
 )

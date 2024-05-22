@@ -46,7 +46,7 @@ internal class BoforholdBarnServiceV2() {
                     relatertPersonPersonId = boforholdBarnRequest.relatertPersonPersonId,
                     periodeFom = if (it.periodeFom == null) startdatoBeregning else it.periodeFom.withDayOfMonth(1),
                     periodeTom = it.periodeTom?.plusMonths(1)?.withDayOfMonth(1)?.minusDays(1),
-                    bostatuskode = it.bostatusKode ?: Bostatuskode.MED_FORELDER,
+                    bostatus = it.bostatusKode ?: Bostatuskode.MED_FORELDER,
                     fødselsdato = boforholdBarnRequest.fødselsdato,
                     kilde = Kilde.OFFENTLIG,
                 )
@@ -60,7 +60,7 @@ internal class BoforholdBarnServiceV2() {
                     relatertPersonPersonId = boforholdBarnRequest.relatertPersonPersonId,
                     periodeFom = if (it.periodeFom!!.isBefore(startdatoBeregning)) startdatoBeregning else it.periodeFom,
                     periodeTom = it.periodeTom,
-                    bostatuskode = it.bostatusKode!!,
+                    bostatus = it.bostatusKode!!,
                     fødselsdato = boforholdBarnRequest.fødselsdato,
                     kilde = it.kilde,
                 )
@@ -127,7 +127,7 @@ internal class BoforholdBarnServiceV2() {
                 relatertPersonPersonId = it.relatertPersonPersonId,
                 periodeFom = it.periodeFom,
                 periodeTom = it.periodeTom,
-                bostatuskode = it.bostatuskode,
+                bostatus = it.bostatus,
                 fødselsdato = it.fødselsdato,
                 kilde = if (beregnetPeriodeErInnenforOffentligPeriodeMedLikBostatuskode(
                         it,
@@ -215,7 +215,7 @@ internal class BoforholdBarnServiceV2() {
                 }
 
                 if (liste[indeks + 1].periodeFom.isBefore(periodeTom!!.plusDays(2)) &&
-                    liste[indeks + 1].bostatuskode == liste[indeks].bostatuskode
+                    liste[indeks + 1].bostatus == liste[indeks].bostatus
                 ) {
                     // perioden overlapper og skal slås sammen
                     if (periodeFom == null) {
@@ -234,7 +234,7 @@ internal class BoforholdBarnServiceV2() {
                                 relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                                 periodeFom = periodeFom,
                                 periodeTom = liste[indeks].periodeTom ?: periodeTom,
-                                bostatuskode = liste[indeks].bostatuskode,
+                                bostatus = liste[indeks].bostatus,
                                 fødselsdato = liste[indeks].fødselsdato,
                                 kilde = kilde ?: liste[indeks].kilde,
 
@@ -248,7 +248,7 @@ internal class BoforholdBarnServiceV2() {
                                 relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                                 periodeFom = liste[indeks].periodeFom,
                                 periodeTom = liste[indeks].periodeTom ?: periodeTom,
-                                bostatuskode = liste[indeks].bostatuskode,
+                                bostatus = liste[indeks].bostatus,
                                 fødselsdato = liste[indeks].fødselsdato,
                                 kilde = liste[indeks].kilde,
 
@@ -263,7 +263,7 @@ internal class BoforholdBarnServiceV2() {
                         relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                         periodeFom = periodeFom ?: liste[indeks].periodeFom,
                         periodeTom = liste[indeks].periodeTom,
-                        bostatuskode = liste[indeks].bostatuskode,
+                        bostatus = liste[indeks].bostatus,
                         fødselsdato = liste[indeks].fødselsdato,
                         kilde = kilde ?: liste[indeks].kilde,
 
@@ -286,7 +286,7 @@ internal class BoforholdBarnServiceV2() {
                             relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                             periodeFom = startdatoBeregning,
                             periodeTom = liste[indeks].periodeFom.minusDays(1),
-                            bostatuskode = Bostatuskode.IKKE_MED_FORELDER,
+                            bostatus = Bostatuskode.IKKE_MED_FORELDER,
                             fødselsdato = liste[indeks].fødselsdato,
                             kilde = liste[indeks].kilde,
 
@@ -297,7 +297,7 @@ internal class BoforholdBarnServiceV2() {
                             relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                             periodeFom = liste[indeks].periodeFom,
                             periodeTom = liste[indeks].periodeTom,
-                            bostatuskode = liste[indeks].bostatuskode,
+                            bostatus = liste[indeks].bostatus,
                             fødselsdato = liste[indeks].fødselsdato,
                             kilde = liste[indeks].kilde,
 
@@ -309,7 +309,7 @@ internal class BoforholdBarnServiceV2() {
                             relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                             periodeFom = startdatoBeregning,
                             periodeTom = liste[indeks].periodeTom,
-                            bostatuskode = liste[indeks].bostatuskode,
+                            bostatus = liste[indeks].bostatus,
                             fødselsdato = liste[indeks].fødselsdato,
                             kilde = liste[indeks].kilde,
 
@@ -325,7 +325,7 @@ internal class BoforholdBarnServiceV2() {
                             relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                             periodeFom = liste[indeks - 1].periodeTom!!.plusDays(1),
                             periodeTom = liste[indeks].periodeFom.minusDays(1),
-                            bostatuskode = Bostatuskode.IKKE_MED_FORELDER,
+                            bostatus = Bostatuskode.IKKE_MED_FORELDER,
                             fødselsdato = liste[indeks].fødselsdato,
                             kilde = liste[indeks].kilde,
 
@@ -338,7 +338,7 @@ internal class BoforholdBarnServiceV2() {
                         relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                         periodeFom = liste[indeks].periodeFom,
                         periodeTom = liste[indeks].periodeTom,
-                        bostatuskode = liste[indeks].bostatuskode,
+                        bostatus = liste[indeks].bostatus,
                         fødselsdato = liste[indeks].fødselsdato,
                         kilde = liste[indeks].kilde,
 
@@ -354,7 +354,7 @@ internal class BoforholdBarnServiceV2() {
                         relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                         periodeFom = liste[indeks].periodeTom!!.plusDays(1),
                         periodeTom = null,
-                        bostatuskode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         fødselsdato = liste[indeks].fødselsdato,
                         kilde = liste[indeks].kilde,
 
@@ -375,7 +375,7 @@ internal class BoforholdBarnServiceV2() {
             for (indeks in liste.indices) {
                 val bostatuskodeAttenÅr =
                     if (liste[indeks].kilde == Kilde.MANUELL && (
-                            liste[indeks].bostatuskode == Bostatuskode.MED_FORELDER || liste[indeks].bostatuskode
+                            liste[indeks].bostatus == Bostatuskode.MED_FORELDER || liste[indeks].bostatus
                                 == Bostatuskode.DOKUMENTERT_SKOLEGANG
                             )
                     ) {
@@ -394,7 +394,7 @@ internal class BoforholdBarnServiceV2() {
                                 relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                                 periodeFom = liste[indeks].periodeFom,
                                 periodeTom = attenårFraDato.minusDays(1),
-                                bostatuskode = liste[indeks].bostatuskode,
+                                bostatus = liste[indeks].bostatus,
                                 fødselsdato = liste[indeks].fødselsdato,
                                 kilde = liste[indeks].kilde,
 
@@ -405,7 +405,7 @@ internal class BoforholdBarnServiceV2() {
                                 relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                                 periodeFom = attenårFraDato,
                                 periodeTom = liste[indeks].periodeTom,
-                                bostatuskode = bostatuskodeAttenÅr,
+                                bostatus = bostatuskodeAttenÅr,
                                 fødselsdato = liste[indeks].fødselsdato,
                                 kilde = liste[indeks].kilde,
 
@@ -417,7 +417,7 @@ internal class BoforholdBarnServiceV2() {
                                 relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
                                 periodeFom = liste[indeks].periodeFom,
                                 periodeTom = liste[indeks].periodeTom,
-                                bostatuskode = bostatuskodeAttenÅr,
+                                bostatus = bostatuskodeAttenÅr,
                                 fødselsdato = liste[indeks].fødselsdato,
                                 kilde = liste[indeks].kilde,
                             ),
@@ -443,7 +443,7 @@ internal class BoforholdBarnServiceV2() {
                     relatertPersonPersonId = endretPeriode.relatertPersonPersonId,
                     periodeFom = endretPeriode.periodeFom,
                     periodeTom = endretPeriode.periodeTom,
-                    bostatuskode = endretPeriode.bostatuskode,
+                    bostatus = endretPeriode.bostatus,
                     fødselsdato = endretPeriode.fødselsdato,
                     kilde = endretPeriode.kilde,
 //                    kilde = if (manuellPeriodeErIdentiskMedOffentligPeriode(endretPeriode, behandledePerioder)) Kilde.OFFENTLIG else Kilde.MANUELL,
@@ -562,7 +562,7 @@ internal class BoforholdBarnServiceV2() {
                             relatertPersonPersonId = offentligePeriode.relatertPersonPersonId,
                             periodeFom = offentligePeriode.periodeFom,
                             periodeTom = periodeTom,
-                            bostatuskode = offentligePeriode.bostatuskode,
+                            bostatus = offentligePeriode.bostatus,
                             fødselsdato = offentligePeriode.fødselsdato,
                             kilde = offentligePeriode.kilde,
                         ),
@@ -581,7 +581,7 @@ internal class BoforholdBarnServiceV2() {
                             // periodeFom er satt hvis første manuelle periode overlapper startdato for offentlig periode
                             periodeFom = periodeFom ?: overlappendePerioder[indeks].periodeTom!!.plusDays(1),
                             periodeTom = periodeTom,
-                            bostatuskode = offentligePeriode.bostatuskode,
+                            bostatus = offentligePeriode.bostatus,
                             fødselsdato = offentligePeriode.fødselsdato,
                             kilde = offentligePeriode.kilde,
                         ),
@@ -600,7 +600,7 @@ internal class BoforholdBarnServiceV2() {
                                 relatertPersonPersonId = offentligePeriode.relatertPersonPersonId,
                                 periodeFom = overlappendePerioder[indeks].periodeTom!!.plusDays(1),
                                 periodeTom = offentligePeriode.periodeTom,
-                                bostatuskode = offentligePeriode.bostatuskode,
+                                bostatus = offentligePeriode.bostatus,
                                 fødselsdato = offentligePeriode.fødselsdato,
                                 kilde = offentligePeriode.kilde,
                             ),
@@ -621,7 +621,7 @@ internal class BoforholdBarnServiceV2() {
         offentligePerioder: List<BoforholdResponse>,
     ): Boolean {
         return offentligePerioder.any { offentligPeriode ->
-            beregnetPeriode.bostatuskode == offentligPeriode.bostatuskode &&
+            beregnetPeriode.bostatus == offentligPeriode.bostatus &&
                 beregnetPeriode.periodeFom.isAfter(offentligPeriode.periodeFom.minusDays(1)) &&
                 (offentligPeriode.periodeTom == null || beregnetPeriode.periodeTom?.isBefore(offentligPeriode.periodeTom.plusDays(1)) == true)
         }
@@ -649,7 +649,7 @@ internal class BoforholdBarnServiceV2() {
                         fødselsdato = boforholdBarnRequest.fødselsdato,
                         periodeFom = originalBostatus.periodeFom!!,
                         periodeTom = originalBostatus.periodeTom,
-                        bostatuskode = motsattBostatuskode(originalBostatus.bostatusKode!!),
+                        bostatus = motsattBostatuskode(originalBostatus.bostatusKode!!),
                         kilde = Kilde.MANUELL,
                     ),
                 )
@@ -670,7 +670,7 @@ internal class BoforholdBarnServiceV2() {
                         relatertPersonPersonId = boforholdBarnRequest.relatertPersonPersonId,
                         periodeFom = nyBostatus.periodeFom!!,
                         periodeTom = nyBostatus.periodeTom,
-                        bostatuskode = nyBostatus.bostatusKode!!,
+                        bostatus = nyBostatus.bostatusKode!!,
                         fødselsdato = boforholdBarnRequest.fødselsdato,
                         kilde = Kilde.MANUELL,
                     ),
@@ -695,7 +695,7 @@ internal class BoforholdBarnServiceV2() {
                             relatertPersonPersonId = boforholdBarnRequest.relatertPersonPersonId,
                             periodeFom = nyBostatus.periodeFom!!,
                             periodeTom = nyBostatus.periodeTom,
-                            bostatuskode = nyBostatus.bostatusKode!!,
+                            bostatus = nyBostatus.bostatusKode!!,
                             fødselsdato = boforholdBarnRequest.fødselsdato,
                             kilde = Kilde.MANUELL,
                         ),
@@ -711,7 +711,7 @@ internal class BoforholdBarnServiceV2() {
                             relatertPersonPersonId = boforholdBarnRequest.relatertPersonPersonId,
                             periodeFom = originalBostatus.periodeFom!!,
                             periodeTom = originalBostatus.periodeTom,
-                            bostatuskode = motsattBostatuskode(originalBostatus.bostatusKode!!),
+                            bostatus = motsattBostatuskode(originalBostatus.bostatusKode!!),
                             fødselsdato = boforholdBarnRequest.fødselsdato,
                             kilde = Kilde.MANUELL,
                         ),
@@ -721,7 +721,7 @@ internal class BoforholdBarnServiceV2() {
                             relatertPersonPersonId = boforholdBarnRequest.relatertPersonPersonId,
                             periodeFom = nyBostatus.periodeFom,
                             periodeTom = nyBostatus.periodeTom,
-                            bostatuskode = nyBostatus.bostatusKode!!,
+                            bostatus = nyBostatus.bostatusKode!!,
                             fødselsdato = boforholdBarnRequest.fødselsdato,
                             kilde = Kilde.MANUELL,
                         ),
@@ -736,7 +736,7 @@ internal class BoforholdBarnServiceV2() {
                             relatertPersonPersonId = boforholdBarnRequest.relatertPersonPersonId,
                             periodeFom = originalBostatus.periodeFom!!,
                             periodeTom = nyBostatus.periodeFom.minusDays(1),
-                            bostatuskode = originalBostatus.bostatusKode!!,
+                            bostatus = originalBostatus.bostatusKode!!,
                             fødselsdato = boforholdBarnRequest.fødselsdato,
                             kilde = originalBostatus.kilde,
                         ),
@@ -749,7 +749,7 @@ internal class BoforholdBarnServiceV2() {
                         relatertPersonPersonId = boforholdBarnRequest.relatertPersonPersonId,
                         periodeFom = nyBostatus.periodeFom,
                         periodeTom = nyBostatus.periodeTom,
-                        bostatuskode = nyBostatus.bostatusKode!!,
+                        bostatus = nyBostatus.bostatusKode!!,
                         fødselsdato = boforholdBarnRequest.fødselsdato,
                         kilde = nyBostatus.kilde,
                     ),
@@ -763,7 +763,7 @@ internal class BoforholdBarnServiceV2() {
                                 relatertPersonPersonId = boforholdBarnRequest.relatertPersonPersonId,
                                 periodeFom = nyBostatus.periodeTom.plusDays(1),
                                 periodeTom = null,
-                                bostatuskode = motsattBostatuskode(originalBostatus.bostatusKode!!),
+                                bostatus = motsattBostatuskode(originalBostatus.bostatusKode!!),
                                 fødselsdato = boforholdBarnRequest.fødselsdato,
                                 kilde = originalBostatus.kilde,
                             ),
@@ -776,7 +776,7 @@ internal class BoforholdBarnServiceV2() {
                                 relatertPersonPersonId = boforholdBarnRequest.relatertPersonPersonId,
                                 periodeFom = nyBostatus.periodeTom.plusDays(1),
                                 periodeTom = originalBostatus.periodeTom,
-                                bostatuskode = originalBostatus.bostatusKode!!,
+                                bostatus = originalBostatus.bostatusKode!!,
                                 fødselsdato = boforholdBarnRequest.fødselsdato,
                                 kilde = originalBostatus.kilde,
                             ),
