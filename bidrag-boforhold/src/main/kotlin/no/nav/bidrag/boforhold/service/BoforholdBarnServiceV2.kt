@@ -310,6 +310,7 @@ internal class BoforholdBarnServiceV2() {
                             bostatus = Bostatuskode.IKKE_MED_FORELDER,
                             fødselsdato = liste[indeks].fødselsdato,
                             kilde = kilde,
+
                         ),
                     )
                     sammenhengendePerioderListe.add(liste[indeks])
@@ -331,7 +332,6 @@ internal class BoforholdBarnServiceV2() {
                         ),
                     )
                 }
-
                 sammenhengendePerioderListe.add(liste[indeks])
             }
 

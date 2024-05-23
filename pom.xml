@@ -170,6 +170,27 @@
 
     <profiles>
         <profile>
+            <id>OSX</id>
+            <activation>
+                <os>
+                    <name>Mac OS X</name>
+                </os>
+            </activation>
+            <properties>
+                <profile.default.on>false</profile.default.on>
+            </properties>
+            <repositories>
+                <repository>
+                    <id>nexus-internal-release</id>
+                    <url>https://repo.adeo.no/repository/maven-release</url>
+                </repository>
+                <repository>
+                    <id>nexus-internal-mirror</id>
+                    <url>https://repo.adeo.no/repository/maven-public</url>
+                </repository>
+            </repositories>
+        </profile>
+        <profile>
             <id>release</id>
             <activation>
                 <property>

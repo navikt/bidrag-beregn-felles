@@ -1383,6 +1383,7 @@ internal class BoforholdBarnServiceV2Test {
             resultat[2].periodeFom shouldBe LocalDate.of(2023, 9, 1)
             resultat[2].periodeTom shouldBe null
             resultat[2].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+<<<<<<< HEAD
             resultat[2].kilde shouldBe Kilde.MANUELL
 
             // Beregning 3. Her slettes IKKE_MED_FORELDER-perioden og erstattes med ny periode med MED_FORELDER.
@@ -1618,6 +1619,8 @@ internal class BoforholdBarnServiceV2Test {
             resultat[2].periodeFom shouldBe LocalDate.of(2023, 9, 1)
             resultat[2].periodeTom shouldBe null
             resultat[2].bostatus shouldBe Bostatuskode.DOKUMENTERT_SKOLEGANG
+=======
+>>>>>>> main
             resultat[2].kilde shouldBe Kilde.MANUELL
         }
     }
