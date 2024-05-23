@@ -1286,16 +1286,20 @@ internal class BoforholdBarnServiceV2Test {
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
-            resultat.size shouldBe 1
+            resultat.size shouldBe 2
             // Generert periode for tidsrom mellom virkningstidspunkt og periodeFom for første periode i input.
             resultat[0].periodeFom shouldBe LocalDate.of(2022, 4, 1)
-            resultat[0].periodeTom shouldBe null
-            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[0].periodeTom shouldBe LocalDate.of(2022, 7, 31)
+            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
             resultat[0].kilde shouldBe Kilde.MANUELL
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2022, 8, 1)
+            resultat[1].periodeTom shouldBe null
+            resultat[1].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.OFFENTLIG
         }
     }
 
-    @Disabled
     @Test
     fun `Test med kun lukket manuell periode IKKE_MED_FORELDER`() {
         boforholdBarnServiceV2 = BoforholdBarnServiceV2()
@@ -1314,7 +1318,6 @@ internal class BoforholdBarnServiceV2Test {
         }
     }
 
-    @Disabled
     @Test
     fun `Test offentlige perioder overlapper`() {
         boforholdBarnServiceV2 = BoforholdBarnServiceV2()
@@ -1324,16 +1327,20 @@ internal class BoforholdBarnServiceV2Test {
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
-            resultat.size shouldBe 3
+            resultat.size shouldBe 2
             // Generert periode for tidsrom mellom virkningstidspunkt og periodeFom for første periode i input.
-            resultat[0].periodeFom shouldBe LocalDate.of(2022, 5, 1)
+            resultat[0].periodeFom shouldBe LocalDate.of(2022, 4, 1)
             resultat[0].periodeTom shouldBe LocalDate.of(2022, 7, 31)
             resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
-            resultat[0].kilde shouldBe Kilde.MANUELL
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2022, 8, 1)
+            resultat[1].periodeTom shouldBe null
+            resultat[1].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.OFFENTLIG
         }
     }
 
-    @Disabled
     @Test
     fun `Test endre periodeFom offentlig periode`() {
         boforholdBarnServiceV2 = BoforholdBarnServiceV2()
@@ -1348,12 +1355,12 @@ internal class BoforholdBarnServiceV2Test {
             resultat[0].periodeFom shouldBe LocalDate.of(2023, 1, 1)
             resultat[0].periodeTom shouldBe LocalDate.of(2023, 2, 28)
             resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
-            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+            resultat[0].kilde shouldBe Kilde.MANUELL
 
             resultat[1].periodeFom shouldBe LocalDate.of(2023, 3, 1)
             resultat[1].periodeTom shouldBe null
             resultat[1].bostatus shouldBe Bostatuskode.MED_FORELDER
-            resultat[1].kilde shouldBe Kilde.MANUELL
+            resultat[1].kilde shouldBe Kilde.OFFENTLIG
         }
     }
 
