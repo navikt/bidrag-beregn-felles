@@ -77,12 +77,29 @@ internal class BoforholdBarnServiceV2() {
         val attenårFraDato = beregnetAttenÅrFraDato(boforholdBarnRequest.fødselsdato)
 
         if (boforholdBarnRequest.endreBostatus == null) {
+            if (behandledeOpplysninger.isNotEmpty()) {
+                // virkningstidspunkt er endret, juster og fyll inn med offentlig informasjon.
+                val komplettOffentligTidslinje =
+                    fyllUtMedPerioderBarnetIkkeBorIHusstanden(Kilde.OFFENTLIG, startdatoBeregning, justerteOffentligePerioder)
+                // Justerer offentlige perioder mot 18-årsdager og lager bruddperiode hvis barnet fyllet 18 år i perioden bor i husstanden
+                val offentligePerioderJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, komplettOffentligTidslinje)
+                val sammenslåtteBehandledeOgOffentligePerioder =
+                    slåSammenPrimærOgSekundærperioder(behandledeOpplysninger, offentligePerioderJustertMotAttenårsdag)
+
+                // Slår sammen sammenhengende perioder med lik Bostatuskode og setter kilde = Manuell
+                return slåSammenPerioderOgJusterPeriodeTom(sammenslåtteBehandledeOgOffentligePerioder)
+//                return fyllUtMedPerioderBarnetIkkeBorIHusstanden(Kilde.OFFENTLIG, startdatoBeregning, behandledeOpplysninger)
+                // Slår sammen sammenhengende perioder med lik Bostatuskode
+//                return slåSammenPerioderOgJusterPeriodeTom(offentligePerioderJustertMotAttenårsdag)
+            }
+
             // Førstegangs beregning av boforhold for barnet. Beregn fra innhentede offentlige opplysninger.
             if (justerteOffentligePerioder.isEmpty()) {
                 return emptyList()
             } else {
                 // Fyller ut perioder der det ikke finnes informasjon om barnet i offentlige opplysninger
-                val komplettOffentligTidslinje = fyllUtMedPerioderBarnetIkkeBorIHusstanden(startdatoBeregning, justerteOffentligePerioder)
+                val komplettOffentligTidslinje =
+                    fyllUtMedPerioderBarnetIkkeBorIHusstanden(Kilde.OFFENTLIG, startdatoBeregning, justerteOffentligePerioder)
                 // Justerer offentlige perioder mot 18-årsdager og lager bruddperiode hvis barnet fyllet 18 år i perioden bor i husstanden
                 val offentligePerioderJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, komplettOffentligTidslinje)
                 // Slår sammen sammenhengende perioder med lik Bostatuskode.
@@ -100,7 +117,7 @@ internal class BoforholdBarnServiceV2() {
                 // Feilsituasjon. Må alltid være ny hvis det ikke finnes perioder fra før.
                 return emptyList()
             }
-            val komplettManuellTidslinje = fyllUtMedPerioderBarnetIkkeBorIHusstanden(startdatoBeregning, endredeBostatusPerioder)
+            val komplettManuellTidslinje = fyllUtMedPerioderBarnetIkkeBorIHusstanden(Kilde.MANUELL, startdatoBeregning, endredeBostatusPerioder)
             // Gjør en ny sammenslåing av sammenhengende perioder med lik bostatus for å få med perioder generert i komplettManuellTidslinje.
             val sammenslåttManuellTidslinje = slåSammenPerioderOgJusterPeriodeTom(komplettManuellTidslinje)
             // Manuelle perioder justeres mot 18årsdag
@@ -109,17 +126,17 @@ internal class BoforholdBarnServiceV2() {
         }
 
         // Det finnes både behandlede og endrede perioder
-        // Manuelle perioder justeres mot 18årsdag. Perioder som enten overlapper med 18årsdag splittes i to der periode nr to får oppdatert
+        // Endrede perioder justeres mot 18årsdag. Perioder som overlapper med 18årsdag splittes i to der periode nr to får oppdatert
         // bostatuskode. Perioder som er etter 18årsdag får endret bostatuskode.
         val endredePerioderJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, endredeBostatusPerioder)
         val sammenslåtteEndredeOgBehandledePerioder =
-            slåSammenEndredeOgBehandledePerioder(endredePerioderJustertMotAttenårsdag, behandledeOpplysninger)
+            slåSammenPrimærOgSekundærperioder(endredePerioderJustertMotAttenårsdag, behandledeOpplysninger)
 
         // Slår sammen sammenhengende perioder med lik Bostatuskode og setter kilde = Manuell
         val sammenslåttListe = slåSammenPerioderOgJusterPeriodeTom(sammenslåtteEndredeOgBehandledePerioder)
         // Lager komplett tidslinje basert på offentlige opplysninger for å kunne sjekke alle perioder mot offentlige perioder. Alle beregnede
         // perioder som her helt innenfor en offentlig periode med lik bostatuskode får kilde = OFFENTLIG.
-        val komplettOffentligTidslinje = fyllUtMedPerioderBarnetIkkeBorIHusstanden(startdatoBeregning, justerteOffentligePerioder)
+        val komplettOffentligTidslinje = fyllUtMedPerioderBarnetIkkeBorIHusstanden(Kilde.OFFENTLIG, startdatoBeregning, justerteOffentligePerioder)
         val offentligePerioderJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, komplettOffentligTidslinje)
 
         return sammenslåttListe.map {
@@ -274,7 +291,11 @@ internal class BoforholdBarnServiceV2() {
         return sammenslåttListe
     }
 
-    private fun fyllUtMedPerioderBarnetIkkeBorIHusstanden(startdatoBeregning: LocalDate, liste: List<BoforholdResponse>): List<BoforholdResponse> {
+    private fun fyllUtMedPerioderBarnetIkkeBorIHusstanden(
+        kilde: Kilde,
+        startdatoBeregning: LocalDate,
+        liste: List<BoforholdResponse>,
+    ): List<BoforholdResponse> {
         val sammenhengendePerioderListe = mutableListOf<BoforholdResponse>()
 
         for (indeks in liste.indices) {
@@ -288,33 +309,13 @@ internal class BoforholdBarnServiceV2() {
                             periodeTom = liste[indeks].periodeFom.minusDays(1),
                             bostatus = Bostatuskode.IKKE_MED_FORELDER,
                             fødselsdato = liste[indeks].fødselsdato,
-                            kilde = liste[indeks].kilde,
+                            kilde = kilde,
 
                         ),
                     )
-                    sammenhengendePerioderListe.add(
-                        BoforholdResponse(
-                            relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
-                            periodeFom = liste[indeks].periodeFom,
-                            periodeTom = liste[indeks].periodeTom,
-                            bostatus = liste[indeks].bostatus,
-                            fødselsdato = liste[indeks].fødselsdato,
-                            kilde = liste[indeks].kilde,
-
-                        ),
-                    )
+                    sammenhengendePerioderListe.add(liste[indeks])
                 } else {
-                    sammenhengendePerioderListe.add(
-                        BoforholdResponse(
-                            relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
-                            periodeFom = startdatoBeregning,
-                            periodeTom = liste[indeks].periodeTom,
-                            bostatus = liste[indeks].bostatus,
-                            fødselsdato = liste[indeks].fødselsdato,
-                            kilde = liste[indeks].kilde,
-
-                        ),
-                    )
+                    sammenhengendePerioderListe.add(liste[indeks].copy(periodeFom = startdatoBeregning))
                 }
             } else {
                 if (liste[indeks - 1].periodeTom!!.plusDays(1).isBefore(liste[indeks].periodeFom)) {
@@ -327,23 +328,11 @@ internal class BoforholdBarnServiceV2() {
                             periodeTom = liste[indeks].periodeFom.minusDays(1),
                             bostatus = Bostatuskode.IKKE_MED_FORELDER,
                             fødselsdato = liste[indeks].fødselsdato,
-                            kilde = liste[indeks].kilde,
-
+                            kilde = kilde,
                         ),
                     )
                 }
-
-                sammenhengendePerioderListe.add(
-                    BoforholdResponse(
-                        relatertPersonPersonId = liste[indeks].relatertPersonPersonId,
-                        periodeFom = liste[indeks].periodeFom,
-                        periodeTom = liste[indeks].periodeTom,
-                        bostatus = liste[indeks].bostatus,
-                        fødselsdato = liste[indeks].fødselsdato,
-                        kilde = liste[indeks].kilde,
-
-                    ),
-                )
+                sammenhengendePerioderListe.add(liste[indeks])
             }
 
             // Siste forekomst. Hvis periodeTom er satt så dannes det en ny periode som dekker perioden fra periodeTom på forrige forekomst
@@ -356,8 +345,7 @@ internal class BoforholdBarnServiceV2() {
                         periodeTom = null,
                         bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         fødselsdato = liste[indeks].fødselsdato,
-                        kilde = liste[indeks].kilde,
-
+                        kilde = kilde,
                     ),
                 )
             }
@@ -430,48 +418,51 @@ internal class BoforholdBarnServiceV2() {
         return slåSammenPerioderOgJusterPeriodeTom(listeJustertMotAttenårsdag)
     }
 
-    private fun slåSammenEndredeOgBehandledePerioder(
-        endredePerioder: List<BoforholdResponse>,
-        behandledePerioder: List<BoforholdResponse>,
+    // Funksjon for å slå sammen to lister med hhv hoved- og sekundærperioder. Hovedperioder skrives uendret til output mens sekundærperioder
+    // justeres mot hovedperioder. Hvis en sekundærperiode overlapper med én eller flere hovedperioder så splittes sekundærperioden til å dekke
+    // eventuelt opphold mellom hovedperioder.
+    private fun slåSammenPrimærOgSekundærperioder(
+        primærperioder: List<BoforholdResponse>,
+        sekundærperioder: List<BoforholdResponse>,
     ): List<BoforholdResponse> {
         val resultatliste = mutableListOf<BoforholdResponse>()
 
-        // Skriver alle endrede perioder til resultatet. Perioder med identisk informasjon som en offentlig periode skrives med kilde = Offentlig
-        endredePerioder.forEach { endretPeriode ->
+        // Skriver alle primærperioder til resultatet.
+        primærperioder.forEach { primærperiode ->
             resultatliste.add(
                 BoforholdResponse(
-                    relatertPersonPersonId = endretPeriode.relatertPersonPersonId,
-                    periodeFom = endretPeriode.periodeFom,
-                    periodeTom = endretPeriode.periodeTom,
-                    bostatus = endretPeriode.bostatus,
-                    fødselsdato = endretPeriode.fødselsdato,
-                    kilde = endretPeriode.kilde,
+                    relatertPersonPersonId = primærperiode.relatertPersonPersonId,
+                    periodeFom = primærperiode.periodeFom,
+                    periodeTom = primærperiode.periodeTom,
+                    bostatus = primærperiode.bostatus,
+                    fødselsdato = primærperiode.fødselsdato,
+                    kilde = primærperiode.kilde,
 //                    kilde = if (manuellPeriodeErIdentiskMedOffentligPeriode(endretPeriode, behandledePerioder)) Kilde.OFFENTLIG else Kilde.MANUELL,
                 ),
             )
         }
 
-        // Sjekker offentlige perioder og justerer periodeFom og periodeTom der disse overlapper med manuelle perioder
-        // Offentlige perioder som helt dekkes av manuelle perioder skrives ikke til resultatet
-        behandledePerioder.forEach { offentligPeriode ->
-            // Finner manuelle perioder som overlapper med den offentlige perioden
+        // Sjekker sekundærperioder og justerer periodeFom og periodeTom der disse overlapper med primærperioder.
+        // Sekundærperioder som helt dekkes av primærperioder skrives ikke til resultatet.
+        sekundærperioder.forEach { sekundærperiode ->
+            // Finner sekundærperioder som overlapper med den primære perioden
             val overlappendePerioder = mutableListOf<BoforholdResponse>()
-            endredePerioder.forEach { manuellPeriode ->
-                if (offentligPeriode.periodeTom == null) {
-                    if (manuellPeriode.periodeTom == null || manuellPeriode.periodeTom.isAfter(offentligPeriode.periodeFom)) {
-                        overlappendePerioder.add(manuellPeriode)
+            primærperioder.forEach { primærperiode ->
+                if (sekundærperiode.periodeTom == null) {
+                    if (primærperiode.periodeTom == null || primærperiode.periodeTom.isAfter(sekundærperiode.periodeFom)) {
+                        overlappendePerioder.add(primærperiode)
                     }
                 } else {
-                    if (manuellPeriode.periodeTom == null) {
-                        if (manuellPeriode.periodeFom.isBefore(offentligPeriode.periodeTom.plusDays(1))) {
-                            overlappendePerioder.add(manuellPeriode)
+                    if (primærperiode.periodeTom == null) {
+                        if (primærperiode.periodeFom.isBefore(sekundærperiode.periodeTom.plusDays(1))) {
+                            overlappendePerioder.add(primærperiode)
                         }
                     } else {
-                        if (manuellPeriode.periodeFom.isBefore(offentligPeriode.periodeTom.plusDays(1)) &&
-                            manuellPeriode.periodeTom.plusDays(1)
-                                ?.isAfter(offentligPeriode.periodeFom) == true
+                        if (primærperiode.periodeFom.isBefore(sekundærperiode.periodeTom.plusDays(1)) &&
+                            primærperiode.periodeTom.plusDays(1)
+                                ?.isAfter(sekundærperiode.periodeFom) == true
                         ) {
-                            overlappendePerioder.add(manuellPeriode)
+                            overlappendePerioder.add(primærperiode)
                         }
                     }
                 }
@@ -505,66 +496,63 @@ internal class BoforholdBarnServiceV2() {
                 }
             }
 
-            val justertOffentligPeriode =
-                justerPeriodeOffentligOpplysning(offentligPeriode, sammenslåttListeOverlappendePerioder.sortedBy { it.periodeFom })
-            if (justertOffentligPeriode != null) {
-                resultatliste.addAll(justertOffentligPeriode)
+            val justertSekundærperiode =
+                justerSekundærperiode(sekundærperiode, sammenslåttListeOverlappendePerioder.sortedBy { it.periodeFom })
+            if (justertSekundærperiode != null) {
+                resultatliste.addAll(justertSekundærperiode)
             }
         }
 
         return resultatliste.sortedBy { it.periodeFom }
     }
 
-    // Offentlig periode sjekkes mot manuelle perioder og justeres til å ikke overlappe med disse. En offentlig periode kan overlappe med 0 til
-    // mange manuelle perioder. Hvis en offentlig periode dekkes helt av manuelle perioder returneres null, ellers returneres en liste. Hvis
-    // en offentlig perioder overlappes av flere enn to manuelle perioder så vil responsen bestå av flere offentlige perioder som dekker
-    // oppholdet mellom de ulike manuelle periodene. Kilde endres til Manuell for offentlig periode som har fått endret perioder.
-    private fun justerPeriodeOffentligOpplysning(
-        offentligePeriode: BoforholdResponse,
-        overlappendePerioder: List<BoforholdResponse>,
-    ): List<BoforholdResponse>? {
+    // Sekundær periode sjekkes mot primærperioder og justeres til å ikke overlappe med disse. En sekundær periode kan overlappe med 0 til
+    // mange primærperioder. Hvis en sekundær periode dekkes helt av primære perioder returneres null, ellers returneres en liste. Hvis
+    // en sekundær periode overlappes av flere enn to primærperioder så vil responsen bestå av flere sekundærperioder som dekker
+    // oppholdet mellom de ulike primærperiodene.
+    private fun justerSekundærperiode(sekundærperiode: BoforholdResponse, overlappendePerioder: List<BoforholdResponse>): List<BoforholdResponse>? {
         var periodeFom: LocalDate? = null
         var periodeTom: LocalDate? = null
-        val justertOffentligPeriodeListe = mutableListOf<BoforholdResponse>()
+        val justertSekundærPeriodeListe = mutableListOf<BoforholdResponse>()
 
         if (overlappendePerioder.isNullOrEmpty()) {
-            return listOf(offentligePeriode)
+            return listOf(sekundærperiode)
         }
 
         for (indeks in overlappendePerioder.indices) {
-            // Sjekker først om den første manuelle perioden dekker starten, og eventuelt hele den offentlige perioden
+            // Sjekker først om den første primærperioder dekker starten, og eventuelt hele den sekundære perioden
             if (indeks == 0) {
-                if (overlappendePerioder[indeks].periodeFom.isBefore(offentligePeriode.periodeFom.plusDays(1))) {
+                if (overlappendePerioder[indeks].periodeFom.isBefore(sekundærperiode.periodeFom.plusDays(1))) {
                     if (overlappendePerioder[indeks].periodeTom == null) {
-                        // Den manuelle perioden dekker hele den offentlige perioden
+                        // Den primære perioden dekker hele den sekundære perioden
                         return null
                     } else {
-                        if (offentligePeriode.periodeTom != null && overlappendePerioder[indeks].periodeTom?.isAfter(
-                                offentligePeriode.periodeTom.plusDays(1),
+                        if (sekundærperiode.periodeTom != null && overlappendePerioder[indeks].periodeTom?.isAfter(
+                                sekundærperiode.periodeTom.plusDays(1),
                             ) == true
                         ) {
-                            // Den manuelle perioden dekker hele den offentlige perioden
+                            // Den primære perioden dekker hele den sekundære perioden
                             return null
                         } else {
-                            // Den manuelle perioden dekker starten på den offentlige perioden og periodeFom må forskyves
+                            // Den primære perioden dekker starten på den sekundære perioden og periodeFom må forskyves
                             periodeFom = overlappendePerioder[indeks].periodeTom!!.plusDays(1)
                         }
                     }
                 } else {
-                    // Den manuelle perioden overlapper etter starten på den offentlige perioden og periodeTom må forskyves på den offentlige perioden
+                    // Den primære perioden overlapper etter starten på den sekundære perioden og periodeTom må forskyves på den sekundære perioden
                     periodeTom = overlappendePerioder[indeks].periodeFom.minusDays(1)
                 }
                 if (periodeTom != null) {
-                    // Første manuelle periode starter etter offentlig periode. Den offentlige perioden skrives med justert tomdato. Senere i logikken
-                    // må det sjekkes på om den offentlige perioden må splittes i mer enn én periode.
-                    justertOffentligPeriodeListe.add(
+                    // Første primære periode starter etter sekundær periode. Den sekundære perioden skrives med justert tomdato. Senere i logikken
+                    // må det sjekkes på om den sekundære perioden må splittes i mer enn én periode.
+                    justertSekundærPeriodeListe.add(
                         BoforholdResponse(
-                            relatertPersonPersonId = offentligePeriode.relatertPersonPersonId,
-                            periodeFom = offentligePeriode.periodeFom,
+                            relatertPersonPersonId = sekundærperiode.relatertPersonPersonId,
+                            periodeFom = sekundærperiode.periodeFom,
                             periodeTom = periodeTom,
-                            bostatus = offentligePeriode.bostatus,
-                            fødselsdato = offentligePeriode.fødselsdato,
-                            kilde = offentligePeriode.kilde,
+                            bostatus = sekundærperiode.bostatus,
+                            fødselsdato = sekundærperiode.fødselsdato,
+                            kilde = sekundærperiode.kilde,
                         ),
                     )
                     periodeFom = null
@@ -573,17 +561,17 @@ internal class BoforholdBarnServiceV2() {
             }
             if (indeks < overlappendePerioder.size - 1) {
                 if (overlappendePerioder[indeks + 1].periodeFom.isAfter(overlappendePerioder[indeks].periodeTom!!.plusDays(1))) {
-                    // Det er en åpen tidsperiode mellom to manuelle perioder, og den offentlige perioden skal fylle denne tidsperioden
+                    // Det er en åpen tidsperiode mellom to primære perioder, og den sekundære perioden skal fylle denne tidsperioden
                     periodeTom = overlappendePerioder[indeks + 1].periodeFom.minusDays(1)
-                    justertOffentligPeriodeListe.add(
+                    justertSekundærPeriodeListe.add(
                         BoforholdResponse(
-                            relatertPersonPersonId = offentligePeriode.relatertPersonPersonId,
-                            // periodeFom er satt hvis første manuelle periode overlapper startdato for offentlig periode
+                            relatertPersonPersonId = sekundærperiode.relatertPersonPersonId,
+                            // periodeFom er satt hvis første primære periode overlapper startdato for sekundære periode
                             periodeFom = periodeFom ?: overlappendePerioder[indeks].periodeTom!!.plusDays(1),
                             periodeTom = periodeTom,
-                            bostatus = offentligePeriode.bostatus,
-                            fødselsdato = offentligePeriode.fødselsdato,
-                            kilde = offentligePeriode.kilde,
+                            bostatus = sekundærperiode.bostatus,
+                            fødselsdato = sekundærperiode.fødselsdato,
+                            kilde = sekundærperiode.kilde,
                         ),
                     )
                     periodeFom = null
@@ -594,22 +582,22 @@ internal class BoforholdBarnServiceV2() {
             } else {
                 // Siste manuelle periode
                 if (overlappendePerioder[indeks].periodeTom != null) {
-                    if (offentligePeriode.periodeTom == null || offentligePeriode.periodeTom.isAfter(overlappendePerioder[indeks].periodeTom)) {
-                        justertOffentligPeriodeListe.add(
+                    if (sekundærperiode.periodeTom == null || sekundærperiode.periodeTom.isAfter(overlappendePerioder[indeks].periodeTom)) {
+                        justertSekundærPeriodeListe.add(
                             BoforholdResponse(
-                                relatertPersonPersonId = offentligePeriode.relatertPersonPersonId,
+                                relatertPersonPersonId = sekundærperiode.relatertPersonPersonId,
                                 periodeFom = overlappendePerioder[indeks].periodeTom!!.plusDays(1),
-                                periodeTom = offentligePeriode.periodeTom,
-                                bostatus = offentligePeriode.bostatus,
-                                fødselsdato = offentligePeriode.fødselsdato,
-                                kilde = offentligePeriode.kilde,
+                                periodeTom = sekundærperiode.periodeTom,
+                                bostatus = sekundærperiode.bostatus,
+                                fødselsdato = sekundærperiode.fødselsdato,
+                                kilde = sekundærperiode.kilde,
                             ),
                         )
                     }
                 }
             }
         }
-        return justertOffentligPeriodeListe
+        return justertSekundærPeriodeListe
     }
 
     private fun beregnetAttenÅrFraDato(fødselsdato: LocalDate): LocalDate {
@@ -736,7 +724,7 @@ internal class BoforholdBarnServiceV2() {
                             relatertPersonPersonId = boforholdBarnRequest.relatertPersonPersonId,
                             periodeFom = originalBostatus.periodeFom!!,
                             periodeTom = nyBostatus.periodeFom.minusDays(1),
-                            bostatus = originalBostatus.bostatusKode!!,
+                            bostatus = motsattBostatuskode(nyBostatus.bostatusKode!!),
                             fødselsdato = boforholdBarnRequest.fødselsdato,
                             kilde = originalBostatus.kilde,
                         ),
@@ -776,7 +764,7 @@ internal class BoforholdBarnServiceV2() {
                                 relatertPersonPersonId = boforholdBarnRequest.relatertPersonPersonId,
                                 periodeFom = nyBostatus.periodeTom.plusDays(1),
                                 periodeTom = originalBostatus.periodeTom,
-                                bostatus = originalBostatus.bostatusKode!!,
+                                bostatus = motsattBostatuskode(nyBostatus.bostatusKode),
                                 fødselsdato = boforholdBarnRequest.fødselsdato,
                                 kilde = originalBostatus.kilde,
                             ),

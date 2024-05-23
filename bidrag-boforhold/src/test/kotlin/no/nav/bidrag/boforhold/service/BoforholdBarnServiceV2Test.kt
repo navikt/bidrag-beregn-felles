@@ -1358,7 +1358,7 @@ internal class BoforholdBarnServiceV2Test {
     }
 
     @Test
-    fun `Test legge til periode uten offentlige perioder`() {
+    fun `Test ny periode, ny periode og slett periode, uten offentlige perioder`() {
         boforholdBarnServiceV2 = BoforholdBarnServiceV2()
         val mottatteBoforhold = TestUtil.byggNyPeriodeIngenOffentligePerioder()
         val virkningstidspunkt = LocalDate.of(2023, 3, 1)
@@ -1366,7 +1366,7 @@ internal class BoforholdBarnServiceV2Test {
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
-            resultat.size shouldBe 3
+            resultat.size shouldBe 4
 
             // Beregning 1
             resultat[0].periodeFom shouldBe LocalDate.of(2023, 3, 1)
@@ -1383,6 +1383,244 @@ internal class BoforholdBarnServiceV2Test {
             resultat[2].periodeFom shouldBe LocalDate.of(2023, 9, 1)
             resultat[2].periodeTom shouldBe null
             resultat[2].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+<<<<<<< HEAD
+            resultat[2].kilde shouldBe Kilde.MANUELL
+
+            // Beregning 3. Her slettes IKKE_MED_FORELDER-perioden og erstattes med ny periode med MED_FORELDER.
+            resultat[3].periodeFom shouldBe LocalDate.of(2023, 3, 1)
+            resultat[3].periodeTom shouldBe null
+            resultat[3].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[3].kilde shouldBe Kilde.MANUELL
+        }
+    }
+
+    @Test
+    fun `Test ny periode, endre periode og bostatuskode og slett periode, uten offentlige perioder`() {
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
+        val mottatteBoforhold = TestUtil.byggEndrePeriodeOgBostatuskodeIngenOffentligePerioder()
+        val virkningstidspunkt = LocalDate.of(2023, 3, 1)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 4
+
+            // Beregning 1
+            resultat[0].periodeFom shouldBe LocalDate.of(2023, 3, 1)
+            resultat[0].periodeTom shouldBe null
+            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.MANUELL
+
+            // Beregning 2
+            resultat[1].periodeFom shouldBe LocalDate.of(2023, 3, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2023, 8, 31)
+            resultat[1].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.MANUELL
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2023, 9, 1)
+            resultat[2].periodeTom shouldBe null
+            resultat[2].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[2].kilde shouldBe Kilde.MANUELL
+
+            // Beregning 3. Her slettes MED_FORELDER-perioden og erstattes med ny periode med IKKE_MED_FORELDER.
+            resultat[3].periodeFom shouldBe LocalDate.of(2023, 3, 1)
+            resultat[3].periodeTom shouldBe null
+            resultat[3].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[3].kilde shouldBe Kilde.MANUELL
+        }
+    }
+
+    @Test
+    fun `Test ny periode, endre periode frem i tid og slett periode, uten offentlige perioder`() {
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
+        val mottatteBoforhold = TestUtil.byggEndrePeriodeFremITidIngenOffentligePerioder()
+        val virkningstidspunkt = LocalDate.of(2023, 3, 1)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 4
+
+            // Beregning 1
+            resultat[0].periodeFom shouldBe LocalDate.of(2023, 3, 1)
+            resultat[0].periodeTom shouldBe null
+            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.MANUELL
+
+            // Beregning 2
+            resultat[1].periodeFom shouldBe LocalDate.of(2023, 3, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2023, 8, 31)
+            resultat[1].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.MANUELL
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2023, 9, 1)
+            resultat[2].periodeTom shouldBe null
+            resultat[2].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[2].kilde shouldBe Kilde.MANUELL
+
+            // Beregning 3. Her slettes MED_FORELDER-perioden og erstattes med ny periode med IKKE_MED_FORELDER.
+            resultat[3].periodeFom shouldBe LocalDate.of(2023, 3, 1)
+            resultat[3].periodeTom shouldBe null
+            resultat[3].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[3].kilde shouldBe Kilde.MANUELL
+        }
+    }
+
+    @Test
+    fun `Test ny periode, endre periode tilbake i tid og slett periode, uten offentlige perioder`() {
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
+        val mottatteBoforhold = TestUtil.byggEndrePeriodeTilbakeITidIngenOffentligePerioder()
+        val virkningstidspunkt = LocalDate.of(2023, 3, 1)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 5
+
+            // Beregning 1
+            resultat[0].periodeFom shouldBe LocalDate.of(2023, 3, 1)
+            resultat[0].periodeTom shouldBe null
+            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.MANUELL
+
+            // Beregning 2
+            resultat[1].periodeFom shouldBe LocalDate.of(2023, 3, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2024, 1, 31)
+            resultat[1].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.MANUELL
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2024, 2, 1)
+            resultat[2].periodeTom shouldBe null
+            resultat[2].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[2].kilde shouldBe Kilde.MANUELL
+
+            // Beregning 3.
+            resultat[3].periodeFom shouldBe LocalDate.of(2023, 3, 1)
+            resultat[3].periodeTom shouldBe LocalDate.of(2023, 10, 31)
+            resultat[3].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[3].kilde shouldBe Kilde.MANUELL
+
+            resultat[4].periodeFom shouldBe LocalDate.of(2023, 11, 1)
+            resultat[4].periodeTom shouldBe null
+            resultat[4].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[4].kilde shouldBe Kilde.MANUELL
+        }
+    }
+
+    @Test
+    fun `Test ny periode, endre periode frem i tid og slett periode, med offentlige perioder`() {
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
+        val mottatteBoforhold = TestUtil.byggEndrePeriodeFremITidMedOffentligePerioder()
+        val virkningstidspunkt = LocalDate.of(2023, 3, 1)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 6
+
+            // Beregning 1
+            resultat[0].periodeFom shouldBe LocalDate.of(2023, 3, 1)
+            resultat[0].periodeTom shouldBe null
+            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            // Beregning 2
+            resultat[1].periodeFom shouldBe LocalDate.of(2023, 3, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2023, 6, 30)
+            resultat[1].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2023, 7, 1)
+            resultat[2].periodeTom shouldBe null
+            resultat[2].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[2].kilde shouldBe Kilde.MANUELL
+
+            // Beregning 3.
+            resultat[3].periodeFom shouldBe LocalDate.of(2023, 3, 1)
+            resultat[3].periodeTom shouldBe LocalDate.of(2023, 10, 31)
+            resultat[3].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[3].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[4].periodeFom shouldBe LocalDate.of(2023, 11, 1)
+            resultat[4].periodeTom shouldBe null
+            resultat[4].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[4].kilde shouldBe Kilde.MANUELL
+
+            // Beregning 4.
+            resultat[5].periodeFom shouldBe LocalDate.of(2023, 3, 1)
+            resultat[5].periodeTom shouldBe null
+            resultat[5].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[5].kilde shouldBe Kilde.MANUELL
+        }
+    }
+
+    @Test
+    fun `Test juster behandlede bostatusopplysninger etter endret virkningstidspunkt`() {
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
+        val mottatteBoforhold = TestUtil.byggTestJusterBehandledeBostatusopplysningerEtterEndretVirkningsdato()
+        val virkningstidspunkt = LocalDate.of(2022, 3, 1)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 4
+
+            // Test som verfiserer at det genereres en ny periode basert på offentlige opplysninger ved endring av virkningstidspunkt tilbake i tid.
+            // Behandlede bostatusopplysninger er opprinnelig beregnet fra virkningstidspunkt 2023-06-01, etter barnets attenårsdag.
+            // Denne kjøringen er ved virkningstidspunkt 2022-03-01.
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2022, 3, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2023, 3, 31)
+            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2023, 4, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2023, 7, 31)
+            resultat[1].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
+            resultat[1].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2023, 8, 1)
+            resultat[2].periodeTom shouldBe LocalDate.of(2023, 8, 31)
+            resultat[2].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[2].kilde shouldBe Kilde.MANUELL
+
+            resultat[3].periodeFom shouldBe LocalDate.of(2023, 9, 1)
+            resultat[3].periodeTom shouldBe null
+            resultat[3].bostatus shouldBe Bostatuskode.DOKUMENTERT_SKOLEGANG
+            resultat[3].kilde shouldBe Kilde.MANUELL
+        }
+    }
+
+    @Test
+    fun `Test juster behandlede bostatusopplysninger etter endret virkningstidspunkt frem i tid`() {
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
+        val mottatteBoforhold = TestUtil.byggTestJusterBehandledeBostatusopplysningerEtterEndretVirkningsdatoFremITid()
+        val virkningstidspunkt = LocalDate.of(2023, 6, 1)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 3
+
+            // Test som verfiserer at det genereres en ny periode basert på offentlige opplysninger ved endring av virkningstidspunkt tilbake i tid.
+            // Behandlede bostatusopplysninger er opprinnelig beregnet fra virkningstidspunkt 2023-06-01, etter barnets attenårsdag.
+            // Denne kjøringen er ved virkningstidspunkt 2022-03-01.
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2023, 6, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2023, 7, 31)
+            resultat[0].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2023, 8, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2023, 8, 31)
+            resultat[1].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.MANUELL
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2023, 9, 1)
+            resultat[2].periodeTom shouldBe null
+            resultat[2].bostatus shouldBe Bostatuskode.DOKUMENTERT_SKOLEGANG
+=======
+>>>>>>> main
             resultat[2].kilde shouldBe Kilde.MANUELL
         }
     }
