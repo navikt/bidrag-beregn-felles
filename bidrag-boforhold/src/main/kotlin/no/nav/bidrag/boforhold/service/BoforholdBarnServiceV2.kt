@@ -107,7 +107,7 @@ internal class BoforholdBarnServiceV2() {
             }
         }
 
-        val endredeBostatusPerioder = behandleEndringer(boforholdBarnRequest)
+        val endredeBostatusPerioder = behandleEndringer(startdatoBeregning, boforholdBarnRequest)
 
         if (behandledeOpplysninger.isEmpty()) {
             // Det finnes ingen offentlige eller behandlede perioder og den nye bostatusperioden skal returneres sammen med genererte perioder
@@ -615,7 +615,7 @@ internal class BoforholdBarnServiceV2() {
         }
     }
 
-    private fun behandleEndringer(boforholdBarnRequest: BoforholdBarnRequest): List<BoforholdResponse> {
+    private fun behandleEndringer(startdatoBeregning: LocalDate, boforholdBarnRequest: BoforholdBarnRequest): List<BoforholdResponse> {
         val endredePerioder = mutableListOf<BoforholdResponse>()
         val nyBostatus = boforholdBarnRequest.endreBostatus!!.nyBostatus
         val originalBostatus = boforholdBarnRequest.endreBostatus.originalBostatus
@@ -656,7 +656,7 @@ internal class BoforholdBarnServiceV2() {
                 endredePerioder.add(
                     BoforholdResponse(
                         relatertPersonPersonId = boforholdBarnRequest.relatertPersonPersonId,
-                        periodeFom = nyBostatus.periodeFom!!,
+                        periodeFom = if (nyBostatus.periodeFom!!.isBefore(startdatoBeregning)) startdatoBeregning else nyBostatus.periodeFom,
                         periodeTom = nyBostatus.periodeTom,
                         bostatus = nyBostatus.bostatusKode!!,
                         fødselsdato = boforholdBarnRequest.fødselsdato,

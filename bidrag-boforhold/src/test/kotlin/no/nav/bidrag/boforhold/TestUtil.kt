@@ -1527,6 +1527,26 @@ class TestUtil {
                 erBarnAvBmBp = true,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
+                        periodeFom = LocalDate.of(2022, 4, 4),
+                        periodeTom = LocalDate.of(2022, 4, 20),
+                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2022, 6, 12),
+                        periodeTom = LocalDate.of(2022, 6, 17),
+                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2022, 8, 1),
+                        periodeTom = null,
+                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                ),
+                behandledeBostatusopplysninger = listOf(
+                    Bostatus(
                         periodeFom = LocalDate.of(2022, 4, 1),
                         periodeTom = LocalDate.of(2022, 4, 30),
                         bostatusKode = Bostatuskode.MED_FORELDER,
@@ -1557,15 +1577,16 @@ class TestUtil {
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                behandledeBostatusopplysninger = listOf(
-                    Bostatus(
-                        periodeFom = LocalDate.of(2022, 5, 1),
+                endreBostatus = EndreBostatus(
+                    typeEndring = TypeEndring.NY,
+                    nyBostatus = Bostatus(
+                        periodeFom = LocalDate.of(2022, 3, 1),
                         periodeTom = LocalDate.of(2022, 7, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
+                    originalBostatus = null,
                 ),
-                endreBostatus = null,
             ),
         )
 
@@ -1594,19 +1615,7 @@ class TestUtil {
                 erBarnAvBmBp = true,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
-                        periodeFom = LocalDate.of(2021, 4, 1),
-                        periodeTom = LocalDate.of(2021, 8, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
-                        kilde = Kilde.OFFENTLIG,
-                    ),
-                    Bostatus(
-                        periodeFom = LocalDate.of(2021, 8, 1),
-                        periodeTom = LocalDate.of(2021, 12, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
-                        kilde = Kilde.OFFENTLIG,
-                    ),
-                    Bostatus(
-                        periodeFom = LocalDate.of(2022, 4, 1),
+                        periodeFom = LocalDate.of(2022, 8, 17),
                         periodeTom = null,
                         bostatusKode = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
@@ -1632,13 +1641,27 @@ class TestUtil {
                 ),
                 behandledeBostatusopplysninger = listOf(
                     Bostatus(
+                        periodeFom = LocalDate.of(2023, 1, 1),
+                        periodeTom = null,
+                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                ),
+                endreBostatus = EndreBostatus(
+                    typeEndring = TypeEndring.ENDRET,
+                    nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = null,
                         bostatusKode = Bostatuskode.MED_FORELDER,
-                        kilde = Kilde.MANUELL,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    originalBostatus = Bostatus(
+                        periodeFom = LocalDate.of(2023, 1, 1),
+                        periodeTom = null,
+                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
                     ),
                 ),
-                endreBostatus = null,
             ),
         )
 
