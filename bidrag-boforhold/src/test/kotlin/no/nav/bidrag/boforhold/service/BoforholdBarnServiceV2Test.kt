@@ -737,7 +737,6 @@ internal class BoforholdBarnServiceV2Test {
         }
     }
 
-    @Disabled
     @Test
     fun `Test sammenhengende offentlige og manuelle perioder med lik status slås sammen som Manuell `() {
         boforholdBarnServiceV2 = BoforholdBarnServiceV2()
@@ -747,26 +746,62 @@ internal class BoforholdBarnServiceV2Test {
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
-            resultat.size shouldBe 3
+            resultat.size shouldBe 10
 
+            // Beregning 1
             resultat[0].periodeFom shouldBe LocalDate.of(2020, 5, 1)
-            resultat[0].periodeTom shouldBe LocalDate.of(2022, 11, 30)
+            resultat[0].periodeTom shouldBe LocalDate.of(2023, 4, 30)
             resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
             resultat[0].kilde shouldBe Kilde.OFFENTLIG
 
-            resultat[1].periodeFom shouldBe LocalDate.of(2022, 12, 1)
-            resultat[1].periodeTom shouldBe LocalDate.of(2024, 3, 31)
+            resultat[1].periodeFom shouldBe LocalDate.of(2023, 5, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2023, 11, 30)
             resultat[1].bostatus shouldBe Bostatuskode.MED_FORELDER
-            resultat[1].kilde shouldBe Kilde.MANUELL
+            resultat[1].kilde shouldBe Kilde.OFFENTLIG
 
-            resultat[2].periodeFom shouldBe LocalDate.of(2024, 4, 1)
-            resultat[2].periodeTom shouldBe null
+            resultat[2].periodeFom shouldBe LocalDate.of(2023, 12, 1)
+            resultat[2].periodeTom shouldBe LocalDate.of(2024, 1, 31)
             resultat[2].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
             resultat[2].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[3].periodeFom shouldBe LocalDate.of(2024, 2, 1)
+            resultat[3].periodeTom shouldBe LocalDate.of(2024, 3, 31)
+            resultat[3].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[3].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[4].periodeFom shouldBe LocalDate.of(2024, 4, 1)
+            resultat[4].periodeTom shouldBe null
+            resultat[4].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[4].kilde shouldBe Kilde.OFFENTLIG
+
+            // Beregning 2
+            resultat[5].periodeFom shouldBe LocalDate.of(2020, 5, 1)
+            resultat[5].periodeTom shouldBe LocalDate.of(2023, 6, 30)
+            resultat[5].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[5].kilde shouldBe Kilde.MANUELL
+
+            resultat[6].periodeFom shouldBe LocalDate.of(2023, 7, 1)
+            resultat[6].periodeTom shouldBe LocalDate.of(2023, 11, 30)
+            resultat[6].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[6].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[7].periodeFom shouldBe LocalDate.of(2023, 12, 1)
+            resultat[7].periodeTom shouldBe LocalDate.of(2024, 1, 31)
+            resultat[7].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[7].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[8].periodeFom shouldBe LocalDate.of(2024, 2, 1)
+            resultat[8].periodeTom shouldBe LocalDate.of(2024, 3, 31)
+            resultat[8].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[8].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[9].periodeFom shouldBe LocalDate.of(2024, 4, 1)
+            resultat[9].periodeTom shouldBe null
+            resultat[9].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[9].kilde shouldBe Kilde.OFFENTLIG
         }
     }
 
-    @Disabled
     @Test
     fun `Test sammenhengende offentlige og manuelle perioder med lik status slås sammen som Manuell med null i periodeTom `() {
         boforholdBarnServiceV2 = BoforholdBarnServiceV2()
@@ -776,17 +811,34 @@ internal class BoforholdBarnServiceV2Test {
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
-            resultat.size shouldBe 2
+            resultat.size shouldBe 5
 
+            // Beregning 1
             resultat[0].periodeFom shouldBe LocalDate.of(2020, 5, 1)
-            resultat[0].periodeTom shouldBe LocalDate.of(2022, 11, 30)
+            resultat[0].periodeTom shouldBe LocalDate.of(2023, 4, 30)
             resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
             resultat[0].kilde shouldBe Kilde.OFFENTLIG
 
-            resultat[1].periodeFom shouldBe LocalDate.of(2022, 12, 1)
-            resultat[1].periodeTom shouldBe null
+            resultat[1].periodeFom shouldBe LocalDate.of(2023, 5, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2023, 10, 31)
             resultat[1].bostatus shouldBe Bostatuskode.MED_FORELDER
-            resultat[1].kilde shouldBe Kilde.MANUELL
+            resultat[1].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2023, 11, 1)
+            resultat[2].periodeTom shouldBe null
+            resultat[2].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[2].kilde shouldBe Kilde.OFFENTLIG
+
+            // Beregning 2
+            resultat[3].periodeFom shouldBe LocalDate.of(2020, 5, 1)
+            resultat[3].periodeTom shouldBe LocalDate.of(2023, 4, 30)
+            resultat[3].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[3].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[4].periodeFom shouldBe LocalDate.of(2023, 5, 1)
+            resultat[4].periodeTom shouldBe null
+            resultat[4].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[4].kilde shouldBe Kilde.MANUELL
         }
     }
 
