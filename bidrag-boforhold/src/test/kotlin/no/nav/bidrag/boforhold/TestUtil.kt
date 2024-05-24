@@ -964,32 +964,10 @@ class TestUtil {
                         bostatusKode = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
-                    Bostatus(
-                        periodeFom = LocalDate.of(2024, 4, 1),
-                        periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
-                        kilde = Kilde.OFFENTLIG,
-                    ),
                 ),
-                behandledeBostatusopplysninger = listOf(
-                    Bostatus(
-                        periodeFom = LocalDate.of(2022, 12, 1),
-                        periodeTom = LocalDate.of(2023, 4, 30),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
-                        kilde = Kilde.MANUELL,
-                    ),
-                    Bostatus(
-                        periodeFom = LocalDate.of(2023, 12, 1),
-                        periodeTom = LocalDate.of(2024, 1, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
-                        kilde = Kilde.MANUELL,
-                    ),
-                ),
+                behandledeBostatusopplysninger = emptyList(),
                 endreBostatus = null,
             ),
-        )
-
-        fun manuellOgOffentligPeriodeMedLikStatusPeriodeTomErNull() = listOf(
             BoforholdBarnRequest(
                 relatertPersonPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2020, 3, 1),
@@ -1001,22 +979,192 @@ class TestUtil {
                         bostatusKode = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2024, 2, 1),
+                        periodeTom = LocalDate.of(2024, 3, 31),
+                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
                 ),
                 behandledeBostatusopplysninger = listOf(
                     Bostatus(
-                        periodeFom = LocalDate.of(2022, 12, 1),
+                        periodeFom = LocalDate.of(2020, 5, 1),
                         periodeTom = LocalDate.of(2023, 4, 30),
+                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 5, 1),
+                        periodeTom = LocalDate.of(2023, 11, 30),
                         bostatusKode = Bostatuskode.MED_FORELDER,
-                        kilde = Kilde.MANUELL,
+                        kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 12, 1),
+                        periodeTom = LocalDate.of(2024, 1, 31),
+                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2024, 2, 1),
+                        periodeTom = LocalDate.of(2024, 3, 31),
+                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2024, 4, 1),
+                        periodeTom = null,
+                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                ),
+                endreBostatus = EndreBostatus(
+                    typeEndring = TypeEndring.NY,
+                    nyBostatus = Bostatus(
+                        periodeFom = LocalDate.of(2022, 12, 1),
+                        periodeTom = LocalDate.of(2023, 6, 30),
+                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    originalBostatus = null,
+                ),
+            ),
+//            BoforholdBarnRequest(
+//                relatertPersonPersonId = "98765432109",
+//                fødselsdato = LocalDate.of(2020, 3, 1),
+//                erBarnAvBmBp = true,
+//                innhentedeOffentligeOpplysninger = listOf(
+//                    Bostatus(
+//                        periodeFom = LocalDate.of(2023, 5, 1),
+//                        periodeTom = LocalDate.of(2023, 11, 30),
+//                        bostatusKode = Bostatuskode.MED_FORELDER,
+//                        kilde = Kilde.OFFENTLIG,
+//                    ),
+//                    Bostatus(
+//                        periodeFom = LocalDate.of(2024, 2, 1),
+//                        periodeTom = LocalDate.of(2024, 3, 31),
+//                        bostatusKode = Bostatuskode.MED_FORELDER,
+//                        kilde = Kilde.OFFENTLIG,
+//                    ),
+//                ),
+//                behandledeBostatusopplysninger = listOf(
+//                    Bostatus(
+//                        periodeFom = LocalDate.of(2020, 5, 1),
+//                        periodeTom = LocalDate.of(2023, 6, 30),
+//                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+//                        kilde = Kilde.MANUELL,
+//                    ),
+//                    Bostatus(
+//                        periodeFom = LocalDate.of(2023, 7, 1),
+//                        periodeTom = LocalDate.of(2023, 11, 30),
+//                        bostatusKode = Bostatuskode.MED_FORELDER,
+//                        kilde = Kilde.OFFENTLIG,
+//                    ),
+//                    Bostatus(
+//                        periodeFom = LocalDate.of(2023, 12, 1),
+//                        periodeTom = LocalDate.of(2024, 2, 29),
+//                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+//                        kilde = Kilde.OFFENTLIG,
+//                    ),
+//                    Bostatus(
+//                        periodeFom = LocalDate.of(2024, 2, 1),
+//                        periodeTom = LocalDate.of(2024, 3, 31),
+//                        bostatusKode = Bostatuskode.MED_FORELDER,
+//                        kilde = Kilde.OFFENTLIG,
+//                    ),
+//                    Bostatus(
+//                        periodeFom = LocalDate.of(2024, 4, 1),
+//                        periodeTom = null,
+//                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+//                        kilde = Kilde.OFFENTLIG,
+//                    ),
+//                ),
+// //                behandledeBostatusopplysninger = listOf(
+// //                    Bostatus(
+// //                        periodeFom = LocalDate.of(2022, 12, 1),
+// //                        periodeTom = LocalDate.of(2023, 4, 30),
+// //                        bostatusKode = Bostatuskode.MED_FORELDER,
+// //                        kilde = Kilde.MANUELL,
+// //                    ),
+// //                    Bostatus(
+// //                        periodeFom = LocalDate.of(2023, 12, 1),
+// //                        periodeTom = LocalDate.of(2024, 1, 31),
+// //                        bostatusKode = Bostatuskode.MED_FORELDER,
+// //                        kilde = Kilde.MANUELL,
+// //                    ),
+// //                ),
+//                endreBostatus = EndreBostatus(
+//                    typeEndring = TypeEndring.NY,
+//                    nyBostatus = Bostatus(
+//                        periodeFom = LocalDate.of(2022, 12, 1),
+//                        periodeTom = null,
+//                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+//                        kilde = Kilde.MANUELL,
+//                    ),
+//                    originalBostatus = null,
+//                ),
+//            ),
+
+        )
+
+        fun manuellOgOffentligPeriodeMedLikStatusPeriodeTomErNull() = listOf(
+            BoforholdBarnRequest(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2020, 3, 1),
+                erBarnAvBmBp = true,
+                innhentedeOffentligeOpplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 5, 1),
+                        periodeTom = LocalDate.of(2023, 10, 31),
+                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                ),
+                behandledeBostatusopplysninger = emptyList(),
+                endreBostatus = null,
+            ),
+            BoforholdBarnRequest(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2020, 3, 1),
+                erBarnAvBmBp = true,
+                innhentedeOffentligeOpplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 5, 1),
+                        periodeTom = LocalDate.of(2023, 10, 31),
+                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                ),
+                behandledeBostatusopplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2020, 5, 1),
+                        periodeTom = LocalDate.of(2023, 4, 30),
+                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 5, 1),
+                        periodeTom = LocalDate.of(2023, 10, 31),
+                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 11, 1),
+                        periodeTom = null,
+                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                ),
+                endreBostatus = EndreBostatus(
+                    typeEndring = TypeEndring.NY,
+                    nyBostatus = Bostatus(
+                        periodeFom = LocalDate.of(2023, 10, 1),
                         periodeTom = null,
                         bostatusKode = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
+                    originalBostatus = null,
                 ),
-                endreBostatus = null,
             ),
         )
 
