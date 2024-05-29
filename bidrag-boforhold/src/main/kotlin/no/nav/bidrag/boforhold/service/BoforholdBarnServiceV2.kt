@@ -87,10 +87,26 @@ internal class BoforholdBarnServiceV2() {
                     slåSammenPrimærOgSekundærperioder(behandledeOpplysninger, offentligePerioderJustertMotAttenårsdag)
 
                 // Slår sammen sammenhengende perioder med lik Bostatuskode og setter kilde = Manuell
-                return slåSammenPerioderOgJusterPeriodeTom(sammenslåtteBehandledeOgOffentligePerioder)
-//                return fyllUtMedPerioderBarnetIkkeBorIHusstanden(Kilde.OFFENTLIG, startdatoBeregning, behandledeOpplysninger)
-                // Slår sammen sammenhengende perioder med lik Bostatuskode
-//                return slåSammenPerioderOgJusterPeriodeTom(offentligePerioderJustertMotAttenårsdag)
+                val sammenslåttListe = slåSammenPerioderOgJusterPeriodeTom(sammenslåtteBehandledeOgOffentligePerioder)
+
+                return sammenslåttListe.map {
+                    BoforholdResponse(
+                        relatertPersonPersonId = it.relatertPersonPersonId,
+                        periodeFom = it.periodeFom,
+                        periodeTom = it.periodeTom,
+                        bostatus = it.bostatus,
+                        fødselsdato = it.fødselsdato,
+                        kilde = if (beregnetPeriodeErInnenforOffentligPeriodeMedLikBostatuskode(
+                                it,
+                                offentligePerioderJustertMotAttenårsdag,
+                            )
+                        ) {
+                            Kilde.OFFENTLIG
+                        } else {
+                            Kilde.MANUELL
+                        },
+                    )
+                }
             }
 
             // Førstegangs beregning av boforhold for barnet. Beregn fra innhentede offentlige opplysninger.
