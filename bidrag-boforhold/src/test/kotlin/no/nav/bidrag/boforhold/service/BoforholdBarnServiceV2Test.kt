@@ -1680,4 +1680,25 @@ internal class BoforholdBarnServiceV2Test {
             resultat[2].kilde shouldBe Kilde.MANUELL
         }
     }
+
+    @Test
+    fun `Test nye offentlige opplysninger endrer kilde på manuelle perioder`() {
+        boforholdBarnServiceV2 = BoforholdBarnServiceV2()
+        val mottatteBoforhold = TestUtil.byggTestNyeOffentligeOpplysningerEndrerKildeManuellPeriode()
+        val virkningstidspunkt = LocalDate.of(2023, 6, 1)
+        val resultat = boforholdBarnServiceV2.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 1
+
+            // Test som verifiserer at kilde på manuell periode endres til Offentlig hvis det kommer nye offentlige opplysninger som dekker
+            // manuell periode.
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2023, 6, 1)
+            resultat[0].periodeTom shouldBe null
+            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
 }

@@ -2331,5 +2331,30 @@ class TestUtil {
                 endreBostatus = null,
             ),
         )
+
+        fun byggTestNyeOffentligeOpplysningerEndrerKildeManuellPeriode() = listOf(
+            BoforholdBarnRequest(
+                relatertPersonPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2015, 3, 17),
+                erBarnAvBmBp = true,
+                innhentedeOffentligeOpplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2020, 1, 23),
+                        periodeTom = null,
+                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                ),
+                behandledeBostatusopplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 6, 1),
+                        periodeTom = null,
+                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+                endreBostatus = null,
+            ),
+        )
     }
 }

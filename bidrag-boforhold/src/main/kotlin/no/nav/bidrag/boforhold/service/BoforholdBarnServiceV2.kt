@@ -52,7 +52,7 @@ internal class BoforholdBarnServiceV2() {
                 )
             }
 
-        // Filterer først bort alle perioder benadlede opplysninger som avsluttes før startdatoBeregning
+        // Filterer først bort alle perioder med behandlede opplysninger som avsluttes før startdatoBeregning
         val behandledeOpplysninger = boforholdBarnRequest.behandledeBostatusopplysninger
             .filter { (it.periodeTom == null || it.periodeTom.isAfter(startdatoBeregning)) }
             .sortedBy { it.periodeFom }.map {
@@ -68,7 +68,7 @@ internal class BoforholdBarnServiceV2() {
 
         if (justerteOffentligePerioder.isEmpty() && behandledeOpplysninger.isEmpty() && boforholdBarnRequest.endreBostatus == null) {
             // Ingen perioder innenfor beregningsperiode. Dette skal ikke forekomme. Hvis det ikke finnes offentlige perioder så skal
-            // bidrag-behanding legge til en periode med Bostatuskode = IKKE_MED_FORELDER og Kilde = OFFENTLIG i input.
+            // bidrag-behandling legge til en periode med Bostatuskode = IKKE_MED_FORELDER og Kilde = OFFENTLIG i input.
             // Unntaket er hvis barnet er manuelt lagt til, da skal det ikke finnes offentlige perioder, kun manuelle perioder.
             return emptyList()
         }
@@ -78,7 +78,7 @@ internal class BoforholdBarnServiceV2() {
 
         if (boforholdBarnRequest.endreBostatus == null) {
             if (behandledeOpplysninger.isNotEmpty()) {
-                // virkningstidspunkt er endret, juster og fyll inn med offentlig informasjon.
+                // virkningstidspunkt eller offentlige perioder er endret, juster og fyll inn med offentlig informasjon.
                 val komplettOffentligTidslinje =
                     fyllUtMedPerioderBarnetIkkeBorIHusstanden(Kilde.OFFENTLIG, startdatoBeregning, justerteOffentligePerioder)
                 // Justerer offentlige perioder mot 18-årsdager og lager bruddperiode hvis barnet fyllet 18 år i perioden bor i husstanden
@@ -88,6 +88,7 @@ internal class BoforholdBarnServiceV2() {
 
                 // Slår sammen sammenhengende perioder med lik Bostatuskode og setter kilde = Manuell
                 val sammenslåttListe = slåSammenPerioderOgJusterPeriodeTom(sammenslåtteBehandledeOgOffentligePerioder)
+
                 return sammenslåttListe.map {
                     BoforholdResponse(
                         relatertPersonPersonId = it.relatertPersonPersonId,
@@ -172,63 +173,6 @@ internal class BoforholdBarnServiceV2() {
                 },
             )
         }
-
-        /*        // Hvis det ikke finnes offentlige perioder skal det bygges en tidslinje med bare manuelle perioder. Perioder uten data i input genereres.
-                if (justerteOffentligePerioder.isEmpty()) {
-                    // Leser gjennom manuelle perioder og slår sammen sammenhengende perioder med lik Bostatuskode. Hvis det er flere perioder med
-                    // periodeTom = null så slås disse sammen til én periode hvis de har lik Bostatuskode. Hvis ikke så settes periodeTom lik neste periodes
-                    // periodeFom minus én dag.
-                    val justerteManuellePerioder = slåSammenPerioderOgJusterPeriodeTom(behandledeOpplysninger)
-                    // Fyller ut perioder der det ikke finnes informasjon om barnet i manuelle opplysninger. Bostatuskode settes lik IKKE_MED_FORELDER og
-                    // kilde = MANUELL. Hvis det kun finnes manuelle perioder med IKKE_MED_FORELDER så returneres disse uendret.
-                    if (justerteManuellePerioder.all { it.bostatuskode == Bostatuskode.IKKE_MED_FORELDER }) {
-                        return justerteManuellePerioder
-                    }
-                    val komplettManuellTidslinje = fyllUtMedPerioderBarnetIkkeBorIHusstanden(startdatoBeregning, justerteManuellePerioder)
-                    // Gjør en ny sammenslåing av sammenhengende perioder med lik bostatus for å få med perioder generert i komplettManuellTidslinje.
-                    val sammenslåttManuellTidslinje = slåSammenPerioderOgJusterPeriodeTom(komplettManuellTidslinje)
-                    // Manuelle perioder justeres mot 18årsdag
-                    val manuellePerioderJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, sammenslåttManuellTidslinje)
-                    return manuellePerioderJustertMotAttenårsdag
-                } else {*/
-        /*            if (behandledeOpplysninger.isEmpty()) {
-                        // Fyller ut perioder der det ikke finnes informasjon om barnet i offentlige opplysninger
-                        val komplettOffentligTidslinje = fyllUtMedPerioderBarnetIkkeBorIHusstanden(startdatoBeregning, justerteOffentligePerioder)
-                        // Justerer offentlige perioder mot 18-årsdager og lager bruddperiode hvis barnet fyllet 18 år i perioden bor i husstanden
-                        val offentligePerioderJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, komplettOffentligTidslinje)
-                        // Slår sammen sammenhengende perioder med lik Bostatuskode og setter kilde = Manuell
-                        return slåSammenPerioderOgJusterPeriodeTom(offentligePerioderJustertMotAttenårsdag)
-                    } else {*/
-
-        // Det finnes både behandlede og manuelle perioder
-
-        // Leser gjennom manuelle perioder og slår sammen sammenhengende perioder med lik Bostatuskode. Hvis det er flere perioder med
-        // periodeTom = null så slås disse sammen til én periode hvis de har lik Bostatuskode. Hvis ikke så settes periodeTom lik neste periodes
-        /*                // periodeFom minus én dag.
-                        val justerteManuellePerioder = slåSammenPerioderOgJusterPeriodeTom(behandledeOpplysninger)
-
-                        // Manuelle perioder justeres mot 18årsdag. Perioder som enten overlapper med 18årsdag splittes i to der periode nr to får oppdatert
-                        // bostatuskode. Perioder som er etter 18årsdag får endret bostatuskode.
-                        val manuellePerioderJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, justerteManuellePerioder)
-
-                        // Fyller ut perioder der det ikke finnes informasjon om barnet i offentlige opplysninger. Bostatuskode settes lik IKKE_MED_FORELDER
-                        // og kilde = OFFENTLIG.
-                        val komplettOffentligTidslinje = fyllUtMedPerioderBarnetIkkeBorIHusstanden(startdatoBeregning, justerteOffentligePerioder)
-
-                        // Justerer offentlige perioder mot 18-årsdager og lager bruddperiode hvis barnet fyllet 18 år i perioden bor i husstanden
-                        val offentligePerioderJustertMotAttenårsdag =
-                            justerMotAttenårsdag(
-                                attenårFraDato,
-                                komplettOffentligTidslinje,
-                            )
-
-                        val sammenslåtteManuelleOgOffentligePerioder =
-                            slåSammenManuelleOgOffentligePerioder(manuellePerioderJustertMotAttenårsdag, offentligePerioderJustertMotAttenårsdag)
-
-                        // Slår sammen sammenhengende perioder med lik Bostatuskode og setter kilde = Manuell
-                        return slåSammenPerioderOgJusterPeriodeTom(sammenslåtteManuelleOgOffentligePerioder)
-                    }*/
-//        }
     }
 
     private fun slåSammenPerioderOgJusterPeriodeTom(liste: List<BoforholdResponse>): List<BoforholdResponse> {

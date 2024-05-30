@@ -6,7 +6,6 @@ import no.nav.bidrag.domene.enums.diverse.Kilde
 import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import no.nav.bidrag.sivilstand.TestUtil
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
@@ -236,7 +235,6 @@ internal class SivilstandServiceV2Test {
         }
     }
 
-    @Disabled
     @Test
     fun `Test at manuell periode som har en identisk offentlig periode endres til kilde = Offentlig `() {
         sivilstandServiceV2 = SivilstandServiceV2()
@@ -254,92 +252,51 @@ internal class SivilstandServiceV2Test {
         }
     }
 
-    @Disabled
     @Test
     fun `Test periodisering med flere manuelle og offentlige perioder og perioder uten status `() {
         sivilstandServiceV2 = SivilstandServiceV2()
-        val mottatteBoforhold = TestUtil.flereManuelleOgOffentligePerioderFlereRequester()
+        val mottatteBoforhold = TestUtil.flereManuelleOgOffentligePerioder()
         val virkningstidspunkt = LocalDate.of(2020, 9, 1)
-        val resultat1 = sivilstandServiceV2.beregn(virkningstidspunkt, mottatteBoforhold[0])
-        val resultat2 = sivilstandServiceV2.beregn(virkningstidspunkt, mottatteBoforhold[1])
-        val resultat3 = sivilstandServiceV2.beregn(virkningstidspunkt, mottatteBoforhold[2])
+        val resultat = sivilstandServiceV2.beregn(virkningstidspunkt, mottatteBoforhold)
 
         assertSoftly {
-            Assertions.assertNotNull(resultat3)
-//            resultat3.size shouldBe 6
-            // Beregning 1
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 6
             // Offentlig periode der periodeFom forskyves frem til virkningstidspunkt
-            resultat1[0].periodeFom shouldBe LocalDate.of(2020, 9, 1)
-            resultat1[0].periodeTom shouldBe LocalDate.of(2021, 2, 28)
-            resultat1[0].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
-            resultat1[0].kilde shouldBe Kilde.OFFENTLIG
+            resultat[0].periodeFom shouldBe LocalDate.of(2020, 9, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2021, 2, 28)
+            resultat[0].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
 
-            // Offentlig periode som ligger med null i periodeTom. Perioden splittes senere opp i de underliggende offentlige periodene
-            // for å dekke oppholdet mellom nye perioder som blir lagt til manuelt.
-            resultat1[1].periodeFom shouldBe LocalDate.of(2021, 3, 1)
-            resultat1[1].periodeTom shouldBe null
-            resultat1[1].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
-            resultat1[1].kilde shouldBe Kilde.OFFENTLIG
+            // Offentlig periode som ligger med null i preiodeTom. Perioden splittes opp i de underliggende offentlige periodene for å dekke
+            // oppholdet mellom manuelle perioder.
+            resultat[1].periodeFom shouldBe LocalDate.of(2021, 3, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2021, 6, 30)
+            resultat[1].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
+            resultat[1].kilde shouldBe Kilde.OFFENTLIG
 
-            // Beregning 2
-            // Offentlig periode der periodeFom forskyves frem til virkningstidspunkt
-            resultat2[0].periodeFom shouldBe LocalDate.of(2020, 9, 1)
-            resultat2[0].periodeTom shouldBe LocalDate.of(2021, 2, 28)
-            resultat2[0].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
-            resultat2[0].kilde shouldBe Kilde.OFFENTLIG
+            resultat[2].periodeFom shouldBe LocalDate.of(2021, 7, 1)
+            resultat[2].periodeTom shouldBe LocalDate.of(2021, 12, 31)
+            resultat[2].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat[2].kilde shouldBe Kilde.MANUELL
 
-            // Offentlig periode som ligger med null i periodeTom. Perioden er splittet opp i de underliggende offentlige periodene
-            // for å dekke oppholdet mellom nye perioder som blir lagt til manuelt.
-            resultat2[1].periodeFom shouldBe LocalDate.of(2021, 3, 1)
-            resultat2[1].periodeTom shouldBe LocalDate.of(2021, 6, 30)
-            resultat2[1].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
-            resultat2[1].kilde shouldBe Kilde.OFFENTLIG
+            resultat[3].periodeFom shouldBe LocalDate.of(2022, 1, 1)
+            resultat[3].periodeTom shouldBe LocalDate.of(2023, 3, 31)
+            resultat[3].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
+            resultat[3].kilde shouldBe Kilde.OFFENTLIG
 
-            // Nyregistrert periode som er lagt til manuelt
-            resultat2[2].periodeFom shouldBe LocalDate.of(2021, 7, 1)
-            resultat2[2].periodeTom shouldBe LocalDate.of(2021, 12, 31)
-            resultat2[2].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
-            resultat2[2].kilde shouldBe Kilde.MANUELL
+            resultat[4].periodeFom shouldBe LocalDate.of(2023, 4, 1)
+            resultat[4].periodeTom shouldBe LocalDate.of(2023, 8, 31)
+            resultat[4].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat[4].kilde shouldBe Kilde.MANUELL
 
-            resultat2[3].periodeFom shouldBe LocalDate.of(2022, 1, 1)
-            resultat2[3].periodeTom shouldBe null
-            resultat2[3].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
-            resultat2[3].kilde shouldBe Kilde.OFFENTLIG
-
-            // Beregning 3
-            resultat3[0].periodeFom shouldBe LocalDate.of(2020, 9, 1)
-            resultat3[0].periodeTom shouldBe LocalDate.of(2021, 2, 28)
-            resultat3[0].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
-            resultat3[0].kilde shouldBe Kilde.OFFENTLIG
-
-            resultat3[1].periodeFom shouldBe LocalDate.of(2021, 3, 1)
-            resultat3[1].periodeTom shouldBe LocalDate.of(2021, 6, 30)
-            resultat3[1].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
-            resultat3[1].kilde shouldBe Kilde.OFFENTLIG
-
-            resultat3[2].periodeFom shouldBe LocalDate.of(2021, 7, 1)
-            resultat3[2].periodeTom shouldBe LocalDate.of(2021, 12, 31)
-            resultat3[2].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
-            resultat3[2].kilde shouldBe Kilde.MANUELL
-
-            resultat3[3].periodeFom shouldBe LocalDate.of(2022, 1, 1)
-            resultat3[3].periodeTom shouldBe LocalDate.of(2023, 3, 31)
-            resultat3[3].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
-            resultat3[3].kilde shouldBe Kilde.OFFENTLIG
-
-            resultat3[4].periodeFom shouldBe LocalDate.of(2023, 4, 1)
-            resultat3[4].periodeTom shouldBe LocalDate.of(2023, 8, 31)
-            resultat3[4].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
-            resultat3[4].kilde shouldBe Kilde.MANUELL
-
-            resultat3[5].periodeFom shouldBe LocalDate.of(2023, 9, 1)
-            resultat3[5].periodeTom shouldBe null
-            resultat3[5].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
-            resultat3[5].kilde shouldBe Kilde.OFFENTLIG
+            resultat[5].periodeFom shouldBe LocalDate.of(2023, 9, 1)
+            resultat[5].periodeTom shouldBe null
+            resultat[5].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
+            resultat[5].kilde shouldBe Kilde.OFFENTLIG
         }
     }
 
-    @Disabled
     @Test
     fun `Test kun manuell periode med periodeTom satt`() {
         sivilstandServiceV2 = SivilstandServiceV2()
@@ -363,7 +320,6 @@ internal class SivilstandServiceV2Test {
         }
     }
 
-    @Disabled
     @Test
     fun `Test at sammenhengende manuell og offentlig periode med lik sivilstandskode slås sammen til manuell periode`() {
         sivilstandServiceV2 = SivilstandServiceV2()
@@ -387,60 +343,42 @@ internal class SivilstandServiceV2Test {
         }
     }
 
-    @Disabled
     @Test
     fun `Test kun manuelle perioder`() {
         sivilstandServiceV2 = SivilstandServiceV2()
         val mottatteBoforhold = TestUtil.flereManuellePerioder()
         val virkningstidspunkt = LocalDate.of(2020, 9, 1)
-        val resultat1 = sivilstandServiceV2.beregn(virkningstidspunkt, mottatteBoforhold[0])
-        val resultat2 = sivilstandServiceV2.beregn(virkningstidspunkt, mottatteBoforhold[1])
+        val resultat = sivilstandServiceV2.beregn(virkningstidspunkt, mottatteBoforhold)
 
         // Det genereres en offentlig periode med Sivilstandskode = UKJENT for etter den manuelle perioden.
         assertSoftly {
-            Assertions.assertNotNull(resultat1)
-            resultat1.size shouldBe 3
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 5
 
-            resultat1[0].periodeFom shouldBe LocalDate.of(2020, 9, 1)
-            resultat1[0].periodeTom shouldBe LocalDate.of(2021, 6, 30)
-            resultat1[0].sivilstandskode shouldBe Sivilstandskode.UKJENT
-            resultat1[0].kilde shouldBe Kilde.OFFENTLIG
+            resultat[0].periodeFom shouldBe LocalDate.of(2020, 9, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2021, 6, 30)
+            resultat[0].sivilstandskode shouldBe Sivilstandskode.UKJENT
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
 
-            resultat1[1].periodeFom shouldBe LocalDate.of(2021, 7, 1)
-            resultat1[1].periodeTom shouldBe LocalDate.of(2021, 8, 31)
-            resultat1[1].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
-            resultat1[1].kilde shouldBe Kilde.MANUELL
+            resultat[1].periodeFom shouldBe LocalDate.of(2021, 7, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2021, 8, 31)
+            resultat[1].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat[1].kilde shouldBe Kilde.MANUELL
 
-            resultat1[2].periodeFom shouldBe LocalDate.of(2021, 9, 1)
-            resultat1[2].periodeTom shouldBe null
-            resultat1[2].sivilstandskode shouldBe Sivilstandskode.UKJENT
-            resultat1[2].kilde shouldBe Kilde.OFFENTLIG
+            resultat[2].periodeFom shouldBe LocalDate.of(2021, 9, 1)
+            resultat[2].periodeTom shouldBe LocalDate.of(2021, 12, 31)
+            resultat[2].sivilstandskode shouldBe Sivilstandskode.UKJENT
+            resultat[2].kilde shouldBe Kilde.OFFENTLIG
 
-            // Beregning 2
-            resultat2[0].periodeFom shouldBe LocalDate.of(2020, 9, 1)
-            resultat2[0].periodeTom shouldBe LocalDate.of(2021, 6, 30)
-            resultat2[0].sivilstandskode shouldBe Sivilstandskode.UKJENT
-            resultat2[0].kilde shouldBe Kilde.OFFENTLIG
+            resultat[3].periodeFom shouldBe LocalDate.of(2022, 1, 1)
+            resultat[3].periodeTom shouldBe LocalDate.of(2023, 8, 31)
+            resultat[3].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat[3].kilde shouldBe Kilde.MANUELL
 
-            resultat2[1].periodeFom shouldBe LocalDate.of(2021, 7, 1)
-            resultat2[1].periodeTom shouldBe LocalDate.of(2021, 8, 31)
-            resultat2[1].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
-            resultat2[1].kilde shouldBe Kilde.MANUELL
-
-            resultat2[2].periodeFom shouldBe LocalDate.of(2021, 9, 1)
-            resultat2[2].periodeTom shouldBe LocalDate.of(2021, 12, 31)
-            resultat2[2].sivilstandskode shouldBe Sivilstandskode.UKJENT
-            resultat2[2].kilde shouldBe Kilde.OFFENTLIG
-
-            resultat2[2].periodeFom shouldBe LocalDate.of(2022, 1, 1)
-            resultat2[2].periodeTom shouldBe LocalDate.of(2023, 8, 31)
-            resultat2[2].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
-            resultat2[2].kilde shouldBe Kilde.MANUELL
-
-            resultat2[3].periodeFom shouldBe LocalDate.of(2023, 9, 1)
-            resultat2[3].periodeTom shouldBe null
-            resultat2[3].sivilstandskode shouldBe Sivilstandskode.UKJENT
-            resultat2[3].kilde shouldBe Kilde.OFFENTLIG
+            resultat[4].periodeFom shouldBe LocalDate.of(2023, 9, 1)
+            resultat[4].periodeTom shouldBe null
+            resultat[4].sivilstandskode shouldBe Sivilstandskode.UKJENT
+            resultat[4].kilde shouldBe Kilde.OFFENTLIG
         }
     }
 }
