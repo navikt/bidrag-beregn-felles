@@ -1,6 +1,7 @@
 package no.nav.bidrag.sivilstand.dto
 
 import no.nav.bidrag.domene.enums.diverse.Kilde
+import no.nav.bidrag.domene.enums.diverse.TypeEndring
 import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import no.nav.bidrag.transport.behandling.grunnlag.response.SivilstandGrunnlagDto
 import java.time.LocalDate
@@ -28,9 +29,3 @@ data class EndreSivilstand(
     // Periode som har blitt endret/slettet.
     val originalSivilstand: Sivilstand?,
 )
-
-enum class TypeEndring {
-    NY,
-    ENDRET,
-    SLETTET,
-}

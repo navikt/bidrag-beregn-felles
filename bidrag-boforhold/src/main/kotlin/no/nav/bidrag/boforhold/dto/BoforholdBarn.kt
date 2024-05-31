@@ -1,6 +1,7 @@
 package no.nav.bidrag.boforhold.dto
 
 import no.nav.bidrag.domene.enums.diverse.Kilde
+import no.nav.bidrag.domene.enums.diverse.TypeEndring
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import java.time.LocalDate
 
@@ -32,12 +33,6 @@ data class EndreBostatus(
     // Periode som har blitt endret/slettet.
     val originalBostatus: Bostatus?,
 )
-
-enum class TypeEndring {
-    NY,
-    ENDRET,
-    SLETTET,
-}
 
 data class BoforholdResponse(
     val relatertPersonPersonId: String?,

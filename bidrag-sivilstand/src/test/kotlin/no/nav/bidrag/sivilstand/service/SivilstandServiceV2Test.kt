@@ -6,7 +6,6 @@ import no.nav.bidrag.domene.enums.diverse.Kilde
 import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import no.nav.bidrag.sivilstand.TestUtil
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
@@ -236,7 +235,6 @@ internal class SivilstandServiceV2Test {
         }
     }
 
-    @Disabled
     @Test
     fun `Test at manuell periode som har en identisk offentlig periode endres til kilde = Offentlig `() {
         sivilstandServiceV2 = SivilstandServiceV2()
@@ -254,7 +252,6 @@ internal class SivilstandServiceV2Test {
         }
     }
 
-    @Disabled
     @Test
     fun `Test periodisering med flere manuelle og offentlige perioder og perioder uten status `() {
         sivilstandServiceV2 = SivilstandServiceV2()
@@ -339,7 +336,6 @@ internal class SivilstandServiceV2Test {
         }
     }
 
-    @Disabled
     @Test
     fun `Test kun manuell periode med periodeTom satt`() {
         sivilstandServiceV2 = SivilstandServiceV2()
@@ -359,35 +355,60 @@ internal class SivilstandServiceV2Test {
             resultat[1].periodeFom shouldBe LocalDate.of(2023, 9, 1)
             resultat[1].periodeTom shouldBe null
             resultat[1].sivilstandskode shouldBe Sivilstandskode.UKJENT
-            resultat[1].kilde shouldBe Kilde.OFFENTLIG
+            resultat[1].kilde shouldBe Kilde.MANUELL
         }
     }
 
-    @Disabled
     @Test
     fun `Test at sammenhengende manuell og offentlig periode med lik sivilstandskode slås sammen til manuell periode`() {
         sivilstandServiceV2 = SivilstandServiceV2()
         val mottatteBoforhold = TestUtil.manuellOgOffentligPerioderLikSivilstandskode()
         val virkningstidspunkt = LocalDate.of(2020, 9, 1)
-        val resultat = sivilstandServiceV2.beregn(virkningstidspunkt, mottatteBoforhold)
+        val resultat1 = sivilstandServiceV2.beregn(virkningstidspunkt, mottatteBoforhold[0])
+        val resultat2 = sivilstandServiceV2.beregn(virkningstidspunkt, mottatteBoforhold[1])
 
         assertSoftly {
-            Assertions.assertNotNull(resultat)
-            resultat.size shouldBe 2
+            Assertions.assertNotNull(resultat1)
+            resultat1.size shouldBe 3
+            resultat2.size shouldBe 4
 
-            resultat[0].periodeFom shouldBe LocalDate.of(2020, 9, 1)
-            resultat[0].periodeTom shouldBe LocalDate.of(2021, 3, 31)
-            resultat[0].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
-            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+            resultat1[0].periodeFom shouldBe LocalDate.of(2020, 9, 1)
+            resultat1[0].periodeTom shouldBe LocalDate.of(2021, 3, 31)
+            resultat1[0].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
+            resultat1[0].kilde shouldBe Kilde.OFFENTLIG
 
-            resultat[1].periodeFom shouldBe LocalDate.of(2021, 4, 1)
-            resultat[1].periodeTom shouldBe null
-            resultat[1].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
-            resultat[1].kilde shouldBe Kilde.MANUELL
+            resultat1[1].periodeFom shouldBe LocalDate.of(2021, 4, 1)
+            resultat1[1].periodeTom shouldBe LocalDate.of(2022, 4, 30)
+            resultat1[1].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat1[1].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat1[2].periodeFom shouldBe LocalDate.of(2022, 5, 1)
+            resultat1[2].periodeTom shouldBe null
+            resultat1[2].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
+            resultat1[2].kilde shouldBe Kilde.MANUELL
+
+            resultat2[0].periodeFom shouldBe LocalDate.of(2020, 9, 1)
+            resultat2[0].periodeTom shouldBe LocalDate.of(2021, 3, 31)
+            resultat2[0].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
+            resultat2[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat2[1].periodeFom shouldBe LocalDate.of(2021, 4, 1)
+            resultat2[1].periodeTom shouldBe LocalDate.of(2022, 4, 30)
+            resultat2[1].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat2[1].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat2[2].periodeFom shouldBe LocalDate.of(2022, 5, 1)
+            resultat2[2].periodeTom shouldBe LocalDate.of(2023, 12, 31)
+            resultat2[2].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
+            resultat2[2].kilde shouldBe Kilde.MANUELL
+
+            resultat2[3].periodeFom shouldBe LocalDate.of(2024, 1, 1)
+            resultat2[3].periodeTom shouldBe null
+            resultat2[3].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat2[3].kilde shouldBe Kilde.OFFENTLIG
         }
     }
 
-    @Disabled
     @Test
     fun `Test kun manuelle perioder`() {
         sivilstandServiceV2 = SivilstandServiceV2()
@@ -432,15 +453,15 @@ internal class SivilstandServiceV2Test {
             resultat2[2].sivilstandskode shouldBe Sivilstandskode.UKJENT
             resultat2[2].kilde shouldBe Kilde.OFFENTLIG
 
-            resultat2[2].periodeFom shouldBe LocalDate.of(2022, 1, 1)
-            resultat2[2].periodeTom shouldBe LocalDate.of(2023, 8, 31)
-            resultat2[2].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
-            resultat2[2].kilde shouldBe Kilde.MANUELL
+            resultat2[3].periodeFom shouldBe LocalDate.of(2022, 1, 1)
+            resultat2[3].periodeTom shouldBe LocalDate.of(2023, 8, 31)
+            resultat2[3].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat2[3].kilde shouldBe Kilde.MANUELL
 
-            resultat2[3].periodeFom shouldBe LocalDate.of(2023, 9, 1)
-            resultat2[3].periodeTom shouldBe null
-            resultat2[3].sivilstandskode shouldBe Sivilstandskode.UKJENT
-            resultat2[3].kilde shouldBe Kilde.OFFENTLIG
+            resultat2[4].periodeFom shouldBe LocalDate.of(2023, 9, 1)
+            resultat2[4].periodeTom shouldBe null
+            resultat2[4].sivilstandskode shouldBe Sivilstandskode.UKJENT
+            resultat2[4].kilde shouldBe Kilde.OFFENTLIG
         }
     }
 }

@@ -2,9 +2,9 @@ package no.nav.bidrag.boforhold.service
 
 import no.nav.bidrag.boforhold.dto.BoforholdBarnRequest
 import no.nav.bidrag.boforhold.dto.BoforholdResponse
-import no.nav.bidrag.boforhold.dto.TypeEndring
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.diverse.Kilde
+import no.nav.bidrag.domene.enums.diverse.TypeEndring
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import java.time.LocalDate
 
@@ -29,6 +29,37 @@ internal class BoforholdBarnServiceV2() {
     }
 
     private fun beregnPerioderForBarn(virkningstidspunkt: LocalDate, boforholdBarnRequest: BoforholdBarnRequest): List<BoforholdResponse> {
+        // 1. endreBoforhold = null. Beregning gjøres da enten på offentlige opplysninger eller behandledeBoforholdopplysninger.
+        //    1a. Hvis behandledeBoforholdopplysninger er utfyllt og innhentedeOffentligeOpplysninger er utfyllt:
+        //        behandledeBoforholdopplysninger skal da justeres mot virkningstidspunkt. Perioder i behandledeBoforholdopplysninger sjekkes mot
+        //        offentlige perioder og kilde evt. endres til Offentlig hvis det er match. Dette vil kunne skje ved endring av innhentede offentlige
+        //        opplysninger som nå helt overlapper manuelt innlagte perioder.
+        //        I tilfeller der virkningstidspunkt forskyves tilbake i tid så skal tidslinjen suppleres med offentlige perioder.
+        //    1b. Hvis behandledeBoforholdopplysninger er utfyllt og innhentedeOffentligeOpplysninger er tom:
+        //        behandledeBoforholdopplysninger skal da justeres mot virkningstidspunkt. I tilfeller der virkningstidspunkt forskyves tilbake i
+        //        tid så skal tidslinjen suppleres med én offentlig perioder med Bostatuskode = IKKE_MED_FORELDER og Kilde = OFFENTLIG i tidsrommet
+        //        mellom virkningstidspunkt og periodeFom for første forekomst i behandledeBoforholdopplysninger.
+        //    1c. Hvis behandledeBoforholdopplysninger er tom og innhentedeOffentligeOpplysninger er utfyllt: Det gjøres da en beregning basert på
+        //        offentlige perioder.
+        //    1d. Hvis behandledeBoforholdopplysninger er tom og innhentedeOffentligeOpplysninger  er tom: Det skal legges til en periode med
+        //        Bostatuskode = IKKE_MED_FORELDER og Kilde = OFFENTLIG
+        // 2. endreBoforhold er utfyllt.
+        //    2a. Hvis behandledeBoforholdopplysninger er utfyllt og innhentedeOffentligeOpplysninger er utfyllt: behandledeBoforholdopplysninger
+        //        skal da justeres etter det som er sendt inn i endreBoforhold. Det kan slettes/legges til eller endres perioder.
+        //        Perioder i oppdaterte behandledeBoforholdopplysninger sjekkes mot offentlige perioder og kilde evt. endres til Offentlig hvis det
+        //        er match.
+        //    2b. Hvis behandledeBoforholdopplysninger er utfyllt og innhentedeOffentligeOpplysninger er tom: behandledeBoforholdopplysninger skal
+        //        da justeres etter det som er sendt inn i endreBoforhold. Det kan slettes/legges til eller endres perioder.
+        //        Perioder i oppdaterte behandledeBoforholdopplysninger sjekkes mot genererte offentlige perioder (IKKE_MED_FORELDER/
+        //        REGNES_IKKE_SOM_BARN). Kilde endres til Offentlig hvis det er match.
+        //    2c. Hvis behandledeBoforholdopplysninger er tom og innhentedeOffentligeOpplysninger er utfyllt: Feil.
+        //        Det bør da i stedet gjøres en beregning på offentlige perioder før det kan sendes en endreBoforhold-request.
+        //        Beregningen ignorerer innhentedeOffentligeOpplysninger og gjør en beregning på det som ligger i endreBoforhold. typeEndring må
+        //        være lik NY, hvis ikke reurneres tom liste. Hull i tidslinjen utfylles med Bostatuskode = IKKE_MED_FORELDER og Kilde = MANUELL.
+        //    2d. Hvis behandledeBoforholdopplysninger er tom og innhentedeOffentligeOpplysninger er tom: Beregningen gjøres på det som ligger i
+        //        endreBoforhold. typeEndring må være lik NY, hvis ikke reurneres tom liste.
+        //        Hull i tidslinjen utfylles med Bostatuskode = IKKE_MED_FORELDER og Kilde = MANUELL.
+
         // Bruker fødselsdato som startdato for beregning hvis barnet er født etter virkningstidspunkt
         val startdatoBeregning = if (virkningstidspunkt.isBefore(boforholdBarnRequest.fødselsdato)) {
             boforholdBarnRequest.fødselsdato.withDayOfMonth(1)
@@ -126,7 +157,7 @@ internal class BoforholdBarnServiceV2() {
         val endredeBostatusPerioder = behandleEndringer(startdatoBeregning, boforholdBarnRequest)
 
         if (behandledeOpplysninger.isEmpty()) {
-            // Det finnes ingen offentlige eller behandlede perioder og den nye bostatusperioden skal returneres sammen med genererte perioder
+            // Det finnes ingen behandlede perioder og den nye bostatusperioden skal returneres sammen med genererte perioder
             // som fyller tidslinjen fra virkningstidspunkt til dagens dato.
 
             if (boforholdBarnRequest.endreBostatus.typeEndring != TypeEndring.NY) {
@@ -396,7 +427,6 @@ internal class BoforholdBarnServiceV2() {
                     bostatus = primærperiode.bostatus,
                     fødselsdato = primærperiode.fødselsdato,
                     kilde = primærperiode.kilde,
-//                    kilde = if (manuellPeriodeErIdentiskMedOffentligPeriode(endretPeriode, behandledePerioder)) Kilde.OFFENTLIG else Kilde.MANUELL,
                 ),
             )
         }

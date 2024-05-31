@@ -2,12 +2,12 @@ package no.nav.bidrag.sivilstand
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.domene.enums.diverse.Kilde
+import no.nav.bidrag.domene.enums.diverse.TypeEndring
 import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import no.nav.bidrag.domene.enums.person.SivilstandskodePDL
 import no.nav.bidrag.sivilstand.dto.EndreSivilstand
 import no.nav.bidrag.sivilstand.dto.Sivilstand
 import no.nav.bidrag.sivilstand.dto.SivilstandRequest
-import no.nav.bidrag.sivilstand.dto.TypeEndring
 import no.nav.bidrag.transport.behandling.grunnlag.response.SivilstandGrunnlagDto
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -527,7 +527,7 @@ class TestUtil {
                     periodeFom = LocalDate.of(2020, 9, 1),
                     periodeTom = null,
                     sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
-                    kilde = Kilde.MANUELL,
+                    kilde = Kilde.OFFENTLIG,
                 ),
             ),
             endreSivilstand = EndreSivilstand(
@@ -697,44 +697,104 @@ class TestUtil {
 
         )
 
-        fun manuellOgOffentligPerioderLikSivilstandskode() = SivilstandRequest(
-            listOf(
-                SivilstandGrunnlagDto(
-                    personId = "98765432109",
-                    type = SivilstandskodePDL.GIFT,
-                    gyldigFom = LocalDate.of(2020, 4, 12),
-                    bekreftelsesdato = null,
-                    master = "PDL",
-                    registrert = null,
-                    historisk = false,
+        fun manuellOgOffentligPerioderLikSivilstandskode() = listOf(
+            SivilstandRequest(
+                innhentedeOffentligeOpplysninger = listOf(
+                    SivilstandGrunnlagDto(
+                        personId = "98765432109",
+                        type = SivilstandskodePDL.GIFT,
+                        gyldigFom = LocalDate.of(2020, 4, 12),
+                        bekreftelsesdato = null,
+                        master = "PDL",
+                        registrert = null,
+                        historisk = false,
+                    ),
+                    SivilstandGrunnlagDto(
+                        personId = "98765432109",
+                        type = SivilstandskodePDL.SKILT,
+                        gyldigFom = LocalDate.of(2021, 4, 12),
+                        bekreftelsesdato = null,
+                        master = "PDL",
+                        registrert = null,
+                        historisk = false,
+                    ),
                 ),
-                SivilstandGrunnlagDto(
-                    personId = "98765432109",
-                    type = SivilstandskodePDL.SKILT,
-                    gyldigFom = LocalDate.of(2021, 4, 12),
-                    bekreftelsesdato = null,
-                    master = "PDL",
-                    registrert = null,
-                    historisk = false,
+                behandledeSivilstandsopplysninger = listOf(
+                    Sivilstand(
+                        periodeFom = LocalDate.of(2020, 9, 1),
+                        periodeTom = LocalDate.of(2021, 3, 31),
+                        sivilstandskode = Sivilstandskode.GIFT_SAMBOER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Sivilstand(
+                        periodeFom = LocalDate.of(2021, 4, 1),
+                        periodeTom = null,
+                        sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                ),
+                endreSivilstand = EndreSivilstand(
+                    typeEndring = TypeEndring.NY,
+                    nySivilstand = Sivilstand(
+                        periodeFom = LocalDate.of(2022, 5, 1),
+                        periodeTom = null,
+                        sivilstandskode = Sivilstandskode.GIFT_SAMBOER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    originalSivilstand = null,
                 ),
             ),
-            behandledeSivilstandsopplysninger = listOf(
-                Sivilstand(
-                    periodeFom = LocalDate.of(2020, 9, 1),
-                    periodeTom = null,
-                    sivilstandskode = Sivilstandskode.GIFT_SAMBOER,
-                    kilde = Kilde.MANUELL,
+            SivilstandRequest(
+                innhentedeOffentligeOpplysninger = listOf(
+                    SivilstandGrunnlagDto(
+                        personId = "98765432109",
+                        type = SivilstandskodePDL.GIFT,
+                        gyldigFom = LocalDate.of(2020, 4, 12),
+                        bekreftelsesdato = null,
+                        master = "PDL",
+                        registrert = null,
+                        historisk = false,
+                    ),
+                    SivilstandGrunnlagDto(
+                        personId = "98765432109",
+                        type = SivilstandskodePDL.SKILT,
+                        gyldigFom = LocalDate.of(2021, 4, 12),
+                        bekreftelsesdato = null,
+                        master = "PDL",
+                        registrert = null,
+                        historisk = false,
+                    ),
                 ),
-            ),
-            endreSivilstand = EndreSivilstand(
-                typeEndring = TypeEndring.NY,
-                nySivilstand = Sivilstand(
-                    periodeFom = LocalDate.of(2021, 4, 1),
-                    periodeTom = null,
-                    sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
-                    kilde = Kilde.MANUELL,
+                behandledeSivilstandsopplysninger = listOf(
+                    Sivilstand(
+                        periodeFom = LocalDate.of(2020, 9, 1),
+                        periodeTom = LocalDate.of(2021, 3, 31),
+                        sivilstandskode = Sivilstandskode.GIFT_SAMBOER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Sivilstand(
+                        periodeFom = LocalDate.of(2021, 4, 1),
+                        periodeTom = LocalDate.of(2022, 4, 30),
+                        sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Sivilstand(
+                        periodeFom = LocalDate.of(2022, 5, 1),
+                        periodeTom = null,
+                        sivilstandskode = Sivilstandskode.GIFT_SAMBOER,
+                        kilde = Kilde.MANUELL,
+                    ),
                 ),
-                originalSivilstand = null,
+                endreSivilstand = EndreSivilstand(
+                    typeEndring = TypeEndring.NY,
+                    nySivilstand = Sivilstand(
+                        periodeFom = LocalDate.of(2024, 1, 1),
+                        periodeTom = null,
+                        sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    originalSivilstand = null,
+                ),
             ),
         )
 
