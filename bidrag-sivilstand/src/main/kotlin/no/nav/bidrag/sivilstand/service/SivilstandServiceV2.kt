@@ -477,7 +477,7 @@ internal class SivilstandServiceV2() {
                     // tidsrommet for den originale perioden, i tillegg til at den nye perioden legges til.
                     endredePerioder.add(
                         Sivilstand(
-                            periodeFom = originalSivilstand.periodeFom!!,
+                            periodeFom = originalSivilstand.periodeFom,
                             periodeTom = originalSivilstand.periodeTom,
                             sivilstandskode = motsattSivilstandskode(originalSivilstand.sivilstandskode),
                             kilde = Kilde.MANUELL,
