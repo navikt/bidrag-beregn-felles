@@ -26,7 +26,7 @@ internal class SivilstandServiceV2() {
         //        offentlige perioder.
         //    1b. Hvis behandledeSivilstandsopplysninger er utfyllt og innhentedeOffentligeOpplysninger er tom:
         //        behandledeSivilstandsopplysninger skal da justeres mot virkningstidspunkt. I tilfeller der virkningstidspunkt forskyves tilbake i
-        //        tid så skal tidslinjen suppleres med én offentlig perioder med Sivilstandskode = UKJENT og Kilde = OFFENTLIG i tidsrommet mellom
+        //        tid så skal tidslinjen suppleres med én offentlig periode med Sivilstandskode = UKJENT og Kilde = OFFENTLIG i tidsrommet mellom
         //        virkningstidspunkt og periodeFom for første forekomst i behandledeSivilstandsopplysninger.
         //    1c. Hvis behandledeSivilstandsopplysninger er tom og innhentedeOffentligeOpplysninger er utfyllt: Det gjøres da en beregning basert på
         //        offentlige perioder.
@@ -39,14 +39,13 @@ internal class SivilstandServiceV2() {
         //        er match.
         //    2b. Hvis behandledeSivilstandsopplysninger er utfyllt og innhentedeOffentligeOpplysninger er tom: behandledeSivilstandsopplysninger skal
         //        da justeres etter det som er sendt inn i endreSivilstand. Det kan slettes/legges til eller endres perioder.
-        //        Ved flytting av virkningstidspunkt tilbake i tid legges det til en periode først med Sivilstandskode = UKJENT og Kilde = MANUELL.
         //    2c. Hvis behandledeSivilstandsopplysninger er tom og innhentedeOffentligeOpplysninger er utfyllt: Feil.
         //        Det bør da i stedet gjøres en beregning på offentlige perioder før det kan sendes en endreSivilstand-request.
         //        Beregningen ignorerer innhentedeOffentligeOpplysninger og gjør en beregning på det som ligger i endreSivilstand. typeEndring må
-        //        være lik NY, hvis ikke reurneres tom liste. Hull i tidslinjen utfylles med Sivilstandskode UKJENT og Kilde = MANUELL.
+        //        være lik NY, hvis ikke returneres tom liste. Hull i tidslinjen utfylles med Sivilstandskode UKJENT og Kilde = OFFENTLIG.
         //    2d. Hvis behandledeSivilstandsopplysninger er tom og innhentedeOffentligeOpplysninger er tom: Beregningen gjøres på det som ligger i
         //        endreSivilstand. typeEndring må være lik NY, hvis ikke reurneres tom liste.
-        //        Hull i tidslinjen utfylles med Sivilstandskode UKJENT og Kilde = MANUELL.
+        //        Hull i tidslinjen utfylles med Sivilstandskode UKJENT og Kilde = OFFENTLIG.
 
         // Beregner offentlige perioder som er hentet inn. Hvis det ikke er hentet inn offentlige opplysninger så returneres en periode med
         // Sivilstandskode = UKJENT og Kilde = OFFENTLIG.
@@ -100,41 +99,23 @@ internal class SivilstandServiceV2() {
             }
         }
 
-        val endredeSivilstandsperioder = behandleEndringer(virkningstidspunkt, sivilstandRequest.endreSivilstand)
+        val oppdaterteBehandledeOpplysninger = behandleEndringer(virkningstidspunkt, sivilstandRequest.endreSivilstand, behandledeOpplysninger)
 
         if (behandledeOpplysninger.isEmpty()) {
             // 2c + 2d
             // Det finnes ingen behandlede perioder og den nye bostatusperioden skal returneres sammen med genererte perioder
-            // med Sivilstandskode = UKJENT og kilde = MANUELL som fyller tidslinjen fra virkningstidspunkt til dagens dato.
+            // med Sivilstandskode = UKJENT og kilde = OFFENTLIG som fyller tidslinjen fra virkningstidspunkt til dagens dato.
 
             if (sivilstandRequest.endreSivilstand.typeEndring != TypeEndring.NY) {
                 // Feilsituasjon. Må alltid være ny hvis det ikke finnes perioder fra før.
                 return emptyList()
             }
-
-            val manuellPeriodeUkjent = listOf(
-                Sivilstand(
-                    periodeFom = virkningstidspunkt,
-                    periodeTom = null,
-                    sivilstandskode = Sivilstandskode.UKJENT,
-                    kilde = Kilde.MANUELL,
-                ),
-            )
-
-            return slåSammenPrimærOgSekundærperioder(virkningstidspunkt, endredeSivilstandsperioder, manuellPeriodeUkjent)
+            return slåSammenPrimærOgSekundærperioder(virkningstidspunkt, oppdaterteBehandledeOpplysninger, offentligePerioder)
         } else {
             // 2a + 2b
             // Det finnes både behandlede og endrede perioder
-            val sammenslåttListe =
-                slåSammenPrimærOgSekundærperioder(virkningstidspunkt, endredeSivilstandsperioder, behandledeOpplysninger)
 
-            val sammenslåttListeMedOffentligePerioder = slåSammenPrimærOgSekundærperioder(
-                virkningstidspunkt,
-                sammenslåttListe,
-                offentligePerioder,
-            )
-
-            return sammenslåttListeMedOffentligePerioder.map {
+            return oppdaterteBehandledeOpplysninger.map {
                 Sivilstand(
                     periodeFom = it.periodeFom,
                     periodeTom = it.periodeTom,
@@ -204,11 +185,7 @@ internal class SivilstandServiceV2() {
                     periodeFom = virkningstidspunkt,
                     periodeTom = null,
                     sivilstandskode = Sivilstandskode.UKJENT,
-                    kilde = if (offentligePerioder.isNotEmpty()) {
-                        Kilde.OFFENTLIG
-                    } else {
-                        Kilde.MANUELL
-                    },
+                    kilde = Kilde.OFFENTLIG,
                 ),
             )
         }
@@ -430,31 +407,66 @@ internal class SivilstandServiceV2() {
         return justertSekundærPeriodeListe
     }
 
-    private fun behandleEndringer(virkningstidspunkt: LocalDate, endreSivilstand: EndreSivilstand): List<Sivilstand> {
+    private fun behandleEndringer(
+        virkningstidspunkt: LocalDate,
+        endreSivilstand: EndreSivilstand,
+        behandledeOpplysninger: List<Sivilstand>,
+    ): List<Sivilstand> {
         val endredePerioder = mutableListOf<Sivilstand>()
         val nySivilstand = endreSivilstand.nySivilstand
         val originalSivilstand = endreSivilstand.originalSivilstand
 
         when (endreSivilstand.typeEndring) {
             TypeEndring.SLETTET -> {
-                if (originalSivilstand == null) {
-                    // Hvis det ikke finnes original bostatuskode så skal det ikke være mulig å slette en periode
+                // Hvis original sivilstand ikke er angitt eller ikke finnes i behandledeOpplysninger så skal det kastes en exception.
+                if (originalSivilstand == null || behandledeOpplysninger.none { behandletOpplysning ->
+                        perioderErIdentiske(originalSivilstand, behandletOpplysning)
+                    }
+                ) {
                     secureLogger.info {
-                        "Periode som skal slettes må være angitt som originalSivilstand i input. endreSivilstand: " +
+                        "Periode som skal slettes er enten ikke angitt som originalSivilstand eller finnes ikke i behandledeOpplysninger. " +
+                            "endreSivilstand: " +
                             "$endreSivilstand "
                     }
-                    throw IllegalStateException("Periode som skal slettes må være angitt som originalSivilstand i input")
+                    throw IllegalStateException(
+                        "Periode som skal slettes er enten ikke angitt som originalSivilstand eller finnes " +
+                            "ikke i behandledeOpplysninger",
+                    )
                 }
-                // Returnerer en periode med samme periodeFom og periodeTom som original periode med motsatt bostatuskode
-                endredePerioder.add(
-                    Sivilstand(
-                        periodeFom = originalSivilstand.periodeFom,
-                        periodeTom = originalSivilstand.periodeTom,
-                        sivilstandskode = motsattSivilstandskode(originalSivilstand.sivilstandskode),
-                        kilde = Kilde.MANUELL,
-                    ),
-                )
-                return endredePerioder
+
+                var indeksMatch = 0
+
+                for (indeks in behandledeOpplysninger.indices) {
+                    if (perioderErIdentiske(originalSivilstand, behandledeOpplysninger[indeks])) {
+                        indeksMatch = indeks
+                    }
+                }
+
+                if (indeksMatch == 0) {
+                    secureLogger.info {
+                        "Periode som skal slettes er første periode i behandledeOpplysninger, denne kan ikke slettes . " +
+                            "endreSivilstand: " +
+                            "$endreSivilstand "
+                    }
+                }
+                val oppdatertbehandledeOpplysninger = mutableListOf<Sivilstand>()
+
+                for (indeks in behandledeOpplysninger.indices) {
+                    if (indeks == indeksMatch - 1) {
+                        // Periode før periode som skal slettes. Justerer periodeTom til å være lik slettet periodes periodeTom.
+                        oppdatertbehandledeOpplysninger.add(behandledeOpplysninger[indeks].copy(periodeTom = originalSivilstand.periodeTom))
+                    } else {
+                        if (indeks == indeksMatch) {
+                            // Periode som skal slettes. Hopper over denne.
+                            continue
+                        } else {
+                            oppdatertbehandledeOpplysninger.add(behandledeOpplysninger[indeks])
+                        }
+                    }
+                }
+
+                // Fjerner perioden som skal slettes fra behandledeOpplysninger
+                return slåSammenSammenhengendePerioderMedLikSivilstandskode(virkningstidspunkt, oppdatertbehandledeOpplysninger)
             }
 
             TypeEndring.NY -> {
@@ -474,7 +486,7 @@ internal class SivilstandServiceV2() {
                         kilde = Kilde.MANUELL,
                     ),
                 )
-                return endredePerioder
+                return slåSammenPrimærOgSekundærperioder(virkningstidspunkt, endredePerioder, behandledeOpplysninger)
             }
 
             TypeEndring.ENDRET -> {
@@ -568,7 +580,7 @@ internal class SivilstandServiceV2() {
                         )
                     }
                 }
-                return endredePerioder
+                return slåSammenPrimærOgSekundærperioder(virkningstidspunkt, endredePerioder, behandledeOpplysninger)
             }
         }
     }
@@ -817,6 +829,13 @@ internal class SivilstandServiceV2() {
             Sivilstandskode.UKJENT -> return Sivilstandskode.UKJENT
             else -> sivilstandskode
         }
+    }
+
+    private fun perioderErIdentiske(periode1: Sivilstand, periode2: Sivilstand): Boolean {
+        return periode1.periodeFom == periode2.periodeFom &&
+            periode1.periodeTom == periode2.periodeTom &&
+            periode1.sivilstandskode == periode2.sivilstandskode &&
+            periode1.kilde == periode2.kilde
     }
 
     private fun hentFørsteDagIMåneden(dato: LocalDate): LocalDate {
