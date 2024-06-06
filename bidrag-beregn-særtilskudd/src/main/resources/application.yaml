@@ -1,0 +1,24 @@
+springdoc:
+  packages-to-scan: no.nav.bidrag.beregn.saertilskudd.rest.controller
+  swagger-ui:
+    path: /
+
+# OIDC
+no.nav.security.jwt:
+  issuer:
+    aad:
+      discovery-url: ${AZURE_APP_WELL_KNOWN_URL}
+      accepted_audience: ${AZURE_APP_CLIENT_ID}, api://${AZURE_APP_CLIENT_ID}
+
+---
+# Profil for lokal kjøring
+spring.config.activate.on-profile: local
+
+# Lokal profil bruker selvstendige wiremocks
+wiremock.server:
+  files: classpath:/__files
+  stubs: classpath:/wiremock_stubs
+
+---
+# Profil for integrasjonstest
+spring.config.activate.on-profile: integrationtest

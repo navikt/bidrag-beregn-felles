@@ -1,0 +1,156 @@
+{
+  "beregnDatoFra": "2020-08-01",
+  "beregnDatoTil": "2020-09-01",
+  "grunnlagListe": [
+    {
+      "referanse": "Mottatt_SoknadsbarnInfo_SB1",
+      "type": "SOKNADSBARN_INFO",
+      "innhold": {
+        "id": 1,
+        "fodselsdato": "2006-02-01"
+      }
+    },
+    {
+      "referanse": "Mottatt_Inntekt_AG_20200801_SB1",
+      "type": "INNTEKT",
+      "innhold": {
+        "rolle": "SOKNADSBARN",
+        "datoFom": "2020-08-01",
+        "datoTil": "2020-09-01",
+        "soknadsbarnId": 1,
+        "inntektType": "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+        "belop": 0
+      }
+    },
+    {
+      "referanse": "Mottatt_Inntekt_AG_20200801_BM",
+      "type": "INNTEKT",
+      "innhold": {
+        "rolle": "BIDRAGSMOTTAKER",
+        "datoFom": "2020-08-01",
+        "datoTil": "2021-09-01",
+        "inntektType": "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+        "belop": 300000,
+        "deltFordel": false,
+        "skatteklasse2": false
+      }
+    },
+    {
+      "referanse": "Mottatt_Inntekt_AG_20200801_BM",
+      "type": "INNTEKT",
+      "innhold": {
+        "rolle": "BIDRAGSMOTTAKER",
+        "datoFom": "2020-08-01",
+        "datoTil": "2021-09-01",
+        "inntektType": "UTVIDET_BARNETRYGD",
+        "belop": 12688,
+        "deltFordel": false,
+        "skatteklasse2": false
+      }
+    },
+    {
+      "referanse": "Mottatt_Inntekt_AG_20200801_BP",
+      "type": "INNTEKT",
+      "innhold": {
+        "rolle": "BIDRAGSPLIKTIG",
+        "datoFom": "2020-08-01",
+        "datoTil": "2021-09-01",
+        "inntektType": "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+        "belop": 410000
+      }
+    },
+    {
+      "referanse": "Mottatt_BarnIHusstand_20200801",
+      "type": "BARN_I_HUSSTAND",
+      "innhold": {
+        "datoFom": "2020-08-01",
+        "datoTil": "2021-09-01",
+        "antall": 0
+      }
+    },
+    {
+      "referanse": "Mottatt_Bostatus_20200801",
+      "type": "BOSTATUS",
+      "innhold": {
+        "datoFom": "2020-08-01",
+        "datoTil": "2021-09-01",
+        "bostatusKode": "ALENE"
+      }
+    },
+    {
+      "referanse": "Mottatt_Saerfradrag_20200801",
+      "type": "SAERFRADRAG",
+      "innhold": {
+        "datoFom": "2020-08-01",
+        "datoTil": "2021-09-01",
+        "saerfradragKode": "INGEN"
+      }
+    },
+    {
+      "referanse": "Mottatt_Skatteklasse_20200801",
+      "type": "SKATTEKLASSE",
+      "innhold": {
+        "datoFom": "2020-08-01",
+        "datoTil": "2021-09-01",
+        "skatteklasseId": 1
+      }
+    },
+    {
+      "referanse": "Mottatt_Netto_Saertilskudd_20200801",
+      "type": "NETTO_SAERTILSKUDD",
+      "innhold": {
+        "datoFom": "2020-08-01",
+        "datoTil": "2021-09-01",
+        "nettoSaertilskuddBelop": 12000
+      }
+    },
+    {
+      "referanse": "Mottatt_Samvaersklasse_20200801_SB1",
+      "type": "SAMVAERSKLASSE",
+      "innhold": {
+        "datoFom": "2020-08-01",
+        "datoTil": "2021-09-01",
+        "soknadsbarnId": 1,
+        "soknadsbarnFodselsdato": "2006-02-01",
+        "samvaersklasseId": "02"
+      }
+    },
+    {
+      "referanse": "Mottatt_Samvaersklasse_20200801_SB2",
+      "type": "SAMVAERSKLASSE",
+      "innhold": {
+        "datoFom": "2020-08-01",
+        "datoTil": "2021-09-01",
+        "soknadsbarnId": 2,
+        "soknadsbarnFodselsdato": "2008-01-01",
+        "samvaersklasseId": "02"
+      }
+    },
+    {
+      "referanse": "Mottatt_LopendeBidrag_20200801_SB1",
+      "type": "LOPENDE_BIDRAG",
+      "innhold": {
+        "datoFom": "2020-08-01",
+        "datoTil": "2021-09-01",
+        "soknadsbarnId": 1,
+        "belop": 2900,
+        "opprinneligBPAndelUnderholdskostnadBelop": 4000,
+        "opprinneligBidragBelop": 2800,
+        "opprinneligSamvaersfradragBelop": 1323
+      }
+    },
+    {
+      "referanse": "Mottatt_LopendeBidrag_20200801_SB2",
+      "type": "LOPENDE_BIDRAG",
+      "innhold": {
+        "datoFom": "2020-08-01",
+        "datoTil": "2021-09-01",
+        "soknadsbarnId": 2,
+        "belop": 2900,
+        "opprinneligBPAndelUnderholdskostnadBelop": 4000,
+        "opprinneligBidragBelop": 2800,
+        "opprinneligSamvaersfradragBelop": 1323
+      }
+    }
+  ]
+}
