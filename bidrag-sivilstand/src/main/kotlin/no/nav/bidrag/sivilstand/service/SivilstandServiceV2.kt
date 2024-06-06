@@ -509,7 +509,7 @@ internal class SivilstandServiceV2() {
                             kilde = Kilde.MANUELL,
                         ),
                     )
-                    return endredePerioder
+                    return slåSammenPrimærOgSekundærperioder(virkningstidspunkt, endredePerioder, behandledeOpplysninger)
                 }
 
                 if (originalSivilstand.periodeTom != null && nySivilstand.periodeFom.isAfter(originalSivilstand.periodeTom)) {
@@ -531,7 +531,7 @@ internal class SivilstandServiceV2() {
                             kilde = Kilde.MANUELL,
                         ),
                     )
-                    return endredePerioder
+                    return slåSammenPrimærOgSekundærperioder(virkningstidspunkt, endredePerioder, behandledeOpplysninger)
                 }
 
                 if (nySivilstand.periodeFom.isAfter(originalSivilstand.periodeFom)) {
