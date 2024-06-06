@@ -1118,6 +1118,53 @@ class TestUtil {
                     ),
                     Sivilstand(
                         periodeFom = LocalDate.of(2022, 3, 1),
+                        periodeTom = LocalDate.of(2022, 12, 31),
+                        sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Sivilstand(
+                        periodeFom = LocalDate.of(2023, 1, 1),
+                        periodeTom = null,
+                        sivilstandskode = Sivilstandskode.GIFT_SAMBOER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+                endreSivilstand = EndreSivilstand(
+                    typeEndring = TypeEndring.SLETTET,
+                    nySivilstand = null,
+                    originalSivilstand = Sivilstand(
+                        periodeFom = LocalDate.of(2023, 1, 1),
+                        periodeTom = null,
+                        sivilstandskode = Sivilstandskode.GIFT_SAMBOER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+            )
+
+        fun endreSivilstandUtfylltSLETTMidtperiodeBehandledeUtfylltOffentligeOpplysningerTom2b() = // 1b
+            SivilstandRequest(
+                innhentedeOffentligeOpplysninger = emptyList(),
+                behandledeSivilstandsopplysninger = listOf(
+                    Sivilstand(
+                        periodeFom = LocalDate.of(2020, 9, 1),
+                        periodeTom = LocalDate.of(2022, 2, 28),
+                        sivilstandskode = Sivilstandskode.GIFT_SAMBOER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Sivilstand(
+                        periodeFom = LocalDate.of(2022, 3, 1),
+                        periodeTom = LocalDate.of(2022, 12, 31),
+                        sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Sivilstand(
+                        periodeFom = LocalDate.of(2023, 1, 1),
+                        periodeTom = LocalDate.of(2024, 1, 31),
+                        sivilstandskode = Sivilstandskode.GIFT_SAMBOER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Sivilstand(
+                        periodeFom = LocalDate.of(2024, 2, 1),
                         periodeTom = null,
                         sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
                         kilde = Kilde.MANUELL,
@@ -1127,9 +1174,9 @@ class TestUtil {
                     typeEndring = TypeEndring.SLETTET,
                     nySivilstand = null,
                     originalSivilstand = Sivilstand(
-                        periodeFom = LocalDate.of(2020, 9, 1),
-                        periodeTom = LocalDate.of(2022, 2, 28),
-                        sivilstandskode = Sivilstandskode.GIFT_SAMBOER,
+                        periodeFom = LocalDate.of(2022, 3, 1),
+                        periodeTom = LocalDate.of(2022, 12, 31),
+                        sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
