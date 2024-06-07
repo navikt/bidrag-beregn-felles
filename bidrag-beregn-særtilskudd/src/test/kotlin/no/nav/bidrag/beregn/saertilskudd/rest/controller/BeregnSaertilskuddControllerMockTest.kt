@@ -3,8 +3,6 @@ package no.nav.bidrag.beregn.saertilskudd.rest.controller
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import no.nav.bidrag.beregn.felles.dto.PeriodeCore
-import no.nav.bidrag.beregn.saertilskudd.dto.ResultatBeregningCore
-import no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore
 import no.nav.bidrag.beregn.saertilskudd.rest.BidragBeregnSaertilskuddTest
 import no.nav.bidrag.beregn.saertilskudd.rest.BidragBeregnSaertilskuddTest.Companion.TEST_PROFILE
 import no.nav.bidrag.beregn.saertilskudd.rest.TestUtil
@@ -12,6 +10,8 @@ import no.nav.bidrag.beregn.saertilskudd.rest.TestUtil.BIDRAGSEVNE_REFERANSE
 import no.nav.bidrag.beregn.saertilskudd.rest.TestUtil.BPS_ANDEL_SAERTILSKUDD_REFERANSE
 import no.nav.bidrag.beregn.saertilskudd.rest.TestUtil.SAMVAERSFRADRAG_REFERANSE
 import no.nav.bidrag.beregn.saertilskudd.rest.service.BeregnSaertilskuddService
+import no.nav.bidrag.beregn.særtilskudd.dto.ResultatBeregningCore
+import no.nav.bidrag.beregn.særtilskudd.dto.ResultatPeriodeCore
 import no.nav.bidrag.commons.web.HttpResponse
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
 import no.nav.bidrag.domain.enums.resultatkoder.ResultatKodeSaertilskudd

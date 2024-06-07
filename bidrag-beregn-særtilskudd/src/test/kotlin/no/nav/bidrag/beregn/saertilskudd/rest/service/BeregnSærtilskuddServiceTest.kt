@@ -5,8 +5,6 @@ import no.nav.bidrag.beregn.bidragsevne.dto.BeregnBidragsevneGrunnlagCore
 import no.nav.bidrag.beregn.bpsandelsaertilskudd.BPsAndelSaertilskuddCore
 import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddGrunnlagCore
 import no.nav.bidrag.beregn.felles.dto.SjablonPeriodeCore
-import no.nav.bidrag.beregn.saertilskudd.SaertilskuddCore
-import no.nav.bidrag.beregn.saertilskudd.dto.BeregnSaertilskuddGrunnlagCore
 import no.nav.bidrag.beregn.saertilskudd.rest.BidragBeregnSaertilskuddTest
 import no.nav.bidrag.beregn.saertilskudd.rest.TestUtil
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Bidragsevne
@@ -15,6 +13,8 @@ import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Sjablontall
 import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException
 import no.nav.bidrag.beregn.samvaersfradrag.SamvaersfradragCore
 import no.nav.bidrag.beregn.samvaersfradrag.dto.BeregnSamvaersfradragGrunnlagCore
+import no.nav.bidrag.beregn.særtilskudd.SaertilskuddCore
+import no.nav.bidrag.beregn.særtilskudd.dto.BeregnSaertilskuddGrunnlagCore
 import no.nav.bidrag.commons.web.HttpResponse.Companion.from
 import no.nav.bidrag.domain.enums.sjablon.SjablonNavn
 import no.nav.bidrag.domain.enums.sjablon.SjablonTallNavn

@@ -9,12 +9,14 @@ import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddR
 import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.BeregnedeGrunnlagCore
 import no.nav.bidrag.beregn.felles.dto.AvvikCore
 import no.nav.bidrag.beregn.felles.dto.PeriodeCore
-import no.nav.bidrag.beregn.saertilskudd.dto.BeregnSaertilskuddResultatCore
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Bidragsevne
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Samvaersfradrag
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Sjablontall
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.TrinnvisSkattesats
 import no.nav.bidrag.beregn.samvaersfradrag.dto.BeregnSamvaersfradragResultatCore
+import no.nav.bidrag.beregn.særtilskudd.dto.BeregnSaertilskuddResultatCore
+import no.nav.bidrag.beregn.særtilskudd.dto.ResultatBeregningCore
+import no.nav.bidrag.beregn.særtilskudd.dto.ResultatPeriodeCore
 import no.nav.bidrag.domain.enums.GrunnlagType
 import no.nav.bidrag.domain.enums.Rolle
 import no.nav.bidrag.transport.beregning.felles.BeregnGrunnlag
@@ -368,12 +370,12 @@ object TestUtil {
 
     // Bygger opp BeregnSaertilskuddResultatCore
     fun dummySaertilskuddResultatCore(): BeregnSaertilskuddResultatCore {
-        val beregnetSaertilskuddPeriodeListe = ArrayList<no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore>()
+        val beregnetSaertilskuddPeriodeListe = ArrayList<ResultatPeriodeCore>()
         beregnetSaertilskuddPeriodeListe.add(
-            no.nav.bidrag.beregn.saertilskudd.dto.ResultatPeriodeCore(
+            ResultatPeriodeCore(
                 PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
                 1,
-                no.nav.bidrag.beregn.saertilskudd.dto.ResultatBeregningCore(BigDecimal.valueOf(100), "SAERTILSKUDD_INNVILGET"),
+                ResultatBeregningCore(BigDecimal.valueOf(100), "SAERTILSKUDD_INNVILGET"),
                 java.util.List.of(INNTEKT_REFERANSE, BIDRAGSEVNE_REFERANSE),
             ),
         )
