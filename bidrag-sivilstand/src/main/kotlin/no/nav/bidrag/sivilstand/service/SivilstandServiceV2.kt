@@ -103,7 +103,7 @@ internal class SivilstandServiceV2() {
 
         if (behandledeOpplysninger.isEmpty()) {
             // 2c + 2d
-            // Det finnes ingen behandlede perioder og den nye bostatusperioden skal returneres sammen med genererte perioder
+            // Det finnes ingen behandlede perioder og den nye sivilstandsperioden skal returneres sammen med genererte perioder
             // med Sivilstandskode = UKJENT og kilde = OFFENTLIG som fyller tidslinjen fra virkningstidspunkt til dagens dato.
 
             if (sivilstandRequest.endreSivilstand.typeEndring != TypeEndring.NY) {
@@ -471,7 +471,7 @@ internal class SivilstandServiceV2() {
 
             TypeEndring.NY -> {
                 if (nySivilstand == null) {
-                    // Hvis det ikke finnes en ny bostatus så kan det ikke leges til ny periode
+                    // Hvis det ikke finnes en ny sivilstandsperiode så kan det ikke legges til ny periode
                     secureLogger.info {
                         "Periode som skal legges til må være angitt som nySivilstand i input. endreSivilstand: " +
                             "$endreSivilstand "
@@ -535,13 +535,13 @@ internal class SivilstandServiceV2() {
                 }
 
                 if (nySivilstand.periodeFom.isAfter(originalSivilstand.periodeFom)) {
-                    // Det må lages en ny periode med original bostatuskode for perioden mellom gammel og ny periodeFom
+                    // Det må lages en ny periode med motsatt sivilstandskode for perioden mellom gammel og ny periodeFom
                     endredePerioder.add(
                         Sivilstand(
                             periodeFom = originalSivilstand.periodeFom,
                             periodeTom = nySivilstand.periodeFom.minusDays(1),
                             sivilstandskode = motsattSivilstandskode(nySivilstand.sivilstandskode),
-                            kilde = originalSivilstand.kilde,
+                            kilde = Kilde.MANUELL,
                         ),
                     )
                 }
@@ -558,13 +558,13 @@ internal class SivilstandServiceV2() {
                 // Sjekk om det må lages en ekstra periode etter nySivilstand med motsatt sivilstandskode.
                 if (originalSivilstand.periodeTom == null) {
                     if (nySivilstand.periodeTom != null) {
-                        // Det må lages en ny periode med motsatt bostatuskode for perioden mellom ny periodeTom og gammel periodeTom
+                        // Det må lages en ny periode med motsatt sivilstandskode for perioden mellom ny periodeTom og gammel periodeTom
                         endredePerioder.add(
                             Sivilstand(
                                 periodeFom = nySivilstand.periodeTom.plusDays(1),
                                 periodeTom = null,
                                 sivilstandskode = motsattSivilstandskode(originalSivilstand.sivilstandskode),
-                                kilde = originalSivilstand.kilde,
+                                kilde = Kilde.MANUELL,
                             ),
                         )
                     }

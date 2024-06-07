@@ -1232,5 +1232,60 @@ class TestUtil {
                     originalSivilstand = null,
                 ),
             )
+
+        fun endreSivilstand() = SivilstandRequest(
+            innhentedeOffentligeOpplysninger = listOf(
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.UGIFT,
+                    gyldigFom = LocalDate.parse("1978-02-17"),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.now(),
+                    historisk = true,
+                ),
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.GIFT,
+                    gyldigFom = LocalDate.parse("2022-11-01"),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2022-03-12T12:00:00"),
+                    historisk = true,
+                ),
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.SEPARERT,
+                    gyldigFom = LocalDate.parse("2024-02-01"),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2022-03-12T12:00:00"),
+                    historisk = false,
+                ),
+            ),
+            behandledeSivilstandsopplysninger = listOf(
+                Sivilstand(
+                    periodeFom = LocalDate.of(2023, 1, 1),
+                    periodeTom = null,
+                    sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+            ),
+            endreSivilstand = EndreSivilstand(
+                typeEndring = TypeEndring.ENDRET,
+                nySivilstand = Sivilstand(
+                    periodeFom = LocalDate.of(2023, 4, 1),
+                    periodeTom = LocalDate.of(2023, 12, 31),
+                    sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
+                    kilde = Kilde.MANUELL,
+                ),
+                originalSivilstand = Sivilstand(
+                    periodeFom = LocalDate.of(2023, 1, 1),
+                    periodeTom = null,
+                    sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+            ),
+        )
     }
 }
