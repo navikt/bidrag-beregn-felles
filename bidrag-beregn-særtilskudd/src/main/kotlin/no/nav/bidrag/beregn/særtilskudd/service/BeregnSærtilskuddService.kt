@@ -1,58 +1,8 @@
 package no.nav.bidrag.beregn.særtilskudd.service
 
 import com.fasterxml.jackson.databind.JsonNode
-import no.nav.bidrag.beregn.bidragsevne.BidragsevneCore
-import no.nav.bidrag.beregn.bidragsevne.dto.BeregnBidragsevneGrunnlagCore
-import no.nav.bidrag.beregn.bidragsevne.dto.BeregnBidragsevneResultatCore
-import no.nav.bidrag.beregn.bpsandelsaertilskudd.BPsAndelSaertilskuddCore
-import no.nav.bidrag.beregn.bpsandelsaertilskudd.bo.Inntekt
-import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddGrunnlagCore
-import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddResultatCore
-import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.ResultatPeriodeCore
-import no.nav.bidrag.beregn.felles.dto.AvvikCore
-import no.nav.bidrag.beregn.felles.dto.IResultatPeriode
-import no.nav.bidrag.beregn.felles.dto.SjablonResultatGrunnlagCore
-import no.nav.bidrag.beregn.saertilskudd.SaertilskuddCore
-import no.nav.bidrag.beregn.saertilskudd.dto.BPsAndelSaertilskuddPeriodeCore
-import no.nav.bidrag.beregn.saertilskudd.dto.BeregnSaertilskuddGrunnlagCore
-import no.nav.bidrag.beregn.saertilskudd.dto.BeregnSaertilskuddResultatCore
-import no.nav.bidrag.beregn.saertilskudd.dto.BidragsevnePeriodeCore
-import no.nav.bidrag.beregn.saertilskudd.dto.SamvaersfradragPeriodeCore
-import no.nav.bidrag.beregn.saertilskudd.rest.SECURE_LOGGER
-import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonConsumer
-import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonListe
-import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException
-import no.nav.bidrag.beregn.saertilskudd.rest.extensions.valider
-import no.nav.bidrag.beregn.saertilskudd.rest.mapper.BPAndelSaertilskuddCoreMapper
-import no.nav.bidrag.beregn.saertilskudd.rest.mapper.BidragsevneCoreMapper
-import no.nav.bidrag.beregn.saertilskudd.rest.mapper.CoreMapper.Companion.grunnlagTilObjekt
-import no.nav.bidrag.beregn.saertilskudd.rest.mapper.CoreMapper.Companion.tilJsonNode
-import no.nav.bidrag.beregn.saertilskudd.rest.mapper.SaertilskuddCoreMapper
-import no.nav.bidrag.beregn.saertilskudd.rest.mapper.SamvaersfradragCoreMapper
-import no.nav.bidrag.beregn.samvaersfradrag.SamvaersfradragCore
-import no.nav.bidrag.beregn.samvaersfradrag.dto.BeregnSamvaersfradragGrunnlagCore
-import no.nav.bidrag.beregn.samvaersfradrag.dto.BeregnSamvaersfradragResultatCore
 import no.nav.bidrag.commons.web.HttpResponse
 import no.nav.bidrag.commons.web.HttpResponse.Companion.from
-import no.nav.bidrag.domain.enums.GrunnlagType
-import no.nav.bidrag.domain.enums.Rolle
-import no.nav.bidrag.domain.enums.resultatkoder.ResultatKodeSaertilskudd
-import no.nav.bidrag.domain.enums.sjablon.SjablonTallNavn
-import no.nav.bidrag.transport.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.beregning.felles.Grunnlag
-import no.nav.bidrag.transport.beregning.felles.Periode
-import no.nav.bidrag.transport.beregning.saertilskudd.BMInntekt
-import no.nav.bidrag.transport.beregning.saertilskudd.BPInntekt
-import no.nav.bidrag.transport.beregning.saertilskudd.BPsAndelSaertilskuddResultatPeriode
-import no.nav.bidrag.transport.beregning.saertilskudd.BeregnetTotalSaertilskuddResultat
-import no.nav.bidrag.transport.beregning.saertilskudd.BidragsevneResultatPeriode
-import no.nav.bidrag.transport.beregning.saertilskudd.ResultatBeregning
-import no.nav.bidrag.transport.beregning.saertilskudd.ResultatPeriode
-import no.nav.bidrag.transport.beregning.saertilskudd.SBInntekt
-import no.nav.bidrag.transport.beregning.saertilskudd.SamvaersfradragResultatPeriode
-import no.nav.bidrag.transport.beregning.saertilskudd.Samvaersklasse
-import no.nav.bidrag.transport.beregning.saertilskudd.SjablonResultatPeriode
-import no.nav.bidrag.transport.beregning.saertilskudd.SoknadsBarnInfo
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
@@ -60,7 +10,7 @@ import java.time.LocalDate
 import java.util.stream.Collectors
 
 @Service
-class BeregnSaertilskuddService(
+class BeregnSærtilskuddService(
     private val sjablonConsumer: SjablonConsumer,
     private val bidragsevneCore: BidragsevneCore,
     private val bpAndelSaertilskuddCore: BPsAndelSaertilskuddCore,
@@ -683,7 +633,7 @@ class BeregnSaertilskuddService(
     }
 
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(BeregnSaertilskuddService::class.java)
+        private val LOGGER = LoggerFactory.getLogger(BeregnSærtilskuddService::class.java)
 
         private fun mapDato(dato: LocalDate?): LocalDate {
             return if (dato!!.isAfter(LocalDate.parse("9999-12-31"))) LocalDate.parse("9999-12-31") else dato

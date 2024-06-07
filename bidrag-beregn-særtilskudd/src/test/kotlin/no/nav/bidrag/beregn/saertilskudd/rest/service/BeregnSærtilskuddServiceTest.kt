@@ -45,7 +45,7 @@ import java.time.LocalDate
 @ExtendWith(MockitoExtension::class)
 @DisplayName("BeregnSaertilskuddServiceTest")
 @ActiveProfiles(BidragBeregnSaertilskuddTest.TEST_PROFILE)
-internal class BeregnSaertilskuddServiceTest {
+internal class BeregnSærtilskuddServiceTest {
     @InjectMocks
     private lateinit var beregnSaertilskuddService: BeregnSaertilskuddService
 
