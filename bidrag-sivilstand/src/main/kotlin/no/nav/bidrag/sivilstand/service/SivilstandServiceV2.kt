@@ -177,7 +177,7 @@ internal class SivilstandServiceV2() {
         // Sjekker om det finnes forekomster uten datoinformasjon. For aktive/ikke-historiske forekomster kan også 'registrert' brukes
         // til å angi periodeFom.
         if (offentligePerioder.any {
-                it.gyldigFom == null && it.bekreftelsesdato == null && it.historisk == true
+                it.gyldigFom == null && it.bekreftelsesdato == null && it.historisk == true && it.type != SivilstandskodePDL.UGIFT
             } ||
             offentligePerioder.any {
                 it.gyldigFom == null && it.bekreftelsesdato == null && it.registrert == null && it.historisk == false

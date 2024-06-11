@@ -1,9 +1,21 @@
 package no.nav.bidrag.beregn.service
 
 import com.fasterxml.jackson.databind.JsonNode
+import no.nav.bidrag.beregn.bidragsevne.BidragsevneCore
+import no.nav.bidrag.beregn.bidragsevne.BidragsevneCoreMapper
+import no.nav.bidrag.beregn.bpsandelsaertilskudd.BPsAndelSaertilskuddCore
+import no.nav.bidrag.beregn.exception.UgyldigInputException
+import no.nav.bidrag.beregn.samvaersfradrag.SamvaersfradragCore
+import no.nav.bidrag.beregn.service.CoreMapper.Companion.grunnlagTilObjekt
+import no.nav.bidrag.beregn.særtilskudd.SaertilskuddCore
 import no.nav.bidrag.beregn.særtilskudd.dto.ResultatPeriodeCore
 import no.nav.bidrag.commons.web.HttpResponse
 import no.nav.bidrag.commons.web.HttpResponse.Companion.from
+import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
+import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.beregning.saertilskudd.BeregnetTotalSaertilskuddResultat
+import no.nav.bidrag.transport.behandling.beregning.saertilskudd.Samvaersklasse
+import no.nav.bidrag.transport.behandling.beregning.saertilskudd.SoknadsBarnInfo
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
@@ -12,7 +24,7 @@ import java.util.stream.Collectors
 
 @Service
 class BeregnSærtilskuddService(
-    private val sjablonConsumer: SjablonConsumer,
+//    private val sjablonConsumer: SjablonConsumer,
     private val bidragsevneCore: BidragsevneCore,
     private val bpAndelSaertilskuddCore: BPsAndelSaertilskuddCore,
     private val samvaersfradragCore: SamvaersfradragCore,
@@ -42,13 +54,13 @@ class BeregnSærtilskuddService(
     private fun validerSoknadsbarn(beregnGrunnlag: BeregnGrunnlag): SoknadsBarnInfo {
         val soknadsbarnInfoGrunnlagListe =
             beregnGrunnlag.grunnlagListe
-                ?.filter { grunnlag -> grunnlag.type == GrunnlagType.SOKNADSBARN_INFO }?.toList()
+                ?.filter { grunnlag -> grunnlag.type == Grunnlagstype.PERSON_SØKNADSBARN }?.toList()
         if (soknadsbarnInfoGrunnlagListe?.size != 1) {
             throw UgyldigInputException("Det må være nøyaktig ett søknadsbarn i beregningsgrunnlaget")
         }
         val soknadsBarnInfo = grunnlagTilObjekt(soknadsbarnInfoGrunnlagListe[0], SoknadsBarnInfo::class.java)
         beregnGrunnlag.grunnlagListe!!
-            .filter { grunnlag -> grunnlag.type == GrunnlagType.SAMVAERSKLASSE }
+            .filter { grunnlag -> grunnlag.type == Grunnlagstype.SAMVÆRSKLASSE }
             .map { grunnlag: Grunnlag? ->
                 grunnlagTilObjekt(
                     grunnlag!!,

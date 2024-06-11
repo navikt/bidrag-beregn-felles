@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.service
+package no.nav.bidrag.beregn.bidragsevne
 
 import no.nav.bidrag.beregn.bidragsevne.dto.AntallBarnIEgetHusholdPeriodeCore
 import no.nav.bidrag.beregn.bidragsevne.dto.BeregnBidragsevneGrunnlagCore
@@ -10,13 +10,9 @@ import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonInnholdCore
 import no.nav.bidrag.beregn.core.dto.SjablonNokkelCore
 import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
-import no.nav.bidrag.beregn.felles.dto.PeriodeCore
-import no.nav.bidrag.beregn.felles.dto.SjablonInnholdCore
-import no.nav.bidrag.beregn.felles.dto.SjablonNokkelCore
-import no.nav.bidrag.beregn.felles.dto.SjablonPeriodeCore
-import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Bidragsevne
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonListe
-import no.nav.bidrag.beregn.saertilskudd.rest.extensions.tilCore
+import no.nav.bidrag.beregn.service.CoreMapper
+import no.nav.bidrag.beregn.service.tilCore
 import no.nav.bidrag.beregn.særtilskudd.bo.Bidragsevne
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.rolle.Rolle
@@ -30,13 +26,6 @@ import no.nav.bidrag.transport.behandling.beregning.saertilskudd.Bostatus
 import no.nav.bidrag.transport.behandling.beregning.saertilskudd.InntektRolle
 import no.nav.bidrag.transport.behandling.beregning.saertilskudd.Saerfradrag
 import no.nav.bidrag.transport.behandling.beregning.saertilskudd.Skatteklasse
-import no.nav.bidrag.transport.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.beregning.saertilskudd.BPInntekt
-import no.nav.bidrag.transport.beregning.saertilskudd.BarnIHusstand
-import no.nav.bidrag.transport.beregning.saertilskudd.Bostatus
-import no.nav.bidrag.transport.beregning.saertilskudd.InntektRolle
-import no.nav.bidrag.transport.beregning.saertilskudd.Saerfradrag
-import no.nav.bidrag.transport.beregning.saertilskudd.Skatteklasse
 import java.util.*
 
 object BidragsevneCoreMapper : CoreMapper() {

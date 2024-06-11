@@ -20,7 +20,7 @@
         <kotest.version>5.8.1</kotest.version>
         <swagger.version>2.2.22</swagger.version>
         <ktlint.version>1.2.1</ktlint.version>
-        <bidrag-felles.version>2024.05.31.103510</bidrag-felles.version>
+        <bidrag-felles.version>2024.06.11.125343</bidrag-felles.version>
         <spring-boot.version>3.2.5</spring-boot.version>
         <kotlin-logging-jvm.version>6.0.9</kotlin-logging-jvm.version>
         <mockito-kotlin.version>5.3.1</mockito-kotlin.version>
