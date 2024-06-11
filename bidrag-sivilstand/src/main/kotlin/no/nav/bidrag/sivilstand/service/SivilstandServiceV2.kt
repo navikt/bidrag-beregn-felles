@@ -201,6 +201,11 @@ internal class SivilstandServiceV2() {
             val periodeFom = if (sivilstand.historisk == true) {
                 sivilstand.gyldigFom
                     ?: sivilstand.bekreftelsesdato
+                    ?: if (sivilstand.type == SivilstandskodePDL.UGIFT) {
+                        sivilstand.registrert?.toLocalDate()
+                    } else {
+                        null
+                    }
             } else {
                 sivilstand.gyldigFom
                     ?: sivilstand.bekreftelsesdato
