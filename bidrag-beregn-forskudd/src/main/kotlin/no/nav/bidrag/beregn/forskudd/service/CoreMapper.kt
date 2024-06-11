@@ -30,6 +30,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBase
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.time.YearMonth
 
 internal object CoreMapper {
     private val MAX_DATO = LocalDate.parse("9999-12-31")
@@ -122,7 +123,7 @@ internal object CoreMapper {
                     periode =
                     PeriodeCore(
                         datoFom = it.innhold.periode.toDatoperiode().fom,
-                        datoTil = it.innhold.periode.toDatoperiode().til,
+                        datoTil = mapDatoTil(it.innhold.periode, beregnForskuddGrunnlag.periode.til),
                     ),
                     kode = it.innhold.bostatus.name,
                 )
@@ -154,7 +155,7 @@ internal object CoreMapper {
                             periode =
                             PeriodeCore(
                                 datoFom = it.innhold.periode.toDatoperiode().fom,
-                                datoTil = it.innhold.periode.toDatoperiode().til,
+                                datoTil = mapDatoTil(it.innhold.periode, beregnForskuddGrunnlag.periode.til),
                             ),
                             beløp = if (erKapitalinntekt(it.innhold.inntektsrapportering)) {
                                 justerKapitalinntekt(
@@ -188,7 +189,7 @@ internal object CoreMapper {
                     periode =
                     PeriodeCore(
                         datoFom = it.innhold.periode.toDatoperiode().fom,
-                        datoTil = it.innhold.periode.toDatoperiode().til,
+                        datoTil = mapDatoTil(it.innhold.periode, beregnForskuddGrunnlag.periode.til),
                     ),
                     kode = it.innhold.sivilstand.name,
                 )
@@ -212,7 +213,7 @@ internal object CoreMapper {
                             periode =
                             PeriodeCore(
                                 datoFom = it.innhold.periode.toDatoperiode().fom,
-                                datoTil = it.innhold.periode.toDatoperiode().til,
+                                datoTil = mapDatoTil(it.innhold.periode, beregnForskuddGrunnlag.periode.til),
                             ),
                             antall = 1,
                             grunnlagsreferanseListe = emptyList(),
@@ -227,6 +228,15 @@ internal object CoreMapper {
             throw IllegalArgumentException(
                 "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.BOSTATUS_PERIODE er ikke gyldig: " + e.message,
             )
+        }
+    }
+
+    // Setter til-dato for grunnlaget til null hvis det er lik eller etter beregnDatoTil
+    private fun mapDatoTil(grunnlagPeriode: ÅrMånedsperiode, beregnPeriodeTil: YearMonth?): LocalDate? {
+        return if (grunnlagPeriode.til == null || (beregnPeriodeTil != null && (!grunnlagPeriode.til!!.isBefore(beregnPeriodeTil)))) {
+            null
+        } else {
+            grunnlagPeriode.toDatoperiode().til
         }
     }
 
