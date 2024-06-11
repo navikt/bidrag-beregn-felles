@@ -801,4 +801,24 @@ internal class SivilstandServiceV2Test {
             resultat[2].kilde shouldBe Kilde.MANUELL
         }
     }
+
+    @Test
+    fun `Test endreVirkningstidspunktFremITid`() {
+        sivilstandServiceV2 = SivilstandServiceV2()
+        val mottattSivilstand = TestUtil.endreVirkningstidspunktFremITid()
+
+        val virkningstidspunkt1 = LocalDate.of(2023, 1, 1)
+        val resultat = sivilstandServiceV2.beregn(virkningstidspunkt1, mottattSivilstand)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 1
+
+            // Første periode får kilde satt til Offentlig pga matchende offentlig periode
+            resultat[0].periodeFom shouldBe LocalDate.of(2023, 1, 1)
+            resultat[0].periodeTom shouldBe null
+            resultat[0].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
 }

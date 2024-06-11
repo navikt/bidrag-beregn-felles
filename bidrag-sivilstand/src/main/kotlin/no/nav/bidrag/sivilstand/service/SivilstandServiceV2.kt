@@ -65,13 +65,13 @@ internal class SivilstandServiceV2() {
 
         if (sivilstandRequest.endreSivilstand == null) {
             // 1
-            if (sivilstandRequest.behandledeSivilstandsopplysninger.isNotEmpty()) {
+            if (behandledeOpplysninger.isNotEmpty()) {
                 // 1a + 1b
-                // Virkningstidspunkt er endret og/eller offentlige perioder er oppdatert og perioder i behandledeSivilstandsopplysninger skal
+                // Virkningstidspunkt er endret og/eller offentlige perioder er oppdatert og perioder i behandledeOpplysninger skal
                 // sjekkes mot disse og evt få kilde = Offentlig. Hvis virkningstidspunkt er endret tilbake i tid så skal hullet i tidslinjen fylles
                 // med offentlige opplysninger.
                 val sammenslåttListe =
-                    slåSammenPrimærOgSekundærperioder(virkningstidspunkt, sivilstandRequest.behandledeSivilstandsopplysninger, offentligePerioder)
+                    slåSammenPrimærOgSekundærperioder(virkningstidspunkt, behandledeOpplysninger, offentligePerioder)
 
                 return sammenslåttListe.map {
                     Sivilstand(

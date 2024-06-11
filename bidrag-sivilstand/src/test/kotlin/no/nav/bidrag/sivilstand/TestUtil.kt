@@ -1287,5 +1287,30 @@ class TestUtil {
                 ),
             ),
         )
+
+        fun endreVirkningstidspunktFremITid() = SivilstandRequest(
+            innhentedeOffentligeOpplysninger =
+            listOf(
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.UGIFT,
+                    gyldigFom = LocalDate.of(2017, 3, 7),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = null,
+                    historisk = false,
+                ),
+            ),
+            behandledeSivilstandsopplysninger =
+            listOf(
+                Sivilstand(
+                    periodeFom = LocalDate.of(2020, 9, 1),
+                    periodeTom = null,
+                    sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+            ),
+            endreSivilstand = null,
+        )
     }
 }
