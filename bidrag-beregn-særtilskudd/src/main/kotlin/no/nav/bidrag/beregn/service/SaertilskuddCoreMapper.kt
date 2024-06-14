@@ -1,19 +1,19 @@
 package no.nav.bidrag.beregn.service
 
-import no.nav.bidrag.beregn.bidragsevne.dto.BeregnBidragsevneResultatCore
-import no.nav.bidrag.beregn.bidragsevne.dto.ResultatPeriodeCore
-import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddResultatCore
+import no.nav.bidrag.beregn.core.bidragsevne.dto.BeregnBidragsevneResultatCore
+import no.nav.bidrag.beregn.core.bidragsevne.dto.ResultatPeriodeCore
+import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddResultatCore
+import no.nav.bidrag.beregn.core.samvaersfradrag.dto.BeregnSamvaersfradragResultatCore
+import no.nav.bidrag.beregn.core.samvaersfradrag.dto.ResultatBeregningCore
+import no.nav.bidrag.beregn.core.særtilskudd.dto.BPsAndelSaertilskuddPeriodeCore
+import no.nav.bidrag.beregn.core.særtilskudd.dto.BeregnSaertilskuddGrunnlagCore
+import no.nav.bidrag.beregn.core.særtilskudd.dto.BidragsevnePeriodeCore
+import no.nav.bidrag.beregn.core.særtilskudd.dto.LopendeBidragPeriodeCore
+import no.nav.bidrag.beregn.core.særtilskudd.dto.SamvaersfradragPeriodeCore
 import no.nav.bidrag.beregn.felles.dto.PeriodeCore
 import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonListe
 import no.nav.bidrag.beregn.saertilskudd.rest.extensions.tilPeriodeCore
 import no.nav.bidrag.beregn.saertilskudd.rest.extensions.valider
-import no.nav.bidrag.beregn.samvaersfradrag.dto.BeregnSamvaersfradragResultatCore
-import no.nav.bidrag.beregn.samvaersfradrag.dto.ResultatBeregningCore
-import no.nav.bidrag.beregn.særtilskudd.dto.BPsAndelSaertilskuddPeriodeCore
-import no.nav.bidrag.beregn.særtilskudd.dto.BeregnSaertilskuddGrunnlagCore
-import no.nav.bidrag.beregn.særtilskudd.dto.BidragsevnePeriodeCore
-import no.nav.bidrag.beregn.særtilskudd.dto.LopendeBidragPeriodeCore
-import no.nav.bidrag.beregn.særtilskudd.dto.SamvaersfradragPeriodeCore
 import no.nav.bidrag.domain.enums.GrunnlagType
 import no.nav.bidrag.transport.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.beregning.saertilskudd.LopendeBidrag
@@ -46,7 +46,7 @@ object SaertilskuddCoreMapper : CoreMapper() {
         val bpAndelSaertilskuddPeriodeCoreListe =
             beregnBPsAndelSaertilskuddResultatCore.resultatPeriodeListe
                 .stream()
-                .map { (periode, resultatBeregning): no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.ResultatPeriodeCore ->
+                .map { (periode, resultatBeregning): no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.ResultatPeriodeCore ->
                     BPsAndelSaertilskuddPeriodeCore(
                         byggReferanseForDelberegning("Delberegning_BP_AndelSaertilskudd", periode.datoFom),
                         PeriodeCore(periode.datoFom, periode.datoTil),
@@ -61,7 +61,7 @@ object SaertilskuddCoreMapper : CoreMapper() {
         val samvaersfradragPeriodeCoreListe =
             beregnSamvaersfradragResultatCore.resultatPeriodeListe
                 .stream()
-                .flatMap { (periode, resultatBeregningListe): no.nav.bidrag.beregn.samvaersfradrag.dto.ResultatPeriodeCore ->
+                .flatMap { (periode, resultatBeregningListe): no.nav.bidrag.beregn.core.samvaersfradrag.dto.ResultatPeriodeCore ->
                     resultatBeregningListe
                         .stream()
                         .map { (barnPersonId, resultatSamvaersfradragBelop): ResultatBeregningCore ->
@@ -108,9 +108,8 @@ object SaertilskuddCoreMapper : CoreMapper() {
     }
 
     // Bygger referanse for delberegning
-    private fun byggReferanseForDelberegning(delberegning: String, dato: LocalDate): String {
-        return delberegning + "_" + dato.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
-    }
+    private fun byggReferanseForDelberegning(delberegning: String, dato: LocalDate): String =
+        delberegning + "_" + dato.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
 }
 
 fun LopendeBidrag.tilCore(referanse: String): LopendeBidragPeriodeCore {

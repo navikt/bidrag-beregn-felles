@@ -1,13 +1,13 @@
 package no.nav.bidrag.beregn.service
 
-import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonListe
-import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException
+import no.nav.bidrag.beregn.core.felles.bo.SjablonListe
+import no.nav.bidrag.beregn.core.samvaersfradrag.dto.BeregnSamvaersfradragGrunnlagCore
+import no.nav.bidrag.beregn.core.samvaersfradrag.dto.SamvaersklassePeriodeCore
+import no.nav.bidrag.beregn.exception.UgyldigInputException
 import no.nav.bidrag.beregn.saertilskudd.rest.extensions.tilPeriodeCore
-import no.nav.bidrag.beregn.samvaersfradrag.dto.BeregnSamvaersfradragGrunnlagCore
-import no.nav.bidrag.beregn.samvaersfradrag.dto.SamvaersklassePeriodeCore
 import no.nav.bidrag.domain.enums.GrunnlagType
-import no.nav.bidrag.transport.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.beregning.saertilskudd.Samvaersklasse
+import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.beregning.saertilskudd.Samvaersklasse
 
 object SamvaersfradragCoreMapper : CoreMapper() {
     fun mapSamvaersfradragGrunnlagTilCore(beregnGrunnlag: BeregnGrunnlag, sjablonListe: SjablonListe): BeregnSamvaersfradragGrunnlagCore {

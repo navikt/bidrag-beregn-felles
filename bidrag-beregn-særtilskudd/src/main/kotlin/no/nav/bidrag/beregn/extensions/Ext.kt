@@ -1,14 +1,14 @@
 package no.nav.bidrag.beregn.extensions
 
-import no.nav.bidrag.beregn.bidragsevne.dto.AntallBarnIEgetHusholdPeriodeCore
-import no.nav.bidrag.beregn.bidragsevne.dto.BostatusPeriodeCore
-import no.nav.bidrag.beregn.bidragsevne.dto.InntektPeriodeCore
-import no.nav.bidrag.beregn.bidragsevne.dto.SaerfradragPeriodeCore
-import no.nav.bidrag.beregn.bidragsevne.dto.SkatteklassePeriodeCore
-import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.NettoSaertilskuddPeriodeCore
+import no.nav.bidrag.beregn.core.bidragsevne.dto.AntallBarnIEgetHusholdPeriodeCore
+import no.nav.bidrag.beregn.core.bidragsevne.dto.BostatusPeriodeCore
+import no.nav.bidrag.beregn.core.bidragsevne.dto.InntektPeriodeCore
+import no.nav.bidrag.beregn.core.bidragsevne.dto.SaerfradragPeriodeCore
+import no.nav.bidrag.beregn.core.bidragsevne.dto.SkatteklassePeriodeCore
+import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.NettoSaertilskuddPeriodeCore
+import no.nav.bidrag.beregn.core.samvaersfradrag.dto.SamvaersklassePeriodeCore
 import no.nav.bidrag.beregn.felles.dto.PeriodeCore
 import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException
-import no.nav.bidrag.beregn.samvaersfradrag.dto.SamvaersklassePeriodeCore
 import no.nav.bidrag.transport.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.beregning.felles.Grunnlag
 import no.nav.bidrag.transport.beregning.saertilskudd.BMInntekt
@@ -51,7 +51,7 @@ fun InntektBase.tilInntektPeriodeCore(referanse: String): InntektPeriodeCore {
     )
 }
 
-fun InntektBase.tilInntektPeriodeCoreBPsAndelSaertilskudd(referanse: String): no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.InntektPeriodeCore {
+fun InntektBase.tilInntektPeriodeCoreBPsAndelSaertilskudd(referanse: String): no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.InntektPeriodeCore {
     validerInntekt()
     return no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.InntektPeriodeCore(
         referanse,
@@ -83,7 +83,7 @@ fun BMInntekt.valider() {
     if (skatteklasse2 == null) throw UgyldigInputException("skatteklasse2 kan ikke være null")
 }
 
-fun BMInntekt.tilCore(referanse: String): no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.InntektPeriodeCore {
+fun BMInntekt.tilCore(referanse: String): no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.InntektPeriodeCore {
     valider()
     return no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.InntektPeriodeCore(
         referanse,
@@ -100,7 +100,7 @@ fun SBInntekt.valider() {
     if (soknadsbarnId == null) throw UgyldigInputException("soknadsbarnId kan ikke være null")
 }
 
-fun SBInntekt.tilCore(referanse: String): no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.InntektPeriodeCore {
+fun SBInntekt.tilCore(referanse: String): no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.InntektPeriodeCore {
     valider()
     return tilInntektPeriodeCoreBPsAndelSaertilskudd(referanse)
 }

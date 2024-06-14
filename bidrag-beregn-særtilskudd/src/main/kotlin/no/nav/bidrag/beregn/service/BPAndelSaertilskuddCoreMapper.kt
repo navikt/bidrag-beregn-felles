@@ -1,20 +1,17 @@
 package no.nav.bidrag.beregn.service
 
-import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddGrunnlagCore
-import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.InntektPeriodeCore
-import no.nav.bidrag.beregn.bpsandelsaertilskudd.dto.NettoSaertilskuddPeriodeCore
-import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonListe
-import no.nav.bidrag.beregn.saertilskudd.rest.extensions.tilCore
-import no.nav.bidrag.beregn.saertilskudd.rest.extensions.tilInntektPeriodeCoreBPsAndelSaertilskudd
-import no.nav.bidrag.domain.enums.GrunnlagType
-import no.nav.bidrag.domain.enums.Rolle
-import no.nav.bidrag.domain.enums.sjablon.SjablonTallNavn
-import no.nav.bidrag.transport.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.beregning.saertilskudd.BMInntekt
-import no.nav.bidrag.transport.beregning.saertilskudd.BPInntekt
-import no.nav.bidrag.transport.beregning.saertilskudd.InntektRolle
-import no.nav.bidrag.transport.beregning.saertilskudd.NettoSaertilskudd
-import no.nav.bidrag.transport.beregning.saertilskudd.SBInntekt
+import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddGrunnlagCore
+import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.InntektPeriodeCore
+import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.NettoSaertilskuddPeriodeCore
+import no.nav.bidrag.beregn.core.felles.bo.SjablonListe
+import no.nav.bidrag.domene.enums.rolle.Rolle
+import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.beregning.saertilskudd.BMInntekt
+import no.nav.bidrag.transport.behandling.beregning.saertilskudd.BPInntekt
+import no.nav.bidrag.transport.behandling.beregning.saertilskudd.InntektRolle
+import no.nav.bidrag.transport.behandling.beregning.saertilskudd.NettoSaertilskudd
+import no.nav.bidrag.transport.behandling.beregning.saertilskudd.SBInntekt
 
 object BPAndelSaertilskuddCoreMapper : CoreMapper() {
     fun mapBPsAndelSaertilskuddGrunnlagTilCore(
@@ -38,7 +35,7 @@ object BPAndelSaertilskuddCoreMapper : CoreMapper() {
                     } else if (rolle == Rolle.BIDRAGSMOTTAKER) {
                         val bmInntekt = grunnlagTilObjekt(grunnlag, BMInntekt::class.java)
                         inntektBMPeriodeListe.add(bmInntekt.tilCore(grunnlag.referanse!!))
-                    } else if (rolle == Rolle.SOKNADSBARN) {
+                    } else if (rolle == Rolle.SØKNADSBARN) {
                         val sbInntekt = grunnlagTilObjekt(grunnlag, SBInntekt::class.java)
                         inntektBBPeriodeListe.add(sbInntekt.tilCore(grunnlag.referanse!!))
                     }
@@ -56,7 +53,7 @@ object BPAndelSaertilskuddCoreMapper : CoreMapper() {
         // Hent aktuelle sjabloner
         val sjablonPeriodeCoreListe =
             mapSjablonSjablontall(
-                sjablonListe.sjablonSjablontallResponse,
+                sjablonListe.sjablontallResponse,
                 BP_ANDEL_SAERTILSKUDD,
                 beregnGrunnlag,
                 sjablontallMap,
