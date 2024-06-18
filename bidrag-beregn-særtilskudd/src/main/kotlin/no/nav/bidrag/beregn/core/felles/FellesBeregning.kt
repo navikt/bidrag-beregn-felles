@@ -1,8 +1,8 @@
 package no.nav.bidrag.beregn.core.felles
 
-import no.nav.bidrag.beregn.felles.bo.Periode
-import no.nav.bidrag.beregn.felles.bo.SjablonPeriode
-import no.nav.bidrag.beregn.felles.bo.SjablonPeriodeNavnVerdi
+import no.nav.bidrag.beregn.core.bo.Periode
+import no.nav.bidrag.beregn.core.bo.SjablonPeriode
+import no.nav.bidrag.beregn.core.bo.SjablonPeriodeNavnVerdi
 import java.math.BigDecimal
 import java.time.LocalDate
 

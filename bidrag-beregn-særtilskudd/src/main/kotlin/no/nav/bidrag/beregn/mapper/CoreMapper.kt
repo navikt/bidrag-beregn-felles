@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.service
+package no.nav.bidrag.beregn.mapper
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.JsonNode
@@ -14,6 +14,9 @@ import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
 import no.nav.bidrag.beregn.core.felles.dto.BarnIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.core.felles.dto.DelberegningSærtilskudd
 import no.nav.bidrag.beregn.core.felles.dto.InntektPeriodeCore
+import no.nav.bidrag.beregn.core.util.InntektUtil.erKapitalinntekt
+import no.nav.bidrag.beregn.core.util.InntektUtil.justerKapitalinntekt
+import no.nav.bidrag.beregn.exception.UgyldigInputException
 import no.nav.bidrag.commons.service.sjablon.Samværsfradrag
 import no.nav.bidrag.commons.service.sjablon.Sjablontall
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -23,6 +26,7 @@ import no.nav.bidrag.domene.enums.sjablon.SjablonNøkkelNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåFremmedReferanse
@@ -30,22 +34,22 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningref
 import java.math.BigDecimal
 import java.util.*
 
-abstract class CoreMapper {
+internal object CoreMapper {
 
-    private fun mapInntekt(
-        beregnForskuddGrunnlag: BeregnGrunnlag,
+    fun mapInntekt(
+        beregnSærtilskuddGrunnlag: BeregnGrunnlag,
         referanseBidragsmottaker: String,
         innslagKapitalinntektSjablonverdi: BigDecimal,
     ): List<InntektPeriodeCore> {
         try {
             val inntektGrunnlagListe =
-                beregnForskuddGrunnlag.grunnlagListe
+                beregnSærtilskuddGrunnlag.grunnlagListe
                     .filtrerOgKonverterBasertPåFremmedReferanse<InntektsrapporteringPeriode>(
                         grunnlagType = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
                         referanse = referanseBidragsmottaker,
                     )
                     .filter { it.innhold.valgt }
-                    .filter { it.innhold.gjelderBarn == null || it.innhold.gjelderBarn == beregnForskuddGrunnlag.søknadsbarnReferanse }
+                    .filter { it.innhold.gjelderBarn == null || it.innhold.gjelderBarn == beregnSærtilskuddGrunnlag.søknadsbarnReferanse }
                     .map {
                         InntektPeriodeCore(
                             referanse = it.referanse,
@@ -54,16 +58,56 @@ abstract class CoreMapper {
                                 datoFom = it.innhold.periode.toDatoperiode().fom,
                                 datoTil = it.innhold.periode.toDatoperiode().til,
                             ),
-                            beløp = it.innhold.beløp,
+                            beløp = if (erKapitalinntekt(it.innhold.inntektsrapportering)) {
+                                justerKapitalinntekt(
+                                    beløp = it.innhold.beløp,
+                                    innslagKapitalinntektSjablonverdi = innslagKapitalinntektSjablonverdi,
+                                )
+                            } else {
+                                it.innhold.beløp
+                            },
                             grunnlagsreferanseListe = emptyList(),
                         )
                     }
-            return akkumulerOgPeriodiser(inntektGrunnlagListe, beregnForskuddGrunnlag.søknadsbarnReferanse, InntektPeriodeCore::class.java)
+            return akkumulerOgPeriodiser(inntektGrunnlagListe, beregnSærtilskuddGrunnlag.søknadsbarnReferanse, InntektPeriodeCore::class.java)
         } catch (e: Exception) {
             throw IllegalArgumentException(
                 "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE er ikke gyldig: " +
                     e.message,
             )
+        }
+    }
+
+    // TODO Bør det lages delberegninger uansett om det ikke er inntekter og/eller hjemmeboende barn i en periode (i så fall mappe ut 0 eller null)?
+    // TODO Søknadsbarnet vil f.eks. alltid ha en bostatus selv om det ikke bor hjemme
+
+    // Lager en gruppert liste hvor grunnlaget er akkumulert pr bruddperiode, med en liste over tilhørende grunnlagsreferanser
+    private fun <T : DelberegningBidragsevne> akkumulerOgPeriodiser(grunnlagListe: List<T>, søknadsbarnReferanse: String, clazz: Class<T>): List<T> {
+        // Lager unik, sortert liste over alle bruddatoer og legger evt. null-forekomst bakerst
+        val bruddatoListe = grunnlagListe
+            .flatMap { listOf(it.periode.datoFom, it.periode.datoTil) }
+            .distinct()
+            .sortedBy { it }
+            .sortedWith(compareBy { it == null })
+
+        // Slå sammen brudddatoer til en liste med perioder (fom-/til-dato)
+        val periodeListe = bruddatoListe
+            .zipWithNext()
+            .map { Periode(it.first!!, it.second) }
+
+        // Returnerer en gruppert og akkumulert liste, med en liste over tilhørende grunnlagsreferanser, pr bruddperiode
+        return when (clazz) {
+            InntektPeriodeCore::class.java -> {
+                akkumulerOgPeriodiserInntekter(grunnlagListe as List<InntektPeriodeCore>, periodeListe, søknadsbarnReferanse) as List<T>
+            }
+
+            BarnIHusstandenPeriodeCore::class.java -> {
+                akkumulerOgPeriodiserBarnIHusstanden(grunnlagListe as List<BarnIHusstandenPeriodeCore>, periodeListe, søknadsbarnReferanse) as List<T>
+            }
+
+            else -> {
+                emptyList()
+            }
         }
     }
 

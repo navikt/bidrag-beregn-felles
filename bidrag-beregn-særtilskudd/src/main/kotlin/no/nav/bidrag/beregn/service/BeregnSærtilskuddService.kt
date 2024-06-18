@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import no.nav.bidrag.beregn.core.bidragsevne.BidragsevneCore
-import no.nav.bidrag.beregn.core.bidragsevne.BidragsevneCoreMapper
 import no.nav.bidrag.beregn.core.bidragsevne.bo.Inntekt
 import no.nav.bidrag.beregn.core.bidragsevne.dto.BeregnBidragsevneGrunnlagCore
 import no.nav.bidrag.beregn.core.bidragsevne.dto.BeregnBidragsevneResultatCore
@@ -30,8 +29,12 @@ import no.nav.bidrag.beregn.core.særtilskudd.dto.BeregnSaertilskuddResultatCore
 import no.nav.bidrag.beregn.core.særtilskudd.dto.ResultatPeriodeCore
 import no.nav.bidrag.beregn.core.særtilskudd.dto.SamvaersfradragPeriodeCore
 import no.nav.bidrag.beregn.exception.UgyldigInputException
-import no.nav.bidrag.beregn.service.CoreMapper.Companion.grunnlagTilObjekt
-import no.nav.bidrag.beregn.service.CoreMapper.Companion.tilJsonNode
+import no.nav.bidrag.beregn.mapper.BPAndelSaertilskuddCoreMapper
+import no.nav.bidrag.beregn.mapper.BidragsevneCoreMapper
+import no.nav.bidrag.beregn.mapper.CoreMapper.Companion.grunnlagTilObjekt
+import no.nav.bidrag.beregn.mapper.CoreMapper.Companion.tilJsonNode
+import no.nav.bidrag.beregn.mapper.SaertilskuddCoreMapper
+import no.nav.bidrag.beregn.mapper.SamvaersfradragCoreMapper
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -42,7 +45,6 @@ import no.nav.bidrag.transport.behandling.beregning.saertilskudd.BPsAndelSaertil
 import no.nav.bidrag.transport.behandling.beregning.saertilskudd.BeregnetTotalSaertilskuddResultat
 import no.nav.bidrag.transport.behandling.beregning.saertilskudd.BidragsevneResultatPeriode
 import no.nav.bidrag.transport.behandling.beregning.saertilskudd.SamvaersfradragResultatPeriode
-import no.nav.bidrag.transport.behandling.beregning.saertilskudd.Samvaersklasse
 import no.nav.bidrag.transport.behandling.beregning.saertilskudd.SjablonResultatPeriode
 import no.nav.bidrag.transport.behandling.beregning.saertilskudd.SoknadsBarnInfo
 import org.slf4j.LoggerFactory
@@ -94,22 +96,23 @@ internal class BeregnSærtilskuddService(
             throw UgyldigInputException("Det må være nøyaktig ett søknadsbarn i beregningsgrunnlaget")
         }
         val soknadsBarnInfo = grunnlagTilObjekt(soknadsbarnInfoGrunnlagListe[0], SoknadsBarnInfo::class.java)
-        beregnGrunnlag.grunnlagListe!!
-            .filter { grunnlag -> grunnlag.type == Grunnlagstype.SAMVÆRSKLASSE }
-            .map { grunnlag: Grunnlag? ->
-                grunnlagTilObjekt(
-                    grunnlag!!,
-                    Samvaersklasse::class.java,
-                )
-            }
-            .forEach { samvaersklasse: Samvaersklasse ->
-                samvaersklasse.valider()
-                if (samvaersklasse.soknadsbarnId == soknadsBarnInfo.id && samvaersklasse.soknadsbarnFodselsdato != soknadsBarnInfo.fodselsdato) {
-                    throw UgyldigInputException(
-                        "Fødselsdato for søknadsbarn stemmer ikke overens med fødselsdato til barnet i Samværsklasse-grunnlaget",
-                    )
-                }
-            }
+//
+//        beregnGrunnlag.grunnlagListe!!
+//            .filter { grunnlag -> grunnlag.type == Grunnlagstype.SAMVÆRSKLASSE }
+//            .map { grunnlag: Grunnlag? ->
+//                grunnlagTilObjekt(
+//                    grunnlag!!,
+//                    Samvaersklasse::class.java,
+//                )
+//            }
+//            .forEach { samvaersklasse: Samvaersklasse ->
+//                samvaersklasse.valider()
+//                if (samvaersklasse.soknadsbarnId == soknadsBarnInfo.id && samvaersklasse.soknadsbarnFodselsdato != soknadsBarnInfo.fodselsdato) {
+//                    throw UgyldigInputException(
+//                        "Fødselsdato for søknadsbarn stemmer ikke overens med fødselsdato til barnet i Samværsklasse-grunnlaget",
+//                    )
+//                }
+//            }
         return soknadsBarnInfo
     }
 
@@ -478,10 +481,11 @@ internal class BeregnSærtilskuddService(
                 "Bidragsevne - grunnlag for beregning:" + System.lineSeparator() +
                     "beregnDatoFra= " + bidragsevneGrunnlagTilCore.beregnDatoFra + System.lineSeparator() +
                     "beregnDatoTil= " + bidragsevneGrunnlagTilCore.beregnDatoTil + System.lineSeparator() +
-                    "antallBarnIEgetHusholdPeriodeListe= " + bidragsevneGrunnlagTilCore.antallBarnIEgetHusholdPeriodeListe + System.lineSeparator() +
+                    "antallBarnIEgetHusholdPeriodeListe= " + bidragsevneGrunnlagTilCore.antallBarnIEgetHusholdPeriodeCoreListe +
+                    System.lineSeparator() +
                     "bostatusPeriodeListe= " + bidragsevneGrunnlagTilCore.bostatusPeriodeListe + System.lineSeparator() +
                     "inntektPeriodeListe= " + bidragsevneGrunnlagTilCore.inntektPeriodeListe + System.lineSeparator() +
-                    "særfradragPeriodeListe= " + bidragsevneGrunnlagTilCore.saerfradragPeriodeListe + System.lineSeparator() +
+                    "særfradragPeriodeListe= " + bidragsevneGrunnlagTilCore.særfradragPeriodeListe + System.lineSeparator() +
                     "skatteklassePeriodeListe= " + bidragsevneGrunnlagTilCore.skatteklassePeriodeListe,
             )
             throw UgyldigInputException(

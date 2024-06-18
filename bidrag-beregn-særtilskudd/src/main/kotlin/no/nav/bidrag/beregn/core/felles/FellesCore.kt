@@ -1,16 +1,16 @@
 package no.nav.bidrag.beregn.core.felles
 
-import no.nav.bidrag.beregn.felles.bo.Avvik
-import no.nav.bidrag.beregn.felles.bo.Periode
-import no.nav.bidrag.beregn.felles.bo.Sjablon
-import no.nav.bidrag.beregn.felles.bo.SjablonInnhold
-import no.nav.bidrag.beregn.felles.bo.SjablonNokkel
-import no.nav.bidrag.beregn.felles.bo.SjablonPeriode
-import no.nav.bidrag.beregn.felles.bo.SjablonPeriodeNavnVerdi
-import no.nav.bidrag.beregn.felles.dto.AvvikCore
-import no.nav.bidrag.beregn.felles.dto.PeriodeCore
-import no.nav.bidrag.beregn.felles.dto.SjablonPeriodeCore
-import no.nav.bidrag.beregn.felles.dto.SjablonResultatGrunnlagCore
+import no.nav.bidrag.beregn.core.bo.Avvik
+import no.nav.bidrag.beregn.core.bo.Periode
+import no.nav.bidrag.beregn.core.bo.Sjablon
+import no.nav.bidrag.beregn.core.bo.SjablonInnhold
+import no.nav.bidrag.beregn.core.bo.SjablonNokkel
+import no.nav.bidrag.beregn.core.bo.SjablonPeriode
+import no.nav.bidrag.beregn.core.bo.SjablonPeriodeNavnVerdi
+import no.nav.bidrag.beregn.core.dto.AvvikCore
+import no.nav.bidrag.beregn.core.dto.PeriodeCore
+import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
+import no.nav.bidrag.beregn.core.dto.SjablonResultatGrunnlagCore
 import java.time.format.DateTimeFormatter
 
 open class FellesCore {

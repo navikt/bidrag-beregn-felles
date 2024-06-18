@@ -1,6 +1,6 @@
 package no.nav.bidrag.beregn.core.felles
 
-import no.nav.bidrag.beregn.felles.bo.Periode
+import no.nav.bidrag.beregn.core.bo.Periode
 import java.time.LocalDate
 
 abstract class FellesPeriode {

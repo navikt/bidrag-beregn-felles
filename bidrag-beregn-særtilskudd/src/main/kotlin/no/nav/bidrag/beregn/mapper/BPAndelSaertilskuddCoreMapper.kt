@@ -1,9 +1,10 @@
-package no.nav.bidrag.beregn.service
+package no.nav.bidrag.beregn.mapper
 
 import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddGrunnlagCore
 import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.NettoSaertilskuddPeriodeCore
 import no.nav.bidrag.beregn.core.felles.bo.SjablonListe
+import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.rolle.Rolle
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
@@ -27,7 +28,7 @@ object BPAndelSaertilskuddCoreMapper : CoreMapper() {
         // Løper gjennom alle grunnlagene og identifiserer de som skal mappes til bidragsevne core
         for (grunnlag in beregnGrunnlag.grunnlagListe!!) {
             when (grunnlag.type) {
-                GrunnlagType.INNTEKT -> {
+                Grunnlagstype.INNTEKT -> {
                     val (rolle) = grunnlagTilObjekt(grunnlag, InntektRolle::class.java)
                     if (rolle == Rolle.BIDRAGSPLIKTIG) {
                         val bpInntekt = grunnlagTilObjekt(grunnlag, BPInntekt::class.java)
@@ -41,7 +42,7 @@ object BPAndelSaertilskuddCoreMapper : CoreMapper() {
                     }
                 }
 
-                GrunnlagType.NETTO_SAERTILSKUDD -> {
+                Grunnlagstype.NETTO_SAERTILSKUDD -> {
                     val nettoSaertilskudd = grunnlagTilObjekt(grunnlag, NettoSaertilskudd::class.java)
                     nettoSaertilskuddPeriodeListe.add(nettoSaertilskudd.tilCore(grunnlag.referanse!!))
                 }

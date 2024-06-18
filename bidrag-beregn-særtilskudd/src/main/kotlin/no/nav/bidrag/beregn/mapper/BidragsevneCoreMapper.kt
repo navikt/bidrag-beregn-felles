@@ -1,20 +1,23 @@
-package no.nav.bidrag.beregn.core.bidragsevne
+package no.nav.bidrag.beregn.mapper
 
 import no.nav.bidrag.beregn.core.bidragsevne.dto.AntallBarnIEgetHusholdPeriodeCore
 import no.nav.bidrag.beregn.core.bidragsevne.dto.BeregnBidragsevneGrunnlagCore
 import no.nav.bidrag.beregn.core.bidragsevne.dto.BostatusPeriodeCore
 import no.nav.bidrag.beregn.core.bidragsevne.dto.InntektPeriodeCore
-import no.nav.bidrag.beregn.core.bidragsevne.dto.SaerfradragPeriodeCore
 import no.nav.bidrag.beregn.core.bidragsevne.dto.SkatteklassePeriodeCore
+import no.nav.bidrag.beregn.core.bidragsevne.dto.SærfradragPeriodeCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonInnholdCore
 import no.nav.bidrag.beregn.core.dto.SjablonNokkelCore
 import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
 import no.nav.bidrag.beregn.core.felles.bo.SjablonListe
+import no.nav.bidrag.beregn.core.felles.dto.BarnIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.core.særtilskudd.bo.Bidragsevne
-import no.nav.bidrag.beregn.service.CoreMapper
-import no.nav.bidrag.beregn.service.tilCore
+import no.nav.bidrag.beregn.extensions.tilCore
+import no.nav.bidrag.beregn.mapper.BPAndelSaertilskuddCoreMapper.akkumulerOgPeriodiser
+import no.nav.bidrag.beregn.mapper.CoreMapper.mapInntekt
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
+import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.enums.rolle.Rolle
 import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
@@ -26,6 +29,9 @@ import no.nav.bidrag.transport.behandling.beregning.saertilskudd.Bostatus
 import no.nav.bidrag.transport.behandling.beregning.saertilskudd.InntektRolle
 import no.nav.bidrag.transport.behandling.beregning.saertilskudd.Saerfradrag
 import no.nav.bidrag.transport.behandling.beregning.saertilskudd.Skatteklasse
+import no.nav.bidrag.transport.behandling.felles.grunnlag.BostatusPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
+import java.math.BigDecimal
 import java.util.*
 
 object BidragsevneCoreMapper : CoreMapper() {
@@ -38,23 +44,33 @@ object BidragsevneCoreMapper : CoreMapper() {
         val skatteklassePeriodeCoreListe = ArrayList<SkatteklassePeriodeCore>()
         val bostatusPeriodeCoreListe = ArrayList<BostatusPeriodeCore>()
         val antallBarnIEgetHusholdPeriodeCoreListe = ArrayList<AntallBarnIEgetHusholdPeriodeCore>()
-        val saerfradragPeriodeCoreListe = ArrayList<SaerfradragPeriodeCore>()
+        val særfradragPeriodeCoreListe = ArrayList<SærfradragPeriodeCore>()
         val sjablonPeriodeCoreListe = ArrayList<SjablonPeriodeCore>()
 
-        val referanseBidragsmottaker = beregnGrunnlag.grunnlagListe
-            .filter { it.type == Grunnlagstype.PERSON_BIDRAGSMOTTAKER }
-            .map { it.referanse }
-            .firstOrNull() ?: throw NoSuchElementException("Grunnlagstype PERSON_BIDRAGSMOTTAKER mangler i input")
+        // Henter sjablonverdi for kapitalinntekt
+        // TODO Pt ligger det bare en gyldig sjablonverdi (uforandret siden 2003). Logikken her må utvides hvis det legges inn nye sjablonverdier
+        val innslagKapitalinntektSjablonverdi =
+            sjablonListe.sjablontallResponse.firstOrNull { it.typeSjablon == SjablonTallNavn.INNSLAG_KAPITALINNTEKT_BELØP.id }?.verdi
+                ?: BigDecimal.ZERO
+
+//        val referanseBidragsmottaker = beregnGrunnlag.grunnlagListe
+//            .filter { it.type == Grunnlagstype.PERSON_BIDRAGSMOTTAKER }
+//            .map { it.referanse }
+//            .firstOrNull() ?: throw NoSuchElementException("Grunnlagstype PERSON_BIDRAGSMOTTAKER mangler i input")
 
         val referanseBidragspliktig = beregnGrunnlag.grunnlagListe
             .filter { it.type == Grunnlagstype.PERSON_BIDRAGSPLIKTIG }
             .map { it.referanse }
             .firstOrNull() ?: throw NoSuchElementException("Grunnlagstype PERSON_BIDRAGSPLIKTIG mangler i input")
 
-        val referanseSøknadsbarn = beregnGrunnlag.grunnlagListe
-            .filter { it.type == Grunnlagstype.PERSON_SØKNADSBARN }
-            .map { it.referanse }
-            .firstOrNull() ?: throw NoSuchElementException("Grunnlagstype PERSON_SØKNADSBARN mangler i input")
+//        val referanseSøknadsbarn = beregnGrunnlag.grunnlagListe
+//            .filter { it.type == Grunnlagstype.PERSON_SØKNADSBARN }
+//            .map { it.referanse }
+//            .firstOrNull() ?: throw NoSuchElementException("Grunnlagstype PERSON_SØKNADSBARN mangler i input")
+
+        val inntektPeriodeCoreListe = mapInntekt(beregnGrunnlag, referanseBidragspliktig, innslagKapitalinntektSjablonverdi)
+
+        val barnIHusstandenPeriodeCoreListe = mapBarnIHusstanden(beregnForskuddGrunnlag)
 
         // Løper gjennom alle grunnlagene og identifiserer de som skal mappes til bidragsevne core
         for (grunnlag in beregnGrunnlag.grunnlagListe!!) {
@@ -79,7 +95,7 @@ object BidragsevneCoreMapper : CoreMapper() {
 
                 Grunnlagstype.SAERFRADRAG -> {
                     val saerfradrag = grunnlagTilObjekt(grunnlag, Saerfradrag::class.java)
-                    saerfradragPeriodeCoreListe.add(saerfradrag.tilCore(grunnlag.referanse!!))
+                    særfradragPeriodeCoreListe.add(saerfradrag.tilCore(grunnlag.referanse!!))
                 }
 
                 Grunnlagstype.SKATTEKLASSE -> {
@@ -104,7 +120,7 @@ object BidragsevneCoreMapper : CoreMapper() {
             skatteklassePeriodeCoreListe,
             bostatusPeriodeCoreListe,
             antallBarnIEgetHusholdPeriodeCoreListe,
-            saerfradragPeriodeCoreListe,
+            særfradragPeriodeCoreListe,
             sjablonPeriodeCoreListe,
         )
     }
@@ -127,6 +143,36 @@ object BidragsevneCoreMapper : CoreMapper() {
                 )
             }
             .toList()
+    }
+
+    private fun mapBarnIHusstanden(beregnGrunnlag: BeregnGrunnlag): List<BarnIHusstandenPeriodeCore> {
+        try {
+            val barnIHusstandenGrunnlagListe =
+                beregnGrunnlag.grunnlagListe
+                    .filtrerOgKonverterBasertPåEgenReferanse<BostatusPeriode>(Grunnlagstype.BOSTATUS_PERIODE)
+                    .filter { it.innhold.bostatus == Bostatuskode.MED_FORELDER || it.innhold.bostatus == Bostatuskode.DOKUMENTERT_SKOLEGANG }
+                    .map {
+                        BarnIHusstandenPeriodeCore(
+                            referanse = it.referanse,
+                            periode =
+                            PeriodeCore(
+                                datoFom = it.innhold.periode.toDatoperiode().fom,
+                                datoTil = it.innhold.periode.toDatoperiode().til,
+                            ),
+                            antall = 1,
+                            grunnlagsreferanseListe = emptyList(),
+                        )
+                    }
+            return akkumulerOgPeriodiser(
+                barnIHusstandenGrunnlagListe,
+                beregnGrunnlag.søknadsbarnReferanse,
+                BarnIHusstandenPeriodeCore::class.java,
+            )
+        } catch (e: Exception) {
+            throw IllegalArgumentException(
+                "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.BOSTATUS_PERIODE er ikke gyldig: " + e.message,
+            )
+        }
     }
 }
 

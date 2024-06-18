@@ -1,22 +1,22 @@
-package no.nav.bidrag.beregn.service
+package no.nav.bidrag.beregn.mapper
 
 import no.nav.bidrag.beregn.core.bidragsevne.dto.BeregnBidragsevneResultatCore
 import no.nav.bidrag.beregn.core.bidragsevne.dto.ResultatPeriodeCore
 import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddResultatCore
+import no.nav.bidrag.beregn.core.dto.PeriodeCore
+import no.nav.bidrag.beregn.core.felles.bo.SjablonListe
 import no.nav.bidrag.beregn.core.samvaersfradrag.dto.BeregnSamvaersfradragResultatCore
 import no.nav.bidrag.beregn.core.samvaersfradrag.dto.ResultatBeregningCore
+import no.nav.bidrag.beregn.core.særtilskudd.bo.LopendeBidrag
 import no.nav.bidrag.beregn.core.særtilskudd.dto.BPsAndelSaertilskuddPeriodeCore
 import no.nav.bidrag.beregn.core.særtilskudd.dto.BeregnSaertilskuddGrunnlagCore
 import no.nav.bidrag.beregn.core.særtilskudd.dto.BidragsevnePeriodeCore
 import no.nav.bidrag.beregn.core.særtilskudd.dto.LopendeBidragPeriodeCore
 import no.nav.bidrag.beregn.core.særtilskudd.dto.SamvaersfradragPeriodeCore
-import no.nav.bidrag.beregn.felles.dto.PeriodeCore
-import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonListe
 import no.nav.bidrag.beregn.saertilskudd.rest.extensions.tilPeriodeCore
 import no.nav.bidrag.beregn.saertilskudd.rest.extensions.valider
-import no.nav.bidrag.domain.enums.GrunnlagType
-import no.nav.bidrag.transport.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.beregning.saertilskudd.LopendeBidrag
+import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
+import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -79,7 +79,7 @@ object SaertilskuddCoreMapper : CoreMapper() {
                 .toList()
         val andreLopendeBidragListe = ArrayList<LopendeBidragPeriodeCore>()
         for (grunnlag in beregnGrunnlag.grunnlagListe!!) {
-            if (GrunnlagType.LOPENDE_BIDRAG == grunnlag.type) {
+            if (Grunnlagstype.LØPENDE_BIDRAG == grunnlag.type) {
                 val lopendeBidrag = grunnlagTilObjekt(grunnlag, LopendeBidrag::class.java)
                 andreLopendeBidragListe.add(lopendeBidrag.tilCore(grunnlag.referanse!!))
             }
@@ -89,7 +89,7 @@ object SaertilskuddCoreMapper : CoreMapper() {
         val sjablonPeriodeCoreListe =
             ArrayList(
                 mapSjablonSjablontall(
-                    sjablonListe.sjablonSjablontallResponse,
+                    sjablonListe.sjablontallResponse,
                     SAERTILSKUDD,
                     beregnGrunnlag,
                     mapSjablontall(),

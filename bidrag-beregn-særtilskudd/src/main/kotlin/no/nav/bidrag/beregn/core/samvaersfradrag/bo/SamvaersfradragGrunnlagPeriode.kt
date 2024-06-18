@@ -1,7 +1,7 @@
 package no.nav.bidrag.beregn.core.samvaersfradrag.bo
 
-import no.nav.bidrag.beregn.felles.bo.Periode
-import no.nav.bidrag.beregn.felles.bo.PeriodisertGrunnlag
+import no.nav.bidrag.beregn.core.bo.Periode
+import no.nav.bidrag.beregn.core.bo.PeriodisertGrunnlag
 import java.time.LocalDate
 
 data class SamvaersfradragGrunnlagPeriode(

@@ -1,5 +1,6 @@
 package no.nav.bidrag.beregn.core.samvaersfradrag.periode
 
+import no.nav.bidrag.beregn.core.bo.Avvik
 import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.bo.SjablonPeriode
 import no.nav.bidrag.beregn.core.felles.FellesPeriode
@@ -12,8 +13,7 @@ import no.nav.bidrag.beregn.core.samvaersfradrag.bo.GrunnlagBeregningPeriodisert
 import no.nav.bidrag.beregn.core.samvaersfradrag.bo.ResultatPeriode
 import no.nav.bidrag.beregn.core.samvaersfradrag.bo.SamvaersfradragGrunnlagPerBarn
 import no.nav.bidrag.beregn.core.samvaersfradrag.bo.SamvaersfradragGrunnlagPeriode
-import no.nav.bidrag.beregn.felles.bo.Avvik
-import no.nav.bidrag.beregn.felles.util.PeriodeUtil
+import no.nav.bidrag.beregn.core.util.PeriodeUtil
 import java.time.Period
 
 class SamvaersfradragPeriode(private val samvaersfradragBeregning: SamvaersfradragBeregning = SamvaersfradragBeregning()) : FellesPeriode() {

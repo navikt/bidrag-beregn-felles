@@ -1,9 +1,9 @@
 package no.nav.bidrag.beregn.core.særtilskudd.dto
 
+import no.nav.bidrag.beregn.core.dto.AvvikCore
+import no.nav.bidrag.beregn.core.dto.PeriodeCore
+import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
 import no.nav.bidrag.beregn.core.felles.dto.IResultatPeriode
-import no.nav.bidrag.beregn.felles.dto.AvvikCore
-import no.nav.bidrag.beregn.felles.dto.PeriodeCore
-import no.nav.bidrag.beregn.felles.dto.SjablonPeriodeCore
 import java.math.BigDecimal
 import java.time.LocalDate
 

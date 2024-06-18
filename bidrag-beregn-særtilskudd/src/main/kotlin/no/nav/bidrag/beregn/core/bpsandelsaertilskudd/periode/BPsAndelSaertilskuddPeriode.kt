@@ -1,5 +1,6 @@
 package no.nav.bidrag.beregn.core.bpsandelsaertilskudd.periode
 
+import no.nav.bidrag.beregn.core.bo.Avvik
 import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.bo.SjablonPeriode
 import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.beregning.BPsAndelSaertilskuddBeregning
@@ -12,10 +13,9 @@ import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.bo.InntektPeriode
 import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.bo.NettoSaertilskuddPeriode
 import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.bo.ResultatPeriode
 import no.nav.bidrag.beregn.core.felles.FellesPeriode
+import no.nav.bidrag.beregn.core.inntekt.InntektPeriodeGrunnlagUtenInntektType
 import no.nav.bidrag.beregn.core.periode.Periodiserer
-import no.nav.bidrag.beregn.felles.bo.Avvik
-import no.nav.bidrag.beregn.felles.inntekt.InntektPeriodeGrunnlagUtenInntektType
-import no.nav.bidrag.beregn.felles.util.PeriodeUtil
+import no.nav.bidrag.beregn.core.util.PeriodeUtil
 import java.time.LocalDate
 
 class BPsAndelSaertilskuddPeriode(private val bPsAndelSaertilskuddBeregning: BPsAndelSaertilskuddBeregning = BPsAndelSaertilskuddBeregning()) :
@@ -190,7 +190,7 @@ class BPsAndelSaertilskuddPeriode(private val bPsAndelSaertilskuddBeregning: BPs
     }
 
     // Validerer at input-verdier til BPsAndelSaertilskuddsberegning er gyldige
-    override fun validerInput(grunnlag: BeregnBPsAndelSaertilskuddGrunnlag): List<Avvik> {
+    fun validerInput(grunnlag: BeregnBPsAndelSaertilskuddGrunnlag): List<Avvik> {
         val avvikListe =
             PeriodeUtil.validerBeregnPeriodeInput(beregnDatoFom = grunnlag.beregnDatoFra, beregnDatoTil = grunnlag.beregnDatoTil).toMutableList()
 

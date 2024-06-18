@@ -3,26 +3,17 @@ package no.nav.bidrag.beregn.extensions
 import no.nav.bidrag.beregn.core.bidragsevne.dto.AntallBarnIEgetHusholdPeriodeCore
 import no.nav.bidrag.beregn.core.bidragsevne.dto.BostatusPeriodeCore
 import no.nav.bidrag.beregn.core.bidragsevne.dto.InntektPeriodeCore
-import no.nav.bidrag.beregn.core.bidragsevne.dto.SaerfradragPeriodeCore
 import no.nav.bidrag.beregn.core.bidragsevne.dto.SkatteklassePeriodeCore
+import no.nav.bidrag.beregn.core.bidragsevne.dto.SærfradragPeriodeCore
 import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.NettoSaertilskuddPeriodeCore
+import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.samvaersfradrag.dto.SamvaersklassePeriodeCore
-import no.nav.bidrag.beregn.felles.dto.PeriodeCore
-import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException
-import no.nav.bidrag.transport.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.beregning.felles.Grunnlag
-import no.nav.bidrag.transport.beregning.saertilskudd.BMInntekt
-import no.nav.bidrag.transport.beregning.saertilskudd.BPInntekt
-import no.nav.bidrag.transport.beregning.saertilskudd.BarnIHusstand
-import no.nav.bidrag.transport.beregning.saertilskudd.BasePeriode
-import no.nav.bidrag.transport.beregning.saertilskudd.Bostatus
-import no.nav.bidrag.transport.beregning.saertilskudd.InntektBase
-import no.nav.bidrag.transport.beregning.saertilskudd.LopendeBidrag
-import no.nav.bidrag.transport.beregning.saertilskudd.NettoSaertilskudd
-import no.nav.bidrag.transport.beregning.saertilskudd.SBInntekt
-import no.nav.bidrag.transport.beregning.saertilskudd.Saerfradrag
-import no.nav.bidrag.transport.beregning.saertilskudd.Samvaersklasse
-import no.nav.bidrag.transport.beregning.saertilskudd.Skatteklasse
+import no.nav.bidrag.beregn.exception.UgyldigInputException
+import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.beregning.saertilskudd.BMInntekt
+import no.nav.bidrag.transport.behandling.beregning.saertilskudd.BPInntekt
+import no.nav.bidrag.transport.behandling.beregning.saertilskudd.InntektBase
+import no.nav.bidrag.transport.behandling.beregning.særtilskudd.BasePeriode
 
 fun BeregnGrunnlag.valider() {
     if (beregnDatoFra == null) throw UgyldigInputException("beregnDatoFra kan ikke være null")
@@ -140,7 +131,7 @@ fun Saerfradrag.valider() {
     if (saerfradragKode == null) throw UgyldigInputException("saerfradragKode kan ikke være null")
 }
 
-fun Saerfradrag.tilCore(referanse: String): SaerfradragPeriodeCore {
+fun Saerfradrag.tilCore(referanse: String): SærfradragPeriodeCore {
     valider()
     return SaerfradragPeriodeCore(
         referanse,

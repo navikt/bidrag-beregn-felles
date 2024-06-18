@@ -1,11 +1,11 @@
-package no.nav.bidrag.beregn.service
+package no.nav.bidrag.beregn.mapper
 
 import no.nav.bidrag.beregn.core.felles.bo.SjablonListe
 import no.nav.bidrag.beregn.core.samvaersfradrag.dto.BeregnSamvaersfradragGrunnlagCore
 import no.nav.bidrag.beregn.core.samvaersfradrag.dto.SamvaersklassePeriodeCore
+import no.nav.bidrag.beregn.core.samvaersfradrag.tilCore
 import no.nav.bidrag.beregn.exception.UgyldigInputException
-import no.nav.bidrag.beregn.saertilskudd.rest.extensions.tilPeriodeCore
-import no.nav.bidrag.domain.enums.GrunnlagType
+import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.saertilskudd.Samvaersklasse
 
@@ -15,7 +15,7 @@ object SamvaersfradragCoreMapper : CoreMapper() {
 
         // Løper gjennom alle grunnlagene og identifiserer de som skal mappes til samværsfradrag core
         for (grunnlag in beregnGrunnlag.grunnlagListe!!) {
-            if (GrunnlagType.SAMVAERSKLASSE == grunnlag.type) {
+            if (Grunnlagstype.SAMVÆRSKLASSE == grunnlag.type) {
                 val samvaersklasse = grunnlagTilObjekt(grunnlag, Samvaersklasse::class.java)
                 samvaersklassePeriodeCoreListe.add(samvaersklasse.tilCore(grunnlag.referanse!!))
             }

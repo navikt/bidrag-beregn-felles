@@ -1,5 +1,7 @@
 package no.nav.bidrag.beregn.core.særtilskudd.periode
 
+import no.nav.bidrag.beregn.core.bo.Avvik
+import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.felles.FellesPeriode
 import no.nav.bidrag.beregn.core.periode.Periodiserer
 import no.nav.bidrag.beregn.core.særtilskudd.beregning.SaertilskuddBeregning
@@ -16,9 +18,7 @@ import no.nav.bidrag.beregn.core.særtilskudd.bo.LopendeBidragPeriode
 import no.nav.bidrag.beregn.core.særtilskudd.bo.ResultatPeriode
 import no.nav.bidrag.beregn.core.særtilskudd.bo.SamvaersfradragGrunnlag
 import no.nav.bidrag.beregn.core.særtilskudd.bo.SamvaersfradragGrunnlagPeriode
-import no.nav.bidrag.beregn.felles.bo.Avvik
-import no.nav.bidrag.beregn.felles.bo.Periode
-import no.nav.bidrag.beregn.felles.util.PeriodeUtil
+import no.nav.bidrag.beregn.core.util.PeriodeUtil
 
 class SaertilskuddPeriode(private val saertilskuddberegning: SaertilskuddBeregning = SaertilskuddBeregning()) : FellesPeriode() {
 

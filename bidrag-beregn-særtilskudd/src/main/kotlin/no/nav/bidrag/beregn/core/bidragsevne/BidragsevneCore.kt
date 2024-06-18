@@ -15,8 +15,8 @@ import no.nav.bidrag.beregn.core.bidragsevne.dto.BostatusPeriodeCore
 import no.nav.bidrag.beregn.core.bidragsevne.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.core.bidragsevne.dto.ResultatBeregningCore
 import no.nav.bidrag.beregn.core.bidragsevne.dto.ResultatPeriodeCore
-import no.nav.bidrag.beregn.core.bidragsevne.dto.SaerfradragPeriodeCore
 import no.nav.bidrag.beregn.core.bidragsevne.dto.SkatteklassePeriodeCore
+import no.nav.bidrag.beregn.core.bidragsevne.dto.SærfradragPeriodeCore
 import no.nav.bidrag.beregn.core.bidragsevne.periode.BidragsevnePeriode
 import no.nav.bidrag.beregn.core.bo.Avvik
 import no.nav.bidrag.beregn.core.bo.Periode
@@ -45,8 +45,8 @@ internal class BidragsevneCore(private val bidragsevnePeriode: BidragsevnePeriod
         inntektPeriodeListe = mapInntektPeriodeListe(grunnlag.inntektPeriodeListe),
         skatteklassePeriodeListe = mapSkatteklassePeriodeListe(grunnlag.skatteklassePeriodeListe),
         bostatusPeriodeListe = mapBostatusPeriodeListe(grunnlag.bostatusPeriodeListe),
-        antallBarnIEgetHusholdPeriodeListe = mapAntallBarnIEgetHusholdPeriodeListe(grunnlag.antallBarnIEgetHusholdPeriodeListe),
-        saerfradragPeriodeListe = mapSaerfradragPeriodeListe(grunnlag.saerfradragPeriodeListe),
+        antallBarnIEgetHusholdPeriodeListe = mapAntallBarnIEgetHusholdPeriodeListe(grunnlag.antallBarnIEgetHusholdPeriodeCoreListe),
+        saerfradragPeriodeListe = mapSaerfradragPeriodeListe(grunnlag.særfradragPeriodeListe),
         sjablonPeriodeListe = mapSjablonPeriodeListe(grunnlag.sjablonPeriodeListe),
     )
 
@@ -115,7 +115,7 @@ internal class BidragsevneCore(private val bidragsevnePeriode: BidragsevnePeriod
         return antallBarnIEgetHusholdPeriodeListe
     }
 
-    private fun mapSaerfradragPeriodeListe(saerfradragPeriodeListeCore: List<SaerfradragPeriodeCore>): List<SaerfradragPeriode> {
+    private fun mapSaerfradragPeriodeListe(saerfradragPeriodeListeCore: List<SærfradragPeriodeCore>): List<SaerfradragPeriode> {
         val saerfradragPeriodeListe = mutableListOf<SaerfradragPeriode>()
         saerfradragPeriodeListeCore.forEach {
             saerfradragPeriodeListe.add(

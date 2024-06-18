@@ -18,6 +18,7 @@ import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.ResultatBeregningCore
 import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.ResultatPeriodeCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.felles.FellesCore
+import no.nav.bidrag.beregn.core.særtilskudd.bo.BPsAndelSaertilskuddPeriode
 
 class BPsAndelSaertilskuddCore(private val bPsAndelSaertilskuddPeriode: BPsAndelSaertilskuddPeriode = BPsAndelSaertilskuddPeriode()) : FellesCore() {
 
