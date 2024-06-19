@@ -13,7 +13,7 @@ import no.nav.bidrag.transport.behandling.grunnlag.response.SivilstandGrunnlagDt
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
-internal class SivilstandServiceV2() {
+internal class SivilstandServiceV2 {
     fun beregn(virkningstidspunkt: LocalDate, sivilstandRequest: SivilstandRequest): List<Sivilstand> {
         // Dette er følgende scenarier som kan forekomme i beregning:
 
@@ -139,7 +139,61 @@ internal class SivilstandServiceV2() {
     }
 
     private fun behandleOffentligePerioder(virkningstidspunkt: LocalDate, sivilstandRequest: SivilstandRequest): List<Sivilstand> {
-        val offentligePerioder = sivilstandRequest.innhentedeOffentligeOpplysninger
+        // Overstyrer gyldigFom til BMs fødselsdato for ugift og uoppgitt sivilstand
+        val offentligePerioder = sivilstandRequest.innhentedeOffentligeOpplysninger.map {
+            SivilstandGrunnlagDto(
+                personId = it.personId,
+                type = it.type,
+                gyldigFom = if (it.type == SivilstandskodePDL.UGIFT || it.type == SivilstandskodePDL.UOPPGITT) {
+                    sivilstandRequest.fødselsdatoBM
+                } else {
+                    it.gyldigFom
+                },
+                bekreftelsesdato = it.bekreftelsesdato,
+                master = it.master,
+                registrert = it.registrert,
+                historisk = it.historisk,
+            )
+        }.sortedWith(
+            compareByDescending<SivilstandGrunnlagDto> { it.historisk }.thenBy { it.gyldigFom }
+                .thenBy { it.bekreftelsesdato }.thenBy { it.registrert }.thenBy { it.type.toString() },
+        )
+
+        // Sjekker om aktiv sivilstand har en fradato som er før virkningstidspunktet. Hvis det er tilfellet så utelates alle logiske tester på de
+        // historiske sivilstandstatusene. Hvis det ikke finnes en aktiv sivilstand så returneres UKJENT.
+        val aktivSivilstand = offentligePerioder.filter { it.historisk == false }
+        if (aktivSivilstand.isNotEmpty()) {
+            val sivilstandskode = finnSivilstandskode(aktivSivilstand.first().type!!)
+            val periodeFom = aktivSivilstand.first().gyldigFom
+                ?: aktivSivilstand.first().bekreftelsesdato
+                ?: aktivSivilstand.first().registrert?.toLocalDate()
+                ?: virkningstidspunkt
+            val justertPeriodeFom = if (sivilstandskode == Sivilstandskode.BOR_ALENE_MED_BARN) {
+                periodeFom.withDayOfMonth(1)
+            } else {
+                periodeFom.plusMonths(1)?.withDayOfMonth(1)
+            }
+
+            if (justertPeriodeFom != null && justertPeriodeFom.isBefore(virkningstidspunkt.plusDays(1))) {
+                return listOf(
+                    Sivilstand(
+                        periodeFom = virkningstidspunkt,
+                        periodeTom = null,
+                        sivilstandskode = sivilstandskode,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                )
+            }
+        } else {
+            return listOf(
+                Sivilstand(
+                    periodeFom = virkningstidspunkt,
+                    periodeTom = null,
+                    sivilstandskode = Sivilstandskode.UKJENT,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+            )
+        }
 
         val beregnedeSivilstandsperioder = mutableListOf<Sivilstand>()
 
@@ -158,7 +212,7 @@ internal class SivilstandServiceV2() {
         // Sjekker om det finnes forekomster uten datoinformasjon. For aktive/ikke-historiske forekomster kan også 'registrert' brukes
         // til å angi periodeFom.
         if (offentligePerioder.any {
-                it.gyldigFom == null && it.bekreftelsesdato == null && it.historisk == true && it.type != SivilstandskodePDL.UGIFT
+                it.gyldigFom == null && it.bekreftelsesdato == null && it.historisk == true
             } ||
             offentligePerioder.any {
                 it.gyldigFom == null && it.bekreftelsesdato == null && it.registrert == null && it.historisk == false
@@ -201,11 +255,6 @@ internal class SivilstandServiceV2() {
             val periodeFom = if (sivilstand.historisk == true) {
                 sivilstand.gyldigFom
                     ?: sivilstand.bekreftelsesdato
-                    ?: if (sivilstand.type == SivilstandskodePDL.UGIFT) {
-                        sivilstand.registrert?.toLocalDate()
-                    } else {
-                        null
-                    }
             } else {
                 sivilstand.gyldigFom
                     ?: sivilstand.bekreftelsesdato
@@ -347,7 +396,8 @@ internal class SivilstandServiceV2() {
                         // Den primære perioden dekker hele den sekundære perioden
                         return null
                     } else {
-                        if (sekundærPeriode.periodeTom != null && overlappendePerioder[indeks].periodeTom?.isAfter(
+                        if (sekundærPeriode.periodeTom != null &&
+                            overlappendePerioder[indeks].periodeTom?.isAfter(
                                 sekundærPeriode.periodeTom.plusDays(1),
                             ) == true
                         ) {
@@ -424,7 +474,8 @@ internal class SivilstandServiceV2() {
         when (endreSivilstand.typeEndring) {
             TypeEndring.SLETTET -> {
                 // Hvis original sivilstand ikke er angitt eller ikke finnes i behandledeOpplysninger så skal det kastes en exception.
-                if (originalSivilstand == null || behandledeOpplysninger.none { behandletOpplysning ->
+                if (originalSivilstand == null ||
+                    behandledeOpplysninger.none { behandletOpplysning ->
                         perioderErIdentiske(originalSivilstand, behandletOpplysning)
                     }
                 ) {
@@ -593,13 +644,11 @@ internal class SivilstandServiceV2() {
     private fun beregnetPeriodeErInnenforOffentligPeriodeMedLikSivilstandskode(
         beregnetPeriode: Sivilstand,
         offentligePerioder: List<Sivilstand>,
-    ): Boolean {
-        return offentligePerioder.any { offentligPeriode ->
-            beregnetPeriode.sivilstandskode == offentligPeriode.sivilstandskode &&
-                beregnetPeriode.periodeFom.isAfter(offentligPeriode.periodeFom.minusDays(1)) &&
-                (offentligPeriode.periodeTom == null || beregnetPeriode.periodeTom?.isBefore(offentligPeriode.periodeTom.plusDays(1)) == true) &&
-                beregnetPeriode.kilde != offentligPeriode.kilde
-        }
+    ): Boolean = offentligePerioder.any { offentligPeriode ->
+        beregnetPeriode.sivilstandskode == offentligPeriode.sivilstandskode &&
+            beregnetPeriode.periodeFom.isAfter(offentligPeriode.periodeFom.minusDays(1)) &&
+            (offentligPeriode.periodeTom == null || beregnetPeriode.periodeTom?.isBefore(offentligPeriode.periodeTom.plusDays(1)) == true) &&
+            beregnetPeriode.kilde != offentligPeriode.kilde
     }
 
     private fun sjekkLogiskeVerdier(sivilstandPDLBoListe: List<SivilstandPDLBo>): Boolean {
@@ -636,12 +685,10 @@ internal class SivilstandServiceV2() {
         return true
     }
 
-    private fun finnSivilstandskode(type: SivilstandskodePDL): Sivilstandskode {
-        return when (type) {
-            SivilstandskodePDL.GIFT, SivilstandskodePDL.REGISTRERT_PARTNER -> Sivilstandskode.GIFT_SAMBOER
-            SivilstandskodePDL.UOPPGITT -> Sivilstandskode.UKJENT
-            else -> Sivilstandskode.BOR_ALENE_MED_BARN
-        }
+    private fun finnSivilstandskode(type: SivilstandskodePDL): Sivilstandskode = when (type) {
+        SivilstandskodePDL.GIFT, SivilstandskodePDL.REGISTRERT_PARTNER -> Sivilstandskode.GIFT_SAMBOER
+        SivilstandskodePDL.UOPPGITT -> Sivilstandskode.UKJENT
+        else -> Sivilstandskode.BOR_ALENE_MED_BARN
     }
 
     private fun beregnPerioder(virkningstidspunkt: LocalDate, sivilstandPDLBoListe: List<SivilstandPDLBo>): List<Sivilstand> {
@@ -836,26 +883,17 @@ internal class SivilstandServiceV2() {
         }
     }
 
-    private fun perioderErIdentiske(periode1: Sivilstand, periode2: Sivilstand): Boolean {
-        return periode1.periodeFom == periode2.periodeFom &&
-            periode1.periodeTom == periode2.periodeTom &&
-            periode1.sivilstandskode == periode2.sivilstandskode &&
-            periode1.kilde == periode2.kilde
-    }
+    private fun perioderErIdentiske(periode1: Sivilstand, periode2: Sivilstand): Boolean = periode1.periodeFom == periode2.periodeFom &&
+        periode1.periodeTom == periode2.periodeTom &&
+        periode1.sivilstandskode == periode2.sivilstandskode &&
+        periode1.kilde == periode2.kilde
 
-    private fun hentFørsteDagIMåneden(dato: LocalDate): LocalDate {
-        return LocalDate.of(dato.year, dato.month, 1)
-    }
+    private fun hentFørsteDagIMåneden(dato: LocalDate): LocalDate = LocalDate.of(dato.year, dato.month, 1)
 
-    private fun hentSisteDagIMåneden(dato: LocalDate): LocalDate {
-        return LocalDate.of(dato.year, dato.month, dato.month.length(dato.isLeapYear))
-    }
+    private fun hentSisteDagIMåneden(dato: LocalDate): LocalDate = LocalDate.of(dato.year, dato.month, dato.month.length(dato.isLeapYear))
 
-    private fun hentSisteDagIForrigeMåned(dato: LocalDate): LocalDate {
-        return LocalDate.of(dato.year, dato.month.minus(1), dato.month.minus(1).length(dato.isLeapYear))
-    }
+    private fun hentSisteDagIForrigeMåned(dato: LocalDate): LocalDate =
+        LocalDate.of(dato.year, dato.month.minus(1), dato.month.minus(1).length(dato.isLeapYear))
 
-    private fun hentFørsteDagINesteMåned(dato: LocalDate): LocalDate {
-        return LocalDate.of(dato.year, dato.month, 1).plusMonths(1)
-    }
+    private fun hentFørsteDagINesteMåned(dato: LocalDate): LocalDate = LocalDate.of(dato.year, dato.month, 1).plusMonths(1)
 }

@@ -22,22 +22,18 @@ internal class SivilstandServiceV2Test {
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
-            resultat.size shouldBe 4
+            resultat.size shouldBe 3
             resultat[0].periodeFom shouldBe LocalDate.of(2010, 9, 1)
-            resultat[0].periodeTom shouldBe LocalDate.of(2011, 1, 31)
-            resultat[0].sivilstandskode shouldBe Sivilstandskode.UKJENT
+            resultat[0].periodeTom shouldBe LocalDate.of(2017, 7, 31)
+            resultat[0].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
 
-            resultat[1].periodeFom shouldBe LocalDate.of(2011, 2, 1)
-            resultat[1].periodeTom shouldBe LocalDate.of(2017, 7, 31)
-            resultat[1].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat[1].periodeFom shouldBe LocalDate.of(2017, 8, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2021, 8, 31)
+            resultat[1].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
 
-            resultat[2].periodeFom shouldBe LocalDate.of(2017, 8, 1)
-            resultat[2].periodeTom shouldBe LocalDate.of(2021, 8, 31)
-            resultat[2].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
-
-            resultat[3].periodeFom shouldBe LocalDate.of(2021, 9, 1)
-            resultat[3].periodeTom shouldBe null
-            resultat[3].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat[2].periodeFom shouldBe LocalDate.of(2021, 9, 1)
+            resultat[2].periodeTom shouldBe null
+            resultat[2].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
         }
     }
 
@@ -816,6 +812,54 @@ internal class SivilstandServiceV2Test {
 
             // Første periode får kilde satt til Offentlig pga matchende offentlig periode
             resultat[0].periodeFom shouldBe LocalDate.of(2023, 1, 1)
+            resultat[0].periodeTom shouldBe null
+            resultat[0].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
+
+    @Test
+    fun `Test at gyldigFom blir satt lik BMs fødselsdato ved status UGIFT`() {
+        sivilstandServiceV2 = SivilstandServiceV2()
+        val mottattSivilstand = TestUtil.gyldigFomLikFødselsdatoUgift()
+
+        val virkningstidspunkt1 = LocalDate.of(2022, 8, 1)
+        val resultat = sivilstandServiceV2.beregn(virkningstidspunkt1, mottattSivilstand)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 3
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2022, 8, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2022, 12, 31)
+            resultat[0].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2023, 1, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2023, 4, 30)
+            resultat[1].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
+            resultat[1].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2023, 5, 1)
+            resultat[2].periodeTom shouldBe null
+            resultat[2].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat[2].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
+
+    @Test
+    fun `Test at det ikke genereres periode med UKJENT hvis aktiv periode er før virkningstidspunkt`() {
+        sivilstandServiceV2 = SivilstandServiceV2()
+        val mottattSivilstand = TestUtil.aktivPeriodeErFørVirkningstidspunkt()
+
+        val virkningstidspunkt1 = LocalDate.of(2024, 4, 1)
+        val resultat = sivilstandServiceV2.beregn(virkningstidspunkt1, mottattSivilstand)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 1
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2024, 4, 1)
             resultat[0].periodeTom shouldBe null
             resultat[0].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
             resultat[0].kilde shouldBe Kilde.OFFENTLIG
