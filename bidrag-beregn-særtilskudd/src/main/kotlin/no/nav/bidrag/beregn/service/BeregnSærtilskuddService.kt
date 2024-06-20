@@ -124,7 +124,7 @@ internal class BeregnSærtilskuddService(
         sjablonListe: SjablonListe,
         soknadsBarnId: Int,
     ): BeregnetTotalSaertilskuddResultat {
-        val grunnlagReferanseListe = ArrayList<Grunnlag>()
+//        val grunnlagReferanseListe = ArrayList<Grunnlag>()
 
         // ++ Bidragsevne
         val bidragsevneGrunnlagTilCore =
@@ -134,13 +134,13 @@ internal class BeregnSærtilskuddService(
                 sjablonListe,
             )
         val bidragsevneResultatFraCore = beregnBidragsevne(bidragsevneGrunnlagTilCore)
-        grunnlagReferanseListe.addAll(
-            lagGrunnlagListeForDelberegning(
-                beregnGrunnlag,
-                bidragsevneResultatFraCore.resultatPeriodeListe,
-                bidragsevneResultatFraCore.sjablonListe,
-            ),
-        )
+//        grunnlagReferanseListe.addAll(
+//            lagGrunnlagListeForDelberegning(
+//                beregnGrunnlag,
+//                bidragsevneResultatFraCore.resultatPeriodeListe,
+//                bidragsevneResultatFraCore.sjablonListe,
+//            ),
+//        )
 
         // ++ BPs andel av særtilskudd
         val bpAndelSaertilskuddGrunnlagTilCore =
@@ -150,28 +150,28 @@ internal class BeregnSærtilskuddService(
                 sjablonListe,
             )
         val bpAndelSaertilskuddResultatFraCore = beregnBPAndelSaertilskudd(bpAndelSaertilskuddGrunnlagTilCore)
-        grunnlagReferanseListe.addAll(
-            lagGrunnlagListeForDelberegning(
-                beregnGrunnlag,
-                bpAndelSaertilskuddResultatFraCore.resultatPeriodeListe,
-                bpAndelSaertilskuddResultatFraCore.sjablonListe,
-            ),
-        )
-        grunnlagReferanseListe.addAll(
-            lagGrunnlagListeForBeregnedeGrunnlagBPsAndelSaertilskudd(bpAndelSaertilskuddResultatFraCore.resultatPeriodeListe),
-        )
+//        grunnlagReferanseListe.addAll(
+//            lagGrunnlagListeForDelberegning(
+//                beregnGrunnlag,
+//                bpAndelSaertilskuddResultatFraCore.resultatPeriodeListe,
+//                bpAndelSaertilskuddResultatFraCore.sjablonListe,
+//            ),
+//        )
+//        grunnlagReferanseListe.addAll(
+//            lagGrunnlagListeForBeregnedeGrunnlagBPsAndelSaertilskudd(bpAndelSaertilskuddResultatFraCore.resultatPeriodeListe),
+//        )
 
         // ++ Samværsfradrag
         val samvaersfradragGrunnlagTilCore =
             SamvaersfradragCoreMapper.mapSamvaersfradragGrunnlagTilCore(beregnGrunnlag, sjablonListe)
         val samvaersfradragResultatFraCore = beregnSamvaersfradrag(samvaersfradragGrunnlagTilCore)
-        grunnlagReferanseListe.addAll(
-            lagGrunnlagListeForDelberegning(
-                beregnGrunnlag,
-                samvaersfradragResultatFraCore.resultatPeriodeListe,
-                samvaersfradragResultatFraCore.sjablonListe,
-            ),
-        )
+//        grunnlagReferanseListe.addAll(
+//            lagGrunnlagListeForDelberegning(
+//                beregnGrunnlag,
+//                samvaersfradragResultatFraCore.resultatPeriodeListe,
+//                samvaersfradragResultatFraCore.sjablonListe,
+//            ),
+//        )
 
         // ++ Særtilskudd (totalberegning)
         val saertilskuddGrunnlagTilCore =
@@ -184,17 +184,17 @@ internal class BeregnSærtilskuddService(
                 sjablonListe,
             )
         val saertilskuddResultatFraCore = beregnSaertilskudd(saertilskuddGrunnlagTilCore)
-        grunnlagReferanseListe.addAll(
-            lagGrunnlagReferanseListeSaertilskudd(
-                beregnGrunnlag,
-                saertilskuddResultatFraCore,
-                saertilskuddGrunnlagTilCore,
-                bidragsevneResultatFraCore,
-                bpAndelSaertilskuddResultatFraCore,
-                samvaersfradragResultatFraCore,
-            ),
-        )
-        val unikeReferanserListe = grunnlagReferanseListe.sortedBy { it.referanse }.distinct().toList()
+//        grunnlagReferanseListe.addAll(
+//            lagGrunnlagReferanseListeSaertilskudd(
+//                beregnGrunnlag,
+//                saertilskuddResultatFraCore,
+//                saertilskuddGrunnlagTilCore,
+//                bidragsevneResultatFraCore,
+//                bpAndelSaertilskuddResultatFraCore,
+//                samvaersfradragResultatFraCore,
+//            ),
+//        )
+//        val unikeReferanserListe = grunnlagReferanseListe.sortedBy { it.referanse }.distinct().toList()
 
         // Bygger responsobjekt
         return BeregnetTotalSaertilskuddResultat(
