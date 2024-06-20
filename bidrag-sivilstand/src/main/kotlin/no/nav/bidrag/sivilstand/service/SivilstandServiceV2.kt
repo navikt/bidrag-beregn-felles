@@ -718,12 +718,20 @@ internal class SivilstandServiceV2 {
                     it.kilde,
                 )
             } else {
-                val periodeFom = if (it.periodeFom == virkningstidspunkt) {
+                // Overstyrer ikke periodeFom til første dag i neste måned hvis periodeFom er første dag i måneden.
+                // Samme gjelder om periodeTom er siste dag i måneden.
+                val periodeFom = if (it.periodeFom == virkningstidspunkt || it.periodeFom.dayOfMonth == 1) {
                     it.periodeFom
                 } else {
                     hentFørsteDagINesteMåned(it.periodeFom)
                 }
-                val periodeTom = if (it.periodeTom == null) null else hentSisteDagIForrigeMåned(it.periodeTom)
+                val periodeTom = if (it.periodeTom == null) {
+                    null
+                } else if (erSisteDagIMåneden(it.periodeTom)) {
+                    it.periodeTom
+                } else {
+                    hentSisteDagIForrigeMåned(it.periodeTom)
+                }
                 // Forekomster med Gift/Samboer ignoreres hvis perioden er mindre enn én måned. Bor alene med barn skal da gjelde.
                 if (periodeTom != null) {
                     if (ChronoUnit.MONTHS.between(periodeFom, periodeTom) >= 1) {
@@ -896,4 +904,13 @@ internal class SivilstandServiceV2 {
         LocalDate.of(dato.year, dato.month.minus(1), dato.month.minus(1).length(dato.isLeapYear))
 
     private fun hentFørsteDagINesteMåned(dato: LocalDate): LocalDate = LocalDate.of(dato.year, dato.month, 1).plusMonths(1)
+
+    private fun erSisteDagIMåneden(dato: LocalDate): Boolean {
+        // Finner den siste dagen i måneden for den gitte datoen
+        val lastDayOfMonth = dato.withDayOfMonth(dato.lengthOfMonth())
+        // Sjekker om den gitte datoen er lik den siste dagen i måneden
+        return dato == lastDayOfMonth
+    }
+
+    // lag metode som sjekker om mottatt dato er siste dag i måneden
 }

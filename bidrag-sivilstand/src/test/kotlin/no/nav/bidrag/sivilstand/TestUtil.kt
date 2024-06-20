@@ -1415,5 +1415,104 @@ class TestUtil {
             behandledeSivilstandsopplysninger = emptyList(),
             endreSivilstand = null,
         )
+
+        fun hullIPeriode() = SivilstandRequest(
+            fødselsdatoBM = LocalDate.parse("1980-01-01"),
+            innhentedeOffentligeOpplysninger =
+            listOf(
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.GIFT,
+                    gyldigFom = LocalDate.of(2023, 6, 1),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2024-06-14T14:44:16"),
+                    historisk = true,
+                ),
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.UGIFT,
+                    gyldigFom = LocalDate.of(2015, 6, 1),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2024-06-14T14:44:16"),
+                    historisk = true,
+                ),
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.SEPARERT,
+                    gyldigFom = LocalDate.of(2023, 12, 1),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2023-06-13T14:44:16"),
+                    historisk = false,
+                ),
+            ),
+            behandledeSivilstandsopplysninger = emptyList(),
+            endreSivilstand = null,
+        )
+
+        fun ikkeToUkjentPerioder() = SivilstandRequest(
+            fødselsdatoBM = LocalDate.parse("1980-01-01"),
+            innhentedeOffentligeOpplysninger =
+            listOf(
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.UOPPGITT,
+                    gyldigFom = null,
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2024-06-14T14:44:16"),
+                    historisk = false,
+                ),
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.UOPPGITT,
+                    gyldigFom = LocalDate.of(2019, 9, 5),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2024-06-14T14:44:16"),
+                    historisk = true,
+                ),
+            ),
+            behandledeSivilstandsopplysninger = emptyList(),
+            endreSivilstand = null,
+        )
+
+        fun ikkeNPPlease() = SivilstandRequest(
+            fødselsdatoBM = LocalDate.parse("1980-01-01"),
+            innhentedeOffentligeOpplysninger =
+            listOf(
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.GIFT,
+                    gyldigFom = null,
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2021-06-14T14:44:16"),
+                    historisk = true,
+                ),
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.UGIFT,
+                    gyldigFom = null, // overstyres til BMs fødselsdag
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2020-06-14T14:44:16"),
+                    historisk = true,
+                ),
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.SEPARERT,
+                    gyldigFom = LocalDate.of(2023, 7, 27),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2023-06-14T14:44:16"),
+                    historisk = false,
+                ),
+            ),
+            behandledeSivilstandsopplysninger = emptyList(),
+            endreSivilstand = null,
+        )
     }
 }

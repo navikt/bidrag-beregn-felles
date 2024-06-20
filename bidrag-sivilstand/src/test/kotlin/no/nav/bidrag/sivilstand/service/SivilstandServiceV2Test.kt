@@ -865,4 +865,71 @@ internal class SivilstandServiceV2Test {
             resultat[0].kilde shouldBe Kilde.OFFENTLIG
         }
     }
+
+    @Test
+    fun `Test periodeTom blir riktig når neste periode starter den første i måneden`() {
+        sivilstandServiceV2 = SivilstandServiceV2()
+        val mottattSivilstand = TestUtil.hullIPeriode()
+
+        val virkningstidspunkt1 = LocalDate.of(2021, 4, 1)
+        val resultat = sivilstandServiceV2.beregn(virkningstidspunkt1, mottattSivilstand)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 3
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2021, 4, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2023, 5, 31)
+            resultat[0].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2023, 6, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2023, 11, 30)
+            resultat[1].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
+            resultat[1].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2023, 12, 1)
+            resultat[2].periodeTom shouldBe null
+            resultat[2].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat[2].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
+
+    @Test
+    fun `Test at det ikke genereres to Ukjent-periode`() {
+        sivilstandServiceV2 = SivilstandServiceV2()
+        val mottattSivilstand = TestUtil.ikkeToUkjentPerioder()
+
+        val virkningstidspunkt1 = LocalDate.of(2021, 4, 1)
+        val resultat = sivilstandServiceV2.beregn(virkningstidspunkt1, mottattSivilstand)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 1
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2021, 4, 1)
+            resultat[0].periodeTom shouldBe null
+            resultat[0].sivilstandskode shouldBe Sivilstandskode.UKJENT
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
+
+    @Test
+    fun `Test at det ikke blir np`() {
+        sivilstandServiceV2 = SivilstandServiceV2()
+        val mottattSivilstand = TestUtil.ikkeNPPlease()
+
+        val virkningstidspunkt1 = LocalDate.of(2021, 4, 1)
+        val resultat = sivilstandServiceV2.beregn(virkningstidspunkt1, mottattSivilstand)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 1
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2021, 4, 1)
+            resultat[0].periodeTom shouldBe null
+            resultat[0].sivilstandskode shouldBe Sivilstandskode.UKJENT
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
 }
