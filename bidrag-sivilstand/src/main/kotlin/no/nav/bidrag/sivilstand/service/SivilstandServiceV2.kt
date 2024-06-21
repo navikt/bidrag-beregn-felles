@@ -753,7 +753,7 @@ internal class SivilstandServiceV2 {
                     )
                 }
             }
-        }
+        }.filterNotNull()
 
         val datojustertSivilstandListe = mutableListOf<Sivilstand>()
 
