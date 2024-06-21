@@ -917,7 +917,7 @@ internal class SivilstandServiceV2Test {
     @Test
     fun `Test at det ikke blir np når første status er Gift og periode er under én måned`() {
         sivilstandServiceV2 = SivilstandServiceV2()
-        val mottattSivilstand = TestUtil.nPGiftTest()
+        val mottattSivilstand = TestUtil.nPGiftUnderEnMånedTest()
 
         val virkningstidspunkt1 = LocalDate.of(2021, 8, 1)
         val resultat = sivilstandServiceV2.beregn(virkningstidspunkt1, mottattSivilstand)
@@ -930,6 +930,30 @@ internal class SivilstandServiceV2Test {
             resultat[0].periodeTom shouldBe null
             resultat[0].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
             resultat[0].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
+
+    @Test
+    fun `Test at Gift-status tas med når perioden er første og siste dag i samme måned`() {
+        sivilstandServiceV2 = SivilstandServiceV2()
+        val mottattSivilstand = TestUtil.giftEnMånedTest()
+
+        val virkningstidspunkt1 = LocalDate.of(2021, 8, 1)
+        val resultat = sivilstandServiceV2.beregn(virkningstidspunkt1, mottattSivilstand)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 2
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2021, 8, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2021, 8, 31)
+            resultat[0].sivilstandskode shouldBe Sivilstandskode.GIFT_SAMBOER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2021, 9, 1)
+            resultat[1].periodeTom shouldBe null
+            resultat[1].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat[1].kilde shouldBe Kilde.OFFENTLIG
         }
     }
 }
