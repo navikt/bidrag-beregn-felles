@@ -707,7 +707,7 @@ internal class SivilstandServiceV2 {
 
         // Justerer datoer. Perioder med 'Bor alene med barn' skal få periodeFom lik første dag i måneden og periodeTil lik siste dag i måneden.
         // Justerer ikke frem periodeFom hvis første periode har status GIFT/SAMBOER eller UKJENT og periodeFom = virkningstidpunkt.
-        val mappetSivilstandListe = sivilstandListe.map {
+        val mappetSivilstandListe = sivilstandListe.mapNotNull {
             if (it.sivilstandskode == Sivilstandskode.BOR_ALENE_MED_BARN) {
                 val periodeFom = hentFørsteDagIMåneden(it.periodeFom)
                 val periodeTom = if (it.periodeTom == null) null else hentSisteDagIMåneden(it.periodeTom)
@@ -733,8 +733,9 @@ internal class SivilstandServiceV2 {
                     hentSisteDagIForrigeMåned(it.periodeTom)
                 }
                 // Forekomster med Gift/Samboer ignoreres hvis perioden er mindre enn én måned. Bor alene med barn skal da gjelde.
+                // Legger til én dag i periodeTom slik at testen fungerer for perioder som er første og siste dag i samme måned.
                 if (periodeTom != null) {
-                    if (ChronoUnit.MONTHS.between(periodeFom, periodeTom) >= 1) {
+                    if (ChronoUnit.MONTHS.between(periodeFom, periodeTom.plusDays(1)) >= 1) {
                         Sivilstand(
                             periodeFom,
                             periodeTom,
@@ -747,13 +748,13 @@ internal class SivilstandServiceV2 {
                 } else {
                     Sivilstand(
                         periodeFom,
-                        periodeTom,
+                        null,
                         it.sivilstandskode,
                         it.kilde,
                     )
                 }
             }
-        }.filterNotNull()
+        }
 
         val datojustertSivilstandListe = mutableListOf<Sivilstand>()
 
