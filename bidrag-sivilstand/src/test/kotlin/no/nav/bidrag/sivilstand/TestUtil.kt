@@ -1479,36 +1479,36 @@ class TestUtil {
             endreSivilstand = null,
         )
 
-        fun ikkeNPPlease() = SivilstandRequest(
+        fun nPGiftTest() = SivilstandRequest(
             fødselsdatoBM = LocalDate.parse("1980-01-01"),
             innhentedeOffentligeOpplysninger =
             listOf(
                 SivilstandGrunnlagDto(
                     personId = "12345678901",
                     type = SivilstandskodePDL.GIFT,
-                    gyldigFom = null,
+                    gyldigFom = LocalDate.of(2014, 10, 2),
                     bekreftelsesdato = null,
                     master = "PDL",
-                    registrert = LocalDateTime.parse("2021-06-14T14:44:16"),
+                    registrert = LocalDateTime.parse("2020-12-05T14:44:16"),
                     historisk = true,
                 ),
                 SivilstandGrunnlagDto(
                     personId = "12345678901",
-                    type = SivilstandskodePDL.UGIFT,
-                    gyldigFom = null, // overstyres til BMs fødselsdag
+                    type = SivilstandskodePDL.SKILT,
+                    gyldigFom = LocalDate.of(2023, 1, 9),
                     bekreftelsesdato = null,
                     master = "PDL",
-                    registrert = LocalDateTime.parse("2020-06-14T14:44:16"),
-                    historisk = true,
+                    registrert = LocalDateTime.parse("2023-01-09T14:44:16"),
+                    historisk = false,
                 ),
                 SivilstandGrunnlagDto(
                     personId = "12345678901",
                     type = SivilstandskodePDL.SEPARERT,
-                    gyldigFom = LocalDate.of(2023, 7, 27),
+                    gyldigFom = LocalDate.of(2021, 8, 26),
                     bekreftelsesdato = null,
                     master = "PDL",
-                    registrert = LocalDateTime.parse("2023-06-14T14:44:16"),
-                    historisk = false,
+                    registrert = LocalDateTime.parse("2021-10-28T14:44:16"),
+                    historisk = true,
                 ),
             ),
             behandledeSivilstandsopplysninger = emptyList(),
