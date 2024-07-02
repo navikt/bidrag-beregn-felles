@@ -1,19 +1,23 @@
-package no.nav.bidrag.beregn.service
+package no.nav.bidrag.beregn.særtilskudd.service
 
-import no.nav.bidrag.beregn.BidragBeregnSaertilskuddTest
-import no.nav.bidrag.beregn.TestUtil
-import no.nav.bidrag.beregn.core.bidragsevne.dto.BeregnBidragsevneGrunnlagCore
-import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddGrunnlagCore
-import no.nav.bidrag.beregn.core.samvaersfradrag.dto.BeregnSamvaersfradragGrunnlagCore
-import no.nav.bidrag.beregn.core.særtilskudd.dto.BeregnSaertilskuddGrunnlagCore
-import no.nav.bidrag.beregn.felles.dto.SjablonPeriodeCore
-import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Bidragsevne
-import no.nav.bidrag.beregn.saertilskudd.rest.consumer.SjablonConsumer
-import no.nav.bidrag.beregn.saertilskudd.rest.consumer.Sjablontall
-import no.nav.bidrag.beregn.saertilskudd.rest.exception.UgyldigInputException
-import no.nav.bidrag.commons.web.HttpResponse.Companion.from
-import no.nav.bidrag.domain.enums.sjablon.SjablonNavn
-import no.nav.bidrag.domain.enums.sjablon.SjablonTallNavn
+import io.mockk.every
+import io.mockk.mockkObject
+import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
+import no.nav.bidrag.beregn.særtilskudd.TestUtil
+import no.nav.bidrag.beregn.særtilskudd.core.bidragsevne.BidragsevneCore
+import no.nav.bidrag.beregn.særtilskudd.core.bidragsevne.dto.BeregnBidragsevneGrunnlagCore
+import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.BPsAndelSaertilskuddCore
+import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddGrunnlagCore
+import no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.SamvaersfradragCore
+import no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.dto.BeregnSamvaersfradragGrunnlagCore
+import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.SærtilskuddCore
+import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.dto.BeregnSaertilskuddGrunnlagCore
+import no.nav.bidrag.beregn.særtilskudd.exception.UgyldigInputException
+import no.nav.bidrag.commons.service.sjablon.Bidragsevne
+import no.nav.bidrag.commons.service.sjablon.SjablonProvider
+import no.nav.bidrag.commons.service.sjablon.Sjablontall
+import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
+import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
@@ -27,26 +31,17 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.function.Executable
 import org.mockito.ArgumentCaptor
 import org.mockito.Captor
-import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.capture
-import org.springframework.http.HttpStatus
-import org.springframework.test.context.ActiveProfiles
 import java.math.BigDecimal
 import java.time.LocalDate
 
 @ExtendWith(MockitoExtension::class)
-@DisplayName("BeregnSaertilskuddServiceTest")
-@ActiveProfiles(BidragBeregnSaertilskuddTest.TEST_PROFILE)
 internal class BeregnSærtilskuddServiceTest {
-    @InjectMocks
-    private lateinit var beregnSaertilskuddService: BeregnSaertilskuddService
-
-    @Mock
-    private lateinit var sjablonConsumerMock: SjablonConsumer
+    private lateinit var beregnSaertilskuddService: BeregnSærtilskuddService
 
     @Mock
     private lateinit var bidragsevneCoreMock: BidragsevneCore
@@ -58,7 +53,7 @@ internal class BeregnSærtilskuddServiceTest {
     private lateinit var samvaersfradragCoreMock: SamvaersfradragCore
 
     @Mock
-    private lateinit var saertilskuddCoreMock: SaertilskuddCore
+    private lateinit var saertilskuddCoreMock: SærtilskuddCore
 
     @Captor
     private lateinit var beregnSaertilskuddGrunnlagCoreCaptor: ArgumentCaptor<BeregnSaertilskuddGrunnlagCore>
@@ -73,15 +68,27 @@ internal class BeregnSærtilskuddServiceTest {
     private lateinit var beregnBPsAndelSaertilskuddGrunnlagCoreCaptor: ArgumentCaptor<BeregnBPsAndelSaertilskuddGrunnlagCore>
 
     @BeforeEach
-    fun settOppSjablonMocks() {
-        `when`(sjablonConsumerMock.hentSjablonSjablontall())
-            .thenReturn(from(HttpStatus.OK, TestUtil.dummySjablonSjablontallListe()))
-        `when`(sjablonConsumerMock.hentSjablonSamvaersfradrag())
-            .thenReturn(from(HttpStatus.OK, TestUtil.dummySjablonSamvaersfradragListe()))
-        `when`(sjablonConsumerMock.hentSjablonBidragsevne())
-            .thenReturn(from(HttpStatus.OK, TestUtil.dummySjablonBidragsevneListe()))
-        `when`(sjablonConsumerMock.hentSjablonTrinnvisSkattesats())
-            .thenReturn(from(HttpStatus.OK, TestUtil.dummySjablonTrinnvisSkattesatsListe()))
+    fun initMock() {
+        mockkObject(SjablonProvider)
+        every {
+            SjablonProvider.hentSjablontall()
+        } returns TestUtil.dummySjablonSjablontallListe()
+        every {
+            SjablonProvider.hentSjablonSamværsfradrag()
+        } returns TestUtil.dummySjablonSamværsfradragListe()
+        every {
+            SjablonProvider.hentSjablonBidragsevne()
+        } returns TestUtil.dummySjablonBidragsevneListe()
+        every {
+            SjablonProvider.hentSjablonTrinnvisSkattesats()
+        } returns TestUtil.dummySjablonTrinnvisSkattesatsListe()
+
+        beregnSaertilskuddService = BeregnSærtilskuddService(
+            bidragsevneCore = bidragsevneCoreMock,
+            bpAndelSaertilskuddCore = bpAndelSaertilskuddCoreMock,
+            samvaersfradragCore = samvaersfradragCoreMock,
+            saertilskuddCore = saertilskuddCoreMock,
+        )
     }
 
     @Test
@@ -109,11 +116,11 @@ internal class BeregnSærtilskuddServiceTest {
         `when`(bpAndelSaertilskuddCoreMock.beregnBPsAndelSaertilskudd(bpAndelSaertilskuddGrunnlagTilCoreCaptor.capture()))
             .thenReturn(TestUtil.dummyBPsAndelSaertilskuddResultatCore())
         `when`(samvaersfradragCoreMock.beregnSamvaersfradrag(samvaersfradragGrunnlagTilCoreCaptor.capture()))
-            .thenReturn(TestUtil.dummySamvaersfradragResultatCore())
+            .thenReturn(TestUtil.dummySamværsfradragResultatCore())
         `when`(saertilskuddCoreMock.beregnSaertilskudd(saertilskuddGrunnlagTilCoreCaptor.capture()))
             .thenReturn(TestUtil.dummySaertilskuddResultatCore())
         val beregnTotalSaertilskuddResultat = beregnSaertilskuddService.beregn(TestUtil.byggTotalSaertilskuddGrunnlag())
-        val (_, _, _, _, _, _, _, sjablonPeriodeListe) = bidragsevneGrunnlagTilCoreCaptor.value
+        val (_, _, _, _, _, sjablonPeriodeListe) = bidragsevneGrunnlagTilCoreCaptor.value
         val (_, _, _, _, _, _, sjablonPeriodeListe1) = bpAndelSaertilskuddGrunnlagTilCoreCaptor.value
         val (_, _, _, sjablonPeriodeListe2) = samvaersfradragGrunnlagTilCoreCaptor.value
         val (_, _, _, _, _, _, _, sjablonPeriodeListe3) = saertilskuddGrunnlagTilCoreCaptor.value
@@ -130,8 +137,7 @@ internal class BeregnSærtilskuddServiceTest {
         // Saertilskudd: Ingen sjabloner
         val forventetAntallSjablonElementerSaertilskudd = 0
         assertAll(
-            Executable { assertThat(beregnTotalSaertilskuddResultat.responseEntity.statusCode).isEqualTo(HttpStatus.OK) },
-            Executable { assertThat(beregnTotalSaertilskuddResultat.responseEntity.body).isNotNull() },
+            Executable { assertThat(beregnTotalSaertilskuddResultat).isNotNull() },
             Executable { assertThat(sjablonPeriodeListe).hasSize(forventetAntallSjablonElementerBidragsevne) },
             Executable { assertThat(sjablonPeriodeListe1).hasSize(forventetAntallSjablonElementerBPsAndelSaertilskudd) },
             Executable { assertThat(sjablonPeriodeListe2).hasSize(forventetAntallSjablonElementerSamvaersfradrag) },
@@ -193,17 +199,16 @@ internal class BeregnSærtilskuddServiceTest {
         ).thenReturn(TestUtil.dummyBPsAndelSaertilskuddResultatCore())
         `when`(
             samvaersfradragCoreMock.beregnSamvaersfradrag(capture(beregnSamvaersfradragGrunnlagCoreCaptor)),
-        ).thenReturn(TestUtil.dummySamvaersfradragResultatCore())
+        ).thenReturn(TestUtil.dummySamværsfradragResultatCore())
         `when`(
             saertilskuddCoreMock.beregnSaertilskudd(capture(beregnSaertilskuddGrunnlagCoreCaptor)),
         ).thenReturn(TestUtil.dummySaertilskuddResultatCore())
 
         val beregnSaertilskuddResultat = beregnSaertilskuddService.beregn(TestUtil.byggTotalSaertilskuddGrunnlag())
         assertAll(
-            { assertEquals(HttpStatus.OK, beregnSaertilskuddResultat.responseEntity.statusCode) },
-            { assertNotNull(beregnSaertilskuddResultat.responseEntity.body) },
-            { assertNotNull(beregnSaertilskuddResultat.responseEntity.body?.beregnetSaertilskuddPeriodeListe) },
-            { assertEquals(1, beregnSaertilskuddResultat.responseEntity.body?.beregnetSaertilskuddPeriodeListe?.size) },
+            { assertNotNull(beregnSaertilskuddResultat) },
+            { assertNotNull(beregnSaertilskuddResultat.beregnetSærtilskuddPeriodeListe) },
+            { assertEquals(1, beregnSaertilskuddResultat.beregnetSærtilskuddPeriodeListe.size) },
         )
     }
 
@@ -245,7 +250,7 @@ internal class BeregnSærtilskuddServiceTest {
         `when`(bpAndelSaertilskuddCoreMock.beregnBPsAndelSaertilskudd(capture(beregnBPsAndelSaertilskuddGrunnlagCoreCaptor)))
             .thenReturn(TestUtil.dummyBPsAndelSaertilskuddResultatCore())
         `when`(samvaersfradragCoreMock.beregnSamvaersfradrag(capture(beregnSamvaersfradragGrunnlagCoreCaptor)))
-            .thenReturn(TestUtil.dummySamvaersfradragResultatCoreMedAvvik())
+            .thenReturn(TestUtil.dummySamværsfradragResultatCoreMedAvvik())
         Assertions.assertThatExceptionOfType(UgyldigInputException::class.java)
             .isThrownBy { beregnSaertilskuddService.beregn(TestUtil.byggTotalSaertilskuddGrunnlag()) }
             .withMessageContaining("Ugyldig input ved beregning av samværsfradrag. Følgende avvik ble funnet:")
@@ -260,7 +265,7 @@ internal class BeregnSærtilskuddServiceTest {
         `when`(bpAndelSaertilskuddCoreMock.beregnBPsAndelSaertilskudd(capture(beregnBPsAndelSaertilskuddGrunnlagCoreCaptor)))
             .thenReturn(TestUtil.dummyBPsAndelSaertilskuddResultatCore())
         `when`(samvaersfradragCoreMock.beregnSamvaersfradrag(capture(beregnSamvaersfradragGrunnlagCoreCaptor)))
-            .thenReturn(TestUtil.dummySamvaersfradragResultatCore())
+            .thenReturn(TestUtil.dummySamværsfradragResultatCoreMedAvvik())
         `when`(
             saertilskuddCoreMock.beregnSaertilskudd(capture(beregnSaertilskuddGrunnlagCoreCaptor)),
         ).thenReturn(TestUtil.dummySaertilskuddResultatCoreMedAvvik())
@@ -273,7 +278,5 @@ internal class BeregnSærtilskuddServiceTest {
 
     companion object MockitoHelper {
         fun <T> any(): T = Mockito.any()
-
-        fun <T> any(type: Class<T>): T = Mockito.any(type)
     }
 }

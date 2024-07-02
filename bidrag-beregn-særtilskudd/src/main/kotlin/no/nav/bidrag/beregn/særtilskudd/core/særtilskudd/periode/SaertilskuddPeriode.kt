@@ -2,23 +2,19 @@ package no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.periode
 
 import no.nav.bidrag.beregn.core.bo.Avvik
 import no.nav.bidrag.beregn.core.bo.Periode
-import no.nav.bidrag.beregn.core.felles.FellesPeriode
 import no.nav.bidrag.beregn.core.periode.Periodiserer
-import no.nav.bidrag.beregn.core.særtilskudd.beregning.SaertilskuddBeregning
-import no.nav.bidrag.beregn.core.særtilskudd.bo.BPsAndelSaertilskudd
-import no.nav.bidrag.beregn.core.særtilskudd.bo.BeregnSaertilskuddGrunnlag
-import no.nav.bidrag.beregn.core.særtilskudd.bo.BeregnSaertilskuddListeGrunnlag
-import no.nav.bidrag.beregn.core.særtilskudd.bo.BeregnSaertilskuddResultat
-import no.nav.bidrag.beregn.core.særtilskudd.bo.Bidragsevne
-import no.nav.bidrag.beregn.core.særtilskudd.bo.GrunnlagBeregning
-import no.nav.bidrag.beregn.core.særtilskudd.bo.LopendeBidrag
-import no.nav.bidrag.beregn.core.særtilskudd.bo.ResultatPeriode
-import no.nav.bidrag.beregn.core.særtilskudd.bo.SamvaersfradragGrunnlag
 import no.nav.bidrag.beregn.core.util.PeriodeUtil
-import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.BPsAndelSaertilskuddPeriode
-import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.BidragsevnePeriode
-import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.LopendeBidragPeriode
-import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.SamvaersfradragGrunnlagPeriode
+import no.nav.bidrag.beregn.særtilskudd.core.felles.FellesPeriode
+import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.beregning.SaertilskuddBeregning
+import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.BPsAndelSaertilskudd
+import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.BeregnSaertilskuddGrunnlag
+import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.BeregnSaertilskuddListeGrunnlag
+import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.BeregnSaertilskuddResultat
+import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.Bidragsevne
+import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.GrunnlagBeregning
+import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.LopendeBidrag
+import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.ResultatPeriode
+import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.SamvaersfradragGrunnlag
 
 class SaertilskuddPeriode(private val saertilskuddberegning: SaertilskuddBeregning = SaertilskuddBeregning()) : FellesPeriode() {
 
@@ -142,7 +138,7 @@ class SaertilskuddPeriode(private val saertilskuddberegning: SaertilskuddBeregni
     }
 
     // Validerer at input-verdier til særtilskuddberegning er gyldige
-    override fun validerInput(grunnlag: BeregnSaertilskuddGrunnlag): List<Avvik> {
+    fun validerInput(grunnlag: BeregnSaertilskuddGrunnlag): List<Avvik> {
         val avvikListe =
             PeriodeUtil.validerBeregnPeriodeInput(beregnDatoFom = grunnlag.beregnDatoFra, beregnDatoTil = grunnlag.beregnDatoTil).toMutableList()
 

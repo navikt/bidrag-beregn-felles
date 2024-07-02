@@ -5,7 +5,7 @@ import no.nav.bidrag.beregn.core.bo.PeriodisertGrunnlag
 import java.math.BigDecimal
 
 data class BidragsevnePeriode(val referanse: String, val periodeDatoFraTil: Periode, val bidragsevneBelop: BigDecimal) : PeriodisertGrunnlag {
-    constructor(bidragsevnePeriode: no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.BidragsevnePeriode) :
+    constructor(bidragsevnePeriode: BidragsevnePeriode) :
         this(
             bidragsevnePeriode.referanse,
             bidragsevnePeriode.periodeDatoFraTil.justerDatoer(),
@@ -22,7 +22,7 @@ data class BPsAndelSaertilskuddPeriode(
     val bPsAndelSaertilskuddBelop: BigDecimal,
     val barnetErSelvforsorget: Boolean,
 ) : PeriodisertGrunnlag {
-    constructor(bPsAndelSaertilskuddPeriode: no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.BPsAndelSaertilskuddPeriode) :
+    constructor(bPsAndelSaertilskuddPeriode: BPsAndelSaertilskuddPeriode) :
         this(
             bPsAndelSaertilskuddPeriode.referanse,
             bPsAndelSaertilskuddPeriode.periodeDatoFraTil.justerDatoer(),
@@ -43,7 +43,7 @@ data class LopendeBidragPeriode(
     val opprinneligBidragBelop: BigDecimal,
     val opprinneligSamvaersfradragBelop: BigDecimal,
 ) : PeriodisertGrunnlag {
-    constructor(lopendeBidragPeriode: no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.LopendeBidragPeriode) :
+    constructor(lopendeBidragPeriode: LopendeBidragPeriode) :
         this(
             lopendeBidragPeriode.referanse,
             lopendeBidragPeriode.periodeDatoFraTil.justerDatoer(),
@@ -63,7 +63,7 @@ data class SamvaersfradragGrunnlagPeriode(
     val periodeDatoFraTil: Periode,
     val samvaersfradragBelop: BigDecimal,
 ) : PeriodisertGrunnlag {
-    constructor(samvaersfradragGrunnlagPeriode: no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.SamvaersfradragGrunnlagPeriode) :
+    constructor(samvaersfradragGrunnlagPeriode: SamvaersfradragGrunnlagPeriode) :
         this(
             samvaersfradragGrunnlagPeriode.referanse,
             samvaersfradragGrunnlagPeriode.barnPersonId,

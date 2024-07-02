@@ -1,29 +1,23 @@
 package no.nav.bidrag.beregn.særtilskudd.core.bidragsevne
 
-import no.nav.bidrag.beregn.core.bidragsevne.bo.BarnIHustandPeriode
-import no.nav.bidrag.beregn.core.bidragsevne.bo.BeregnBidragsevneGrunnlag
-import no.nav.bidrag.beregn.core.bidragsevne.bo.BeregnBidragsevneResultat
-import no.nav.bidrag.beregn.core.bidragsevne.bo.BostatusPeriode
-import no.nav.bidrag.beregn.core.bidragsevne.bo.InntektPeriode
-import no.nav.bidrag.beregn.core.bidragsevne.bo.ResultatPeriode
-import no.nav.bidrag.beregn.core.bidragsevne.bo.SaerfradragPeriode
-import no.nav.bidrag.beregn.core.bidragsevne.bo.SkatteklassePeriode
-import no.nav.bidrag.beregn.core.bidragsevne.dto.AntallBarnIEgetHusholdPeriodeCore
-import no.nav.bidrag.beregn.core.bidragsevne.dto.BeregnBidragsevneGrunnlagCore
-import no.nav.bidrag.beregn.core.bidragsevne.dto.BeregnBidragsevneResultatCore
-import no.nav.bidrag.beregn.core.bidragsevne.dto.BostatusPeriodeCore
-import no.nav.bidrag.beregn.core.bidragsevne.dto.InntektPeriodeCore
-import no.nav.bidrag.beregn.core.bidragsevne.dto.ResultatBeregningCore
-import no.nav.bidrag.beregn.core.bidragsevne.dto.ResultatPeriodeCore
-import no.nav.bidrag.beregn.core.bidragsevne.dto.SkatteklassePeriodeCore
-import no.nav.bidrag.beregn.core.bidragsevne.dto.SærfradragPeriodeCore
-import no.nav.bidrag.beregn.core.bidragsevne.periode.BidragsevnePeriode
 import no.nav.bidrag.beregn.core.bo.Avvik
 import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
-import no.nav.bidrag.beregn.core.felles.FellesCore
-import no.nav.bidrag.domene.enums.beregning.Særfradragskode
-import no.nav.bidrag.domene.enums.person.Bostatuskode
+import no.nav.bidrag.beregn.særtilskudd.core.bidragsevne.bo.BarnIHusstandPeriode
+import no.nav.bidrag.beregn.særtilskudd.core.bidragsevne.bo.BeregnBidragsevneGrunnlag
+import no.nav.bidrag.beregn.særtilskudd.core.bidragsevne.bo.BeregnBidragsevneResultat
+import no.nav.bidrag.beregn.særtilskudd.core.bidragsevne.bo.InntektPeriode
+import no.nav.bidrag.beregn.særtilskudd.core.bidragsevne.bo.ResultatPeriode
+import no.nav.bidrag.beregn.særtilskudd.core.bidragsevne.bo.VoksneIHusstandPeriode
+import no.nav.bidrag.beregn.særtilskudd.core.bidragsevne.dto.BeregnBidragsevneGrunnlagCore
+import no.nav.bidrag.beregn.særtilskudd.core.bidragsevne.dto.BeregnBidragsevneResultatCore
+import no.nav.bidrag.beregn.særtilskudd.core.bidragsevne.dto.ResultatBeregningCore
+import no.nav.bidrag.beregn.særtilskudd.core.bidragsevne.dto.ResultatPeriodeCore
+import no.nav.bidrag.beregn.særtilskudd.core.bidragsevne.periode.BidragsevnePeriode
+import no.nav.bidrag.beregn.særtilskudd.core.felles.FellesCore
+import no.nav.bidrag.beregn.særtilskudd.core.felles.dto.BarnIHusstandenPeriodeCore
+import no.nav.bidrag.beregn.særtilskudd.core.felles.dto.InntektPeriodeCore
+import no.nav.bidrag.beregn.særtilskudd.core.felles.dto.VoksneIHusstandenPeriodeCore
 
 internal class BidragsevneCore(private val bidragsevnePeriode: BidragsevnePeriode = BidragsevnePeriode()) : FellesCore() {
 
@@ -43,10 +37,8 @@ internal class BidragsevneCore(private val bidragsevnePeriode: BidragsevnePeriod
         beregnDatoFra = grunnlag.beregnDatoFra,
         beregnDatoTil = grunnlag.beregnDatoTil,
         inntektPeriodeListe = mapInntektPeriodeListe(grunnlag.inntektPeriodeListe),
-        skatteklassePeriodeListe = mapSkatteklassePeriodeListe(grunnlag.skatteklassePeriodeListe),
-        bostatusPeriodeListe = mapBostatusPeriodeListe(grunnlag.bostatusPeriodeListe),
-        antallBarnIEgetHusholdPeriodeListe = mapAntallBarnIEgetHusholdPeriodeListe(grunnlag.antallBarnIEgetHusholdPeriodeCoreListe),
-        saerfradragPeriodeListe = mapSaerfradragPeriodeListe(grunnlag.særfradragPeriodeListe),
+        barnIHusstandPeriodeListe = mapBarnIHusstandPeriodeListe(grunnlag.barnIHusstandenPeriodeListe),
+        voksneIHusstandPeriodeListe = mapVoksneIHusstandPeriodeListe(grunnlag.voksneIHusstandenPeriodeListe),
         sjablonPeriodeListe = mapSjablonPeriodeListe(grunnlag.sjablonPeriodeListe),
     )
 
@@ -56,111 +48,56 @@ internal class BidragsevneCore(private val bidragsevnePeriode: BidragsevnePeriod
         avvikListe = mapAvvik(avvikListe),
     )
 
-    private fun mapInntektPeriodeListe(inntektPeriodeListeCore: List<InntektPeriodeCore>): List<InntektPeriode> {
-        val inntektPeriodeListe = mutableListOf<InntektPeriode>()
-        inntektPeriodeListeCore.forEach {
-            inntektPeriodeListe.add(
-                InntektPeriode(
-                    referanse = it.referanse,
-                    periodeDatoFraTil = Periode(datoFom = it.periodeDatoFraTil.datoFom, datoTil = it.periodeDatoFraTil.datoTil),
-                    inntektType = it.inntektType,
-                    inntektBelop = it.inntektBelop,
-                ),
-            )
-        }
-        return inntektPeriodeListe
+    private fun mapInntektPeriodeListe(inntektPeriodeListeCore: List<InntektPeriodeCore>) = inntektPeriodeListeCore.map {
+        InntektPeriode(
+            referanse = it.referanse,
+            periodeDatoFraTil = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
+            inntektType = " ",
+            inntektBelop = it.beløp,
+        )
     }
 
-    private fun mapSkatteklassePeriodeListe(skatteklassePeriodeListeCore: List<SkatteklassePeriodeCore>): List<SkatteklassePeriode> {
-        val skatteklassePeriodeListe = mutableListOf<SkatteklassePeriode>()
-        skatteklassePeriodeListeCore.forEach {
-            skatteklassePeriodeListe.add(
-                SkatteklassePeriode(
-                    referanse = it.referanse,
-                    periodeDatoFraTil = Periode(datoFom = it.periodeDatoFraTil.datoFom, datoTil = it.periodeDatoFraTil.datoTil),
-                    skatteklasse = it.skatteklasse,
-                ),
+    private fun mapBarnIHusstandPeriodeListe(antallBarnIHusstandenPeriodeListeCore: List<BarnIHusstandenPeriodeCore>) =
+        antallBarnIHusstandenPeriodeListeCore.map {
+            BarnIHusstandPeriode(
+                referanse = it.referanse,
+                periodeDatoFraTil = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
+                antallBarn = it.antall,
             )
         }
-        return skatteklassePeriodeListe
-    }
 
-    private fun mapBostatusPeriodeListe(bostatusPeriodeListeCore: List<BostatusPeriodeCore>): List<BostatusPeriode> {
-        val bostatusPeriodeListe = mutableListOf<BostatusPeriode>()
-        bostatusPeriodeListeCore.forEach {
-            bostatusPeriodeListe.add(
-                BostatusPeriode(
-                    referanse = it.referanse,
-                    periodeDatoFraTil = Periode(datoFom = it.periodeDatoFraTil.datoFom, datoTil = it.periodeDatoFraTil.datoTil),
-                    bostatusKode = Bostatuskode.valueOf(it.bostatusKode),
-                ),
+    private fun mapVoksneIHusstandPeriodeListe(bostatusVoksneIHusstandenPeriodeListeCore: List<VoksneIHusstandenPeriodeCore>) =
+        bostatusVoksneIHusstandenPeriodeListeCore.map {
+            VoksneIHusstandPeriode(
+                referanse = it.referanse,
+                periodeDatoFraTil = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
+                borMedAndre = it.borMedAndre,
             )
         }
-        return bostatusPeriodeListe
-    }
 
-    private fun mapAntallBarnIEgetHusholdPeriodeListe(
-        antallBarnIEgetHusholdPeriodeListeCore: List<AntallBarnIEgetHusholdPeriodeCore>,
-    ): List<BarnIHustandPeriode> {
-        val antallBarnIEgetHusholdPeriodeListe = mutableListOf<BarnIHustandPeriode>()
-        antallBarnIEgetHusholdPeriodeListeCore.forEach {
-            antallBarnIEgetHusholdPeriodeListe.add(
-                BarnIHustandPeriode(
-                    referanse = it.referanse,
-                    periodeDatoFraTil = Periode(datoFom = it.periodeDatoFraTil.datoFom, datoTil = it.periodeDatoFraTil.datoTil),
-                    antallBarn = it.antallBarn,
-                ),
-            )
-        }
-        return antallBarnIEgetHusholdPeriodeListe
-    }
-
-    private fun mapSaerfradragPeriodeListe(saerfradragPeriodeListeCore: List<SærfradragPeriodeCore>): List<SaerfradragPeriode> {
-        val saerfradragPeriodeListe = mutableListOf<SaerfradragPeriode>()
-        saerfradragPeriodeListeCore.forEach {
-            saerfradragPeriodeListe.add(
-                SaerfradragPeriode(
-                    referanse = it.referanse,
-                    periodeDatoFraTil = Periode(datoFom = it.periodeDatoFraTil.datoFom, datoTil = it.periodeDatoFraTil.datoTil),
-                    saerfradragKode = Særfradragskode.valueOf(it.saerfradragKode),
-                ),
-            )
-        }
-        return saerfradragPeriodeListe
-    }
-
-    private fun mapResultatPeriode(resultatPeriodeListe: List<ResultatPeriode>): List<ResultatPeriodeCore> {
-        val resultatPeriodeCoreListe = mutableListOf<ResultatPeriodeCore>()
-        resultatPeriodeListe.forEach {
-            resultatPeriodeCoreListe.add(
-                ResultatPeriodeCore(
-                    periode = PeriodeCore(datoFom = it.resultatDatoFraTil.datoFom, datoTil = it.resultatDatoFraTil.datoTil),
-                    resultatBeregning = ResultatBeregningCore(it.resultatBeregning.belop),
-                    grunnlagReferanseListe = mapReferanseListe(it),
-                ),
-            )
-        }
-        return resultatPeriodeCoreListe
+    private fun mapResultatPeriode(resultatPeriodeListe: List<ResultatPeriode>) = resultatPeriodeListe.map {
+        ResultatPeriodeCore(
+            periode = PeriodeCore(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
+            resultat = ResultatBeregningCore(it.resultat.belop),
+            grunnlagsreferanseListe = mapReferanseListe(it),
+        )
     }
 
     private fun mapReferanseListe(resultatPeriode: ResultatPeriode): List<String> {
-        val (inntektListe, skatteklasse, bostatus, barnIHusstand, saerfradrag) = resultatPeriode.resultatGrunnlagBeregning
-        val sjablonListe = resultatPeriode.resultatBeregning.sjablonListe
+        val (inntektListe, antallBarnIHusstand, antallVoksneIHusstand) = resultatPeriode.grunnlag
+        val sjablonListe = resultatPeriode.resultat.sjablonListe
         val referanseListe = mutableListOf<String>()
         inntektListe.forEach {
             referanseListe.add(it.referanse)
         }
-        referanseListe.add(skatteklasse.referanse)
-        referanseListe.add(bostatus.referanse)
-        referanseListe.add(barnIHusstand.referanse)
-        referanseListe.add(saerfradrag.referanse)
+        referanseListe.add(antallBarnIHusstand.referanse)
+        referanseListe.add(antallVoksneIHusstand.referanse)
         referanseListe.addAll(sjablonListe.map { lagSjablonReferanse(it) }.distinct())
         return referanseListe.sorted()
     }
 
-    private fun mapSjablonGrunnlagListe(resultatPeriodeListe: List<ResultatPeriode>) = resultatPeriodeListe.stream()
-        .map { mapSjablonListe(it.resultatBeregning.sjablonListe) }
-        .flatMap { it.stream() }
+    private fun mapSjablonGrunnlagListe(resultatPeriodeListe: List<ResultatPeriode>) = resultatPeriodeListe
+        .map { it.resultat.sjablonListe }
+        .flatMap { mapSjablonListe(it) }
         .distinct()
-        .toList()
 }

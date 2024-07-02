@@ -6,13 +6,12 @@ import java.time.LocalDate
 abstract class FellesPeriode {
     protected fun mergeSluttperiode(periodeListe: MutableList<Periode>, datoTil: LocalDate) {
         if (periodeListe.size > 1) {
-            val nestSisteTilDato = periodeListe[periodeListe.size - 2].datoTil
-            val sisteTilDato = periodeListe[periodeListe.size - 1].datoTil
-            if (datoTil == nestSisteTilDato && null == sisteTilDato) {
-                val nyPeriode = Periode(datoFom = periodeListe[periodeListe.size - 2].datoFom, datoTil = null)
+            val nestSistePeriode = periodeListe[periodeListe.size - 2]
+            val sistePeriode = periodeListe.last()
+
+            if (datoTil == nestSistePeriode.datoTil && sistePeriode.datoTil == null) {
+                periodeListe[periodeListe.size - 2] = Periode(datoFom = nestSistePeriode.datoFom, datoTil = null)
                 periodeListe.removeAt(periodeListe.size - 1)
-                periodeListe.removeAt(periodeListe.size - 1)
-                periodeListe.add(nyPeriode)
             }
         }
     }

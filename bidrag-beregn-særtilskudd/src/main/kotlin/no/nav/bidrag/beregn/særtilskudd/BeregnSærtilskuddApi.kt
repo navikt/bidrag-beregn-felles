@@ -3,7 +3,7 @@ package no.nav.bidrag.beregn.særtilskudd
 import no.nav.bidrag.beregn.særtilskudd.service.BeregnSærtilskuddService
 import no.nav.bidrag.commons.service.sjablon.EnableSjablonProvider
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.behandling.beregning.saertilskudd.BeregnetTotalSaertilskuddResultat
+import no.nav.bidrag.transport.behandling.beregning.særtilskudd.BeregnetSærtilskuddResultat
 import org.springframework.stereotype.Service
 
 /**
@@ -28,5 +28,5 @@ import org.springframework.stereotype.Service
 class BeregnSærtilskuddApi {
     private val service = BeregnSærtilskuddService()
 
-    fun beregn(beregnSærtilskuddGrunnlag: BeregnGrunnlag): BeregnetTotalSaertilskuddResultat = service.beregn(beregnSærtilskuddGrunnlag)
+    fun beregn(beregnSærtilskuddGrunnlag: BeregnGrunnlag): BeregnetSærtilskuddResultat = service.beregn(beregnSærtilskuddGrunnlag)
 }

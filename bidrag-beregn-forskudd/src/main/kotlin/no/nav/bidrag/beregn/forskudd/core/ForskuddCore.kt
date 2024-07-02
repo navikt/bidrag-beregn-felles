@@ -195,16 +195,18 @@ internal class ForskuddCore(private val forskuddPeriode: ForskuddPeriode = Forsk
         return referanseListe.distinct().sorted()
     }
 
-    private fun mapSjablonGrunnlagListe(periodeResultatListe: List<ResultatPeriode>) = periodeResultatListe.stream()
-        .map { mapSjablonListe(it.resultat.sjablonListe) }
-        .flatMap { it.stream() }
+    private fun mapSjablonGrunnlagListe(periodeResultatListe: List<ResultatPeriode>) = periodeResultatListe
+        .map { it.resultat.sjablonListe }
+        .flatMap { mapSjablonListe(it) }
         .distinct()
-        .toList()
 
     private fun mapSjablonListe(sjablonListe: List<SjablonPeriodeNavnVerdi>) = sjablonListe
         .map {
             SjablonResultatGrunnlagCore(
-                referanse = opprettSjablonreferanse(navn = it.navn, periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil)),
+                referanse = opprettSjablonreferanse(
+                    navn = it.navn,
+                    periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
+                ),
                 periode = PeriodeCore(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
                 navn = it.navn,
                 verdi = it.verdi,

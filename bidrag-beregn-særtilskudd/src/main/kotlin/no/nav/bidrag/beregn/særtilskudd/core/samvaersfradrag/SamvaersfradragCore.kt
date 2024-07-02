@@ -4,21 +4,21 @@ import no.nav.bidrag.beregn.core.bo.Avvik
 import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.bo.SjablonPeriodeNavnVerdi
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
-import no.nav.bidrag.beregn.core.felles.FellesCore
-import no.nav.bidrag.beregn.core.samvaersfradrag.bo.BeregnSamvaersfradragGrunnlag
-import no.nav.bidrag.beregn.core.samvaersfradrag.bo.BeregnSamvaersfradragResultat
-import no.nav.bidrag.beregn.core.samvaersfradrag.bo.ResultatBeregning
-import no.nav.bidrag.beregn.core.samvaersfradrag.bo.ResultatPeriode
-import no.nav.bidrag.beregn.core.samvaersfradrag.bo.SamvaersfradragGrunnlagPeriode
-import no.nav.bidrag.beregn.core.samvaersfradrag.dto.BeregnSamvaersfradragGrunnlagCore
-import no.nav.bidrag.beregn.core.samvaersfradrag.dto.BeregnSamvaersfradragResultatCore
-import no.nav.bidrag.beregn.core.samvaersfradrag.dto.ResultatBeregningCore
-import no.nav.bidrag.beregn.core.samvaersfradrag.dto.ResultatPeriodeCore
-import no.nav.bidrag.beregn.core.samvaersfradrag.dto.SamvaersklassePeriodeCore
+import no.nav.bidrag.beregn.særtilskudd.core.felles.FellesCore
+import no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.bo.BeregnSamvaersfradragGrunnlag
+import no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.bo.BeregnSamvaersfradragResultat
+import no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.bo.ResultatBeregning
+import no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.bo.ResultatPeriode
+import no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.bo.SamvaersfradragGrunnlagPeriode
+import no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.dto.BeregnSamvaersfradragGrunnlagCore
+import no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.dto.BeregnSamvaersfradragResultatCore
+import no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.dto.ResultatBeregningCore
+import no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.dto.ResultatPeriodeCore
+import no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.dto.SamvaersklassePeriodeCore
 import no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.periode.SamvaersfradragPeriode
 
 class SamvaersfradragCore(
-    private val samvaersfradragPeriode: no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.periode.SamvaersfradragPeriode = no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.periode.SamvaersfradragPeriode(),
+    private val samvaersfradragPeriode: SamvaersfradragPeriode = SamvaersfradragPeriode(),
 ) : FellesCore() {
     fun beregnSamvaersfradrag(grunnlag: BeregnSamvaersfradragGrunnlagCore): BeregnSamvaersfradragResultatCore {
         val beregnSamvaersfradragGrunnlag = mapTilBusinessObject(grunnlag)

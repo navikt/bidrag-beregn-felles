@@ -2,26 +2,26 @@ package no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd
 
 import no.nav.bidrag.beregn.core.bo.Avvik
 import no.nav.bidrag.beregn.core.bo.Periode
-import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.bo.BeregnBPsAndelSaertilskuddGrunnlag
-import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.bo.BeregnBPsAndelSaertilskuddResultat
-import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.bo.GrunnlagBeregning
-import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.bo.Inntekt
-import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.bo.ResultatPeriode
-import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddGrunnlagCore
-import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddResultatCore
-import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.BeregnedeGrunnlagCore
-import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.InntektPeriodeCore
-import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.NettoSaertilskuddPeriodeCore
-import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.ResultatBeregningCore
-import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.ResultatPeriodeCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
-import no.nav.bidrag.beregn.core.felles.FellesCore
+import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.BeregnBPsAndelSaertilskuddGrunnlag
+import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.BeregnBPsAndelSaertilskuddResultat
+import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.GrunnlagBeregning
+import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.Inntekt
 import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.InntektPeriode
 import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.NettoSaertilskuddPeriode
-import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.BPsAndelSaertilskuddPeriode
+import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.ResultatPeriode
+import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddGrunnlagCore
+import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddResultatCore
+import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.dto.BeregnedeGrunnlagCore
+import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.dto.NettoSaertilskuddPeriodeCore
+import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.dto.ResultatBeregningCore
+import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.dto.ResultatPeriodeCore
+import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.periode.BPsAndelSaertilskuddPeriode
+import no.nav.bidrag.beregn.særtilskudd.core.felles.FellesCore
+import no.nav.bidrag.beregn.særtilskudd.core.felles.dto.InntektPeriodeCore
 
 class BPsAndelSaertilskuddCore(
-    private val bPsAndelSaertilskuddPeriode: no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.BPsAndelSaertilskuddPeriode = no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.BPsAndelSaertilskuddPeriode(),
+    private val bPsAndelSaertilskuddPeriode: BPsAndelSaertilskuddPeriode = BPsAndelSaertilskuddPeriode(),
 ) : FellesCore() {
 
     fun beregnBPsAndelSaertilskudd(grunnlag: BeregnBPsAndelSaertilskuddGrunnlagCore): BeregnBPsAndelSaertilskuddResultatCore {
@@ -62,11 +62,11 @@ class BPsAndelSaertilskuddCore(
 
     private fun mapNettoSaertilskuddPeriodeListe(
         nettoSaertilskuddPeriodeListeCore: List<NettoSaertilskuddPeriodeCore>,
-    ): List<no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.NettoSaertilskuddPeriode> {
-        val nettoSaertilskuddPeriodeListe = mutableListOf<no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.NettoSaertilskuddPeriode>()
+    ): List<NettoSaertilskuddPeriode> {
+        val nettoSaertilskuddPeriodeListe = mutableListOf<NettoSaertilskuddPeriode>()
         nettoSaertilskuddPeriodeListeCore.forEach {
             nettoSaertilskuddPeriodeListe.add(
-                no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.NettoSaertilskuddPeriode(
+                NettoSaertilskuddPeriode(
                     referanse = it.referanse,
                     periodeDatoFraTil = Periode(datoFom = it.periodeDatoFraTil.datoFom, datoTil = it.periodeDatoFraTil.datoTil),
                     nettoSaertilskuddBelop = it.nettoSaertilskuddBelop,
@@ -76,19 +76,17 @@ class BPsAndelSaertilskuddCore(
         return nettoSaertilskuddPeriodeListe
     }
 
-    private fun mapInntektPeriodeListe(
-        inntekterPeriodeListeCore: List<InntektPeriodeCore>,
-    ): List<no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.InntektPeriode> {
-        val inntekterPeriodeListe = mutableListOf<no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.InntektPeriode>()
+    private fun mapInntektPeriodeListe(inntekterPeriodeListeCore: List<InntektPeriodeCore>): List<InntektPeriode> {
+        val inntekterPeriodeListe = mutableListOf<InntektPeriode>()
         inntekterPeriodeListeCore.forEach {
             inntekterPeriodeListe.add(
-                no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.InntektPeriode(
+                InntektPeriode(
                     referanse = it.referanse,
-                    periodeDatoFraTil = Periode(datoFom = it.periodeDatoFraTil.datoFom, datoTil = it.periodeDatoFraTil.datoTil),
-                    inntektType = it.inntektType,
-                    inntektBelop = it.inntektBelop,
-                    deltFordel = it.deltFordel,
-                    skatteklasse2 = it.skatteklasse2,
+                    periodeDatoFraTil = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
+                    inntektType = " ",
+                    inntektBelop = it.beløp,
+                    deltFordel = false,
+                    skatteklasse2 = false,
                 ),
             )
         }

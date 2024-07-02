@@ -1,10 +1,10 @@
 package no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.beregning
 
 import no.nav.bidrag.beregn.core.bo.SjablonPeriode
-import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.bo.GrunnlagBeregning
-import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.bo.ResultatBeregning
-import no.nav.bidrag.beregn.core.felles.FellesBeregning
 import no.nav.bidrag.beregn.core.util.SjablonUtil
+import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.GrunnlagBeregning
+import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.ResultatBeregning
+import no.nav.bidrag.beregn.særtilskudd.core.felles.FellesBeregning
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import java.math.BigDecimal
 import java.math.RoundingMode

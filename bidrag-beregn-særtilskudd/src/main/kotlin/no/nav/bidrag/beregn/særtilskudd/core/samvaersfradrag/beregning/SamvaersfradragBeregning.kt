@@ -2,10 +2,10 @@ package no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.beregning
 
 import no.nav.bidrag.beregn.core.bo.SjablonNokkel
 import no.nav.bidrag.beregn.core.bo.SjablonPeriode
-import no.nav.bidrag.beregn.core.felles.FellesBeregning
-import no.nav.bidrag.beregn.core.samvaersfradrag.bo.GrunnlagBeregningPeriodisert
-import no.nav.bidrag.beregn.core.samvaersfradrag.bo.ResultatBeregning
 import no.nav.bidrag.beregn.core.util.SjablonUtil
+import no.nav.bidrag.beregn.særtilskudd.core.felles.FellesBeregning
+import no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.bo.GrunnlagBeregningPeriodisert
+import no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.bo.ResultatBeregning
 import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonNøkkelNavn

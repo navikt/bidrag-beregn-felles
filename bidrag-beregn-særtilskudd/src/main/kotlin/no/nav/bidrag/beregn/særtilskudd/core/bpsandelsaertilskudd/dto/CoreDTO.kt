@@ -1,11 +1,12 @@
 package no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.dto
 
-import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.bo.Inntekt
 import no.nav.bidrag.beregn.core.dto.AvvikCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonResultatGrunnlagCore
-import no.nav.bidrag.beregn.core.felles.dto.IResultatPeriode
+import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.Inntekt
+import no.nav.bidrag.beregn.særtilskudd.core.felles.dto.IResultatPeriode
+import no.nav.bidrag.beregn.særtilskudd.core.felles.dto.InntektPeriodeCore
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -21,15 +22,6 @@ data class BeregnBPsAndelSaertilskuddGrunnlagCore(
 )
 
 data class NettoSaertilskuddPeriodeCore(val referanse: String, val periodeDatoFraTil: PeriodeCore, val nettoSaertilskuddBelop: BigDecimal)
-
-data class InntektPeriodeCore(
-    val referanse: String,
-    val periodeDatoFraTil: PeriodeCore,
-    val inntektType: String,
-    val inntektBelop: BigDecimal,
-    val deltFordel: Boolean,
-    val skatteklasse2: Boolean,
-)
 
 // Resultatperiode
 data class BeregnBPsAndelSaertilskuddResultatCore(

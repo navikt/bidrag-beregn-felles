@@ -4,7 +4,9 @@ import no.nav.bidrag.beregn.core.dto.AvvikCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonResultatGrunnlagCore
-import no.nav.bidrag.beregn.core.felles.dto.IResultatPeriode
+import no.nav.bidrag.beregn.særtilskudd.core.felles.dto.BarnIHusstandenPeriodeCore
+import no.nav.bidrag.beregn.særtilskudd.core.felles.dto.InntektPeriodeCore
+import no.nav.bidrag.beregn.særtilskudd.core.felles.dto.VoksneIHusstandenPeriodeCore
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -12,23 +14,17 @@ import java.time.LocalDate
 data class BeregnBidragsevneGrunnlagCore(
     val beregnDatoFra: LocalDate,
     val beregnDatoTil: LocalDate,
-    val bostatusPeriodeListe: List<BostatusPeriodeCore>,
     val inntektPeriodeListe: List<InntektPeriodeCore>,
-    val skatteklassePeriodeListe: List<SkatteklassePeriodeCore>,
-    val antallBarnIEgetHusholdPeriodeCoreListe: List<AntallBarnIEgetHusholdPeriodeCore>,
-    val særfradragPeriodeListe: List<SærfradragPeriodeCore>,
+    val barnIHusstandenPeriodeListe: List<BarnIHusstandenPeriodeCore>,
+    val voksneIHusstandenPeriodeListe: List<VoksneIHusstandenPeriodeCore>,
     var sjablonPeriodeListe: List<SjablonPeriodeCore>,
 )
 
-data class InntektPeriodeCore(val referanse: String, val periodeDatoFraTil: PeriodeCore, val inntektType: String, val inntektBelop: BigDecimal)
-
-data class SkatteklassePeriodeCore(val referanse: String, val periodeDatoFraTil: PeriodeCore, val skatteklasse: Int)
-
-data class BostatusPeriodeCore(val referanse: String, val periodeDatoFraTil: PeriodeCore, val bostatusKode: String)
-
-data class AntallBarnIEgetHusholdPeriodeCore(val referanse: String, val periodeDatoFraTil: PeriodeCore, val antallBarn: Double)
-
-data class SærfradragPeriodeCore(val referanse: String, val periodeDatoFraTil: PeriodeCore, val saerfradragKode: String)
+// data class BostatusPeriodeCore(
+//    val referanse: String,
+//    val periode: PeriodeCore,
+//    val kode: String,
+// )
 
 // Resultatperiode
 data class BeregnBidragsevneResultatCore(
@@ -38,9 +34,11 @@ data class BeregnBidragsevneResultatCore(
 )
 
 data class ResultatPeriodeCore(
-    override val periode: PeriodeCore,
-    val resultatBeregning: ResultatBeregningCore,
-    override val grunnlagReferanseListe: List<String>,
-) : IResultatPeriode
+    val periode: PeriodeCore,
+    val resultat: ResultatBeregningCore,
+    val grunnlagsreferanseListe: List<String>,
+)
 
-data class ResultatBeregningCore(val belop: BigDecimal)
+data class ResultatBeregningCore(
+    val belop: BigDecimal,
+)

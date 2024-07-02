@@ -3,23 +3,23 @@ package no.nav.bidrag.beregn.særtilskudd.core.særtilskudd
 import no.nav.bidrag.beregn.core.bo.Avvik
 import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
-import no.nav.bidrag.beregn.core.felles.FellesCore
-import no.nav.bidrag.beregn.core.særtilskudd.bo.BeregnSaertilskuddGrunnlag
-import no.nav.bidrag.beregn.core.særtilskudd.bo.BeregnSaertilskuddResultat
-import no.nav.bidrag.beregn.core.særtilskudd.bo.ResultatPeriode
-import no.nav.bidrag.beregn.core.særtilskudd.dto.BPsAndelSaertilskuddPeriodeCore
-import no.nav.bidrag.beregn.core.særtilskudd.dto.BeregnSaertilskuddGrunnlagCore
-import no.nav.bidrag.beregn.core.særtilskudd.dto.BeregnSaertilskuddResultatCore
-import no.nav.bidrag.beregn.core.særtilskudd.dto.BidragsevnePeriodeCore
-import no.nav.bidrag.beregn.core.særtilskudd.dto.LopendeBidragPeriodeCore
-import no.nav.bidrag.beregn.core.særtilskudd.dto.ResultatBeregningCore
-import no.nav.bidrag.beregn.core.særtilskudd.dto.ResultatPeriodeCore
-import no.nav.bidrag.beregn.core.særtilskudd.dto.SamvaersfradragPeriodeCore
-import no.nav.bidrag.beregn.core.særtilskudd.periode.SaertilskuddPeriode
+import no.nav.bidrag.beregn.særtilskudd.core.felles.FellesCore
 import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.BPsAndelSaertilskuddPeriode
+import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.BeregnSaertilskuddGrunnlag
+import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.BeregnSaertilskuddResultat
 import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.BidragsevnePeriode
 import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.LopendeBidragPeriode
+import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.ResultatPeriode
 import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.SamvaersfradragGrunnlagPeriode
+import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.dto.BPsAndelSaertilskuddPeriodeCore
+import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.dto.BeregnSaertilskuddGrunnlagCore
+import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.dto.BeregnSaertilskuddResultatCore
+import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.dto.BidragsevnePeriodeCore
+import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.dto.LopendeBidragPeriodeCore
+import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.dto.ResultatBeregningCore
+import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.dto.ResultatPeriodeCore
+import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.dto.SamvaersfradragPeriodeCore
+import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.periode.SaertilskuddPeriode
 
 class SærtilskuddCore(private val saertilskuddPeriode: SaertilskuddPeriode = SaertilskuddPeriode()) : FellesCore() {
     fun beregnSaertilskudd(grunnlag: BeregnSaertilskuddGrunnlagCore): BeregnSaertilskuddResultatCore {
@@ -50,13 +50,11 @@ class SærtilskuddCore(private val saertilskuddPeriode: SaertilskuddPeriode = Sa
         avvikListe = mapAvvik(avvikListe),
     )
 
-    private fun mapBidragsevnePeriodeListe(
-        bidragsevnePeriodeListeCore: List<BidragsevnePeriodeCore>,
-    ): List<no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.BidragsevnePeriode> {
-        val bidragsevnePeriodeListe = mutableListOf<no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.BidragsevnePeriode>()
+    private fun mapBidragsevnePeriodeListe(bidragsevnePeriodeListeCore: List<BidragsevnePeriodeCore>): List<BidragsevnePeriode> {
+        val bidragsevnePeriodeListe = mutableListOf<BidragsevnePeriode>()
         bidragsevnePeriodeListeCore.forEach {
             bidragsevnePeriodeListe.add(
-                no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.BidragsevnePeriode(
+                BidragsevnePeriode(
                     referanse = it.referanse,
                     periodeDatoFraTil = Periode(datoFom = it.periodeDatoFraTil.datoFom, datoTil = it.periodeDatoFraTil.datoTil),
                     bidragsevneBelop = it.bidragsevneBelop,
@@ -68,11 +66,11 @@ class SærtilskuddCore(private val saertilskuddPeriode: SaertilskuddPeriode = Sa
 
     private fun mapBPsAndelSaertilskuddPeriodeListe(
         bPsAndelSaertilskuddPeriodeListeCore: List<BPsAndelSaertilskuddPeriodeCore>,
-    ): List<no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.BPsAndelSaertilskuddPeriode> {
-        val bPsAndelSaertilskuddPeriodeListe = mutableListOf<no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.BPsAndelSaertilskuddPeriode>()
+    ): List<BPsAndelSaertilskuddPeriode> {
+        val bPsAndelSaertilskuddPeriodeListe = mutableListOf<BPsAndelSaertilskuddPeriode>()
         bPsAndelSaertilskuddPeriodeListeCore.forEach {
             bPsAndelSaertilskuddPeriodeListe.add(
-                no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.BPsAndelSaertilskuddPeriode(
+                BPsAndelSaertilskuddPeriode(
                     referanse = it.referanse,
                     periodeDatoFraTil = Periode(datoFom = it.periodeDatoFraTil.datoFom, datoTil = it.periodeDatoFraTil.datoTil),
                     bPsAndelSaertilskuddProsent = it.bPsAndelSaertilskuddProsent,
@@ -84,13 +82,11 @@ class SærtilskuddCore(private val saertilskuddPeriode: SaertilskuddPeriode = Sa
         return bPsAndelSaertilskuddPeriodeListe
     }
 
-    private fun mapLopendeBidragPeriodeListe(
-        lopendeBidragPeriodeListeCore: List<LopendeBidragPeriodeCore>,
-    ): List<no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.LopendeBidragPeriode> {
-        val lopendeBidragPeriodeListe = mutableListOf<no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.LopendeBidragPeriode>()
+    private fun mapLopendeBidragPeriodeListe(lopendeBidragPeriodeListeCore: List<LopendeBidragPeriodeCore>): List<LopendeBidragPeriode> {
+        val lopendeBidragPeriodeListe = mutableListOf<LopendeBidragPeriode>()
         lopendeBidragPeriodeListeCore.forEach {
             lopendeBidragPeriodeListe.add(
-                no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.LopendeBidragPeriode(
+                LopendeBidragPeriode(
                     referanse = it.referanse,
                     periodeDatoFraTil = Periode(datoFom = it.periodeDatoFraTil.datoFom, datoTil = it.periodeDatoFraTil.datoTil),
                     barnPersonId = it.barnPersonId,
@@ -106,11 +102,11 @@ class SærtilskuddCore(private val saertilskuddPeriode: SaertilskuddPeriode = Sa
 
     private fun mapSamvaersfradragPeriodeListe(
         samvaersfradragPeriodeCoreListe: List<SamvaersfradragPeriodeCore>,
-    ): List<no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.SamvaersfradragGrunnlagPeriode> {
-        val samvaersfradragPeriodeListe = mutableListOf<no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.SamvaersfradragGrunnlagPeriode>()
+    ): List<SamvaersfradragGrunnlagPeriode> {
+        val samvaersfradragPeriodeListe = mutableListOf<SamvaersfradragGrunnlagPeriode>()
         samvaersfradragPeriodeCoreListe.forEach {
             samvaersfradragPeriodeListe.add(
-                no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.SamvaersfradragGrunnlagPeriode(
+                SamvaersfradragGrunnlagPeriode(
                     referanse = it.referanse,
                     barnPersonId = it.barnPersonId,
                     periodeDatoFraTil = Periode(datoFom = it.periodeDatoFraTil.datoFom, datoTil = it.periodeDatoFraTil.datoTil),

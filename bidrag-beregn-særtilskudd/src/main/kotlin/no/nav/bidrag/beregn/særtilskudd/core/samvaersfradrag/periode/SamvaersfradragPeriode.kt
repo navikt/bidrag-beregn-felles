@@ -3,22 +3,22 @@ package no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.periode
 import no.nav.bidrag.beregn.core.bo.Avvik
 import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.bo.SjablonPeriode
-import no.nav.bidrag.beregn.core.felles.FellesPeriode
 import no.nav.bidrag.beregn.core.periode.Periodiserer
-import no.nav.bidrag.beregn.core.samvaersfradrag.beregning.SamvaersfradragBeregning
-import no.nav.bidrag.beregn.core.samvaersfradrag.bo.BeregnSamvaersfradragGrunnlag
-import no.nav.bidrag.beregn.core.samvaersfradrag.bo.BeregnSamvaersfradragListeGrunnlag
-import no.nav.bidrag.beregn.core.samvaersfradrag.bo.BeregnSamvaersfradragResultat
-import no.nav.bidrag.beregn.core.samvaersfradrag.bo.GrunnlagBeregningPeriodisert
-import no.nav.bidrag.beregn.core.samvaersfradrag.bo.ResultatPeriode
-import no.nav.bidrag.beregn.core.samvaersfradrag.bo.SamvaersfradragGrunnlagPerBarn
-import no.nav.bidrag.beregn.core.samvaersfradrag.bo.SamvaersfradragGrunnlagPeriode
 import no.nav.bidrag.beregn.core.util.PeriodeUtil
+import no.nav.bidrag.beregn.særtilskudd.core.felles.FellesPeriode
+import no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.beregning.SamvaersfradragBeregning
+import no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.bo.BeregnSamvaersfradragGrunnlag
+import no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.bo.BeregnSamvaersfradragListeGrunnlag
+import no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.bo.BeregnSamvaersfradragResultat
+import no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.bo.GrunnlagBeregningPeriodisert
+import no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.bo.ResultatPeriode
+import no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.bo.SamvaersfradragGrunnlagPerBarn
+import no.nav.bidrag.beregn.særtilskudd.core.samvaersfradrag.bo.SamvaersfradragGrunnlagPeriode
 import java.time.Period
 
 class SamvaersfradragPeriode(private val samvaersfradragBeregning: SamvaersfradragBeregning = SamvaersfradragBeregning()) : FellesPeriode() {
 
-    override fun beregnPerioder(grunnlag: BeregnSamvaersfradragGrunnlag): BeregnSamvaersfradragResultat {
+    fun beregnPerioder(grunnlag: BeregnSamvaersfradragGrunnlag): BeregnSamvaersfradragResultat {
         val beregnSamvaersfradragListeGrunnlag = BeregnSamvaersfradragListeGrunnlag()
 
         // Juster datoer
@@ -98,7 +98,7 @@ class SamvaersfradragPeriode(private val samvaersfradragBeregning: Samvaersfradr
     }
 
     // Validerer at input-verdier til samvaersfradragberegning er gyldige
-    override fun validerInput(grunnlag: BeregnSamvaersfradragGrunnlag): List<Avvik> {
+    fun validerInput(grunnlag: BeregnSamvaersfradragGrunnlag): List<Avvik> {
         val avvikListe = PeriodeUtil.validerBeregnPeriodeInput(grunnlag.beregnDatoFra, grunnlag.beregnDatoTil).toMutableList()
 
         avvikListe.addAll(

@@ -11,10 +11,10 @@ data class BeregnSaertilskuddGrunnlag(
     val beregnDatoFra: LocalDate,
     val beregnDatoTil: LocalDate,
     val soknadsbarnPersonId: Int,
-    val bidragsevnePeriodeListe: List<no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.BidragsevnePeriode>,
-    val bPsAndelSaertilskuddPeriodeListe: List<no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.BPsAndelSaertilskuddPeriode>,
-    val lopendeBidragPeriodeListe: List<no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.LopendeBidragPeriode>,
-    val samvaersfradragGrunnlagPeriodeListe: List<no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.SamvaersfradragGrunnlagPeriode>,
+    val bidragsevnePeriodeListe: List<BidragsevnePeriode>,
+    val bPsAndelSaertilskuddPeriodeListe: List<BPsAndelSaertilskuddPeriode>,
+    val lopendeBidragPeriodeListe: List<LopendeBidragPeriode>,
+    val samvaersfradragGrunnlagPeriodeListe: List<SamvaersfradragGrunnlagPeriode>,
     val sjablonPeriodeListe: List<SjablonPeriode>,
 
 )
@@ -57,9 +57,9 @@ data class SamvaersfradragGrunnlag(val referanse: String, val barnPersonId: Int,
 // Hjelpeklasser
 data class BeregnSaertilskuddListeGrunnlag(
     val periodeResultatListe: MutableList<ResultatPeriode> = mutableListOf(),
-    var justertBidragsevnePeriodeListe: List<no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.BidragsevnePeriode> = listOf(),
-    var justertBPsAndelSaertilskuddPeriodeListe: List<no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.BPsAndelSaertilskuddPeriode> = listOf(),
-    var justertLopendeBidragPeriodeListe: List<no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.LopendeBidragPeriode> = listOf(),
-    var justertSamvaersfradragPeriodeListe: List<no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.SamvaersfradragGrunnlagPeriode> = listOf(),
+    var justertBidragsevnePeriodeListe: List<BidragsevnePeriode> = listOf(),
+    var justertBPsAndelSaertilskuddPeriodeListe: List<BPsAndelSaertilskuddPeriode> = listOf(),
+    var justertLopendeBidragPeriodeListe: List<LopendeBidragPeriode> = listOf(),
+    var justertSamvaersfradragPeriodeListe: List<SamvaersfradragGrunnlagPeriode> = listOf(),
     var bruddPeriodeListe: MutableList<Periode> = mutableListOf(),
 )

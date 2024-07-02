@@ -6,7 +6,7 @@ import no.nav.bidrag.commons.service.sjablon.Sjablontall
 import no.nav.bidrag.commons.service.sjablon.TrinnvisSkattesats
 
 data class SjablonListe(
-    var sjablontallResponse: List<Sjablontall> = emptyList(),
+    var sjablonSjablontallResponse: List<Sjablontall> = emptyList(),
     var sjablonSamvaersfradragResponse: List<Samværsfradrag> = emptyList(),
     var sjablonBidragsevneResponse: List<Bidragsevne> = emptyList(),
     var sjablonTrinnvisSkattesatsResponse: List<TrinnvisSkattesats> = emptyList(),

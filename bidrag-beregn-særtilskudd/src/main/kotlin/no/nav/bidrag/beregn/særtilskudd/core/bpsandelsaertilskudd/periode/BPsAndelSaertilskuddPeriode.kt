@@ -3,19 +3,17 @@ package no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.periode
 import no.nav.bidrag.beregn.core.bo.Avvik
 import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.bo.SjablonPeriode
-import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.beregning.BPsAndelSaertilskuddBeregning
-import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.bo.BeregnBPsAndelSaertilskuddGrunnlag
-import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.bo.BeregnBPsAndelSaertilskuddListeGrunnlag
-import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.bo.BeregnBPsAndelSaertilskuddResultat
-import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.bo.GrunnlagBeregning
-import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.bo.Inntekt
-import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.bo.ResultatPeriode
-import no.nav.bidrag.beregn.core.felles.FellesPeriode
-import no.nav.bidrag.beregn.core.inntekt.InntektPeriodeGrunnlagUtenInntektType
 import no.nav.bidrag.beregn.core.periode.Periodiserer
 import no.nav.bidrag.beregn.core.util.PeriodeUtil
+import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.beregning.BPsAndelSaertilskuddBeregning
+import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.BeregnBPsAndelSaertilskuddGrunnlag
+import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.BeregnBPsAndelSaertilskuddListeGrunnlag
+import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.BeregnBPsAndelSaertilskuddResultat
+import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.GrunnlagBeregning
+import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.Inntekt
 import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.InntektPeriode
-import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.NettoSaertilskuddPeriode
+import no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.ResultatPeriode
+import no.nav.bidrag.beregn.særtilskudd.core.felles.FellesPeriode
 import java.time.LocalDate
 
 class BPsAndelSaertilskuddPeriode(private val bPsAndelSaertilskuddBeregning: BPsAndelSaertilskuddBeregning = BPsAndelSaertilskuddBeregning()) :
@@ -51,16 +49,16 @@ class BPsAndelSaertilskuddPeriode(private val bPsAndelSaertilskuddBeregning: BPs
             .map { no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.NettoSaertilskuddPeriode(it) }
 
         beregnBPsAndelSaertilskuddListeGrunnlag.justertInntektBPPeriodeListe = periodeGrunnlag.inntektBPPeriodeListe
-            .map { no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.InntektPeriode(it) }
+            .map { InntektPeriode(it) }
 
-        beregnBPsAndelSaertilskuddListeGrunnlag.justertInntektBMPeriodeListe = behandlUtvidetBarnetrygd(
-            inntektPeriodeListe = periodeGrunnlag.inntektBMPeriodeListe,
-            sjablonPeriodeListe = beregnBPsAndelSaertilskuddListeGrunnlag.justertSjablonPeriodeListe,
-        )
-            .map { no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.InntektPeriode(it) }
+//        beregnBPsAndelSaertilskuddListeGrunnlag.justertInntektBMPeriodeListe = behandlUtvidetBarnetrygd(
+//            inntektPeriodeListe = periodeGrunnlag.inntektBMPeriodeListe,
+//            sjablonPeriodeListe = beregnBPsAndelSaertilskuddListeGrunnlag.justertSjablonPeriodeListe,
+//        )
+//            .map { InntektPeriode(it) }
 
         beregnBPsAndelSaertilskuddListeGrunnlag.justertInntektBBPeriodeListe = periodeGrunnlag.inntektBBPeriodeListe
-            .map { no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.InntektPeriode(it) }
+            .map { InntektPeriode(it) }
     }
 
     // Lagger bruddperioder ved å løpe gjennom alle periodelistene
@@ -155,42 +153,42 @@ class BPsAndelSaertilskuddPeriode(private val bPsAndelSaertilskuddBeregning: BPs
     }
 
     // Sjekker om det skal legges til inntekt for fordel særfradrag enslig forsørger og skatteklasse 2 (kun BM)
-    private fun behandlUtvidetBarnetrygd(
-        inntektPeriodeListe: List<no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.InntektPeriode>,
-        sjablonPeriodeListe: List<SjablonPeriode>,
-    ): List<no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.InntektPeriode> {
-        if (inntektPeriodeListe.isEmpty()) {
-            return inntektPeriodeListe
-        }
-
-        val justertInntektPeriodeListe = behandlUtvidetBarnetrygd(
-            inntektPeriodeGrunnlagListe = inntektPeriodeListe
-                .map {
-                    InntektPeriodeGrunnlagUtenInntektType(
-                        referanse = it.referanse,
-                        inntektPeriode = it.getPeriode(),
-                        type = it.inntektType,
-                        belop = it.inntektBelop,
-                        deltFordel = it.deltFordel,
-                        skatteklasse2 = it.skatteklasse2,
-                    )
-                },
-            sjablonPeriodeListe = sjablonPeriodeListe,
-        )
-
-        return justertInntektPeriodeListe
-            .map {
-                no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.InntektPeriode(
-                    referanse = it.referanse,
-                    periodeDatoFraTil = it.getPeriode(),
-                    inntektType = it.type,
-                    inntektBelop = it.belop,
-                    deltFordel = it.deltFordel,
-                    skatteklasse2 = it.skatteklasse2,
-                )
-            }
-            .sortedBy { it.periodeDatoFraTil.datoFom }
-    }
+//    private fun behandlUtvidetBarnetrygd(
+//        inntektPeriodeListe: List<InntektPeriode>,
+//        sjablonPeriodeListe: List<SjablonPeriode>,
+//    ): List<InntektPeriode> {
+//        if (inntektPeriodeListe.isEmpty()) {
+//            return inntektPeriodeListe
+//        }
+//
+//        val justertInntektPeriodeListe = behandlUtvidetBarnetrygd(
+//            inntektPeriodeGrunnlagListe = inntektPeriodeListe
+//                .map {
+//                    InntektPeriodeGrunnlagUtenInntektType(
+//                        referanse = it.referanse,
+//                        inntektPeriode = it.getPeriode(),
+//                        type = it.inntektType,
+//                        belop = it.inntektBelop,
+//                        deltFordel = it.deltFordel,
+//                        skatteklasse2 = it.skatteklasse2,
+//                    )
+//                },
+//            sjablonPeriodeListe = sjablonPeriodeListe,
+//        )
+//
+//        return justertInntektPeriodeListe
+//            .map {
+//                InntektPeriode(
+//                    referanse = it.referanse,
+//                    periodeDatoFraTil = it.getPeriode(),
+//                    inntektType = it.type,
+//                    inntektBelop = it.belop,
+//                    deltFordel = it.deltFordel,
+//                    skatteklasse2 = it.skatteklasse2,
+//                )
+//            }
+//            .sortedBy { it.periodeDatoFraTil.datoFom }
+//    }
 
     // Validerer at input-verdier til BPsAndelSaertilskuddsberegning er gyldige
     fun validerInput(grunnlag: BeregnBPsAndelSaertilskuddGrunnlag): List<Avvik> {

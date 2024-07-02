@@ -1,74 +1,60 @@
 package no.nav.bidrag.beregn.særtilskudd.service.mapper
 
-import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.BeregnBPsAndelSaertilskuddGrunnlagCore
-import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.InntektPeriodeCore
-import no.nav.bidrag.beregn.core.bpsandelsaertilskudd.dto.NettoSaertilskuddPeriodeCore
-import no.nav.bidrag.beregn.core.felles.bo.SjablonListe
-import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
-import no.nav.bidrag.domene.enums.rolle.Rolle
-import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
-import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.behandling.beregning.saertilskudd.BMInntekt
-import no.nav.bidrag.transport.behandling.beregning.saertilskudd.BPInntekt
-import no.nav.bidrag.transport.behandling.beregning.saertilskudd.InntektRolle
-import no.nav.bidrag.transport.behandling.beregning.saertilskudd.NettoSaertilskudd
-import no.nav.bidrag.transport.behandling.beregning.saertilskudd.SBInntekt
-
 object BPAndelSaertilskuddCoreMapper : CoreMapper() {
-    fun mapBPsAndelSaertilskuddGrunnlagTilCore(
-        beregnGrunnlag: BeregnGrunnlag,
-        sjablontallMap: Map<String, SjablonTallNavn>,
-        sjablonListe: SjablonListe,
-    ): BeregnBPsAndelSaertilskuddGrunnlagCore {
-        val nettoSaertilskuddPeriodeListe = ArrayList<NettoSaertilskuddPeriodeCore>()
-        val inntektBPPeriodeListe = ArrayList<InntektPeriodeCore>()
-        val inntektBMPeriodeListe = ArrayList<InntektPeriodeCore>()
-        val inntektBBPeriodeListe = ArrayList<InntektPeriodeCore>()
-
-        // Løper gjennom alle grunnlagene og identifiserer de som skal mappes til bidragsevne core
-        for (grunnlag in beregnGrunnlag.grunnlagListe!!) {
-            when (grunnlag.type) {
-                Grunnlagstype.INNTEKT -> {
-                    val (rolle) = grunnlagTilObjekt(grunnlag, InntektRolle::class.java)
-                    if (rolle == Rolle.BIDRAGSPLIKTIG) {
-                        val bpInntekt = grunnlagTilObjekt(grunnlag, BPInntekt::class.java)
-                        inntektBPPeriodeListe.add(bpInntekt.tilInntektPeriodeCoreBPsAndelSaertilskudd(grunnlag.referanse!!))
-                    } else if (rolle == Rolle.BIDRAGSMOTTAKER) {
-                        val bmInntekt = grunnlagTilObjekt(grunnlag, BMInntekt::class.java)
-                        inntektBMPeriodeListe.add(bmInntekt.tilCore(grunnlag.referanse!!))
-                    } else if (rolle == Rolle.SØKNADSBARN) {
-                        val sbInntekt = grunnlagTilObjekt(grunnlag, SBInntekt::class.java)
-                        inntektBBPeriodeListe.add(sbInntekt.tilCore(grunnlag.referanse!!))
-                    }
-                }
-
-                Grunnlagstype.NETTO_SAERTILSKUDD -> {
-                    val nettoSaertilskudd = grunnlagTilObjekt(grunnlag, NettoSaertilskudd::class.java)
-                    nettoSaertilskuddPeriodeListe.add(nettoSaertilskudd.tilCore(grunnlag.referanse!!))
-                }
-
-                else -> {}
-            }
-        }
-
-        // Hent aktuelle sjabloner
-        val sjablonPeriodeCoreListe =
-            mapSjablonSjablontall(
-                sjablonListe.sjablontallResponse,
-                BP_ANDEL_SAERTILSKUDD,
-                beregnGrunnlag,
-                sjablontallMap,
-            )
-        return BeregnBPsAndelSaertilskuddGrunnlagCore(
-            beregnGrunnlag.beregnDatoFra!!,
-            beregnGrunnlag.beregnDatoTil!!,
-            nettoSaertilskuddPeriodeListe,
-            inntektBPPeriodeListe,
-            inntektBMPeriodeListe,
-            inntektBBPeriodeListe,
-            sjablonPeriodeCoreListe,
-        )
-    }
+//    fun mapBPsAndelSaertilskuddGrunnlagTilCore(
+//        beregnGrunnlag: BeregnGrunnlag,
+//        sjablontallMap: Map<String, SjablonTallNavn>,
+//        sjablonListe: SjablonListe,
+//    ): BeregnBPsAndelSaertilskuddGrunnlagCore {
+//        val nettoSaertilskuddPeriodeListe = ArrayList<NettoSaertilskuddPeriodeCore>()
+//        val inntektBPPeriodeListe = ArrayList<InntektPeriodeCore>()
+//        val inntektBMPeriodeListe = ArrayList<InntektPeriodeCore>()
+//        val inntektBBPeriodeListe = ArrayList<InntektPeriodeCore>()
+//
+//        // Løper gjennom alle grunnlagene og identifiserer de som skal mappes til bidragsevne core
+//        for (grunnlag in beregnGrunnlag.grunnlagListe!!) {
+//            when (grunnlag.type) {
+//                Grunnlagstype.INNTEKT -> {
+//                    val (rolle) = grunnlagTilObjekt(grunnlag, InntektRolle::class.java)
+//                    if (rolle == Rolle.BIDRAGSPLIKTIG) {
+//                        val bpInntekt = grunnlagTilObjekt(grunnlag, BPInntekt::class.java)
+//                        inntektBPPeriodeListe.add(bpInntekt.tilInntektPeriodeCoreBPsAndelSaertilskudd(grunnlag.referanse!!))
+//                    } else if (rolle == Rolle.BIDRAGSMOTTAKER) {
+//                        val bmInntekt = grunnlagTilObjekt(grunnlag, BMInntekt::class.java)
+//                        inntektBMPeriodeListe.add(bmInntekt.tilCore(grunnlag.referanse!!))
+//                    } else if (rolle == Rolle.SØKNADSBARN) {
+//                        val sbInntekt = grunnlagTilObjekt(grunnlag, SBInntekt::class.java)
+//                        inntektBBPeriodeListe.add(sbInntekt.tilCore(grunnlag.referanse!!))
+//                    }
+//                }
+//
+//                Grunnlagstype.NETTO_SAERTILSKUDD -> {
+//                    val nettoSaertilskudd = grunnlagTilObjekt(grunnlag, NettoSaertilskudd::class.java)
+//                    nettoSaertilskuddPeriodeListe.add(nettoSaertilskudd.tilCore(grunnlag.referanse!!))
+//                }
+//
+//                else -> {}
+//            }
+//        }
+//
+//        // Hent aktuelle sjabloner
+//        val sjablonPeriodeCoreListe =
+//            mapSjablonSjablontall(
+//                sjablonListe.sjablontallResponse,
+//                BP_ANDEL_SAERTILSKUDD,
+//                beregnGrunnlag,
+//                sjablontallMap,
+//            )
+//        return BeregnBPsAndelSaertilskuddGrunnlagCore(
+//            beregnGrunnlag.beregnDatoFra!!,
+//            beregnGrunnlag.beregnDatoTil!!,
+//            nettoSaertilskuddPeriodeListe,
+//            inntektBPPeriodeListe,
+//            inntektBMPeriodeListe,
+//            inntektBBPeriodeListe,
+//            sjablonPeriodeCoreListe,
+//        )
+//    }
 }
 
 /*fun BasePeriode.tilPeriodeCore(): PeriodeCore {

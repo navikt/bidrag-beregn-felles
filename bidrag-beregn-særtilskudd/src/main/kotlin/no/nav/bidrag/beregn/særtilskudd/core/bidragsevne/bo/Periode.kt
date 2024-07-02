@@ -36,11 +36,21 @@ data class BostatusPeriode(val referanse: String, val periodeDatoFraTil: Periode
     override fun getPeriode(): Periode = periodeDatoFraTil
 }
 
-data class BarnIHustandPeriode(val referanse: String, val periodeDatoFraTil: Periode, val antallBarn: Double) : PeriodisertGrunnlag {
-    constructor(barnIEgetHusholdPeriode: BarnIHustandPeriode) : this(
-        barnIEgetHusholdPeriode.referanse,
-        barnIEgetHusholdPeriode.periodeDatoFraTil.justerDatoer(),
-        barnIEgetHusholdPeriode.antallBarn,
+data class BarnIHusstandPeriode(val referanse: String, val periodeDatoFraTil: Periode, val antallBarn: Double) : PeriodisertGrunnlag {
+    constructor(barnIHusstandPeriode: BarnIHusstandPeriode) : this(
+        barnIHusstandPeriode.referanse,
+        barnIHusstandPeriode.periodeDatoFraTil.justerDatoer(),
+        barnIHusstandPeriode.antallBarn,
+    )
+
+    override fun getPeriode(): Periode = periodeDatoFraTil
+}
+
+data class VoksneIHusstandPeriode(val referanse: String, val periodeDatoFraTil: Periode, val borMedAndre: Boolean) : PeriodisertGrunnlag {
+    constructor(voksneIHusstandPeriode: VoksneIHusstandPeriode) : this(
+        voksneIHusstandPeriode.referanse,
+        voksneIHusstandPeriode.periodeDatoFraTil.justerDatoer(),
+        voksneIHusstandPeriode.borMedAndre,
     )
 
     override fun getPeriode(): Periode = periodeDatoFraTil

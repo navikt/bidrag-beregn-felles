@@ -10,10 +10,10 @@ import java.time.LocalDate
 data class BeregnBPsAndelSaertilskuddGrunnlag(
     val beregnDatoFra: LocalDate,
     val beregnDatoTil: LocalDate,
-    val nettoSaertilskuddPeriodeListe: List<no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.NettoSaertilskuddPeriode>,
-    val inntektBPPeriodeListe: List<no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.InntektPeriode>,
-    val inntektBMPeriodeListe: List<no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.InntektPeriode>,
-    val inntektBBPeriodeListe: List<no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.InntektPeriode>,
+    val nettoSaertilskuddPeriodeListe: List<NettoSaertilskuddPeriode>,
+    val inntektBPPeriodeListe: List<InntektPeriode>,
+    val inntektBMPeriodeListe: List<InntektPeriode>,
+    val inntektBBPeriodeListe: List<InntektPeriode>,
     val sjablonPeriodeListe: List<SjablonPeriode>,
 )
 
@@ -48,10 +48,10 @@ data class Inntekt(val referanse: String, val inntektType: String, val inntektBe
 // Hjelpeklasser
 data class BeregnBPsAndelSaertilskuddListeGrunnlag(
     val periodeResultatListe: MutableList<ResultatPeriode> = mutableListOf(),
-    var justertNettoSaertilskuddPeriodeListe: List<no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.NettoSaertilskuddPeriode> = listOf(),
-    var justertInntektBPPeriodeListe: List<no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.InntektPeriode> = listOf(),
-    var justertInntektBMPeriodeListe: List<no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.InntektPeriode> = listOf(),
-    var justertInntektBBPeriodeListe: List<no.nav.bidrag.beregn.særtilskudd.core.bpsandelsaertilskudd.bo.InntektPeriode> = listOf(),
+    var justertNettoSaertilskuddPeriodeListe: List<NettoSaertilskuddPeriode> = listOf(),
+    var justertInntektBPPeriodeListe: List<InntektPeriode> = listOf(),
+    var justertInntektBMPeriodeListe: List<InntektPeriode> = listOf(),
+    var justertInntektBBPeriodeListe: List<InntektPeriode> = listOf(),
     var justertSjablonPeriodeListe: List<SjablonPeriode> = listOf(),
     var bruddPeriodeListe: MutableList<Periode> = mutableListOf(),
 )

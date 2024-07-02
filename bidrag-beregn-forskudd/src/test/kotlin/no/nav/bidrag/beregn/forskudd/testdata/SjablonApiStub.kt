@@ -13,7 +13,7 @@ class SjablonApiStub {
     }
 
     private fun settOppSjablonSjablontallStub() {
-        val url = "/bidrag-sjablon/sjablontall/all"
+        mockkObject(SjablonProvider.Companion)
         val sjablonliste =
             " [  " +
                 "{\"typeSjablon\": \"0005\"," +
@@ -121,7 +121,6 @@ class SjablonApiStub {
                 "\"brukerid\": \"A100364 \"," +
                 "\"tidspktEndret\": \"2020-05-17T14:15:49.233\"}]"
 
-        mockkObject(SjablonProvider.Companion)
         every {
             SjablonProvider.hentSjablontall()
         } returns ObjectMapper().findAndRegisterModules().readValue(sjablonliste, object : TypeReference<List<Sjablontall>>() {})

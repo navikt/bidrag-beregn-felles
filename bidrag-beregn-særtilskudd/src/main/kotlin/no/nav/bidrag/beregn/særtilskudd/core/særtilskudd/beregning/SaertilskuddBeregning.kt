@@ -1,8 +1,8 @@
 package no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.beregning
 
-import no.nav.bidrag.beregn.core.felles.FellesBeregning
-import no.nav.bidrag.beregn.core.særtilskudd.bo.GrunnlagBeregning
-import no.nav.bidrag.beregn.core.særtilskudd.bo.ResultatBeregning
+import no.nav.bidrag.beregn.særtilskudd.core.felles.FellesBeregning
+import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.GrunnlagBeregning
+import no.nav.bidrag.beregn.særtilskudd.core.særtilskudd.bo.ResultatBeregning
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import java.math.BigDecimal
 
