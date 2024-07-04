@@ -7,6 +7,7 @@ import no.nav.bidrag.transport.behandling.grunnlag.response.SivilstandGrunnlagDt
 import java.time.LocalDate
 
 data class SivilstandRequest(
+    val fødselsdatoBM: LocalDate,
     // Data som er hentet fra PDL. Disse dataene brukes til å beregne offentlige perioder.
     val innhentedeOffentligeOpplysninger: List<SivilstandGrunnlagDto>,
     // Behandlede sivilstandsopplysninger. Dette vil være resultatperioder fra en tidligere beregning.
@@ -15,12 +16,7 @@ data class SivilstandRequest(
     val endreSivilstand: EndreSivilstand?,
 )
 
-data class Sivilstand(
-    val periodeFom: LocalDate,
-    val periodeTom: LocalDate?,
-    val sivilstandskode: Sivilstandskode,
-    val kilde: Kilde,
-)
+data class Sivilstand(val periodeFom: LocalDate, val periodeTom: LocalDate?, val sivilstandskode: Sivilstandskode, val kilde: Kilde)
 
 data class EndreSivilstand(
     val typeEndring: TypeEndring,

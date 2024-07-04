@@ -37,6 +37,11 @@ class YtelserServiceOvergangsstønad {
 
         val periodeListe = hentPerioder(ainntektListeFiltrert)
         val periodeListeAlleInntekter = hentPerioder(ainntektListeInn)
+
+        if (periodeListeAlleInntekter.isEmpty()) {
+            return emptyList()
+        }
+
         val sisteRapportertePeriode = finnSisteRapportertePeriode(ainntektHentetDato)
         val førstePeriodeSomSkalBeregnes = YearMonth.of(periodeListeAlleInntekter.values.flatten().minOrNull()!!.year, BRUDD_MÅNED_OVERGANSSTØNAD)
 

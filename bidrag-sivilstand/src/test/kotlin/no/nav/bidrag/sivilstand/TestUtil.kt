@@ -248,6 +248,7 @@ class TestUtil {
         )
 
         fun byggHentSivilstandResponseTestSorteringV2() = SivilstandRequest(
+            fødselsdatoBM = LocalDate.parse("1980-01-01"),
             innhentedeOffentligeOpplysninger =
             listOf(
                 SivilstandGrunnlagDto(
@@ -301,6 +302,7 @@ class TestUtil {
         )
 
         fun byggSivilstandUtenAktivStatusV2() = SivilstandRequest(
+            fødselsdatoBM = LocalDate.parse("1980-01-01"),
             innhentedeOffentligeOpplysninger =
             listOf(
                 SivilstandGrunnlagDto(
@@ -327,6 +329,7 @@ class TestUtil {
         )
 
         fun byggSivilstandMedPeriodeUtenDatoerV2() = SivilstandRequest(
+            fødselsdatoBM = LocalDate.parse("1980-01-01"),
             innhentedeOffentligeOpplysninger =
             listOf(
                 SivilstandGrunnlagDto(
@@ -353,6 +356,7 @@ class TestUtil {
         )
 
         fun byggSivilstandMedAktivForekomstOgKunRegistrertV2() = SivilstandRequest(
+            fødselsdatoBM = LocalDate.parse("1980-01-01"),
             innhentedeOffentligeOpplysninger =
             listOf(
                 SivilstandGrunnlagDto(
@@ -379,6 +383,7 @@ class TestUtil {
         )
 
         fun byggSivilstandÉnForekomstBorAleneMedBarnV2() = SivilstandRequest(
+            fødselsdatoBM = LocalDate.parse("1980-01-01"),
             innhentedeOffentligeOpplysninger =
             listOf(
                 SivilstandGrunnlagDto(
@@ -396,6 +401,7 @@ class TestUtil {
         )
 
         fun byggSivilstandÉnForekomstGiftSamboerV2() = SivilstandRequest(
+            fødselsdatoBM = LocalDate.parse("1980-01-01"),
             innhentedeOffentligeOpplysninger =
             listOf(
                 SivilstandGrunnlagDto(
@@ -413,6 +419,7 @@ class TestUtil {
         )
 
         fun byggSivilstandFlereForekomstBorAleneMedBarnV2() = SivilstandRequest(
+            fødselsdatoBM = LocalDate.parse("1980-01-01"),
             innhentedeOffentligeOpplysninger =
             listOf(
                 SivilstandGrunnlagDto(
@@ -448,6 +455,7 @@ class TestUtil {
         )
 
         fun byggSivilstandMedLogiskFeilV2() = SivilstandRequest(
+            fødselsdatoBM = LocalDate.parse("1980-01-01"),
             innhentedeOffentligeOpplysninger =
             listOf(
                 SivilstandGrunnlagDto(
@@ -474,6 +482,7 @@ class TestUtil {
         )
 
         fun byggSivilstandFlereForkomsterISammeMånedV2() = SivilstandRequest(
+            fødselsdatoBM = LocalDate.parse("1980-01-01"),
             innhentedeOffentligeOpplysninger =
             listOf(
                 SivilstandGrunnlagDto(
@@ -509,6 +518,7 @@ class TestUtil {
         )
 
         fun manuellOgOffentligPeriodeErIdentisk() = SivilstandRequest(
+            fødselsdatoBM = LocalDate.parse("1980-01-01"),
             innhentedeOffentligeOpplysninger =
             listOf(
                 SivilstandGrunnlagDto(
@@ -545,6 +555,7 @@ class TestUtil {
         fun flereManuelleOgOffentligePerioderFlereRequester() = listOf(
             // 1
             SivilstandRequest(
+                fødselsdatoBM = LocalDate.parse("1980-01-01"),
                 innhentedeOffentligeOpplysninger =
                 listOf(
                     SivilstandGrunnlagDto(
@@ -571,6 +582,7 @@ class TestUtil {
             ),
             // 2
             SivilstandRequest(
+                fødselsdatoBM = LocalDate.parse("1980-01-01"),
                 innhentedeOffentligeOpplysninger =
                 listOf(
                     SivilstandGrunnlagDto(
@@ -620,6 +632,7 @@ class TestUtil {
             ),
             // 3
             SivilstandRequest(
+                fødselsdatoBM = LocalDate.parse("1980-01-01"),
                 innhentedeOffentligeOpplysninger =
                 listOf(
                     SivilstandGrunnlagDto(
@@ -682,6 +695,7 @@ class TestUtil {
         )
 
         fun kunManuellPeriode() = SivilstandRequest(
+            fødselsdatoBM = LocalDate.parse("1980-01-01"),
             innhentedeOffentligeOpplysninger = emptyList(),
             behandledeSivilstandsopplysninger = emptyList(),
             endreSivilstand = EndreSivilstand(
@@ -699,6 +713,7 @@ class TestUtil {
 
         fun manuellOgOffentligPerioderLikSivilstandskode() = listOf(
             SivilstandRequest(
+                fødselsdatoBM = LocalDate.parse("1980-01-01"),
                 innhentedeOffentligeOpplysninger = listOf(
                     SivilstandGrunnlagDto(
                         personId = "98765432109",
@@ -707,7 +722,7 @@ class TestUtil {
                         bekreftelsesdato = null,
                         master = "PDL",
                         registrert = null,
-                        historisk = false,
+                        historisk = true,
                     ),
                     SivilstandGrunnlagDto(
                         personId = "98765432109",
@@ -745,6 +760,7 @@ class TestUtil {
                 ),
             ),
             SivilstandRequest(
+                fødselsdatoBM = LocalDate.parse("1980-01-01"),
                 innhentedeOffentligeOpplysninger = listOf(
                     SivilstandGrunnlagDto(
                         personId = "98765432109",
@@ -753,7 +769,7 @@ class TestUtil {
                         bekreftelsesdato = null,
                         master = "PDL",
                         registrert = null,
-                        historisk = false,
+                        historisk = true,
                     ),
                     SivilstandGrunnlagDto(
                         personId = "98765432109",
@@ -800,6 +816,7 @@ class TestUtil {
 
         fun flereManuellePerioder() = listOf(
             SivilstandRequest(
+                fødselsdatoBM = LocalDate.parse("1980-01-01"),
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeSivilstandsopplysninger = listOf(
                     Sivilstand(
@@ -821,6 +838,7 @@ class TestUtil {
                 ),
             ),
             SivilstandRequest(
+                fødselsdatoBM = LocalDate.parse("1980-01-01"),
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeSivilstandsopplysninger = listOf(
                     Sivilstand(
@@ -858,6 +876,7 @@ class TestUtil {
         fun endreSivilstandNullBehandledeUtfylltOffentligeOpplysningerUtfyllt1a1c2a() = listOf(
             // 1c
             SivilstandRequest(
+                fødselsdatoBM = LocalDate.parse("1980-01-01"),
                 innhentedeOffentligeOpplysninger = listOf(
                     SivilstandGrunnlagDto(
                         personId = "12345678901",
@@ -892,6 +911,7 @@ class TestUtil {
             ),
             // 2a
             SivilstandRequest(
+                fødselsdatoBM = LocalDate.parse("1980-01-01"),
                 innhentedeOffentligeOpplysninger = listOf(
                     SivilstandGrunnlagDto(
                         personId = "12345678901",
@@ -948,6 +968,7 @@ class TestUtil {
             ),
             // 1a med oppdaterte offentlige opplysninger og endret virkningstidspunkt
             SivilstandRequest(
+                fødselsdatoBM = LocalDate.parse("1980-01-01"),
                 innhentedeOffentligeOpplysninger = listOf(
                     SivilstandGrunnlagDto(
                         personId = "12345678901",
@@ -1018,6 +1039,7 @@ class TestUtil {
 
         fun endreSivilstandNullBehandledeUtfylltOffentligeOpplysningerTom1b() = // 1b
             SivilstandRequest(
+                fødselsdatoBM = LocalDate.parse("1980-01-01"),
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeSivilstandsopplysninger = listOf(
                     Sivilstand(
@@ -1038,6 +1060,7 @@ class TestUtil {
 
         fun endreSivilstandNullBehandledeTomOffentligeOpplysningerTom1d() = // 1d
             SivilstandRequest(
+                fødselsdatoBM = LocalDate.parse("1980-01-01"),
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeSivilstandsopplysninger = emptyList(),
                 endreSivilstand = null,
@@ -1045,6 +1068,7 @@ class TestUtil {
 
         fun endreSivilstandUtfylltNYBehandledeUtfylltOffentligeOpplysningerTom2b() = // 1b
             SivilstandRequest(
+                fødselsdatoBM = LocalDate.parse("1980-01-01"),
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeSivilstandsopplysninger = listOf(
                     Sivilstand(
@@ -1074,6 +1098,7 @@ class TestUtil {
 
         fun endreSivilstandUtfylltENDREBehandledeUtfylltOffentligeOpplysningerTom2b() = // 1b
             SivilstandRequest(
+                fødselsdatoBM = LocalDate.parse("1980-01-01"),
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeSivilstandsopplysninger = listOf(
                     Sivilstand(
@@ -1108,6 +1133,7 @@ class TestUtil {
 
         fun endreSivilstandUtfylltSLETTBehandledeUtfylltOffentligeOpplysningerTom2b() = // 1b
             SivilstandRequest(
+                fødselsdatoBM = LocalDate.parse("1980-01-01"),
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeSivilstandsopplysninger = listOf(
                     Sivilstand(
@@ -1118,6 +1144,54 @@ class TestUtil {
                     ),
                     Sivilstand(
                         periodeFom = LocalDate.of(2022, 3, 1),
+                        periodeTom = LocalDate.of(2022, 12, 31),
+                        sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Sivilstand(
+                        periodeFom = LocalDate.of(2023, 1, 1),
+                        periodeTom = null,
+                        sivilstandskode = Sivilstandskode.GIFT_SAMBOER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+                endreSivilstand = EndreSivilstand(
+                    typeEndring = TypeEndring.SLETTET,
+                    nySivilstand = null,
+                    originalSivilstand = Sivilstand(
+                        periodeFom = LocalDate.of(2023, 1, 1),
+                        periodeTom = null,
+                        sivilstandskode = Sivilstandskode.GIFT_SAMBOER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+            )
+
+        fun endreSivilstandUtfylltSLETTMidtperiodeBehandledeUtfylltOffentligeOpplysningerTom2b() = // 1b
+            SivilstandRequest(
+                fødselsdatoBM = LocalDate.parse("1980-01-01"),
+                innhentedeOffentligeOpplysninger = emptyList(),
+                behandledeSivilstandsopplysninger = listOf(
+                    Sivilstand(
+                        periodeFom = LocalDate.of(2020, 9, 1),
+                        periodeTom = LocalDate.of(2022, 2, 28),
+                        sivilstandskode = Sivilstandskode.GIFT_SAMBOER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Sivilstand(
+                        periodeFom = LocalDate.of(2022, 3, 1),
+                        periodeTom = LocalDate.of(2022, 12, 31),
+                        sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Sivilstand(
+                        periodeFom = LocalDate.of(2023, 1, 1),
+                        periodeTom = LocalDate.of(2024, 1, 31),
+                        sivilstandskode = Sivilstandskode.GIFT_SAMBOER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Sivilstand(
+                        periodeFom = LocalDate.of(2024, 2, 1),
                         periodeTom = null,
                         sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
                         kilde = Kilde.MANUELL,
@@ -1127,9 +1201,9 @@ class TestUtil {
                     typeEndring = TypeEndring.SLETTET,
                     nySivilstand = null,
                     originalSivilstand = Sivilstand(
-                        periodeFom = LocalDate.of(2020, 9, 1),
-                        periodeTom = LocalDate.of(2022, 2, 28),
-                        sivilstandskode = Sivilstandskode.GIFT_SAMBOER,
+                        periodeFom = LocalDate.of(2022, 3, 1),
+                        periodeTom = LocalDate.of(2022, 12, 31),
+                        sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -1137,6 +1211,7 @@ class TestUtil {
 
         fun endreSivilstandUtfylltBehandledeTomOffentligeOpplysningerUtfyllt2c() = // 1b
             SivilstandRequest(
+                fødselsdatoBM = LocalDate.parse("1980-01-01"),
                 innhentedeOffentligeOpplysninger = listOf(
                     SivilstandGrunnlagDto(
                         personId = "12345678901",
@@ -1172,6 +1247,7 @@ class TestUtil {
 
         fun endreSivilstandUtfylltBehandledeTomOffentligeOpplysningerTom2d() = // 1b
             SivilstandRequest(
+                fødselsdatoBM = LocalDate.parse("1980-01-01"),
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeSivilstandsopplysninger = emptyList(),
                 endreSivilstand = EndreSivilstand(
@@ -1185,5 +1261,294 @@ class TestUtil {
                     originalSivilstand = null,
                 ),
             )
+
+        fun endreSivilstand() = SivilstandRequest(
+            fødselsdatoBM = LocalDate.parse("1980-01-01"),
+            innhentedeOffentligeOpplysninger = listOf(
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.UGIFT,
+                    gyldigFom = LocalDate.parse("1978-02-17"),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.now(),
+                    historisk = true,
+                ),
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.GIFT,
+                    gyldigFom = LocalDate.parse("2022-11-01"),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2022-03-12T12:00:00"),
+                    historisk = true,
+                ),
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.SEPARERT,
+                    gyldigFom = LocalDate.parse("2024-02-01"),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2022-03-12T12:00:00"),
+                    historisk = false,
+                ),
+            ),
+            behandledeSivilstandsopplysninger = listOf(
+                Sivilstand(
+                    periodeFom = LocalDate.of(2023, 1, 1),
+                    periodeTom = null,
+                    sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+            ),
+            endreSivilstand = EndreSivilstand(
+                typeEndring = TypeEndring.ENDRET,
+                nySivilstand = Sivilstand(
+                    periodeFom = LocalDate.of(2023, 4, 1),
+                    periodeTom = LocalDate.of(2023, 12, 31),
+                    sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
+                    kilde = Kilde.MANUELL,
+                ),
+                originalSivilstand = Sivilstand(
+                    periodeFom = LocalDate.of(2023, 1, 1),
+                    periodeTom = null,
+                    sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+            ),
+        )
+
+        fun endreVirkningstidspunktFremITid() = SivilstandRequest(
+            fødselsdatoBM = LocalDate.parse("1980-01-01"),
+            innhentedeOffentligeOpplysninger =
+            listOf(
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.UGIFT,
+                    gyldigFom = LocalDate.of(2017, 3, 7),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = null,
+                    historisk = false,
+                ),
+            ),
+            behandledeSivilstandsopplysninger =
+            listOf(
+                Sivilstand(
+                    periodeFom = LocalDate.of(2020, 9, 1),
+                    periodeTom = null,
+                    sivilstandskode = Sivilstandskode.BOR_ALENE_MED_BARN,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+            ),
+            endreSivilstand = null,
+        )
+
+        fun gyldigFomLikFødselsdatoUgift() = SivilstandRequest(
+            fødselsdatoBM = LocalDate.parse("1980-01-01"),
+            innhentedeOffentligeOpplysninger =
+            listOf(
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.GIFT,
+                    gyldigFom = LocalDate.of(2022, 12, 9),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2021-01-13T14:44:16"),
+                    historisk = true,
+                ),
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.UGIFT,
+                    gyldigFom = null,
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2020-12-05T14:44:16"),
+                    historisk = true,
+                ),
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.SEPARERT,
+                    gyldigFom = LocalDate.of(2023, 5, 12),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2023-06-13T14:44:16"),
+                    historisk = false,
+                ),
+            ),
+            behandledeSivilstandsopplysninger = emptyList(),
+            endreSivilstand = null,
+        )
+
+        fun aktivPeriodeErFørVirkningstidspunkt() = SivilstandRequest(
+            fødselsdatoBM = LocalDate.parse("1980-01-01"),
+            innhentedeOffentligeOpplysninger =
+            listOf(
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.GIFT,
+                    gyldigFom = null,
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = null,
+                    historisk = true,
+                ),
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.UGIFT,
+                    gyldigFom = null,
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = null,
+                    historisk = true,
+                ),
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.SEPARERT,
+                    gyldigFom = LocalDate.of(2024, 4, 17),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2023-06-13T14:44:16"),
+                    historisk = false,
+                ),
+            ),
+            behandledeSivilstandsopplysninger = emptyList(),
+            endreSivilstand = null,
+        )
+
+        fun hullIPeriode() = SivilstandRequest(
+            fødselsdatoBM = LocalDate.parse("1980-01-01"),
+            innhentedeOffentligeOpplysninger =
+            listOf(
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.GIFT,
+                    gyldigFom = LocalDate.of(2023, 6, 1),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2024-06-14T14:44:16"),
+                    historisk = true,
+                ),
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.UGIFT,
+                    gyldigFom = LocalDate.of(2015, 6, 1),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2024-06-14T14:44:16"),
+                    historisk = true,
+                ),
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.SEPARERT,
+                    gyldigFom = LocalDate.of(2023, 12, 1),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2023-06-13T14:44:16"),
+                    historisk = false,
+                ),
+            ),
+            behandledeSivilstandsopplysninger = emptyList(),
+            endreSivilstand = null,
+        )
+
+        fun ikkeToUkjentPerioder() = SivilstandRequest(
+            fødselsdatoBM = LocalDate.parse("1980-01-01"),
+            innhentedeOffentligeOpplysninger =
+            listOf(
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.UOPPGITT,
+                    gyldigFom = null,
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2024-06-14T14:44:16"),
+                    historisk = false,
+                ),
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.UOPPGITT,
+                    gyldigFom = LocalDate.of(2019, 9, 5),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2024-06-14T14:44:16"),
+                    historisk = true,
+                ),
+            ),
+            behandledeSivilstandsopplysninger = emptyList(),
+            endreSivilstand = null,
+        )
+
+        fun nPGiftUnderEnMånedTest() = SivilstandRequest(
+            fødselsdatoBM = LocalDate.parse("1980-01-01"),
+            innhentedeOffentligeOpplysninger =
+            listOf(
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.GIFT,
+                    gyldigFom = LocalDate.of(2014, 10, 2),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2020-12-05T14:44:16"),
+                    historisk = true,
+                ),
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.SKILT,
+                    gyldigFom = LocalDate.of(2023, 1, 9),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2023-01-09T14:44:16"),
+                    historisk = false,
+                ),
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.SEPARERT,
+                    gyldigFom = LocalDate.of(2021, 8, 26),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2021-10-28T14:44:16"),
+                    historisk = true,
+                ),
+            ),
+            behandledeSivilstandsopplysninger = emptyList(),
+            endreSivilstand = null,
+        )
+
+        fun giftEnMånedTest() = SivilstandRequest(
+            fødselsdatoBM = LocalDate.parse("1980-01-01"),
+            innhentedeOffentligeOpplysninger =
+            listOf(
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.GIFT,
+                    gyldigFom = LocalDate.of(2014, 10, 2),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2020-12-05T14:44:16"),
+                    historisk = true,
+                ),
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.SKILT,
+                    gyldigFom = LocalDate.of(2023, 1, 9),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2023-01-09T14:44:16"),
+                    historisk = false,
+                ),
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.SEPARERT,
+                    gyldigFom = LocalDate.of(2021, 9, 26),
+                    bekreftelsesdato = null,
+                    master = "PDL",
+                    registrert = LocalDateTime.parse("2021-10-28T14:44:16"),
+                    historisk = true,
+                ),
+            ),
+            behandledeSivilstandsopplysninger = emptyList(),
+            endreSivilstand = null,
+        )
     }
 }
