@@ -3,6 +3,7 @@ package no.nav.bidrag.boforhold.dto
 import no.nav.bidrag.domene.enums.diverse.Kilde
 import no.nav.bidrag.domene.enums.diverse.TypeEndring
 import no.nav.bidrag.domene.enums.person.Bostatuskode
+import no.nav.bidrag.domene.enums.person.Familierelasjon
 import java.time.LocalDate
 
 data class BoforholdBarnRequest(
@@ -19,12 +20,21 @@ data class BoforholdBarnRequest(
     val endreBostatus: EndreBostatus?,
 )
 
-data class Bostatus(
-    val periodeFom: LocalDate?,
-    val periodeTom: LocalDate?,
-    val bostatusKode: Bostatuskode?,
-    val kilde: Kilde,
+data class BoforholdRequest(
+    // Personid til barn av BM
+    val gjelderPersonId: String?,
+    val fødselsdato: LocalDate,
+    // Angir relasjon mellom gjelderPerson og BM/BP
+    val relasjon: Familierelasjon,
+    // Periodisert liste med offentlige bostatus-opplysninger hentet fra PDL
+    val innhentedeOffentligeOpplysninger: List<Bostatus>,
+    // Behandlede bostatusopplysninger
+    val behandledeBostatusopplysninger: List<Bostatus>,
+    // Endret bostatus
+    val endreBostatus: EndreBostatus?,
 )
+
+data class Bostatus(val periodeFom: LocalDate?, val periodeTom: LocalDate?, val bostatusKode: Bostatuskode?, val kilde: Kilde)
 
 data class EndreBostatus(
     val typeEndring: TypeEndring,
@@ -36,6 +46,15 @@ data class EndreBostatus(
 
 data class BoforholdResponse(
     val relatertPersonPersonId: String?,
+    val fødselsdato: LocalDate,
+    val periodeFom: LocalDate,
+    val periodeTom: LocalDate?,
+    val bostatus: Bostatuskode,
+    val kilde: Kilde = Kilde.OFFENTLIG,
+)
+
+data class BoforholdResponseV2(
+    val gjelderPersonId: String?,
     val fødselsdato: LocalDate,
     val periodeFom: LocalDate,
     val periodeTom: LocalDate?,
