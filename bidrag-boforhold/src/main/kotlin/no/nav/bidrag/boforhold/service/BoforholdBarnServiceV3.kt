@@ -33,34 +33,34 @@ internal class BoforholdBarnServiceV3 {
     }
 
     private fun beregnPerioderForBarn(virkningstidspunkt: LocalDate, boforholdRequest: BoforholdBarnRequestV3): List<BoforholdResponseV2> {
-        // 1. endreBoforhold = null. Beregning gjøres da enten på offentlige opplysninger eller behandledeBoforholdopplysninger.
-        //    1a. Hvis behandledeBoforholdopplysninger er utfyllt og innhentedeOffentligeOpplysninger er utfyllt:
-        //        behandledeBoforholdopplysninger skal da justeres mot virkningstidspunkt. Perioder i behandledeBoforholdopplysninger sjekkes mot
+        // 1. endreBoforhold = null. Beregning gjøres da enten på offentlige opplysninger eller behandledeBostatusopplysninger.
+        //    1a. Hvis behandledeBostatusopplysninger er utfyllt og innhentedeOffentligeOpplysninger er utfyllt:
+        //        behandledeBostatusopplysninger skal da justeres mot virkningstidspunkt. Perioder i behandledeBostatusopplysninger sjekkes mot
         //        offentlige perioder og kilde evt. endres til Offentlig hvis det er match. Dette vil kunne skje ved endring av innhentede offentlige
         //        opplysninger som nå helt overlapper manuelt innlagte perioder.
         //        I tilfeller der virkningstidspunkt forskyves tilbake i tid så skal tidslinjen suppleres med offentlige perioder.
-        //    1b. Hvis behandledeBoforholdopplysninger er utfyllt og innhentedeOffentligeOpplysninger er tom:
-        //        behandledeBoforholdopplysninger skal da justeres mot virkningstidspunkt. I tilfeller der virkningstidspunkt forskyves tilbake i
+        //    1b. Hvis behandledeBostatusopplysninger er utfyllt og innhentedeOffentligeOpplysninger er tom:
+        //        behandledeBostatusopplysninger skal da justeres mot virkningstidspunkt. I tilfeller der virkningstidspunkt forskyves tilbake i
         //        tid så skal tidslinjen suppleres med én offentlig perioder med Bostatuskode = IKKE_MED_FORELDER og Kilde = OFFENTLIG i tidsrommet
-        //        mellom virkningstidspunkt og periodeFom for første forekomst i behandledeBoforholdopplysninger.
-        //    1c. Hvis behandledeBoforholdopplysninger er tom og innhentedeOffentligeOpplysninger er utfyllt: Det gjøres da en beregning basert på
+        //        mellom virkningstidspunkt og periodeFom for første forekomst i behandledeBostatusopplysninger.
+        //    1c. Hvis behandledeBostatusopplysninger er tom og innhentedeOffentligeOpplysninger er utfyllt: Det gjøres da en beregning basert på
         //        offentlige perioder.
-        //    1d. Hvis behandledeBoforholdopplysninger er tom og innhentedeOffentligeOpplysninger  er tom: Det skal legges til en periode med
+        //    1d. Hvis behandledeBostatusopplysninger er tom og innhentedeOffentligeOpplysninger  er tom: Det skal legges til en periode med
         //        Bostatuskode = IKKE_MED_FORELDER og Kilde = OFFENTLIG
         // 2. endreBoforhold er utfyllt.
-        //    2a. Hvis behandledeBoforholdopplysninger er utfyllt og innhentedeOffentligeOpplysninger er utfyllt: behandledeBoforholdopplysninger
+        //    2a. Hvis behandledeBostatusopplysninger er utfyllt og innhentedeOffentligeOpplysninger er utfyllt: behandledeBostatusopplysninger
         //        skal da justeres etter det som er sendt inn i endreBoforhold. Det kan slettes/legges til eller endres perioder.
-        //        Perioder i oppdaterte behandledeBoforholdopplysninger sjekkes mot offentlige perioder og kilde evt. endres til Offentlig hvis det
+        //        Perioder i oppdaterte behandledeBostatusopplysninger sjekkes mot offentlige perioder og kilde evt. endres til Offentlig hvis det
         //        er match.
-        //    2b. Hvis behandledeBoforholdopplysninger er utfyllt og innhentedeOffentligeOpplysninger er tom: behandledeBoforholdopplysninger skal
+        //    2b. Hvis behandledeBostatusopplysninger er utfyllt og innhentedeOffentligeOpplysninger er tom: behandledeBostatusopplysninger skal
         //        da justeres etter det som er sendt inn i endreBoforhold. Det kan slettes/legges til eller endres perioder.
-        //        Perioder i oppdaterte behandledeBoforholdopplysninger sjekkes mot genererte offentlige perioder (IKKE_MED_FORELDER/
+        //        Perioder i oppdaterte behandledeBostatusopplysninger sjekkes mot genererte offentlige perioder (IKKE_MED_FORELDER/
         //        REGNES_IKKE_SOM_BARN). Kilde endres til Offentlig hvis det er match.
-        //    2c. Hvis behandledeBoforholdopplysninger er tom og innhentedeOffentligeOpplysninger er utfyllt: Feil.
+        //    2c. Hvis behandledeBostatusopplysninger er tom og innhentedeOffentligeOpplysninger er utfyllt: Feil.
         //        Det bør da i stedet gjøres en beregning på offentlige perioder før det kan sendes en endreBoforhold-request.
         //        Beregningen ignorerer innhentedeOffentligeOpplysninger og gjør en beregning på det som ligger i endreBoforhold. typeEndring må
         //        være lik NY, hvis ikke reurneres tom liste. Hull i tidslinjen utfylles med Bostatuskode = IKKE_MED_FORELDER og Kilde = MANUELL.
-        //    2d. Hvis behandledeBoforholdopplysninger er tom og innhentedeOffentligeOpplysninger er tom: Beregningen gjøres på det som ligger i
+        //    2d. Hvis behandledeBostatusopplysninger er tom og innhentedeOffentligeOpplysninger er tom: Beregningen gjøres på det som ligger i
         //        endreBoforhold. typeEndring må være lik NY, hvis ikke reurneres tom liste.
         //        Hull i tidslinjen utfylles med Bostatuskode = IKKE_MED_FORELDER og Kilde = MANUELL.
 
@@ -81,7 +81,7 @@ internal class BoforholdBarnServiceV3 {
                     gjelderPersonId = boforholdRequest.gjelderPersonId,
                     periodeFom = if (it.periodeFom == null) startdatoBeregning else it.periodeFom.withDayOfMonth(1),
                     periodeTom = it.periodeTom?.plusMonths(1)?.withDayOfMonth(1)?.minusDays(1),
-                    bostatus = it.bostatusKode ?: Bostatuskode.MED_FORELDER,
+                    bostatus = it.bostatus ?: Bostatuskode.MED_FORELDER,
                     fødselsdato = boforholdRequest.fødselsdato,
                     kilde = Kilde.OFFENTLIG,
                 )
@@ -95,7 +95,7 @@ internal class BoforholdBarnServiceV3 {
                     gjelderPersonId = boforholdRequest.gjelderPersonId,
                     periodeFom = if (it.periodeFom!!.isBefore(startdatoBeregning)) startdatoBeregning else it.periodeFom,
                     periodeTom = it.periodeTom,
-                    bostatus = it.bostatusKode!!,
+                    bostatus = it.bostatus!!,
                     fødselsdato = boforholdRequest.fødselsdato,
                     kilde = it.kilde,
                 )
@@ -674,7 +674,7 @@ internal class BoforholdBarnServiceV3 {
                         gjelderPersonId = boforholdRequest.gjelderPersonId,
                         periodeFom = if (nyBostatus.periodeFom!!.isBefore(startdatoBeregning)) startdatoBeregning else nyBostatus.periodeFom,
                         periodeTom = nyBostatus.periodeTom,
-                        bostatus = nyBostatus.bostatusKode!!,
+                        bostatus = nyBostatus.bostatus!!,
                         fødselsdato = boforholdRequest.fødselsdato,
                         kilde = Kilde.MANUELL,
                     ),
@@ -708,7 +708,7 @@ internal class BoforholdBarnServiceV3 {
                                     gjelderPersonId = boforholdRequest.gjelderPersonId,
                                     periodeFom = nyBostatus.periodeFom!!,
                                     periodeTom = nyBostatus.periodeTom,
-                                    bostatus = nyBostatus.bostatusKode!!,
+                                    bostatus = nyBostatus.bostatus!!,
                                     fødselsdato = boforholdRequest.fødselsdato,
                                     kilde = Kilde.MANUELL,
                                 ),
@@ -747,7 +747,7 @@ internal class BoforholdBarnServiceV3 {
                             gjelderPersonId = boforholdRequest.gjelderPersonId,
                             periodeFom = nyBostatus.periodeFom,
                             periodeTom = nyBostatus.periodeTom,
-                            bostatus = nyBostatus.bostatusKode!!,
+                            bostatus = nyBostatus.bostatus!!,
                             fødselsdato = boforholdRequest.fødselsdato,
                             kilde = Kilde.MANUELL,
                         ),
@@ -766,7 +766,7 @@ internal class BoforholdBarnServiceV3 {
                     // Sjekk om det finnes en periode før den som endres og endre periodeTom på denne til å bli lik periodeFom på den nye perioden.
                     // Hvis bostatuskode er endret i nyBostatus så forkortes i stedet periodeTom for originalBostatus
 
-                    if (originalBostatus.bostatusKode != nyBostatus.bostatusKode) {
+                    if (originalBostatus.bostatus != nyBostatus.bostatus) {
                         for (indeks in behandledeOpplysninger.sortedBy { it.periodeFom }.indices) {
                             if (indeks < indeksMatch!!) {
                                 // Skriver alle perioder før originalBostatus til endredePerioder.
@@ -778,7 +778,7 @@ internal class BoforholdBarnServiceV3 {
                                 gjelderPersonId = boforholdRequest.gjelderPersonId,
                                 periodeFom = originalBostatus.periodeFom!!,
                                 periodeTom = nyBostatus.periodeFom.minusDays(1),
-                                bostatus = originalBostatus.bostatusKode!!,
+                                bostatus = originalBostatus.bostatus!!,
                                 fødselsdato = boforholdRequest.fødselsdato,
                                 kilde = originalBostatus.kilde,
                             ),
@@ -799,7 +799,7 @@ internal class BoforholdBarnServiceV3 {
                         gjelderPersonId = boforholdRequest.gjelderPersonId,
                         periodeFom = nyBostatus.periodeFom,
                         periodeTom = nyBostatus.periodeTom,
-                        bostatus = nyBostatus.bostatusKode!!,
+                        bostatus = nyBostatus.bostatus!!,
                         fødselsdato = boforholdRequest.fødselsdato,
                         kilde = nyBostatus.kilde,
                     ),
@@ -812,13 +812,13 @@ internal class BoforholdBarnServiceV3 {
                     // Sjekker først om bostatuskode er endret i nyBostatus. Hvis den er det så beholdes gjenstånde del av originalBostatus med
                     // justert perioderFom
 
-                    if (originalBostatus.bostatusKode != nyBostatus.bostatusKode) {
+                    if (originalBostatus.bostatus != nyBostatus.bostatus) {
                         endredePerioder.add(
                             BoforholdResponseV2(
                                 gjelderPersonId = boforholdRequest.gjelderPersonId,
                                 periodeFom = nyBostatus.periodeTom.plusDays(1),
                                 periodeTom = originalBostatus.periodeTom,
-                                bostatus = originalBostatus.bostatusKode!!,
+                                bostatus = originalBostatus.bostatus!!,
                                 fødselsdato = boforholdRequest.fødselsdato,
                                 kilde = originalBostatus.kilde,
                             ),
@@ -866,7 +866,7 @@ internal class BoforholdBarnServiceV3 {
 
     private fun perioderErIdentiske(periode1: Bostatus, periode2: BoforholdResponseV2): Boolean = periode1.periodeFom == periode2.periodeFom &&
         periode1.periodeTom == periode2.periodeTom &&
-        periode1.bostatusKode == periode2.bostatus &&
+        periode1.bostatus == periode2.bostatus &&
         periode1.kilde == periode2.kilde
 
     private fun finnIndeksMatch(periode: Bostatus, liste: List<BoforholdResponseV2>): Int? {

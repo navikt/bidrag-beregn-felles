@@ -3,8 +3,10 @@ package no.nav.bidrag.boforhold
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.boforhold.dto.BoforholdBarnRequest
 import no.nav.bidrag.boforhold.dto.BoforholdBarnRequestV3
+import no.nav.bidrag.boforhold.dto.BoforholdVoksneRequest
 import no.nav.bidrag.boforhold.dto.Bostatus
 import no.nav.bidrag.boforhold.dto.EndreBostatus
+import no.nav.bidrag.boforhold.dto.Husstandsmedlemmer
 import no.nav.bidrag.boforhold.response.RelatertPerson
 import no.nav.bidrag.domene.enums.diverse.Kilde
 import no.nav.bidrag.domene.enums.diverse.TypeEndring
@@ -43,7 +45,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 12),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -61,7 +63,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 12),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -167,25 +169,25 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 2),
                         periodeTom = LocalDate.of(2019, 4, 7),
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 10),
                         periodeTom = LocalDate.of(2019, 4, 17),
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 5, 2),
                         periodeTom = LocalDate.of(2019, 7, 28),
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 7, 2),
                         periodeTom = null,
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -203,25 +205,25 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 2),
                         periodeTom = LocalDate.of(2019, 4, 7),
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 10),
                         periodeTom = LocalDate.of(2019, 4, 17),
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 5, 2),
                         periodeTom = LocalDate.of(2019, 7, 28),
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 7, 2),
                         periodeTom = null,
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -261,19 +263,19 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 2),
                         periodeTom = LocalDate.of(2019, 4, 7),
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 10),
                         periodeTom = LocalDate.of(2019, 4, 17),
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 5, 2),
                         periodeTom = LocalDate.of(2019, 7, 28),
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -291,19 +293,19 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 2),
                         periodeTom = LocalDate.of(2019, 4, 7),
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 10),
                         periodeTom = LocalDate.of(2019, 4, 17),
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 5, 2),
                         periodeTom = LocalDate.of(2019, 7, 28),
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -347,31 +349,31 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2017, 4, 2),
                         periodeTom = LocalDate.of(2019, 1, 7),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 2),
                         periodeTom = LocalDate.of(2019, 4, 7),
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 10),
                         periodeTom = LocalDate.of(2019, 4, 17),
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 5, 2),
                         periodeTom = LocalDate.of(2019, 7, 28),
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 7, 2),
                         periodeTom = null,
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -389,31 +391,31 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2017, 4, 2),
                         periodeTom = LocalDate.of(2019, 1, 7),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 2),
                         periodeTom = LocalDate.of(2019, 4, 7),
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 10),
                         periodeTom = LocalDate.of(2019, 4, 17),
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 5, 2),
                         periodeTom = LocalDate.of(2019, 7, 28),
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 7, 2),
                         periodeTom = null,
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -445,7 +447,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 12),
                         periodeTom = null,
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -463,7 +465,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 12),
                         periodeTom = null,
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -495,7 +497,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 12),
                         periodeTom = LocalDate.of(2022, 12, 27),
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -513,7 +515,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 12),
                         periodeTom = LocalDate.of(2022, 12, 27),
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -553,19 +555,19 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 12),
                         periodeTom = LocalDate.of(2022, 7, 27),
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 10, 12),
                         periodeTom = LocalDate.of(2022, 12, 27),
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 2, 9),
                         periodeTom = null,
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -583,19 +585,19 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 12),
                         periodeTom = LocalDate.of(2022, 7, 27),
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 10, 12),
                         periodeTom = LocalDate.of(2022, 12, 27),
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 2, 9),
                         periodeTom = null,
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -613,7 +615,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 12),
                         periodeTom = LocalDate.of(2020, 2, 11),
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -621,7 +623,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -630,7 +632,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2020, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.DOKUMENTERT_SKOLEGANG,
+                        bostatus = Bostatuskode.DOKUMENTERT_SKOLEGANG,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -647,7 +649,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 12),
                         periodeTom = LocalDate.of(2020, 2, 11),
-                        bostatusKode = null,
+                        bostatus = null,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -655,7 +657,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -664,7 +666,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2020, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.DOKUMENTERT_SKOLEGANG,
+                        bostatus = Bostatuskode.DOKUMENTERT_SKOLEGANG,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -681,7 +683,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 5, 12),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -696,7 +698,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 5, 12),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -704,7 +706,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                        bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -713,7 +715,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2022, 2, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.DOKUMENTERT_SKOLEGANG,
+                        bostatus = Bostatuskode.DOKUMENTERT_SKOLEGANG,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -730,7 +732,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 5, 12),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -745,7 +747,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 5, 12),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -753,7 +755,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                        bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -762,7 +764,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2022, 2, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.DOKUMENTERT_SKOLEGANG,
+                        bostatus = Bostatuskode.DOKUMENTERT_SKOLEGANG,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -782,7 +784,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2022, 2, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -797,13 +799,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 9, 1),
                         periodeTom = LocalDate.of(2022, 1, 31),
-                        bostatusKode = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                        bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 2, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.DOKUMENTERT_SKOLEGANG,
+                        bostatus = Bostatuskode.DOKUMENTERT_SKOLEGANG,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -812,7 +814,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -832,7 +834,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2022, 2, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -847,7 +849,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 2, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                        bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -856,7 +858,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -873,7 +875,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 4, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -881,13 +883,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 12, 1),
                         periodeTom = LocalDate.of(2022, 3, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 4, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -896,7 +898,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2022, 4, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -913,7 +915,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 4, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -921,13 +923,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 12, 1),
                         periodeTom = LocalDate.of(2022, 3, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 4, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -936,7 +938,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2022, 4, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -953,25 +955,25 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 4, 12),
                         periodeTom = LocalDate.of(2020, 12, 3),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 2, 17),
                         periodeTom = LocalDate.of(2021, 4, 17),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 8, 17),
                         periodeTom = LocalDate.of(2021, 11, 17),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 2, 12),
                         periodeTom = LocalDate.of(2023, 5, 4),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -979,25 +981,25 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 6, 1),
                         periodeTom = LocalDate.of(2021, 12, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 4, 1),
                         periodeTom = LocalDate.of(2022, 8, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 10, 1),
                         periodeTom = LocalDate.of(2022, 12, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 2, 1),
                         periodeTom = LocalDate.of(2023, 3, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -1015,13 +1017,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 1),
                         periodeTom = LocalDate.of(2021, 2, 28),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 2, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -1038,7 +1040,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2005, 4, 17),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1053,7 +1055,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2005, 4, 17),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1061,13 +1063,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 9, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 11, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                        bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1076,7 +1078,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2021, 11, 1),
                         periodeTom = LocalDate.of(2021, 12, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -1090,7 +1092,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2005, 4, 17),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1098,25 +1100,25 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 9, 1),
                         periodeTom = LocalDate.of(2021, 10, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 11, 1),
                         periodeTom = LocalDate.of(2021, 12, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 11, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                        bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1125,7 +1127,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2022, 2, 1),
                         periodeTom = LocalDate.of(2023, 1, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -1142,7 +1144,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2005, 4, 17),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1157,7 +1159,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2005, 4, 17),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1165,13 +1167,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 9, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 11, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                        bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1180,7 +1182,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2021, 11, 1),
                         periodeTom = LocalDate.of(2021, 12, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -1194,7 +1196,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2005, 4, 17),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1202,25 +1204,25 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 9, 1),
                         periodeTom = LocalDate.of(2021, 10, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 11, 1),
                         periodeTom = LocalDate.of(2021, 12, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 11, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                        bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1229,7 +1231,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2022, 2, 1),
                         periodeTom = LocalDate.of(2023, 1, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -1246,7 +1248,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2005, 4, 17),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1261,7 +1263,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2005, 4, 17),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1269,13 +1271,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 9, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 11, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                        bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1284,13 +1286,13 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2021, 11, 1),
                         periodeTom = LocalDate.of(2021, 12, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = Bostatus(
                         periodeFom = LocalDate.of(2020, 9, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1303,7 +1305,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2005, 4, 17),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1311,25 +1313,25 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 9, 1),
                         periodeTom = LocalDate.of(2021, 10, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 11, 1),
                         periodeTom = LocalDate.of(2021, 12, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 11, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                        bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1338,13 +1340,13 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2022, 2, 1),
                         periodeTom = LocalDate.of(2023, 1, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1360,7 +1362,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2005, 4, 17),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1375,7 +1377,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2005, 4, 17),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1383,13 +1385,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 9, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 11, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                        bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1398,13 +1400,13 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2021, 11, 1),
                         periodeTom = LocalDate.of(2021, 12, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = Bostatus(
                         periodeFom = LocalDate.of(2020, 9, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1417,7 +1419,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2005, 4, 17),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1425,25 +1427,25 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 9, 1),
                         periodeTom = LocalDate.of(2021, 10, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 11, 1),
                         periodeTom = LocalDate.of(2021, 12, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 11, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                        bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1452,13 +1454,13 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2022, 2, 1),
                         periodeTom = LocalDate.of(2023, 1, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1474,13 +1476,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = LocalDate.of(2023, 5, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 6, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1488,14 +1490,14 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 1),
                         periodeTom = LocalDate.of(2022, 12, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
 
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 8, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -1512,13 +1514,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2018, 5, 1),
                         periodeTom = LocalDate.of(2020, 2, 29),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 3, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1527,19 +1529,19 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 1),
                         periodeTom = LocalDate.of(2022, 12, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = LocalDate.of(2023, 5, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 6, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -1556,13 +1558,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 5, 1),
                         periodeTom = LocalDate.of(2023, 11, 30),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2024, 2, 1),
                         periodeTom = LocalDate.of(2024, 3, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1577,13 +1579,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 5, 1),
                         periodeTom = LocalDate.of(2023, 11, 30),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2024, 2, 1),
                         periodeTom = LocalDate.of(2024, 3, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1591,31 +1593,31 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 5, 1),
                         periodeTom = LocalDate.of(2023, 4, 30),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 5, 1),
                         periodeTom = LocalDate.of(2023, 11, 30),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 12, 1),
                         periodeTom = LocalDate.of(2024, 1, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2024, 2, 1),
                         periodeTom = LocalDate.of(2024, 3, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2024, 4, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1624,7 +1626,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2022, 12, 1),
                         periodeTom = LocalDate.of(2023, 6, 30),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -1717,13 +1719,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 5, 1),
                         periodeTom = LocalDate.of(2023, 11, 30),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2024, 2, 1),
                         periodeTom = LocalDate.of(2024, 3, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1738,13 +1740,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 5, 1),
                         periodeTom = LocalDate.of(2023, 11, 30),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2024, 2, 1),
                         periodeTom = LocalDate.of(2024, 3, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1752,31 +1754,31 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 5, 1),
                         periodeTom = LocalDate.of(2023, 4, 30),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 5, 1),
                         periodeTom = LocalDate.of(2023, 11, 30),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 12, 1),
                         periodeTom = LocalDate.of(2024, 1, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2024, 2, 1),
                         periodeTom = LocalDate.of(2024, 3, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2024, 4, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1785,7 +1787,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2022, 12, 1),
                         periodeTom = LocalDate.of(2023, 6, 30),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -1802,7 +1804,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 5, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1817,7 +1819,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 5, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1825,19 +1827,19 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 5, 1),
                         periodeTom = LocalDate.of(2023, 4, 30),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 5, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 11, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1846,7 +1848,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 10, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -1863,7 +1865,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 5, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1878,7 +1880,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 5, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1886,19 +1888,19 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 5, 1),
                         periodeTom = LocalDate.of(2023, 4, 30),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 5, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 11, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1907,7 +1909,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 10, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -1924,13 +1926,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 6, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = LocalDate.of(2023, 5, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -1938,13 +1940,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 1),
                         periodeTom = LocalDate.of(2022, 12, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 8, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -1999,7 +2001,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 12, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2014,7 +2016,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 12, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2022,7 +2024,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 12, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -2039,7 +2041,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 1),
                         periodeTom = LocalDate.of(2023, 8, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2047,7 +2049,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 11, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -2064,13 +2066,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 17),
                         periodeTom = LocalDate.of(2022, 12, 3),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 12),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2085,13 +2087,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 17),
                         periodeTom = LocalDate.of(2022, 12, 3),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 12),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2099,13 +2101,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 1),
                         periodeTom = LocalDate.of(2022, 12, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2114,7 +2116,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 11, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -2128,13 +2130,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 1),
                         periodeTom = LocalDate.of(2022, 12, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2142,19 +2144,19 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 1),
                         periodeTom = LocalDate.of(2022, 12, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 11, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -2163,7 +2165,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 12, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -2180,13 +2182,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 17),
                         periodeTom = LocalDate.of(2022, 12, 3),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 12),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2201,13 +2203,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 17),
                         periodeTom = LocalDate.of(2022, 12, 3),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 12),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2215,13 +2217,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 1),
                         periodeTom = LocalDate.of(2022, 12, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2230,7 +2232,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 11, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -2244,13 +2246,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 1),
                         periodeTom = LocalDate.of(2022, 12, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2258,19 +2260,19 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 1),
                         periodeTom = LocalDate.of(2022, 12, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 11, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -2279,7 +2281,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 12, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -2296,13 +2298,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 1, 1),
                         periodeTom = LocalDate.of(2022, 12, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2310,13 +2312,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 11, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 12, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -2333,19 +2335,19 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 1),
                         periodeTom = LocalDate.of(2019, 8, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 9, 1),
                         periodeTom = LocalDate.of(2019, 10, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 11, 1),
                         periodeTom = LocalDate.of(2019, 12, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2363,19 +2365,19 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 4, 1),
                         periodeTom = LocalDate.of(2019, 8, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 9, 1),
                         periodeTom = LocalDate.of(2019, 10, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2019, 11, 1),
                         periodeTom = LocalDate.of(2019, 12, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2394,19 +2396,19 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = LocalDate.of(2024, 2, 29),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2024, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2024, 3, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -2424,7 +2426,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -2442,25 +2444,25 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 3, 1),
                         periodeTom = LocalDate.of(2022, 12, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = LocalDate.of(2023, 9, 30),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2024, 3, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -2477,7 +2479,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2485,26 +2487,26 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 3, 1),
                         periodeTom = LocalDate.of(2022, 12, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
 
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = LocalDate.of(2023, 9, 30),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2024, 3, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -2522,7 +2524,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 1, 1),
                         periodeTom = LocalDate.of(2022, 1, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -2539,7 +2541,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 1, 1),
                         periodeTom = LocalDate.of(2022, 1, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2557,7 +2559,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 1, 1),
                         periodeTom = LocalDate.of(2022, 1, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2575,7 +2577,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 6, 1),
                         periodeTom = LocalDate.of(2024, 1, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2583,13 +2585,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2021, 7, 1),
                         periodeTom = LocalDate.of(2022, 1, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2024, 2, 1),
                         periodeTom = LocalDate.of(2024, 4, 30),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -2607,19 +2609,19 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 4, 4),
                         periodeTom = LocalDate.of(2022, 4, 20),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 6, 12),
                         periodeTom = LocalDate.of(2022, 6, 17),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 8, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2627,31 +2629,31 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 4, 1),
                         periodeTom = LocalDate.of(2022, 4, 30),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 5, 1),
                         periodeTom = LocalDate.of(2022, 5, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 6, 1),
                         periodeTom = LocalDate.of(2022, 6, 30),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 7, 1),
                         periodeTom = LocalDate.of(2022, 7, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 8, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2660,7 +2662,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2022, 3, 1),
                         periodeTom = LocalDate.of(2022, 7, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -2678,7 +2680,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 5, 1),
                         periodeTom = LocalDate.of(2022, 7, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -2696,7 +2698,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 5, 1),
                         periodeTom = LocalDate.of(2022, 7, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -2713,7 +2715,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 8, 17),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2731,7 +2733,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 8, 17),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2749,7 +2751,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2757,7 +2759,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2766,13 +2768,13 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     originalBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2788,7 +2790,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2796,7 +2798,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2805,13 +2807,13 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     originalBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -2830,7 +2832,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -2845,7 +2847,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -2854,7 +2856,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -2869,13 +2871,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = LocalDate.of(2023, 8, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -2885,7 +2887,7 @@ class TestUtil {
                     originalBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -2904,7 +2906,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -2919,7 +2921,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -2928,7 +2930,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -2943,13 +2945,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = LocalDate.of(2023, 8, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -2959,7 +2961,7 @@ class TestUtil {
                     originalBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -2978,7 +2980,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -2993,7 +2995,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3002,13 +3004,13 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3022,13 +3024,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = LocalDate.of(2023, 8, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3038,7 +3040,7 @@ class TestUtil {
                     originalBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3057,7 +3059,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -3072,7 +3074,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3081,13 +3083,13 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3101,13 +3103,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = LocalDate.of(2023, 8, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3117,7 +3119,7 @@ class TestUtil {
                     originalBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3136,7 +3138,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -3151,7 +3153,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3160,13 +3162,13 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3180,13 +3182,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = LocalDate.of(2023, 8, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3196,7 +3198,7 @@ class TestUtil {
                     originalBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3215,7 +3217,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -3230,7 +3232,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3239,13 +3241,13 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3259,7 +3261,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3269,7 +3271,7 @@ class TestUtil {
                     originalBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3285,7 +3287,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -3300,7 +3302,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -3308,7 +3310,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -3317,7 +3319,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 7, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -3331,7 +3333,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -3339,13 +3341,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = LocalDate.of(2023, 6, 30),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 7, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3354,13 +3356,13 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 11, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 7, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3373,7 +3375,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -3381,13 +3383,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 11, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3397,7 +3399,7 @@ class TestUtil {
                     originalBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -3413,7 +3415,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -3428,7 +3430,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -3436,7 +3438,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -3445,7 +3447,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 7, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -3459,7 +3461,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -3467,13 +3469,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = LocalDate.of(2023, 6, 30),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 7, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3482,13 +3484,13 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 11, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 7, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3501,7 +3503,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -3509,13 +3511,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 11, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3525,7 +3527,7 @@ class TestUtil {
                     originalBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -3544,7 +3546,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -3559,7 +3561,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3568,7 +3570,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2024, 2, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -3583,13 +3585,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = LocalDate.of(2024, 1, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2024, 2, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3598,13 +3600,13 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = LocalDate.of(2024, 1, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3623,7 +3625,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 1, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -3638,7 +3640,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3647,7 +3649,7 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2024, 2, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = null,
@@ -3662,13 +3664,13 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = LocalDate.of(2024, 1, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2024, 2, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3677,13 +3679,13 @@ class TestUtil {
                     nyBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = LocalDate.of(2023, 10, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     originalBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 3, 1),
                         periodeTom = LocalDate.of(2024, 1, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3699,7 +3701,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 1, 23),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -3707,19 +3709,19 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 6, 1),
                         periodeTom = LocalDate.of(2023, 7, 31),
-                        bostatusKode = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                        bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 8, 1),
                         periodeTom = LocalDate.of(2023, 8, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.DOKUMENTERT_SKOLEGANG,
+                        bostatus = Bostatuskode.DOKUMENTERT_SKOLEGANG,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3736,7 +3738,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 1, 23),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -3744,19 +3746,19 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 6, 1),
                         periodeTom = LocalDate.of(2023, 7, 31),
-                        bostatusKode = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                        bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 8, 1),
                         periodeTom = LocalDate.of(2023, 8, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.DOKUMENTERT_SKOLEGANG,
+                        bostatus = Bostatuskode.DOKUMENTERT_SKOLEGANG,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3773,7 +3775,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 1, 23),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -3781,25 +3783,25 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 6, 1),
                         periodeTom = LocalDate.of(2023, 3, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 4, 1),
                         periodeTom = LocalDate.of(2023, 7, 31),
-                        bostatusKode = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                        bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 8, 1),
                         periodeTom = LocalDate.of(2023, 8, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.DOKUMENTERT_SKOLEGANG,
+                        bostatus = Bostatuskode.DOKUMENTERT_SKOLEGANG,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3816,7 +3818,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 1, 23),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -3824,25 +3826,25 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2022, 6, 1),
                         periodeTom = LocalDate.of(2023, 3, 31),
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 4, 1),
                         periodeTom = LocalDate.of(2023, 7, 31),
-                        bostatusKode = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                        bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
                         kilde = Kilde.OFFENTLIG,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 8, 1),
                         periodeTom = LocalDate.of(2023, 8, 31),
-                        bostatusKode = Bostatuskode.IKKE_MED_FORELDER,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 9, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.DOKUMENTERT_SKOLEGANG,
+                        bostatus = Bostatuskode.DOKUMENTERT_SKOLEGANG,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3859,7 +3861,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 1, 23),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -3867,7 +3869,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 6, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
@@ -3884,7 +3886,7 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2020, 1, 23),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
                     ),
                 ),
@@ -3892,12 +3894,47 @@ class TestUtil {
                     Bostatus(
                         periodeFom = LocalDate.of(2023, 6, 1),
                         periodeTom = null,
-                        bostatusKode = Bostatuskode.MED_FORELDER,
+                        bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.MANUELL,
                     ),
                 ),
                 endreBostatus = null,
             ),
+        )
+
+        // Tester for voksne i husstanden
+        fun byggBorMedAndreVoksne1() = BoforholdVoksneRequest(
+            innhentedeOffentligeOpplysninger = listOf(
+                Husstandsmedlemmer(
+                    gjelderPersonId = "98765432109",
+                    fødselsdato = LocalDate.of(1980, 3, 17),
+                    relasjon = Familierelasjon.INGEN,
+                    borISammeHusstandListe = listOf(
+                        Bostatus(
+                            periodeFom = LocalDate.of(2020, 1, 1),
+                            periodeTom = LocalDate.of(2023, 8, 31),
+                            bostatus = null,
+                            kilde = Kilde.OFFENTLIG,
+                        ),
+                    ),
+                ),
+                Husstandsmedlemmer(
+                    gjelderPersonId = "123456789",
+                    fødselsdato = LocalDate.of(1977, 3, 17),
+                    relasjon = Familierelasjon.INGEN,
+                    borISammeHusstandListe = listOf(
+                        Bostatus(
+                            periodeFom = LocalDate.of(2024, 2, 17),
+                            periodeTom = null,
+                            bostatus = null,
+                            kilde = Kilde.OFFENTLIG,
+                        ),
+                    ),
+                ),
+            ),
+            behandledeBostatusopplysninger = emptyList(),
+            endreBostatus = null,
+
         )
     }
 }

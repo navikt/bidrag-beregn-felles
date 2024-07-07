@@ -5,7 +5,7 @@ import no.nav.bidrag.boforhold.dto.BoforholdBarnRequestV3
 import no.nav.bidrag.boforhold.dto.BoforholdResponse
 import no.nav.bidrag.boforhold.dto.BoforholdResponseV2
 import no.nav.bidrag.boforhold.dto.BoforholdVoksneRequest
-import no.nav.bidrag.boforhold.dto.BoforholdVoksneResponse
+import no.nav.bidrag.boforhold.dto.Bostatus
 import no.nav.bidrag.boforhold.response.BoforholdBeregnet
 import no.nav.bidrag.boforhold.response.RelatertPerson
 import no.nav.bidrag.boforhold.service.BoforholdAndreVoksneService
@@ -35,7 +35,7 @@ class BoforholdApi {
         ): List<BoforholdResponseV2> = boforholdBarnServiceV3.beregnBoforholdBarn(virkningstidspunkt, boforholdBarnRequestV3Liste)
 
         private val boforholdAndreVoksneService = BoforholdAndreVoksneService()
-        fun beregnBoforholdAndreVoksne(virkningstidspunkt: LocalDate, boforholdVoksneRequest: BoforholdVoksneRequest): List<BoforholdVoksneResponse> =
+        fun beregnBoforholdAndreVoksne(virkningstidspunkt: LocalDate, boforholdVoksneRequest: BoforholdVoksneRequest): List<Bostatus> =
             boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, boforholdVoksneRequest)
     }
 }
