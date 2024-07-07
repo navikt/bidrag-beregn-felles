@@ -20,8 +20,8 @@ data class BoforholdBarnRequest(
     val endreBostatus: EndreBostatus?,
 )
 
-data class BoforholdRequest(
-    // Personid til barn av BM
+data class BoforholdBarnRequestV3(
+    // Personid til barn/husstandsmedlem
     val gjelderPersonId: String?,
     val fødselsdato: LocalDate,
     // Angir relasjon mellom gjelderPerson og BM/BP
@@ -32,6 +32,24 @@ data class BoforholdRequest(
     val behandledeBostatusopplysninger: List<Bostatus>,
     // Endret bostatus
     val endreBostatus: EndreBostatus?,
+)
+
+data class BoforholdVoksneRequest(
+    val boforholdOffentligeOpplysninger: List<BoforholdOffentligeOpplysninger>,
+    // Behandlede bostatusopplysninger
+    val behandledeBostatusopplysninger: List<Bostatus>,
+    // Endret bostatus
+    val endreBostatus: EndreBostatus?,
+)
+
+data class BoforholdOffentligeOpplysninger(
+    // Personid til husstandsmedlem
+    val gjelderPersonId: String?,
+    val fødselsdato: LocalDate,
+    // Angir relasjon mellom gjelderPerson og BM/BP
+    val relasjon: Familierelasjon,
+    // Periodisert liste med offentlige bostatus-opplysninger hentet fra PDL
+    val innhentedeOffentligeOpplysninger: List<Bostatus>,
 )
 
 data class Bostatus(val periodeFom: LocalDate?, val periodeTom: LocalDate?, val bostatusKode: Bostatuskode?, val kilde: Kilde)
@@ -56,6 +74,13 @@ data class BoforholdResponse(
 data class BoforholdResponseV2(
     val gjelderPersonId: String?,
     val fødselsdato: LocalDate,
+    val periodeFom: LocalDate,
+    val periodeTom: LocalDate?,
+    val bostatus: Bostatuskode,
+    val kilde: Kilde = Kilde.OFFENTLIG,
+)
+
+data class BoforholdVoksneResponse(
     val periodeFom: LocalDate,
     val periodeTom: LocalDate?,
     val bostatus: Bostatuskode,

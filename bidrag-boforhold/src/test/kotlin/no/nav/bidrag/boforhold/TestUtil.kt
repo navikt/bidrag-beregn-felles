@@ -2,7 +2,7 @@ package no.nav.bidrag.boforhold
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.boforhold.dto.BoforholdBarnRequest
-import no.nav.bidrag.boforhold.dto.BoforholdRequest
+import no.nav.bidrag.boforhold.dto.BoforholdBarnRequestV3
 import no.nav.bidrag.boforhold.dto.Bostatus
 import no.nav.bidrag.boforhold.dto.EndreBostatus
 import no.nav.bidrag.boforhold.response.RelatertPerson
@@ -53,7 +53,7 @@ class TestUtil {
         )
 
         fun byggBarnHusstandsmedlemAttenÅrV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2000, 2, 17),
                 relasjon = Familierelasjon.BARN,
@@ -91,7 +91,7 @@ class TestUtil {
         )
 
         fun byggBarnAttenÅrIPeriodenUtenHusstandsmedlemskapV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -122,7 +122,7 @@ class TestUtil {
         )
 
         fun byggBarnAttenÅrIHelePeriodenUtenHusstandsmedlemskapV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2000, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -195,7 +195,7 @@ class TestUtil {
         )
 
         fun byggFlereSammenhengendeForekomsterMedBruddV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2017, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -283,7 +283,7 @@ class TestUtil {
         )
 
         fun byggFlereSammenhengendeForekomsterV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2017, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -381,7 +381,7 @@ class TestUtil {
         )
 
         fun byggSammenhengendeForekomsterMedAttenÅrV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2004, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -455,7 +455,7 @@ class TestUtil {
         )
 
         fun byggPeriodeFraFørVirkningstidspunktV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2014, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -505,7 +505,7 @@ class TestUtil {
         )
 
         fun byggPeriodeTomEtterAttenårsdagV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2004, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -575,7 +575,7 @@ class TestUtil {
         )
 
         fun byggOppholdPerioderHusstandsmedlemskapOgAttenårV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 8, 17),
                 relasjon = Familierelasjon.BARN,
@@ -639,7 +639,7 @@ class TestUtil {
         )
 
         fun barnAttenÅrManuellPeriodeDokumentertSkolegangV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2000, 2, 17),
                 relasjon = Familierelasjon.BARN,
@@ -722,7 +722,7 @@ class TestUtil {
         )
 
         fun barnAttenÅrManuellPeriodeEtterAttenårsdagDokumentertSkolegangV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2000, 2, 17),
                 relasjon = Familierelasjon.BARN,
@@ -737,7 +737,7 @@ class TestUtil {
                 behandledeBostatusopplysninger = emptyList(),
                 endreBostatus = null,
             ),
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2000, 2, 17),
                 relasjon = Familierelasjon.BARN,
@@ -821,7 +821,7 @@ class TestUtil {
         )
 
         fun barnAttenÅrManuellPeriodeEtterAttenårsdagDokumentertSkolegangIngenOffentligInformasjonV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2000, 2, 17),
                 relasjon = Familierelasjon.BARN,
@@ -838,7 +838,7 @@ class TestUtil {
                     originalBostatus = null,
                 ),
             ),
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2000, 2, 17),
                 relasjon = Familierelasjon.BARN,
@@ -905,7 +905,7 @@ class TestUtil {
         )
 
         fun manuellOgOffentligPeriodeErIdentiskV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2020, 12, 17),
                 relasjon = Familierelasjon.BARN,
@@ -1134,7 +1134,7 @@ class TestUtil {
         )
 
         fun barnManuellePeriodeOverlapperPeriodeTomOffentligPeriodeMedAttenÅrTypeEndringNyV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 10, 7),
                 relasjon = Familierelasjon.BARN,
@@ -1149,7 +1149,7 @@ class TestUtil {
                 behandledeBostatusopplysninger = emptyList(),
                 endreBostatus = null,
             ),
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 10, 7),
                 relasjon = Familierelasjon.BARN,
@@ -1186,7 +1186,7 @@ class TestUtil {
                     originalBostatus = null,
                 ),
             ),
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 10, 7),
                 relasjon = Familierelasjon.BARN,
@@ -1352,7 +1352,7 @@ class TestUtil {
         )
 
         fun barnManuellePeriodeOverlapperPeriodeTomOffentligPeriodeMedAttenÅrTypeEndringEndretV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 10, 7),
                 relasjon = Familierelasjon.BARN,
@@ -1367,7 +1367,7 @@ class TestUtil {
                 behandledeBostatusopplysninger = emptyList(),
                 endreBostatus = null,
             ),
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 10, 7),
                 relasjon = Familierelasjon.BARN,
@@ -1409,7 +1409,7 @@ class TestUtil {
                     ),
                 ),
             ),
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 10, 7),
                 relasjon = Familierelasjon.BARN,
@@ -1709,7 +1709,7 @@ class TestUtil {
         )
 
         fun manuellOgOffentligPeriodeMedLikStatusV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2020, 3, 1),
                 relasjon = Familierelasjon.BARN,
@@ -1730,7 +1730,7 @@ class TestUtil {
                 behandledeBostatusopplysninger = emptyList(),
                 endreBostatus = null,
             ),
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2020, 3, 1),
                 relasjon = Familierelasjon.BARN,
@@ -1855,7 +1855,7 @@ class TestUtil {
         )
 
         fun manuellOgOffentligPeriodeMedLikStatusPeriodeTomErNullV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2020, 3, 1),
                 relasjon = Familierelasjon.BARN,
@@ -1870,7 +1870,7 @@ class TestUtil {
                 behandledeBostatusopplysninger = emptyList(),
                 endreBostatus = null,
             ),
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2020, 3, 1),
                 relasjon = Familierelasjon.BARN,
@@ -1972,7 +1972,7 @@ class TestUtil {
         )
 
         fun flerePersonerIGrunnlagUtenOffentligePerioderV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "12345678901",
                 fødselsdato = LocalDate.of(2010, 3, 1),
                 relasjon = Familierelasjon.BARN,
@@ -1980,7 +1980,7 @@ class TestUtil {
                 behandledeBostatusopplysninger = emptyList(),
                 endreBostatus = null,
             ),
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2020, 3, 1),
                 relasjon = Familierelasjon.BARN,
@@ -2172,7 +2172,7 @@ class TestUtil {
         )
 
         fun flereManuellePerioderMedPeriodeTomNullLikStatusV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "12345678901",
                 fødselsdato = LocalDate.of(2017, 9, 1),
                 relasjon = Familierelasjon.BARN,
@@ -2193,7 +2193,7 @@ class TestUtil {
                 behandledeBostatusopplysninger = emptyList(),
                 endreBostatus = null,
             ),
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "12345678901",
                 fødselsdato = LocalDate.of(2017, 9, 1),
                 relasjon = Familierelasjon.BARN,
@@ -2236,7 +2236,7 @@ class TestUtil {
                     originalBostatus = null,
                 ),
             ),
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "12345678901",
                 fødselsdato = LocalDate.of(2017, 9, 1),
                 relasjon = Familierelasjon.BARN,
@@ -2355,7 +2355,7 @@ class TestUtil {
         )
 
         fun byggFlereSammenhengendeForekomsterMedBostatuskodeV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2017, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -2549,7 +2549,7 @@ class TestUtil {
         )
 
         fun byggUtenPeriodeEtterAttenårsdagOffentligV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -2687,7 +2687,7 @@ class TestUtil {
         )
 
         fun byggKunManuellIkkeMedForelderV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -2723,7 +2723,7 @@ class TestUtil {
         )
 
         fun byggOffentligePerioderOverlapperV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -2780,7 +2780,7 @@ class TestUtil {
         )
 
         fun byggEndrePeriodeFomOffentligPeriodeV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -2893,7 +2893,7 @@ class TestUtil {
         )
 
         fun byggNyPeriodeIngenOffentligePerioderV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -2910,7 +2910,7 @@ class TestUtil {
                     originalBostatus = null,
                 ),
             ),
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -2934,7 +2934,7 @@ class TestUtil {
                     originalBostatus = null,
                 ),
             ),
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -3046,7 +3046,7 @@ class TestUtil {
         )
 
         fun byggEndrePeriodeOgBostatuskodeIngenOffentligePerioderV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -3063,7 +3063,7 @@ class TestUtil {
                     originalBostatus = null,
                 ),
             ),
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -3092,7 +3092,7 @@ class TestUtil {
                     ),
                 ),
             ),
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -3204,7 +3204,7 @@ class TestUtil {
         )
 
         fun byggEndrePeriodeFremITidIngenOffentligePerioderV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -3221,7 +3221,7 @@ class TestUtil {
                     originalBostatus = null,
                 ),
             ),
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -3250,7 +3250,7 @@ class TestUtil {
                     ),
                 ),
             ),
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -3405,7 +3405,7 @@ class TestUtil {
         )
 
         fun byggEndrePeriodeFremITidMedOffentligePerioderV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -3420,7 +3420,7 @@ class TestUtil {
                 behandledeBostatusopplysninger = emptyList(),
                 endreBostatus = null,
             ),
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -3451,7 +3451,7 @@ class TestUtil {
                     originalBostatus = null,
                 ),
             ),
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -3493,7 +3493,7 @@ class TestUtil {
                     ),
                 ),
             ),
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -3612,7 +3612,7 @@ class TestUtil {
         )
 
         fun byggEndrePeriodeTilbakeITidIngenOffentligePerioderV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -3629,7 +3629,7 @@ class TestUtil {
                     originalBostatus = null,
                 ),
             ),
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -3653,7 +3653,7 @@ class TestUtil {
                     originalBostatus = null,
                 ),
             ),
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -3728,7 +3728,7 @@ class TestUtil {
         )
 
         fun byggTestJusterBehandledeBostatusopplysningerEtterEndretVirkningsdatoV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -3808,7 +3808,7 @@ class TestUtil {
         )
 
         fun byggTestJusterBehandledeBostatusopplysningerEtterEndretVirkningsdatoFremITidV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 3, 17),
                 relasjon = Familierelasjon.BARN,
@@ -3876,7 +3876,7 @@ class TestUtil {
         )
 
         fun byggTestNyeOffentligeOpplysningerEndrerKildeManuellPeriodeV3() = listOf(
-            BoforholdRequest(
+            BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
                 relasjon = Familierelasjon.BARN,

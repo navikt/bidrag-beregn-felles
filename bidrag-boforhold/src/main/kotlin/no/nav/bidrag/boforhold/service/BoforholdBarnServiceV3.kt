@@ -1,6 +1,6 @@
 package no.nav.bidrag.boforhold.service
 
-import no.nav.bidrag.boforhold.dto.BoforholdRequest
+import no.nav.bidrag.boforhold.dto.BoforholdBarnRequestV3
 import no.nav.bidrag.boforhold.dto.BoforholdResponseV2
 import no.nav.bidrag.boforhold.dto.Bostatus
 import no.nav.bidrag.commons.util.secureLogger
@@ -11,7 +11,7 @@ import no.nav.bidrag.domene.enums.person.Familierelasjon
 import java.time.LocalDate
 
 internal class BoforholdBarnServiceV3 {
-    fun beregnBoforholdBarn(virkningstidspunkt: LocalDate, boforholdGrunnlagListe: List<BoforholdRequest>): List<BoforholdResponseV2> {
+    fun beregnBoforholdBarn(virkningstidspunkt: LocalDate, boforholdGrunnlagListe: List<BoforholdBarnRequestV3>): List<BoforholdResponseV2> {
         secureLogger.info { "Beregner bostatus for BM/BPs egne barn V3. Input: $virkningstidspunkt $boforholdGrunnlagListe" }
 
         val resultat = mutableListOf<BoforholdResponseV2>()
@@ -32,7 +32,7 @@ internal class BoforholdBarnServiceV3 {
         return resultat
     }
 
-    private fun beregnPerioderForBarn(virkningstidspunkt: LocalDate, boforholdRequest: BoforholdRequest): List<BoforholdResponseV2> {
+    private fun beregnPerioderForBarn(virkningstidspunkt: LocalDate, boforholdRequest: BoforholdBarnRequestV3): List<BoforholdResponseV2> {
         // 1. endreBoforhold = null. Beregning gjøres da enten på offentlige opplysninger eller behandledeBoforholdopplysninger.
         //    1a. Hvis behandledeBoforholdopplysninger er utfyllt og innhentedeOffentligeOpplysninger er utfyllt:
         //        behandledeBoforholdopplysninger skal da justeres mot virkningstidspunkt. Perioder i behandledeBoforholdopplysninger sjekkes mot
@@ -607,7 +607,7 @@ internal class BoforholdBarnServiceV3 {
     private fun behandleEndringer(
         startdatoBeregning: LocalDate,
         attenårFraDato: LocalDate,
-        boforholdRequest: BoforholdRequest,
+        boforholdRequest: BoforholdBarnRequestV3,
         behandledeOpplysninger: List<BoforholdResponseV2>,
     ): List<BoforholdResponseV2> {
         val endredePerioder = mutableListOf<BoforholdResponseV2>()
