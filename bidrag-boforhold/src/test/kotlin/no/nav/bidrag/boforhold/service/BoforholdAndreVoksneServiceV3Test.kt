@@ -41,9 +41,9 @@ internal class BoforholdAndreVoksneServiceV3Test {
     }
 
     @Test
-    fun `Test voksne i husstanden offentlig og manuell periode`() {
+    fun `Test voksne i husstanden offentlig og ny manuell periode som så slettes`() {
         boforholdAndreVoksneService = BoforholdAndreVoksneService()
-        val mottatteBoforhold = TestUtil.byggBorMedAndreVoksneOffentligeMauellePerioder1()
+        val mottatteBoforhold = TestUtil.byggBorMedAndreVoksneOffentligNyManuellePeriode()
         val virkningstidspunkt = LocalDate.of(2020, 9, 1)
         val resultat = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold[0])
         val resultat2 = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold[1])
@@ -76,6 +76,50 @@ internal class BoforholdAndreVoksneServiceV3Test {
             resultat3[0].periodeTom shouldBe null
             resultat3[0].bostatus shouldBe Bostatuskode.BOR_MED_ANDRE_VOKSNE
             resultat3[0].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
+
+    @Test
+    fun `Test voksne i husstanden ingen offentlige perioder og ny manuell periode som så endres`() {
+        boforholdAndreVoksneService = BoforholdAndreVoksneService()
+        val mottatteBoforhold = TestUtil.byggBorMedAndreVoksneOffentligeNyManuellePeriodeEndre()
+        val virkningstidspunkt = LocalDate.of(2020, 9, 1)
+        val resultat = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold[0])
+        val resultat2 = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold[1])
+        val resultat3 = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold[2])
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            // Beregning 1
+            resultat.size shouldBe 2
+            resultat[0].periodeFom shouldBe LocalDate.of(2020, 9, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2023, 8, 31)
+            resultat[0].bostatus shouldBe Bostatuskode.BOR_MED_ANDRE_VOKSNE
+            resultat[0].kilde shouldBe Kilde.MANUELL
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2023, 9, 1)
+            resultat[1].periodeTom shouldBe null
+            resultat[1].bostatus shouldBe Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE
+            resultat[1].kilde shouldBe Kilde.MANUELL
+
+            // Beregning 2
+            resultat2.size shouldBe 2
+            resultat2[0].periodeFom shouldBe LocalDate.of(2020, 9, 1)
+            resultat2[0].periodeTom shouldBe LocalDate.of(2024, 1, 31)
+            resultat2[0].bostatus shouldBe Bostatuskode.BOR_MED_ANDRE_VOKSNE
+            resultat2[0].kilde shouldBe Kilde.MANUELL
+
+            resultat2[1].periodeFom shouldBe LocalDate.of(2024, 2, 1)
+            resultat2[1].periodeTom shouldBe null
+            resultat2[1].bostatus shouldBe Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE
+            resultat2[1].kilde shouldBe Kilde.MANUELL
+
+            // Beregning 3
+            resultat3.size shouldBe 1
+            resultat3[0].periodeFom shouldBe LocalDate.of(2020, 9, 1)
+            resultat3[0].periodeTom shouldBe null
+            resultat3[0].bostatus shouldBe Bostatuskode.BOR_MED_ANDRE_VOKSNE
+            resultat3[0].kilde shouldBe Kilde.MANUELL
         }
     }
 }

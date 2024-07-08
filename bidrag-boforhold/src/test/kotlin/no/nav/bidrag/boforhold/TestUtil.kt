@@ -3955,7 +3955,7 @@ class TestUtil {
 
         )
 
-        fun byggBorMedAndreVoksneOffentligeMauellePerioder1() = listOf(
+        fun byggBorMedAndreVoksneOffentligNyManuellePeriode() = listOf(
             BoforholdVoksneRequest(
                 innhentedeOffentligeOpplysninger = listOf(
                     Husstandsmedlemmer(
@@ -4178,6 +4178,92 @@ class TestUtil {
                     nyBostatus = null,
                     originalBostatus = Bostatus(
                         periodeFom = LocalDate.of(2023, 9, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+
+            ),
+        )
+
+        fun byggBorMedAndreVoksneOffentligeNyManuellePeriodeEndre() = listOf(
+            BoforholdVoksneRequest(
+                innhentedeOffentligeOpplysninger = emptyList(),
+                behandledeBostatusopplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2020, 9, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.BOR_MED_ANDRE_VOKSNE,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+                endreBostatus = EndreBostatus(
+                    typeEndring = TypeEndring.NY,
+                    nyBostatus = Bostatus(
+                        periodeFom = LocalDate.of(2023, 9, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    originalBostatus = null,
+                ),
+
+            ),
+            BoforholdVoksneRequest(
+                innhentedeOffentligeOpplysninger = emptyList(),
+                behandledeBostatusopplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2020, 9, 1),
+                        periodeTom = LocalDate.of(2023, 8, 31),
+                        bostatus = Bostatuskode.BOR_MED_ANDRE_VOKSNE,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 9, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+                endreBostatus = EndreBostatus(
+                    typeEndring = TypeEndring.ENDRET,
+                    nyBostatus = Bostatus(
+                        periodeFom = LocalDate.of(2024, 2, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    originalBostatus = Bostatus(
+                        periodeFom = LocalDate.of(2023, 9, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+
+            ),
+            BoforholdVoksneRequest(
+                innhentedeOffentligeOpplysninger = emptyList(),
+                behandledeBostatusopplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2020, 9, 1),
+                        periodeTom = LocalDate.of(2024, 1, 31),
+                        bostatus = Bostatuskode.BOR_MED_ANDRE_VOKSNE,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2024, 2, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+                endreBostatus = EndreBostatus(
+                    typeEndring = TypeEndring.SLETTET,
+                    nyBostatus = null,
+                    originalBostatus = Bostatus(
+                        periodeFom = LocalDate.of(2024, 2, 1),
                         periodeTom = null,
                         bostatus = Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE,
                         kilde = Kilde.MANUELL,
