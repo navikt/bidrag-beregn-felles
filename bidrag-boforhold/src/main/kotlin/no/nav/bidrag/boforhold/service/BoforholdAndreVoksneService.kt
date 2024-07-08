@@ -23,14 +23,16 @@ internal class BoforholdAndreVoksneService {
             .filter { it.fødselsdato.isBefore(virkningstidspunkt.minusYears(18)) }
             .forEach { offentligeBostatusperioder.addAll(it.borISammeHusstandListe) }
 
-        val justerteOffentligeBostatusperioder = offentligeBostatusperioder.map {
-            Bostatus(
-                periodeFom = it.periodeFom?.withDayOfMonth(1),
-                periodeTom = it.periodeTom?.withDayOfMonth(1)?.minusDays(1),
-                bostatus = it.bostatus,
-                kilde = Kilde.OFFENTLIG,
-            )
-        }.filter { it.periodeTom == null || ChronoUnit.MONTHS.between(it.periodeFom, it.periodeTom) >= 1 }
+        val justerteOffentligeBostatusperioder = offentligeBostatusperioder
+            .filter { it.periodeTom == null || ChronoUnit.MONTHS.between(it.periodeFom, it.periodeTom) >= 1 }
+            .map {
+                Bostatus(
+                    periodeFom = it.periodeFom?.withDayOfMonth(1),
+                    periodeTom = it.periodeTom?.withDayOfMonth(1)?.minusDays(1),
+                    bostatus = it.bostatus,
+                    kilde = Kilde.OFFENTLIG,
+                )
+            }
 
         val sammenslåtteBostatusperioder =
             slåSammenBostatusperioder(
