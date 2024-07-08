@@ -3954,5 +3954,323 @@ class TestUtil {
             endreBostatus = null,
 
         )
+
+        fun byggBorMedAndreVoksneOffentligNyManuellePeriode() = listOf(
+            BoforholdVoksneRequest(
+                innhentedeOffentligeOpplysninger = listOf(
+                    Husstandsmedlemmer(
+                        gjelderPersonId = "98765432109",
+                        fødselsdato = LocalDate.of(1980, 3, 17),
+                        relasjon = Familierelasjon.INGEN,
+                        borISammeHusstandListe = listOf(
+                            Bostatus(
+                                periodeFom = LocalDate.of(2021, 1, 11),
+                                periodeTom = LocalDate.of(2023, 8, 21),
+                                bostatus = null,
+                                kilde = Kilde.OFFENTLIG,
+                            ),
+                            Bostatus(
+                                periodeFom = LocalDate.of(2023, 9, 21),
+                                periodeTom = LocalDate.of(2023, 10, 5),
+                                bostatus = null,
+                                kilde = Kilde.OFFENTLIG,
+                            ),
+                            Bostatus(
+                                periodeFom = LocalDate.of(2023, 12, 2),
+                                periodeTom = null,
+                                bostatus = null,
+                                kilde = Kilde.OFFENTLIG,
+                            ),
+                        ),
+                    ),
+                    Husstandsmedlemmer(
+                        gjelderPersonId = "123456789",
+                        fødselsdato = LocalDate.of(1977, 3, 17),
+                        relasjon = Familierelasjon.INGEN,
+                        borISammeHusstandListe = listOf(
+                            Bostatus(
+                                periodeFom = LocalDate.of(2022, 2, 17),
+                                periodeTom = LocalDate.of(2023, 9, 12),
+                                bostatus = null,
+                                kilde = Kilde.OFFENTLIG,
+                            ),
+                            Bostatus(
+                                periodeFom = LocalDate.of(2024, 2, 17),
+                                periodeTom = null,
+                                bostatus = null,
+                                kilde = Kilde.OFFENTLIG,
+                            ),
+                        ),
+                    ),
+                    Husstandsmedlemmer(
+                        gjelderPersonId = "123456789",
+                        fødselsdato = LocalDate.of(1975, 3, 17),
+                        relasjon = Familierelasjon.INGEN,
+                        borISammeHusstandListe = listOf(
+                            Bostatus(
+                                periodeFom = LocalDate.of(2012, 1, 17),
+                                periodeTom = null,
+                                bostatus = null,
+                                kilde = Kilde.OFFENTLIG,
+                            ),
+                        ),
+                    ),
+                ),
+                behandledeBostatusopplysninger = emptyList(),
+                endreBostatus = null,
+            ),
+            BoforholdVoksneRequest(
+                innhentedeOffentligeOpplysninger = listOf(
+                    Husstandsmedlemmer(
+                        gjelderPersonId = "98765432109",
+                        fødselsdato = LocalDate.of(1980, 3, 17),
+                        relasjon = Familierelasjon.INGEN,
+                        borISammeHusstandListe = listOf(
+                            Bostatus(
+                                periodeFom = LocalDate.of(2021, 1, 11),
+                                periodeTom = LocalDate.of(2023, 8, 21),
+                                bostatus = null,
+                                kilde = Kilde.OFFENTLIG,
+                            ),
+                            Bostatus(
+                                periodeFom = LocalDate.of(2023, 9, 21),
+                                periodeTom = LocalDate.of(2023, 10, 5),
+                                bostatus = null,
+                                kilde = Kilde.OFFENTLIG,
+                            ),
+                            Bostatus(
+                                periodeFom = LocalDate.of(2023, 12, 2),
+                                periodeTom = null,
+                                bostatus = null,
+                                kilde = Kilde.OFFENTLIG,
+                            ),
+                        ),
+                    ),
+                    Husstandsmedlemmer(
+                        gjelderPersonId = "123456789",
+                        fødselsdato = LocalDate.of(1977, 3, 17),
+                        relasjon = Familierelasjon.INGEN,
+                        borISammeHusstandListe = listOf(
+                            Bostatus(
+                                periodeFom = LocalDate.of(2022, 2, 17),
+                                periodeTom = LocalDate.of(2023, 9, 12),
+                                bostatus = null,
+                                kilde = Kilde.OFFENTLIG,
+                            ),
+                            Bostatus(
+                                periodeFom = LocalDate.of(2024, 2, 17),
+                                periodeTom = null,
+                                bostatus = null,
+                                kilde = Kilde.OFFENTLIG,
+                            ),
+                        ),
+                    ),
+                    Husstandsmedlemmer(
+                        gjelderPersonId = "123456789",
+                        fødselsdato = LocalDate.of(1975, 3, 17),
+                        relasjon = Familierelasjon.INGEN,
+                        borISammeHusstandListe = listOf(
+                            Bostatus(
+                                periodeFom = LocalDate.of(2012, 1, 17),
+                                periodeTom = null,
+                                bostatus = null,
+                                kilde = Kilde.OFFENTLIG,
+                            ),
+                        ),
+                    ),
+                ),
+                behandledeBostatusopplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2020, 9, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.BOR_MED_ANDRE_VOKSNE,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                ),
+                endreBostatus = EndreBostatus(
+                    typeEndring = TypeEndring.NY,
+                    nyBostatus = Bostatus(
+                        periodeFom = LocalDate.of(2023, 9, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    originalBostatus = null,
+                ),
+
+            ),
+            BoforholdVoksneRequest(
+                innhentedeOffentligeOpplysninger = listOf(
+                    Husstandsmedlemmer(
+                        gjelderPersonId = "98765432109",
+                        fødselsdato = LocalDate.of(1980, 3, 17),
+                        relasjon = Familierelasjon.INGEN,
+                        borISammeHusstandListe = listOf(
+                            Bostatus(
+                                periodeFom = LocalDate.of(2021, 1, 11),
+                                periodeTom = LocalDate.of(2023, 8, 21),
+                                bostatus = null,
+                                kilde = Kilde.OFFENTLIG,
+                            ),
+                            Bostatus(
+                                periodeFom = LocalDate.of(2023, 9, 21),
+                                periodeTom = LocalDate.of(2023, 10, 5),
+                                bostatus = null,
+                                kilde = Kilde.OFFENTLIG,
+                            ),
+                            Bostatus(
+                                periodeFom = LocalDate.of(2023, 12, 2),
+                                periodeTom = null,
+                                bostatus = null,
+                                kilde = Kilde.OFFENTLIG,
+                            ),
+                        ),
+                    ),
+                    Husstandsmedlemmer(
+                        gjelderPersonId = "123456789",
+                        fødselsdato = LocalDate.of(1977, 3, 17),
+                        relasjon = Familierelasjon.INGEN,
+                        borISammeHusstandListe = listOf(
+                            Bostatus(
+                                periodeFom = LocalDate.of(2022, 2, 17),
+                                periodeTom = LocalDate.of(2023, 9, 12),
+                                bostatus = null,
+                                kilde = Kilde.OFFENTLIG,
+                            ),
+                            Bostatus(
+                                periodeFom = LocalDate.of(2024, 2, 17),
+                                periodeTom = null,
+                                bostatus = null,
+                                kilde = Kilde.OFFENTLIG,
+                            ),
+                        ),
+                    ),
+                    Husstandsmedlemmer(
+                        gjelderPersonId = "123456789",
+                        fødselsdato = LocalDate.of(1975, 3, 17),
+                        relasjon = Familierelasjon.INGEN,
+                        borISammeHusstandListe = listOf(
+                            Bostatus(
+                                periodeFom = LocalDate.of(2012, 1, 17),
+                                periodeTom = null,
+                                bostatus = null,
+                                kilde = Kilde.OFFENTLIG,
+                            ),
+                        ),
+                    ),
+                ),
+                behandledeBostatusopplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2020, 9, 1),
+                        periodeTom = LocalDate.of(2023, 8, 31),
+                        bostatus = Bostatuskode.BOR_MED_ANDRE_VOKSNE,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 9, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+                endreBostatus = EndreBostatus(
+                    typeEndring = TypeEndring.SLETTET,
+                    nyBostatus = null,
+                    originalBostatus = Bostatus(
+                        periodeFom = LocalDate.of(2023, 9, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+
+            ),
+        )
+
+        fun byggBorMedAndreVoksneOffentligeNyManuellePeriodeEndre() = listOf(
+            BoforholdVoksneRequest(
+                innhentedeOffentligeOpplysninger = emptyList(),
+                behandledeBostatusopplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2020, 9, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.BOR_MED_ANDRE_VOKSNE,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+                endreBostatus = EndreBostatus(
+                    typeEndring = TypeEndring.NY,
+                    nyBostatus = Bostatus(
+                        periodeFom = LocalDate.of(2023, 9, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    originalBostatus = null,
+                ),
+
+            ),
+            BoforholdVoksneRequest(
+                innhentedeOffentligeOpplysninger = emptyList(),
+                behandledeBostatusopplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2020, 9, 1),
+                        periodeTom = LocalDate.of(2023, 8, 31),
+                        bostatus = Bostatuskode.BOR_MED_ANDRE_VOKSNE,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 9, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+                endreBostatus = EndreBostatus(
+                    typeEndring = TypeEndring.ENDRET,
+                    nyBostatus = Bostatus(
+                        periodeFom = LocalDate.of(2024, 2, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    originalBostatus = Bostatus(
+                        periodeFom = LocalDate.of(2023, 9, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+
+            ),
+            BoforholdVoksneRequest(
+                innhentedeOffentligeOpplysninger = emptyList(),
+                behandledeBostatusopplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2020, 9, 1),
+                        periodeTom = LocalDate.of(2024, 1, 31),
+                        bostatus = Bostatuskode.BOR_MED_ANDRE_VOKSNE,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2024, 2, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+                endreBostatus = EndreBostatus(
+                    typeEndring = TypeEndring.SLETTET,
+                    nyBostatus = null,
+                    originalBostatus = Bostatus(
+                        periodeFom = LocalDate.of(2024, 2, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+
+            ),
+        )
     }
 }
