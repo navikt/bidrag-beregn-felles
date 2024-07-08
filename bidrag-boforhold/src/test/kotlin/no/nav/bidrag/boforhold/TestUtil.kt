@@ -3923,6 +3923,12 @@ class TestUtil {
                             kilde = Kilde.OFFENTLIG,
                         ),
                         Bostatus(
+                            periodeFom = LocalDate.of(2023, 11, 21),
+                            periodeTom = LocalDate.of(2023, 11, 27),
+                            bostatus = null,
+                            kilde = Kilde.OFFENTLIG,
+                        ),
+                        Bostatus(
                             periodeFom = LocalDate.of(2023, 12, 2),
                             periodeTom = null,
                             bostatus = null,
@@ -4271,6 +4277,39 @@ class TestUtil {
                 ),
 
             ),
+        )
+
+        fun byggTestÉnmånedsgrenseHusstandsmedlemskap() = BoforholdVoksneRequest(
+            innhentedeOffentligeOpplysninger = listOf(
+                Husstandsmedlemmer(
+                    gjelderPersonId = "98765432109",
+                    fødselsdato = LocalDate.of(1980, 3, 17),
+                    relasjon = Familierelasjon.INGEN,
+                    borISammeHusstandListe = listOf(
+                        Bostatus(
+                            periodeFom = LocalDate.of(2023, 1, 11),
+                            periodeTom = LocalDate.of(2023, 1, 22),
+                            bostatus = null,
+                            kilde = Kilde.OFFENTLIG,
+                        ),
+                        Bostatus(
+                            periodeFom = LocalDate.of(2023, 3, 21),
+                            periodeTom = LocalDate.of(2023, 4, 12),
+                            bostatus = null,
+                            kilde = Kilde.OFFENTLIG,
+                        ),
+                        Bostatus(
+                            periodeFom = LocalDate.of(2023, 5, 21),
+                            periodeTom = LocalDate.of(2023, 7, 27),
+                            bostatus = null,
+                            kilde = Kilde.OFFENTLIG,
+                        ),
+                    ),
+                ),
+            ),
+            behandledeBostatusopplysninger = emptyList(),
+            endreBostatus = null,
+
         )
     }
 }
