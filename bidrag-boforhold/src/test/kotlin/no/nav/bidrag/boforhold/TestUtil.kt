@@ -3903,7 +3903,7 @@ class TestUtil {
         )
 
         // Tester for voksne i husstanden
-        fun byggBorMedAndreVoksne1() = BoforholdVoksneRequest(
+        fun byggBorMedAndreVoksneOffentligePerioder() = BoforholdVoksneRequest(
             innhentedeOffentligeOpplysninger = listOf(
                 Husstandsmedlemmer(
                     gjelderPersonId = "98765432109",
@@ -3911,8 +3911,20 @@ class TestUtil {
                     relasjon = Familierelasjon.INGEN,
                     borISammeHusstandListe = listOf(
                         Bostatus(
-                            periodeFom = LocalDate.of(2020, 1, 1),
-                            periodeTom = LocalDate.of(2023, 8, 31),
+                            periodeFom = LocalDate.of(2020, 1, 11),
+                            periodeTom = LocalDate.of(2023, 8, 21),
+                            bostatus = null,
+                            kilde = Kilde.OFFENTLIG,
+                        ),
+                        Bostatus(
+                            periodeFom = LocalDate.of(2023, 9, 21),
+                            periodeTom = LocalDate.of(2023, 10, 5),
+                            bostatus = null,
+                            kilde = Kilde.OFFENTLIG,
+                        ),
+                        Bostatus(
+                            periodeFom = LocalDate.of(2023, 12, 2),
+                            periodeTom = null,
                             bostatus = null,
                             kilde = Kilde.OFFENTLIG,
                         ),
@@ -3923,6 +3935,12 @@ class TestUtil {
                     fødselsdato = LocalDate.of(1977, 3, 17),
                     relasjon = Familierelasjon.INGEN,
                     borISammeHusstandListe = listOf(
+                        Bostatus(
+                            periodeFom = LocalDate.of(2022, 2, 17),
+                            periodeTom = LocalDate.of(2023, 9, 12),
+                            bostatus = null,
+                            kilde = Kilde.OFFENTLIG,
+                        ),
                         Bostatus(
                             periodeFom = LocalDate.of(2024, 2, 17),
                             periodeTom = null,
