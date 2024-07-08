@@ -22,15 +22,22 @@ internal class BoforholdAndreVoksneService {
             .filter { it.fødselsdato.isBefore(virkningstidspunkt.minusYears(18)) }
             .forEach { offentligeBostatusperioder.addAll(it.borISammeHusstandListe) }
 
+        val justerteOffentligeBostatusperioder = offentligeBostatusperioder.map {
+            Bostatus(
+                periodeFom = it.periodeFom?.withDayOfMonth(1),
+                periodeTom = it.periodeTom?.plusMonths(1)?.withDayOfMonth(1)?.minusDays(1),
+                bostatus = it.bostatus,
+                kilde = Kilde.OFFENTLIG,
+            )
+        }
+
         val sammenslåtteBostatusperioder =
             slåSammenBostatusperioder(
-                offentligeBostatusperioder.filter {
+                justerteOffentligeBostatusperioder.filter {
                     it.periodeTom == null ||
                         it.periodeTom.isAfter(virkningstidspunkt.plusDays(1))
-                }.map {
-                    if (it.periodeFom == null) it.copy(periodeFom = virkningstidspunkt) else it
                 },
-            )
+            ).sortedWith(compareBy<Bostatus> { it.periodeFom }.thenBy { it.periodeTom })
 
         return beregnPerioder(
             virkningstidspunkt,
@@ -42,7 +49,7 @@ internal class BoforholdAndreVoksneService {
 
     private fun beregnPerioder(
         virkningstidspunkt: LocalDate,
-        offentligeBostatusperioder: List<Bostatus>,
+        justerteOffentligePerioder: List<Bostatus>,
         behandledeBostatusopplysninger: List<Bostatus>,
         endreBostatus: EndreBostatus?,
     ): List<Bostatus> {
@@ -78,24 +85,7 @@ internal class BoforholdAndreVoksneService {
         //        endreBoforhold. typeEndring må være lik NY, hvis ikke reurneres tom liste.
         //        Hull i tidslinjen utfylles med Bostatuskode = BOR_IKKE_MED_ANDRE_VOKSNE og Kilde = MANUELL.
 
-        // Filterer først bort alle offentlige perioder som avsluttes før virkningstidspunkt
-        // Justerer så offentlige perioder slik at de starter på første dag i måneden og slutter på siste dag i måneden
-        val justerteOffentligePerioder = offentligeBostatusperioder
-            .sortedWith(compareBy<Bostatus> { it.periodeFom }.thenBy { it.periodeTom })
-            .map {
-                Bostatus(
-                    periodeFom = if (it.periodeFom!!.isBefore(virkningstidspunkt)) {
-                        virkningstidspunkt
-                    } else {
-                        it.periodeFom.withDayOfMonth(1)
-                    },
-                    periodeTom = it.periodeTom?.plusMonths(1)?.withDayOfMonth(1)?.minusDays(1),
-                    bostatus = Bostatuskode.BOR_MED_ANDRE_VOKSNE,
-                    kilde = Kilde.OFFENTLIG,
-                )
-            }
-
-        // Filterer først bort alle perioder med behandlede opplysninger som avsluttes før virkningstidspunkt
+        // Filterer bort alle perioder med behandlede opplysninger som avsluttes før virkningstidspunkt
         val behandledeOpplysninger = behandledeBostatusopplysninger
             .filter { (it.periodeTom == null || it.periodeTom.isAfter(virkningstidspunkt)) }
             .sortedBy { it.periodeFom }.map {
@@ -208,7 +198,7 @@ internal class BoforholdAndreVoksneService {
                     sammenhengendePerioderListe.add(liste[indeks].copy(periodeFom = virkningstidspunkt))
                 }
             } else {
-                if (liste[indeks - 1].periodeTom!!.plusDays(1).isBefore(liste[indeks].periodeFom)) {
+                if (liste[indeks - 1].periodeTom?.plusDays(1)?.isBefore(liste[indeks].periodeFom) == true) {
                     // Det er opphold mellom to perioder og det må lages en periode med bostatus IKKE_MED_FORELDER for oppholdet
 
                     sammenhengendePerioderListe.add(
@@ -734,31 +724,40 @@ internal class BoforholdAndreVoksneService {
     }
 
     private fun slåSammenBostatusperioder(offentligeBostatusperioder: List<Bostatus>): List<Bostatus> {
+        val sortertePerioder = offentligeBostatusperioder.sortedWith(compareBy<Bostatus> { it.periodeFom }.thenBy { it.periodeTom })
         val resultatliste = mutableListOf<Bostatus>()
         var periodeFom: LocalDate? = null
         var periodeTom: LocalDate? = null
-        for (indeks in offentligeBostatusperioder.sortedWith(compareBy<Bostatus> { it.periodeFom }.thenBy { it.periodeTom }).indices) {
-            if (indeks == 0) {
-                periodeFom = offentligeBostatusperioder[indeks].periodeFom
-                periodeTom = offentligeBostatusperioder[indeks].periodeTom
-                if (offentligeBostatusperioder.size == 1) {
-                    resultatliste.add(offentligeBostatusperioder[indeks].copy(bostatus = Bostatuskode.BOR_MED_ANDRE_VOKSNE))
-                }
-            } else {
-                if (offentligeBostatusperioder[indeks].periodeFom!!.isBefore(periodeTom?.plusDays(2))) {
-                    // perioden overlapper med forrige periode
-                    periodeTom = offentligeBostatusperioder[indeks].periodeTom
-                    if (indeks == offentligeBostatusperioder.size - 1) {
-                        resultatliste.add(Bostatus(periodeFom, periodeTom, Bostatuskode.BOR_MED_ANDRE_VOKSNE, Kilde.OFFENTLIG))
-                    }
-                } else {
+
+        sortertePerioder.forEachIndexed { indeks, bostatusperiode ->
+            if (indeks == 0 || bostatusperiode.periodeFom!!.isAfter(periodeTom?.plusDays(1))) {
+                if (indeks != 0) {
                     resultatliste.add(Bostatus(periodeFom, periodeTom, Bostatuskode.BOR_MED_ANDRE_VOKSNE, Kilde.OFFENTLIG))
-                    if (indeks == offentligeBostatusperioder.size - 1) {
-                        resultatliste.add(offentligeBostatusperioder[indeks].copy(bostatus = Bostatuskode.BOR_MED_ANDRE_VOKSNE))
-                    }
+                    periodeFom = null
+                    periodeTom = null
                 }
+                if (bostatusperiode.periodeTom == null) {
+                    resultatliste.add(
+                        Bostatus(
+                            periodeFom = bostatusperiode.periodeFom,
+                            periodeTom = null,
+                            bostatus = Bostatuskode.BOR_MED_ANDRE_VOKSNE,
+                            kilde = Kilde.OFFENTLIG,
+                        ),
+                    )
+                    return resultatliste
+                }
+                periodeFom = bostatusperiode.periodeFom
+                periodeTom = bostatusperiode.periodeTom
+            } else if (bostatusperiode.periodeTom == null || bostatusperiode.periodeTom.isAfter(periodeTom)) {
+                periodeTom = bostatusperiode.periodeTom
+            }
+
+            if (indeks == sortertePerioder.size - 1) {
+                resultatliste.add(Bostatus(periodeFom, periodeTom, Bostatuskode.BOR_MED_ANDRE_VOKSNE, Kilde.OFFENTLIG))
             }
         }
+
         return resultatliste
     }
 }
