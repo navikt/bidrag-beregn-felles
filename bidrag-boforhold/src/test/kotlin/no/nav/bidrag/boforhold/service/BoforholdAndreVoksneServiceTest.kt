@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
-internal class BoforholdAndreVoksneServiceV3Test {
+internal class BoforholdAndreVoksneServiceTest {
     private lateinit var boforholdAndreVoksneService: BoforholdAndreVoksneService
 
     // Tester med kun offentlige perioder
@@ -24,11 +24,11 @@ internal class BoforholdAndreVoksneServiceV3Test {
             Assertions.assertNotNull(resultat)
             resultat.size shouldBe 3
             resultat[0].periodeFom shouldBe LocalDate.of(2020, 9, 1)
-            resultat[0].periodeTom shouldBe LocalDate.of(2023, 10, 31)
+            resultat[0].periodeTom shouldBe LocalDate.of(2023, 8, 31)
             resultat[0].bostatus shouldBe Bostatuskode.BOR_MED_ANDRE_VOKSNE
             resultat[0].kilde shouldBe Kilde.OFFENTLIG
 
-            resultat[1].periodeFom shouldBe LocalDate.of(2023, 11, 1)
+            resultat[1].periodeFom shouldBe LocalDate.of(2023, 9, 1)
             resultat[1].periodeTom shouldBe LocalDate.of(2023, 11, 30)
             resultat[1].bostatus shouldBe Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE
             resultat[1].kilde shouldBe Kilde.OFFENTLIG
@@ -120,6 +120,34 @@ internal class BoforholdAndreVoksneServiceV3Test {
             resultat3[0].periodeTom shouldBe null
             resultat3[0].bostatus shouldBe Bostatuskode.BOR_MED_ANDRE_VOKSNE
             resultat3[0].kilde shouldBe Kilde.MANUELL
+        }
+    }
+
+    @Test
+    fun `Test at husstandsmedlemskap under én måned filtreres bort`() {
+        boforholdAndreVoksneService = BoforholdAndreVoksneService()
+        val mottatteBoforhold = TestUtil.byggTestÉnmånedsgrenseHusstandsmedlemskap()
+        val virkningstidspunkt = LocalDate.of(2020, 9, 1)
+        val resultat = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 3
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2020, 9, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2023, 4, 30)
+            resultat[0].bostatus shouldBe Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2023, 5, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2023, 6, 30)
+            resultat[1].bostatus shouldBe Bostatuskode.BOR_MED_ANDRE_VOKSNE
+            resultat[1].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2023, 7, 1)
+            resultat[2].periodeTom shouldBe null
+            resultat[2].bostatus shouldBe Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE
+            resultat[2].kilde shouldBe Kilde.OFFENTLIG
         }
     }
 }
