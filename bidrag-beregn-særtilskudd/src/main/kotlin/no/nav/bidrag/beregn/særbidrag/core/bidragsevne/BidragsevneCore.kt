@@ -44,7 +44,7 @@ internal class BidragsevneCore(private val bidragsevnePeriode: BidragsevnePeriod
 
     private fun mapFraBusinessObject(avvikListe: List<Avvik>, resultat: BeregnBidragsevneResultat) = BeregnBidragsevneResultatCore(
         resultatPeriodeListe = mapResultatPeriode(resultat.resultatPeriodeListe),
-        sjablonListe = mapSjablonGrunnlagListe(resultat.resultatPeriodeListe),
+        sjablonListe = mapSjablonGrunnlagListe(resultat.resultatPeriodeListe).toMutableList(),
         avvikListe = mapAvvik(avvikListe),
     )
 
@@ -78,7 +78,7 @@ internal class BidragsevneCore(private val bidragsevnePeriode: BidragsevnePeriod
     private fun mapResultatPeriode(resultatPeriodeListe: List<ResultatPeriode>) = resultatPeriodeListe.map {
         ResultatPeriodeCore(
             periode = PeriodeCore(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
-            resultat = ResultatBeregningCore(it.resultat.belop),
+            resultat = ResultatBeregningCore(it.resultat.beløp),
             grunnlagsreferanseListe = mapReferanseListe(it),
         )
     }

@@ -25,7 +25,7 @@ data class ResultatPeriode(
     val grunnlag: GrunnlagBeregning,
 )
 
-data class ResultatBeregning(val belop: BigDecimal, val sjablonListe: List<SjablonPeriodeNavnVerdi>)
+data class ResultatBeregning(val beløp: BigDecimal, val sjablonListe: List<SjablonPeriodeNavnVerdi>)
 
 // Grunnlag beregning
 data class GrunnlagBeregning(
@@ -35,11 +35,21 @@ data class GrunnlagBeregning(
     val sjablonListe: List<SjablonPeriode>,
 )
 
-data class Inntekt(val referanse: String, val inntektType: String, val inntektBelop: BigDecimal)
+data class Inntekt(
+    val referanse: String,
+    val inntektType: String,
+    val inntektBeløp: BigDecimal
+)
 
-data class AntallBarnIHusstand(val referanse: String, val antallBarn: Double)
+data class AntallBarnIHusstand(
+    val referanse: String,
+    val antallBarn: Double
+)
 
-data class BostatusVoksneIHusstand(val referanse: String, val borMedAndre: Boolean)
+data class BostatusVoksneIHusstand(
+    val referanse: String,
+    val borMedAndre: Boolean
+)
 
 // Hjelpeklasser
 data class BeregnBidragsevneListeGrunnlag(

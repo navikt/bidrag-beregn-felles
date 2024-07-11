@@ -2,58 +2,47 @@ package no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto
 
 import no.nav.bidrag.beregn.core.dto.AvvikCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
-import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.felles.dto.IResultatPeriode
 import java.math.BigDecimal
 import java.time.LocalDate
 
 // Grunnlag periode
-data class BeregnSaertilskuddGrunnlagCore(
+data class BeregnSærbidragGrunnlagCore(
     val beregnDatoFra: LocalDate,
     val beregnDatoTil: LocalDate,
-    val soknadsbarnPersonId: Int,
+    val søknadsbarnPersonId: String,
     val bidragsevnePeriodeListe: List<BidragsevnePeriodeCore>,
-    val bPsAndelSaertilskuddPeriodeListe: List<BPsAndelSaertilskuddPeriodeCore>,
-    val lopendeBidragPeriodeListe: List<LopendeBidragPeriodeCore>,
-    val samvaersfradragPeriodeListe: List<SamvaersfradragPeriodeCore>,
-    val sjablonPeriodeListe: List<SjablonPeriodeCore>,
+    val bPsAndelSærbidragPeriodeListe: List<BPsAndelSærbidragPeriodeCore>,
 )
 
-data class BidragsevnePeriodeCore(val referanse: String, val periodeDatoFraTil: PeriodeCore, val bidragsevneBelop: BigDecimal)
-
-data class BPsAndelSaertilskuddPeriodeCore(
+data class BidragsevnePeriodeCore(
     val referanse: String,
-    val periodeDatoFraTil: PeriodeCore,
-    val bPsAndelSaertilskuddProsent: BigDecimal,
-    val bPsAndelSaertilskuddBelop: BigDecimal,
-    val barnetErSelvforsorget: Boolean,
+    val periode: PeriodeCore,
+    val beløp: BigDecimal
 )
 
-data class LopendeBidragPeriodeCore(
+data class BPsAndelSærbidragPeriodeCore(
     val referanse: String,
-    val periodeDatoFraTil: PeriodeCore,
-    val barnPersonId: Int,
-    val lopendeBidragBelop: BigDecimal,
-    val opprinneligBPsAndelUnderholdskostnadBelop: BigDecimal,
-    val opprinneligBidragBelop: BigDecimal,
-    val opprinneligSamvaersfradragBelop: BigDecimal,
-)
-
-data class SamvaersfradragPeriodeCore(
-    val referanse: String,
-    val periodeDatoFraTil: PeriodeCore,
-    val barnPersonId: Int,
-    val samvaersfradragBelop: BigDecimal,
+    val periode: PeriodeCore,
+    val andelProsent: BigDecimal,
+    val andelBeløp: BigDecimal,
+    val barnetErSelvforsørget: Boolean,
 )
 
 // Resultatperiode
-data class BeregnSaertilskuddResultatCore(val resultatPeriodeListe: List<ResultatPeriodeCore>, val avvikListe: List<AvvikCore>)
+data class BeregnSærbidragResultatCore(
+    val resultatPeriodeListe: List<ResultatPeriodeCore>,
+    val avvikListe: List<AvvikCore>
+)
 
 data class ResultatPeriodeCore(
     override val periode: PeriodeCore,
-    val soknadsbarnPersonId: Int,
-    val resultatBeregning: ResultatBeregningCore,
+    val søknadsbarnPersonId: String,
+    val resultat: ResultatBeregningCore,
     override val grunnlagsreferanseListe: List<String>,
 ) : IResultatPeriode
 
-data class ResultatBeregningCore(val belop: BigDecimal, val kode: String)
+data class ResultatBeregningCore(
+    val beløp: BigDecimal,
+    val kode: String
+)

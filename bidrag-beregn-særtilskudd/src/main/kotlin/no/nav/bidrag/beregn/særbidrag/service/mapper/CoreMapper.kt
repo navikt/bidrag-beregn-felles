@@ -10,7 +10,7 @@ import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
 import no.nav.bidrag.beregn.core.util.InntektUtil.erKapitalinntekt
 import no.nav.bidrag.beregn.core.util.InntektUtil.justerKapitalinntekt
 import no.nav.bidrag.beregn.særbidrag.core.felles.dto.BarnIHusstandenPeriodeCore
-import no.nav.bidrag.beregn.særbidrag.core.felles.dto.DelberegningSærtilskudd
+import no.nav.bidrag.beregn.særbidrag.core.felles.dto.DelberegningSærbidrag
 import no.nav.bidrag.beregn.særbidrag.core.felles.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.felles.dto.VoksneIHusstandenPeriodeCore
 import no.nav.bidrag.commons.service.sjablon.Bidragsevne
@@ -34,15 +34,6 @@ import java.time.LocalDate
 abstract class CoreMapper {
     private val maxDato = LocalDate.parse("9999-12-31")
 
-    val filtrerDelberegning: (String) -> (SjablonTallNavn) -> Boolean = { delberegning ->
-        { sjablonTallNavn ->
-            when (delberegning) {
-                "bidragsevne" -> sjablonTallNavn.bidragsevne
-                else -> false
-            }
-        }
-    }
-
     // Henter sjablonverdi for kapitalinntekt
     // TODO Pt ligger det bare en gyldig sjablonverdi (uforandret siden 2003). Logikken her må utvides hvis det legges inn nye sjablonverdier
     fun finnInnslagKapitalinntekt(sjablontallListe: List<Sjablontall>) =
@@ -54,19 +45,19 @@ abstract class CoreMapper {
 
     // TODO Kan slås sammen med mapInntekt for forskudd?
     fun mapInntekt(
-        beregnSærtilskuddGrunnlag: BeregnGrunnlag,
+        beregnSærbidragrunnlag: BeregnGrunnlag,
         referanseBidragspliktig: String,
         innslagKapitalinntektSjablonverdi: BigDecimal,
     ): List<InntektPeriodeCore> {
         try {
             val inntektGrunnlagListe =
-                beregnSærtilskuddGrunnlag.grunnlagListe
+                beregnSærbidragrunnlag.grunnlagListe
                     .filtrerOgKonverterBasertPåFremmedReferanse<InntektsrapporteringPeriode>(
                         grunnlagType = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
                         referanse = referanseBidragspliktig,
                     )
                     .filter { it.innhold.valgt }
-                    .filter { it.innhold.gjelderBarn == null || it.innhold.gjelderBarn == beregnSærtilskuddGrunnlag.søknadsbarnReferanse }
+                    .filter { it.innhold.gjelderBarn == null || it.innhold.gjelderBarn == beregnSærbidragrunnlag.søknadsbarnReferanse }
                     .map {
                         InntektPeriodeCore(
                             referanse = it.referanse,
@@ -86,7 +77,11 @@ abstract class CoreMapper {
                             grunnlagsreferanseListe = emptyList(),
                         )
                     }
-            return akkumulerOgPeriodiser(inntektGrunnlagListe, referanseBidragspliktig, InntektPeriodeCore::class.java)
+            return akkumulerOgPeriodiser(
+                grunnlagListe = inntektGrunnlagListe,
+                referanse = referanseBidragspliktig,
+                clazz = InntektPeriodeCore::class.java
+            )
         } catch (e: Exception) {
             throw IllegalArgumentException(
                 "Ugyldig input ved beregning av særlige utgifter. Innhold i Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE er ikke gyldig: " +
@@ -99,7 +94,7 @@ abstract class CoreMapper {
     // TODO Søknadsbarnet vil f.eks. alltid ha en bostatus selv om det ikke bor hjemme
 
     // Lager en gruppert liste hvor grunnlaget er akkumulert pr bruddperiode, med en liste over tilhørende grunnlagsreferanser
-    fun <T : DelberegningSærtilskudd> akkumulerOgPeriodiser(grunnlagListe: List<T>, referanse: String, clazz: Class<T>): List<T> {
+    fun <T : DelberegningSærbidrag> akkumulerOgPeriodiser(grunnlagListe: List<T>, referanse: String, clazz: Class<T>): List<T> {
         // Lager unik, sortert liste over alle bruddatoer og legger evt. null-forekomst bakerst
         val bruddatoListe = grunnlagListe
             .flatMap { listOf(it.periode.datoFom, it.periode.datoTil) }
@@ -196,51 +191,11 @@ abstract class CoreMapper {
         }
 
     // Filtrerer ut grunnlag som tilhører en gitt periode
-    private fun <T : DelberegningSærtilskudd> filtrerGrunnlagsliste(grunnlagsliste: List<T>, periode: Periode): List<T> =
+    private fun <T : DelberegningSærbidrag> filtrerGrunnlagsliste(grunnlagsliste: List<T>, periode: Periode): List<T> =
         grunnlagsliste.filter { grunnlag ->
             (grunnlag.periode.datoTil == null || periode.datoFom.isBefore(grunnlag.periode.datoTil)) &&
                 (periode.datoTil == null || periode.datoTil!!.isAfter(grunnlag.periode.datoFom))
         }
-
-    // Mapper sjabloner av typen sjablontall
-    // Filtrerer bort de sjablonene som ikke brukes i den aktuelle delberegningen og de som ikke er innenfor intervallet beregnDatoFra-beregnDatoTil
-//    fun mapSjablonSjablontallBidragsevne(
-//        beregnDatoFra: LocalDate,
-//        beregnDatoTil: LocalDate,
-//        sjablonSjablontallListe: List<Sjablontall>,
-//        sjablontallMap: Map<String, SjablonTallNavn>,
-//    ): List<SjablonPeriodeCore> {
-//        return sjablonSjablontallListe
-//            .filter { !(it.datoFom!!.isAfter(beregnDatoTil) || it.datoTom!!.isBefore(beregnDatoFra)) }
-//            .filter { (sjablontallMap.getOrDefault(key = it.typeSjablon, defaultValue = SjablonTallNavn.DUMMY)).bidragsevne }
-//            .map {
-//                SjablonPeriodeCore(
-//                    periode = PeriodeCore(datoFom = it.datoFom!!, datoTil = justerTilDato(it.datoTom)),
-//                    navn = sjablontallMap.getOrDefault(key = it.typeSjablon, defaultValue = SjablonTallNavn.DUMMY).navn,
-//                    nokkelListe = emptyList(),
-//                    innholdListe = listOf(SjablonInnholdCore(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = it.verdi!!)),
-//                )
-//            }
-//    }
-//
-//    fun mapSjablonSjablontallBpsAndelSærtilskudd(
-//        beregnDatoFra: LocalDate,
-//        beregnDatoTil: LocalDate,
-//        sjablonSjablontallListe: List<Sjablontall>,
-//        sjablontallMap: Map<String, SjablonTallNavn>,
-//    ): List<SjablonPeriodeCore> {
-//        return sjablonSjablontallListe
-//            .filter { !(it.datoFom!!.isAfter(beregnDatoTil) || it.datoTom!!.isBefore(beregnDatoFra)) }
-//            .filter { (sjablontallMap.getOrDefault(key = it.typeSjablon, defaultValue = SjablonTallNavn.DUMMY)).bpAndelSaertilskudd }
-//            .map {
-//                SjablonPeriodeCore(
-//                    periode = PeriodeCore(datoFom = it.datoFom!!, datoTil = justerTilDato(it.datoTom)),
-//                    navn = sjablontallMap.getOrDefault(key = it.typeSjablon, defaultValue = SjablonTallNavn.DUMMY).navn,
-//                    nokkelListe = emptyList(),
-//                    innholdListe = listOf(SjablonInnholdCore(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = it.verdi!!)),
-//                )
-//            }
-//    }
 
     fun mapSjablonSjablontall(
         beregnDatoFra: LocalDate,
@@ -268,17 +223,13 @@ abstract class CoreMapper {
         sjablonSjablontallListe: List<Sjablontall>,
         sjablontallMap: Map<String, SjablonTallNavn>
     ): List<SjablonPeriodeCore> {
-        return mapSjablonSjablontall(beregnDatoFra, beregnDatoTil, sjablonSjablontallListe, sjablontallMap) { it.bidragsevne }
+        return mapSjablonSjablontall(
+            beregnDatoFra = beregnDatoFra,
+            beregnDatoTil = beregnDatoTil,
+            sjablonSjablontallListe = sjablonSjablontallListe,
+            sjablontallMap = sjablontallMap
+        ) { it.bidragsevne }
     }
-
-//    fun mapSjablonSjablontallBpsAndelSærtilskudd(
-//        beregnDatoFra: LocalDate,
-//        beregnDatoTil: LocalDate,
-//        sjablonSjablontallListe: List<Sjablontall>,
-//        sjablontallMap: Map<String, SjablonTallNavn>
-//    ): List<SjablonPeriodeCore> {
-//        return mapSjablonSjablontall(beregnDatoFra, beregnDatoTil, sjablonSjablontallListe, sjablontallMap) { it.bpAndelSaertilskudd }
-//    }
 
     fun mapSjablonBidragsevne(
         beregnDatoFra: LocalDate,
@@ -322,48 +273,6 @@ abstract class CoreMapper {
             }
     }
 
-    // Mapper sjabloner av typen samværsfradrag
-    // Filtrerer bort de sjablonene som ikke er innenfor intervallet beregnDatoFra-beregnDatoTil
-//    protected fun mapSjablonSamvaersfradrag(
-//        sjablonSamvaersfradragListe: List<Samværsfradrag>,
-//        beregnGrunnlag: BeregnGrunnlag,
-//    ): List<SjablonPeriodeCore> {
-//        val beregnDatoFra = beregnGrunnlag.beregnDatoFra
-//        val beregnDatoTil = beregnGrunnlag.beregnDatoTil
-//        return sjablonSamvaersfradragListe
-//            .stream()
-//            .filter { (_, _, datoFom, datoTom): Samværsfradrag -> datoFom!!.isBefore(beregnDatoTil) && !datoTom!!.isBefore(beregnDatoFra) }
-//            .map { (samvaersklasse, alderTom, datoFom, datoTom, antDagerTom, antNetterTom, belopFradrag): Samværsfradrag ->
-//                SjablonPeriodeCore(
-//                    PeriodeCore(datoFom!!, datoTom),
-//                    SjablonNavn.SAMVÆRSFRADRAG.navn,
-//                    Arrays.asList(
-//                        SjablonNokkelCore(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, samvaersklasse!!),
-//                        SjablonNokkelCore(SjablonNøkkelNavn.ALDER_TOM.navn, alderTom.toString()),
-//                    ),
-//                    Arrays.asList(
-//                        SjablonInnholdCore(
-//                            SjablonInnholdNavn.ANTALL_DAGER_TOM.navn,
-//                            BigDecimal.valueOf(
-//                                antDagerTom!!.toLong(),
-//                            ),
-//                        ),
-//                        SjablonInnholdCore(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(antNetterTom!!.toLong())),
-//                        SjablonInnholdCore(SjablonInnholdNavn.FRADRAG_BELØP.navn, belopFradrag!!),
-//                    ),
-//                )
-//            }
-//            .toList()
-//    }
-//
-//    protected fun mapSjablontall(): Map<String, SjablonTallNavn> {
-//        val sjablontallMap = HashMap<String, SjablonTallNavn>()
-//        for (sjablonTallNavn in SjablonTallNavn.entries) {
-//            sjablontallMap[sjablonTallNavn.id] = sjablonTallNavn
-//        }
-//        return sjablontallMap
-//    }
-
     private fun justerTilDato(dato: LocalDate?): LocalDate? {
         return if (dato == null || dato == maxDato) {
             null
@@ -375,17 +284,6 @@ abstract class CoreMapper {
     }
 
     companion object {
-//        const val BP_ANDEL_SAERTILSKUDD = "BPsAndelSaertilskudd"
-//        const val BIDRAGSEVNE = "Bidragsevne"
-//        const val SAERTILSKUDD = "Saertilskudd"
-//
-//        // Sjekker om en type SjablonTall er i bruk for en delberegning
-//        private fun filtrerSjablonTall(sjablonTallNavn: SjablonTallNavn, delberegning: String): Boolean = when (delberegning) {
-//            SAERTILSKUDD -> sjablonTallNavn.saertilskudd
-//            BIDRAGSEVNE -> sjablonTallNavn.bidragsevne
-//            BP_ANDEL_SAERTILSKUDD -> sjablonTallNavn.bpAndelSaertilskudd
-//            else -> false
-//        }
 
         @JvmStatic
         fun tilJsonNode(`object`: Any?): JsonNode {

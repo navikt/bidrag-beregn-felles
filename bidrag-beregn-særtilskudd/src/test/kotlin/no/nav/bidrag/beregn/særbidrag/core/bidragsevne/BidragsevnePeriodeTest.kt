@@ -41,35 +41,35 @@ internal class BidragsevnePeriodeTest {
 
             { assertThat(resultat.resultatPeriodeListe[0].periode.datoFom).isEqualTo(LocalDate.parse("2018-07-01")) },
             { assertThat(resultat.resultatPeriodeListe[0].periode.datoTil).isEqualTo(LocalDate.parse("2019-01-01")) },
-            { assertThat(resultat.resultatPeriodeListe[0].resultat.belop).isEqualTo(BigDecimal.valueOf(2655)) },
-            { assertThat(resultat.resultatPeriodeListe[0].grunnlag.inntektListe[0].inntektBelop).isEqualTo(BigDecimal.valueOf(444000)) },
+            { assertThat(resultat.resultatPeriodeListe[0].resultat.beløp).isEqualTo(BigDecimal.valueOf(2655)) },
+            { assertThat(resultat.resultatPeriodeListe[0].grunnlag.inntektListe[0].inntektBeløp).isEqualTo(BigDecimal.valueOf(444000)) },
 
             { assertThat(resultat.resultatPeriodeListe[1].periode.datoFom).isEqualTo(LocalDate.parse("2019-01-01")) },
             { assertThat(resultat.resultatPeriodeListe[1].periode.datoTil).isEqualTo(LocalDate.parse("2019-02-01")) },
-            { assertThat(resultat.resultatPeriodeListe[1].resultat.belop).isEqualTo(BigDecimal.valueOf(14523)) },
+            { assertThat(resultat.resultatPeriodeListe[1].resultat.beløp).isEqualTo(BigDecimal.valueOf(14523)) },
             { assertThat(resultat.resultatPeriodeListe[1].grunnlag.bostatusVoksneIHusstand.borMedAndre).isFalse() },
 
             { assertThat(resultat.resultatPeriodeListe[2].periode.datoFom).isEqualTo(LocalDate.parse("2019-02-01")) },
             { assertThat(resultat.resultatPeriodeListe[2].periode.datoTil).isEqualTo(LocalDate.parse("2019-04-01")) },
-            { assertThat(resultat.resultatPeriodeListe[2].resultat.belop).isEqualTo(BigDecimal.valueOf(19455)) },
+            { assertThat(resultat.resultatPeriodeListe[2].resultat.beløp).isEqualTo(BigDecimal.valueOf(19455)) },
 
             { assertThat(resultat.resultatPeriodeListe[3].periode.datoFom).isEqualTo(LocalDate.parse("2019-04-01")) },
             { assertThat(resultat.resultatPeriodeListe[3].periode.datoTil).isEqualTo(LocalDate.parse("2019-05-01")) },
-            { assertThat(resultat.resultatPeriodeListe[3].resultat.belop).isEqualTo(BigDecimal.valueOf(19455)) },
-            { assertThat(resultat.resultatPeriodeListe[3].grunnlag.inntektListe[0].inntektBelop).isEqualTo(BigDecimal.valueOf(666001)) },
+            { assertThat(resultat.resultatPeriodeListe[3].resultat.beløp).isEqualTo(BigDecimal.valueOf(19455)) },
+            { assertThat(resultat.resultatPeriodeListe[3].grunnlag.inntektListe[0].inntektBeløp).isEqualTo(BigDecimal.valueOf(666001)) },
 
             { assertThat(resultat.resultatPeriodeListe[4].periode.datoFom).isEqualTo(LocalDate.parse("2019-05-01")) },
             { assertThat(resultat.resultatPeriodeListe[4].periode.datoTil).isEqualTo(LocalDate.parse("2019-07-01")) },
-            { assertThat(resultat.resultatPeriodeListe[4].resultat.belop).isEqualTo(BigDecimal.valueOf(19455)) },
-            { assertThat(resultat.resultatPeriodeListe[4].grunnlag.inntektListe[0].inntektBelop).isEqualTo(BigDecimal.valueOf(666001)) },
-            { assertThat(resultat.resultatPeriodeListe[4].grunnlag.inntektListe[1].inntektBelop).isEqualTo(BigDecimal.valueOf(2)) },
+            { assertThat(resultat.resultatPeriodeListe[4].resultat.beløp).isEqualTo(BigDecimal.valueOf(19455)) },
+            { assertThat(resultat.resultatPeriodeListe[4].grunnlag.inntektListe[0].inntektBeløp).isEqualTo(BigDecimal.valueOf(666001)) },
+            { assertThat(resultat.resultatPeriodeListe[4].grunnlag.inntektListe[1].inntektBeløp).isEqualTo(BigDecimal.valueOf(2)) },
 
             { assertThat(resultat.resultatPeriodeListe[5].periode.datoFom).isEqualTo(LocalDate.parse("2019-07-01")) },
             { assertThat(resultat.resultatPeriodeListe[5].periode.datoTil).isNull() },
-            { assertThat(resultat.resultatPeriodeListe[5].resultat.belop).isEqualTo(BigDecimal.valueOf(18982)) },
-            { assertThat(resultat.resultatPeriodeListe[5].grunnlag.inntektListe[0].inntektBelop).isEqualTo(BigDecimal.valueOf(666001)) },
-            { assertThat(resultat.resultatPeriodeListe[5].grunnlag.inntektListe[1].inntektBelop).isEqualTo(BigDecimal.valueOf(2)) },
-            { assertThat(resultat.resultatPeriodeListe[5].grunnlag.inntektListe[2].inntektBelop).isEqualTo(BigDecimal.valueOf(3)) },
+            { assertThat(resultat.resultatPeriodeListe[5].resultat.beløp).isEqualTo(BigDecimal.valueOf(18982)) },
+            { assertThat(resultat.resultatPeriodeListe[5].grunnlag.inntektListe[0].inntektBeløp).isEqualTo(BigDecimal.valueOf(666001)) },
+            { assertThat(resultat.resultatPeriodeListe[5].grunnlag.inntektListe[1].inntektBeløp).isEqualTo(BigDecimal.valueOf(2)) },
+            { assertThat(resultat.resultatPeriodeListe[5].grunnlag.inntektListe[2].inntektBeløp).isEqualTo(BigDecimal.valueOf(3)) },
         )
     }
 

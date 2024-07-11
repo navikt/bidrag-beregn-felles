@@ -72,18 +72,18 @@ internal class BidragsevneCoreTest {
             { assertThat(resultatCore.resultatPeriodeListe).hasSize(3) },
             { assertThat(resultatCore.resultatPeriodeListe[0].periode.datoFom).isEqualTo(LocalDate.parse("2017-01-01")) },
             { assertThat(resultatCore.resultatPeriodeListe[0].periode.datoTil).isEqualTo(LocalDate.parse("2018-01-01")) },
-            { assertThat(resultatCore.resultatPeriodeListe[0].resultat.belop).isEqualTo(BigDecimal.valueOf(666)) },
-            { assertThat(resultatCore.resultatPeriodeListe[0].resultat.belop).isEqualTo(BigDecimal.valueOf(666)) },
+            { assertThat(resultatCore.resultatPeriodeListe[0].resultat.beløp).isEqualTo(BigDecimal.valueOf(666)) },
+            { assertThat(resultatCore.resultatPeriodeListe[0].resultat.beløp).isEqualTo(BigDecimal.valueOf(666)) },
             { assertThat(resultatCore.resultatPeriodeListe[0].grunnlagsreferanseListe).hasSize(4) },
             { assertThat(resultatCore.resultatPeriodeListe[0].grunnlagsreferanseListe[0]).isEqualTo(TestUtil.BARN_I_HUSSTANDEN_REFERANSE) },
             { assertThat(resultatCore.resultatPeriodeListe[0].grunnlagsreferanseListe[1]).isEqualTo(TestUtil.INNTEKT_REFERANSE) },
             { assertThat(resultatCore.resultatPeriodeListe[0].grunnlagsreferanseListe[3]).isEqualTo(TestUtil.VOKSNE_I_HUSSTANDEN_REFERANSE) },
             { assertThat(resultatCore.resultatPeriodeListe[1].periode.datoFom).isEqualTo(LocalDate.parse("2018-01-01")) },
             { assertThat(resultatCore.resultatPeriodeListe[1].periode.datoTil).isEqualTo(LocalDate.parse("2019-01-01")) },
-            { assertThat(resultatCore.resultatPeriodeListe[1].resultat.belop).isEqualTo(BigDecimal.valueOf(667)) },
+            { assertThat(resultatCore.resultatPeriodeListe[1].resultat.beløp).isEqualTo(BigDecimal.valueOf(667)) },
             { assertThat(resultatCore.resultatPeriodeListe[2].periode.datoFom).isEqualTo(LocalDate.parse("2019-01-01")) },
             { assertThat(resultatCore.resultatPeriodeListe[2].periode.datoTil).isEqualTo(LocalDate.parse("2020-01-01")) },
-            { assertThat(resultatCore.resultatPeriodeListe[2].resultat.belop).isEqualTo(BigDecimal.valueOf(668)) },
+            { assertThat(resultatCore.resultatPeriodeListe[2].resultat.beløp).isEqualTo(BigDecimal.valueOf(668)) },
         )
     }
 
@@ -160,7 +160,7 @@ internal class BidragsevneCoreTest {
             ResultatPeriode(
                 periode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2018-01-01")),
                 resultat = ResultatBeregning(
-                    belop = BigDecimal.valueOf(666),
+                    beløp = BigDecimal.valueOf(666),
                     sjablonListe = listOf(
                         SjablonPeriodeNavnVerdi(
                             periode = Periode(
@@ -177,7 +177,7 @@ internal class BidragsevneCoreTest {
                         Inntekt(
                             referanse = TestUtil.INNTEKT_REFERANSE,
                             inntektType = "LONN_SKE",
-                            inntektBelop = BigDecimal.valueOf(666000),
+                            inntektBeløp = BigDecimal.valueOf(666000),
                         ),
                     ),
                     antallBarnIHusstand = AntallBarnIHusstand(referanse = TestUtil.BARN_I_HUSSTANDEN_REFERANSE, antallBarn = 1.0),
@@ -202,7 +202,7 @@ internal class BidragsevneCoreTest {
             ResultatPeriode(
                 periode = Periode(datoFom = LocalDate.parse("2018-01-01"), datoTil = LocalDate.parse("2019-01-01")),
                 resultat = ResultatBeregning(
-                    belop = BigDecimal.valueOf(667),
+                    beløp = BigDecimal.valueOf(667),
                     sjablonListe = listOf(
                         SjablonPeriodeNavnVerdi(
                             periode = Periode(
@@ -219,7 +219,7 @@ internal class BidragsevneCoreTest {
                         Inntekt(
                             referanse = TestUtil.INNTEKT_REFERANSE,
                             inntektType = "LONN_SKE",
-                            inntektBelop = BigDecimal.valueOf(666000),
+                            inntektBeløp = BigDecimal.valueOf(666000),
                         ),
                     ),
                     antallBarnIHusstand = AntallBarnIHusstand(referanse = TestUtil.BARN_I_HUSSTANDEN_REFERANSE, antallBarn = 1.0),
@@ -244,7 +244,7 @@ internal class BidragsevneCoreTest {
             ResultatPeriode(
                 periode = Periode(datoFom = LocalDate.parse("2019-01-01"), datoTil = LocalDate.parse("2020-01-01")),
                 resultat = ResultatBeregning(
-                    belop = BigDecimal.valueOf(668),
+                    beløp = BigDecimal.valueOf(668),
                     sjablonListe = listOf(
                         SjablonPeriodeNavnVerdi(
                             periode = Periode(

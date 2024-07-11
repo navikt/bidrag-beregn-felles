@@ -24,13 +24,11 @@ import java.nio.file.Paths
 internal class BeregnSærbidragApiTest {
     private lateinit var filnavn: String
 
-    private var forventetBidragsevneBelop = BigDecimal.ZERO
-    private var forventetBPAndelSaertilskuddProsentBarn = BigDecimal.ZERO
-    private var forventetBPAndelSaertilskuddBelopBarn = BigDecimal.ZERO
-    private var forventetSamvaersfradragBelopBarn1 = BigDecimal.ZERO
-    private var forventetSamvaersfradragBelopBarn2 = BigDecimal.ZERO
-    private var forventetSaertilskuddBelopBarn = BigDecimal.ZERO
-    private lateinit var forventetSaertilskuddResultatkodeBarn: Resultatkode
+    private var forventetBidragsevneBeløp = BigDecimal.ZERO
+    private var forventetBPAndelSærbidragProsentBarn = BigDecimal.ZERO
+    private var forventetBPAndelSærbidragBeløpBarn = BigDecimal.ZERO
+    private var forventetSærbidragBeløpBarn = BigDecimal.ZERO
+    private lateinit var forventetSærbidragResultatkodeBarn: Resultatkode
 
     @Mock
     private lateinit var beregnSærbidragService: BeregnSærbidragService
@@ -46,13 +44,12 @@ internal class BeregnSærbidragApiTest {
     fun skalKalleCoreOgReturnereEtResultat_Eksempel01() {
         // Enkel beregning med full evne, ett barn
         filnavn = "src/test/resources/testfiler/særbidrag_eksempel1.json"
-        forventetBidragsevneBelop = BigDecimal.valueOf(11069)
-        forventetBPAndelSaertilskuddProsentBarn = BigDecimal.valueOf(60.6)
-        forventetBPAndelSaertilskuddBelopBarn = BigDecimal.valueOf(4242)
-        forventetSamvaersfradragBelopBarn1 = BigDecimal.valueOf(457)
-        forventetSaertilskuddBelopBarn = BigDecimal.valueOf(4242)
-        forventetSaertilskuddResultatkodeBarn = Resultatkode.SÆRTILSKUDD_INNVILGET
-        utfoerBeregningerOgEvaluerResultat_EttSoknadsbarn()
+        forventetBidragsevneBeløp = BigDecimal.valueOf(11069)
+        forventetBPAndelSærbidragProsentBarn = BigDecimal.valueOf(60.6)
+        forventetBPAndelSærbidragBeløpBarn = BigDecimal.valueOf(4242)
+        forventetSærbidragBeløpBarn = BigDecimal.valueOf(4242)
+        forventetSærbidragResultatkodeBarn = Resultatkode.SÆRBIDRAG_INNVILGET
+        utførBeregningerOgEvaluerResultat_EttSøknadsbarn()
     }
 
     @Test
@@ -60,14 +57,12 @@ internal class BeregnSærbidragApiTest {
     fun skalKalleCoreOgReturnereEtResultat_Eksempel02() {
         // Enkel beregning med full evne, to barn
         filnavn = "src/test/resources/testfiler/særbidrag_eksempel2.json"
-        forventetBidragsevneBelop = BigDecimal.valueOf(6696)
-        forventetBPAndelSaertilskuddProsentBarn = BigDecimal.valueOf(49.7)
-        forventetBPAndelSaertilskuddBelopBarn = BigDecimal.valueOf(2982)
-        forventetSamvaersfradragBelopBarn1 = BigDecimal.valueOf(1513)
-        forventetSamvaersfradragBelopBarn2 = BigDecimal.valueOf(1513)
-        forventetSaertilskuddBelopBarn = BigDecimal.valueOf(2982)
-        forventetSaertilskuddResultatkodeBarn = Resultatkode.SÆRTILSKUDD_INNVILGET
-        utfoerBeregningerOgEvaluerResultat_ToSoknadsbarn()
+        forventetBidragsevneBeløp = BigDecimal.valueOf(6696)
+        forventetBPAndelSærbidragProsentBarn = BigDecimal.valueOf(49.7)
+        forventetBPAndelSærbidragBeløpBarn = BigDecimal.valueOf(2982)
+        forventetSærbidragBeløpBarn = BigDecimal.valueOf(2982)
+        forventetSærbidragResultatkodeBarn = Resultatkode.SÆRBIDRAG_INNVILGET
+        utførBeregningerOgEvaluerResultat_ToSøknadsbarn()
     }
 
     @Test
@@ -75,14 +70,12 @@ internal class BeregnSærbidragApiTest {
     fun skalKalleCoreOgReturnereEtResultat_Eksempel03() {
         // Enkel beregning med full evne, to barn
         filnavn = "src/test/resources/testfiler/særbidrag_eksempel3.json"
-        forventetBidragsevneBelop = BigDecimal.valueOf(6149)
-        forventetBPAndelSaertilskuddProsentBarn = BigDecimal.valueOf(55.7)
-        forventetBPAndelSaertilskuddBelopBarn = BigDecimal.valueOf(6684)
-        forventetSamvaersfradragBelopBarn1 = BigDecimal.valueOf(1513)
-        forventetSamvaersfradragBelopBarn2 = BigDecimal.valueOf(1513)
-        forventetSaertilskuddBelopBarn = BigDecimal.valueOf(6684)
-        forventetSaertilskuddResultatkodeBarn = Resultatkode.SÆRTILSKUDD_INNVILGET
-        utfoerBeregningerOgEvaluerResultat_ToSoknadsbarn()
+        forventetBidragsevneBeløp = BigDecimal.valueOf(6149)
+        forventetBPAndelSærbidragProsentBarn = BigDecimal.valueOf(55.7)
+        forventetBPAndelSærbidragBeløpBarn = BigDecimal.valueOf(6684)
+        forventetSærbidragBeløpBarn = BigDecimal.valueOf(6684)
+        forventetSærbidragResultatkodeBarn = Resultatkode.SÆRBIDRAG_INNVILGET
+        utførBeregningerOgEvaluerResultat_ToSøknadsbarn()
     }
 
     @Test
@@ -90,14 +83,12 @@ internal class BeregnSærbidragApiTest {
     fun skalKalleCoreOgReturnereEtResultat_Eksempel04() {
         // Beregning med manglende evne, to barn
         filnavn = "src/test/resources/testfiler/særbidrag_eksempel4.json"
-        forventetBidragsevneBelop = BigDecimal.valueOf(6149)
-        forventetBPAndelSaertilskuddProsentBarn = BigDecimal.valueOf(55.7)
-        forventetBPAndelSaertilskuddBelopBarn = BigDecimal.valueOf(6684)
-        forventetSamvaersfradragBelopBarn1 = BigDecimal.valueOf(1513)
-        forventetSamvaersfradragBelopBarn2 = BigDecimal.valueOf(1513)
-        forventetSaertilskuddBelopBarn = BigDecimal.ZERO
-        forventetSaertilskuddResultatkodeBarn = Resultatkode.SÆRTILSKUDD_IKKE_FULL_BIDRAGSEVNE
-        utfoerBeregningerOgEvaluerResultat_ToSoknadsbarn()
+        forventetBidragsevneBeløp = BigDecimal.valueOf(6149)
+        forventetBPAndelSærbidragProsentBarn = BigDecimal.valueOf(55.7)
+        forventetBPAndelSærbidragBeløpBarn = BigDecimal.valueOf(6684)
+        forventetSærbidragBeløpBarn = BigDecimal.ZERO
+        forventetSærbidragResultatkodeBarn = Resultatkode.SÆRBIDRAG_IKKE_FULL_BIDRAGSEVNE
+        utførBeregningerOgEvaluerResultat_ToSøknadsbarn()
     }
 
     @Test
@@ -105,14 +96,12 @@ internal class BeregnSærbidragApiTest {
     fun skalKalleCoreOgReturnereEtResultat_Eksempel05() {
         // Beregning med manglende evne, to barn
         filnavn = "src/test/resources/testfiler/særbidrag_eksempel5.json"
-        forventetBidragsevneBelop = BigDecimal.valueOf(9962)
-        forventetBPAndelSaertilskuddProsentBarn = BigDecimal.valueOf(62.8)
-        forventetBPAndelSaertilskuddBelopBarn = BigDecimal.valueOf(7536)
-        forventetSamvaersfradragBelopBarn1 = BigDecimal.valueOf(1513)
-        forventetSamvaersfradragBelopBarn2 = BigDecimal.valueOf(1513)
-        forventetSaertilskuddBelopBarn = BigDecimal.ZERO
-        forventetSaertilskuddResultatkodeBarn = Resultatkode.SÆRTILSKUDD_IKKE_FULL_BIDRAGSEVNE
-        utfoerBeregningerOgEvaluerResultat_ToSoknadsbarn()
+        forventetBidragsevneBeløp = BigDecimal.valueOf(9962)
+        forventetBPAndelSærbidragProsentBarn = BigDecimal.valueOf(62.8)
+        forventetBPAndelSærbidragBeløpBarn = BigDecimal.valueOf(7536)
+        forventetSærbidragBeløpBarn = BigDecimal.ZERO
+        forventetSærbidragResultatkodeBarn = Resultatkode.SÆRBIDRAG_IKKE_FULL_BIDRAGSEVNE
+        utførBeregningerOgEvaluerResultat_ToSøknadsbarn()
     }
 
     @Test
@@ -120,14 +109,12 @@ internal class BeregnSærbidragApiTest {
     fun skalKalleCoreOgReturnereEtResultat_Eksempel06() {
         // Enkel beregning med full evne, to barn
         filnavn = "src/test/resources/testfiler/særbidrag_eksempel6.json"
-        forventetBidragsevneBelop = BigDecimal.valueOf(10891)
-        forventetBPAndelSaertilskuddProsentBarn = BigDecimal.valueOf(55.1)
-        forventetBPAndelSaertilskuddBelopBarn = BigDecimal.valueOf(6612)
-        forventetSamvaersfradragBelopBarn1 = BigDecimal.valueOf(1513)
-        forventetSamvaersfradragBelopBarn2 = BigDecimal.valueOf(1513)
-        forventetSaertilskuddBelopBarn = BigDecimal.valueOf(6612)
-        forventetSaertilskuddResultatkodeBarn = Resultatkode.SÆRTILSKUDD_INNVILGET
-        utfoerBeregningerOgEvaluerResultat_ToSoknadsbarn()
+        forventetBidragsevneBeløp = BigDecimal.valueOf(10891)
+        forventetBPAndelSærbidragProsentBarn = BigDecimal.valueOf(55.1)
+        forventetBPAndelSærbidragBeløpBarn = BigDecimal.valueOf(6612)
+        forventetSærbidragBeløpBarn = BigDecimal.valueOf(6612)
+        forventetSærbidragResultatkodeBarn = Resultatkode.SÆRBIDRAG_INNVILGET
+        utførBeregningerOgEvaluerResultat_ToSøknadsbarn()
     }
 
     @Test
@@ -135,14 +122,12 @@ internal class BeregnSærbidragApiTest {
     fun skalKalleCoreOgReturnereEtResultat_Eksempel07() {
         // Beregning med manglende evne, to barn
         filnavn = "src/test/resources/testfiler/særbidrag_eksempel7.json"
-        forventetBidragsevneBelop = BigDecimal.valueOf(6149)
-        forventetBPAndelSaertilskuddProsentBarn = BigDecimal.valueOf(55.7)
-        forventetBPAndelSaertilskuddBelopBarn = BigDecimal.valueOf(6684)
-        forventetSamvaersfradragBelopBarn1 = BigDecimal.valueOf(1513)
-        forventetSamvaersfradragBelopBarn2 = BigDecimal.valueOf(1513)
-        forventetSaertilskuddBelopBarn = BigDecimal.ZERO
-        forventetSaertilskuddResultatkodeBarn = Resultatkode.SÆRTILSKUDD_IKKE_FULL_BIDRAGSEVNE
-        utfoerBeregningerOgEvaluerResultat_ToSoknadsbarn()
+        forventetBidragsevneBeløp = BigDecimal.valueOf(6149)
+        forventetBPAndelSærbidragProsentBarn = BigDecimal.valueOf(55.7)
+        forventetBPAndelSærbidragBeløpBarn = BigDecimal.valueOf(6684)
+        forventetSærbidragBeløpBarn = BigDecimal.ZERO
+        forventetSærbidragResultatkodeBarn = Resultatkode.SÆRBIDRAG_IKKE_FULL_BIDRAGSEVNE
+        utførBeregningerOgEvaluerResultat_ToSøknadsbarn()
     }
 
     @Test
@@ -150,106 +135,93 @@ internal class BeregnSærbidragApiTest {
     fun skalKalleCoreOgReturnereEtResultat_Eksempel08() {
         // Beregning med manglende evne, to barn
         filnavn = "src/test/resources/testfiler/særbidrag_eksempel8.json"
-        forventetBidragsevneBelop = BigDecimal.valueOf(6149)
-        forventetBPAndelSaertilskuddProsentBarn = BigDecimal.valueOf(55.7)
-        forventetBPAndelSaertilskuddBelopBarn = BigDecimal.valueOf(6684)
-        forventetSamvaersfradragBelopBarn1 = BigDecimal.valueOf(1513)
-        forventetSamvaersfradragBelopBarn2 = BigDecimal.valueOf(1513)
-        forventetSaertilskuddBelopBarn = BigDecimal.ZERO
-        forventetSaertilskuddResultatkodeBarn = Resultatkode.SÆRTILSKUDD_IKKE_FULL_BIDRAGSEVNE
-        utfoerBeregningerOgEvaluerResultat_ToSoknadsbarn()
+        forventetBidragsevneBeløp = BigDecimal.valueOf(6149)
+        forventetBPAndelSærbidragProsentBarn = BigDecimal.valueOf(55.7)
+        forventetBPAndelSærbidragBeløpBarn = BigDecimal.valueOf(6684)
+        forventetSærbidragBeløpBarn = BigDecimal.ZERO
+        forventetSærbidragResultatkodeBarn = Resultatkode.SÆRBIDRAG_IKKE_FULL_BIDRAGSEVNE
+        utførBeregningerOgEvaluerResultat_ToSøknadsbarn()
     }
 
-    private fun utfoerBeregningerOgEvaluerResultat_EttSoknadsbarn() {
+    private fun utførBeregningerOgEvaluerResultat_EttSøknadsbarn() {
         val request = lesFilOgByggRequest(filnavn)
 
-        val totalSærtilskuddResultat = beregnSærbidragService.beregn(request)
+         val totalSærbidragResultat = beregnSærbidragService.beregn(request)
 
-        TestUtil.printJson(totalSærtilskuddResultat)
+        TestUtil.printJson(totalSærbidragResultat)
 
 // TODO
 
-//        val saertilskuddDelberegningResultat = totalSærtilskuddResultat?.let { SærtilskuddDelberegningResultat(it) }
-//        val alleReferanser = totalSærtilskuddResultat.let { TestUtil.hentAlleReferanser(it) }
-//        val referanserIGrunnlagListe = totalSærtilskuddResultat!!.grunnlagListe.map(Grunnlag::referanse).toList()
+//        val særbidragDelberegningResultat = totalSærbidragResultat?.let { SærbidragDelberegningResultat(it) }
+//        val alleReferanser = totalSærbidragResultat.let { TestUtil.hentAlleReferanser(it) }
+//        val referanserIGrunnlagListe = totalSærbidragResultat!!.grunnlagListe.map(Grunnlag::referanse).toList()
 
         assertAll(
-            { assertThat(totalSærtilskuddResultat).isNotNull },
-            { assertThat(totalSærtilskuddResultat.beregnetSærtilskuddPeriodeListe).hasSize(1) },
-            { assertThat(totalSærtilskuddResultat.beregnetSærtilskuddPeriodeListe).isNotNull },
-            { assertThat(totalSærtilskuddResultat.beregnetSærtilskuddPeriodeListe[0].resultat.beløp).isEqualTo(forventetSaertilskuddBelopBarn) },
+            { assertThat(totalSærbidragResultat).isNotNull },
+            { assertThat(totalSærbidragResultat.beregnetSærbidragPeriodeListe).hasSize(1) },
+            { assertThat(totalSærbidragResultat.beregnetSærbidragPeriodeListe).isNotNull },
+            { assertThat(totalSærbidragResultat.beregnetSærbidragPeriodeListe[0].resultat.beløp).isEqualTo(forventetSærbidragBeløpBarn) },
             {
-                assertThat(totalSærtilskuddResultat.beregnetSærtilskuddPeriodeListe[0].resultat.resultatkode).isEqualTo(
-                    forventetSaertilskuddResultatkodeBarn,
+                assertThat(totalSærbidragResultat.beregnetSærbidragPeriodeListe[0].resultat.resultatkode).isEqualTo(
+                    forventetSærbidragResultatkodeBarn,
                 )
             },
-//            { assertThat(saertilskuddDelberegningResultat!!.bidragsevneListe).size().isEqualTo(1) },
-//            { assertThat(saertilskuddDelberegningResultat!!.bidragsevneListe[0].belop).isEqualTo(forventetBidragsevneBelop) },
-//            { assertThat(saertilskuddDelberegningResultat!!.bpsAndelSaertilskuddListe).size().isEqualTo(1) },
+//            { assertThat(særbidragDelberegningResultat!!.bidragsevneListe).size().isEqualTo(1) },
+//            { assertThat(særbidragDelberegningResultat!!.bidragsevneListe[0].beløp).isEqualTo(forventetBidragsevneBeløp) },
+//            { assertThat(særbidragDelberegningResultat!!.bpsAndelSærbidragListe).size().isEqualTo(1) },
 //            {
-//                assertThat(saertilskuddDelberegningResultat!!.bpsAndelSaertilskuddListe[0].belop).isEqualTo(
-//                    forventetBPAndelSaertilskuddBelopBarn,
+//                assertThat(særbidragDelberegningResultat!!.bpsAndelSærbidragListe[0].beløp).isEqualTo(
+//                    forventetBPAndelSærbidragBeløpBarn,
 //                )
 //            },
 //            {
-//                assertThat(saertilskuddDelberegningResultat!!.bpsAndelSaertilskuddListe[0].prosent).isEqualTo(
-//                    forventetBPAndelSaertilskuddProsentBarn,
+//                assertThat(særbidragDelberegningResultat!!.bpsAndelSærbidragListe[0].prosent).isEqualTo(
+//                    forventetBPAndelSærbidragProsentBarn,
 //                )
-//            },
-//            { assertThat(saertilskuddDelberegningResultat!!.samvaersfradragListe).size().isEqualTo(1) },
-//            {
-//                assertThat(saertilskuddDelberegningResultat!!.samvaersfradragListe[0].belop).isEqualTo(forventetSamvaersfradragBelopBarn1)
 //            },
 //            { assertThat(referanserIGrunnlagListe).containsAll(alleReferanser) },
         )
     }
 
-    private fun utfoerBeregningerOgEvaluerResultat_ToSoknadsbarn() {
+    private fun utførBeregningerOgEvaluerResultat_ToSøknadsbarn() {
         val request = lesFilOgByggRequest(filnavn)
 
-        val totalSærtilskuddResultat = beregnSærbidragService.beregn(request)
+        val totalSærbidragResultat = beregnSærbidragService.beregn(request)
 
-        TestUtil.printJson(totalSærtilskuddResultat)
+        TestUtil.printJson(totalSærbidragResultat)
 
 // TODO
 
-//        val saertilskuddDelberegningResultat = totalSærtilskuddResultat?.let { SaertilskuddDelberegningResultat(it) }
-//        val alleReferanser = totalSærtilskuddResultat?.let { TestUtil.hentAlleReferanser(it) }
-//        val referanserIGrunnlagListe = totalSærtilskuddResultat!!.grunnlagListe.stream().map(Grunnlag::referanse).toList()
+//        val særbidragDelberegningResultat = totalSærbidragResultat?.let { SærbidragDelberegningResultat(it) }
+//        val alleReferanser = totalSærbidragResultat?.let { TestUtil.hentAlleReferanser(it) }
+//        val referanserIGrunnlagListe = totalSærbidragResultat!!.grunnlagListe.stream().map(Grunnlag::referanse).toList()
 
         assertAll(
-            Executable { assertThat(totalSærtilskuddResultat).isNotNull },
-//            Executable { assertThat(saertilskuddDelberegningResultat!!.bidragsevneListe).hasSize(1) },
+            Executable { assertThat(totalSærbidragResultat).isNotNull },
+//            Executable { assertThat(særbidragDelberegningResultat!!.bidragsevneListe).hasSize(1) },
 //            Executable {
-//                assertThat(saertilskuddDelberegningResultat!!.bidragsevneListe[0].belop).isEqualTo(forventetBidragsevneBelop)
+//                assertThat(særbidragDelberegningResultat!!.bidragsevneListe[0].beløp).isEqualTo(forventetBidragsevneBeløp)
 //            },
-//            Executable { assertThat(saertilskuddDelberegningResultat!!.bpsAndelSaertilskuddListe).hasSize(1) },
+//            Executable { assertThat(særbidragDelberegningResultat!!.bpsAndelSærbidragListe).hasSize(1) },
 //            Executable {
-//                assertThat(saertilskuddDelberegningResultat!!.bpsAndelSaertilskuddListe[0].belop).isEqualTo(
-//                    forventetBPAndelSaertilskuddBelopBarn,
+//                assertThat(særbidragDelberegningResultat!!.bpsAndelSærbidragListe[0].beløp).isEqualTo(
+//                    forventetBPAndelSærbidragBeløpBarn,
 //                )
 //            },
 //            Executable {
-//                assertThat(saertilskuddDelberegningResultat!!.bpsAndelSaertilskuddListe[0].prosent).isEqualTo(
-//                    forventetBPAndelSaertilskuddProsentBarn,
+//                assertThat(særbidragDelberegningResultat!!.bpsAndelSærbidragListe[0].prosent).isEqualTo(
+//                    forventetBPAndelSærbidragProsentBarn,
 //                )
 //            },
-//            Executable { assertThat(saertilskuddDelberegningResultat!!.samvaersfradragListe).hasSize(2) },
+//            Executable { assertThat(totalSærbidragResultat.beregnetSærbidragPeriodeListe).hasSize(1) },
 //            Executable {
-//                assertThat(saertilskuddDelberegningResultat!!.samvaersfradragListe[0].belop).isEqualTo(forventetSamvaersfradragBelopBarn1)
-//            },
-//            Executable {
-//                assertThat(saertilskuddDelberegningResultat!!.samvaersfradragListe[1].belop).isEqualTo(forventetSamvaersfradragBelopBarn2)
-//            },
-//            Executable { assertThat(totalSærtilskuddResultat.beregnetSaertilskuddPeriodeListe).hasSize(1) },
-//            Executable {
-//                assertThat(totalSærtilskuddResultat.beregnetSaertilskuddPeriodeListe[0].resultat.belop).isEqualTo(
-//                    forventetSaertilskuddBelopBarn,
+//                assertThat(totalSærbidragResultat.beregnetSærbidragPeriodeListe[0].resultat.beløp).isEqualTo(
+//                    forventetSærbidragBeløpBarn,
 //                )
 //            },
 //            Executable {
-//                assertThat(totalSærtilskuddResultat.beregnetSaertilskuddPeriodeListe[0].resultat.kode.toString()).isEqualTo(
-//                    forventetSaertilskuddResultatkodeBarn,
+//                assertThat(totalSærbidragResultat.beregnetSærbidragPeriodeListe[0].resultat.kode.toString()).isEqualTo(
+//                    forventetSærbidragResultatkodeBarn,
 //                )
 //            },
 //            Executable { assertThat(referanserIGrunnlagListe).containsAll(alleReferanser) },

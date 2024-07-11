@@ -28,21 +28,21 @@ class BPsAndelSærbidragBeregningTest {
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.valueOf(217666),
+                inntektBeløp = BigDecimal.valueOf(217666),
             ),
         )
         val inntektBM = listOf(
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.valueOf(400000),
+                inntektBeløp = BigDecimal.valueOf(400000),
             ),
         )
-        val inntektBB = listOf(
+        val inntektSB = listOf(
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.valueOf(40000),
+                inntektBeløp = BigDecimal.valueOf(40000),
             ),
         )
 
@@ -51,7 +51,7 @@ class BPsAndelSærbidragBeregningTest {
                 utgift = utgift,
                 inntektBPListe = inntektBP,
                 inntektBMListe = inntektBM,
-                inntektSBListe = inntektBB,
+                inntektSBListe = inntektSB,
                 sjablonListe = sjablonPeriodeListe,
             )
 
@@ -79,14 +79,14 @@ class BPsAndelSærbidragBeregningTest {
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.valueOf(200000),
+                inntektBeløp = BigDecimal.valueOf(200000),
             ),
         )
         inntektBP.add(
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.valueOf(17666),
+                inntektBeløp = BigDecimal.valueOf(17666),
             ),
         )
 
@@ -95,65 +95,65 @@ class BPsAndelSærbidragBeregningTest {
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.valueOf(100000),
+                inntektBeløp = BigDecimal.valueOf(100000),
             ),
         )
         inntektBM.add(
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.valueOf(200000),
+                inntektBeløp = BigDecimal.valueOf(200000),
             ),
         )
         inntektBM.add(
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.valueOf(100000),
+                inntektBeløp = BigDecimal.valueOf(100000),
             ),
         )
 
-        val inntektBB = mutableListOf<Inntekt>()
-        inntektBB.add(
+        val inntektSB = mutableListOf<Inntekt>()
+        inntektSB.add(
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.valueOf(10000),
+                inntektBeløp = BigDecimal.valueOf(10000),
             ),
         )
-        inntektBB.add(
+        inntektSB.add(
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.valueOf(10000),
+                inntektBeløp = BigDecimal.valueOf(10000),
             ),
         )
-        inntektBB.add(
+        inntektSB.add(
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.valueOf(10000),
+                inntektBeløp = BigDecimal.valueOf(10000),
             ),
         )
-        inntektBB.add(
+        inntektSB.add(
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.valueOf(10000),
+                inntektBeløp = BigDecimal.valueOf(10000),
             ),
         )
-        inntektBB.add(
+        inntektSB.add(
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.valueOf(10000),
+                inntektBeløp = BigDecimal.valueOf(10000),
             ),
         )
-        inntektBB.add(
+        inntektSB.add(
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.valueOf(10000),
+                inntektBeløp = BigDecimal.valueOf(10000),
             ),
         )
 
@@ -162,7 +162,7 @@ class BPsAndelSærbidragBeregningTest {
                 utgift = utgift,
                 inntektBPListe = inntektBP,
                 inntektBMListe = inntektBM,
-                inntektSBListe = inntektBB,
+                inntektSBListe = inntektSB,
                 sjablonListe = sjablonPeriodeListe,
             )
 
@@ -171,7 +171,7 @@ class BPsAndelSærbidragBeregningTest {
         assertAll(
             { assertThat(resultat).isNotNull() },
             { assertThat(resultat.resultatAndelProsent).isEqualTo(BigDecimal.valueOf(34.7)) },
-            { assertThat(resultat.barnetErSelvforsorget).isFalse() },
+            { assertThat(resultat.barnetErSelvforsørget).isFalse() },
         )
     }
 
@@ -187,21 +187,21 @@ class BPsAndelSærbidragBeregningTest {
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.valueOf(217666),
+                inntektBeløp = BigDecimal.valueOf(217666),
             ),
         )
         val inntektBM = listOf(
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.valueOf(400000),
+                inntektBeløp = BigDecimal.valueOf(400000),
             ),
         )
-        val inntektBB = listOf(
+        val inntektSB = listOf(
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.valueOf(400000),
+                inntektBeløp = BigDecimal.valueOf(400000),
             ),
         )
 
@@ -210,7 +210,7 @@ class BPsAndelSærbidragBeregningTest {
                 utgift = utgift,
                 inntektBPListe = inntektBP,
                 inntektBMListe = inntektBM,
-                inntektSBListe = inntektBB,
+                inntektSBListe = inntektSB,
                 sjablonListe = sjablonPeriodeListe,
             )
 
@@ -219,7 +219,7 @@ class BPsAndelSærbidragBeregningTest {
         assertAll(
             { assertThat(resultat).isNotNull() },
             { assertThat(resultat.resultatAndelProsent).isEqualTo(BigDecimal.ZERO) },
-            { assertThat(resultat.barnetErSelvforsorget).isTrue() },
+            { assertThat(resultat.barnetErSelvforsørget).isTrue() },
         )
     }
 
@@ -237,21 +237,21 @@ class BPsAndelSærbidragBeregningTest {
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.valueOf(1000000),
+                inntektBeløp = BigDecimal.valueOf(1000000),
             ),
         )
         val inntektBM = listOf(
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.valueOf(40000),
+                inntektBeløp = BigDecimal.valueOf(40000),
             ),
         )
-        val inntektBB = listOf(
+        val inntektSB = listOf(
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.valueOf(40000),
+                inntektBeløp = BigDecimal.valueOf(40000),
             ),
         )
 
@@ -261,7 +261,7 @@ class BPsAndelSærbidragBeregningTest {
                 utgift = utgift,
                 inntektBPListe = inntektBP,
                 inntektBMListe = inntektBM,
-                inntektSBListe = inntektBB,
+                inntektSBListe = inntektSB,
                 sjablonListe = sjablonPeriodeListe,
             )
 
@@ -285,21 +285,21 @@ class BPsAndelSærbidragBeregningTest {
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.valueOf(502000),
+                inntektBeløp = BigDecimal.valueOf(502000),
             ),
         )
         val inntektBM = listOf(
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.valueOf(500000),
+                inntektBeløp = BigDecimal.valueOf(500000),
             ),
         )
-        val inntektBB = listOf(
+        val inntektSB = listOf(
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.ZERO,
+                inntektBeløp = BigDecimal.ZERO,
             ),
         )
 
@@ -308,7 +308,7 @@ class BPsAndelSærbidragBeregningTest {
                 utgift = utgift,
                 inntektBPListe = inntektBP,
                 inntektBMListe = inntektBM,
-                inntektSBListe = inntektBB,
+                inntektSBListe = inntektSB,
                 sjablonListe = sjablonPeriodeListe,
             )
 
@@ -332,21 +332,21 @@ class BPsAndelSærbidragBeregningTest {
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.valueOf(550000),
+                inntektBeløp = BigDecimal.valueOf(550000),
             ),
         )
         val inntektBM = listOf(
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.valueOf(300000),
+                inntektBeløp = BigDecimal.valueOf(300000),
             ),
         )
-        val inntektBB = listOf(
+        val inntektSB = listOf(
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.ZERO,
+                inntektBeløp = BigDecimal.ZERO,
             ),
         )
 
@@ -355,7 +355,7 @@ class BPsAndelSærbidragBeregningTest {
                 utgift = utgift,
                 inntektBPListe = inntektBP,
                 inntektBMListe = inntektBM,
-                inntektSBListe = inntektBB,
+                inntektSBListe = inntektSB,
                 sjablonListe = sjablonPeriodeListe,
             )
 
@@ -364,7 +364,7 @@ class BPsAndelSærbidragBeregningTest {
         assertAll(
             { assertThat(resultat).isNotNull() },
             { assertThat(resultat.resultatAndelProsent).isEqualTo(BigDecimal.valueOf(64.7)) },
-            { assertThat(resultat.resultatAndelBelop).isEqualTo(BigDecimal.valueOf(647)) },
+            { assertThat(resultat.resultatAndelBeløp).isEqualTo(BigDecimal.valueOf(647)) },
         )
     }
 }

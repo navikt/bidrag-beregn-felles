@@ -63,7 +63,7 @@ class BidragsevnePeriode(private val bidragsevneberegning: BidragsevneBeregning 
             val inntektListe =
                 grunnlagTilBeregning.inntektPeriodeListe
                     .filter { it.getPeriode().overlapperMed(beregningsperiode) }
-                    .map { Inntekt(referanse = it.referanse, inntektType = it.type, inntektBelop = it.beløp) }
+                    .map { Inntekt(referanse = it.referanse, inntektType = it.type, inntektBeløp = it.beløp) }
 
             val antallBarnIHusstand =
                 grunnlagTilBeregning.barnIHusstandPeriodeListe.stream()

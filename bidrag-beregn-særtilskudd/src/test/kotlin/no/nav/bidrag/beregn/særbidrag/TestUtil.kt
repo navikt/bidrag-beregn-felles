@@ -14,9 +14,8 @@ import no.nav.bidrag.beregn.core.bo.SjablonPeriode
 import no.nav.bidrag.beregn.core.dto.AvvikCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto.BeregnBidragsevneResultatCore
-import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.BeregnBPsAndelSærtilskuddResultatCore
-import no.nav.bidrag.beregn.særbidrag.core.samvaersfradrag.dto.BeregnSamvaersfradragResultatCore
-import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BeregnSaertilskuddResultatCore
+import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.BeregnBPsAndelSærbidragResultatCore
+import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BeregnSærbidragResultatCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.ResultatBeregningCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.ResultatPeriodeCore
 import no.nav.bidrag.commons.service.sjablon.Bidragsevne
@@ -43,19 +42,16 @@ import java.time.YearMonth
 
 object TestUtil {
     const val BIDRAGSEVNE_REFERANSE = "BIDRAGSEVNE_REFERANSE"
-    const val BPS_ANDEL_SÆRTILSKUDD_REFERANSE = "BPS_ANDEL_SÆRTILSKUDD_REFERANSE"
+    const val BPS_ANDEL_SÆRBIDRAG_REFERANSE = "BPS_ANDEL_SÆRBIDRAG_REFERANSE"
     const val INNTEKT_REFERANSE = "INNTEKT_REFERANSE"
     const val SKATTEKLASSE_REFERANSE = "SKATTEKLASSE_REFERANSE"
     const val BOSTATUS_REFERANSE = "BOSTATUS_REFERANSE"
     const val BARN_I_HUSSTANDEN_REFERANSE = "BARN_I_HUSSTANDEN_REFERANSE"
     const val VOKSNE_I_HUSSTANDEN_REFERANSE = "VOKSNE_I_HUSSTANDEN_REFERANSE"
     const val SAMVÆRSKLASSE_REFERANSE = "SAMVÆRSKLASSE_REFERANSE"
-    const val LØPENDE_BIDRAG_REFERANSE = "LØPENDE_BIDRAG_REFERANSE"
-    const val SAMVÆRSFRADRAG_REFERANSE = "SAMVÆRSFRADRAG_REFERANSE"
-    const val SÆRFRADRAG_REFERANSE = "SAERFRADRAG_REFERANSE"
     const val UTGIFT_REFERANSE = "UTGIFT_REFERANSE"
 
-    fun byggTotalSaertilskuddGrunnlag(): BeregnGrunnlag {
+    fun byggTotalSærbidragGrunnlag(): BeregnGrunnlag {
         val grunnlagListe = ArrayList<GrunnlagDto>()
         grunnlagListe.add(
             GrunnlagDto(
@@ -194,12 +190,12 @@ object TestUtil {
         return jacksonObjectMapper().convertValue(`object`, JsonNode::class.java)
     }
 
-//    fun hentAlleReferanser(beregnetTotalSaertilskuddResultat: BeregnetTotalSaertilskuddResultat): List<String> {
+//    fun hentAlleReferanser(beregnetTotalSærbidragResultat: BeregnetTotalSærbidragResultat): List<String> {
 //        val alleReferanser: MutableList<String> = ArrayList()
-//        for ((_, _, _, grunnlagReferanseListe) in beregnetTotalSaertilskuddResultat.beregnetSaertilskuddPeriodeListe) {
+//        for ((_, _, _, grunnlagReferanseListe) in beregnetTotalSærbidragResultat.beregnetSærbidragPeriodeListe) {
 //            alleReferanser.addAll(grunnlagReferanseListe)
 //        }
-//        for ((_, _, innhold) in beregnetTotalSaertilskuddResultat.grunnlagListe) {
+//        for ((_, _, innhold) in beregnetTotalSærbidragResultat.grunnlagListe) {
 //            if (innhold.has("grunnlagReferanseListe")) {
 //                val grunnlagReferanseListe = innhold["grunnlagReferanseListe"]
 //                if (grunnlagReferanseListe.isArray) {
@@ -247,7 +243,7 @@ object TestUtil {
                 ),
             ),
         )
-        return BeregnBidragsevneResultatCore(resultatPeriodeListe = bidragPeriodeResultatListe, sjablonListe = emptyList(), avvikListe = emptyList())
+        return BeregnBidragsevneResultatCore(resultatPeriodeListe = bidragPeriodeResultatListe, sjablonListe = mutableListOf(), avvikListe = emptyList())
     }
 
     // Bygger opp BeregnBidragsevneResultatCore med avvik
@@ -260,14 +256,14 @@ object TestUtil {
                 "DATO_FRA_ETTER_DATO_TIL",
             ),
         )
-        return BeregnBidragsevneResultatCore(emptyList(), emptyList(), avvikListe)
+        return BeregnBidragsevneResultatCore(emptyList(), mutableListOf(), avvikListe)
     }
 
-    // Bygger opp BeregnBPAndelSaertilskuddResultat
-//    fun dummyBPsAndelSaertilskuddResultat(): Grunnlag {
+    // Bygger opp BeregnBPAndelSærbidragResultat
+//    fun dummyBPsAndelSærbidragResultat(): Grunnlag {
 //        val objectMapper = ObjectMapper()
-//        val bpsAndelSaertilskudd =
-//            BPsAndelSaertilskuddResultatPeriode(
+//        val bpsAndelSærbidrag =
+//            BPsAndelSærbidragResultatPeriode(
 //                LocalDate.parse("2020-08-01"),
 //                LocalDate.parse("2020-09-01"),
 //                BigDecimal.valueOf(100),
@@ -281,14 +277,14 @@ object TestUtil {
 //            )
 //
 //        return Grunnlag(
-//            BPS_ANDEL_SAERTILSKUDD_REFERANSE,
-//            Grunnlagstype.BPS_ANDEL_SAERTILSKUDD,
-//            objectMapper.valueToTree(bpsAndelSaertilskudd),
+//            BPS_ANDEL_SÆRBIDRAG_REFERANSE,
+//            Grunnlagstype.BPS_ANDEL_SÆRBIDRAG,
+//            objectMapper.valueToTree(bpsAndelSærbidrag),
 //        )
 //    }
 
-    // Bygger opp BeregnBPsAndelSaertilskuddResultatCore
-    fun dummyBPsAndelSaertilskuddResultatCore(): BeregnBPsAndelSærtilskuddResultatCore {
+    // Bygger opp BeregnBPsAndelSærbidragResultatCore
+    fun dummyBPsAndelSærbidragResultatCore(): BeregnBPsAndelSærbidragResultatCore {
         val bidragPeriodeResultatListe = ArrayList<no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.ResultatPeriodeCore>()
         bidragPeriodeResultatListe.add(
             no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.ResultatPeriodeCore(
@@ -305,15 +301,15 @@ object TestUtil {
                 ),
             ),
         )
-        return BeregnBPsAndelSærtilskuddResultatCore(
+        return BeregnBPsAndelSærbidragResultatCore(
             resultatPeriodeListe = bidragPeriodeResultatListe,
             sjablonListe = emptyList(),
             avvikListe = emptyList(),
         )
     }
 
-    // Bygger opp BeregnBPsAndelSaertilskuddResultatCore med avvik
-    fun dummyBPsAndelSaertilskuddResultatCoreMedAvvik(): BeregnBPsAndelSærtilskuddResultatCore {
+    // Bygger opp BeregnBPsAndelSærbidragResultatCore med avvik
+    fun dummyBPsAndelSærbidragResultatCoreMedAvvik(): BeregnBPsAndelSærbidragResultatCore {
         val avvikListe = ArrayList<AvvikCore>()
         avvikListe.add(AvvikCore("beregnDatoFra kan ikke være null", "NULL_VERDI_I_DATO"))
         avvikListe.add(
@@ -322,7 +318,7 @@ object TestUtil {
                 "DATO_FRA_ETTER_DATO_TIL",
             ),
         )
-        return BeregnBPsAndelSærtilskuddResultatCore(emptyList(), emptyList(), avvikListe)
+        return BeregnBPsAndelSærbidragResultatCore(emptyList(), emptyList(), avvikListe)
     }
 
     // Bygger opp BeregnSamværsfradragResultat
@@ -341,57 +337,22 @@ object TestUtil {
 //        return Grunnlag(SAMVAERSFRADRAG_REFERANSE, Grunnlagstype.SAMVAERSFRADRAG, objectMapper.valueToTree(samvaersfradrag))
 //    }
 
-    // Bygger opp BeregnSamværsfradragResultatCore
-    fun dummySamværsfradragResultatCore(): BeregnSamvaersfradragResultatCore {
-        val bidragPeriodeResultatListe = ArrayList<no.nav.bidrag.beregn.særbidrag.core.samvaersfradrag.dto.ResultatPeriodeCore>()
-        bidragPeriodeResultatListe.add(
-            no.nav.bidrag.beregn.særbidrag.core.samvaersfradrag.dto.ResultatPeriodeCore(
-                periode = PeriodeCore(LocalDate.parse("2020-08-01"), LocalDate.parse("2020-09-01")),
-                resultatBeregningListe = listOf(
-                    no.nav.bidrag.beregn.særbidrag.core.samvaersfradrag.dto.ResultatBeregningCore(
-                        barnPersonId = 1,
-                        belop = BigDecimal.valueOf(100),
-                    ),
-                ),
-                grunnlagsreferanseListe = listOf(SAMVÆRSFRADRAG_REFERANSE),
-            ),
-        )
-        return BeregnSamvaersfradragResultatCore(
-            resultatPeriodeListe = bidragPeriodeResultatListe,
-            sjablonListe = emptyList(),
-            avvikListe = emptyList(),
-        )
-    }
-
-    // Bygger opp BeregnSamværsfradragResultatCore med avvik
-    fun dummySamværsfradragResultatCoreMedAvvik(): BeregnSamvaersfradragResultatCore {
-        val avvikListe = ArrayList<AvvikCore>()
-        avvikListe.add(AvvikCore("beregnDatoFra kan ikke være null", "NULL_VERDI_I_DATO"))
-        avvikListe.add(
-            AvvikCore(
-                "periodeDatoTil må være etter periodeDatoFra i samvaersklassePeriodeListe: datoFra=2018-04-01, datoTil=2018-03-01",
-                "DATO_FRA_ETTER_DATO_TIL",
-            ),
-        )
-        return BeregnSamvaersfradragResultatCore(emptyList(), emptyList(), avvikListe)
-    }
-
-    // Bygger opp BeregnSaertilskuddResultatCore
-    fun dummySaertilskuddResultatCore(): BeregnSaertilskuddResultatCore {
-        val beregnetSaertilskuddPeriodeListe = ArrayList<ResultatPeriodeCore>()
-        beregnetSaertilskuddPeriodeListe.add(
+    // Bygger opp BeregnSærbidragResultatCore
+    fun dummySærbidragResultatCore(): BeregnSærbidragResultatCore {
+        val beregnetSærbidragPeriodeListe = ArrayList<ResultatPeriodeCore>()
+        beregnetSærbidragPeriodeListe.add(
             ResultatPeriodeCore(
                 PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
-                1,
-                ResultatBeregningCore(BigDecimal.valueOf(100), "SAERTILSKUDD_INNVILGET"),
+                "1",
+                ResultatBeregningCore(BigDecimal.valueOf(100), "SÆRBIDRAG_INNVILGET"),
                 listOf(INNTEKT_REFERANSE, BIDRAGSEVNE_REFERANSE),
             ),
         )
-        return BeregnSaertilskuddResultatCore(beregnetSaertilskuddPeriodeListe, emptyList())
+        return BeregnSærbidragResultatCore(beregnetSærbidragPeriodeListe, emptyList())
     }
 
-    // Bygger opp BeregnSaertilskuddResultatCore med avvik
-    fun dummySaertilskuddResultatCoreMedAvvik(): BeregnSaertilskuddResultatCore {
+    // Bygger opp BeregnSærbidragResultatCore med avvik
+    fun dummySærbidragResultatCoreMedAvvik(): BeregnSærbidragResultatCore {
         val avvikListe = ArrayList<AvvikCore>()
         avvikListe.add(AvvikCore("beregnDatoFra kan ikke være null", "NULL_VERDI_I_DATO"))
         avvikListe.add(
@@ -400,7 +361,7 @@ object TestUtil {
                 "DATO_FRA_ETTER_DATO_TIL",
             ),
         )
-        return BeregnSaertilskuddResultatCore(emptyList(), avvikListe)
+        return BeregnSærbidragResultatCore(emptyList(), avvikListe)
     }
 
     // Bygger opp liste av sjabloner av typen Sjablontall
@@ -1213,28 +1174,28 @@ object TestUtil {
         return sjablonTrinnvisSkattesatsListe
     }
 
-    fun byggDummySærtilskuddGrunnlag(): BeregnGrunnlag {
-        return byggDummySærtilskuddGrunnlag("")
+    fun byggDummySærbidragGrunnlag(): BeregnGrunnlag {
+        return byggDummySærbidragGrunnlag("")
     }
 
-    fun byggSærtilskuddGrunnlagUtenBeregningsperiodeTil(): BeregnGrunnlag {
-        return byggDummySærtilskuddGrunnlag("beregningsperiodeTil")
+    fun byggSærbidragGrunnlagUtenBeregningsperiodeTil(): BeregnGrunnlag {
+        return byggDummySærbidragGrunnlag("beregningsperiodeTil")
     }
 
-    fun byggSærtilskuddGrunnlagUtenGrunnlagListe(): BeregnGrunnlag {
-        return byggDummySærtilskuddGrunnlag("grunnlagListe")
+    fun byggSærbidragGrunnlagUtenGrunnlagListe(): BeregnGrunnlag {
+        return byggDummySærbidragGrunnlag("grunnlagListe")
     }
 
-    fun byggSærtilskuddGrunnlagUtenReferanse(): BeregnGrunnlag {
-        return byggDummySærtilskuddGrunnlag("referanse")
+    fun byggSærbidragGrunnlagUtenReferanse(): BeregnGrunnlag {
+        return byggDummySærbidragGrunnlag("referanse")
     }
 
-    fun byggSærtilskuddGrunnlagUtenInnhold(): BeregnGrunnlag {
-        return byggDummySærtilskuddGrunnlag("innhold")
+    fun byggSærbidragGrunnlagUtenInnhold(): BeregnGrunnlag {
+        return byggDummySærbidragGrunnlag("innhold")
     }
 
     // Bygger opp BeregnGrunnlag
-    private fun byggDummySærtilskuddGrunnlag(nullVerdi: String): BeregnGrunnlag {
+    private fun byggDummySærbidragGrunnlag(nullVerdi: String): BeregnGrunnlag {
         val mapper = ObjectMapper()
         val beregningsperiodeFom = YearMonth.parse("2017-01")
         val beregningsperiodeTil = if (nullVerdi == "beregningsperiodeTil") null else YearMonth.parse("2020-01")

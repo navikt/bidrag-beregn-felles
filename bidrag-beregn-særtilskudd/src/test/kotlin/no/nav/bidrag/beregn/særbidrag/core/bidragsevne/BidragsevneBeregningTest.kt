@@ -39,7 +39,7 @@ internal class BidragsevneBeregningTest {
             bostatusVoksneIHusstand = BostatusVoksneIHusstand(TestUtil.VOKSNE_I_HUSSTANDEN_REFERANSE, borMedAndre),
             sjablonListe = sjablonPeriodeListe,
         )
-        val result = bidragsevneberegning.beregn(grunnlagBeregning).belop
+        val result = bidragsevneberegning.beregn(grunnlagBeregning).beløp
         assertEquals(expectedResult.toBigDecimal(), result)
     }
 
@@ -51,7 +51,7 @@ internal class BidragsevneBeregningTest {
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.valueOf(200000),
+                inntektBeløp = BigDecimal.valueOf(200000),
             ),
         )
         var grunnlagBeregning = GrunnlagBeregning(
@@ -63,8 +63,8 @@ internal class BidragsevneBeregningTest {
 
         assertThat(
             bidragsevneberegning.beregnMinstefradrag(
-                inntekt = grunnlagBeregning.inntektListe.sumOf { it.inntektBelop },
-                minstefradragInntektSjablonBelop = SjablonUtil.hentSjablonverdi(
+                inntekt = grunnlagBeregning.inntektListe.sumOf { it.inntektBeløp },
+                minstefradragInntektSjablonBeløp = SjablonUtil.hentSjablonverdi(
                     sjablonListe = sjablonListe,
                     sjablonTallNavn = SjablonTallNavn.MINSTEFRADRAG_INNTEKT_BELØP,
                 ),
@@ -79,7 +79,7 @@ internal class BidragsevneBeregningTest {
         inntekter[0] = Inntekt(
             referanse = TestUtil.INNTEKT_REFERANSE,
             inntektType = "LONN_SKE",
-            inntektBelop = BigDecimal.valueOf(1000000),
+            inntektBeløp = BigDecimal.valueOf(1000000),
         )
         grunnlagBeregning = GrunnlagBeregning(
             inntektListe = inntekter,
@@ -90,8 +90,8 @@ internal class BidragsevneBeregningTest {
 
         assertThat(
             bidragsevneberegning.beregnMinstefradrag(
-                inntekt = grunnlagBeregning.inntektListe.sumOf { it.inntektBelop },
-                minstefradragInntektSjablonBelop = SjablonUtil.hentSjablonverdi(
+                inntekt = grunnlagBeregning.inntektListe.sumOf { it.inntektBeløp },
+                minstefradragInntektSjablonBeløp = SjablonUtil.hentSjablonverdi(
                     sjablonListe = sjablonListe,
                     sjablonTallNavn = SjablonTallNavn.MINSTEFRADRAG_INNTEKT_BELØP,
                 ),
@@ -112,7 +112,7 @@ internal class BidragsevneBeregningTest {
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
                 inntektType = "LONN_SKE",
-                inntektBelop = BigDecimal.valueOf(666000),
+                inntektBeløp = BigDecimal.valueOf(666000),
             ),
         )
         var grunnlagBeregning = GrunnlagBeregning(
@@ -123,13 +123,13 @@ internal class BidragsevneBeregningTest {
         )
         assertEquals(
             BigDecimal.valueOf((1400 + 16181 + 3465 + 0).toLong()),
-            bidragsevneberegning.beregnSkattetrinnBeløp(grunnlagBeregning, grunnlagBeregning.inntektListe.sumOf { it.inntektBelop }),
+            bidragsevneberegning.beregnSkattetrinnBeløp(grunnlagBeregning, grunnlagBeregning.inntektListe.sumOf { it.inntektBeløp }),
         )
 
         inntekter[0] = Inntekt(
             referanse = TestUtil.INNTEKT_REFERANSE,
             inntektType = "LONN_SKE",
-            inntektBelop = BigDecimal.valueOf(174600),
+            inntektBeløp = BigDecimal.valueOf(174600),
         )
         grunnlagBeregning = GrunnlagBeregning(
             inntektListe = inntekter,
@@ -139,13 +139,13 @@ internal class BidragsevneBeregningTest {
         )
         assertEquals(
             BigDecimal.ZERO,
-            bidragsevneberegning.beregnSkattetrinnBeløp(grunnlagBeregning, grunnlagBeregning.inntektListe.sumOf { it.inntektBelop }),
+            bidragsevneberegning.beregnSkattetrinnBeløp(grunnlagBeregning, grunnlagBeregning.inntektListe.sumOf { it.inntektBeløp }),
         )
 
         inntekter[0] = Inntekt(
             referanse = TestUtil.INNTEKT_REFERANSE,
             inntektType = "LONN_SKE",
-            inntektBelop = BigDecimal.valueOf(250000),
+            inntektBeløp = BigDecimal.valueOf(250000),
         )
         grunnlagBeregning = GrunnlagBeregning(
             inntektListe = inntekter,
@@ -155,7 +155,7 @@ internal class BidragsevneBeregningTest {
         )
         assertEquals(
             BigDecimal.valueOf(1315),
-            bidragsevneberegning.beregnSkattetrinnBeløp(grunnlagBeregning, grunnlagBeregning.inntektListe.sumOf { it.inntektBelop }),
+            bidragsevneberegning.beregnSkattetrinnBeløp(grunnlagBeregning, grunnlagBeregning.inntektListe.sumOf { it.inntektBeløp }),
         )
     }
 }

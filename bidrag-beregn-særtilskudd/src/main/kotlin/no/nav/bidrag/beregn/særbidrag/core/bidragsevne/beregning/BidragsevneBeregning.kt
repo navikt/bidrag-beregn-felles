@@ -28,12 +28,12 @@ class BidragsevneBeregning : FellesBeregning() {
         )
 
         // Legger sammen inntektene
-        val inntekt = grunnlag.inntektListe.sumOf { it.inntektBelop }
+        val inntekt = grunnlag.inntektListe.sumOf { it.inntektBeløp }
 
         // Beregner minstefradrag
         val minstefradrag = beregnMinstefradrag(
             inntekt = inntekt,
-            minstefradragInntektSjablonBelop = sjablonNavnVerdiMap[SjablonTallNavn.MINSTEFRADRAG_INNTEKT_BELØP.navn] ?: BigDecimal.ZERO,
+            minstefradragInntektSjablonBeløp = sjablonNavnVerdiMap[SjablonTallNavn.MINSTEFRADRAG_INNTEKT_BELØP.navn] ?: BigDecimal.ZERO,
             minstefradragInntektSjablonProsent = sjablonNavnVerdiMap[SjablonTallNavn.MINSTEFRADRAG_INNTEKT_PROSENT.navn] ?: BigDecimal.ZERO,
         )
 
@@ -56,7 +56,7 @@ class BidragsevneBeregning : FellesBeregning() {
                     .divide(bigDecimal100, mathContext),
             )
 
-        val skattetrinnBeløp = beregnSkattetrinnBeløp(grunnlag, inntekt)
+        val skattetrinnBeløp = beregnSkattetrinnBeløp(grunnlag = grunnlag, inntekt = inntekt)
 
         val boutgifter = (sjablonNavnVerdiMap[SjablonInnholdNavn.BOUTGIFT_BELØP.navn] ?: BigDecimal.ZERO)
             .multiply(bigDecimal12)
@@ -84,15 +84,15 @@ class BidragsevneBeregning : FellesBeregning() {
         )
 
         return ResultatBeregning(
-            belop = månedligBidragsevne,
+            beløp = månedligBidragsevne,
             sjablonListe = byggSjablonResultatListe(sjablonNavnVerdiMap = sjablonNavnVerdiMap, sjablonPeriodeListe = grunnlag.sjablonListe),
         )
     }
 
-    fun beregnMinstefradrag(inntekt: BigDecimal, minstefradragInntektSjablonBelop: BigDecimal, minstefradragInntektSjablonProsent: BigDecimal) =
+    fun beregnMinstefradrag(inntekt: BigDecimal, minstefradragInntektSjablonBeløp: BigDecimal, minstefradragInntektSjablonProsent: BigDecimal) =
         minOf(
             inntekt.multiply(minstefradragInntektSjablonProsent.divide(BigDecimal.valueOf(100), MathContext(2, RoundingMode.HALF_UP))),
-            minstefradragInntektSjablonBelop,
+            minstefradragInntektSjablonBeløp,
         ).setScale(0, RoundingMode.HALF_UP)
 
     fun beregnSkattetrinnBeløp(grunnlag: GrunnlagBeregning, inntekt: BigDecimal): BigDecimal {
@@ -161,6 +161,16 @@ class BidragsevneBeregning : FellesBeregning() {
             sjablonNokkelListe = listOf(SjablonNokkel(navn = SjablonNøkkelNavn.BOSTATUS.navn, verdi = sjablonNokkelVerdi)),
             sjablonInnholdNavn = SjablonInnholdNavn.UNDERHOLD_BELØP,
         )
+
+        // TrinnvisSkattesats
+        val trinnvisSkattesatsListe =
+            SjablonUtil.hentTrinnvisSkattesats(sjablonListe = sjablonListe, sjablonNavn = SjablonNavn.TRINNVIS_SKATTESATS)
+        var indeks = 1
+        trinnvisSkattesatsListe.forEach {
+            sjablonNavnVerdiMap[SjablonNavn.TRINNVIS_SKATTESATS.navn + "InntektGrense" + indeks] = it.inntektGrense
+            sjablonNavnVerdiMap[SjablonNavn.TRINNVIS_SKATTESATS.navn + "Sats" + indeks] = it.sats
+            indeks++
+        }
 
         return sjablonNavnVerdiMap
     }

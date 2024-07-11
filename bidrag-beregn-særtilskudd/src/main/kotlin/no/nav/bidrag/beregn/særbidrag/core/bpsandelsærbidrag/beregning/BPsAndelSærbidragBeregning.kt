@@ -19,9 +19,9 @@ class BPsAndelSærbidragBeregning : FellesBeregning() {
         val forskuddssats = sjablonNavnVerdiMap[SjablonTallNavn.FORSKUDDSSATS_BELØP.navn] ?: BigDecimal.ZERO
 
         // Legger sammen inntektene
-        val inntektBP = grunnlag.inntektBPListe.sumOf { it.inntektBelop }
-        val inntektBM = grunnlag.inntektBMListe.sumOf { it.inntektBelop }
-        var inntektSB = grunnlag.inntektSBListe.sumOf { it.inntektBelop }
+        val inntektBP = grunnlag.inntektBPListe.sumOf { it.inntektBeløp }
+        val inntektBM = grunnlag.inntektBMListe.sumOf { it.inntektBeløp }
+        var inntektSB = grunnlag.inntektSBListe.sumOf { it.inntektBeløp }
 
         // Tester om barnets inntekt er høyere enn 100 ganger sats for forhøyet forskudd. I så fall skal ikke BPs andel regnes ut.
         val barnetErSelvforsorget = (inntektSB > forskuddssats.multiply(BigDecimal.valueOf(100)))
@@ -38,9 +38,9 @@ class BPsAndelSærbidragBeregning : FellesBeregning() {
 
         return ResultatBeregning(
             resultatAndelProsent = andelProsent,
-            resultatAndelBelop = andelBeløp,
-            barnetErSelvforsorget = barnetErSelvforsorget,
-            sjablonListe = byggSjablonResultatListe(sjablonNavnVerdiMap, grunnlag.sjablonListe),
+            resultatAndelBeløp = andelBeløp,
+            barnetErSelvforsørget = barnetErSelvforsorget,
+            sjablonListe = byggSjablonResultatListe(sjablonNavnVerdiMap = sjablonNavnVerdiMap, sjablonPeriodeListe = grunnlag.sjablonListe),
         )
     }
 

@@ -23,7 +23,7 @@ internal object BidragsevneCoreMapper : CoreMapper() {
         // Mapper grunnlagstyper til input for core
         val inntektBPPeriodeCoreListe =
             mapInntekt(
-                beregnSærtilskuddGrunnlag = beregnGrunnlag,
+                beregnSærbidragrunnlag = beregnGrunnlag,
                 referanseBidragspliktig = finnReferanseTilRolle(
                     grunnlagListe = beregnGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG

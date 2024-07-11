@@ -1,7 +1,7 @@
 package no.nav.bidrag.beregn.særbidrag.service.mapper
 
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
-import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.BeregnBPsAndelSærtilskuddGrunnlagCore
+import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.BeregnBPsAndelSærbidragGrunnlagCore
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.UtgiftPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.felles.bo.SjablonListe
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -11,18 +11,18 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUtgift
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 
 internal object BPAndelSærbidragCoreMapper : CoreMapper() {
-    fun mapBPsAndelSaertilskuddGrunnlagTilCore(
+    fun mapBPsAndelSærbidragGrunnlagTilCore(
         beregnGrunnlag: BeregnGrunnlag,
         sjablontallMap: Map<String, SjablonTallNavn>,
         sjablonListe: SjablonListe,
-    ): BeregnBPsAndelSærtilskuddGrunnlagCore {
+    ): BeregnBPsAndelSærbidragGrunnlagCore {
 
         val innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntekt(sjablonListe.sjablonSjablontallResponse)
 
         // Mapper grunnlagstyper til input for core
         val inntektBPPeriodeCoreListe =
             mapInntekt(
-                beregnSærtilskuddGrunnlag = beregnGrunnlag,
+                beregnSærbidragrunnlag = beregnGrunnlag,
                 referanseBidragspliktig = finnReferanseTilRolle(
                     grunnlagListe = beregnGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG
@@ -32,7 +32,7 @@ internal object BPAndelSærbidragCoreMapper : CoreMapper() {
 
         val inntektBMPeriodeCoreListe =
             mapInntekt(
-                beregnSærtilskuddGrunnlag = beregnGrunnlag,
+                beregnSærbidragrunnlag = beregnGrunnlag,
                 referanseBidragspliktig = finnReferanseTilRolle(
                     grunnlagListe = beregnGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER
@@ -42,7 +42,7 @@ internal object BPAndelSærbidragCoreMapper : CoreMapper() {
 
         val inntektSBPeriodeCoreListe =
             mapInntekt(
-                beregnSærtilskuddGrunnlag = beregnGrunnlag,
+                beregnSærbidragrunnlag = beregnGrunnlag,
                 referanseBidragspliktig = finnReferanseTilRolle(
                     grunnlagListe = beregnGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_SØKNADSBARN
@@ -59,25 +59,25 @@ internal object BPAndelSærbidragCoreMapper : CoreMapper() {
                 beregnDatoTil = beregnGrunnlag.periode.til!!.atDay(1),
                 sjablonSjablontallListe = sjablonListe.sjablonSjablontallResponse,
                 sjablontallMap = sjablontallMap,
-                criteria = { it.bpAndelSaertilskudd }
+                criteria = { it.bpAndelSærbidrag }
             )
 
-        return BeregnBPsAndelSærtilskuddGrunnlagCore(
+        return BeregnBPsAndelSærbidragGrunnlagCore(
             beregnDatoFra = beregnGrunnlag.periode.fom.atDay(1),
             beregnDatoTil = beregnGrunnlag.periode.til!!.atDay(1),
             utgiftPeriodeListe = utgiftPeriodeCoreListe,
             inntektBPPeriodeListe = inntektBPPeriodeCoreListe,
             inntektBMPeriodeListe = inntektBMPeriodeCoreListe,
-            inntektBBPeriodeListe = inntektSBPeriodeCoreListe,
+            inntektSBPeriodeListe = inntektSBPeriodeCoreListe,
             sjablonPeriodeListe = sjablonPeriodeCoreListe,
         )
     }
 
     private fun mapUtgift(
-        beregnSærtilskuddGrunnlag: BeregnGrunnlag,
+        beregnSærbidragGrunnlag: BeregnGrunnlag,
     ): List<UtgiftPeriodeCore> {
         try {
-            return beregnSærtilskuddGrunnlag.grunnlagListe
+            return beregnSærbidragGrunnlag.grunnlagListe
                 .filtrerOgKonverterBasertPåEgenReferanse<DelberegningUtgift>(Grunnlagstype.DELBEREGNING_UTGIFT)
                 .map {
                     UtgiftPeriodeCore(
@@ -97,56 +97,3 @@ internal object BPAndelSærbidragCoreMapper : CoreMapper() {
         }
     }
 }
-
-/*fun BasePeriode.tilPeriodeCore(): PeriodeCore {
-    valider()
-    return PeriodeCore(datoFom!!, datoTil!!)
-}
-
-fun BasePeriode.valider() {
-    if (datoFom == null) throw UgyldigInputException("datoFom kan ikke være null")
-    if (datoTil == null) throw UgyldigInputException("datoTil kan ikke være null")
-}*/
-
-/*fun InntektBase.tilInntektPeriodeCoreBPsAndelSaertilskudd(referanse: String): InntektPeriodeCore {
-    validerInntekt()
-    return InntektPeriodeCore(
-        referanse,
-        tilPeriodeCore(),
-        inntektType!!,
-        belop!!,
-        deltFordel = false,
-        skatteklasse2 = false
-    )
-}
-
-fun InntektBase.validerInntekt() {
-    if (inntektType == null) throw UgyldigInputException("inntektType kan ikke være null")
-    if (belop == null) throw UgyldigInputException("belop kan ikke være null")
-}*/
-
-/*fun BMInntekt.tilCore(referanse: String): InntektPeriodeCore {
-    valider()
-    return InntektPeriodeCore(
-        referanse,
-        tilPeriodeCore(),
-        inntektType!!,
-        belop!!,
-        deltFordel!!,
-        skatteklasse2!!
-    )
-}*/
-
-/*fun SBInntekt.tilCore(referanse: String): InntektPeriodeCore {
-    valider()
-    return tilInntektPeriodeCoreBPsAndelSaertilskudd(referanse)
-}*/
-
-/*fun NettoSaertilskudd.tilCore(referanse: String): NettoSaertilskuddPeriodeCore {
-    valider()
-    return NettoSaertilskuddPeriodeCore(
-        referanse,
-        tilPeriodeCore(),
-        nettoSaertilskuddBelop!!
-    )
-}*/

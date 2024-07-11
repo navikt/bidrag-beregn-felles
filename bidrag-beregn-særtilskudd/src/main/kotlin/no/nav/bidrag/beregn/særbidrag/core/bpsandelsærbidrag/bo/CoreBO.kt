@@ -7,7 +7,7 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 // Grunnlag
-data class BeregnBPsAndelSaertilskuddGrunnlag(
+data class BeregnBPsAndelSærbidragGrunnlag(
     val beregnDatoFra: LocalDate,
     val beregnDatoTil: LocalDate,
     val utgiftPeriodeListe: List<UtgiftPeriode>,
@@ -18,7 +18,7 @@ data class BeregnBPsAndelSaertilskuddGrunnlag(
 )
 
 // Resultatperiode
-data class BeregnBPsAndelSaertilskuddResultat(
+data class BeregnBPsAndelSærbidragResultat(
     val resultatPeriodeListe: List<ResultatPeriode>
 )
 
@@ -31,8 +31,8 @@ data class ResultatPeriode(
 
 data class ResultatBeregning(
     val resultatAndelProsent: BigDecimal,
-    val resultatAndelBelop: BigDecimal,
-    val barnetErSelvforsorget: Boolean,
+    val resultatAndelBeløp: BigDecimal,
+    val barnetErSelvforsørget: Boolean,
     val sjablonListe: List<SjablonPeriodeNavnVerdi>,
 )
 
@@ -53,11 +53,11 @@ data class Utgift(
 data class Inntekt(
     val referanse: String,
     val inntektType: String,
-    val inntektBelop: BigDecimal
+    val inntektBeløp: BigDecimal
 )
 
 // Hjelpeklasser
-data class BeregnBPsAndelSaertilskuddListeGrunnlag(
+data class BeregnBPsAndelSærbidragListeGrunnlag(
     val periodeResultatListe: MutableList<ResultatPeriode> = mutableListOf(),
     var utgiftPeriodeListe: List<UtgiftPeriode> = listOf(),
     var inntektBPPeriodeListe: List<InntektPeriode> = listOf(),

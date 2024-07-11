@@ -6,7 +6,7 @@ import no.nav.bidrag.beregn.core.bo.SjablonInnhold
 import no.nav.bidrag.beregn.core.bo.SjablonPeriode
 import no.nav.bidrag.beregn.særbidrag.TestUtil
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.beregning.BPsAndelSærbidragBeregning
-import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.bo.BeregnBPsAndelSaertilskuddGrunnlag
+import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.bo.BeregnBPsAndelSærbidragGrunnlag
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.bo.InntektPeriode
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.bo.UtgiftPeriode
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.periode.BPsAndelSærbidragPeriode
@@ -68,7 +68,7 @@ internal class BPsAndelSærbidragPeriodeTest {
         )
     }
 
-    private fun lagGrunnlag(beregnDatoFra: String, beregnDatoTil: String): BeregnBPsAndelSaertilskuddGrunnlag {
+    private fun lagGrunnlag(beregnDatoFra: String, beregnDatoTil: String): BeregnBPsAndelSærbidragGrunnlag {
         val utgiftPeriodeListe = listOf(
             UtgiftPeriode(
                 referanse = TestUtil.UTGIFT_REFERANSE,
@@ -92,7 +92,7 @@ internal class BPsAndelSærbidragPeriodeTest {
                 beløp = BigDecimal.valueOf(400000),
             ),
         )
-        val inntektBBPeriodeListe = listOf(
+        val inntektSBPeriodeListe = listOf(
             InntektPeriode(
                 referanse = "Inntekt_20180101",
                 periode = Periode(datoFom = LocalDate.parse("2018-01-01"), datoTil = LocalDate.parse("2020-08-01")),
@@ -101,13 +101,13 @@ internal class BPsAndelSærbidragPeriodeTest {
             ),
         )
 
-        return BeregnBPsAndelSaertilskuddGrunnlag(
+        return BeregnBPsAndelSærbidragGrunnlag(
             beregnDatoFra = LocalDate.parse(beregnDatoFra),
             beregnDatoTil = LocalDate.parse(beregnDatoTil),
             utgiftPeriodeListe = utgiftPeriodeListe,
             inntektBPPeriodeListe = inntektBPPeriodeListe,
             inntektBMPeriodeListe = inntektBMPeriodeListe,
-            inntektSBPeriodeListe = inntektBBPeriodeListe,
+            inntektSBPeriodeListe = inntektSBPeriodeListe,
             sjablonPeriodeListe = lagSjablonGrunnlag(),
         )
     }

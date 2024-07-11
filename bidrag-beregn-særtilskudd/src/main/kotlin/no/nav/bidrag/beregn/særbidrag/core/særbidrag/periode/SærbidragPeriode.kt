@@ -6,139 +6,101 @@ import no.nav.bidrag.beregn.core.periode.Periodiserer
 import no.nav.bidrag.beregn.core.util.PeriodeUtil
 import no.nav.bidrag.beregn.særbidrag.core.felles.FellesPeriode
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.beregning.SærbidragBeregning
-import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BPsAndelSaertilskudd
-import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BeregnSaertilskuddGrunnlag
-import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BeregnSaertilskuddListeGrunnlag
-import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BeregnSaertilskuddResultat
+import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BPsAndelSærbidrag
+import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BeregnSærbidragGrunnlag
+import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BeregnSærbidragListeGrunnlag
+import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BeregnSærbidragResultat
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.Bidragsevne
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.GrunnlagBeregning
-import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.LopendeBidrag
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.ResultatPeriode
-import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.SamvaersfradragGrunnlag
 
-class SærbidragPeriode(private val saertilskuddberegning: SærbidragBeregning = SærbidragBeregning()) : FellesPeriode() {
+class SærbidragPeriode(private val særbidragBeregning: SærbidragBeregning = SærbidragBeregning()) : FellesPeriode() {
 
-    fun beregnPerioder(grunnlag: BeregnSaertilskuddGrunnlag): BeregnSaertilskuddResultat {
-        val beregnSaertilskuddListeGrunnlag = BeregnSaertilskuddListeGrunnlag()
+    fun beregnPerioder(grunnlag: BeregnSærbidragGrunnlag): BeregnSærbidragResultat {
+        val grunnlagTilBeregning = BeregnSærbidragListeGrunnlag()
 
-        // Juster datoer
-        justerDatoerGrunnlagslister(periodeGrunnlag = grunnlag, beregnSaertilskuddListeGrunnlag = beregnSaertilskuddListeGrunnlag)
+        // Lag grunnlag til beregning
+        lagGrunnlagTilBeregning(periodeGrunnlag = grunnlag, grunnlagTilBeregning = grunnlagTilBeregning)
 
         // Lag bruddperioder
-        lagBruddperioder(periodeGrunnlag = grunnlag, beregnSaertilskuddListeGrunnlag = beregnSaertilskuddListeGrunnlag)
+        lagBruddperioder(periodeGrunnlag = grunnlag, beregnSærbidragListeGrunnlag = grunnlagTilBeregning)
 
         // Hvis det ligger 2 perioder på slutten som i til-dato inneholder hhv. beregningsperiodens til-dato og null slås de sammen
-        mergeSluttperiode(periodeListe = beregnSaertilskuddListeGrunnlag.bruddPeriodeListe, datoTil = grunnlag.beregnDatoTil)
+        mergeSluttperiode(periodeListe = grunnlagTilBeregning.bruddPeriodeListe, datoTil = grunnlag.beregnDatoTil)
 
         // Foreta beregning
-        beregnSaertilskuddPerPeriode(periodeGrunnlag = grunnlag, grunnlag = beregnSaertilskuddListeGrunnlag)
+        beregnSærbidragPerPeriode(søknadsbarnPersonId = grunnlag.søknadsbarnPersonId, grunnlag = grunnlagTilBeregning)
 
-        return BeregnSaertilskuddResultat(beregnSaertilskuddListeGrunnlag.periodeResultatListe)
+        return BeregnSærbidragResultat(grunnlagTilBeregning.periodeResultatListe)
     }
 
-    private fun justerDatoerGrunnlagslister(
-        periodeGrunnlag: BeregnSaertilskuddGrunnlag,
-        beregnSaertilskuddListeGrunnlag: BeregnSaertilskuddListeGrunnlag,
+    // Lager grunnlag til beregning
+    private fun lagGrunnlagTilBeregning(
+        periodeGrunnlag: BeregnSærbidragGrunnlag,
+        grunnlagTilBeregning: BeregnSærbidragListeGrunnlag
     ) {
-        // Justerer datoer på grunnlagslistene (blir gjort implisitt i xxxPeriode(it))
-        beregnSaertilskuddListeGrunnlag.justertBidragsevnePeriodeListe = periodeGrunnlag.bidragsevnePeriodeListe
-            .map { no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BidragsevnePeriode(it) }
-
-        beregnSaertilskuddListeGrunnlag.justertBPsAndelSaertilskuddPeriodeListe = periodeGrunnlag.bPsAndelSaertilskuddPeriodeListe
-            .map { no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BPsAndelSaertilskuddPeriode(it) }
-
-        beregnSaertilskuddListeGrunnlag.justertLopendeBidragPeriodeListe = periodeGrunnlag.lopendeBidragPeriodeListe
-            .map { no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.LopendeBidragPeriode(it) }
-
-        beregnSaertilskuddListeGrunnlag.justertSamvaersfradragPeriodeListe = periodeGrunnlag.samvaersfradragGrunnlagPeriodeListe
-            .map { no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.SamvaersfradragGrunnlagPeriode(it) }
+        grunnlagTilBeregning.bidragsevnePeriodeListe = periodeGrunnlag.bidragsevnePeriodeListe.map { it }
+        grunnlagTilBeregning.bPsAndelSærbidragPeriodeListe = periodeGrunnlag.bPsAndelSærbidragPeriodeListe.map { it }
     }
 
     // Lagger bruddperioder ved å løpe gjennom alle periodelistene
-    private fun lagBruddperioder(periodeGrunnlag: BeregnSaertilskuddGrunnlag, beregnSaertilskuddListeGrunnlag: BeregnSaertilskuddListeGrunnlag) {
+    private fun lagBruddperioder(periodeGrunnlag: BeregnSærbidragGrunnlag, beregnSærbidragListeGrunnlag: BeregnSærbidragListeGrunnlag) {
         // Bygger opp liste over perioder
-        beregnSaertilskuddListeGrunnlag.bruddPeriodeListe = Periodiserer()
+        beregnSærbidragListeGrunnlag.bruddPeriodeListe = Periodiserer()
             .addBruddpunkt(periodeGrunnlag.beregnDatoFra) // For å sikre bruddpunkt på start-beregning-fra-dato
+            .addBruddpunkter(beregnSærbidragListeGrunnlag.bidragsevnePeriodeListe)
+            .addBruddpunkter(beregnSærbidragListeGrunnlag.bPsAndelSærbidragPeriodeListe)
             .addBruddpunkt(periodeGrunnlag.beregnDatoTil) // For å sikre bruddpunkt på start-beregning-til-dato
-            .addBruddpunkter(beregnSaertilskuddListeGrunnlag.justertBidragsevnePeriodeListe)
-            .addBruddpunkter(beregnSaertilskuddListeGrunnlag.justertBPsAndelSaertilskuddPeriodeListe)
-            .addBruddpunkter(beregnSaertilskuddListeGrunnlag.justertLopendeBidragPeriodeListe)
-            .addBruddpunkter(beregnSaertilskuddListeGrunnlag.justertSamvaersfradragPeriodeListe)
             .finnPerioder(beregnDatoFom = periodeGrunnlag.beregnDatoFra, beregnDatoTil = periodeGrunnlag.beregnDatoTil)
             .toMutableList()
     }
 
     // Løper gjennom periodene og finner matchende verdi for hver kategori. Kaller beregningsmodulen for hver beregningsperiode
-    private fun beregnSaertilskuddPerPeriode(periodeGrunnlag: BeregnSaertilskuddGrunnlag, grunnlag: BeregnSaertilskuddListeGrunnlag) {
+    private fun beregnSærbidragPerPeriode(søknadsbarnPersonId: String, grunnlag: BeregnSærbidragListeGrunnlag) {
         grunnlag.bruddPeriodeListe.forEach { beregningsperiode: Periode ->
-            val bidragsevne = grunnlag.justertBidragsevnePeriodeListe.stream()
+            val bidragsevne = grunnlag.bidragsevnePeriodeListe.stream()
                 .filter { it.getPeriode().overlapperMed(beregningsperiode) }
-                .map { Bidragsevne(referanse = it.referanse, bidragsevneBelop = it.bidragsevneBelop) }
+                .map { Bidragsevne(referanse = it.referanse, beløp = it.beløp) }
                 .findFirst()
                 .orElseThrow { IllegalArgumentException("Grunnlagsobjekt BIDRAGSEVNE mangler data for periode: ${beregningsperiode.getPeriode()}") }
 
-            val bPsAndelSaertilskudd = grunnlag.justertBPsAndelSaertilskuddPeriodeListe.stream()
+            val bPsAndelSærbidrag = grunnlag.bPsAndelSærbidragPeriodeListe.stream()
                 .filter { it.getPeriode().overlapperMed(beregningsperiode) }
                 .map {
-                    BPsAndelSaertilskudd(
+                    BPsAndelSærbidrag(
                         referanse = it.referanse,
-                        bPsAndelSaertilskuddProsent = it.bPsAndelSaertilskuddProsent,
-                        bPsAndelSaertilskuddBelop = it.bPsAndelSaertilskuddBelop,
-                        barnetErSelvforsorget = it.barnetErSelvforsorget,
+                        andelProsent = it.andelProsent,
+                        andelBeløp = it.andelBeløp,
+                        barnetErSelvforsørget = it.barnetErSelvforsørget,
                     )
                 }
                 .findFirst()
                 .orElseThrow {
                     IllegalArgumentException(
-                        "Grunnlagsobjekt BP_ANDEL_SAERTILSKUDD mangler data for periode: ${beregningsperiode.getPeriode()}",
-                    )
-                }
-
-            val lopendeBidragListe = grunnlag.justertLopendeBidragPeriodeListe
-                .filter { it.getPeriode().overlapperMed(beregningsperiode) }
-                .map {
-                    LopendeBidrag(
-                        referanse = it.referanse,
-                        barnPersonId = it.barnPersonId,
-                        lopendeBidragBelop = it.lopendeBidragBelop,
-                        opprinneligBPsAndelUnderholdskostnadBelop = it.opprinneligBPsAndelUnderholdskostnadBelop,
-                        opprinneligBidragBelop = it.opprinneligBidragBelop,
-                        opprinneligSamvaersfradragBelop = it.opprinneligSamvaersfradragBelop,
-                    )
-                }
-
-            val samvaersfradragGrunnlagListe = grunnlag.justertSamvaersfradragPeriodeListe
-                .filter { it.getPeriode().overlapperMed(beregningsperiode) }
-                .map {
-                    SamvaersfradragGrunnlag(
-                        referanse = it.referanse,
-                        barnPersonId = it.barnPersonId,
-                        samvaersfradragBelop = it.samvaersfradragBelop,
+                        "Grunnlagsobjekt BP_ANDEL_SÆRBIDRAG mangler data for periode: ${beregningsperiode.getPeriode()}",
                     )
                 }
 
             // Kaller beregningsmodulen for hver beregningsperiode
-            val beregnSaertilskuddGrunnlagPeriodisert =
+            val beregnSærbidragGrunnlagPeriodisert =
                 GrunnlagBeregning(
                     bidragsevne = bidragsevne,
-                    bPsAndelSaertilskudd = bPsAndelSaertilskudd,
-                    lopendeBidragListe = lopendeBidragListe,
-                    samvaersfradragGrunnlagListe = samvaersfradragGrunnlagListe,
+                    bPsAndelSærbidrag = bPsAndelSærbidrag,
                 )
 
             grunnlag.periodeResultatListe.add(
                 ResultatPeriode(
                     periode = beregningsperiode,
-                    soknadsbarnPersonId = periodeGrunnlag.soknadsbarnPersonId,
-                    resultat = saertilskuddberegning.beregn(beregnSaertilskuddGrunnlagPeriodisert),
-                    grunnlag = beregnSaertilskuddGrunnlagPeriodisert,
+                    søknadsbarnPersonId = søknadsbarnPersonId,
+                    resultat = særbidragBeregning.beregn(beregnSærbidragGrunnlagPeriodisert),
+                    grunnlag = beregnSærbidragGrunnlagPeriodisert,
                 ),
             )
         }
     }
 
-    // Validerer at input-verdier til særtilskuddberegning er gyldige
-    fun validerInput(grunnlag: BeregnSaertilskuddGrunnlag): List<Avvik> {
+    // Validerer at input-verdier til særbidragberegning er gyldige
+    fun validerInput(grunnlag: BeregnSærbidragGrunnlag): List<Avvik> {
         val avvikListe =
             PeriodeUtil.validerBeregnPeriodeInput(beregnDatoFom = grunnlag.beregnDatoFra, beregnDatoTil = grunnlag.beregnDatoTil).toMutableList()
 
@@ -160,38 +122,10 @@ class SærbidragPeriode(private val saertilskuddberegning: SærbidragBeregning =
             PeriodeUtil.validerInputDatoer(
                 beregnDatoFom = grunnlag.beregnDatoFra,
                 beregnDatoTil = grunnlag.beregnDatoTil,
-                dataElement = "bPsAndelSaertilskuddPeriodeListe",
-                periodeListe = grunnlag.bPsAndelSaertilskuddPeriodeListe.map { it.getPeriode() },
+                dataElement = "bPsAndelSærbidragPeriodeListe",
+                periodeListe = grunnlag.bPsAndelSærbidragPeriodeListe.map { it.getPeriode() },
                 sjekkOverlappendePerioder = true,
                 sjekkOppholdMellomPerioder = true,
-                sjekkDatoTilNull = true,
-                sjekkDatoStartSluttAvPerioden = true,
-                sjekkBeregnPeriode = true,
-            ),
-        )
-
-        avvikListe.addAll(
-            PeriodeUtil.validerInputDatoer(
-                beregnDatoFom = grunnlag.beregnDatoFra,
-                beregnDatoTil = grunnlag.beregnDatoTil,
-                dataElement = "lopendeBidragPeriodeListe",
-                periodeListe = grunnlag.lopendeBidragPeriodeListe.map { it.getPeriode() },
-                sjekkOverlappendePerioder = false,
-                sjekkOppholdMellomPerioder = false,
-                sjekkDatoTilNull = true,
-                sjekkDatoStartSluttAvPerioden = true,
-                sjekkBeregnPeriode = true,
-            ),
-        )
-
-        avvikListe.addAll(
-            PeriodeUtil.validerInputDatoer(
-                beregnDatoFom = grunnlag.beregnDatoFra,
-                beregnDatoTil = grunnlag.beregnDatoTil,
-                dataElement = "samvaersfradragGrunnlagPeriodeListe",
-                periodeListe = grunnlag.samvaersfradragGrunnlagPeriodeListe.map { it.getPeriode() },
-                sjekkOverlappendePerioder = false,
-                sjekkOppholdMellomPerioder = false,
                 sjekkDatoTilNull = true,
                 sjekkDatoStartSluttAvPerioden = true,
                 sjekkBeregnPeriode = true,

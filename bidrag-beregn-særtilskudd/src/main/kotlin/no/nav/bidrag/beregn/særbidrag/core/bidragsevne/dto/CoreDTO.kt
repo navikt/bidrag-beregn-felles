@@ -21,16 +21,10 @@ data class BeregnBidragsevneGrunnlagCore(
     var sjablonPeriodeListe: List<SjablonPeriodeCore>,
 )
 
-// data class BostatusPeriodeCore(
-//    val referanse: String,
-//    val periode: PeriodeCore,
-//    val kode: String,
-// )
-
 // Resultatperiode
 data class BeregnBidragsevneResultatCore(
     val resultatPeriodeListe: List<ResultatPeriodeCore>,
-    val sjablonListe: List<SjablonResultatGrunnlagCore>,
+    val sjablonListe: MutableList<SjablonResultatGrunnlagCore>,
     val avvikListe: List<AvvikCore>,
 )
 
@@ -41,5 +35,5 @@ data class ResultatPeriodeCore(
 ) : IResultatPeriode
 
 data class ResultatBeregningCore(
-    val belop: BigDecimal,
+    val beløp: BigDecimal,
 )

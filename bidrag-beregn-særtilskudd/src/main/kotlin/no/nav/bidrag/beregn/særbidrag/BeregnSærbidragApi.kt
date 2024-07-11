@@ -3,17 +3,17 @@ package no.nav.bidrag.beregn.særbidrag
 import no.nav.bidrag.beregn.særbidrag.service.BeregnSærbidragService
 import no.nav.bidrag.commons.service.sjablon.EnableSjablonProvider
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.behandling.beregning.særtilskudd.BeregnetSærtilskuddResultat
+import no.nav.bidrag.transport.behandling.beregning.særbidrag.BeregnetSærbidragResultat
 import org.springframework.stereotype.Service
 
 /**
- * BeregnSærtilskuddApi eksponerer api for å beregne forskudd.
+ * BeregnSærbidragApi eksponerer api for å beregne særbidrag.
  *
  * For å ta i bruk beregnings-apiet må følgende gjøres:
  *
- * Legg til Import-annotering i konfigurasjonen for å initalisere BeregnSærtilskuddApi-bønnen
+ * Legg til Import-annotering i konfigurasjonen for å initalisere BeregnSærbidragApi-bønnen
  * ```kotlin
- * @Import(BeregnSærtilskuddApi::class)
+ * @Import(BeregnSærbidragApi::class)
  * ```
  *
  * Definer BIDRAG_SJABLON_URL miljøvariabler i naiskonfigurasjonen.
@@ -28,5 +28,5 @@ import org.springframework.stereotype.Service
 class BeregnSærbidragApi {
     private val service = BeregnSærbidragService()
 
-    fun beregn(beregnSærtilskuddGrunnlag: BeregnGrunnlag): BeregnetSærtilskuddResultat = service.beregn(beregnSærtilskuddGrunnlag)
+    fun beregn(beregnSærbidragGrunnlag: BeregnGrunnlag): BeregnetSærbidragResultat = service.beregn(beregnSærbidragGrunnlag)
 }

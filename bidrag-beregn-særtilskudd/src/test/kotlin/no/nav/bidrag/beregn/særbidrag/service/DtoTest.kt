@@ -12,7 +12,7 @@ internal class DtoTest {
     @Test
     @DisplayName("Skal kaste IllegalArgumentException når beregningsperiode til er null")
     fun skalKasteIllegalArgumentExceptionNårBeregningsperiodeTilErNull() {
-        val grunnlag = TestUtil.byggSærtilskuddGrunnlagUtenBeregningsperiodeTil()
+        val grunnlag = TestUtil.byggSærbidragGrunnlagUtenBeregningsperiodeTil()
         assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy { grunnlag.valider() }
             .withMessage("beregningsperiode til kan ikke være null")
     }
@@ -20,7 +20,7 @@ internal class DtoTest {
     @Test
     @DisplayName("Skal kaste IllegalArgumentException når grunnlagListe er null")
     fun skalKasteIllegalArgumentExceptionNårGrunnlagListeErNull() {
-        val grunnlag = TestUtil.byggSærtilskuddGrunnlagUtenGrunnlagListe()
+        val grunnlag = TestUtil.byggSærbidragGrunnlagUtenGrunnlagListe()
         assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy { grunnlag.valider() }
             .withMessage("grunnlagListe kan ikke være tom")
     }
@@ -28,7 +28,7 @@ internal class DtoTest {
     @Test
     @DisplayName("Skal kaste IllegalArgumentException når referanse er null")
     fun skalKasteIllegalArgumentExceptionNårReferanseErNull() {
-        val grunnlag = TestUtil.byggSærtilskuddGrunnlagUtenReferanse()
+        val grunnlag = TestUtil.byggSærbidragGrunnlagUtenReferanse()
         assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy { grunnlag.valider() }
             .withMessage("referanse kan ikke være en tom streng")
     }
@@ -36,7 +36,7 @@ internal class DtoTest {
     @Test
     @DisplayName("Skal kaste IllegalArgumentException når innhold er null")
     fun skalKasteIllegalArgumentExceptionNårInnholdErNull() {
-        val grunnlag = TestUtil.byggSærtilskuddGrunnlagUtenInnhold()
+        val grunnlag = TestUtil.byggSærbidragGrunnlagUtenInnhold()
         assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy { grunnlag.valider() }
             .withMessage("innhold kan ikke være null")
     }
@@ -44,7 +44,7 @@ internal class DtoTest {
     @Test
     @DisplayName("Skal ikke kaste exception")
     fun skalIkkeKasteException() {
-        val grunnlag = TestUtil.byggDummySærtilskuddGrunnlag()
+        val grunnlag = TestUtil.byggDummySærbidragGrunnlag()
         assertThatCode { grunnlag.valider() }.doesNotThrowAnyException()
     }
 }

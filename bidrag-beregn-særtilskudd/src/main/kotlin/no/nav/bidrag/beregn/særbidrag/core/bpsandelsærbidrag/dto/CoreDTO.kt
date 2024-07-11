@@ -10,12 +10,12 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 // Grunnlag periode
-data class BeregnBPsAndelSærtilskuddGrunnlagCore(
+data class BeregnBPsAndelSærbidragGrunnlagCore(
     val beregnDatoFra: LocalDate,
     val beregnDatoTil: LocalDate,
     val inntektBPPeriodeListe: List<InntektPeriodeCore>,
     val inntektBMPeriodeListe: List<InntektPeriodeCore>,
-    val inntektBBPeriodeListe: List<InntektPeriodeCore>,
+    val inntektSBPeriodeListe: List<InntektPeriodeCore>,
     val utgiftPeriodeListe: List<UtgiftPeriodeCore>,
     var sjablonPeriodeListe: List<SjablonPeriodeCore>,
 )
@@ -27,7 +27,7 @@ data class UtgiftPeriodeCore(
 )
 
 // Resultatperiode
-data class BeregnBPsAndelSærtilskuddResultatCore(
+data class BeregnBPsAndelSærbidragResultatCore(
     val resultatPeriodeListe: List<ResultatPeriodeCore>,
     val sjablonListe: List<SjablonResultatGrunnlagCore>,
     val avvikListe: List<AvvikCore>,

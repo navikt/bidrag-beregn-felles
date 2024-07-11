@@ -5,9 +5,9 @@ import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.periode.Periodiserer
 import no.nav.bidrag.beregn.core.util.PeriodeUtil
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.beregning.BPsAndelSærbidragBeregning
-import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.bo.BeregnBPsAndelSaertilskuddGrunnlag
-import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.bo.BeregnBPsAndelSaertilskuddListeGrunnlag
-import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.bo.BeregnBPsAndelSaertilskuddResultat
+import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.bo.BeregnBPsAndelSærbidragGrunnlag
+import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.bo.BeregnBPsAndelSærbidragListeGrunnlag
+import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.bo.BeregnBPsAndelSærbidragResultat
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.bo.GrunnlagBeregning
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.bo.Inntekt
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.bo.ResultatPeriode
@@ -18,8 +18,8 @@ import java.time.LocalDate
 class BPsAndelSærbidragPeriode(private val bPsAndelSærbidragBeregning: BPsAndelSærbidragBeregning = BPsAndelSærbidragBeregning()) :
     FellesPeriode() {
 
-    fun beregnPerioder(grunnlag: BeregnBPsAndelSaertilskuddGrunnlag): BeregnBPsAndelSaertilskuddResultat {
-        val grunnlagTilBeregning = BeregnBPsAndelSaertilskuddListeGrunnlag()
+    fun beregnPerioder(grunnlag: BeregnBPsAndelSærbidragGrunnlag): BeregnBPsAndelSærbidragResultat {
+        val grunnlagTilBeregning = BeregnBPsAndelSærbidragListeGrunnlag()
 
         // Lag grunnlag til beregning
         lagGrunnlagTilBeregning(periodeGrunnlag = grunnlag, grunnlagTilBeregning = grunnlagTilBeregning)
@@ -31,15 +31,15 @@ class BPsAndelSærbidragPeriode(private val bPsAndelSærbidragBeregning: BPsAnde
         mergeSluttperiode(periodeListe = grunnlagTilBeregning.bruddPeriodeListe, datoTil = grunnlag.beregnDatoTil)
 
         // Foreta beregning
-        beregnBPsAndelSaertilskuddPerPeriode(grunnlagTilBeregning)
+        beregnBPsAndelSærbidragPerPeriode(grunnlagTilBeregning)
 
-        return BeregnBPsAndelSaertilskuddResultat(grunnlagTilBeregning.periodeResultatListe)
+        return BeregnBPsAndelSærbidragResultat(grunnlagTilBeregning.periodeResultatListe)
     }
 
     // Lager grunnlag til beregning
     private fun lagGrunnlagTilBeregning(
-        periodeGrunnlag: BeregnBPsAndelSaertilskuddGrunnlag,
-        grunnlagTilBeregning: BeregnBPsAndelSaertilskuddListeGrunnlag
+        periodeGrunnlag: BeregnBPsAndelSærbidragGrunnlag,
+        grunnlagTilBeregning: BeregnBPsAndelSærbidragListeGrunnlag
     ) {
         grunnlagTilBeregning.inntektBPPeriodeListe = periodeGrunnlag.inntektBPPeriodeListe.map { it }
         grunnlagTilBeregning.inntektBMPeriodeListe = periodeGrunnlag.inntektBMPeriodeListe.map { it }
@@ -50,8 +50,8 @@ class BPsAndelSærbidragPeriode(private val bPsAndelSærbidragBeregning: BPsAnde
 
     // Lager bruddperioder ved å løpe gjennom alle periodelistene
     private fun lagBruddperioder(
-        periodeGrunnlag: BeregnBPsAndelSaertilskuddGrunnlag,
-        grunnlagTilBeregning: BeregnBPsAndelSaertilskuddListeGrunnlag,
+        periodeGrunnlag: BeregnBPsAndelSærbidragGrunnlag,
+        grunnlagTilBeregning: BeregnBPsAndelSærbidragListeGrunnlag,
     ) {
         // Regler for beregning av BPs andel ble endret fra 01.01.2009, alle perioder etter da skal beregnes på ny måte.
         // Det må derfor legges til brudd på denne datoen
@@ -72,19 +72,19 @@ class BPsAndelSærbidragPeriode(private val bPsAndelSærbidragBeregning: BPsAnde
     }
 
     // Løper gjennom periodene og finner matchende verdi for hver kategori. Kaller beregningsmodulen for hver beregningsperiode
-    private fun beregnBPsAndelSaertilskuddPerPeriode(grunnlag: BeregnBPsAndelSaertilskuddListeGrunnlag) {
+    private fun beregnBPsAndelSærbidragPerPeriode(grunnlag: BeregnBPsAndelSærbidragListeGrunnlag) {
         grunnlag.bruddPeriodeListe.forEach { beregningsperiode: Periode ->
             val inntektBPListe = grunnlag.inntektBPPeriodeListe
                 .filter { it.getPeriode().overlapperMed(beregningsperiode) }
-                .map { Inntekt(referanse = it.referanse, inntektType = it.type, inntektBelop = it.beløp) }
+                .map { Inntekt(referanse = it.referanse, inntektType = it.type, inntektBeløp = it.beløp) }
 
             val inntektBMListe = grunnlag.inntektBMPeriodeListe
                 .filter { it.getPeriode().overlapperMed(beregningsperiode) }
-                .map { Inntekt(referanse = it.referanse, inntektType = it.type, inntektBelop = it.beløp) }
+                .map { Inntekt(referanse = it.referanse, inntektType = it.type, inntektBeløp = it.beløp) }
 
             val inntektSBListe = grunnlag.inntektSBPeriodeListe
                 .filter { it.getPeriode().overlapperMed(beregningsperiode) }
-                .map { Inntekt(referanse = it.referanse, inntektType = it.type, inntektBelop = it.beløp) }
+                .map { Inntekt(referanse = it.referanse, inntektType = it.type, inntektBeløp = it.beløp) }
 
             val utgiftsbeløp = grunnlag.utgiftPeriodeListe.stream()
                 .filter { it.getPeriode().overlapperMed(beregningsperiode) }
@@ -97,7 +97,7 @@ class BPsAndelSærbidragPeriode(private val bPsAndelSærbidragBeregning: BPsAnde
             val sjablonliste = grunnlag.sjablonPeriodeListe.filter { it.getPeriode().overlapperMed(beregningsperiode) }
 
             // Kaller beregningsmodulen for hver beregningsperiode
-            val beregnBPsAndelSaertilskuddGrunnlagPeriodisert =
+            val beregnBPsAndelSærbidragGrunnlagPeriodisert =
                 GrunnlagBeregning(
                     utgift = utgiftsbeløp,
                     inntektBPListe = inntektBPListe,
@@ -109,15 +109,15 @@ class BPsAndelSærbidragPeriode(private val bPsAndelSærbidragBeregning: BPsAnde
             grunnlag.periodeResultatListe.add(
                 ResultatPeriode(
                     periode = beregningsperiode,
-                    resultat = bPsAndelSærbidragBeregning.beregn(beregnBPsAndelSaertilskuddGrunnlagPeriodisert),
-                    grunnlag = beregnBPsAndelSaertilskuddGrunnlagPeriodisert,
+                    resultat = bPsAndelSærbidragBeregning.beregn(beregnBPsAndelSærbidragGrunnlagPeriodisert),
+                    grunnlag = beregnBPsAndelSærbidragGrunnlagPeriodisert,
                 ),
             )
         }
     }
 
-    // Validerer at input-verdier til BPsAndelSaertilskuddsberegning er gyldige
-    fun validerInput(grunnlag: BeregnBPsAndelSaertilskuddGrunnlag): List<Avvik> {
+    // Validerer at input-verdier til BPsAndelSærbidragsberegning er gyldige
+    fun validerInput(grunnlag: BeregnBPsAndelSærbidragGrunnlag): List<Avvik> {
         val avvikListe =
             PeriodeUtil.validerBeregnPeriodeInput(
                 beregnDatoFom = grunnlag.beregnDatoFra,
