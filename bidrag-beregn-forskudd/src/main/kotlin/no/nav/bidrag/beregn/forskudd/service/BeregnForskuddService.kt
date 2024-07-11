@@ -30,7 +30,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSumInntekt
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningForskudd
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettSjablonreferanse
@@ -251,7 +251,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
                         innhold = POJONode(
                             DelberegningBarnIHusstand(
                                 periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
-                                antallBarn = it.antall,
+                                antallBarn = it.antall.toDouble(),
                             ),
                         ),
                         grunnlagsreferanseListe = it.grunnlagsreferanseListe,
@@ -291,7 +291,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
                         referanse = it.referanse,
                         type = Grunnlagstype.SJABLON,
                         innhold = POJONode(
-                            SjablonGrunnlag(
+                            SjablonSjablontallPeriode(
                                 periode = ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil),
                                 sjablon = SjablonTallNavn.from(it.navn),
                                 verdi = it.verdi,
@@ -311,7 +311,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
                     ),
                     type = Grunnlagstype.SJABLON,
                     innhold = POJONode(
-                        SjablonGrunnlag(
+                        SjablonSjablontallPeriode(
                             periode = ÅrMånedsperiode(innslagKapitalinntektSjablon.datoFom!!, innslagKapitalinntektSjablon.datoTom),
                             sjablon = SjablonTallNavn.fromId(innslagKapitalinntektSjablon.typeSjablon!!),
                             verdi = innslagKapitalinntektSjablon.verdi!!,
