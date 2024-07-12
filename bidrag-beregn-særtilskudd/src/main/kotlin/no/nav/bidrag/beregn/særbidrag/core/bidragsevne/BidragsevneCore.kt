@@ -79,7 +79,7 @@ internal class BidragsevneCore(private val bidragsevnePeriode: BidragsevnePeriod
         ResultatPeriodeCore(
             periode = PeriodeCore(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
             resultat = ResultatBeregningCore(it.resultat.beløp),
-            grunnlagsreferanseListe = mapReferanseListe(it),
+            grunnlagsreferanseListe = mapReferanseListe(it).toMutableList(),
         )
     }
 

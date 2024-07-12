@@ -39,9 +39,8 @@ abstract class CoreMapper {
     fun finnInnslagKapitalinntekt(sjablontallListe: List<Sjablontall>) =
         sjablontallListe.firstOrNull { it.typeSjablon == SjablonTallNavn.INNSLAG_KAPITALINNTEKT_BELØP.id }?.verdi ?: BigDecimal.ZERO
 
-    fun finnReferanseTilRolle(grunnlagListe: List<GrunnlagDto>, grunnlagstype: Grunnlagstype) =
-        grunnlagListe
-            .firstOrNull { it.type == grunnlagstype }?.referanse ?: throw NoSuchElementException("Grunnlagstype $grunnlagstype mangler i input")
+    fun finnReferanseTilRolle(grunnlagListe: List<GrunnlagDto>, grunnlagstype: Grunnlagstype) = grunnlagListe
+        .firstOrNull { it.type == grunnlagstype }?.referanse ?: throw NoSuchElementException("Grunnlagstype $grunnlagstype mangler i input")
 
     // TODO Kan slås sammen med mapInntekt for forskudd?
     fun mapInntekt(
@@ -80,7 +79,7 @@ abstract class CoreMapper {
             return akkumulerOgPeriodiser(
                 grunnlagListe = inntektGrunnlagListe,
                 referanse = referanseBidragspliktig,
-                clazz = InntektPeriodeCore::class.java
+                clazz = InntektPeriodeCore::class.java,
             )
         } catch (e: Exception) {
             throw IllegalArgumentException(
@@ -202,7 +201,7 @@ abstract class CoreMapper {
         beregnDatoTil: LocalDate,
         sjablonSjablontallListe: List<Sjablontall>,
         sjablontallMap: Map<String, SjablonTallNavn>,
-        criteria: (SjablonTallNavn) -> Boolean
+        criteria: (SjablonTallNavn) -> Boolean,
     ): List<SjablonPeriodeCore> {
         return sjablonSjablontallListe
             .filter { !(it.datoFom!!.isAfter(beregnDatoTil) || it.datoTom!!.isBefore(beregnDatoFra)) }
@@ -212,7 +211,7 @@ abstract class CoreMapper {
                     periode = PeriodeCore(datoFom = it.datoFom!!, datoTil = justerTilDato(it.datoTom)),
                     navn = sjablontallMap.getOrDefault(it.typeSjablon, SjablonTallNavn.DUMMY).navn,
                     nokkelListe = emptyList(),
-                    innholdListe = listOf(SjablonInnholdCore(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = it.verdi!!))
+                    innholdListe = listOf(SjablonInnholdCore(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = it.verdi!!)),
                 )
             }
     }
@@ -221,13 +220,13 @@ abstract class CoreMapper {
         beregnDatoFra: LocalDate,
         beregnDatoTil: LocalDate,
         sjablonSjablontallListe: List<Sjablontall>,
-        sjablontallMap: Map<String, SjablonTallNavn>
+        sjablontallMap: Map<String, SjablonTallNavn>,
     ): List<SjablonPeriodeCore> {
         return mapSjablonSjablontall(
             beregnDatoFra = beregnDatoFra,
             beregnDatoTil = beregnDatoTil,
             sjablonSjablontallListe = sjablonSjablontallListe,
-            sjablontallMap = sjablontallMap
+            sjablontallMap = sjablontallMap,
         ) { it.bidragsevne }
     }
 

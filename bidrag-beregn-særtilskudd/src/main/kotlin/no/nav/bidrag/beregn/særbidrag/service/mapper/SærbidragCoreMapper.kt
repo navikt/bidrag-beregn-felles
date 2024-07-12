@@ -5,9 +5,12 @@ import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto.BeregnBidragsevneRes
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.BeregnBPsAndelSærbidragResultatCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BPsAndelSærbidragPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BeregnSærbidragGrunnlagCore
+import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BetaltAvBpPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BidragsevnePeriodeCore
+import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUtgift
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import java.time.LocalDate
@@ -19,7 +22,6 @@ internal object SærbidragCoreMapper : CoreMapper() {
         beregnBidragsevneResultatCore: BeregnBidragsevneResultatCore,
         beregnBPsAndelSærbidragResultatCore: BeregnBPsAndelSærbidragResultatCore,
     ): BeregnSærbidragGrunnlagCore {
-
         // Løper gjennom output fra beregning av bidragsevne og bygger opp ny input-liste til core
         val bidragsevnePeriodeCoreListe =
             beregnBidragsevneResultatCore.resultatPeriodeListe
@@ -48,6 +50,7 @@ internal object SærbidragCoreMapper : CoreMapper() {
             beregnDatoFra = beregnGrunnlag.periode.fom.atDay(1),
             beregnDatoTil = beregnGrunnlag.periode.til!!.atDay(1),
             søknadsbarnPersonId = mapSøknadsbarn(beregnGrunnlag)!!.verdi,
+            betaltAvBpPeriodeListe = mapUtgift(beregnGrunnlag),
             bidragsevnePeriodeListe = bidragsevnePeriodeCoreListe,
             bPsAndelSærbidragPeriodeListe = bpAndelSærbidragPeriodeCoreListe,
         )
@@ -64,6 +67,28 @@ internal object SærbidragCoreMapper : CoreMapper() {
         } catch (e: Exception) {
             throw IllegalArgumentException(
                 "Ugyldig input ved beregning av særbidrag. Innhold i Grunnlagstype.PERSON_SØKNADSBARN er ikke gyldig: " + e.message,
+            )
+        }
+    }
+
+    private fun mapUtgift(beregnSærbidragGrunnlag: BeregnGrunnlag): List<BetaltAvBpPeriodeCore> {
+        try {
+            return beregnSærbidragGrunnlag.grunnlagListe
+                .filtrerOgKonverterBasertPåEgenReferanse<DelberegningUtgift>(Grunnlagstype.DELBEREGNING_UTGIFT)
+                .map {
+                    BetaltAvBpPeriodeCore(
+                        referanse = it.referanse,
+                        periode =
+                        PeriodeCore(
+                            datoFom = it.innhold.periode.toDatoperiode().fom,
+                            datoTil = it.innhold.periode.toDatoperiode().til,
+                        ),
+                        beløp = it.innhold.sumBetaltAvBp,
+                    )
+                }
+        } catch (e: Exception) {
+            throw IllegalArgumentException(
+                "Ugyldig input ved beregning av særlige utgifter. Innhold i Grunnlagstype.DELBEREGNING_UTGIFT er ikke gyldig: " + e.message,
             )
         }
     }

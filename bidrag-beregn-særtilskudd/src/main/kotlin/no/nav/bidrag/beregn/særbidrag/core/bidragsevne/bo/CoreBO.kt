@@ -38,17 +38,17 @@ data class GrunnlagBeregning(
 data class Inntekt(
     val referanse: String,
     val inntektType: String,
-    val inntektBeløp: BigDecimal
+    val inntektBeløp: BigDecimal,
 )
 
 data class AntallBarnIHusstand(
     val referanse: String,
-    val antallBarn: Double
+    val antallBarn: Double,
 )
 
 data class BostatusVoksneIHusstand(
     val referanse: String,
-    val borMedAndre: Boolean
+    val borMedAndre: Boolean,
 )
 
 // Hjelpeklasser

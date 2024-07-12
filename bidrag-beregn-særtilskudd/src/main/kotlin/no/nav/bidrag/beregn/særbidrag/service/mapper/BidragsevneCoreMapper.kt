@@ -19,16 +19,15 @@ internal object BidragsevneCoreMapper : CoreMapper() {
         sjablontallMap: Map<String, SjablonTallNavn>,
         sjablonListe: SjablonListe,
     ): BeregnBidragsevneGrunnlagCore {
-
         // Mapper grunnlagstyper til input for core
         val inntektBPPeriodeCoreListe =
             mapInntekt(
                 beregnSærbidragrunnlag = beregnGrunnlag,
                 referanseBidragspliktig = finnReferanseTilRolle(
                     grunnlagListe = beregnGrunnlag.grunnlagListe,
-                    grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG
+                    grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
                 ),
-                innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntekt(sjablonListe.sjablonSjablontallResponse)
+                innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntekt(sjablonListe.sjablonSjablontallResponse),
             )
         val barnIHusstandenPeriodeCoreListe = mapBarnIHusstanden(beregnGrunnlag)
         val voksneIHusstandenPeriodeCoreListe = mapVoksneIHusstanden(beregnGrunnlag)
@@ -46,7 +45,7 @@ internal object BidragsevneCoreMapper : CoreMapper() {
                 beregnDatoTil = beregnGrunnlag.periode.til!!.atDay(1),
                 sjablonSjablontallListe = sjablonListe.sjablonSjablontallResponse,
                 sjablontallMap = sjablontallMap,
-                criteria = { it.bidragsevne }
+                criteria = { it.bidragsevne },
             ),
         )
         sjablonPeriodeCoreListe.addAll(

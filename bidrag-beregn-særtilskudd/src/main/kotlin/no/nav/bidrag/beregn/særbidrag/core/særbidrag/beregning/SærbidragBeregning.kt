@@ -12,20 +12,23 @@ class SærbidragBeregning : FellesBeregning() {
         return when {
             grunnlag.bidragsevne.beløp < grunnlag.bPsAndelSærbidrag.andelBeløp ->
                 ResultatBeregning(
+                    beregnetBeløp = BigDecimal.ZERO,
+                    resultatKode = Resultatkode.SÆRBIDRAG_IKKE_FULL_BIDRAGSEVNE,
                     resultatBeløp = BigDecimal.ZERO,
-                    resultatkode = Resultatkode.SÆRBIDRAG_IKKE_FULL_BIDRAGSEVNE,
                 )
 
             grunnlag.bPsAndelSærbidrag.barnetErSelvforsørget ->
                 ResultatBeregning(
+                    beregnetBeløp = BigDecimal.ZERO,
+                    resultatKode = Resultatkode.BARNET_ER_SELVFORSØRGET,
                     resultatBeløp = BigDecimal.ZERO,
-                    resultatkode = Resultatkode.BARNET_ER_SELVFORSØRGET,
                 )
 
             else ->
                 ResultatBeregning(
-                    resultatBeløp = grunnlag.bPsAndelSærbidrag.andelBeløp,
-                    resultatkode = Resultatkode.SÆRBIDRAG_INNVILGET,
+                    beregnetBeløp = grunnlag.bPsAndelSærbidrag.andelBeløp,
+                    resultatKode = Resultatkode.SÆRBIDRAG_INNVILGET,
+                    resultatBeløp = maxOf(BigDecimal.ZERO, grunnlag.bPsAndelSærbidrag.andelBeløp.subtract(grunnlag.betaltAvBp.beløp)),
                 )
         }
     }

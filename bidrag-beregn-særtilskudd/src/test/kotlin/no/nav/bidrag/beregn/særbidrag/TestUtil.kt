@@ -41,6 +41,7 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 object TestUtil {
+    const val BETALT_AV_BP_REFERANSE = "BETALT_AV_BP_REFERANSE"
     const val BIDRAGSEVNE_REFERANSE = "BIDRAGSEVNE_REFERANSE"
     const val BPS_ANDEL_SÆRBIDRAG_REFERANSE = "BPS_ANDEL_SÆRBIDRAG_REFERANSE"
     const val INNTEKT_REFERANSE = "INNTEKT_REFERANSE"
@@ -234,7 +235,7 @@ object TestUtil {
             no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto.ResultatPeriodeCore(
                 periode = PeriodeCore(datoFom = LocalDate.parse("2020-08-01"), datoTil = LocalDate.parse("2020-09-01")),
                 resultat = no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto.ResultatBeregningCore(BigDecimal.valueOf(100)),
-                grunnlagsreferanseListe = listOf(
+                grunnlagsreferanseListe = mutableListOf(
                     INNTEKT_REFERANSE,
                     SKATTEKLASSE_REFERANSE,
                     BOSTATUS_REFERANSE,
@@ -243,7 +244,11 @@ object TestUtil {
                 ),
             ),
         )
-        return BeregnBidragsevneResultatCore(resultatPeriodeListe = bidragPeriodeResultatListe, sjablonListe = mutableListOf(), avvikListe = emptyList())
+        return BeregnBidragsevneResultatCore(
+            resultatPeriodeListe = bidragPeriodeResultatListe,
+            sjablonListe = mutableListOf(),
+            avvikListe = emptyList(),
+        )
     }
 
     // Bygger opp BeregnBidragsevneResultatCore med avvik
@@ -294,7 +299,7 @@ object TestUtil {
                     resultatAndelBeløp = BigDecimal.valueOf(100),
                     barnetErSelvforsørget = false,
                 ),
-                grunnlagsreferanseListe = listOf(
+                grunnlagsreferanseListe = mutableListOf(
                     INNTEKT_REFERANSE,
                     INNTEKT_REFERANSE,
                     INNTEKT_REFERANSE,
@@ -344,8 +349,8 @@ object TestUtil {
             ResultatPeriodeCore(
                 PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
                 "1",
-                ResultatBeregningCore(BigDecimal.valueOf(100), "SÆRBIDRAG_INNVILGET"),
-                listOf(INNTEKT_REFERANSE, BIDRAGSEVNE_REFERANSE),
+                ResultatBeregningCore(BigDecimal.valueOf(100), "SÆRBIDRAG_INNVILGET", BigDecimal.valueOf(100)),
+                mutableListOf(INNTEKT_REFERANSE, BIDRAGSEVNE_REFERANSE),
             ),
         )
         return BeregnSærbidragResultatCore(beregnetSærbidragPeriodeListe, emptyList())

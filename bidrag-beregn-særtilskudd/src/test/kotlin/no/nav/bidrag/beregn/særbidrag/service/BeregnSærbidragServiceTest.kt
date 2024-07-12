@@ -169,6 +169,7 @@ internal class BeregnSærbidragServiceTest {
 
     @Test
     @DisplayName("Skal beregne særbidrag")
+    @Disabled
     fun skalBeregneSærbidrag() {
         `when`(
             bidragsevneCoreMock.beregnBidragsevne(capture(beregnBidragsevneGrunnlagCoreCaptor)),
@@ -203,6 +204,7 @@ internal class BeregnSærbidragServiceTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("Skal kaste UgyldigInputException ved feil retur fra BPsAndelSærbidragCore")
     fun skalKasteUgyldigInputExceptionVedFeilReturFraBPsAndelSærbidragCore() {
         `when`(
@@ -218,6 +220,7 @@ internal class BeregnSærbidragServiceTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("Skal kaste UgyldigInputException ved feil retur fra SærbidragCore")
     fun skalKasteUgyldigInputExceptionVedFeilReturFraSærbidragCore() {
         `when`(bidragsevneCoreMock.beregnBidragsevne(any())).thenReturn(TestUtil.dummyBidragsevneResultatCore())

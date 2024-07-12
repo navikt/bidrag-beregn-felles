@@ -4,6 +4,17 @@ import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.bo.PeriodisertGrunnlag
 import java.math.BigDecimal
 
+data class BetaltAvBpPeriode(val referanse: String, private val periode: Periode, val beløp: BigDecimal) : PeriodisertGrunnlag {
+    constructor(betaltAvBpPeriode: BetaltAvBpPeriode) :
+        this(
+            betaltAvBpPeriode.referanse,
+            betaltAvBpPeriode.periode.justerDatoer(),
+            betaltAvBpPeriode.beløp,
+        )
+
+    override fun getPeriode(): Periode = periode
+}
+
 data class BidragsevnePeriode(val referanse: String, private val periode: Periode, val beløp: BigDecimal) : PeriodisertGrunnlag {
     constructor(bidragsevnePeriode: BidragsevnePeriode) :
         this(

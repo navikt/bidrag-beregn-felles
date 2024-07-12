@@ -10,6 +10,7 @@ import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BPsAndelSærbidrag
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BeregnSærbidragGrunnlag
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BeregnSærbidragListeGrunnlag
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BeregnSærbidragResultat
+import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BetaltAvBp
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.Bidragsevne
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.GrunnlagBeregning
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.ResultatPeriode
@@ -35,10 +36,8 @@ class SærbidragPeriode(private val særbidragBeregning: SærbidragBeregning = S
     }
 
     // Lager grunnlag til beregning
-    private fun lagGrunnlagTilBeregning(
-        periodeGrunnlag: BeregnSærbidragGrunnlag,
-        grunnlagTilBeregning: BeregnSærbidragListeGrunnlag
-    ) {
+    private fun lagGrunnlagTilBeregning(periodeGrunnlag: BeregnSærbidragGrunnlag, grunnlagTilBeregning: BeregnSærbidragListeGrunnlag) {
+        grunnlagTilBeregning.betaltAvBpPeriodeListe = periodeGrunnlag.betaltAvBpPeriodeListe.map { it }
         grunnlagTilBeregning.bidragsevnePeriodeListe = periodeGrunnlag.bidragsevnePeriodeListe.map { it }
         grunnlagTilBeregning.bPsAndelSærbidragPeriodeListe = periodeGrunnlag.bPsAndelSærbidragPeriodeListe.map { it }
     }
@@ -48,6 +47,7 @@ class SærbidragPeriode(private val særbidragBeregning: SærbidragBeregning = S
         // Bygger opp liste over perioder
         beregnSærbidragListeGrunnlag.bruddPeriodeListe = Periodiserer()
             .addBruddpunkt(periodeGrunnlag.beregnDatoFra) // For å sikre bruddpunkt på start-beregning-fra-dato
+            .addBruddpunkter(beregnSærbidragListeGrunnlag.betaltAvBpPeriodeListe)
             .addBruddpunkter(beregnSærbidragListeGrunnlag.bidragsevnePeriodeListe)
             .addBruddpunkter(beregnSærbidragListeGrunnlag.bPsAndelSærbidragPeriodeListe)
             .addBruddpunkt(periodeGrunnlag.beregnDatoTil) // For å sikre bruddpunkt på start-beregning-til-dato
@@ -58,6 +58,12 @@ class SærbidragPeriode(private val særbidragBeregning: SærbidragBeregning = S
     // Løper gjennom periodene og finner matchende verdi for hver kategori. Kaller beregningsmodulen for hver beregningsperiode
     private fun beregnSærbidragPerPeriode(søknadsbarnPersonId: String, grunnlag: BeregnSærbidragListeGrunnlag) {
         grunnlag.bruddPeriodeListe.forEach { beregningsperiode: Periode ->
+            val betaltAvBp = grunnlag.betaltAvBpPeriodeListe.stream()
+                .filter { it.getPeriode().overlapperMed(beregningsperiode) }
+                .map { BetaltAvBp(referanse = it.referanse, beløp = it.beløp) }
+                .findFirst()
+                .orElseThrow { IllegalArgumentException("Grunnlagsobjekt BETALT_AV_BP mangler data for periode: ${beregningsperiode.getPeriode()}") }
+
             val bidragsevne = grunnlag.bidragsevnePeriodeListe.stream()
                 .filter { it.getPeriode().overlapperMed(beregningsperiode) }
                 .map { Bidragsevne(referanse = it.referanse, beløp = it.beløp) }
@@ -84,6 +90,7 @@ class SærbidragPeriode(private val særbidragBeregning: SærbidragBeregning = S
             // Kaller beregningsmodulen for hver beregningsperiode
             val beregnSærbidragGrunnlagPeriodisert =
                 GrunnlagBeregning(
+                    betaltAvBp = betaltAvBp,
                     bidragsevne = bidragsevne,
                     bPsAndelSærbidrag = bPsAndelSærbidrag,
                 )

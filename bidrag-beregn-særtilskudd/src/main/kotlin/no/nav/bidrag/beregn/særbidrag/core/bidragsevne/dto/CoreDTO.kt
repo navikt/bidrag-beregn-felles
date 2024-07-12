@@ -31,7 +31,7 @@ data class BeregnBidragsevneResultatCore(
 data class ResultatPeriodeCore(
     override val periode: PeriodeCore,
     val resultat: ResultatBeregningCore,
-    override val grunnlagsreferanseListe: List<String>,
+    override val grunnlagsreferanseListe: MutableList<String>,
 ) : IResultatPeriode
 
 data class ResultatBeregningCore(

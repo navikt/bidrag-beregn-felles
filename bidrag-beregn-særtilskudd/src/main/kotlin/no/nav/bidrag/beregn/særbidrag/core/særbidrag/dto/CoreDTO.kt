@@ -11,14 +11,21 @@ data class BeregnSærbidragGrunnlagCore(
     val beregnDatoFra: LocalDate,
     val beregnDatoTil: LocalDate,
     val søknadsbarnPersonId: String,
+    val betaltAvBpPeriodeListe: List<BetaltAvBpPeriodeCore>,
     val bidragsevnePeriodeListe: List<BidragsevnePeriodeCore>,
     val bPsAndelSærbidragPeriodeListe: List<BPsAndelSærbidragPeriodeCore>,
+)
+
+data class BetaltAvBpPeriodeCore(
+    val referanse: String,
+    val periode: PeriodeCore,
+    val beløp: BigDecimal,
 )
 
 data class BidragsevnePeriodeCore(
     val referanse: String,
     val periode: PeriodeCore,
-    val beløp: BigDecimal
+    val beløp: BigDecimal,
 )
 
 data class BPsAndelSærbidragPeriodeCore(
@@ -32,17 +39,18 @@ data class BPsAndelSærbidragPeriodeCore(
 // Resultatperiode
 data class BeregnSærbidragResultatCore(
     val resultatPeriodeListe: List<ResultatPeriodeCore>,
-    val avvikListe: List<AvvikCore>
+    val avvikListe: List<AvvikCore>,
 )
 
 data class ResultatPeriodeCore(
     override val periode: PeriodeCore,
     val søknadsbarnPersonId: String,
     val resultat: ResultatBeregningCore,
-    override val grunnlagsreferanseListe: List<String>,
+    override val grunnlagsreferanseListe: MutableList<String>,
 ) : IResultatPeriode
 
 data class ResultatBeregningCore(
-    val beløp: BigDecimal,
-    val kode: String
+    val beregnetBeløp: BigDecimal,
+    val resultatKode: String,
+    val resultatBeløp: BigDecimal,
 )

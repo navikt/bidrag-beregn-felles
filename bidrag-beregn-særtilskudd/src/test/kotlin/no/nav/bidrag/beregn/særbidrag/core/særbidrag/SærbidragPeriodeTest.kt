@@ -5,6 +5,7 @@ import no.nav.bidrag.beregn.særbidrag.TestUtil
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.beregning.SærbidragBeregning
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BPsAndelSærbidragPeriode
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BeregnSærbidragGrunnlag
+import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BetaltAvBpPeriode
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BidragsevnePeriode
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.periode.SærbidragPeriode
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
@@ -23,6 +24,14 @@ class SærbidragPeriodeTest {
     @Test
     @DisplayName("Test at resultatperiode er innenfor beregnDatoFra og beregnDatoTil og at ingen andre perioder dannes")
     fun testPeriode() {
+        val betaltAvBpPeriodeListe = listOf(
+            BetaltAvBpPeriode(
+                referanse = TestUtil.BETALT_AV_BP_REFERANSE,
+                periode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2020-01-01")),
+                beløp = BigDecimal.ZERO,
+            ),
+        )
+
         val bidragsevnePeriodeListe = listOf(
             BidragsevnePeriode(
                 referanse = TestUtil.BIDRAGSEVNE_REFERANSE,
@@ -50,6 +59,7 @@ class SærbidragPeriodeTest {
             beregnDatoFra = LocalDate.parse("2019-08-01"),
             beregnDatoTil = LocalDate.parse("2019-09-01"),
             søknadsbarnPersonId = "1",
+            betaltAvBpPeriodeListe = betaltAvBpPeriodeListe,
             bidragsevnePeriodeListe = bidragsevnePeriodeListe,
             bPsAndelSærbidragPeriodeListe = bPsAndelSærbidragPeriodeListe,
         )
@@ -60,9 +70,9 @@ class SærbidragPeriodeTest {
             { assertThat(resultat.resultatPeriodeListe).hasSize(1) },
             { assertThat(resultat.resultatPeriodeListe[0].periode.datoFom).isEqualTo(LocalDate.parse("2019-08-01")) },
             { assertThat(resultat.resultatPeriodeListe[0].periode.datoTil).isEqualTo(LocalDate.parse("2019-09-01")) },
-            { assertThat(resultat.resultatPeriodeListe[0].resultat.resultatBeløp.toDouble()).isEqualTo(4242.0) },
+            { assertThat(resultat.resultatPeriodeListe[0].resultat.beregnetBeløp.toDouble()).isEqualTo(4242.0) },
             {
-                assertThat(resultat.resultatPeriodeListe[0].resultat.resultatkode).isEqualTo(Resultatkode.SÆRBIDRAG_INNVILGET)
+                assertThat(resultat.resultatPeriodeListe[0].resultat.resultatKode).isEqualTo(Resultatkode.SÆRBIDRAG_INNVILGET)
             },
         )
     }

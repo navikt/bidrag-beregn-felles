@@ -74,7 +74,7 @@ internal class BPsAndelSærbidragCore(
                 resultatAndelBeløp = it.resultat.resultatAndelBeløp,
                 barnetErSelvforsørget = it.resultat.barnetErSelvforsørget,
             ),
-            grunnlagsreferanseListe = mapReferanseListe(it),
+            grunnlagsreferanseListe = mapReferanseListe(it).toMutableList(),
         )
     }
 

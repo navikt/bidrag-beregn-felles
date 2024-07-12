@@ -39,7 +39,7 @@ class BPsAndelSærbidragPeriode(private val bPsAndelSærbidragBeregning: BPsAnde
     // Lager grunnlag til beregning
     private fun lagGrunnlagTilBeregning(
         periodeGrunnlag: BeregnBPsAndelSærbidragGrunnlag,
-        grunnlagTilBeregning: BeregnBPsAndelSærbidragListeGrunnlag
+        grunnlagTilBeregning: BeregnBPsAndelSærbidragListeGrunnlag,
     ) {
         grunnlagTilBeregning.inntektBPPeriodeListe = periodeGrunnlag.inntektBPPeriodeListe.map { it }
         grunnlagTilBeregning.inntektBMPeriodeListe = periodeGrunnlag.inntektBMPeriodeListe.map { it }
@@ -49,10 +49,7 @@ class BPsAndelSærbidragPeriode(private val bPsAndelSærbidragBeregning: BPsAnde
     }
 
     // Lager bruddperioder ved å løpe gjennom alle periodelistene
-    private fun lagBruddperioder(
-        periodeGrunnlag: BeregnBPsAndelSærbidragGrunnlag,
-        grunnlagTilBeregning: BeregnBPsAndelSærbidragListeGrunnlag,
-    ) {
+    private fun lagBruddperioder(periodeGrunnlag: BeregnBPsAndelSærbidragGrunnlag, grunnlagTilBeregning: BeregnBPsAndelSærbidragListeGrunnlag) {
         // Regler for beregning av BPs andel ble endret fra 01.01.2009, alle perioder etter da skal beregnes på ny måte.
         // Det må derfor legges til brudd på denne datoen
         val datoRegelendringer = listOf(Periode(datoFom = LocalDate.parse("2009-01-01"), datoTil = LocalDate.parse("2009-01-01")))
@@ -121,7 +118,7 @@ class BPsAndelSærbidragPeriode(private val bPsAndelSærbidragBeregning: BPsAnde
         val avvikListe =
             PeriodeUtil.validerBeregnPeriodeInput(
                 beregnDatoFom = grunnlag.beregnDatoFra,
-                beregnDatoTil = grunnlag.beregnDatoTil
+                beregnDatoTil = grunnlag.beregnDatoTil,
             ).toMutableList()
 
         avvikListe.addAll(

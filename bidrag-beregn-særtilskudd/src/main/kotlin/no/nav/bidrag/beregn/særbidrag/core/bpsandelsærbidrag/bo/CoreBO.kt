@@ -19,7 +19,7 @@ data class BeregnBPsAndelSærbidragGrunnlag(
 
 // Resultatperiode
 data class BeregnBPsAndelSærbidragResultat(
-    val resultatPeriodeListe: List<ResultatPeriode>
+    val resultatPeriodeListe: List<ResultatPeriode>,
 )
 
 // Resultat
@@ -47,13 +47,13 @@ data class GrunnlagBeregning(
 
 data class Utgift(
     val referanse: String,
-    val beløp: BigDecimal
+    val beløp: BigDecimal,
 )
 
 data class Inntekt(
     val referanse: String,
     val inntektType: String,
-    val inntektBeløp: BigDecimal
+    val inntektBeløp: BigDecimal,
 )
 
 // Hjelpeklasser

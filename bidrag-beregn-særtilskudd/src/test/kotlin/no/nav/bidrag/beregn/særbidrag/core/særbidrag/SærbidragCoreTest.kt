@@ -13,12 +13,14 @@ import no.nav.bidrag.beregn.særbidrag.TestUtil
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.beregning.SærbidragBeregning
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BPsAndelSærbidrag
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BeregnSærbidragResultat
+import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BetaltAvBp
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.Bidragsevne
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.GrunnlagBeregning
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.ResultatBeregning
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.ResultatPeriode
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BPsAndelSærbidragPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BeregnSærbidragGrunnlagCore
+import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BetaltAvBpPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BidragsevnePeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.periode.SærbidragPeriode
 import no.nav.bidrag.domene.enums.beregning.Avvikstype
@@ -91,7 +93,7 @@ internal class SærbidragCoreTest {
             { assertThat(resultatCore.resultatPeriodeListe).hasSize(1) },
             { assertThat(resultatCore.resultatPeriodeListe[0].periode.datoFom).isEqualTo(LocalDate.parse("2017-01-01")) },
             { assertThat(resultatCore.resultatPeriodeListe[0].periode.datoTil).isEqualTo(LocalDate.parse("2020-01-01")) },
-            { assertThat(resultatCore.resultatPeriodeListe[0].grunnlagsreferanseListe).hasSize(2) },
+            { assertThat(resultatCore.resultatPeriodeListe[0].grunnlagsreferanseListe).hasSize(3) },
         )
     }
 
@@ -116,6 +118,14 @@ internal class SærbidragCoreTest {
     }
 
     private fun byggSærbidragPeriodeGrunnlagCore() {
+        val betaltAvBpPeriodeListe = listOf(
+            BetaltAvBpPeriodeCore(
+                referanse = TestUtil.BETALT_AV_BP_REFERANSE,
+                periode = PeriodeCore(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2020-01-01")),
+                beløp = BigDecimal.ZERO,
+            ),
+        )
+
         val bidragsevnePeriodeListe = listOf(
             BidragsevnePeriodeCore(
                 referanse = TestUtil.BIDRAGSEVNE_REFERANSE,
@@ -140,6 +150,7 @@ internal class SærbidragCoreTest {
             beregnDatoFra = LocalDate.parse("2017-01-01"),
             beregnDatoTil = LocalDate.parse("2020-01-01"),
             søknadsbarnPersonId = "1",
+            betaltAvBpPeriodeListe = betaltAvBpPeriodeListe,
             bidragsevnePeriodeListe = bidragsevnePeriodeListe,
             bPsAndelSærbidragPeriodeListe = bPsAndelSærbidragPeriodeListe,
         )
@@ -171,13 +182,17 @@ internal class SærbidragCoreTest {
         .toList()
 
     private fun byggSærbidragPeriodeResultat() {
-
         val periodeResultatListe = listOf(
             ResultatPeriode(
                 periode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2018-01-01")),
                 søknadsbarnPersonId = "1",
-                resultat = ResultatBeregning(resultatBeløp = BigDecimal.valueOf(1000), resultatkode = Resultatkode.SÆRBIDRAG_INNVILGET),
+                resultat = ResultatBeregning(
+                    beregnetBeløp = BigDecimal.valueOf(1000),
+                    resultatKode = Resultatkode.SÆRBIDRAG_INNVILGET,
+                    resultatBeløp = BigDecimal.valueOf(1000),
+                ),
                 grunnlag = GrunnlagBeregning(
+                    betaltAvBp = BetaltAvBp(referanse = TestUtil.BETALT_AV_BP_REFERANSE, beløp = BigDecimal.ZERO),
                     bidragsevne = Bidragsevne(referanse = TestUtil.BIDRAGSEVNE_REFERANSE, beløp = BigDecimal.valueOf(1000)),
                     bPsAndelSærbidrag = BPsAndelSærbidrag(
                         referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,

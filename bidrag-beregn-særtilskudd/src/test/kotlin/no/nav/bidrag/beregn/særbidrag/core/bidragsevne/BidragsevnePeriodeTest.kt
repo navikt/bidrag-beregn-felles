@@ -86,7 +86,11 @@ internal class BidragsevnePeriodeTest {
             { assertThat(avvikListe[0].avvikType).isEqualTo(Avvikstype.PERIODE_MANGLER_DATA) },
             { assertThat(avvikListe[1].avvikTekst).isEqualTo("Siste dato i inntektPeriodeListe (2020-01-01) er før beregnDatoTil (2021-01-01)") },
             { assertThat(avvikListe[1].avvikType).isEqualTo(Avvikstype.PERIODE_MANGLER_DATA) },
-            { assertThat(avvikListe[2].avvikTekst).isEqualTo("Siste dato i barnIHusstandPeriodeListe (2020-01-01) er før beregnDatoTil (2021-01-01)") },
+            {
+                assertThat(
+                    avvikListe[2].avvikTekst,
+                ).isEqualTo("Siste dato i barnIHusstandPeriodeListe (2020-01-01) er før beregnDatoTil (2021-01-01)")
+            },
             { assertThat(avvikListe[2].avvikType).isEqualTo(Avvikstype.PERIODE_MANGLER_DATA) },
             {
                 assertThat(avvikListe[3].avvikTekst)

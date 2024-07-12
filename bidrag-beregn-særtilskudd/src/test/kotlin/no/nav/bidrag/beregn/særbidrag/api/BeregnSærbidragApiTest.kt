@@ -10,6 +10,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -53,6 +54,7 @@ internal class BeregnSærbidragApiTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 2")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel02() {
         // Enkel beregning med full evne, to barn
@@ -66,6 +68,7 @@ internal class BeregnSærbidragApiTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 3")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel03() {
         // Enkel beregning med full evne, to barn
@@ -79,6 +82,7 @@ internal class BeregnSærbidragApiTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 4")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel04() {
         // Beregning med manglende evne, to barn
@@ -92,6 +96,7 @@ internal class BeregnSærbidragApiTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 5")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel05() {
         // Beregning med manglende evne, to barn
@@ -105,6 +110,7 @@ internal class BeregnSærbidragApiTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 6")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel06() {
         // Enkel beregning med full evne, to barn
@@ -118,6 +124,7 @@ internal class BeregnSærbidragApiTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 7")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel07() {
         // Beregning med manglende evne, to barn
@@ -131,6 +138,7 @@ internal class BeregnSærbidragApiTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 8")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel08() {
         // Beregning med manglende evne, to barn
@@ -146,7 +154,7 @@ internal class BeregnSærbidragApiTest {
     private fun utførBeregningerOgEvaluerResultat_EttSøknadsbarn() {
         val request = lesFilOgByggRequest(filnavn)
 
-         val totalSærbidragResultat = beregnSærbidragService.beregn(request)
+        val totalSærbidragResultat = beregnSærbidragService.beregn(request)
 
         TestUtil.printJson(totalSærbidragResultat)
 

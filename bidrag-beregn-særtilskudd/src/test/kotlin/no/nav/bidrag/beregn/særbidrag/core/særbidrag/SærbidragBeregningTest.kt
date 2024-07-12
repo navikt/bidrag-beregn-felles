@@ -3,6 +3,7 @@ package no.nav.bidrag.beregn.særbidrag.core.særbidrag
 import no.nav.bidrag.beregn.særbidrag.TestUtil
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.beregning.SærbidragBeregning
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BPsAndelSærbidrag
+import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BetaltAvBp
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.Bidragsevne
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.GrunnlagBeregning
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
@@ -20,6 +21,7 @@ internal class SærbidragBeregningTest {
     @Test
     fun testFullEvne() {
         val grunnlagBeregningPeriodisert = GrunnlagBeregning(
+            betaltAvBp = BetaltAvBp(referanse = TestUtil.BETALT_AV_BP_REFERANSE, beløp = BigDecimal.ZERO),
             bidragsevne = Bidragsevne(referanse = TestUtil.BIDRAGSEVNE_REFERANSE, beløp = BigDecimal.valueOf(11069)),
             bPsAndelSærbidrag = BPsAndelSærbidrag(
                 referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,
@@ -41,6 +43,7 @@ internal class SærbidragBeregningTest {
     @Test
     fun testEvneErLavereEnnBPsAndel() {
         val grunnlagBeregningPeriodisert = GrunnlagBeregning(
+            betaltAvBp = BetaltAvBp(referanse = TestUtil.BETALT_AV_BP_REFERANSE, beløp = BigDecimal.ZERO),
             bidragsevne = Bidragsevne(referanse = TestUtil.BIDRAGSEVNE_REFERANSE, beløp = BigDecimal.valueOf(3000)),
             bPsAndelSærbidrag = BPsAndelSærbidrag(
                 referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,
@@ -62,6 +65,7 @@ internal class SærbidragBeregningTest {
     @Test
     fun testBarnetErSelvforsørget() {
         val grunnlagBeregningPeriodisert = GrunnlagBeregning(
+            betaltAvBp = BetaltAvBp(referanse = TestUtil.BETALT_AV_BP_REFERANSE, beløp = BigDecimal.ZERO),
             bidragsevne = Bidragsevne(referanse = TestUtil.BIDRAGSEVNE_REFERANSE, beløp = BigDecimal.valueOf(10000)),
             bPsAndelSærbidrag = BPsAndelSærbidrag(
                 referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,
