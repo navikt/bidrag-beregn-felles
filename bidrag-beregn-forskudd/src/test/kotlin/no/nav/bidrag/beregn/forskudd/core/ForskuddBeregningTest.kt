@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
 import java.math.BigDecimal
+import java.math.RoundingMode
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 internal class ForskuddBeregningTest {
@@ -33,7 +34,7 @@ internal class ForskuddBeregningTest {
     private val forventetResultatBelop50Prosent = BigDecimal.valueOf(850)
     private val forventetResultatBelop75Prosent = BigDecimal.valueOf(1280)
     private val forventetResultatBelop100Prosent = BigDecimal.valueOf(1710)
-    private val forventetResultatBelop125Prosent = BigDecimal.valueOf(2130)
+    private val forventetResultatBelop125Prosent = BigDecimal.valueOf(2140)
 
     @Test
     @Order(1)
@@ -646,6 +647,39 @@ internal class ForskuddBeregningTest {
         )
 
         printGrunnlagResultat(resultat, "***  ")
+    }
+
+    @Test
+    @Order(16)
+    @DisplayName("Tester at satser for 2024 beregnes riktig basert på verdi av sjablon 0038")
+    fun testAvSatser2024() {
+        val forventetRedusertForskudd = BigDecimal.valueOf(990)
+        val forventetOrdinærtForskudd = BigDecimal.valueOf(1480)
+        val forventetForhøyetForskudd = BigDecimal.valueOf(1970)
+        val forventetForhøyetForskudd11År = BigDecimal.valueOf(2460)
+
+        val prosent50 = BigDecimal.valueOf(50, 2)
+        val prosent75 = BigDecimal.valueOf(75, 2)
+        val prosent125 = BigDecimal.valueOf(125, 2)
+
+        val sjablon0038 = BigDecimal.valueOf(1480)
+
+        val ordinærtForskudd = sjablon0038
+        val uavrundetForskudd100Prosent = ordinærtForskudd.divide(prosent75, 5, RoundingMode.HALF_UP)
+        val forhøyetForskudd = avrund(uavrundetForskudd100Prosent)
+        val redusertForskudd = avrund(uavrundetForskudd100Prosent.multiply(prosent50))
+        val forhøyetForskudd11År = avrund(forhøyetForskudd.multiply(prosent125))
+
+        assertAll(
+            { assertThat(redusertForskudd).isEqualTo(forventetRedusertForskudd) },
+            { assertThat(ordinærtForskudd).isEqualTo(forventetOrdinærtForskudd) },
+            { assertThat(forhøyetForskudd).isEqualTo(forventetForhøyetForskudd) },
+            { assertThat(forhøyetForskudd11År).isEqualTo(forventetForhøyetForskudd11År) },
+        )
+    }
+
+    private fun avrund(belop: BigDecimal): BigDecimal {
+        return belop.divide(BigDecimal.TEN, 0, RoundingMode.HALF_UP).multiply(BigDecimal.TEN)
     }
 
     private fun lagGrunnlag(

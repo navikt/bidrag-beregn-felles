@@ -370,9 +370,6 @@ internal class SivilstandServiceV2 {
         )
 
         return sammenslåttePerioder.sortedBy { it.periodeFom }
-
-//        val komplettTidslinje = leggTilUkjentForPerioderUtenInfo(virkningstidspunkt, sammenslåttePerioder.sortedBy { it.periodeFom })
-//        return komplettTidslinje
     }
 
     // Sekundær periode sjekkes mot primære perioder og justeres til å ikke overlappe med disse. En sekundær periode kan overlappe med 0 til
@@ -490,7 +487,7 @@ internal class SivilstandServiceV2 {
                     )
                 }
 
-                var indeksMatch = 0
+                var indeksMatch = -1
 
                 for (indeks in behandledeOpplysninger.indices) {
                     if (perioderErIdentiske(originalSivilstand, behandledeOpplysninger[indeks])) {
@@ -507,6 +504,7 @@ internal class SivilstandServiceV2 {
                 }
                 val oppdatertbehandledeOpplysninger = mutableListOf<Sivilstand>()
 
+                // Fjerner perioden som skal slettes fra behandledeOpplysninger
                 for (indeks in behandledeOpplysninger.indices) {
                     if (indeks == indeksMatch - 1) {
                         // Periode før periode som skal slettes. Justerer periodeTom til å være lik slettet periodes periodeTom.
@@ -521,7 +519,6 @@ internal class SivilstandServiceV2 {
                     }
                 }
 
-                // Fjerner perioden som skal slettes fra behandledeOpplysninger
                 return slåSammenSammenhengendePerioderMedLikSivilstandskode(virkningstidspunkt, oppdatertbehandledeOpplysninger)
             }
 
@@ -759,7 +756,7 @@ internal class SivilstandServiceV2 {
         val datojustertSivilstandListe = mutableListOf<Sivilstand>()
 
         // sjekk om første element i sivilstandListe har periodeFom etter virkningstidspunkt
-        if (mappetSivilstandListe.first()!!.periodeFom.isAfter(virkningstidspunkt)) {
+        if (mappetSivilstandListe.first().periodeFom.isAfter(virkningstidspunkt)) {
             datojustertSivilstandListe.add(
                 Sivilstand(
                     periodeFom = virkningstidspunkt,
