@@ -115,7 +115,7 @@ internal class BeregnForskuddApiTest {
     fun skalKalleCoreOgReturnereEtResultat_Eksempel01() {
         // Forhøyet forskudd ved 11 år: SB alder > 11 år; BM inntekt 290000; BM antall barn egen husstand 1; BM sivilstatus gift
         filnavn = "src/test/resources/testfiler/forskudd_eksempel1.json"
-        forventetForskuddBeløp = 2080
+        forventetForskuddBeløp = 2090
         forventetForskuddResultatkode = Resultatkode.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT
         forventetForskuddRegel = "REGEL 5"
         utførBeregningerOgEvaluerResultat()

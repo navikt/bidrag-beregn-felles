@@ -12,10 +12,14 @@ import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.time.LocalDate
-import kotlin.math.roundToInt
 
 class ForskuddBeregning {
+    val prosent50 = BigDecimal.valueOf(50, 2)
+    val prosent75 = BigDecimal.valueOf(75, 2)
+    val prosent125 = BigDecimal.valueOf(125, 2)
+
     fun beregn(grunnlag: GrunnlagBeregning): ResultatBeregning {
         val sjablonverdier = hentSjablonverdier(grunnlag.sjablonListe)
 
@@ -179,19 +183,23 @@ class ForskuddBeregning {
     }
 
     // Beregner forskuddsbeløp basert på resultatkode. Resultatet avrundes til nærmeste tikrone.
-    // Forskudd 50%  = Sjablon 0038 * 2/3
-    // Forskudd 75%  = Sjablon 0038
-    // Forskudd 100% = Sjablon 0038 * 4/3
-    // Forskudd 125% = Sjablon 0038 * 5/3
+    // Utgangspunktet er sjablon 0038 (75% sats), men med utgangspunkt i den simuleres bruk av
+    // sjablon 0005 (100% sats) for å få beregningen lik som i Bisys og i samsvar med det som står på nav.no.
     private fun beregnForskudd(resultatkode: Resultatkode, forskuddssats75ProsentBelop: BigDecimal): BigDecimal {
-        val kalkulertResultat = when (resultatkode) {
-            Resultatkode.REDUSERT_FORSKUDD_50_PROSENT -> forskuddssats75ProsentBelop.toDouble() * 2 / 3
-            Resultatkode.ORDINÆRT_FORSKUDD_75_PROSENT -> forskuddssats75ProsentBelop.toDouble()
-            Resultatkode.FORHØYET_FORSKUDD_100_PROSENT -> forskuddssats75ProsentBelop.toDouble() * 4 / 3
-            Resultatkode.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT -> forskuddssats75ProsentBelop.toDouble() * 5 / 3
-            else -> 0.0
+        val uavrundetForskuddssats100ProsentBeløp = forskuddssats75ProsentBelop.divide(prosent75, 5, RoundingMode.HALF_UP)
+        val avrundetForskuddssats100ProsentBeløp = avrund(uavrundetForskuddssats100ProsentBeløp)
+
+        return when (resultatkode) {
+            Resultatkode.REDUSERT_FORSKUDD_50_PROSENT -> avrund(uavrundetForskuddssats100ProsentBeløp.multiply(prosent50))
+            Resultatkode.ORDINÆRT_FORSKUDD_75_PROSENT -> forskuddssats75ProsentBelop
+            Resultatkode.FORHØYET_FORSKUDD_100_PROSENT -> avrund(uavrundetForskuddssats100ProsentBeløp)
+            Resultatkode.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT -> avrund(avrundetForskuddssats100ProsentBeløp.multiply(prosent125))
+            else -> BigDecimal.ZERO
         }
-        return BigDecimal(10 * (kalkulertResultat / 10.0).roundToInt())
+    }
+
+    private fun avrund(belop: BigDecimal): BigDecimal {
+        return belop.divide(BigDecimal.TEN, 0, RoundingMode.HALF_UP).multiply(BigDecimal.TEN)
     }
 
     private fun erUnderInntektsgrense(inntektsgrense: BigDecimal, inntekt: BigDecimal) = inntekt.compareTo(inntektsgrense) < 1
