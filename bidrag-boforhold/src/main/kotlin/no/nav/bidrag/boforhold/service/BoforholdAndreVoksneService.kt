@@ -20,7 +20,7 @@ internal class BoforholdAndreVoksneService {
         // Bygger opp en liste med alle perioder det har bodd en annen voksen i BPs husstand.
         boforholdVoksne.innhentedeOffentligeOpplysninger
             .filter { it.relasjon != Familierelasjon.BARN }
-            .filter { it.fødselsdato.isBefore(virkningstidspunkt.minusYears(18)) }
+            .filter { it.fødselsdato.withDayOfMonth(1).isBefore(virkningstidspunkt.minusYears(18)) }
             .forEach { offentligeBostatusperioder.addAll(it.borISammeHusstandListe) }
 
         val justerteOffentligeBostatusperioder = offentligeBostatusperioder
