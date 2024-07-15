@@ -377,7 +377,8 @@ object InntektUtil {
                         datoFom = FOM_DATO_FORDEL_SKATTEKLASSE2,
                         datoTil = TIL_DATO_FORDEL_SKATTEKLASSE2,
                     ),
-                ) && periodisertInntekt.skatteklasse2
+                ) &&
+            periodisertInntekt.skatteklasse2
         ) {
             return if (periodisertInntekt.summertBelop < periodisertInntekt.sjablon0031NedreInntektsgrenseBelop) {
                 periodisertInntekt.sjablon0004FordelSkatteklasse2Belop.divide(BigDecimal.valueOf(2), 0, RoundingMode.HALF_UP)
