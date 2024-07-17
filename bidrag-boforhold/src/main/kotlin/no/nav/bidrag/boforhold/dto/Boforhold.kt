@@ -1,5 +1,6 @@
 package no.nav.bidrag.boforhold.dto
 
+import com.fasterxml.jackson.annotation.JsonAlias
 import no.nav.bidrag.domene.enums.diverse.Kilde
 import no.nav.bidrag.domene.enums.diverse.TypeEndring
 import no.nav.bidrag.domene.enums.person.Bostatuskode
@@ -72,6 +73,7 @@ data class BoforholdResponse(
 )
 
 data class BoforholdResponseV2(
+    @JsonAlias("relatertPersonPersonId")
     val gjelderPersonId: String?,
     val fødselsdato: LocalDate,
     val periodeFom: LocalDate,

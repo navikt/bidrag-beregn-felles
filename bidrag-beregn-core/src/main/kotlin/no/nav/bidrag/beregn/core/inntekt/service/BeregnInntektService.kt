@@ -46,10 +46,10 @@ internal class BeregnInntektService {
         grunnlag: BeregnValgteInntekterGrunnlag,
         innslagKapitalinntektSjablonverdi: BigDecimal,
     ): List<InntektPerBarn> {
-        val bidragsmottakerIdent = grunnlag.bidragsmottakerIdent
+        val gjelderIdent = grunnlag.gjelderIdent
 
         val generelleInntekterListe = grunnlag.grunnlagListe
-            .filter { it.inntektEiesAvIdent == bidragsmottakerIdent }
+            .filter { it.inntektEiesAvIdent == gjelderIdent }
             .filter { it.inntektGjelderBarnIdent == null }
             .map {
                 InntektsgrunnlagPeriode(
@@ -82,7 +82,7 @@ internal class BeregnInntektService {
         grunnlag: BeregnValgteInntekterGrunnlag,
         innslagKapitalinntektSjablonverdi: BigDecimal,
     ): List<InntektPerBarn> {
-        val bidragsmottakerIdent = grunnlag.bidragsmottakerIdent
+        val bidragsmottakerIdent = grunnlag.gjelderIdent
         val inntektPerBarnListe = mutableListOf<InntektPerBarn>()
 
         grunnlag.barnIdentListe.forEach { barnIdent ->
@@ -147,51 +147,48 @@ internal class BeregnInntektService {
     private fun akkumulerOgPeriodiserInntekter(
         inntektGrunnlagListe: List<InntektsgrunnlagPeriode>,
         periodeListe: List<Periode>,
-    ): List<DelberegningSumInntekt> {
-        return periodeListe
-            .map { periode ->
-                val filtrertGrunnlagsliste = filtrerGrunnlagsliste(grunnlagsliste = inntektGrunnlagListe, periode = periode)
+    ): List<DelberegningSumInntekt> = periodeListe
+        .map { periode ->
+            val filtrertGrunnlagsliste = filtrerGrunnlagsliste(grunnlagsliste = inntektGrunnlagListe, periode = periode)
 
-                DelberegningSumInntekt(
-                    periode = ÅrMånedsperiode(fom = periode.datoFom, til = periode.datoTil),
-                    totalinntekt = filtrertGrunnlagsliste
-                        .sumOf { it.beløp },
-                    kontantstøtte = filtrertGrunnlagsliste
-                        .filter { it.inntektsrapportering in Inntektstype.KONTANTSTØTTE.inngårIInntektRapporteringer() }
-                        .sumOf { it.beløp }
-                        .takeIf { it != BigDecimal.ZERO },
-                    skattepliktigInntekt = filtrertGrunnlagsliste
-                        .filterNot {
-                            it.inntektsrapportering in Inntektstype.KONTANTSTØTTE.inngårIInntektRapporteringer() +
-                                Inntektstype.BARNETILLEGG_PENSJON.inngårIInntektRapporteringer() +
-                                Inntektstype.UTVIDET_BARNETRYGD.inngårIInntektRapporteringer() +
-                                Inntektstype.SMÅBARNSTILLEGG.inngårIInntektRapporteringer()
-                        }
-                        .sumOf { it.beløp }
-                        .takeIf { it != BigDecimal.ZERO },
-                    barnetillegg = filtrertGrunnlagsliste
-                        .filter { it.inntektsrapportering in Inntektstype.BARNETILLEGG_PENSJON.inngårIInntektRapporteringer() }
-                        .sumOf { it.beløp }
-                        .takeIf { it != BigDecimal.ZERO },
-                    utvidetBarnetrygd = filtrertGrunnlagsliste
-                        .filter { it.inntektsrapportering in Inntektstype.UTVIDET_BARNETRYGD.inngårIInntektRapporteringer() }
-                        .sumOf { it.beløp }
-                        .takeIf { it != BigDecimal.ZERO },
-                    småbarnstillegg = filtrertGrunnlagsliste
-                        .filter { it.inntektsrapportering in Inntektstype.SMÅBARNSTILLEGG.inngårIInntektRapporteringer() }
-                        .sumOf { it.beløp }
-                        .takeIf { it != BigDecimal.ZERO },
-                )
-            }
-    }
+            DelberegningSumInntekt(
+                periode = ÅrMånedsperiode(fom = periode.datoFom, til = periode.datoTil),
+                totalinntekt = filtrertGrunnlagsliste
+                    .sumOf { it.beløp },
+                kontantstøtte = filtrertGrunnlagsliste
+                    .filter { it.inntektsrapportering in Inntektstype.KONTANTSTØTTE.inngårIInntektRapporteringer() }
+                    .sumOf { it.beløp }
+                    .takeIf { it != BigDecimal.ZERO },
+                skattepliktigInntekt = filtrertGrunnlagsliste
+                    .filterNot {
+                        it.inntektsrapportering in Inntektstype.KONTANTSTØTTE.inngårIInntektRapporteringer() +
+                            Inntektstype.BARNETILLEGG_PENSJON.inngårIInntektRapporteringer() +
+                            Inntektstype.UTVIDET_BARNETRYGD.inngårIInntektRapporteringer() +
+                            Inntektstype.SMÅBARNSTILLEGG.inngårIInntektRapporteringer()
+                    }
+                    .sumOf { it.beløp }
+                    .takeIf { it != BigDecimal.ZERO },
+                barnetillegg = filtrertGrunnlagsliste
+                    .filter { it.inntektsrapportering in Inntektstype.BARNETILLEGG_PENSJON.inngårIInntektRapporteringer() }
+                    .sumOf { it.beløp }
+                    .takeIf { it != BigDecimal.ZERO },
+                utvidetBarnetrygd = filtrertGrunnlagsliste
+                    .filter { it.inntektsrapportering in Inntektstype.UTVIDET_BARNETRYGD.inngårIInntektRapporteringer() }
+                    .sumOf { it.beløp }
+                    .takeIf { it != BigDecimal.ZERO },
+                småbarnstillegg = filtrertGrunnlagsliste
+                    .filter { it.inntektsrapportering in Inntektstype.SMÅBARNSTILLEGG.inngårIInntektRapporteringer() }
+                    .sumOf { it.beløp }
+                    .takeIf { it != BigDecimal.ZERO },
+            )
+        }
 
     // Filtrerer ut grunnlag som tilhører en gitt periode
-    private fun filtrerGrunnlagsliste(grunnlagsliste: List<InntektsgrunnlagPeriode>, periode: Periode): List<InntektsgrunnlagPeriode> {
-        return grunnlagsliste.filter { grunnlag ->
+    private fun filtrerGrunnlagsliste(grunnlagsliste: List<InntektsgrunnlagPeriode>, periode: Periode): List<InntektsgrunnlagPeriode> =
+        grunnlagsliste.filter { grunnlag ->
             (grunnlag.periode.til == null || periode.datoFom.isBefore(grunnlag.periode.til!!.atDay(1))) &&
                 (periode.datoTil == null || periode.datoTil.isAfter(grunnlag.periode.fom.atDay(1)))
         }
-    }
 
     private fun tilJson(json: Any): String {
         val objectMapper = ObjectMapper()

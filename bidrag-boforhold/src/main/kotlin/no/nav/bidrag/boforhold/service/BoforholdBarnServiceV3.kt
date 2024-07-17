@@ -788,6 +788,13 @@ internal class BoforholdBarnServiceV3 {
                             if (indeks == indeksMatch!! - 1) {
                                 // Periode før periode som skal slettes. Justerer periodeTom til å være lik slettet periodes periodeTom.
                                 endredePerioder.add(behandledeOpplysninger[indeks].copy(periodeTom = nyBostatus.periodeFom.minusDays(1)))
+                            } else {
+                                if (indeks == indeksMatch) {
+                                    // Periode som skal slettes. Hopper over denne.
+                                    continue
+                                } else {
+                                    endredePerioder.add(behandledeOpplysninger[indeks])
+                                }
                             }
                         }
                     }

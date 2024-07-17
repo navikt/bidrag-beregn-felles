@@ -28,7 +28,6 @@ import org.springframework.stereotype.Service
 class BeregnApi {
     private val inntektService = BeregnInntektService()
 
-    fun beregnInntekt(beregnForskuddGrunnlag: BeregnValgteInntekterGrunnlag): BeregnValgteInntekterResultat {
-        return inntektService.beregn(beregnForskuddGrunnlag)
-    }
+    fun beregnInntekt(beregnForskuddGrunnlag: BeregnValgteInntekterGrunnlag): BeregnValgteInntekterResultat =
+        inntektService.beregn(beregnForskuddGrunnlag)
 }

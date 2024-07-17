@@ -20,7 +20,7 @@ internal class BoforholdAndreVoksneService {
         // Bygger opp en liste med alle perioder det har bodd en annen voksen i BPs husstand.
         boforholdVoksne.innhentedeOffentligeOpplysninger
             .filter { it.relasjon != Familierelasjon.BARN }
-            .filter { it.fødselsdato.isBefore(virkningstidspunkt.minusYears(18)) }
+            .filter { it.fødselsdato.withDayOfMonth(1).isBefore(virkningstidspunkt.minusYears(18)) }
             .forEach { offentligeBostatusperioder.addAll(it.borISammeHusstandListe) }
 
         val justerteOffentligeBostatusperioder = offentligeBostatusperioder
@@ -47,7 +47,20 @@ internal class BoforholdAndreVoksneService {
             sammenslåtteBostatusperioder,
             boforholdVoksne.behandledeBostatusopplysninger,
             boforholdVoksne.endreBostatus,
-        )
+        ).let {
+            // Hvis det ikke finnes noen perioder så betyr det at BP ikke bor med andre voksne.
+            // TODO: Magnus kan dette løses på en annen måte?
+            it.ifEmpty {
+                listOf(
+                    Bostatus(
+                        periodeFom = virkningstidspunkt,
+                        periodeTom = null,
+                        bostatus = Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                )
+            }
+        }
     }
 
     private fun beregnPerioder(
