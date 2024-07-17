@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPattern": "/bidrag-sjablon/barnetilsyn.*"
+  },
+  "response": {
+    "status": 200,
+    "body": " [  {\"typeStonad\": \"64\",\"typeTilsyn\": \"DO\",\"datoFom\": \"2020-07-01\",\"datoTom\": \"9999-12-31\",\"belopBarneTilsyn\": 358,\"brukerid\": \"A100364 \",\"tidspktEndret\": \"2020-05-17T14:13:16.999\"},{\"typeStonad\": \"64\",\"typeTilsyn\": \"DU\",\"datoFom\": \"2020-07-01\",\"datoTom\": \"9999-12-31\",\"belopBarneTilsyn\": 257,\"brukerid\": \"A100364 \",\"tidspktEndret\": \"2020-05-17T14:14:13.801\"},{\"typeStonad\": \"64\",\"typeTilsyn\": \"HO\",\"datoFom\": \"2020-07-01\",\"datoTom\": \"9999-12-31\",\"belopBarneTilsyn\": 589,\"brukerid\": \"A100364 \",\"tidspktEndret\": \"2020-05-17T14:14:53.803\"},{\"typeStonad\": \"64\",\"typeTilsyn\": \"HU\",\"datoFom\": \"2020-07-01\",\"datoTom\": \"9999-12-31\",\"belopBarneTilsyn\": 643,\"brukerid\": \"A100364 \",\"tidspktEndret\": \"2020-05-17T14:15:49.233\"}]",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

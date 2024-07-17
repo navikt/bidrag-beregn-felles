@@ -36,7 +36,7 @@ internal class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning 
         return BeregnForskuddResultat(grunnlagTilBeregning.periodeResultatListe)
     }
 
-    // Lag
+    // Lager grunnlag til beregning
     private fun lagGrunnlagTilBeregning(periodeGrunnlag: BeregnForskuddGrunnlag, grunnlagTilBeregning: GrunnlagTilBeregning) {
         grunnlagTilBeregning.inntektPeriodeListe = periodeGrunnlag.inntektPeriodeListe.map { it }
         grunnlagTilBeregning.sivilstandPeriodeListe = periodeGrunnlag.sivilstandPeriodeListe.map { it }

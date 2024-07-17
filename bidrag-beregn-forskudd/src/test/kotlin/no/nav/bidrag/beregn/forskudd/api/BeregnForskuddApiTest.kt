@@ -378,7 +378,6 @@ internal class BeregnForskuddApiTest {
     private fun utførBeregningerOgEvaluerResultat() {
         val request = lesFilOgByggRequest(filnavn)
 
-        // Kall rest-API for forskudd
         val forskuddResultat = beregnForskuddService.beregn(request)
 
         TestUtil.printJson(forskuddResultat)

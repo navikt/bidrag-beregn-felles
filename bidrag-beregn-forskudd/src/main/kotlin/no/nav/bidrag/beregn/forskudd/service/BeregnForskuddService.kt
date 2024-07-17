@@ -241,7 +241,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
                 },
         )
 
-        // Mapper ut DelberegningBarnIHusstand.
+        // Mapper ut DelberegningBarnIHusstand
         resultatGrunnlagListe.addAll(
             sumAntallBarnListe
                 .map {
