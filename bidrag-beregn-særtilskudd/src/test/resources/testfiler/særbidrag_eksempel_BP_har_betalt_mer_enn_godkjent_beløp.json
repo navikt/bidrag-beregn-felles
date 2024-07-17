@@ -65,7 +65,7 @@
         },
         "inntektsrapportering": "AINNTEKT",
         "gjelderBarn": null,
-        "beløp": 400000,
+        "beløp": 300000,
         "manueltRegistrert": false,
         "valgt": true
       },
@@ -99,7 +99,7 @@
         },
         "inntektsrapportering": "AINNTEKT",
         "gjelderBarn": null,
-        "beløp": 420000,
+        "beløp": 500000,
         "manueltRegistrert": false,
         "valgt": true
       },
@@ -144,8 +144,8 @@
           "fom": "2020-08",
           "til": "2020-09"
         },
-        "sumBetaltAvBp": 0,
-        "sumGodkjent": 6000
+        "sumBetaltAvBp": 8000,
+        "sumGodkjent": 7000
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Bidragsmottaker"

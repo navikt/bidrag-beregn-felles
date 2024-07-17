@@ -5,24 +5,10 @@ import no.nav.bidrag.beregn.core.bo.PeriodisertGrunnlag
 import java.math.BigDecimal
 
 data class BetaltAvBpPeriode(val referanse: String, private val periode: Periode, val beløp: BigDecimal) : PeriodisertGrunnlag {
-    constructor(betaltAvBpPeriode: BetaltAvBpPeriode) :
-        this(
-            betaltAvBpPeriode.referanse,
-            betaltAvBpPeriode.periode.justerDatoer(),
-            betaltAvBpPeriode.beløp,
-        )
-
     override fun getPeriode(): Periode = periode
 }
 
 data class BidragsevnePeriode(val referanse: String, private val periode: Periode, val beløp: BigDecimal) : PeriodisertGrunnlag {
-    constructor(bidragsevnePeriode: BidragsevnePeriode) :
-        this(
-            bidragsevnePeriode.referanse,
-            bidragsevnePeriode.periode.justerDatoer(),
-            bidragsevnePeriode.beløp,
-        )
-
     override fun getPeriode(): Periode = periode
 }
 
@@ -33,14 +19,5 @@ data class BPsAndelSærbidragPeriode(
     val andelBeløp: BigDecimal,
     val barnetErSelvforsørget: Boolean,
 ) : PeriodisertGrunnlag {
-    constructor(bPsAndelSærbidragPeriode: BPsAndelSærbidragPeriode) :
-        this(
-            bPsAndelSærbidragPeriode.referanse,
-            bPsAndelSærbidragPeriode.periode.justerDatoer(),
-            bPsAndelSærbidragPeriode.andelProsent,
-            bPsAndelSærbidragPeriode.andelBeløp,
-            bPsAndelSærbidragPeriode.barnetErSelvforsørget,
-        )
-
     override fun getPeriode(): Periode = periode
 }

@@ -3,7 +3,6 @@ package no.nav.bidrag.beregn.core.periode
 import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.bo.PeriodisertGrunnlag
 import java.time.LocalDate
-import java.util.stream.Collectors
 
 class Periodiserer {
     private val bruddpunkter: MutableSet<LocalDate> = HashSet()
@@ -40,10 +39,10 @@ class Periodiserer {
     // Setter perioder basert på fra- og til-dato
     fun finnPerioder(beregnDatoFom: LocalDate, beregnDatoTil: LocalDate): List<Periode> {
         val sortertBruddpunktListe =
-            bruddpunkter.stream()
-                .filter { dato: LocalDate -> dato.isAfter(beregnDatoFom.minusDays(1)) }
-                .filter { dato: LocalDate -> dato.isBefore(beregnDatoTil.plusDays(1)) }
-                .sorted().collect(Collectors.toList())
+            bruddpunkter
+                .filter { it.isAfter(beregnDatoFom.minusDays(1)) }
+                .filter { it.isBefore(beregnDatoTil.plusDays(1)) }
+                .sorted()
 
         val perioder: MutableList<Periode> = ArrayList()
         val bruddpunktIt = sortertBruddpunktListe.iterator()

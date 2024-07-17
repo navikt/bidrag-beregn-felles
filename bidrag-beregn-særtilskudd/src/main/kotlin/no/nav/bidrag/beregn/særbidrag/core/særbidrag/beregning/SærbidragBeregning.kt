@@ -10,7 +10,8 @@ class SærbidragBeregning : FellesBeregning() {
 
     fun beregn(grunnlag: GrunnlagBeregning): ResultatBeregning {
         return when {
-            grunnlag.bidragsevne.beløp < grunnlag.bPsAndelSærbidrag.andelBeløp ->
+            (grunnlag.bidragsevne.beløp == BigDecimal.ZERO) ||
+                (grunnlag.bidragsevne.beløp < grunnlag.bPsAndelSærbidrag.andelBeløp) ->
                 ResultatBeregning(
                     beregnetBeløp = BigDecimal.ZERO,
                     resultatKode = Resultatkode.SÆRBIDRAG_IKKE_FULL_BIDRAGSEVNE,

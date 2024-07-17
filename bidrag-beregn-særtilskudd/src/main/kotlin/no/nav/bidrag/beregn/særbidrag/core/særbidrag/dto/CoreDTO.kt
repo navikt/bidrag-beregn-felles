@@ -3,6 +3,7 @@ package no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto
 import no.nav.bidrag.beregn.core.dto.AvvikCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.felles.dto.IResultatPeriode
+import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -51,6 +52,6 @@ data class ResultatPeriodeCore(
 
 data class ResultatBeregningCore(
     val beregnetBeløp: BigDecimal,
-    val resultatKode: String,
+    val resultatKode: Resultatkode,
     val resultatBeløp: BigDecimal,
 )

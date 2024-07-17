@@ -28,7 +28,7 @@ class BPsAndelSærbidragPeriode(private val bPsAndelSærbidragBeregning: BPsAnde
         lagBruddperioder(periodeGrunnlag = grunnlag, grunnlagTilBeregning = grunnlagTilBeregning)
 
         // Hvis det ligger 2 perioder på slutten som i til-dato inneholder hhv. beregningsperiodens til-dato og null slås de sammen
-        mergeSluttperiode(periodeListe = grunnlagTilBeregning.bruddPeriodeListe, datoTil = grunnlag.beregnDatoTil)
+        mergeSluttperiode(periodeListe = grunnlagTilBeregning.bruddPeriodeListe, datoTil = grunnlag.beregnDatoTil, åpenSluttperiode = false)
 
         // Foreta beregning
         beregnBPsAndelSærbidragPerPeriode(grunnlagTilBeregning)
@@ -71,17 +71,20 @@ class BPsAndelSærbidragPeriode(private val bPsAndelSærbidragBeregning: BPsAnde
     // Løper gjennom periodene og finner matchende verdi for hver kategori. Kaller beregningsmodulen for hver beregningsperiode
     private fun beregnBPsAndelSærbidragPerPeriode(grunnlag: BeregnBPsAndelSærbidragListeGrunnlag) {
         grunnlag.bruddPeriodeListe.forEach { beregningsperiode: Periode ->
-            val inntektBPListe = grunnlag.inntektBPPeriodeListe
+            val inntektBP = grunnlag.inntektBPPeriodeListe
                 .filter { it.getPeriode().overlapperMed(beregningsperiode) }
-                .map { Inntekt(referanse = it.referanse, inntektType = it.type, inntektBeløp = it.beløp) }
+                .map { Inntekt(referanse = it.referanse, inntektBeløp = it.beløp) }
+                .firstOrNull()
 
-            val inntektBMListe = grunnlag.inntektBMPeriodeListe
+            val inntektBM = grunnlag.inntektBMPeriodeListe
                 .filter { it.getPeriode().overlapperMed(beregningsperiode) }
-                .map { Inntekt(referanse = it.referanse, inntektType = it.type, inntektBeløp = it.beløp) }
+                .map { Inntekt(referanse = it.referanse, inntektBeløp = it.beløp) }
+                .firstOrNull()
 
-            val inntektSBListe = grunnlag.inntektSBPeriodeListe
+            val inntektSB = grunnlag.inntektSBPeriodeListe
                 .filter { it.getPeriode().overlapperMed(beregningsperiode) }
-                .map { Inntekt(referanse = it.referanse, inntektType = it.type, inntektBeløp = it.beløp) }
+                .map { Inntekt(referanse = it.referanse, inntektBeløp = it.beløp) }
+                .firstOrNull()
 
             val utgiftsbeløp = grunnlag.utgiftPeriodeListe.stream()
                 .filter { it.getPeriode().overlapperMed(beregningsperiode) }
@@ -97,9 +100,9 @@ class BPsAndelSærbidragPeriode(private val bPsAndelSærbidragBeregning: BPsAnde
             val beregnBPsAndelSærbidragGrunnlagPeriodisert =
                 GrunnlagBeregning(
                     utgift = utgiftsbeløp,
-                    inntektBPListe = inntektBPListe,
-                    inntektBMListe = inntektBMListe,
-                    inntektSBListe = inntektSBListe,
+                    inntektBP = inntektBP,
+                    inntektBM = inntektBM,
+                    inntektSB = inntektSB,
                     sjablonListe = sjablonliste,
                 )
 

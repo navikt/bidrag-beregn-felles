@@ -9,12 +9,12 @@ import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BetaltAvBpPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BidragsevnePeriodeCore
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.ident.Personident
+import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUtgift
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
 
 internal object SærbidragCoreMapper : CoreMapper() {
     fun mapSærbidragGrunnlagTilCore(
@@ -27,7 +27,11 @@ internal object SærbidragCoreMapper : CoreMapper() {
             beregnBidragsevneResultatCore.resultatPeriodeListe
                 .map { (periode, resultatBeregning): no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto.ResultatPeriodeCore ->
                     BidragsevnePeriodeCore(
-                        referanse = byggReferanseForDelberegning(delberegning = "Delberegning_BP_Bidragsevne", dato = periode.datoFom),
+                        referanse = opprettDelberegningreferanse(
+                            type = Grunnlagstype.DELBEREGNING_BIDRAGSEVNE,
+                            periode = ÅrMånedsperiode(fom = periode.datoFom, til = periode.datoTil),
+                            søknadsbarnReferanse = beregnGrunnlag.søknadsbarnReferanse,
+                        ),
                         periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
                         beløp = resultatBeregning.beløp,
                     )
@@ -38,7 +42,11 @@ internal object SærbidragCoreMapper : CoreMapper() {
             beregnBPsAndelSærbidragResultatCore.resultatPeriodeListe
                 .map { (periode, resultatBeregning): no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.ResultatPeriodeCore ->
                     BPsAndelSærbidragPeriodeCore(
-                        referanse = byggReferanseForDelberegning(delberegning = "Delberegning_BP_AndelSærbidrag", dato = periode.datoFom),
+                        referanse = opprettDelberegningreferanse(
+                            type = Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL_SÆRBIDRAG,
+                            periode = ÅrMånedsperiode(fom = periode.datoFom, til = periode.datoTil),
+                            søknadsbarnReferanse = beregnGrunnlag.søknadsbarnReferanse,
+                        ),
                         periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
                         andelProsent = resultatBeregning.resultatAndelProsent,
                         andelBeløp = resultatBeregning.resultatAndelBeløp,
@@ -92,8 +100,4 @@ internal object SærbidragCoreMapper : CoreMapper() {
             )
         }
     }
-
-    // Bygger referanse for delberegning
-    private fun byggReferanseForDelberegning(delberegning: String, dato: LocalDate): String =
-        delberegning + "_" + dato.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
 }

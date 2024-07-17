@@ -61,7 +61,6 @@ internal class BPsAndelSærbidragCore(
         InntektPeriode(
             referanse = it.referanse,
             periode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
-            type = " ",
             beløp = it.beløp,
         )
     }
@@ -74,18 +73,18 @@ internal class BPsAndelSærbidragCore(
                 resultatAndelBeløp = it.resultat.resultatAndelBeløp,
                 barnetErSelvforsørget = it.resultat.barnetErSelvforsørget,
             ),
-            grunnlagsreferanseListe = mapReferanseListe(it).toMutableList(),
+            grunnlagsreferanseListe = mapReferanseListe(it).sorted().toMutableList(),
         )
     }
 
     private fun mapReferanseListe(resultatPeriode: ResultatPeriode): List<String> {
-        val (utgiftsbeløp, inntektBPListe, inntektBMListe, inntektSBListe) = resultatPeriode.grunnlag
+        val (utgiftsbeløp, inntektBP, inntektBM, inntektSB) = resultatPeriode.grunnlag
         val sjablonListe = resultatPeriode.resultat.sjablonListe
         val referanseListe = mutableListOf<String>()
         referanseListe.add(utgiftsbeløp.referanse)
-        inntektBPListe.forEach { referanseListe.add(it.referanse) }
-        inntektBMListe.forEach { referanseListe.add(it.referanse) }
-        inntektSBListe.forEach { referanseListe.add(it.referanse) }
+        if (inntektBP != null) referanseListe.add(inntektBP.referanse)
+        if (inntektBM != null) referanseListe.add(inntektBM.referanse)
+        if (inntektSB != null) referanseListe.add(inntektSB.referanse)
         referanseListe.addAll(sjablonListe.map { lagSjablonReferanse(it) }.distinct())
         return referanseListe.sorted()
     }

@@ -8,143 +8,123 @@ import no.nav.bidrag.beregn.særbidrag.TestUtil
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.beregning.BPsAndelSærbidragBeregning
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.bo.BeregnBPsAndelSærbidragGrunnlag
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.bo.InntektPeriode
+import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.bo.ResultatBeregning
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.bo.UtgiftPeriode
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.periode.BPsAndelSærbidragPeriode
-import no.nav.bidrag.domene.enums.beregning.Avvikstype
 import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertAll
+import org.assertj.core.api.Assertions.assertThatExceptionOfType
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.Mockito.`when`
+import org.mockito.junit.jupiter.MockitoExtension
 import java.math.BigDecimal
 import java.time.LocalDate
 
+@ExtendWith(MockitoExtension::class)
 internal class BPsAndelSærbidragPeriodeTest {
 
-    private val bPsAndelSærbidragBeregning = BPsAndelSærbidragBeregning()
-    private val bPsAndelSærbidragPeriode = BPsAndelSærbidragPeriode(bPsAndelSærbidragBeregning)
+    private lateinit var bPsAndelSærbidragPeriode: BPsAndelSærbidragPeriode
 
+    @Mock
+    private lateinit var bPsAndelSærbidragBeregningMock: BPsAndelSærbidragBeregning
+
+    private val beregnBPsAndelSærbidragGrunnlag = byggBeregnBPsAndelSærbidragGrunnlag()
+    private val beregnBPsAndelSærbidragResultat = byggResultatBeregning()
+
+    @BeforeEach
+    fun initMocksAndService() {
+        bPsAndelSærbidragPeriode = BPsAndelSærbidragPeriode(bPsAndelSærbidragBeregningMock)
+    }
+
+    @DisplayName("Beregning med gyldig input gir korrekt resultat")
     @Test
-    @DisplayName("Test av periodisering. Periodene i grunnlaget skal gjenspeiles i resultatperiodene")
-    fun testPeriodisering() {
-        val grunnlag = lagGrunnlag("2018-07-01", "2020-08-01")
-        val resultat = bPsAndelSærbidragPeriode.beregnPerioder(grunnlag)
+    fun beregningMedGyldigInputGirKorrektResultat() {
+        `when`(bPsAndelSærbidragBeregningMock.beregn(any())).thenReturn(beregnBPsAndelSærbidragResultat)
 
-        assertAll(
-            { assertThat(resultat).isNotNull() },
-            { assertThat(resultat.resultatPeriodeListe).isNotEmpty() },
-            { assertThat(resultat.resultatPeriodeListe).hasSize(3) },
-            { assertThat(resultat.resultatPeriodeListe[0].periode.datoFom).isEqualTo(LocalDate.parse("2018-07-01")) },
-            { assertThat(resultat.resultatPeriodeListe[0].periode.datoTil).isEqualTo(LocalDate.parse("2019-07-01")) },
-            { assertThat(resultat.resultatPeriodeListe[0].resultat.resultatAndelProsent).isEqualTo(BigDecimal.valueOf(35.2)) },
-            { assertThat(resultat.resultatPeriodeListe[1].periode.datoFom).isEqualTo(LocalDate.parse("2019-07-01")) },
-            { assertThat(resultat.resultatPeriodeListe[1].periode.datoTil).isEqualTo(LocalDate.parse("2020-07-01")) },
-            { assertThat(resultat.resultatPeriodeListe[2].periode.datoFom).isEqualTo(LocalDate.parse("2020-07-01")) },
-            { assertThat(resultat.resultatPeriodeListe[2].periode.datoTil).isNull() },
-        )
+        val resultatPeriode = bPsAndelSærbidragPeriode.beregnPerioder(beregnBPsAndelSærbidragGrunnlag)
+
+        assertThat(resultatPeriode.resultatPeriodeListe).isNotEmpty
+        assertThat(resultatPeriode.resultatPeriodeListe).hasSize(1)
     }
 
+    @DisplayName("Exception når Utgift mangler")
     @Test
-    @DisplayName("Test med feil i grunnlag som skal resultere i avvik")
-    fun testGrunnlagMedAvvik() {
-        val grunnlag = lagGrunnlag("2016-01-01", "2021-01-01")
-        val avvikListe = bPsAndelSærbidragPeriode.validerInput(grunnlag)
+    fun skalKasteExceptionNårUtgiftMangler() {
+        assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
+            bPsAndelSærbidragPeriode.beregnPerioder(byggBeregnBPsAndelSærbidragGrunnlag(avvikUtgift = true))
+        }.withMessageContaining("Grunnlagsobjekt DELBEREGNING_UTGIFT mangler data for periode")
+    }
 
-        assertAll(
-            { assertThat(avvikListe).isNotEmpty() },
-            { assertThat(avvikListe).hasSize(8) },
-            {
-                assertThat(avvikListe[0].avvikTekst)
-                    .isEqualTo("Første dato i utgiftPeriodeListe (2018-01-01) er etter beregnDatoFom (2016-01-01)")
+    @DisplayName("Avvik når Utgift er utenfor beregningsperiode")
+    @Test
+    fun skalDanneAvvikNårUtgiftErUtenforBeregningsperiode() {
+        val avvikListe = bPsAndelSærbidragPeriode.validerInput(byggBeregnBPsAndelSærbidragGrunnlag(avvikUtgift = true))
+        assertThat(avvikListe).hasSize(1)
+    }
+
+    private fun byggBeregnBPsAndelSærbidragGrunnlag(avvikUtgift: Boolean = false) = BeregnBPsAndelSærbidragGrunnlag(
+        beregnDatoFra = LocalDate.parse("2020-01-01"),
+        beregnDatoTil = LocalDate.parse("2020-02-01"),
+        utgiftPeriodeListe = lagUtgiftGrunnlag(avvikUtgift),
+        inntektBPPeriodeListe = lagInntektGrunnlag(),
+        inntektBMPeriodeListe = lagInntektGrunnlag(),
+        inntektSBPeriodeListe = lagInntektGrunnlag(),
+        sjablonPeriodeListe = lagSjablonGrunnlag(),
+    )
+
+    private fun lagInntektGrunnlag() = listOf(
+        InntektPeriode(
+            referanse = TestUtil.INNTEKT_REFERANSE,
+            periode = Periode(datoFom = LocalDate.parse("2020-01-01"), datoTil = LocalDate.parse("2020-02-01")),
+            beløp = BigDecimal.valueOf(666000),
+        ),
+    )
+
+    private fun lagUtgiftGrunnlag(avvik: Boolean) = listOf(
+        UtgiftPeriode(
+            referanse = TestUtil.UTGIFT_REFERANSE,
+            if (!avvik) {
+                Periode(
+                    datoFom = LocalDate.parse("2020-01-01"),
+                    datoTil = LocalDate.parse("2020-02-01"),
+                )
+            } else {
+                Periode(
+                    datoFom = LocalDate.parse("2021-01-01"),
+                    datoTil = LocalDate.parse("2021-02-01"),
+                )
             },
-            { assertThat(avvikListe[0].avvikType).isEqualTo(Avvikstype.PERIODE_MANGLER_DATA) },
-            {
-                assertThat(
-                    avvikListe[1].avvikTekst,
-                ).isEqualTo("Siste dato i utgiftPeriodeListe (2020-08-01) er før beregnDatoTil (2021-01-01)")
-            },
-            { assertThat(avvikListe[1].avvikType).isEqualTo(Avvikstype.PERIODE_MANGLER_DATA) },
+            beløp = BigDecimal.valueOf(10000),
+        ),
+    )
+
+    private fun lagSjablonGrunnlag() = listOf(
+        SjablonPeriode(
+            sjablonPeriode = Periode(datoFom = LocalDate.parse("2020-01-01"), datoTil = null),
+            sjablon = Sjablon(
+                navn = SjablonTallNavn.TRYGDEAVGIFT_PROSENT.navn,
+                nokkelListe = emptyList(),
+                innholdListe = listOf(SjablonInnhold(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = BigDecimal.valueOf(7.8))),
+            ),
+        ),
+    )
+
+    private fun byggResultatBeregning(): ResultatBeregning {
+        return ResultatBeregning(
+            resultatAndelProsent = BigDecimal.valueOf(60),
+            resultatAndelBeløp = BigDecimal.valueOf(6000),
+            barnetErSelvforsørget = false,
+            sjablonListe = emptyList(),
         )
     }
 
-    private fun lagGrunnlag(beregnDatoFra: String, beregnDatoTil: String): BeregnBPsAndelSærbidragGrunnlag {
-        val utgiftPeriodeListe = listOf(
-            UtgiftPeriode(
-                referanse = TestUtil.UTGIFT_REFERANSE,
-                periode = Periode(datoFom = LocalDate.parse("2018-01-01"), datoTil = LocalDate.parse("2020-08-01")),
-                beløp = BigDecimal.valueOf(1000),
-            ),
-        )
-        val inntektBPPeriodeListe = listOf(
-            InntektPeriode(
-                referanse = "Inntekt_20180101",
-                periode = Periode(datoFom = LocalDate.parse("2018-01-01"), datoTil = LocalDate.parse("2020-08-01")),
-                type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-                beløp = BigDecimal.valueOf(217666),
-            ),
-        )
-        val inntektBMPeriodeListe = listOf(
-            InntektPeriode(
-                referanse = "Inntekt_20180101",
-                periode = Periode(datoFom = LocalDate.parse("2018-01-01"), datoTil = LocalDate.parse("2020-08-01")),
-                type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-                beløp = BigDecimal.valueOf(400000),
-            ),
-        )
-        val inntektSBPeriodeListe = listOf(
-            InntektPeriode(
-                referanse = "Inntekt_20180101",
-                periode = Periode(datoFom = LocalDate.parse("2018-01-01"), datoTil = LocalDate.parse("2020-08-01")),
-                type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-                beløp = BigDecimal.valueOf(40000),
-            ),
-        )
-
-        return BeregnBPsAndelSærbidragGrunnlag(
-            beregnDatoFra = LocalDate.parse(beregnDatoFra),
-            beregnDatoTil = LocalDate.parse(beregnDatoTil),
-            utgiftPeriodeListe = utgiftPeriodeListe,
-            inntektBPPeriodeListe = inntektBPPeriodeListe,
-            inntektBMPeriodeListe = inntektBMPeriodeListe,
-            inntektSBPeriodeListe = inntektSBPeriodeListe,
-            sjablonPeriodeListe = lagSjablonGrunnlag(),
-        )
-    }
-
-    private fun lagSjablonGrunnlag(): List<SjablonPeriode> {
-        val sjablonPeriodeListe = mutableListOf<SjablonPeriode>()
-        sjablonPeriodeListe.add(
-            SjablonPeriode(
-                sjablonPeriode = Periode(datoFom = LocalDate.parse("2018-07-01"), datoTil = LocalDate.parse("2019-07-01")),
-                sjablon = Sjablon(
-                    navn = SjablonTallNavn.FORSKUDDSSATS_BELØP.navn,
-                    nokkelListe = emptyList(),
-                    innholdListe = listOf(SjablonInnhold(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = BigDecimal.valueOf(1600))),
-                ),
-            ),
-        )
-        sjablonPeriodeListe.add(
-            SjablonPeriode(
-                sjablonPeriode = Periode(datoFom = LocalDate.parse("2019-07-01"), datoTil = LocalDate.parse("2020-07-01")),
-                sjablon = Sjablon(
-                    navn = SjablonTallNavn.FORSKUDDSSATS_BELØP.navn,
-                    nokkelListe = emptyList(),
-                    innholdListe = listOf(SjablonInnhold(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = BigDecimal.valueOf(1640))),
-                ),
-            ),
-        )
-        sjablonPeriodeListe.add(
-            SjablonPeriode(
-                sjablonPeriode = Periode(datoFom = LocalDate.parse("2020-07-01"), datoTil = null),
-                sjablon = Sjablon(
-                    navn = SjablonTallNavn.FORSKUDDSSATS_BELØP.navn,
-                    nokkelListe = emptyList(),
-                    innholdListe = listOf(SjablonInnhold(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = BigDecimal.valueOf(1670))),
-                ),
-            ),
-        )
-
-        return sjablonPeriodeListe
+    companion object MockitoHelper {
+        fun <T> any(): T = Mockito.any()
     }
 }

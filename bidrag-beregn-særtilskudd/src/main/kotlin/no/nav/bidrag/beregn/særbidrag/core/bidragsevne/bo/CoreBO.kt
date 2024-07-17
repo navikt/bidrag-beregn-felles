@@ -29,7 +29,7 @@ data class ResultatBeregning(val beløp: BigDecimal, val sjablonListe: List<Sjab
 
 // Grunnlag beregning
 data class GrunnlagBeregning(
-    val inntektListe: List<Inntekt>,
+    val inntekt: Inntekt?,
     val antallBarnIHusstand: AntallBarnIHusstand,
     val bostatusVoksneIHusstand: BostatusVoksneIHusstand,
     val sjablonListe: List<SjablonPeriode>,
@@ -37,7 +37,6 @@ data class GrunnlagBeregning(
 
 data class Inntekt(
     val referanse: String,
-    val inntektType: String,
     val inntektBeløp: BigDecimal,
 )
 

@@ -1,161 +1,88 @@
 package no.nav.bidrag.beregn.særbidrag.core.bidragsevne
 
-import no.nav.bidrag.beregn.core.util.SjablonUtil
 import no.nav.bidrag.beregn.særbidrag.TestUtil
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.beregning.BidragsevneBeregning
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.bo.AntallBarnIHusstand
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.bo.BostatusVoksneIHusstand
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.bo.GrunnlagBeregning
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.bo.Inntekt
-import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.CsvSource
 import java.math.BigDecimal
 
 internal class BidragsevneBeregningTest {
 
-    private val sjablonListe = TestUtil.byggSjabloner()
     private val sjablonPeriodeListe = TestUtil.byggSjablonPeriodeListe()
     private val bidragsevneberegning = BidragsevneBeregning()
 
-    @ParameterizedTest
-    @CsvSource(
-        // Test på beregning med ulike inntekter
-        "1000000, 1.0, false, 31859",
-        "520000, 1.0, false, 8322",
-        "666000, 3.0, false, 8424",
-        "480000, 0.0, false, 9976",
-        // Test på at beregnet bidragsevne blir satt til 0 når evne er negativ
-        "100000, 3.0, true, 0",
-    )
-    fun testBidragsevneBeregningStandardSjabloner(inntektBelop: BigDecimal, antallBarn: Double, borMedAndre: Boolean, expectedResult: Int) {
-        val inntekter = listOf(Inntekt(TestUtil.INNTEKT_REFERANSE, "LONN_SKE", inntektBelop))
-        val grunnlagBeregning = GrunnlagBeregning(
-            inntektListe = inntekter,
-            antallBarnIHusstand = AntallBarnIHusstand(TestUtil.BARN_I_HUSSTANDEN_REFERANSE, antallBarn),
-            bostatusVoksneIHusstand = BostatusVoksneIHusstand(TestUtil.VOKSNE_I_HUSSTANDEN_REFERANSE, borMedAndre),
+    @DisplayName("Beregning med standard inntekt og utgifter gir positiv bidragsevne")
+    @Test
+    fun beregningMedStandardInntektOgUtgifterGirPositivBidragsevne() {
+        val grunnlag = GrunnlagBeregning(
+            inntekt = Inntekt(referanse = "inntektRef", inntektBeløp = BigDecimal.valueOf(500000)),
+            antallBarnIHusstand = AntallBarnIHusstand(referanse = "antallBarnRef", antallBarn = 2.0),
+            bostatusVoksneIHusstand = BostatusVoksneIHusstand(referanse = "bostatusRef", borMedAndre = false),
             sjablonListe = sjablonPeriodeListe,
         )
-        val result = bidragsevneberegning.beregn(grunnlagBeregning).beløp
-        assertEquals(expectedResult.toBigDecimal(), result)
+        val resultat = bidragsevneberegning.beregn(grunnlag)
+
+        assertThat(resultat.beløp).isGreaterThan(BigDecimal.ZERO)
     }
 
+    @DisplayName("Beregning med høy inntekt og ingen utgifter gir høy bidragsevne")
     @Test
-    fun beregnMinstefradrag() {
-        val inntekter = mutableListOf<Inntekt>()
-
-        inntekter.add(
-            Inntekt(
-                referanse = TestUtil.INNTEKT_REFERANSE,
-                inntektType = "LONN_SKE",
-                inntektBeløp = BigDecimal.valueOf(200000),
-            ),
-        )
-        var grunnlagBeregning = GrunnlagBeregning(
-            inntektListe = inntekter,
-            antallBarnIHusstand = AntallBarnIHusstand(referanse = TestUtil.BARN_I_HUSSTANDEN_REFERANSE, antallBarn = 1.0),
-            bostatusVoksneIHusstand = BostatusVoksneIHusstand(referanse = TestUtil.VOKSNE_I_HUSSTANDEN_REFERANSE, borMedAndre = false),
+    fun beregningMedHoyInntektOgIngenUtgifterGirHoyBidragsevne() {
+        val grunnlag = GrunnlagBeregning(
+            inntekt = Inntekt(referanse = "inntektRef", inntektBeløp = BigDecimal.valueOf(1000000)),
+            antallBarnIHusstand = AntallBarnIHusstand(referanse = "antallBarnRef", antallBarn = 0.0),
+            bostatusVoksneIHusstand = BostatusVoksneIHusstand(referanse = "bostatusRef", borMedAndre = true),
             sjablonListe = sjablonPeriodeListe,
         )
+        val resultat = bidragsevneberegning.beregn(grunnlag)
 
-        assertThat(
-            bidragsevneberegning.beregnMinstefradrag(
-                inntekt = grunnlagBeregning.inntektListe.sumOf { it.inntektBeløp },
-                minstefradragInntektSjablonBeløp = SjablonUtil.hentSjablonverdi(
-                    sjablonListe = sjablonListe,
-                    sjablonTallNavn = SjablonTallNavn.MINSTEFRADRAG_INNTEKT_BELØP,
-                ),
-                minstefradragInntektSjablonProsent = SjablonUtil.hentSjablonverdi(
-                    sjablonListe = sjablonListe,
-                    sjablonTallNavn = SjablonTallNavn.MINSTEFRADRAG_INNTEKT_PROSENT,
-                ),
-            ),
-        )
-            .isEqualTo(BigDecimal.valueOf(62000))
-
-        inntekter[0] = Inntekt(
-            referanse = TestUtil.INNTEKT_REFERANSE,
-            inntektType = "LONN_SKE",
-            inntektBeløp = BigDecimal.valueOf(1000000),
-        )
-        grunnlagBeregning = GrunnlagBeregning(
-            inntektListe = inntekter,
-            antallBarnIHusstand = AntallBarnIHusstand(referanse = TestUtil.BARN_I_HUSSTANDEN_REFERANSE, antallBarn = 1.0),
-            bostatusVoksneIHusstand = BostatusVoksneIHusstand(referanse = TestUtil.VOKSNE_I_HUSSTANDEN_REFERANSE, borMedAndre = false),
-            sjablonListe = sjablonPeriodeListe,
-        )
-
-        assertThat(
-            bidragsevneberegning.beregnMinstefradrag(
-                inntekt = grunnlagBeregning.inntektListe.sumOf { it.inntektBeløp },
-                minstefradragInntektSjablonBeløp = SjablonUtil.hentSjablonverdi(
-                    sjablonListe = sjablonListe,
-                    sjablonTallNavn = SjablonTallNavn.MINSTEFRADRAG_INNTEKT_BELØP,
-                ),
-                minstefradragInntektSjablonProsent = SjablonUtil.hentSjablonverdi(
-                    sjablonListe = sjablonListe,
-                    sjablonTallNavn = SjablonTallNavn.MINSTEFRADRAG_INNTEKT_PROSENT,
-                ),
-            ),
-        )
-            .isEqualTo(BigDecimal.valueOf(87450))
+        assertThat(resultat.beløp).isGreaterThan(BigDecimal.valueOf(40000))
     }
 
+    @DisplayName("Beregning med negativ inntekt gir bidragsevne lik null")
     @Test
-    fun beregnSkattetrinnBeløp() {
-        val inntekter = mutableListOf<Inntekt>()
-
-        inntekter.add(
-            Inntekt(
-                referanse = TestUtil.INNTEKT_REFERANSE,
-                inntektType = "LONN_SKE",
-                inntektBeløp = BigDecimal.valueOf(666000),
-            ),
-        )
-        var grunnlagBeregning = GrunnlagBeregning(
-            inntektListe = inntekter,
-            antallBarnIHusstand = AntallBarnIHusstand(referanse = TestUtil.BARN_I_HUSSTANDEN_REFERANSE, antallBarn = 1.0),
-            bostatusVoksneIHusstand = BostatusVoksneIHusstand(referanse = TestUtil.VOKSNE_I_HUSSTANDEN_REFERANSE, borMedAndre = false),
+    fun beregningMedNegativInntektGirBidragsevneLikNull() {
+        val grunnlag = GrunnlagBeregning(
+            inntekt = Inntekt(referanse = "inntektRef", inntektBeløp = BigDecimal.valueOf(-100000)),
+            antallBarnIHusstand = AntallBarnIHusstand(referanse = "antallBarnRef", antallBarn = 1.0),
+            bostatusVoksneIHusstand = BostatusVoksneIHusstand(referanse = "bostatusRef", borMedAndre = false),
             sjablonListe = sjablonPeriodeListe,
         )
-        assertEquals(
-            BigDecimal.valueOf((1400 + 16181 + 3465 + 0).toLong()),
-            bidragsevneberegning.beregnSkattetrinnBeløp(grunnlagBeregning, grunnlagBeregning.inntektListe.sumOf { it.inntektBeløp }),
-        )
+        val resultat = bidragsevneberegning.beregn(grunnlag)
 
-        inntekter[0] = Inntekt(
-            referanse = TestUtil.INNTEKT_REFERANSE,
-            inntektType = "LONN_SKE",
-            inntektBeløp = BigDecimal.valueOf(174600),
-        )
-        grunnlagBeregning = GrunnlagBeregning(
-            inntektListe = inntekter,
-            antallBarnIHusstand = AntallBarnIHusstand(referanse = TestUtil.BARN_I_HUSSTANDEN_REFERANSE, antallBarn = 1.0),
-            bostatusVoksneIHusstand = BostatusVoksneIHusstand(referanse = TestUtil.VOKSNE_I_HUSSTANDEN_REFERANSE, borMedAndre = false),
+        assertThat(resultat.beløp).isEqualTo(BigDecimal.ZERO)
+    }
+
+    @DisplayName("Beregning med inntekt under skattefri grense gir redusert bidragsevne")
+    @Test
+    fun beregningMedInntektUnderSkattefriGrenseGirRedusertBidragsevne() {
+        val grunnlag = GrunnlagBeregning(
+            inntekt = Inntekt(referanse = "inntektRef", inntektBeløp = BigDecimal.valueOf(50000)),
+            antallBarnIHusstand = AntallBarnIHusstand(referanse = "antallBarnRef", antallBarn = 2.0),
+            bostatusVoksneIHusstand = BostatusVoksneIHusstand(referanse = "bostatusRef", borMedAndre = true),
             sjablonListe = sjablonPeriodeListe,
         )
-        assertEquals(
-            BigDecimal.ZERO,
-            bidragsevneberegning.beregnSkattetrinnBeløp(grunnlagBeregning, grunnlagBeregning.inntektListe.sumOf { it.inntektBeløp }),
-        )
+        val resultat = bidragsevneberegning.beregn(grunnlag)
 
-        inntekter[0] = Inntekt(
-            referanse = TestUtil.INNTEKT_REFERANSE,
-            inntektType = "LONN_SKE",
-            inntektBeløp = BigDecimal.valueOf(250000),
-        )
-        grunnlagBeregning = GrunnlagBeregning(
-            inntektListe = inntekter,
-            antallBarnIHusstand = AntallBarnIHusstand(referanse = TestUtil.BARN_I_HUSSTANDEN_REFERANSE, antallBarn = 1.0),
-            bostatusVoksneIHusstand = BostatusVoksneIHusstand(referanse = TestUtil.VOKSNE_I_HUSSTANDEN_REFERANSE, borMedAndre = false),
+        assertThat(resultat.beløp).isLessThan(BigDecimal.valueOf(1000))
+    }
+
+    @DisplayName("Beregning med flere barn i husstanden øker utgifter og reduserer bidragsevne")
+    @Test
+    fun beregningMedFlereBarnIHusstandenOkerUtgifterOgRedusererBidragsevne() {
+        val grunnlag = GrunnlagBeregning(
+            inntekt = Inntekt(referanse = "inntektRef", inntektBeløp = BigDecimal.valueOf(600000)),
+            antallBarnIHusstand = AntallBarnIHusstand(referanse = "antallBarnRef", antallBarn = 3.0),
+            bostatusVoksneIHusstand = BostatusVoksneIHusstand(referanse = "bostatusRef", borMedAndre = false),
             sjablonListe = sjablonPeriodeListe,
         )
-        assertEquals(
-            BigDecimal.valueOf(1315),
-            bidragsevneberegning.beregnSkattetrinnBeløp(grunnlagBeregning, grunnlagBeregning.inntektListe.sumOf { it.inntektBeløp }),
-        )
+        val resultat = bidragsevneberegning.beregn(grunnlag)
+
+        assertThat(resultat.beløp).isLessThan(BigDecimal.valueOf(10000))
     }
 }

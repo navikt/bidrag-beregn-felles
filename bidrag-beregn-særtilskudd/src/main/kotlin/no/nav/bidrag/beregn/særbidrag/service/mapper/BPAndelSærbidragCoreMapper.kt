@@ -22,7 +22,7 @@ internal object BPAndelSærbidragCoreMapper : CoreMapper() {
         val inntektBPPeriodeCoreListe =
             mapInntekt(
                 beregnSærbidragrunnlag = beregnGrunnlag,
-                referanseBidragspliktig = finnReferanseTilRolle(
+                referanseTilRolle = finnReferanseTilRolle(
                     grunnlagListe = beregnGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
                 ),
@@ -32,7 +32,7 @@ internal object BPAndelSærbidragCoreMapper : CoreMapper() {
         val inntektBMPeriodeCoreListe =
             mapInntekt(
                 beregnSærbidragrunnlag = beregnGrunnlag,
-                referanseBidragspliktig = finnReferanseTilRolle(
+                referanseTilRolle = finnReferanseTilRolle(
                     grunnlagListe = beregnGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
                 ),
@@ -42,7 +42,7 @@ internal object BPAndelSærbidragCoreMapper : CoreMapper() {
         val inntektSBPeriodeCoreListe =
             mapInntekt(
                 beregnSærbidragrunnlag = beregnGrunnlag,
-                referanseBidragspliktig = finnReferanseTilRolle(
+                referanseTilRolle = finnReferanseTilRolle(
                     grunnlagListe = beregnGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_SØKNADSBARN,
                 ),

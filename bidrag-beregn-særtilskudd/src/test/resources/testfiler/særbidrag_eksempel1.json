@@ -134,10 +134,10 @@
         "relatertTilPart": "Person_Bidragspliktig"
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Bidragpliktig"
+      "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
-      "referanse": "Delberegning_Utgift",
+      "referanse": "delberegning_DELBEREGNING_UTGIFT_Person_Søknadsbarn_202008_202009",
       "type": "DELBEREGNING_UTGIFT",
       "innhold": {
         "periode": {

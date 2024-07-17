@@ -1,7 +1,5 @@
 package no.nav.bidrag.beregn.særbidrag.service.mapper
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonInnholdCore
@@ -36,7 +34,7 @@ abstract class CoreMapper {
 
     // Henter sjablonverdi for kapitalinntekt
     // TODO Pt ligger det bare en gyldig sjablonverdi (uforandret siden 2003). Logikken her må utvides hvis det legges inn nye sjablonverdier
-    fun finnInnslagKapitalinntekt(sjablontallListe: List<Sjablontall>) =
+    fun finnInnslagKapitalinntekt(sjablontallListe: List<Sjablontall>): BigDecimal =
         sjablontallListe.firstOrNull { it.typeSjablon == SjablonTallNavn.INNSLAG_KAPITALINNTEKT_BELØP.id }?.verdi ?: BigDecimal.ZERO
 
     fun finnReferanseTilRolle(grunnlagListe: List<GrunnlagDto>, grunnlagstype: Grunnlagstype) = grunnlagListe
@@ -45,7 +43,7 @@ abstract class CoreMapper {
     // TODO Kan slås sammen med mapInntekt for forskudd?
     fun mapInntekt(
         beregnSærbidragrunnlag: BeregnGrunnlag,
-        referanseBidragspliktig: String,
+        referanseTilRolle: String,
         innslagKapitalinntektSjablonverdi: BigDecimal,
     ): List<InntektPeriodeCore> {
         try {
@@ -53,7 +51,7 @@ abstract class CoreMapper {
                 beregnSærbidragrunnlag.grunnlagListe
                     .filtrerOgKonverterBasertPåFremmedReferanse<InntektsrapporteringPeriode>(
                         grunnlagType = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
-                        referanse = referanseBidragspliktig,
+                        referanse = referanseTilRolle,
                     )
                     .filter { it.innhold.valgt }
                     .filter { it.innhold.gjelderBarn == null || it.innhold.gjelderBarn == beregnSærbidragrunnlag.søknadsbarnReferanse }
@@ -76,11 +74,31 @@ abstract class CoreMapper {
                             grunnlagsreferanseListe = emptyList(),
                         )
                     }
-            return akkumulerOgPeriodiser(
-                grunnlagListe = inntektGrunnlagListe,
-                referanse = referanseBidragspliktig,
-                clazz = InntektPeriodeCore::class.java,
-            )
+
+            return if (inntektGrunnlagListe.isEmpty()) {
+                // Oppretter en periode med inntekt = 0 hvis grunnlagslisten er tom
+                listOf(
+                    InntektPeriodeCore(
+                        referanse = opprettDelberegningreferanse(
+                            type = Grunnlagstype.DELBEREGNING_SUM_INNTEKT,
+                            periode = ÅrMånedsperiode(fom = beregnSærbidragrunnlag.periode.fom, til = beregnSærbidragrunnlag.periode.til),
+                            søknadsbarnReferanse = referanseTilRolle,
+                        ),
+                        periode = PeriodeCore(
+                            datoFom = beregnSærbidragrunnlag.periode.toDatoperiode().fom,
+                            datoTil = beregnSærbidragrunnlag.periode.toDatoperiode().til,
+                        ),
+                        beløp = BigDecimal.ZERO,
+                        grunnlagsreferanseListe = emptyList(),
+                    ),
+                )
+            } else {
+                akkumulerOgPeriodiser(
+                    grunnlagListe = inntektGrunnlagListe,
+                    referanse = referanseTilRolle,
+                    clazz = InntektPeriodeCore::class.java,
+                )
+            }
         } catch (e: Exception) {
             throw IllegalArgumentException(
                 "Ugyldig input ved beregning av særlige utgifter. Innhold i Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE er ikke gyldig: " +
@@ -88,9 +106,6 @@ abstract class CoreMapper {
             )
         }
     }
-
-    // TODO Bør det lages delberegninger uansett om det ikke er inntekter og/eller hjemmeboende barn i en periode (i så fall mappe ut 0 eller null)?
-    // TODO Søknadsbarnet vil f.eks. alltid ha en bostatus selv om det ikke bor hjemme
 
     // Lager en gruppert liste hvor grunnlaget er akkumulert pr bruddperiode, med en liste over tilhørende grunnlagsreferanser
     fun <T : DelberegningSærbidrag> akkumulerOgPeriodiser(grunnlagListe: List<T>, referanse: String, clazz: Class<T>): List<T> {
@@ -143,7 +158,7 @@ abstract class CoreMapper {
                 ),
                 periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
                 beløp = filtrertGrunnlagsliste.sumOf { it.beløp },
-                grunnlagsreferanseListe = filtrertGrunnlagsliste.map { it.referanse },
+                grunnlagsreferanseListe = filtrertGrunnlagsliste.map { it.referanse }.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it }),
             )
         }
 
@@ -164,7 +179,7 @@ abstract class CoreMapper {
                 ),
                 periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
                 antall = filtrertGrunnlagsliste.sumOf { it.antall },
-                grunnlagsreferanseListe = filtrertGrunnlagsliste.map { it.referanse },
+                grunnlagsreferanseListe = filtrertGrunnlagsliste.map { it.referanse }.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it }),
             )
         }
 
@@ -185,7 +200,7 @@ abstract class CoreMapper {
                 ),
                 periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
                 borMedAndre = filtrertGrunnlagsliste.any { it.borMedAndre },
-                grunnlagsreferanseListe = filtrertGrunnlagsliste.map { it.referanse },
+                grunnlagsreferanseListe = filtrertGrunnlagsliste.map { it.referanse }.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it }),
             )
         }
 
@@ -214,20 +229,6 @@ abstract class CoreMapper {
                     innholdListe = listOf(SjablonInnholdCore(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = it.verdi!!)),
                 )
             }
-    }
-
-    fun mapSjablonSjablontallBidragsevne(
-        beregnDatoFra: LocalDate,
-        beregnDatoTil: LocalDate,
-        sjablonSjablontallListe: List<Sjablontall>,
-        sjablontallMap: Map<String, SjablonTallNavn>,
-    ): List<SjablonPeriodeCore> {
-        return mapSjablonSjablontall(
-            beregnDatoFra = beregnDatoFra,
-            beregnDatoTil = beregnDatoTil,
-            sjablonSjablontallListe = sjablonSjablontallListe,
-            sjablontallMap = sjablontallMap,
-        ) { it.bidragsevne }
     }
 
     fun mapSjablonBidragsevne(
@@ -279,15 +280,6 @@ abstract class CoreMapper {
             dato.plusMonths(1).withDayOfMonth(1)
         } else {
             dato
-        }
-    }
-
-    companion object {
-
-        @JvmStatic
-        fun tilJsonNode(`object`: Any?): JsonNode {
-            val mapper = ObjectMapper()
-            return mapper.valueToTree(`object`)
         }
     }
 }

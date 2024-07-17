@@ -1,156 +1,154 @@
 {
-  "beregnDatoFra": "2020-08-01",
-  "beregnDatoTil": "2020-09-01",
+  "periode": {
+    "fom": "2020-08",
+    "til": "2020-09"
+  },
+  "søknadsbarnReferanse": "Person_Søknadsbarn",
   "grunnlagListe": [
     {
-      "referanse": "Mottatt_SoknadsbarnInfo_SB1",
-      "type": "SOKNADSBARN_INFO",
+      "referanse": "Person_Søknadsbarn",
+      "type": "PERSON_SØKNADSBARN",
       "innhold": {
-        "id": 1,
-        "fodselsdato": "2006-02-01"
-      }
+        "ident": "11111111110",
+        "navn": "Trengende Søknadsbarn",
+        "fødselsdato": "2006-02-01"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
     },
     {
-      "referanse": "Mottatt_Inntekt_AG_20200801_SB1",
-      "type": "INNTEKT",
+      "referanse": "Person_Bidragsmottaker",
+      "type": "PERSON_BIDRAGSMOTTAKER",
       "innhold": {
-        "rolle": "SOKNADSBARN",
-        "datoFom": "2020-08-01",
-        "datoTil": "2020-09-01",
-        "soknadsbarnId": 1,
-        "inntektType": "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-        "belop": 0
-      }
+        "ident": "22222222222",
+        "navn": "Søkende Bidragsmottaker",
+        "fødselsdato": "1982-05-05"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
     },
     {
-      "referanse": "Mottatt_Inntekt_AG_20200801_BM",
-      "type": "INNTEKT",
+      "referanse": "Person_Bidragspliktig",
+      "type": "PERSON_BIDRAGSPLIKTIG",
       "innhold": {
-        "rolle": "BIDRAGSMOTTAKER",
-        "datoFom": "2020-08-01",
-        "datoTil": "2021-09-01",
-        "inntektType": "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-        "belop": 300000,
-        "deltFordel": false,
-        "skatteklasse2": false
-      }
+        "ident": "33333333333",
+        "navn": "Motvillig Bidragspliktig",
+        "fødselsdato": "1981-07-13"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
     },
     {
-      "referanse": "Mottatt_Inntekt_AG_20200801_BM",
-      "type": "INNTEKT",
+      "referanse": "BeregningInntektRapportering_Ainntekt_SB_202008",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
       "innhold": {
-        "rolle": "BIDRAGSMOTTAKER",
-        "datoFom": "2020-08-01",
-        "datoTil": "2021-09-01",
-        "inntektType": "UTVIDET_BARNETRYGD",
-        "belop": 12688,
-        "deltFordel": false,
-        "skatteklasse2": false
-      }
+        "periode": {
+          "fom": "2020-08",
+          "til": "2020-09"
+        },
+        "inntektsrapportering": "AINNTEKT",
+        "gjelderBarn": null,
+        "beløp": 0,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Søknadsbarn"
     },
     {
-      "referanse": "Mottatt_Inntekt_AG_20200801_BP",
-      "type": "INNTEKT",
+      "referanse": "BeregningInntektRapportering_Ainntekt_BM_202008",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
       "innhold": {
-        "rolle": "BIDRAGSPLIKTIG",
-        "datoFom": "2020-08-01",
-        "datoTil": "2021-09-01",
-        "inntektType": "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-        "belop": 410000
-      }
+        "periode": {
+          "fom": "2020-08",
+          "til": "2020-09"
+        },
+        "inntektsrapportering": "AINNTEKT",
+        "gjelderBarn": null,
+        "beløp": 300000,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {
-      "referanse": "Mottatt_BarnIHusstand_20200801",
-      "type": "BARN_I_HUSSTAND",
+      "referanse": "BeregningInntektRapportering_UtvidetBarnetrygd_BM_202008",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
       "innhold": {
-        "datoFom": "2020-08-01",
-        "datoTil": "2021-09-01",
-        "antall": 0
-      }
+        "periode": {
+          "fom": "2020-08",
+          "til": "2020-09"
+        },
+        "inntektsrapportering": "UTVIDET_BARNETRYGD",
+        "gjelderBarn": null,
+        "beløp": 25655,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {
-      "referanse": "Mottatt_Bostatus_20200801",
-      "type": "BOSTATUS",
+      "referanse": "BeregningInntektRapportering_Ainntekt_BP_202008",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
       "innhold": {
-        "datoFom": "2020-08-01",
-        "datoTil": "2021-09-01",
-        "bostatusKode": "ALENE"
-      }
+        "periode": {
+          "fom": "2020-08",
+          "til": "2020-09"
+        },
+        "inntektsrapportering": "AINNTEKT",
+        "gjelderBarn": null,
+        "beløp": 410000,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
-      "referanse": "Mottatt_Saerfradrag_20200801",
-      "type": "SAERFRADRAG",
+      "referanse": "Bostatus_Søknadsbarn_202008",
+      "type": "BOSTATUS_PERIODE",
       "innhold": {
-        "datoFom": "2020-08-01",
-        "datoTil": "2021-09-01",
-        "saerfradragKode": "INGEN"
-      }
+        "periode": {
+          "fom": "2020-08",
+          "til": "2020-09"
+        },
+        "bostatus": "IKKE_MED_FORELDER",
+        "manueltRegistrert": false,
+        "relatertTilPart": "Person_Bidragspliktig"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Søknadsbarn"
     },
     {
-      "referanse": "Mottatt_Skatteklasse_20200801",
-      "type": "SKATTEKLASSE",
+      "referanse": "Bostatus_Bidragspliktig_202008",
+      "type": "BOSTATUS_PERIODE",
       "innhold": {
-        "datoFom": "2020-08-01",
-        "datoTil": "2021-09-01",
-        "skatteklasseId": 1
-      }
+        "periode": {
+          "fom": "2020-08",
+          "til": "2020-09"
+        },
+        "bostatus": "BOR_IKKE_MED_ANDRE_VOKSNE",
+        "manueltRegistrert": false,
+        "relatertTilPart": "Person_Bidragspliktig"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
-      "referanse": "Mottatt_Netto_Saertilskudd_20200801",
-      "type": "NETTO_SAERTILSKUDD",
+      "referanse": "delberegning_DELBEREGNING_UTGIFT_Person_Søknadsbarn_202008_202009",
+      "type": "DELBEREGNING_UTGIFT",
       "innhold": {
-        "datoFom": "2020-08-01",
-        "datoTil": "2021-09-01",
-        "nettoSaertilskuddBelop": 12000
-      }
-    },
-    {
-      "referanse": "Mottatt_Samvaersklasse_20200801_SB1",
-      "type": "SAMVAERSKLASSE",
-      "innhold": {
-        "datoFom": "2020-08-01",
-        "datoTil": "2021-09-01",
-        "soknadsbarnId": 1,
-        "soknadsbarnFodselsdato": "2006-02-01",
-        "samvaersklasseId": "02"
-      }
-    },
-    {
-      "referanse": "Mottatt_Samvaersklasse_20200801_SB2",
-      "type": "SAMVAERSKLASSE",
-      "innhold": {
-        "datoFom": "2020-08-01",
-        "datoTil": "2021-09-01",
-        "soknadsbarnId": 2,
-        "soknadsbarnFodselsdato": "2008-01-01",
-        "samvaersklasseId": "02"
-      }
-    },
-    {
-      "referanse": "Mottatt_LoependeBidrag_20200801_SB1",
-      "type": "LOPENDE_BIDRAG",
-      "innhold": {
-        "datoFom": "2020-08-01",
-        "datoTil": "2021-09-01",
-        "soknadsbarnId": 1,
-        "belop": 1800,
-        "opprinneligBPAndelUnderholdskostnadBelop": 4000,
-        "opprinneligBidragBelop": 1700,
-        "opprinneligSamvaersfradragBelop": 1323
-      }
-    },
-    {
-      "referanse": "Mottatt_LoependeBidrag_20200801_SB2",
-      "type": "LOPENDE_BIDRAG",
-      "innhold": {
-        "datoFom": "2020-08-01",
-        "datoTil": "2021-09-01",
-        "soknadsbarnId": 2,
-        "belop": 1800,
-        "opprinneligBPAndelUnderholdskostnadBelop": 4000,
-        "opprinneligBidragBelop": 1700,
-        "opprinneligSamvaersfradragBelop": 1323
-      }
+        "periode": {
+          "fom": "2020-08",
+          "til": "2020-09"
+        },
+        "sumBetaltAvBp": 0,
+        "sumGodkjent": 12000
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
     }
   ]
 }

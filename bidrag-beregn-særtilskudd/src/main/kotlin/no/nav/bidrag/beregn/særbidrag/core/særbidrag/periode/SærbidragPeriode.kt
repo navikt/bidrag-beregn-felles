@@ -27,7 +27,7 @@ class SærbidragPeriode(private val særbidragBeregning: SærbidragBeregning = S
         lagBruddperioder(periodeGrunnlag = grunnlag, beregnSærbidragListeGrunnlag = grunnlagTilBeregning)
 
         // Hvis det ligger 2 perioder på slutten som i til-dato inneholder hhv. beregningsperiodens til-dato og null slås de sammen
-        mergeSluttperiode(periodeListe = grunnlagTilBeregning.bruddPeriodeListe, datoTil = grunnlag.beregnDatoTil)
+        mergeSluttperiode(periodeListe = grunnlagTilBeregning.bruddPeriodeListe, datoTil = grunnlag.beregnDatoTil, åpenSluttperiode = false)
 
         // Foreta beregning
         beregnSærbidragPerPeriode(søknadsbarnPersonId = grunnlag.søknadsbarnPersonId, grunnlag = grunnlagTilBeregning)
@@ -110,6 +110,20 @@ class SærbidragPeriode(private val særbidragBeregning: SærbidragBeregning = S
     fun validerInput(grunnlag: BeregnSærbidragGrunnlag): List<Avvik> {
         val avvikListe =
             PeriodeUtil.validerBeregnPeriodeInput(beregnDatoFom = grunnlag.beregnDatoFra, beregnDatoTil = grunnlag.beregnDatoTil).toMutableList()
+
+        avvikListe.addAll(
+            PeriodeUtil.validerInputDatoer(
+                beregnDatoFom = grunnlag.beregnDatoFra,
+                beregnDatoTil = grunnlag.beregnDatoTil,
+                dataElement = "betaltAvBPPeriodeListe",
+                periodeListe = grunnlag.betaltAvBpPeriodeListe.map { it.getPeriode() },
+                sjekkOverlappendePerioder = true,
+                sjekkOppholdMellomPerioder = true,
+                sjekkDatoTilNull = true,
+                sjekkDatoStartSluttAvPerioden = true,
+                sjekkBeregnPeriode = true,
+            ),
+        )
 
         avvikListe.addAll(
             PeriodeUtil.validerInputDatoer(

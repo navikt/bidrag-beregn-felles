@@ -27,7 +27,7 @@ class BidragsevnePeriode(private val bidragsevneberegning: BidragsevneBeregning 
         lagBruddperioder(periodeGrunnlag = grunnlag, grunnlagTilBeregning = grunnlagTilBeregning)
 
         // Hvis det ligger 2 perioder på slutten som i til-dato inneholder hhv. beregningsperiodens til-dato og null slås de sammen
-        mergeSluttperiode(periodeListe = grunnlagTilBeregning.bruddPeriodeListe, datoTil = grunnlag.beregnDatoTil)
+        mergeSluttperiode(periodeListe = grunnlagTilBeregning.bruddPeriodeListe, datoTil = grunnlag.beregnDatoTil, åpenSluttperiode = false)
 
         // Foreta beregning
         beregnBidragsevnePerPeriode(grunnlagTilBeregning)
@@ -60,10 +60,11 @@ class BidragsevnePeriode(private val bidragsevneberegning: BidragsevneBeregning 
     // Løper gjennom periodene og finner matchende verdi for hver kategori. Kaller beregningsmodulen for hver beregningsperiode
     private fun beregnBidragsevnePerPeriode(grunnlagTilBeregning: BeregnBidragsevneListeGrunnlag) {
         grunnlagTilBeregning.bruddPeriodeListe.forEach { beregningsperiode: Periode ->
-            val inntektListe =
+            val inntekt =
                 grunnlagTilBeregning.inntektPeriodeListe
                     .filter { it.getPeriode().overlapperMed(beregningsperiode) }
-                    .map { Inntekt(referanse = it.referanse, inntektType = it.type, inntektBeløp = it.beløp) }
+                    .map { Inntekt(referanse = it.referanse, inntektBeløp = it.beløp) }
+                    .firstOrNull()
 
             val antallBarnIHusstand =
                 grunnlagTilBeregning.barnIHusstandPeriodeListe.stream()
@@ -71,9 +72,7 @@ class BidragsevnePeriode(private val bidragsevneberegning: BidragsevneBeregning 
                     .map { AntallBarnIHusstand(referanse = it.referanse, antallBarn = it.antall) }
                     .findFirst()
                     .orElseThrow {
-                        IllegalArgumentException(
-                            "Antall barn i husstand mangler data for periode: ${beregningsperiode.getPeriode()}",
-                        )
+                        IllegalArgumentException("Antall barn i husstand mangler data for periode: ${beregningsperiode.getPeriode()}")
                     }
 
             val bostatusVoksneIHusstand =
@@ -90,7 +89,7 @@ class BidragsevnePeriode(private val bidragsevneberegning: BidragsevneBeregning 
             // Kaller beregningsmodulen for hver beregningsperiode
             val beregnBidragsevneGrunnlagPeriodisert =
                 GrunnlagBeregning(
-                    inntektListe = inntektListe,
+                    inntekt = inntekt,
                     antallBarnIHusstand = antallBarnIHusstand,
                     bostatusVoksneIHusstand = bostatusVoksneIHusstand,
                     sjablonListe = sjablonliste,

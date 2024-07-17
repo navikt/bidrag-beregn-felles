@@ -39,9 +39,9 @@ data class ResultatBeregning(
 // Grunnlag beregning
 data class GrunnlagBeregning(
     val utgift: Utgift,
-    val inntektBPListe: List<Inntekt>,
-    val inntektBMListe: List<Inntekt>,
-    val inntektSBListe: List<Inntekt>,
+    val inntektBP: Inntekt?,
+    val inntektBM: Inntekt?,
+    val inntektSB: Inntekt?,
     val sjablonListe: List<SjablonPeriode>,
 )
 
@@ -52,7 +52,6 @@ data class Utgift(
 
 data class Inntekt(
     val referanse: String,
-    val inntektType: String,
     val inntektBeløp: BigDecimal,
 )
 

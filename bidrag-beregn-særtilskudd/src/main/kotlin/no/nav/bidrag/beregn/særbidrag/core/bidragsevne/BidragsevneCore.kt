@@ -52,7 +52,6 @@ internal class BidragsevneCore(private val bidragsevnePeriode: BidragsevnePeriod
         InntektPeriode(
             referanse = it.referanse,
             periode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
-            type = " ",
             beløp = it.beløp,
         )
     }
@@ -79,15 +78,15 @@ internal class BidragsevneCore(private val bidragsevnePeriode: BidragsevnePeriod
         ResultatPeriodeCore(
             periode = PeriodeCore(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
             resultat = ResultatBeregningCore(it.resultat.beløp),
-            grunnlagsreferanseListe = mapReferanseListe(it).toMutableList(),
+            grunnlagsreferanseListe = mapReferanseListe(it).sorted().toMutableList(),
         )
     }
 
     private fun mapReferanseListe(resultatPeriode: ResultatPeriode): List<String> {
-        val (inntektListe, antallBarnIHusstand, antallVoksneIHusstand) = resultatPeriode.grunnlag
+        val (inntekt, antallBarnIHusstand, antallVoksneIHusstand) = resultatPeriode.grunnlag
         val sjablonListe = resultatPeriode.resultat.sjablonListe
         val referanseListe = mutableListOf<String>()
-        inntektListe.forEach { referanseListe.add(it.referanse) }
+        if (inntekt != null) referanseListe.add(inntekt.referanse)
         referanseListe.add(antallBarnIHusstand.referanse)
         referanseListe.add(antallVoksneIHusstand.referanse)
         referanseListe.addAll(sjablonListe.map { lagSjablonReferanse(it) }.distinct())

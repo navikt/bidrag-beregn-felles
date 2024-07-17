@@ -23,7 +23,7 @@ internal object BidragsevneCoreMapper : CoreMapper() {
         val inntektBPPeriodeCoreListe =
             mapInntekt(
                 beregnSærbidragrunnlag = beregnGrunnlag,
-                referanseBidragspliktig = finnReferanseTilRolle(
+                referanseTilRolle = finnReferanseTilRolle(
                     grunnlagListe = beregnGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
                 ),
@@ -32,11 +32,6 @@ internal object BidragsevneCoreMapper : CoreMapper() {
         val barnIHusstandenPeriodeCoreListe = mapBarnIHusstanden(beregnGrunnlag)
         val voksneIHusstandenPeriodeCoreListe = mapVoksneIHusstanden(beregnGrunnlag)
         val sjablonPeriodeCoreListe = ArrayList<SjablonPeriodeCore>()
-
-        // Validerer at alle nødvendige grunnlag er med
-        validerGrunnlag(
-            inntektGrunnlag = inntektBPPeriodeCoreListe.isNotEmpty(),
-        )
 
         // Henter aktuelle sjabloner
         sjablonPeriodeCoreListe.addAll(
@@ -73,14 +68,6 @@ internal object BidragsevneCoreMapper : CoreMapper() {
         )
     }
 
-    private fun validerGrunnlag(inntektGrunnlag: Boolean) {
-        when {
-            !inntektGrunnlag -> {
-                throw IllegalArgumentException("Inntekt mangler i input")
-            }
-        }
-    }
-
     private fun mapBarnIHusstanden(beregnGrunnlag: BeregnGrunnlag): List<BarnIHusstandenPeriodeCore> {
         try {
             val barnIHusstandenGrunnlagListe =
@@ -88,7 +75,8 @@ internal object BidragsevneCoreMapper : CoreMapper() {
                     .filtrerOgKonverterBasertPåEgenReferanse<BostatusPeriode>(Grunnlagstype.BOSTATUS_PERIODE)
                     .filter {
                         it.innhold.bostatus == Bostatuskode.MED_FORELDER || it.innhold.bostatus == Bostatuskode.IKKE_MED_FORELDER ||
-                            it.innhold.bostatus == Bostatuskode.DOKUMENTERT_SKOLEGANG || it.innhold.bostatus == Bostatuskode.DELT_BOSTED
+                            it.innhold.bostatus == Bostatuskode.DOKUMENTERT_SKOLEGANG || it.innhold.bostatus == Bostatuskode.DELT_BOSTED ||
+                            it.innhold.bostatus == Bostatuskode.REGNES_IKKE_SOM_BARN
                     }
                     .map {
                         BarnIHusstandenPeriodeCore(
@@ -101,12 +89,14 @@ internal object BidragsevneCoreMapper : CoreMapper() {
                             antall =
                             when (it.innhold.bostatus) {
                                 Bostatuskode.IKKE_MED_FORELDER -> 0.0
+                                Bostatuskode.REGNES_IKKE_SOM_BARN -> 0.0
                                 Bostatuskode.DELT_BOSTED -> 0.5
                                 else -> 1.0
                             },
                             grunnlagsreferanseListe = emptyList(),
                         )
                     }
+
             return akkumulerOgPeriodiser(
                 grunnlagListe = barnIHusstandenGrunnlagListe,
                 referanse = beregnGrunnlag.søknadsbarnReferanse,
@@ -141,6 +131,7 @@ internal object BidragsevneCoreMapper : CoreMapper() {
                             grunnlagsreferanseListe = emptyList(),
                         )
                     }
+
             return akkumulerOgPeriodiser(
                 voksneIHusstandenGrunnlagListe,
                 beregnGrunnlag.søknadsbarnReferanse,

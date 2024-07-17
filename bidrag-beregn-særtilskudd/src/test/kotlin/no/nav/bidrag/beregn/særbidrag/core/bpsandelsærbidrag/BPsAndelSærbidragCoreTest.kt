@@ -10,6 +10,7 @@ import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonInnholdCore
 import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.TestUtil
+import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.BidragsevneCoreTest
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.bo.BeregnBPsAndelSærbidragResultat
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.bo.GrunnlagBeregning
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.bo.Inntekt
@@ -24,13 +25,11 @@ import no.nav.bidrag.domene.enums.beregning.Avvikstype
 import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import java.math.BigDecimal
@@ -44,68 +43,46 @@ internal class BPsAndelSærbidragCoreTest {
     @Mock
     private lateinit var bPsAndelSærbidragPeriodeMock: BPsAndelSærbidragPeriode
 
-    private lateinit var beregnBPsAndelSærbidragGrunnlagCore: BeregnBPsAndelSærbidragGrunnlagCore
-    private lateinit var bPsAndelSærbidragPeriodeResultat: BeregnBPsAndelSærbidragResultat
-    private lateinit var avvikListe: List<Avvik>
+    private val beregnBPsAndelSærbidragGrunnlagCore = byggBeregnBPsAndelSærbidragGrunnlagCore()
+    private val beregnBPsAndelSærbidragResultat = byggBeregnBPsAndelSærbidragResultat()
+    private val avvikListe = byggAvvik()
 
     @BeforeEach
     fun initMocksAndService() {
         bPsAndelSærbidragCore = BPsAndelSærbidragCore(bPsAndelSærbidragPeriodeMock)
     }
 
+    @DisplayName("Beregning med ugyldig input gir avvik")
     @Test
-    @DisplayName("Skal beregne BPs andel av særbidrag")
-    fun skalBeregneBPsAndelSærbidrag() {
-        byggBPsAndelSærbidragPeriodeGrunnlagCore()
-        byggBPsAndelSærbidragPeriodeResultat()
-
-        `when`(bPsAndelSærbidragPeriodeMock.beregnPerioder(any())).thenReturn(bPsAndelSærbidragPeriodeResultat)
+    fun beregningMedUgyldigInputGirAvvik() {
+        `when`(bPsAndelSærbidragPeriodeMock.validerInput(BidragsevneCoreTest.any())).thenReturn(avvikListe)
 
         val resultatCore = bPsAndelSærbidragCore.beregnBPsAndelSærbidrag(beregnBPsAndelSærbidragGrunnlagCore)
 
-        assertAll(
-            { assertThat(resultatCore).isNotNull() },
-            { assertThat(resultatCore.avvikListe).isEmpty() },
-            { assertThat(resultatCore.resultatPeriodeListe).isNotEmpty() },
-            { assertThat(resultatCore.resultatPeriodeListe).hasSize(3) },
-            { assertThat(resultatCore.resultatPeriodeListe[0].periode.datoFom).isEqualTo(LocalDate.parse("2017-01-01")) },
-            { assertThat(resultatCore.resultatPeriodeListe[0].periode.datoTil).isEqualTo(LocalDate.parse("2018-01-01")) },
-            { assertThat(resultatCore.resultatPeriodeListe[0].resultat.resultatAndelProsent).isEqualTo(BigDecimal.valueOf(10)) },
-            { assertThat(resultatCore.resultatPeriodeListe[1].periode.datoFom).isEqualTo(LocalDate.parse("2018-01-01")) },
-            { assertThat(resultatCore.resultatPeriodeListe[1].periode.datoTil).isEqualTo(LocalDate.parse("2019-01-01")) },
-            { assertThat(resultatCore.resultatPeriodeListe[1].resultat.resultatAndelProsent).isEqualTo(BigDecimal.valueOf(20)) },
-            { assertThat(resultatCore.resultatPeriodeListe[2].periode.datoFom).isEqualTo(LocalDate.parse("2019-01-01")) },
-            { assertThat(resultatCore.resultatPeriodeListe[2].periode.datoTil).isEqualTo(LocalDate.parse("2020-01-01")) },
-            { assertThat(resultatCore.resultatPeriodeListe[2].resultat.resultatAndelProsent).isEqualTo(BigDecimal.valueOf(30)) },
-            { assertThat(resultatCore.sjablonListe[0].verdi).isEqualTo(BigDecimal.valueOf(1600)) },
-        )
+        assertThat(resultatCore.avvikListe).isNotEmpty
+        assertThat(resultatCore.avvikListe).hasSize(1)
+        assertThat(resultatCore.avvikListe[0].avvikTekst).isEqualTo("beregnDatoTil må være etter beregnDatoFra")
+        assertThat(resultatCore.resultatPeriodeListe).isEmpty()
     }
 
+    @DisplayName("Beregning med gyldig input gir korrekt resultat")
     @Test
-    @DisplayName("Skal ikke beregne BPs andel av særbidrag ved avvik")
-    fun skalIkkeBeregneAndelVedAvvik() {
-        byggBPsAndelSærbidragPeriodeGrunnlagCore()
-        byggAvvik()
-
-        `when`(bPsAndelSærbidragPeriodeMock.validerInput(any())).thenReturn(avvikListe)
+    fun beregningMedGyldigInputGirKorrektResultat() {
+        `when`(bPsAndelSærbidragPeriodeMock.validerInput(BidragsevneCoreTest.any())).thenReturn(emptyList())
+        `when`(bPsAndelSærbidragPeriodeMock.beregnPerioder(BidragsevneCoreTest.any())).thenReturn(beregnBPsAndelSærbidragResultat)
 
         val resultatCore = bPsAndelSærbidragCore.beregnBPsAndelSærbidrag(beregnBPsAndelSærbidragGrunnlagCore)
 
-        assertAll(
-            { assertThat(resultatCore).isNotNull() },
-            { assertThat(resultatCore.avvikListe).isNotEmpty() },
-            { assertThat(resultatCore.avvikListe).hasSize(1) },
-            { assertThat(resultatCore.avvikListe[0].avvikTekst).isEqualTo("beregnDatoTil må være etter beregnDatoFra") },
-            { assertThat(resultatCore.avvikListe[0].avvikType).isEqualTo(Avvikstype.DATO_FOM_ETTER_DATO_TIL.toString()) },
-            { assertThat(resultatCore.resultatPeriodeListe).isEmpty() },
-        )
+        assertThat(resultatCore.avvikListe).isEmpty()
+        assertThat(resultatCore.resultatPeriodeListe).isNotEmpty
+        assertThat(resultatCore.resultatPeriodeListe).hasSize(1)
     }
 
-    private fun byggBPsAndelSærbidragPeriodeGrunnlagCore() {
+    private fun byggBeregnBPsAndelSærbidragGrunnlagCore(): BeregnBPsAndelSærbidragGrunnlagCore {
         val utgiftPeriodeListe = listOf(
             UtgiftPeriodeCore(
                 referanse = TestUtil.UTGIFT_REFERANSE,
-                periode = PeriodeCore(datoFom = LocalDate.parse("2018-01-01"), datoTil = LocalDate.parse("2020-08-01")),
+                periode = PeriodeCore(datoFom = LocalDate.parse("2020-01-01"), datoTil = LocalDate.parse("2020-02-01")),
                 beløp = BigDecimal.valueOf(1000),
             ),
         )
@@ -113,7 +90,7 @@ internal class BPsAndelSærbidragCoreTest {
         val inntektBPPeriodeListe = listOf(
             InntektPeriodeCore(
                 referanse = TestUtil.INNTEKT_REFERANSE,
-                periode = PeriodeCore(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2020-01-01")),
+                periode = PeriodeCore(datoFom = LocalDate.parse("2020-01-01"), datoTil = LocalDate.parse("2020-02-01")),
                 beløp = BigDecimal.valueOf(111),
                 grunnlagsreferanseListe = emptyList(),
             ),
@@ -122,7 +99,7 @@ internal class BPsAndelSærbidragCoreTest {
         val inntektBMPeriodeListe = listOf(
             InntektPeriodeCore(
                 referanse = TestUtil.INNTEKT_REFERANSE,
-                periode = PeriodeCore(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2020-01-01")),
+                periode = PeriodeCore(datoFom = LocalDate.parse("2020-01-01"), datoTil = LocalDate.parse("2020-02-01")),
                 beløp = BigDecimal.valueOf(222),
                 grunnlagsreferanseListe = emptyList(),
             ),
@@ -131,7 +108,7 @@ internal class BPsAndelSærbidragCoreTest {
         val inntektSBPeriodeListe = listOf(
             InntektPeriodeCore(
                 referanse = TestUtil.INNTEKT_REFERANSE,
-                periode = PeriodeCore(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2020-01-01")),
+                periode = PeriodeCore(datoFom = LocalDate.parse("2020-01-01"), datoTil = LocalDate.parse("2020-02-01")),
                 beløp = BigDecimal.valueOf(333),
                 grunnlagsreferanseListe = emptyList(),
             ),
@@ -139,16 +116,16 @@ internal class BPsAndelSærbidragCoreTest {
 
         val sjablonPeriodeListe = listOf(
             SjablonPeriodeCore(
-                periode = PeriodeCore(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2020-01-01")),
+                periode = PeriodeCore(datoFom = LocalDate.parse("2020-01-01"), datoTil = LocalDate.parse("2020-02-01")),
                 navn = SjablonTallNavn.FORSKUDDSSATS_BELØP.navn,
                 nokkelListe = emptyList(),
                 innholdListe = listOf(SjablonInnholdCore(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = BigDecimal.valueOf(1600))),
             ),
         )
 
-        beregnBPsAndelSærbidragGrunnlagCore = BeregnBPsAndelSærbidragGrunnlagCore(
-            beregnDatoFra = LocalDate.parse("2017-01-01"),
-            beregnDatoTil = LocalDate.parse("2020-01-01"),
+        return BeregnBPsAndelSærbidragGrunnlagCore(
+            beregnDatoFra = LocalDate.parse("2020-01-01"),
+            beregnDatoTil = LocalDate.parse("2020-02-01"),
             utgiftPeriodeListe = utgiftPeriodeListe,
             inntektBPPeriodeListe = inntektBPPeriodeListe,
             inntektBMPeriodeListe = inntektBMPeriodeListe,
@@ -157,45 +134,39 @@ internal class BPsAndelSærbidragCoreTest {
         )
     }
 
-    private fun byggBPsAndelSærbidragPeriodeResultat() {
+    private fun byggBeregnBPsAndelSærbidragResultat(): BeregnBPsAndelSærbidragResultat {
         val utgift =
             Utgift(
                 referanse = TestUtil.UTGIFT_REFERANSE,
                 beløp = BigDecimal.valueOf(1000),
             )
-        val inntektBPListe = listOf(
+        val inntektBP =
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
-                inntektType = "LONN_SKE",
                 inntektBeløp = BigDecimal.valueOf(111.0),
-            ),
-        )
-        val inntektBMListe = listOf(
+            )
+        val inntektBM =
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
-                inntektType = "LONN_SKE",
                 inntektBeløp = BigDecimal.valueOf(222.0),
-            ),
-        )
-        val inntektSBListe = listOf(
+            )
+        val inntektSB =
             Inntekt(
                 referanse = TestUtil.INNTEKT_REFERANSE,
-                inntektType = "LONN_SKE",
                 inntektBeløp = BigDecimal.valueOf(333.0),
-            ),
-        )
+            )
 
         val periodeResultatListe = mutableListOf<ResultatPeriode>()
         periodeResultatListe.add(
             ResultatPeriode(
-                periode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2018-01-01")),
+                periode = Periode(datoFom = LocalDate.parse("2020-01-01"), datoTil = LocalDate.parse("2020-02-01")),
                 resultat = ResultatBeregning(
                     resultatAndelProsent = BigDecimal.valueOf(10),
                     resultatAndelBeløp = BigDecimal.valueOf(1000),
                     barnetErSelvforsørget = false,
                     sjablonListe = listOf(
                         SjablonPeriodeNavnVerdi(
-                            periode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("9999-12-31")),
+                            periode = Periode(datoFom = LocalDate.parse("2020-01-01"), datoTil = null),
                             navn = SjablonTallNavn.FORSKUDDSSATS_BELØP.navn,
                             verdi = BigDecimal.valueOf(1600),
                         ),
@@ -203,12 +174,12 @@ internal class BPsAndelSærbidragCoreTest {
                 ),
                 grunnlag = GrunnlagBeregning(
                     utgift = utgift,
-                    inntektBPListe = inntektBPListe,
-                    inntektBMListe = inntektBMListe,
-                    inntektSBListe = inntektSBListe,
+                    inntektBP = inntektBP,
+                    inntektBM = inntektBM,
+                    inntektSB = inntektSB,
                     sjablonListe = listOf(
                         SjablonPeriode(
-                            sjablonPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("9999-12-31")),
+                            sjablonPeriode = Periode(datoFom = LocalDate.parse("2020-01-01"), datoTil = null),
                             sjablon = Sjablon(
                                 navn = SjablonTallNavn.FORSKUDDSSATS_BELØP.navn,
                                 nokkelListe = emptyList(),
@@ -219,83 +190,13 @@ internal class BPsAndelSærbidragCoreTest {
                 ),
             ),
         )
-        periodeResultatListe.add(
-            ResultatPeriode(
-                periode = Periode(datoFom = LocalDate.parse("2018-01-01"), datoTil = LocalDate.parse("2019-01-01")),
-                resultat = ResultatBeregning(
-                    resultatAndelProsent = BigDecimal.valueOf(20),
-                    resultatAndelBeløp = BigDecimal.valueOf(1000),
-                    barnetErSelvforsørget = false,
-                    sjablonListe = listOf(
-                        SjablonPeriodeNavnVerdi(
-                            periode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("9999-12-31")),
-                            navn = SjablonTallNavn.FORSKUDDSSATS_BELØP.navn,
-                            verdi = BigDecimal.valueOf(1600),
-                        ),
-                    ),
-                ),
-                grunnlag = GrunnlagBeregning(
-                    utgift = utgift,
-                    inntektBPListe = inntektBPListe,
-                    inntektBMListe = inntektBMListe,
-                    inntektSBListe = inntektSBListe,
-                    sjablonListe = listOf(
-                        SjablonPeriode(
-                            sjablonPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("9999-12-31")),
-                            sjablon = Sjablon(
-                                navn = SjablonTallNavn.FORSKUDDSSATS_BELØP.navn,
-                                nokkelListe = emptyList(),
-                                innholdListe = listOf(SjablonInnhold(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = BigDecimal.valueOf(1640))),
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        )
-        periodeResultatListe.add(
-            ResultatPeriode(
-                periode = Periode(datoFom = LocalDate.parse("2019-01-01"), datoTil = LocalDate.parse("2020-01-01")),
-                resultat = ResultatBeregning(
-                    resultatAndelProsent = BigDecimal.valueOf(30),
-                    resultatAndelBeløp = BigDecimal.valueOf(1000),
-                    barnetErSelvforsørget = false,
-                    sjablonListe = listOf(
-                        SjablonPeriodeNavnVerdi(
-                            periode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("9999-12-31")),
-                            navn = SjablonTallNavn.FORSKUDDSSATS_BELØP.navn,
-                            verdi = BigDecimal.valueOf(1600),
-                        ),
-                    ),
-                ),
-                grunnlag = GrunnlagBeregning(
-                    utgift = utgift,
-                    inntektBPListe = inntektBPListe,
-                    inntektBMListe = inntektBMListe,
-                    inntektSBListe = inntektSBListe,
-                    sjablonListe = listOf(
-                        SjablonPeriode(
-                            sjablonPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("9999-12-31")),
-                            sjablon = Sjablon(
-                                navn = SjablonTallNavn.FORSKUDDSSATS_BELØP.navn,
-                                nokkelListe = emptyList(),
-                                innholdListe = listOf(SjablonInnhold(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = BigDecimal.valueOf(1680))),
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        )
 
-        bPsAndelSærbidragPeriodeResultat = BeregnBPsAndelSærbidragResultat(periodeResultatListe)
+        return BeregnBPsAndelSærbidragResultat(periodeResultatListe)
     }
 
-    private fun byggAvvik() {
-        avvikListe = listOf(
+    private fun byggAvvik(): List<Avvik> {
+        return listOf(
             Avvik(avvikTekst = "beregnDatoTil må være etter beregnDatoFra", avvikType = Avvikstype.DATO_FOM_ETTER_DATO_TIL),
         )
-    }
-
-    companion object MockitoHelper {
-        fun <T> any(): T = Mockito.any()
     }
 }

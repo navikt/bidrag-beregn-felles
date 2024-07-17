@@ -28,7 +28,7 @@ class BidragsevneBeregning : FellesBeregning() {
         )
 
         // Legger sammen inntektene
-        val inntekt = grunnlag.inntektListe.sumOf { it.inntektBeløp }
+        val inntekt = grunnlag.inntekt?.inntektBeløp ?: BigDecimal.ZERO
 
         // Beregner minstefradrag
         val minstefradrag = beregnMinstefradrag(
@@ -89,11 +89,14 @@ class BidragsevneBeregning : FellesBeregning() {
         )
     }
 
-    fun beregnMinstefradrag(inntekt: BigDecimal, minstefradragInntektSjablonBeløp: BigDecimal, minstefradragInntektSjablonProsent: BigDecimal) =
-        minOf(
-            inntekt.multiply(minstefradragInntektSjablonProsent.divide(BigDecimal.valueOf(100), MathContext(2, RoundingMode.HALF_UP))),
-            minstefradragInntektSjablonBeløp,
-        ).setScale(0, RoundingMode.HALF_UP)
+    fun beregnMinstefradrag(
+        inntekt: BigDecimal,
+        minstefradragInntektSjablonBeløp: BigDecimal,
+        minstefradragInntektSjablonProsent: BigDecimal,
+    ): BigDecimal = minOf(
+        inntekt.multiply(minstefradragInntektSjablonProsent.divide(BigDecimal.valueOf(100), MathContext(2, RoundingMode.HALF_UP))),
+        minstefradragInntektSjablonBeløp,
+    ).setScale(0, RoundingMode.HALF_UP)
 
     fun beregnSkattetrinnBeløp(grunnlag: GrunnlagBeregning, inntekt: BigDecimal): BigDecimal {
         val sortertTrinnvisSkattesatsListe = SjablonUtil.hentTrinnvisSkattesats(

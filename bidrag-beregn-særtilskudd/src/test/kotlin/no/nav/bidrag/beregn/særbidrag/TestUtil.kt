@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.POJONode
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.bo.Sjablon
@@ -22,6 +21,7 @@ import no.nav.bidrag.commons.service.sjablon.Bidragsevne
 import no.nav.bidrag.commons.service.sjablon.Samværsfradrag
 import no.nav.bidrag.commons.service.sjablon.Sjablontall
 import no.nav.bidrag.commons.service.sjablon.TrinnvisSkattesats
+import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
@@ -31,6 +31,7 @@ import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.beregning.særbidrag.BeregnetSærbidragResultat
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUtgift
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
@@ -45,11 +46,11 @@ object TestUtil {
     const val BIDRAGSEVNE_REFERANSE = "BIDRAGSEVNE_REFERANSE"
     const val BPS_ANDEL_SÆRBIDRAG_REFERANSE = "BPS_ANDEL_SÆRBIDRAG_REFERANSE"
     const val INNTEKT_REFERANSE = "INNTEKT_REFERANSE"
-    const val SKATTEKLASSE_REFERANSE = "SKATTEKLASSE_REFERANSE"
-    const val BOSTATUS_REFERANSE = "BOSTATUS_REFERANSE"
+    private const val SKATTEKLASSE_REFERANSE = "SKATTEKLASSE_REFERANSE"
+    private const val BOSTATUS_REFERANSE = "BOSTATUS_REFERANSE"
     const val BARN_I_HUSSTANDEN_REFERANSE = "BARN_I_HUSSTANDEN_REFERANSE"
     const val VOKSNE_I_HUSSTANDEN_REFERANSE = "VOKSNE_I_HUSSTANDEN_REFERANSE"
-    const val SAMVÆRSKLASSE_REFERANSE = "SAMVÆRSKLASSE_REFERANSE"
+    private const val SAMVÆRSKLASSE_REFERANSE = "SAMVÆRSKLASSE_REFERANSE"
     const val UTGIFT_REFERANSE = "UTGIFT_REFERANSE"
 
     fun byggTotalSærbidragGrunnlag(): BeregnGrunnlag {
@@ -58,7 +59,7 @@ object TestUtil {
             GrunnlagDto(
                 referanse = "Person_Søknadsbarn",
                 type = Grunnlagstype.PERSON_SØKNADSBARN,
-                innhold = tilJsonNodeInnhold(
+                innhold = POJONode(
                     Person(
                         ident = Personident("11111111111"),
                         navn = "SBNavn",
@@ -71,7 +72,7 @@ object TestUtil {
             GrunnlagDto(
                 referanse = "Person_Bidragsmottaker",
                 type = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
-                innhold = tilJsonNodeInnhold(
+                innhold = POJONode(
                     Person(
                         ident = Personident("22222222222"),
                         fødselsdato = LocalDate.parse("1985-07-11"),
@@ -83,7 +84,7 @@ object TestUtil {
             GrunnlagDto(
                 referanse = "Person_Bidragspliktig",
                 type = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
-                innhold = tilJsonNodeInnhold(
+                innhold = POJONode(
                     Person(
                         ident = Personident("33333333333"),
                         fødselsdato = LocalDate.parse("1983-01-19"),
@@ -95,7 +96,7 @@ object TestUtil {
             GrunnlagDto(
                 referanse = "Mottatt_Inntekt_AG_20200801_SB_1",
                 type = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
-                innhold = tilJsonNodeInnhold(
+                innhold = POJONode(
                     InntektsrapporteringPeriode(
                         periode = ÅrMånedsperiode(fom = LocalDate.parse("2020-08-01"), til = LocalDate.parse("2020-09-01")),
                         manueltRegistrert = false,
@@ -113,7 +114,7 @@ object TestUtil {
             GrunnlagDto(
                 referanse = "Mottatt_Inntekt_AG_20200801_BM",
                 type = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
-                innhold = tilJsonNodeInnhold(
+                innhold = POJONode(
                     InntektsrapporteringPeriode(
                         periode = ÅrMånedsperiode(fom = LocalDate.parse("2020-08-01"), til = LocalDate.parse("2020-09-01")),
                         manueltRegistrert = false,
@@ -131,7 +132,7 @@ object TestUtil {
             GrunnlagDto(
                 referanse = "Mottatt_Inntekt_UB_20200801_BM",
                 type = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
-                innhold = tilJsonNodeInnhold(
+                innhold = POJONode(
                     InntektsrapporteringPeriode(
                         periode = ÅrMånedsperiode(fom = LocalDate.parse("2020-08-01"), til = LocalDate.parse("2020-09-01")),
                         manueltRegistrert = false,
@@ -149,7 +150,7 @@ object TestUtil {
             GrunnlagDto(
                 referanse = "Mottatt_Inntekt_AG_20200801_BP",
                 type = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
-                innhold = tilJsonNodeInnhold(
+                innhold = POJONode(
                     InntektsrapporteringPeriode(
                         periode = ÅrMånedsperiode(fom = LocalDate.parse("2020-08-01"), til = LocalDate.parse("2020-09-01")),
                         manueltRegistrert = false,
@@ -167,7 +168,7 @@ object TestUtil {
             GrunnlagDto(
                 referanse = "Delberegning_Utgift",
                 type = Grunnlagstype.DELBEREGNING_UTGIFT,
-                innhold = tilJsonNodeInnhold(
+                innhold = POJONode(
                     DelberegningUtgift(
                         periode = ÅrMånedsperiode(fom = LocalDate.parse("2020-08-01"), til = LocalDate.parse("2020-09-01")),
                         sumBetaltAvBp = BigDecimal.ZERO,
@@ -186,47 +187,11 @@ object TestUtil {
         )
     }
 
-    private fun tilJsonNodeInnhold(`object`: Any?): JsonNode {
-        jacksonObjectMapper().registerModule(JavaTimeModule())
-        return jacksonObjectMapper().convertValue(`object`, JsonNode::class.java)
-    }
-
-//    fun hentAlleReferanser(beregnetTotalSærbidragResultat: BeregnetTotalSærbidragResultat): List<String> {
-//        val alleReferanser: MutableList<String> = ArrayList()
-//        for ((_, _, _, grunnlagReferanseListe) in beregnetTotalSærbidragResultat.beregnetSærbidragPeriodeListe) {
-//            alleReferanser.addAll(grunnlagReferanseListe)
-//        }
-//        for ((_, _, innhold) in beregnetTotalSærbidragResultat.grunnlagListe) {
-//            if (innhold.has("grunnlagReferanseListe")) {
-//                val grunnlagReferanseListe = innhold["grunnlagReferanseListe"]
-//                if (grunnlagReferanseListe.isArray) {
-//                    for (grunnlagReferanse in grunnlagReferanseListe) {
-//                        alleReferanser.add(grunnlagReferanse.asText())
-//                    }
-//                }
-//            }
-//        }
-//        return alleReferanser
-//    }
-
-    // Bygger opp BeregnBidragsevneResultat
-//    fun dummyBidragsevneResultat(): Grunnlag {
-//        val objectMapper = ObjectMapper()
-//        val bidragsevne =
-//            BidragsevneResultatPeriode(
-//                LocalDate.parse("2020-08-01"),
-//                LocalDate.parse("2020-09-01"),
-//                BigDecimal.valueOf(100),
-//                arrayListOf(
-//                    INNTEKT_REFERANSE,
-//                    SKATTEKLASSE_REFERANSE,
-//                    BOSTATUS_REFERANSE,
-//                    BARN_I_HUSSTAND_REFERANSE,
-//                    SAMVAERSKLASSE_REFERANSE,
-//                ),
-//            )
-//        return Grunnlag(BIDRAGSEVNE_REFERANSE, Grunnlagstype.BIDRAGSEVNE, objectMapper.valueToTree(bidragsevne))
-//    }
+    fun hentAlleReferanser(totalSærbidragResultat: BeregnetSærbidragResultat) =
+        totalSærbidragResultat.beregnetSærbidragPeriodeListe.flatMap { it.grunnlagsreferanseListe } +
+            totalSærbidragResultat.grunnlagListe.flatMap { it.grunnlagsreferanseListe } +
+            totalSærbidragResultat.grunnlagListe.flatMap { grunnlag -> grunnlag.gjelderReferanse?.let { listOf(it) } ?: emptyList() }
+                .distinct()
 
     // Bygger opp BeregnBidragsevneResultatCore
     fun dummyBidragsevneResultatCore(): BeregnBidragsevneResultatCore {
@@ -263,30 +228,6 @@ object TestUtil {
         )
         return BeregnBidragsevneResultatCore(emptyList(), mutableListOf(), avvikListe)
     }
-
-    // Bygger opp BeregnBPAndelSærbidragResultat
-//    fun dummyBPsAndelSærbidragResultat(): Grunnlag {
-//        val objectMapper = ObjectMapper()
-//        val bpsAndelSærbidrag =
-//            BPsAndelSærbidragResultatPeriode(
-//                LocalDate.parse("2020-08-01"),
-//                LocalDate.parse("2020-09-01"),
-//                BigDecimal.valueOf(100),
-//                BigDecimal.valueOf(10),
-//                false,
-//                arrayListOf(
-//                    INNTEKT_REFERANSE,
-//                    INNTEKT_REFERANSE,
-//                    INNTEKT_REFERANSE,
-//                ),
-//            )
-//
-//        return Grunnlag(
-//            BPS_ANDEL_SÆRBIDRAG_REFERANSE,
-//            Grunnlagstype.BPS_ANDEL_SÆRBIDRAG,
-//            objectMapper.valueToTree(bpsAndelSærbidrag),
-//        )
-//    }
 
     // Bygger opp BeregnBPsAndelSærbidragResultatCore
     fun dummyBPsAndelSærbidragResultatCore(): BeregnBPsAndelSærbidragResultatCore {
@@ -326,22 +267,6 @@ object TestUtil {
         return BeregnBPsAndelSærbidragResultatCore(emptyList(), emptyList(), avvikListe)
     }
 
-    // Bygger opp BeregnSamværsfradragResultat
-//    fun dummySamværsfradragResultat(): Grunnlag {
-//        val objectMapper = ObjectMapper()
-//        val samvaersfradrag =
-//            SamværsfradragResultatPeriode(
-//                LocalDate.parse("2020-08-01"),
-//                LocalDate.parse("2020-09-01"),
-//                BigDecimal.valueOf(100),
-//                1,
-//                arrayListOf(
-//                    SAMVAERSFRADRAG_REFERANSE,
-//                ),
-//            )
-//        return Grunnlag(SAMVAERSFRADRAG_REFERANSE, Grunnlagstype.SAMVAERSFRADRAG, objectMapper.valueToTree(samvaersfradrag))
-//    }
-
     // Bygger opp BeregnSærbidragResultatCore
     fun dummySærbidragResultatCore(): BeregnSærbidragResultatCore {
         val beregnetSærbidragPeriodeListe = ArrayList<ResultatPeriodeCore>()
@@ -349,7 +274,7 @@ object TestUtil {
             ResultatPeriodeCore(
                 PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
                 "1",
-                ResultatBeregningCore(BigDecimal.valueOf(100), "SÆRBIDRAG_INNVILGET", BigDecimal.valueOf(100)),
+                ResultatBeregningCore(BigDecimal.valueOf(100), Resultatkode.SÆRBIDRAG_INNVILGET, BigDecimal.valueOf(100)),
                 mutableListOf(INNTEKT_REFERANSE, BIDRAGSEVNE_REFERANSE),
             ),
         )
@@ -1246,704 +1171,6 @@ object TestUtil {
             søknadsbarnReferanse = "1",
             grunnlagListe = grunnlagListe,
         )
-    }
-
-    fun byggSjabloner(): List<Sjablon> {
-        val sjablonListe = ArrayList<Sjablon>()
-
-        // Barnetilsyn
-        // Oppdatert med sjablonverdier gyldig fra 01.07.2020
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.BARNETILSYN.navn,
-                listOf(
-                    SjablonNokkel(SjablonNøkkelNavn.STØNAD_TYPE.navn, "64"),
-                    SjablonNokkel(SjablonNøkkelNavn.TILSYN_TYPE.navn, "DO"),
-                ),
-                listOf(SjablonInnhold(SjablonInnholdNavn.BARNETILSYN_BELØP.navn, BigDecimal.valueOf(358))),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.BARNETILSYN.navn,
-                listOf(
-                    SjablonNokkel(SjablonNøkkelNavn.STØNAD_TYPE.navn, "64"),
-                    SjablonNokkel(SjablonNøkkelNavn.TILSYN_TYPE.navn, "DU"),
-                ),
-                listOf(SjablonInnhold(SjablonInnholdNavn.BARNETILSYN_BELØP.navn, BigDecimal.valueOf(257))),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.BARNETILSYN.navn,
-                listOf(
-                    SjablonNokkel(SjablonNøkkelNavn.STØNAD_TYPE.navn, "64"),
-                    SjablonNokkel(SjablonNøkkelNavn.TILSYN_TYPE.navn, "HO"),
-                ),
-                listOf(SjablonInnhold(SjablonInnholdNavn.BARNETILSYN_BELØP.navn, BigDecimal.valueOf(589))),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.BARNETILSYN.navn,
-                listOf(
-                    SjablonNokkel(SjablonNøkkelNavn.STØNAD_TYPE.navn, "64"),
-                    SjablonNokkel(SjablonNøkkelNavn.TILSYN_TYPE.navn, "HU"),
-                ),
-                listOf(SjablonInnhold(SjablonInnholdNavn.BARNETILSYN_BELØP.navn, BigDecimal.valueOf(643))),
-            ),
-        )
-
-        // Bidragsevne
-        // Oppdatert med sjablonverdier gyldig fra 01.07.2020
-        sjablonListe
-            .add(
-                Sjablon(
-                    SjablonNavn.BIDRAGSEVNE.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.BOSTATUS.navn, "EN")),
-                    listOf(
-                        SjablonInnhold(SjablonInnholdNavn.BOUTGIFT_BELØP.navn, BigDecimal.valueOf(9764)),
-                        SjablonInnhold(SjablonInnholdNavn.UNDERHOLD_BELØP.navn, BigDecimal.valueOf(9818)),
-                    ),
-                ),
-            )
-        sjablonListe
-            .add(
-                Sjablon(
-                    SjablonNavn.BIDRAGSEVNE.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.BOSTATUS.navn, "GS")),
-                    listOf(
-                        SjablonInnhold(SjablonInnholdNavn.BOUTGIFT_BELØP.navn, BigDecimal.valueOf(5981)),
-                        SjablonInnhold(SjablonInnholdNavn.UNDERHOLD_BELØP.navn, BigDecimal.valueOf(8313)),
-                    ),
-                ),
-            )
-
-        // Forbruksutgifter
-        // Oppdatert med sjablonverdier gyldig fra 01.07.2020
-        sjablonListe
-            .add(
-                Sjablon(
-                    SjablonNavn.FORBRUKSUTGIFTER.navn,
-                    listOf(
-                        SjablonNokkel(
-                            SjablonNøkkelNavn.ALDER_TOM.navn,
-                            "18",
-                        ),
-                    ),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.FORBRUK_TOTAL_BELØP.navn, BigDecimal.valueOf(7953))),
-                ),
-            )
-        sjablonListe
-            .add(
-                Sjablon(
-                    SjablonNavn.FORBRUKSUTGIFTER.navn,
-                    listOf(
-                        SjablonNokkel(
-                            SjablonNøkkelNavn.ALDER_TOM.navn,
-                            "5",
-                        ),
-                    ),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.FORBRUK_TOTAL_BELØP.navn, BigDecimal.valueOf(4228))),
-                ),
-            )
-        sjablonListe
-            .add(
-                Sjablon(
-                    SjablonNavn.FORBRUKSUTGIFTER.navn,
-                    listOf(
-                        SjablonNokkel(
-                            SjablonNøkkelNavn.ALDER_TOM.navn,
-                            "99",
-                        ),
-                    ),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.FORBRUK_TOTAL_BELØP.navn, BigDecimal.valueOf(7953))),
-                ),
-            )
-        sjablonListe
-            .add(
-                Sjablon(
-                    SjablonNavn.FORBRUKSUTGIFTER.navn,
-                    listOf(
-                        SjablonNokkel(
-                            SjablonNøkkelNavn.ALDER_TOM.navn,
-                            "10",
-                        ),
-                    ),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.FORBRUK_TOTAL_BELØP.navn, BigDecimal.valueOf(5710))),
-                ),
-            )
-        sjablonListe
-            .add(
-                Sjablon(
-                    SjablonNavn.FORBRUKSUTGIFTER.navn,
-                    listOf(
-                        SjablonNokkel(
-                            SjablonNøkkelNavn.ALDER_TOM.navn,
-                            "14",
-                        ),
-                    ),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.FORBRUK_TOTAL_BELØP.navn, BigDecimal.valueOf(6913))),
-                ),
-            )
-
-        // Maks fradrag
-        // Oppdatert med sjablonverdier gyldig fra 01.07.2020
-        sjablonListe
-            .add(
-                Sjablon(
-                    SjablonNavn.MAKS_FRADRAG.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "1")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELØP.navn, BigDecimal.valueOf(2083.33))),
-                ),
-            )
-        sjablonListe
-            .add(
-                Sjablon(
-                    SjablonNavn.MAKS_FRADRAG.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "2")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELØP.navn, BigDecimal.valueOf(3333))),
-                ),
-            )
-        sjablonListe
-            .add(
-                Sjablon(
-                    SjablonNavn.MAKS_FRADRAG.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "3")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELØP.navn, BigDecimal.valueOf(4583))),
-                ),
-            )
-        sjablonListe
-            .add(
-                Sjablon(
-                    SjablonNavn.MAKS_FRADRAG.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "4")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELØP.navn, BigDecimal.valueOf(5833))),
-                ),
-            )
-        sjablonListe
-            .add(
-                Sjablon(
-                    SjablonNavn.MAKS_FRADRAG.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "5")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELØP.navn, BigDecimal.valueOf(7083))),
-                ),
-            )
-        sjablonListe
-            .add(
-                Sjablon(
-                    SjablonNavn.MAKS_FRADRAG.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "6")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELØP.navn, BigDecimal.valueOf(8333))),
-                ),
-            )
-        sjablonListe
-            .add(
-                Sjablon(
-                    SjablonNavn.MAKS_FRADRAG.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "7")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELØP.navn, BigDecimal.valueOf(9583))),
-                ),
-            )
-        sjablonListe
-            .add(
-                Sjablon(
-                    SjablonNavn.MAKS_FRADRAG.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "8")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELØP.navn, BigDecimal.valueOf(10833))),
-                ),
-            )
-        sjablonListe
-            .add(
-                Sjablon(
-                    SjablonNavn.MAKS_FRADRAG.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "99")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELØP.navn, BigDecimal.valueOf(12083))),
-                ),
-            )
-
-        // Maks tilsyn
-        // Oppdatert med sjablonverdier gyldig fra 01.07.2020
-        sjablonListe
-            .add(
-                Sjablon(
-                    SjablonNavn.MAKS_TILSYN.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "1")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_TILSYN_BELØP.navn, BigDecimal.valueOf(6333))),
-                ),
-            )
-        sjablonListe
-            .add(
-                Sjablon(
-                    SjablonNavn.MAKS_TILSYN.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "2")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_TILSYN_BELØP.navn, BigDecimal.valueOf(8264))),
-                ),
-            )
-        sjablonListe
-            .add(
-                Sjablon(
-                    SjablonNavn.MAKS_TILSYN.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "99")),
-                    listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_TILSYN_BELØP.navn, BigDecimal.valueOf(9364))),
-                ),
-            )
-
-        // Samværsfradrag
-        // Oppdatert med sjablonverdier gyldig fra 01.07.2020
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.SAMVÆRSFRADRAG.navn,
-                listOf(
-                    SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "00"),
-                    SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "99"),
-                ),
-                listOf(
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.valueOf(1)),
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(1)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELØP.navn, BigDecimal.ZERO),
-                ),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.SAMVÆRSFRADRAG.navn,
-                listOf(
-                    SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "01"),
-                    SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "5"),
-                ),
-                listOf(
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.valueOf(3)),
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(3)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELØP.navn, BigDecimal.valueOf(256)),
-                ),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.SAMVÆRSFRADRAG.navn,
-                listOf(
-                    SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "01"),
-                    SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "10"),
-                ),
-                listOf(
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.valueOf(3)),
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(3)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELØP.navn, BigDecimal.valueOf(353)),
-                ),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.SAMVÆRSFRADRAG.navn,
-                listOf(
-                    SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "01"),
-                    SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "14"),
-                ),
-                listOf(
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.valueOf(3)),
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(3)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELØP.navn, BigDecimal.valueOf(457)),
-                ),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.SAMVÆRSFRADRAG.navn,
-                listOf(
-                    SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "01"),
-                    SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "18"),
-                ),
-                listOf(
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.valueOf(3)),
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(3)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELØP.navn, BigDecimal.valueOf(528)),
-                ),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.SAMVÆRSFRADRAG.navn,
-                listOf(
-                    SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "01"),
-                    SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "99"),
-                ),
-                listOf(
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.valueOf(3)),
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(3)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELØP.navn, BigDecimal.valueOf(528)),
-                ),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.SAMVÆRSFRADRAG.navn,
-                listOf(
-                    SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "02"),
-                    SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "5"),
-                ),
-                listOf(
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(8)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELØP.navn, BigDecimal.valueOf(849)),
-                ),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.SAMVÆRSFRADRAG.navn,
-                listOf(
-                    SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "02"),
-                    SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "10"),
-                ),
-                listOf(
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(8)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELØP.navn, BigDecimal.valueOf(1167)),
-                ),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.SAMVÆRSFRADRAG.navn,
-                listOf(
-                    SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "02"),
-                    SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "14"),
-                ),
-                listOf(
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(8)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELØP.navn, BigDecimal.valueOf(1513)),
-                ),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.SAMVÆRSFRADRAG.navn,
-                listOf(
-                    SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "02"),
-                    SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "18"),
-                ),
-                listOf(
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(8)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELØP.navn, BigDecimal.valueOf(1749)),
-                ),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.SAMVÆRSFRADRAG.navn,
-                listOf(
-                    SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "02"),
-                    SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "99"),
-                ),
-                listOf(
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(8)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELØP.navn, BigDecimal.valueOf(1749)),
-                ),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.SAMVÆRSFRADRAG.navn,
-                listOf(
-                    SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "03"),
-                    SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "5"),
-                ),
-                listOf(
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(13)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELØP.navn, BigDecimal.valueOf(2272)),
-                ),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.SAMVÆRSFRADRAG.navn,
-                listOf(
-                    SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "03"),
-                    SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "10"),
-                ),
-                listOf(
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(13)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELØP.navn, BigDecimal.valueOf(2716)),
-                ),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.SAMVÆRSFRADRAG.navn,
-                listOf(
-                    SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "03"),
-                    SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "14"),
-                ),
-                listOf(
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(13)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELØP.navn, BigDecimal.valueOf(3199)),
-                ),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.SAMVÆRSFRADRAG.navn,
-                listOf(
-                    SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "03"),
-                    SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "18"),
-                ),
-                listOf(
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(13)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELØP.navn, BigDecimal.valueOf(3528)),
-                ),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.SAMVÆRSFRADRAG.navn,
-                listOf(
-                    SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "03"),
-                    SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "99"),
-                ),
-                listOf(
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(13)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELØP.navn, BigDecimal.valueOf(3528)),
-                ),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.SAMVÆRSFRADRAG.navn,
-                listOf(
-                    SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "04"),
-                    SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "5"),
-                ),
-                listOf(
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(15)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELØP.navn, BigDecimal.valueOf(2852)),
-                ),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.SAMVÆRSFRADRAG.navn,
-                listOf(
-                    SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "04"),
-                    SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "10"),
-                ),
-                listOf(
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(15)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELØP.navn, BigDecimal.valueOf(3410)),
-                ),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.SAMVÆRSFRADRAG.navn,
-                listOf(
-                    SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "04"),
-                    SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "14"),
-                ),
-                listOf(
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(15)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELØP.navn, BigDecimal.valueOf(4016)),
-                ),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.SAMVÆRSFRADRAG.navn,
-                listOf(
-                    SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "04"),
-                    SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "18"),
-                ),
-                listOf(
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(15)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELØP.navn, BigDecimal.valueOf(4429)),
-                ),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.SAMVÆRSFRADRAG.navn,
-                listOf(
-                    SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "04"),
-                    SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "99"),
-                ),
-                listOf(
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
-                    SjablonInnhold(SjablonInnholdNavn.ANTALL_NETTER_TOM.navn, BigDecimal.valueOf(15)),
-                    SjablonInnhold(SjablonInnholdNavn.FRADRAG_BELØP.navn, BigDecimal.valueOf(4429)),
-                ),
-            ),
-        )
-
-        // Sjablontall
-        // Oppdatert med sjablonverdier gyldig fra 01.07.2020
-        sjablonListe.add(
-            Sjablon(
-                SjablonTallNavn.ORDINÆR_BARNETRYGD_BELØP.navn,
-                emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(1054))),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonTallNavn.ORDINÆR_SMÅBARNSTILLEGG_BELØP.navn,
-                emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.ZERO)),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonTallNavn.BOUTGIFTER_BIDRAGSBARN_BELØP.navn,
-                emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(2825))),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonTallNavn.MINSTEFRADRAG_INNTEKT_PROSENT.navn,
-                emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(31))),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonTallNavn.MINSTEFRADRAG_INNTEKT_BELØP.navn,
-                emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(87450))),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonTallNavn.PERSONFRADRAG_KLASSE1_BELØP.navn,
-                emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(51300))),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonTallNavn.PERSONFRADRAG_KLASSE2_BELØP.navn,
-                emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(51300))),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonTallNavn.SKATTESATS_ALMINNELIG_INNTEKT_PROSENT.navn,
-                emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(22))),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonTallNavn.TRYGDEAVGIFT_PROSENT.navn,
-                emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(8.2))),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonTallNavn.FORDEL_SÆRFRADRAG_BELØP.navn,
-                emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(12977))),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELØP.navn,
-                emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.ZERO)),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonTallNavn.UNDERHOLD_EGNE_BARN_I_HUSSTAND_BELØP.navn,
-                emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(3841))),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonTallNavn.SKATT_ALMINNELIG_INNTEKT_PROSENT.navn,
-                emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(25.05))),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonTallNavn.FORSKUDDSSATS_BELØP.navn,
-                emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(1670))),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonTallNavn.BARNETILLEGG_FORSVARET_FØRSTE_BARN_BELØP.navn,
-                emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(5667))),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonTallNavn.BARNETILLEGG_FORSVARET_ØVRIGE_BARN_BELØP.navn,
-                emptyList(),
-                listOf(SjablonInnhold(SjablonInnholdNavn.SJABLON_VERDI.navn, BigDecimal.valueOf(2334))),
-            ),
-        )
-
-        // Trinnvis skattesats
-        // Oppdatert med sjablonverdier gyldig fra 01.07.2020
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.TRINNVIS_SKATTESATS.navn,
-                emptyList(),
-                listOf(
-                    SjablonInnhold(SjablonInnholdNavn.INNTEKTSGRENSE_BELØP.navn, BigDecimal.valueOf(999550)),
-                    SjablonInnhold(SjablonInnholdNavn.SKATTESATS_PROSENT.navn, BigDecimal.valueOf(16.2)),
-                ),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.TRINNVIS_SKATTESATS.navn,
-                emptyList(),
-                listOf(
-                    SjablonInnhold(SjablonInnholdNavn.INNTEKTSGRENSE_BELØP.navn, BigDecimal.valueOf(254500)),
-                    SjablonInnhold(SjablonInnholdNavn.SKATTESATS_PROSENT.navn, BigDecimal.valueOf(4.2)),
-                ),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.TRINNVIS_SKATTESATS.navn,
-                emptyList(),
-                listOf(
-                    SjablonInnhold(SjablonInnholdNavn.INNTEKTSGRENSE_BELØP.navn, BigDecimal.valueOf(639750)),
-                    SjablonInnhold(SjablonInnholdNavn.SKATTESATS_PROSENT.navn, BigDecimal.valueOf(13.2)),
-                ),
-            ),
-        )
-        sjablonListe.add(
-            Sjablon(
-                SjablonNavn.TRINNVIS_SKATTESATS.navn,
-                emptyList(),
-                listOf(
-                    SjablonInnhold(SjablonInnholdNavn.INNTEKTSGRENSE_BELØP.navn, BigDecimal.valueOf(180800)),
-                    SjablonInnhold(SjablonInnholdNavn.SKATTESATS_PROSENT.navn, BigDecimal.valueOf(1.9)),
-                ),
-            ),
-        )
-        return sjablonListe
     }
 
     fun byggSjablonPeriodeListe(): MutableList<SjablonPeriode> {

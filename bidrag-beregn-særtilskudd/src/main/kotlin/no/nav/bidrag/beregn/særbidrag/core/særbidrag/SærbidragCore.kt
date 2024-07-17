@@ -80,10 +80,10 @@ internal class SærbidragCore(private val særbidragPeriode: SærbidragPeriode =
             søknadsbarnPersonId = it.søknadsbarnPersonId,
             resultat = ResultatBeregningCore(
                 beregnetBeløp = it.resultat.beregnetBeløp,
-                resultatKode = it.resultat.resultatKode.toString(),
+                resultatKode = it.resultat.resultatKode,
                 resultatBeløp = it.resultat.resultatBeløp,
             ),
-            grunnlagsreferanseListe = mapReferanseListe(it).toMutableList(),
+            grunnlagsreferanseListe = mapReferanseListe(it).sorted().toMutableList(),
         )
     }
 
