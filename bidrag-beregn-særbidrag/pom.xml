@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>bidrag-beregn-saertilskudd</artifactId>
+    <artifactId>bidrag-beregn-saerbidrag</artifactId>
 
     <properties>
         <revision>1.0-SNAPSHOT</revision>
