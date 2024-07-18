@@ -50,7 +50,7 @@
         <module>bidrag-boforhold</module>
         <module>bidrag-inntekt</module>
         <module>bidrag-sivilstand</module>
-        <module>bidrag-beregn-særtilskudd</module>
+        <module>bidrag-beregn-særbidrag</module>
     </modules>
     <repositories>
         <repository>
