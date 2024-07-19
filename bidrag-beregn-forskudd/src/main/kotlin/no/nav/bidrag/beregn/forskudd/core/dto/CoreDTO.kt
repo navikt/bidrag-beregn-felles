@@ -1,6 +1,8 @@
 package no.nav.bidrag.beregn.forskudd.core.dto
 
 import no.nav.bidrag.beregn.core.dto.AvvikCore
+import no.nav.bidrag.beregn.core.dto.BarnIHusstandenPeriodeCore
+import no.nav.bidrag.beregn.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonResultatGrunnlagCore
@@ -32,31 +34,11 @@ data class BostatusPeriodeCore(
     val kode: String,
 )
 
-data class InntektPeriodeCore(
-    override val referanse: String,
-    override val periode: PeriodeCore,
-    val beløp: BigDecimal,
-    override val grunnlagsreferanseListe: List<String>,
-) : DelberegningForskudd
-
 data class SivilstandPeriodeCore(
     val referanse: String,
     val periode: PeriodeCore,
     val kode: String,
 )
-
-interface DelberegningForskudd {
-    val referanse: String
-    val periode: PeriodeCore
-    val grunnlagsreferanseListe: List<String>
-}
-
-data class BarnIHusstandenPeriodeCore(
-    override val referanse: String,
-    override val periode: PeriodeCore,
-    val antall: Int,
-    override val grunnlagsreferanseListe: List<String>,
-) : DelberegningForskudd
 
 // Resultat
 data class BeregnetForskuddResultatCore(

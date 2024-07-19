@@ -17,7 +17,7 @@ internal class OverlappendePerioderTest {
     }
 
     @Test
-    fun testStartDatoLikSluttDatoFoerSkalOverlappe() {
+    fun testStartDatoLikSluttDatoFørSkalOverlappe() {
         val overlappendePerioder =
             Periode(datoFom = LocalDate.parse("2010-01-01"), datoTil = LocalDate.parse("2010-04-01"))
                 .overlapperMed(Periode(datoFom = LocalDate.parse("2010-01-01"), datoTil = LocalDate.parse("2010-03-01")))
@@ -33,7 +33,7 @@ internal class OverlappendePerioderTest {
     }
 
     @Test
-    fun testStartDatoEtterSluttDatoFoerSkalOverlappe() {
+    fun testStartDatoEtterSluttDatoFørSkalOverlappe() {
         val overlappendePerioder =
             Periode(datoFom = LocalDate.parse("2010-01-01"), datoTil = LocalDate.parse("2010-04-01"))
                 .overlapperMed(Periode(datoFom = LocalDate.parse("2010-02-01"), datoTil = LocalDate.parse("2010-03-01")))
@@ -41,7 +41,7 @@ internal class OverlappendePerioderTest {
     }
 
     @Test
-    fun testStartDatoFoerSluttDatoFoerSkalOverlappe() {
+    fun testStartDatoFoerSluttDatoFørSkalOverlappe() {
         val overlappendePerioder =
             Periode(datoFom = LocalDate.parse("2010-01-01"), datoTil = LocalDate.parse("2010-04-01"))
                 .overlapperMed(Periode(datoFom = LocalDate.parse("2009-12-01"), datoTil = LocalDate.parse("2010-03-01")))
@@ -57,7 +57,7 @@ internal class OverlappendePerioderTest {
     }
 
     @Test
-    fun testHelePeriodenFoerSkalIkkeOverlappe() {
+    fun testHelePeriodenFørSkalIkkeOverlappe() {
         val overlappendePerioder =
             Periode(datoFom = LocalDate.parse("2010-01-01"), datoTil = LocalDate.parse("2010-04-01"))
                 .overlapperMed(Periode(datoFom = LocalDate.parse("2009-01-01"), datoTil = LocalDate.parse("2009-04-01")))
@@ -97,7 +97,7 @@ internal class OverlappendePerioderTest {
     }
 
     @Test
-    fun testStartDatoFoerSluttDatoNull1SkalOverlappe() {
+    fun testStartDatoFørSluttDatoNull1SkalOverlappe() {
         val overlappendePerioder =
             Periode(datoFom = LocalDate.parse("2010-01-01"), datoTil = LocalDate.parse("2010-04-01"))
                 .overlapperMed(Periode(datoFom = LocalDate.parse("2009-12-01"), datoTil = null))
@@ -105,7 +105,7 @@ internal class OverlappendePerioderTest {
     }
 
     @Test
-    fun testStartDatoFoerSluttDatoNull2SkalOverlappe() {
+    fun testStartDatoFørSluttDatoNull2SkalOverlappe() {
         val overlappendePerioder =
             Periode(datoFom = LocalDate.parse("2010-01-01"), datoTil = null)
                 .overlapperMed(Periode(datoFom = LocalDate.parse("2009-12-01"), datoTil = LocalDate.parse("2010-04-01")))
@@ -113,7 +113,7 @@ internal class OverlappendePerioderTest {
     }
 
     @Test
-    fun testStartDatoFoerSluttDatoNull3SkalOverlappe() {
+    fun testStartDatoFørSluttDatoNull3SkalOverlappe() {
         val overlappendePerioder =
             Periode(datoFom = LocalDate.parse("2010-01-01"), datoTil = null)
                 .overlapperMed(Periode(datoFom = LocalDate.parse("2009-12-01"), datoTil = null))

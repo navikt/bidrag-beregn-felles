@@ -107,9 +107,13 @@ class SærbidragPeriode(private val særbidragBeregning: SærbidragBeregning = S
     }
 
     // Validerer at input-verdier til særbidragberegning er gyldige
+    // Setter alle valideringer til false ettersom det bare er en periode
     fun validerInput(grunnlag: BeregnSærbidragGrunnlag): List<Avvik> {
         val avvikListe =
-            PeriodeUtil.validerBeregnPeriodeInput(beregnDatoFom = grunnlag.beregnDatoFra, beregnDatoTil = grunnlag.beregnDatoTil).toMutableList()
+            PeriodeUtil.validerBeregnPeriodeInput(
+                beregnDatoFom = grunnlag.beregnDatoFra,
+                beregnDatoTil = grunnlag.beregnDatoTil,
+            ).toMutableList()
 
         avvikListe.addAll(
             PeriodeUtil.validerInputDatoer(
@@ -117,11 +121,11 @@ class SærbidragPeriode(private val særbidragBeregning: SærbidragBeregning = S
                 beregnDatoTil = grunnlag.beregnDatoTil,
                 dataElement = "betaltAvBPPeriodeListe",
                 periodeListe = grunnlag.betaltAvBpPeriodeListe.map { it.getPeriode() },
-                sjekkOverlappendePerioder = true,
-                sjekkOppholdMellomPerioder = true,
-                sjekkDatoTilNull = true,
-                sjekkDatoStartSluttAvPerioden = true,
-                sjekkBeregnPeriode = true,
+                sjekkOverlappendePerioder = false,
+                sjekkOppholdMellomPerioder = false,
+                sjekkDatoTilNull = false,
+                sjekkDatoStartSluttAvPerioden = false,
+                sjekkBeregnPeriode = false,
             ),
         )
 
@@ -131,11 +135,11 @@ class SærbidragPeriode(private val særbidragBeregning: SærbidragBeregning = S
                 beregnDatoTil = grunnlag.beregnDatoTil,
                 dataElement = "bidragsevnePeriodeListe",
                 periodeListe = grunnlag.bidragsevnePeriodeListe.map { it.getPeriode() },
-                sjekkOverlappendePerioder = true,
-                sjekkOppholdMellomPerioder = true,
-                sjekkDatoTilNull = true,
-                sjekkDatoStartSluttAvPerioden = true,
-                sjekkBeregnPeriode = true,
+                sjekkOverlappendePerioder = false,
+                sjekkOppholdMellomPerioder = false,
+                sjekkDatoTilNull = false,
+                sjekkDatoStartSluttAvPerioden = false,
+                sjekkBeregnPeriode = false,
             ),
         )
 
@@ -145,11 +149,11 @@ class SærbidragPeriode(private val særbidragBeregning: SærbidragBeregning = S
                 beregnDatoTil = grunnlag.beregnDatoTil,
                 dataElement = "bPsAndelSærbidragPeriodeListe",
                 periodeListe = grunnlag.bPsAndelSærbidragPeriodeListe.map { it.getPeriode() },
-                sjekkOverlappendePerioder = true,
-                sjekkOppholdMellomPerioder = true,
-                sjekkDatoTilNull = true,
-                sjekkDatoStartSluttAvPerioden = true,
-                sjekkBeregnPeriode = true,
+                sjekkOverlappendePerioder = false,
+                sjekkOppholdMellomPerioder = false,
+                sjekkDatoTilNull = false,
+                sjekkDatoStartSluttAvPerioden = false,
+                sjekkBeregnPeriode = false,
             ),
         )
 

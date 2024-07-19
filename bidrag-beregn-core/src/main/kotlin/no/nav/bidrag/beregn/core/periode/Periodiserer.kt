@@ -6,7 +6,7 @@ import java.time.LocalDate
 
 class Periodiserer {
     private val bruddpunkter: MutableSet<LocalDate> = HashSet()
-    private var aapenSluttdato = false
+    private var åpenSluttdato = false
 
     fun addBruddpunkt(dato: LocalDate): Periodiserer {
         bruddpunkter.add(dato)
@@ -17,7 +17,7 @@ class Periodiserer {
         addBruddpunkt(periode.datoFom)
 
         if (periode.datoTil == null) {
-            aapenSluttdato = true
+            åpenSluttdato = true
         } else {
             addBruddpunkt(periode.datoTil)
         }
@@ -56,7 +56,7 @@ class Periodiserer {
                 start = end
             }
 
-            if (aapenSluttdato) {
+            if (åpenSluttdato) {
                 perioder.add(Periode(start!!, null))
             }
         }

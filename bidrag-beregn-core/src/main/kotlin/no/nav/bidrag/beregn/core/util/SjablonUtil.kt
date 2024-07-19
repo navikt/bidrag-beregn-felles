@@ -2,9 +2,9 @@ package no.nav.bidrag.beregn.core.util
 
 import no.nav.bidrag.beregn.core.bo.Sjablon
 import no.nav.bidrag.beregn.core.bo.SjablonInnhold
-import no.nav.bidrag.beregn.core.bo.SjablonNokkel
-import no.nav.bidrag.beregn.core.bo.SjablonSingelNokkel
-import no.nav.bidrag.beregn.core.bo.SjablonSingelNokkelSingelInnhold
+import no.nav.bidrag.beregn.core.bo.SjablonNøkkel
+import no.nav.bidrag.beregn.core.bo.SjablonSingelNøkkel
+import no.nav.bidrag.beregn.core.bo.SjablonSingelNøkkelSingelInnhold
 import no.nav.bidrag.beregn.core.bo.TrinnvisSkattesats
 import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
@@ -20,13 +20,13 @@ object SjablonUtil {
     fun hentSjablonverdi(
         sjablonListe: List<Sjablon>,
         sjablonNavn: SjablonNavn,
-        sjablonNokkelListe: List<SjablonNokkel>,
+        sjablonNøkkelListe: List<SjablonNøkkel>,
         sjablonInnholdNavn: SjablonInnholdNavn,
     ): BigDecimal {
         val filtrertSjablonListe =
-            filtrerSjablonNokkelListePaaSjablonNokkel(
-                sjablonListe = filtrerPaaSjablonNavn(sjablonListe = sjablonListe, sjablonNavn = sjablonNavn.navn),
-                sjablonNokkelListe = sjablonNokkelListe,
+            filtrerSjablonNøkkelListePåSjablonNøkkel(
+                sjablonListe = filtrerPåSjablonNavn(sjablonListe = sjablonListe, sjablonNavn = sjablonNavn.navn),
+                sjablonNøkkelListe = sjablonNøkkelListe,
             )
         val sjablonInnholdListe = mapSjablonListeTilSjablonInnholdListe(filtrertSjablonListe)
 
@@ -35,13 +35,13 @@ object SjablonUtil {
 
     // Henter verdier fra sjablonene Forbruksutgifter, MaksFradrag og MaksTilsyn (1:1, intervall)
     @JvmStatic
-    fun hentSjablonverdi(sjablonListe: List<Sjablon>, sjablonNavn: SjablonNavn, sjablonNokkelVerdi: Int): BigDecimal {
-        val filtrertSjablonListe = filtrerPaaSjablonNavn(sjablonListe = sjablonListe, sjablonNavn = sjablonNavn.navn)
-        val sortertSjablonSingelNokkelSingelInnholdListe = mapTilSingelListeNokkelInnholdSortert(filtrertSjablonListe)
+    fun hentSjablonverdi(sjablonListe: List<Sjablon>, sjablonNavn: SjablonNavn, sjablonNøkkelVerdi: Int): BigDecimal {
+        val filtrertSjablonListe = filtrerPåSjablonNavn(sjablonListe = sjablonListe, sjablonNavn = sjablonNavn.navn)
+        val sortertSjablonSingelNøkkelSingelInnholdListe = mapTilSingelListeNøkkelInnholdSortert(filtrertSjablonListe)
 
         return hentSjablonInnholdVerdiIntervall(
-            sortertSjablonSingelNokkelSingelInnholdListe = sortertSjablonSingelNokkelSingelInnholdListe,
-            sjablonNokkelVerdi = sjablonNokkelVerdi,
+            sortertSjablonSingelNøkkelSingelInnholdListe = sortertSjablonSingelNøkkelSingelInnholdListe,
+            sjablonNøkkelVerdi = sjablonNøkkelVerdi,
         )
     }
 
@@ -50,25 +50,25 @@ object SjablonUtil {
     fun hentSjablonverdi(
         sjablonListe: List<Sjablon>,
         sjablonNavn: SjablonNavn,
-        sjablonNokkelListe: List<SjablonNokkel>,
-        sjablonNokkelNavn: SjablonNøkkelNavn,
-        sjablonNokkelVerdi: Int,
+        sjablonNøkkelListe: List<SjablonNøkkel>,
+        sjablonNøkkelNavn: SjablonNøkkelNavn,
+        sjablonNøkkelVerdi: Int,
         sjablonInnholdNavn: SjablonInnholdNavn,
     ): BigDecimal {
         val filtrertSjablonListe =
-            filtrerSjablonNokkelListePaaSjablonNokkel(
-                sjablonListe = filtrerPaaSjablonNavn(sjablonListe = sjablonListe, sjablonNavn = sjablonNavn.navn),
-                sjablonNokkelListe = sjablonNokkelListe,
+            filtrerSjablonNøkkelListePåSjablonNøkkel(
+                sjablonListe = filtrerPåSjablonNavn(sjablonListe = sjablonListe, sjablonNavn = sjablonNavn.navn),
+                sjablonNøkkelListe = sjablonNøkkelListe,
             )
-        val sortertSjablonSingelNokkelListe =
-            mapTilSingelListeNokkelSortert(
+        val sortertSjablonSingelNøkkelListe =
+            mapTilSingelListeNøkkelSortert(
                 filtrertSjablonListe = filtrertSjablonListe,
-                sjablonNokkelNavn = sjablonNokkelNavn,
+                sjablonNøkkelNavn = sjablonNøkkelNavn,
             )
         val sjablonInnholdListe =
             finnSjablonInnholdVerdiListeIntervall(
-                sortertSjablonSingelNokkelListe = sortertSjablonSingelNokkelListe,
-                sjablonNokkelVerdi = sjablonNokkelVerdi,
+                sortertSjablonSingelNøkkelListe = sortertSjablonSingelNøkkelListe,
+                sjablonNøkkelVerdi = sjablonNøkkelVerdi,
             )
 
         return hentSjablonInnholdVerdiEksakt(sjablonInnholdListe = sjablonInnholdListe, sjablonInnholdNavn = sjablonInnholdNavn)
@@ -77,7 +77,7 @@ object SjablonUtil {
     // Henter verdier fra sjablon Sjablontall (1:1, eksakt match)
     @JvmStatic
     fun hentSjablonverdi(sjablonListe: List<Sjablon>, sjablonTallNavn: SjablonTallNavn): BigDecimal {
-        val filtrertSjablonListe = filtrerPaaSjablonNavn(sjablonListe = sjablonListe, sjablonNavn = sjablonTallNavn.navn)
+        val filtrertSjablonListe = filtrerPåSjablonNavn(sjablonListe = sjablonListe, sjablonNavn = sjablonTallNavn.navn)
         val sjablonInnholdListe = mapSjablonListeTilSjablonInnholdListe(filtrertSjablonListe)
         return hentSjablonInnholdVerdiEksakt(
             sjablonInnholdListe = sjablonInnholdListe,
@@ -88,7 +88,7 @@ object SjablonUtil {
     // Henter liste med verdier fra sjablon TrinnvisSkattesats (0:N, hent alle)
     @JvmStatic
     fun hentTrinnvisSkattesats(sjablonListe: List<Sjablon>, sjablonNavn: SjablonNavn): List<TrinnvisSkattesats> {
-        val filtrertSjablonListe = filtrerPaaSjablonNavn(sjablonListe = sjablonListe, sjablonNavn = sjablonNavn.navn)
+        val filtrertSjablonListe = filtrerPåSjablonNavn(sjablonListe = sjablonListe, sjablonNavn = sjablonNavn.navn)
         val sjablonInnholdListe = mapSjablonListeTilSjablonInnholdListe(filtrertSjablonListe)
         val inntektGrenseListe =
             finnSjablonInnholdVerdiListe(
@@ -112,25 +112,25 @@ object SjablonUtil {
 
     // Filtrerer sjablonListe på sjablonNavn og returnerer ny liste.
     // Brukes av alle typer sjabloner.
-    private fun filtrerPaaSjablonNavn(sjablonListe: List<Sjablon>, sjablonNavn: String) = sjablonListe.filter { it.navn == sjablonNavn }.toList()
+    private fun filtrerPåSjablonNavn(sjablonListe: List<Sjablon>, sjablonNavn: String) = sjablonListe.filter { it.navn == sjablonNavn }.toList()
 
-    // Filtrerer sjablonListe på sjablonNokkelListe og returnerer en ny liste.
+    // Filtrerer sjablonListe på sjablonNøkkelListe og returnerer en ny liste.
     // Brukes av sjabloner som har eksakt match på nøkkel (Barnetilsyn, Bidragsevne, Samværsfradrag).
-    private fun filtrerSjablonNokkelListePaaSjablonNokkel(sjablonListe: List<Sjablon>, sjablonNokkelListe: List<SjablonNokkel>): List<Sjablon> {
+    private fun filtrerSjablonNøkkelListePåSjablonNøkkel(sjablonListe: List<Sjablon>, sjablonNøkkelListe: List<SjablonNøkkel>): List<Sjablon> {
         var sjablonStream = sjablonListe.stream()
-        sjablonNokkelListe.forEach {
-            sjablonStream = filtrerPaaSjablonNokkel(sjablonStream, it)
+        sjablonNøkkelListe.forEach {
+            sjablonStream = filtrerPåSjablonNøkkel(sjablonStream, it)
         }
         return sjablonStream.toList()
     }
 
-    // Filtrerer sjablonStream på sjablonNokkelInput og returnerer en ny stream.
+    // Filtrerer sjablonStream på sjablonNøkkelInput og returnerer en ny stream.
     // Intern bruk.
-    private fun filtrerPaaSjablonNokkel(sjablonStream: Stream<Sjablon>, sjablonNokkelInput: SjablonNokkel) = sjablonStream.filter {
-        it.nokkelListe!!
-            .any { sjablonNokkel ->
-                sjablonNokkel.navn == sjablonNokkelInput.navn &&
-                    sjablonNokkel.verdi == sjablonNokkelInput.verdi
+    private fun filtrerPåSjablonNøkkel(sjablonStream: Stream<Sjablon>, sjablonNøkkelInput: SjablonNøkkel) = sjablonStream.filter {
+        it.nøkkelListe!!
+            .any { sjablonNøkkel ->
+                sjablonNøkkel.navn == sjablonNøkkelInput.navn &&
+                    sjablonNøkkel.verdi == sjablonNøkkelInput.verdi
             }
     }
 
@@ -141,32 +141,32 @@ object SjablonUtil {
     // Tar inn filtrertSjablonListe og mapper denne om til en liste med singel nøkkelverdi og singel innholdverdi (1:1). Returnerer en ny liste sortert
     // på nøkkelverdi.
     // Brukes av sjabloner som har ett nøkkelobjekt og ett innholdobjekt (Forbruksutgifter, MaxFradrag, MaxTilsyn).
-    private fun mapTilSingelListeNokkelInnholdSortert(filtrertSjablonListe: List<Sjablon>) = filtrertSjablonListe
+    private fun mapTilSingelListeNøkkelInnholdSortert(filtrertSjablonListe: List<Sjablon>) = filtrertSjablonListe
         .map {
-            SjablonSingelNokkelSingelInnhold(
+            SjablonSingelNøkkelSingelInnhold(
                 navn = it.navn,
-                nokkelVerdi = it.nokkelListe!!.firstOrNull()?.verdi ?: " ",
+                nøkkelVerdi = it.nøkkelListe!!.firstOrNull()?.verdi ?: " ",
                 innholdVerdi = it.innholdListe.firstOrNull()?.verdi ?: BigDecimal.ZERO,
             )
         }
-        .sortedBy { Integer.valueOf(it.nokkelVerdi) }
+        .sortedBy { Integer.valueOf(it.nøkkelVerdi) }
 
     // Tar inn filtrertSjablonListe og mapper denne om til en liste med singel nøkkelverdi og liste med innholdverdier (1:N). Returnerer en ny liste
     // sortert på nøkkelverdi.
     // Brukes av sjabloner som har ett nøkkelobjekt med eksakt match og flere innholdobjekter (Samværsfradrag).
-    private fun mapTilSingelListeNokkelSortert(
+    private fun mapTilSingelListeNøkkelSortert(
         filtrertSjablonListe: List<Sjablon>,
-        sjablonNokkelNavn: SjablonNøkkelNavn,
-    ): List<SjablonSingelNokkel> = filtrertSjablonListe
+        sjablonNøkkelNavn: SjablonNøkkelNavn,
+    ): List<SjablonSingelNøkkel> = filtrertSjablonListe
         .map {
-            SjablonSingelNokkel(
+            SjablonSingelNøkkel(
                 navn = it.navn,
                 verdi =
-                it.nokkelListe!!
-                    .filter { sjablonNokkel ->
-                        sjablonNokkel.navn == sjablonNokkelNavn.navn
+                it.nøkkelListe!!
+                    .filter { sjablonNøkkel ->
+                        sjablonNøkkel.navn == sjablonNøkkelNavn.navn
                     }
-                    .map(SjablonNokkel::verdi)
+                    .map(SjablonNøkkel::verdi)
                     .firstOrNull() ?: " ",
                 innholdListe = it.innholdListe,
             )
@@ -181,24 +181,24 @@ object SjablonUtil {
         .map { it.verdi }
         .firstOrNull() ?: BigDecimal.ZERO
 
-    // Filtrerer sortertSjablonSingelNokkelSingelInnholdListe på nøkkel-verdi >= sjablonNokkel og returnerer en singel verdi (0d hvis det mot formodning
+    // Filtrerer sortertSjablonSingelNøkkelSingelInnholdListe på nøkkel-verdi >= sjablonNøkkel og returnerer en singel verdi (0d hvis det mot formodning
     // ikke finnes noen verdi).
     // Brukes av 1:1 sjabloner som henter verdi basert på intervall (Forbruksutgifter, MaxFradrag, MaxTilsyn).
 
     private fun hentSjablonInnholdVerdiIntervall(
-        sortertSjablonSingelNokkelSingelInnholdListe: List<SjablonSingelNokkelSingelInnhold>,
-        sjablonNokkelVerdi: Int,
-    ) = sortertSjablonSingelNokkelSingelInnholdListe
-        .filter { it.nokkelVerdi.toInt() >= sjablonNokkelVerdi }
+        sortertSjablonSingelNøkkelSingelInnholdListe: List<SjablonSingelNøkkelSingelInnhold>,
+        sjablonNøkkelVerdi: Int,
+    ) = sortertSjablonSingelNøkkelSingelInnholdListe
+        .filter { it.nøkkelVerdi.toInt() >= sjablonNøkkelVerdi }
         .map { it.innholdVerdi }
         .firstOrNull() ?: BigDecimal.ZERO
 
-    // Filtrerer sortertSjablonSingelNokkelListe på nøkkel-verdi >= sjablonNokkel og returnerer en liste av typen SjablonInnholdNy (tom liste hvis det
+    // Filtrerer sortertSjablonSingelNøkkelListe på nøkkel-verdi >= sjablonNøkkel og returnerer en liste av typen SjablonInnholdNy (tom liste hvis det
     // mot formodning ikke finnes noen forekomster).
     // Brukes av sjabloner som har flere innholdobjekter og som henter verdi(er) basert på intervall (Samværsfradrag).
-    private fun finnSjablonInnholdVerdiListeIntervall(sortertSjablonSingelNokkelListe: List<SjablonSingelNokkel>, sjablonNokkelVerdi: Int) =
-        sortertSjablonSingelNokkelListe
-            .filter { it.verdi.toInt() >= sjablonNokkelVerdi }
+    private fun finnSjablonInnholdVerdiListeIntervall(sortertSjablonSingelNøkkelListe: List<SjablonSingelNøkkel>, sjablonNøkkelVerdi: Int) =
+        sortertSjablonSingelNøkkelListe
+            .filter { it.verdi.toInt() >= sjablonNøkkelVerdi }
             .map { it.innholdListe }
             .firstOrNull() ?: emptyList()
 

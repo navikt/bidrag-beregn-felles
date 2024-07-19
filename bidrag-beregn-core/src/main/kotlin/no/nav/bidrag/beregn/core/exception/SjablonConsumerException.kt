@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.særbidrag.exception
+package no.nav.bidrag.beregn.core.exception
 
 import org.springframework.http.HttpStatus
 import org.springframework.web.client.RestClientResponseException

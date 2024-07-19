@@ -79,8 +79,8 @@ class AinntektService {
     }
 
     // Summerer, grupperer og transformerer ainntekter pr måned
-    fun beregnMaanedsinntekt(ainntektListeInn: List<Ainntektspost>, ainntektHentetDato: LocalDate): List<SummertMånedsinntekt> {
-        val ainntektMap = summerMaanedsinntekter(ainntektListeInn, ainntektHentetDato)
+    fun beregnMånedsinntekt(ainntektListeInn: List<Ainntektspost>, ainntektHentetDato: LocalDate): List<SummertMånedsinntekt> {
+        val ainntektMap = summerMånedsinntekter(ainntektListeInn, ainntektHentetDato)
         val ainntektListeUt = mutableListOf<SummertMånedsinntekt>()
 
         ainntektMap.forEach {
@@ -169,7 +169,7 @@ class AinntektService {
     }
 
     // Summerer og grupperer ainntekter pr måned
-    private fun summerMaanedsinntekter(ainntektListeInn: List<Ainntektspost>, ainntektHentetDato: LocalDate): Map<String, InntektSumPost> {
+    private fun summerMånedsinntekter(ainntektListeInn: List<Ainntektspost>, ainntektHentetDato: LocalDate): Map<String, InntektSumPost> {
         val ainntektMap = mutableMapOf<String, InntektSumPost>()
         ainntektListeInn.forEach { ainntektPost ->
             kalkulerbeløpForPeriode(

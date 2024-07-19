@@ -117,6 +117,7 @@ class BPsAndelSærbidragPeriode(private val bPsAndelSærbidragBeregning: BPsAnde
     }
 
     // Validerer at input-verdier til BPsAndelSærbidragsberegning er gyldige
+    // Setter alle valideringer til false ettersom det bare er en periode
     fun validerInput(grunnlag: BeregnBPsAndelSærbidragGrunnlag): List<Avvik> {
         val avvikListe =
             PeriodeUtil.validerBeregnPeriodeInput(
@@ -130,11 +131,11 @@ class BPsAndelSærbidragPeriode(private val bPsAndelSærbidragBeregning: BPsAnde
                 beregnDatoTil = grunnlag.beregnDatoTil,
                 dataElement = "utgiftPeriodeListe",
                 periodeListe = grunnlag.utgiftPeriodeListe.map { it.getPeriode() },
-                sjekkOverlappendePerioder = true,
-                sjekkOppholdMellomPerioder = true,
-                sjekkDatoTilNull = true,
-                sjekkDatoStartSluttAvPerioden = true,
-                sjekkBeregnPeriode = true,
+                sjekkOverlappendePerioder = false,
+                sjekkOppholdMellomPerioder = false,
+                sjekkDatoTilNull = false,
+                sjekkDatoStartSluttAvPerioden = false,
+                sjekkBeregnPeriode = false,
             ),
         )
 
@@ -145,10 +146,10 @@ class BPsAndelSærbidragPeriode(private val bPsAndelSærbidragBeregning: BPsAnde
                 dataElement = "inntektBPPeriodeListe",
                 periodeListe = grunnlag.inntektBPPeriodeListe.map { it.getPeriode() },
                 sjekkOverlappendePerioder = false,
-                sjekkOppholdMellomPerioder = true,
+                sjekkOppholdMellomPerioder = false,
                 sjekkDatoTilNull = false,
-                sjekkDatoStartSluttAvPerioden = true,
-                sjekkBeregnPeriode = true,
+                sjekkDatoStartSluttAvPerioden = false,
+                sjekkBeregnPeriode = false,
             ),
         )
 
@@ -159,10 +160,10 @@ class BPsAndelSærbidragPeriode(private val bPsAndelSærbidragBeregning: BPsAnde
                 dataElement = "inntektBMPeriodeListe",
                 periodeListe = grunnlag.inntektBMPeriodeListe.map { it.getPeriode() },
                 sjekkOverlappendePerioder = false,
-                sjekkOppholdMellomPerioder = true,
+                sjekkOppholdMellomPerioder = false,
                 sjekkDatoTilNull = false,
-                sjekkDatoStartSluttAvPerioden = true,
-                sjekkBeregnPeriode = true,
+                sjekkDatoStartSluttAvPerioden = false,
+                sjekkBeregnPeriode = false,
             ),
         )
 
@@ -173,10 +174,10 @@ class BPsAndelSærbidragPeriode(private val bPsAndelSærbidragBeregning: BPsAnde
                 dataElement = "inntektSBPeriodeListe",
                 periodeListe = grunnlag.inntektSBPeriodeListe.map { it.getPeriode() },
                 sjekkOverlappendePerioder = false,
-                sjekkOppholdMellomPerioder = true,
+                sjekkOppholdMellomPerioder = false,
                 sjekkDatoTilNull = false,
-                sjekkDatoStartSluttAvPerioden = true,
-                sjekkBeregnPeriode = true,
+                sjekkDatoStartSluttAvPerioden = false,
+                sjekkBeregnPeriode = false,
             ),
         )
 

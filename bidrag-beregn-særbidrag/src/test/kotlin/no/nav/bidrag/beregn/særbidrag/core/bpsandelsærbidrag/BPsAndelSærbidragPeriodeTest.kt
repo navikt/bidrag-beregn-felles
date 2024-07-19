@@ -61,13 +61,6 @@ internal class BPsAndelSærbidragPeriodeTest {
         }.withMessageContaining("Grunnlagsobjekt DELBEREGNING_UTGIFT mangler data for periode")
     }
 
-    @DisplayName("Avvik når Utgift er utenfor beregningsperiode")
-    @Test
-    fun skalDanneAvvikNårUtgiftErUtenforBeregningsperiode() {
-        val avvikListe = bPsAndelSærbidragPeriode.validerInput(byggBeregnBPsAndelSærbidragGrunnlag(avvikUtgift = true))
-        assertThat(avvikListe).hasSize(1)
-    }
-
     private fun byggBeregnBPsAndelSærbidragGrunnlag(avvikUtgift: Boolean = false) = BeregnBPsAndelSærbidragGrunnlag(
         beregnDatoFra = LocalDate.parse("2020-01-01"),
         beregnDatoTil = LocalDate.parse("2020-02-01"),
@@ -109,7 +102,7 @@ internal class BPsAndelSærbidragPeriodeTest {
             sjablonPeriode = Periode(datoFom = LocalDate.parse("2020-01-01"), datoTil = null),
             sjablon = Sjablon(
                 navn = SjablonTallNavn.TRYGDEAVGIFT_PROSENT.navn,
-                nokkelListe = emptyList(),
+                nøkkelListe = emptyList(),
                 innholdListe = listOf(SjablonInnhold(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = BigDecimal.valueOf(7.8))),
             ),
         ),

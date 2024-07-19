@@ -13,15 +13,15 @@
     <properties>
         <revision>1.0-SNAPSHOT</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kotlin.version>1.9.24</kotlin.version>
+        <kotlin.version>2.0.0</kotlin.version>
         <java.version>21</java.version>
         <kotlin.code.style>official</kotlin.code.style>
         <jackson.version>2.17.1</jackson.version>
-        <kotest.version>5.8.1</kotest.version>
+        <kotest.version>5.9.0</kotest.version>
         <swagger.version>2.2.22</swagger.version>
         <ktlint.version>1.2.1</ktlint.version>
         <bidrag-felles.version>2024.07.15.075500</bidrag-felles.version>
-        <spring-boot.version>3.2.5</spring-boot.version>
+        <spring-boot.version>3.3.1</spring-boot.version>
         <kotlin-logging-jvm.version>6.0.9</kotlin-logging-jvm.version>
         <mockito-kotlin.version>5.3.1</mockito-kotlin.version>
         <mockk.version>1.13.11</mockk.version>
@@ -38,7 +38,7 @@
         <maven-antrun.version>3.1.0</maven-antrun.version>
         <maven-jar.version>3.4.1</maven-jar.version>
         <flatten-maven.version>1.6.0</flatten-maven.version>
-        <build-helper-maven.version>3.5.0</build-helper-maven.version>
+        <build-helper-maven.version>3.6.0</build-helper-maven.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

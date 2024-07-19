@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.særbidrag.service
 
 import io.mockk.every
 import io.mockk.mockkObject
+import no.nav.bidrag.beregn.core.exception.UgyldigInputException
 import no.nav.bidrag.beregn.særbidrag.TestUtil
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.BidragsevneCore
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto.BeregnBidragsevneGrunnlagCore
@@ -9,7 +10,6 @@ import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.BPsAndelSærbidra
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.BeregnBPsAndelSærbidragGrunnlagCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.SærbidragCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BeregnSærbidragGrunnlagCore
-import no.nav.bidrag.beregn.særbidrag.exception.UgyldigInputException
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Assertions.assertAll

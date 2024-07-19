@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.forskudd.service
 
 import io.mockk.every
 import io.mockk.mockkObject
+import no.nav.bidrag.beregn.core.exception.UgyldigInputException
 import no.nav.bidrag.beregn.forskudd.TestUtil
 import no.nav.bidrag.beregn.forskudd.core.ForskuddCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore
@@ -60,7 +61,7 @@ internal class BeregnForskuddServiceTest {
     @DisplayName("Skal kaste UgyldigInputException ved feil retur fra Core")
     fun skalKasteUgyldigInputExceptionVedFeilReturFraCore() {
         `when`(forskuddCoreMock.beregnForskudd(any())).thenReturn(TestUtil.dummyForskuddResultatCoreMedAvvik())
-        assertThatExceptionOfType(IllegalArgumentException::class.java)
+        assertThatExceptionOfType(UgyldigInputException::class.java)
             .isThrownBy { beregnForskuddService.beregn(TestUtil.byggForskuddBeregnGrunnlag()) }
             .withMessageContaining("beregnDatoFra kan ikke være null")
             .withMessageContaining("periodeDatoTil må være etter periodeDatoFra")

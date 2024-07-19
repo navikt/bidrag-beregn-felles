@@ -1,6 +1,6 @@
 package no.nav.bidrag.beregn.særbidrag.core.bidragsevne.beregning
 
-import no.nav.bidrag.beregn.core.bo.SjablonNokkel
+import no.nav.bidrag.beregn.core.bo.SjablonNøkkel
 import no.nav.bidrag.beregn.core.bo.SjablonPeriode
 import no.nav.bidrag.beregn.core.util.SjablonUtil
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.bo.GrunnlagBeregning
@@ -151,17 +151,17 @@ class BidragsevneBeregning : FellesBeregning() {
             SjablonUtil.hentSjablonverdi(sjablonListe = sjablonListe, sjablonTallNavn = SjablonTallNavn.MINSTEFRADRAG_INNTEKT_BELØP)
 
         // Bidragsevne
-        val sjablonNokkelVerdi = if (borMedAndre) "GS" else "EN"
+        val sjablonNøkkelVerdi = if (borMedAndre) "GS" else "EN"
         sjablonNavnVerdiMap[SjablonInnholdNavn.BOUTGIFT_BELØP.navn] = SjablonUtil.hentSjablonverdi(
             sjablonListe = sjablonListe,
             sjablonNavn = SjablonNavn.BIDRAGSEVNE,
-            sjablonNokkelListe = listOf(SjablonNokkel(navn = SjablonNøkkelNavn.BOSTATUS.navn, verdi = sjablonNokkelVerdi)),
+            sjablonNøkkelListe = listOf(SjablonNøkkel(navn = SjablonNøkkelNavn.BOSTATUS.navn, verdi = sjablonNøkkelVerdi)),
             sjablonInnholdNavn = SjablonInnholdNavn.BOUTGIFT_BELØP,
         )
         sjablonNavnVerdiMap[SjablonInnholdNavn.UNDERHOLD_BELØP.navn] = SjablonUtil.hentSjablonverdi(
             sjablonListe = sjablonListe,
             sjablonNavn = SjablonNavn.BIDRAGSEVNE,
-            sjablonNokkelListe = listOf(SjablonNokkel(navn = SjablonNøkkelNavn.BOSTATUS.navn, verdi = sjablonNokkelVerdi)),
+            sjablonNøkkelListe = listOf(SjablonNøkkel(navn = SjablonNøkkelNavn.BOSTATUS.navn, verdi = sjablonNøkkelVerdi)),
             sjablonInnholdNavn = SjablonInnholdNavn.UNDERHOLD_BELØP,
         )
 

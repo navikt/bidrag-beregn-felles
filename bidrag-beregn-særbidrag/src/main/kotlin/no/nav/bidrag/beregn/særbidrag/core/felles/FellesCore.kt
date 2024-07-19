@@ -4,7 +4,7 @@ import no.nav.bidrag.beregn.core.bo.Avvik
 import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.bo.Sjablon
 import no.nav.bidrag.beregn.core.bo.SjablonInnhold
-import no.nav.bidrag.beregn.core.bo.SjablonNokkel
+import no.nav.bidrag.beregn.core.bo.SjablonNøkkel
 import no.nav.bidrag.beregn.core.bo.SjablonPeriode
 import no.nav.bidrag.beregn.core.bo.SjablonPeriodeNavnVerdi
 import no.nav.bidrag.beregn.core.dto.AvvikCore
@@ -30,10 +30,10 @@ open class FellesCore {
     protected fun mapSjablonPeriodeListe(sjablonPeriodeListeCore: List<SjablonPeriodeCore>): List<SjablonPeriode> {
         val sjablonPeriodeListe = mutableListOf<SjablonPeriode>()
         sjablonPeriodeListeCore.forEach {
-            val sjablonNokkelListe = mutableListOf<SjablonNokkel>()
+            val sjablonNøkkelListe = mutableListOf<SjablonNøkkel>()
             val sjablonInnholdListe = mutableListOf<SjablonInnhold>()
-            it.nokkelListe!!.forEach { nokkel ->
-                sjablonNokkelListe.add(SjablonNokkel(navn = nokkel.navn, verdi = nokkel.verdi))
+            it.nøkkelListe!!.forEach { nøkkel ->
+                sjablonNøkkelListe.add(SjablonNøkkel(navn = nøkkel.navn, verdi = nøkkel.verdi))
             }
             it.innholdListe.forEach { innhold ->
                 sjablonInnholdListe.add(SjablonInnhold(navn = innhold.navn, verdi = innhold.verdi))
@@ -41,7 +41,7 @@ open class FellesCore {
             sjablonPeriodeListe.add(
                 SjablonPeriode(
                     sjablonPeriode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
-                    sjablon = Sjablon(navn = it.navn, nokkelListe = sjablonNokkelListe, innholdListe = sjablonInnholdListe),
+                    sjablon = Sjablon(navn = it.navn, nøkkelListe = sjablonNøkkelListe, innholdListe = sjablonInnholdListe),
                 ),
             )
         }

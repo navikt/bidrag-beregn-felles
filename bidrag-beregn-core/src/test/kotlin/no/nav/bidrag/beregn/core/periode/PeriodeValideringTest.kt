@@ -7,7 +7,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.function.Executable
 import java.time.LocalDate
 
 internal class PeriodeValideringTest {
@@ -34,14 +33,10 @@ internal class PeriodeValideringTest {
             )
 
         assertAll(
-            Executable { assertThat(avvikListe).isNotEmpty() },
-            Executable { assertThat(avvikListe.size).isEqualTo(1) },
-            Executable { assertThat(avvikListe[0].avvikType).isEqualTo(Avvikstype.PERIODER_OVERLAPPER) },
-            Executable {
-                assertThat(
-                    avvikListe[0].avvikTekst,
-                ).isEqualTo("Overlappende perioder i $dataElement: datoTil=2023-03-01, datoFom=2023-02-01")
-            },
+            { assertThat(avvikListe.size).isEqualTo(1) },
+            { assertThat(avvikListe).isNotEmpty() },
+            { assertThat(avvikListe[0].avvikType).isEqualTo(Avvikstype.PERIODER_OVERLAPPER) },
+            { assertThat(avvikListe[0].avvikTekst).isEqualTo("Overlappende perioder i $dataElement: datoTil=2023-03-01, datoFom=2023-02-01") },
         )
     }
 
@@ -66,14 +61,10 @@ internal class PeriodeValideringTest {
             )
 
         assertAll(
-            Executable { assertThat(avvikListe).isNotEmpty() },
-            Executable { assertThat(avvikListe.size).isEqualTo(1) },
-            Executable { assertThat(avvikListe[0].avvikType).isEqualTo(Avvikstype.PERIODER_HAR_OPPHOLD) },
-            Executable {
-                assertThat(
-                    avvikListe[0].avvikTekst,
-                ).isEqualTo("Opphold mellom perioder i $dataElement: datoTil=2023-02-01, datoFom=2023-03-01")
-            },
+            { assertThat(avvikListe).isNotEmpty() },
+            { assertThat(avvikListe.size).isEqualTo(1) },
+            { assertThat(avvikListe[0].avvikType).isEqualTo(Avvikstype.PERIODER_HAR_OPPHOLD) },
+            { assertThat(avvikListe[0].avvikTekst).isEqualTo("Opphold mellom perioder i $dataElement: datoTil=2023-02-01, datoFom=2023-03-01") },
         )
     }
 
@@ -98,14 +89,10 @@ internal class PeriodeValideringTest {
             )
 
         assertAll(
-            Executable { assertThat(avvikListe).isNotEmpty() },
-            Executable { assertThat(avvikListe.size).isEqualTo(1) },
-            Executable { assertThat(avvikListe[0].avvikType).isEqualTo(Avvikstype.NULL_VERDI_I_DATO) },
-            Executable {
-                assertThat(
-                    avvikListe[0].avvikTekst,
-                ).isEqualTo("datoTil kan ikke være null i $dataElement: datoFom=2023-01-01, datoTil=null")
-            },
+            { assertThat(avvikListe).isNotEmpty() },
+            { assertThat(avvikListe.size).isEqualTo(1) },
+            { assertThat(avvikListe[0].avvikType).isEqualTo(Avvikstype.NULL_VERDI_I_DATO) },
+            { assertThat(avvikListe[0].avvikTekst).isEqualTo("datoTil kan ikke være null i $dataElement: datoFom=2023-01-01, datoTil=null") },
         )
     }
 
@@ -130,20 +117,12 @@ internal class PeriodeValideringTest {
             )
 
         assertAll(
-            Executable { assertThat(avvikListe).isNotEmpty() },
-            Executable { assertThat(avvikListe.size).isEqualTo(2) },
-            Executable { assertThat(avvikListe[0].avvikType).isEqualTo(Avvikstype.DAG_ER_IKKE_FØRSTE_DAG_I_MND) },
-            Executable {
-                assertThat(
-                    avvikListe[0].avvikTekst,
-                ).isEqualTo("datoFom i $dataElement må være den første dagen i måneden: datoFom=2023-01-04")
-            },
-            Executable { assertThat(avvikListe[1].avvikType).isEqualTo(Avvikstype.DAG_ER_IKKE_FØRSTE_DAG_I_MND) },
-            Executable {
-                assertThat(
-                    avvikListe[1].avvikTekst,
-                ).isEqualTo("datoTil i $dataElement må være den første dagen i måneden: datoTil=2023-04-16")
-            },
+            { assertThat(avvikListe).isNotEmpty() },
+            { assertThat(avvikListe.size).isEqualTo(2) },
+            { assertThat(avvikListe[0].avvikType).isEqualTo(Avvikstype.DAG_ER_IKKE_FØRSTE_DAG_I_MND) },
+            { assertThat(avvikListe[0].avvikTekst).isEqualTo("datoFom i $dataElement må være den første dagen i måneden: datoFom=2023-01-04") },
+            { assertThat(avvikListe[1].avvikType).isEqualTo(Avvikstype.DAG_ER_IKKE_FØRSTE_DAG_I_MND) },
+            { assertThat(avvikListe[1].avvikTekst).isEqualTo("datoTil i $dataElement må være den første dagen i måneden: datoTil=2023-04-16") },
         )
     }
 
@@ -168,10 +147,10 @@ internal class PeriodeValideringTest {
             )
 
         assertAll(
-            Executable { assertThat(avvikListe).isNotEmpty() },
-            Executable { assertThat(avvikListe.size).isEqualTo(1) },
-            Executable { assertThat(avvikListe[0].avvikType).isEqualTo(Avvikstype.DATO_FOM_ETTER_DATO_TIL) },
-            Executable {
+            { assertThat(avvikListe).isNotEmpty() },
+            { assertThat(avvikListe.size).isEqualTo(1) },
+            { assertThat(avvikListe[0].avvikType).isEqualTo(Avvikstype.DATO_FOM_ETTER_DATO_TIL) },
+            {
                 assertThat(
                     avvikListe[0].avvikTekst,
                 ).isEqualTo("datoTil må være etter datoFom i $dataElement: datoFom=2023-02-01, datoTil=2023-01-01")
@@ -200,14 +179,10 @@ internal class PeriodeValideringTest {
             )
 
         assertAll(
-            Executable { assertThat(avvikListe).isNotEmpty() },
-            Executable { assertThat(avvikListe.size).isEqualTo(1) },
-            Executable { assertThat(avvikListe[0].avvikType).isEqualTo(Avvikstype.PERIODE_MANGLER_DATA) },
-            Executable {
-                assertThat(
-                    avvikListe[0].avvikTekst,
-                ).isEqualTo("Første dato i $dataElement (2023-02-01) er etter beregnDatoFom (2023-01-01)")
-            },
+            { assertThat(avvikListe).isNotEmpty() },
+            { assertThat(avvikListe.size).isEqualTo(1) },
+            { assertThat(avvikListe[0].avvikType).isEqualTo(Avvikstype.PERIODE_MANGLER_DATA) },
+            { assertThat(avvikListe[0].avvikTekst).isEqualTo("Første dato i $dataElement (2023-02-01) er etter beregnDatoFom (2023-01-01)") },
         )
     }
 
@@ -232,14 +207,10 @@ internal class PeriodeValideringTest {
             )
 
         assertAll(
-            Executable { assertThat(avvikListe).isNotEmpty() },
-            Executable { assertThat(avvikListe.size).isEqualTo(1) },
-            Executable { assertThat(avvikListe[0].avvikType).isEqualTo(Avvikstype.PERIODE_MANGLER_DATA) },
-            Executable {
-                assertThat(
-                    avvikListe[0].avvikTekst,
-                ).isEqualTo("Siste dato i $dataElement (2023-03-01) er før beregnDatoTil (2023-04-01)")
-            },
+            { assertThat(avvikListe).isNotEmpty() },
+            { assertThat(avvikListe.size).isEqualTo(1) },
+            { assertThat(avvikListe[0].avvikType).isEqualTo(Avvikstype.PERIODE_MANGLER_DATA) },
+            { assertThat(avvikListe[0].avvikTekst).isEqualTo("Siste dato i $dataElement (2023-03-01) er før beregnDatoTil (2023-04-01)") },
         )
     }
 
@@ -253,10 +224,10 @@ internal class PeriodeValideringTest {
             )
 
         assertAll(
-            Executable { assertThat(avvikListe).isNotEmpty() },
-            Executable { assertThat(avvikListe.size).isEqualTo(1) },
-            Executable { assertThat(avvikListe[0].avvikType).isEqualTo(Avvikstype.NULL_VERDI_I_DATO) },
-            Executable { assertThat(avvikListe[0].avvikTekst).isEqualTo("beregnDatoFom kan ikke være null") },
+            { assertThat(avvikListe).isNotEmpty() },
+            { assertThat(avvikListe.size).isEqualTo(1) },
+            { assertThat(avvikListe[0].avvikType).isEqualTo(Avvikstype.NULL_VERDI_I_DATO) },
+            { assertThat(avvikListe[0].avvikTekst).isEqualTo("beregnDatoFom kan ikke være null") },
         )
     }
 
@@ -270,10 +241,10 @@ internal class PeriodeValideringTest {
             )
 
         assertAll(
-            Executable { assertThat(avvikListe).isNotEmpty() },
-            Executable { assertThat(avvikListe.size).isEqualTo(1) },
-            Executable { assertThat(avvikListe[0].avvikType).isEqualTo(Avvikstype.NULL_VERDI_I_DATO) },
-            Executable { assertThat(avvikListe[0].avvikTekst).isEqualTo("beregnDatoTil kan ikke være null") },
+            { assertThat(avvikListe).isNotEmpty() },
+            { assertThat(avvikListe.size).isEqualTo(1) },
+            { assertThat(avvikListe[0].avvikType).isEqualTo(Avvikstype.NULL_VERDI_I_DATO) },
+            { assertThat(avvikListe[0].avvikTekst).isEqualTo("beregnDatoTil kan ikke være null") },
         )
     }
 
@@ -287,10 +258,10 @@ internal class PeriodeValideringTest {
             )
 
         assertAll(
-            Executable { assertThat(avvikListe).isNotEmpty() },
-            Executable { assertThat(avvikListe.size).isEqualTo(1) },
-            Executable { assertThat(avvikListe[0].avvikType).isEqualTo(Avvikstype.DATO_FOM_ETTER_DATO_TIL) },
-            Executable { assertThat(avvikListe[0].avvikTekst).isEqualTo("beregnDatoTil må være etter beregnDatoFom") },
+            { assertThat(avvikListe).isNotEmpty() },
+            { assertThat(avvikListe.size).isEqualTo(1) },
+            { assertThat(avvikListe[0].avvikType).isEqualTo(Avvikstype.DATO_FOM_ETTER_DATO_TIL) },
+            { assertThat(avvikListe[0].avvikTekst).isEqualTo("beregnDatoTil må være etter beregnDatoFom") },
         )
     }
 }

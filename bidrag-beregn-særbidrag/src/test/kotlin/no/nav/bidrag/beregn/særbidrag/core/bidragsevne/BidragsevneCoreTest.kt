@@ -6,9 +6,12 @@ import no.nav.bidrag.beregn.core.bo.Sjablon
 import no.nav.bidrag.beregn.core.bo.SjablonInnhold
 import no.nav.bidrag.beregn.core.bo.SjablonPeriode
 import no.nav.bidrag.beregn.core.bo.SjablonPeriodeNavnVerdi
+import no.nav.bidrag.beregn.core.dto.BarnIHusstandenPeriodeCore
+import no.nav.bidrag.beregn.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonInnholdCore
 import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
+import no.nav.bidrag.beregn.core.dto.VoksneIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.TestUtil
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.bo.AntallBarnIHusstand
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.bo.BeregnBidragsevneResultat
@@ -19,9 +22,6 @@ import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.bo.ResultatBeregning
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.bo.ResultatPeriode
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto.BeregnBidragsevneGrunnlagCore
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.periode.BidragsevnePeriode
-import no.nav.bidrag.beregn.særbidrag.core.felles.dto.BarnIHusstandenPeriodeCore
-import no.nav.bidrag.beregn.særbidrag.core.felles.dto.InntektPeriodeCore
-import no.nav.bidrag.beregn.særbidrag.core.felles.dto.VoksneIHusstandenPeriodeCore
 import no.nav.bidrag.domene.enums.beregning.Avvikstype
 import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
@@ -112,7 +112,7 @@ internal class BidragsevneCoreTest {
             SjablonPeriodeCore(
                 periode = PeriodeCore(datoFom = LocalDate.parse("2020-01-01"), datoTil = LocalDate.parse("2020-02-01")),
                 navn = SjablonTallNavn.SKATTESATS_ALMINNELIG_INNTEKT_PROSENT.navn,
-                nokkelListe = emptyList(),
+                nøkkelListe = emptyList(),
                 innholdListe = listOf(SjablonInnholdCore(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = BigDecimal.valueOf(22))),
             ),
         )
@@ -157,7 +157,7 @@ internal class BidragsevneCoreTest {
                             ),
                             sjablon = Sjablon(
                                 navn = SjablonTallNavn.SKATTESATS_ALMINNELIG_INNTEKT_PROSENT.navn,
-                                nokkelListe = emptyList(),
+                                nøkkelListe = emptyList(),
                                 innholdListe = listOf(SjablonInnhold(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = BigDecimal.valueOf(22))),
                             ),
                         ),
