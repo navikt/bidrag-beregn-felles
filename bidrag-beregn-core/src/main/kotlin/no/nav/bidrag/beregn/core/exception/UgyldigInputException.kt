@@ -1,3 +1,3 @@
-package no.nav.bidrag.beregn.særbidrag.exception
+package no.nav.bidrag.beregn.core.exception
 
 class UgyldigInputException(melding: String?) : RuntimeException(melding)

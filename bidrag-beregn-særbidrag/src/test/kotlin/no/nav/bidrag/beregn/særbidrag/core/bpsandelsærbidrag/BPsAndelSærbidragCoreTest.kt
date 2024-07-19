@@ -6,6 +6,7 @@ import no.nav.bidrag.beregn.core.bo.Sjablon
 import no.nav.bidrag.beregn.core.bo.SjablonInnhold
 import no.nav.bidrag.beregn.core.bo.SjablonPeriode
 import no.nav.bidrag.beregn.core.bo.SjablonPeriodeNavnVerdi
+import no.nav.bidrag.beregn.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonInnholdCore
 import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
@@ -20,7 +21,6 @@ import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.bo.Utgift
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.BeregnBPsAndelSærbidragGrunnlagCore
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.UtgiftPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.periode.BPsAndelSærbidragPeriode
-import no.nav.bidrag.beregn.særbidrag.core.felles.dto.InntektPeriodeCore
 import no.nav.bidrag.domene.enums.beregning.Avvikstype
 import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
@@ -118,7 +118,7 @@ internal class BPsAndelSærbidragCoreTest {
             SjablonPeriodeCore(
                 periode = PeriodeCore(datoFom = LocalDate.parse("2020-01-01"), datoTil = LocalDate.parse("2020-02-01")),
                 navn = SjablonTallNavn.FORSKUDDSSATS_BELØP.navn,
-                nokkelListe = emptyList(),
+                nøkkelListe = emptyList(),
                 innholdListe = listOf(SjablonInnholdCore(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = BigDecimal.valueOf(1600))),
             ),
         )
@@ -182,7 +182,7 @@ internal class BPsAndelSærbidragCoreTest {
                             sjablonPeriode = Periode(datoFom = LocalDate.parse("2020-01-01"), datoTil = null),
                             sjablon = Sjablon(
                                 navn = SjablonTallNavn.FORSKUDDSSATS_BELØP.navn,
-                                nokkelListe = emptyList(),
+                                nøkkelListe = emptyList(),
                                 innholdListe = listOf(SjablonInnhold(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = BigDecimal.valueOf(1600))),
                             ),
                         ),

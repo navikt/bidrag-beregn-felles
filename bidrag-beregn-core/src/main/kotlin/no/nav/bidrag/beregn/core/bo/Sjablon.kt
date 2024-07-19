@@ -5,11 +5,11 @@ import java.math.BigDecimal
 // Nye sjablonklasser
 data class Sjablon(
     val navn: String,
-    val nokkelListe: List<SjablonNokkel>? = emptyList(),
+    val nøkkelListe: List<SjablonNøkkel>? = emptyList(),
     val innholdListe: List<SjablonInnhold>,
 )
 
-data class SjablonNokkel(
+data class SjablonNøkkel(
     val navn: String,
     val verdi: String,
 )
@@ -19,15 +19,15 @@ data class SjablonInnhold(
     val verdi: BigDecimal,
 )
 
-data class SjablonSingelNokkel(
+data class SjablonSingelNøkkel(
     val navn: String,
     val verdi: String,
     val innholdListe: List<SjablonInnhold>,
 )
 
-data class SjablonSingelNokkelSingelInnhold(
+data class SjablonSingelNøkkelSingelInnhold(
     val navn: String,
-    val nokkelVerdi: String,
+    val nøkkelVerdi: String,
     val innholdVerdi: BigDecimal,
 )
 

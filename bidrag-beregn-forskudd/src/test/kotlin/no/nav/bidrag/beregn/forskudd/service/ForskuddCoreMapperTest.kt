@@ -1,8 +1,8 @@
 package no.nav.bidrag.beregn.forskudd.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import no.nav.bidrag.beregn.forskudd.core.dto.BarnIHusstandenPeriodeCore
-import no.nav.bidrag.beregn.forskudd.core.dto.InntektPeriodeCore
+import no.nav.bidrag.beregn.core.dto.BarnIHusstandenPeriodeCore
+import no.nav.bidrag.beregn.forskudd.service.ForskuddCoreMapper.mapInntekt
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
@@ -19,7 +19,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.time.LocalDate
 
-internal class CoreMapperTest {
+internal class ForskuddCoreMapperTest {
     @Test
     @DisplayName("Skal kaste UgyldigInputException når PERSON-objekt inneholder ugyldige data")
     fun mapPersonUgyldig() {
@@ -48,7 +48,7 @@ internal class CoreMapperTest {
             )
 
         assertThatExceptionOfType(IllegalArgumentException::class.java)
-            .isThrownBy { CoreMapper.mapGrunnlagTilCore(beregnForskuddGrunnlag = beregnForskuddGrunnlag, sjablontallListe = emptyList()) }
+            .isThrownBy { ForskuddCoreMapper.mapGrunnlagTilCore(beregnForskuddGrunnlag = beregnForskuddGrunnlag, sjablontallListe = emptyList()) }
             .withMessageContaining("Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.PERSON_SØKNADSBARN er ikke gyldig")
     }
 
@@ -88,7 +88,7 @@ internal class CoreMapperTest {
             )
 
         assertThatExceptionOfType(IllegalArgumentException::class.java)
-            .isThrownBy { CoreMapper.mapGrunnlagTilCore(beregnForskuddGrunnlag = beregnForskuddGrunnlag, sjablontallListe = emptyList()) }
+            .isThrownBy { ForskuddCoreMapper.mapGrunnlagTilCore(beregnForskuddGrunnlag = beregnForskuddGrunnlag, sjablontallListe = emptyList()) }
             .withMessageContaining("Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.BOSTATUS_PERIODE er ikke gyldig")
     }
 
@@ -136,9 +136,9 @@ internal class CoreMapperTest {
             )
 
         assertThatExceptionOfType(IllegalArgumentException::class.java)
-            .isThrownBy { CoreMapper.mapGrunnlagTilCore(beregnForskuddGrunnlag = beregnForskuddGrunnlag, sjablontallListe = emptyList()) }
+            .isThrownBy { ForskuddCoreMapper.mapGrunnlagTilCore(beregnForskuddGrunnlag = beregnForskuddGrunnlag, sjablontallListe = emptyList()) }
             .withMessageContaining(
-                "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE er ikke gyldig",
+                "Ugyldig input ved beregning. Innhold i Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE er ikke gyldig",
             )
     }
 
@@ -194,7 +194,7 @@ internal class CoreMapperTest {
             )
 
         assertThatExceptionOfType(IllegalArgumentException::class.java)
-            .isThrownBy { CoreMapper.mapGrunnlagTilCore(beregnForskuddGrunnlag = beregnForskuddGrunnlag, sjablontallListe = emptyList()) }
+            .isThrownBy { ForskuddCoreMapper.mapGrunnlagTilCore(beregnForskuddGrunnlag = beregnForskuddGrunnlag, sjablontallListe = emptyList()) }
             .withMessageContaining("Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.SIVILSTAND_PERIODE er ikke gyldig")
     }
 
@@ -204,15 +204,7 @@ internal class CoreMapperTest {
     fun mapInntektTest() {
         val filnavn = "src/test/resources/testfiler/forskudd_test_inntekt.json"
         val forskuddGrunnlag = lesFilOgByggRequest(filnavn)
-
-        val inntektPeriodeListe =
-            invokePrivateMethod(
-                CoreMapper,
-                "mapInntekt",
-                forskuddGrunnlag,
-                "Person_Bidragsmottaker",
-                BigDecimal.valueOf(10000),
-            ) as List<InntektPeriodeCore>
+        val inntektPeriodeListe = mapInntekt(forskuddGrunnlag, "Person_Bidragsmottaker", BigDecimal.valueOf(10000))
 
         assertAll(
             { assertThat(inntektPeriodeListe).isNotNull },
@@ -273,7 +265,7 @@ internal class CoreMapperTest {
 
         val inntektPeriodeListe =
             invokePrivateMethod(
-                CoreMapper,
+                ForskuddCoreMapper,
                 "mapBarnIHusstanden",
                 forskuddGrunnlag,
             ) as List<BarnIHusstandenPeriodeCore>
@@ -283,9 +275,9 @@ internal class CoreMapperTest {
 
             { assertThat(inntektPeriodeListe[0].periode.datoFom).isEqualTo(LocalDate.parse("2022-01-01")) },
             { assertThat(inntektPeriodeListe[0].periode.datoTil).isEqualTo(LocalDate.parse("2022-02-01")) },
-            { assertThat(inntektPeriodeListe[0].antall).isEqualTo(2) },
+            { assertThat(inntektPeriodeListe[0].antall).isEqualTo(2.0) },
             {
-                assertThat(inntektPeriodeListe[0].grunnlagsreferanseListe).containsExactly(
+                assertThat(inntektPeriodeListe[0].grunnlagsreferanseListe).contains(
                     "Bostatus_Søknadsbarn_202201",
                     "Bostatus_Husstandsbarn_01_202201",
                 )
@@ -293,9 +285,9 @@ internal class CoreMapperTest {
 
             { assertThat(inntektPeriodeListe[1].periode.datoFom).isEqualTo(LocalDate.parse("2022-02-01")) },
             { assertThat(inntektPeriodeListe[1].periode.datoTil).isEqualTo(LocalDate.parse("2022-03-01")) },
-            { assertThat(inntektPeriodeListe[1].antall).isEqualTo(3) },
+            { assertThat(inntektPeriodeListe[1].antall).isEqualTo(3.0) },
             {
-                assertThat(inntektPeriodeListe[1].grunnlagsreferanseListe).containsExactly(
+                assertThat(inntektPeriodeListe[1].grunnlagsreferanseListe).contains(
                     "Bostatus_Søknadsbarn_202201",
                     "Bostatus_Husstandsbarn_01_202201",
                     "Bostatus_Husstandsbarn_02_202202",
@@ -304,9 +296,9 @@ internal class CoreMapperTest {
 
             { assertThat(inntektPeriodeListe[2].periode.datoFom).isEqualTo(LocalDate.parse("2022-03-01")) },
             { assertThat(inntektPeriodeListe[2].periode.datoTil).isEqualTo(LocalDate.parse("2022-04-01")) },
-            { assertThat(inntektPeriodeListe[2].antall).isEqualTo(3) },
+            { assertThat(inntektPeriodeListe[2].antall).isEqualTo(3.0) },
             {
-                assertThat(inntektPeriodeListe[2].grunnlagsreferanseListe).containsExactly(
+                assertThat(inntektPeriodeListe[2].grunnlagsreferanseListe).contains(
                     "Bostatus_Søknadsbarn_202201",
                     "Bostatus_Husstandsbarn_02_202202",
                     "Bostatus_Husstandsbarn_03_202203",
@@ -315,9 +307,9 @@ internal class CoreMapperTest {
 
             { assertThat(inntektPeriodeListe[3].periode.datoFom).isEqualTo(LocalDate.parse("2022-04-01")) },
             { assertThat(inntektPeriodeListe[3].periode.datoTil).isEqualTo(LocalDate.parse("2022-05-01")) },
-            { assertThat(inntektPeriodeListe[3].antall).isEqualTo(4) },
+            { assertThat(inntektPeriodeListe[3].antall).isEqualTo(4.0) },
             {
-                assertThat(inntektPeriodeListe[3].grunnlagsreferanseListe).containsExactly(
+                assertThat(inntektPeriodeListe[3].grunnlagsreferanseListe).contains(
                     "Bostatus_Søknadsbarn_202201",
                     "Bostatus_Husstandsbarn_02_202202",
                     "Bostatus_Husstandsbarn_03_202203",
@@ -327,9 +319,9 @@ internal class CoreMapperTest {
 
             { assertThat(inntektPeriodeListe[4].periode.datoFom).isEqualTo(LocalDate.parse("2022-05-01")) },
             { assertThat(inntektPeriodeListe[4].periode.datoTil).isNull() },
-            { assertThat(inntektPeriodeListe[4].antall).isEqualTo(3) },
+            { assertThat(inntektPeriodeListe[4].antall).isEqualTo(3.0) },
             {
-                assertThat(inntektPeriodeListe[4].grunnlagsreferanseListe).containsExactly(
+                assertThat(inntektPeriodeListe[4].grunnlagsreferanseListe).contains(
                     "Bostatus_Søknadsbarn_202201",
                     "Bostatus_Husstandsbarn_03_202203",
                     "Bostatus_Husstandsbarn_04_202204",

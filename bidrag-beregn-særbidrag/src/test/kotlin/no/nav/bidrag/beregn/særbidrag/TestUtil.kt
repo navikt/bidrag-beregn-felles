@@ -8,7 +8,7 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.bo.Sjablon
 import no.nav.bidrag.beregn.core.bo.SjablonInnhold
-import no.nav.bidrag.beregn.core.bo.SjablonNokkel
+import no.nav.bidrag.beregn.core.bo.SjablonNøkkel
 import no.nav.bidrag.beregn.core.bo.SjablonPeriode
 import no.nav.bidrag.beregn.core.dto.AvvikCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
@@ -287,7 +287,7 @@ object TestUtil {
         avvikListe.add(AvvikCore("beregnDatoFra kan ikke være null", "NULL_VERDI_I_DATO"))
         avvikListe.add(
             AvvikCore(
-                "periodeDatoTil må være etter periodeDatoFra i samvaersfradragPeriodeListe: datoFra=2018-04-01, datoTil=2018-03-01",
+                "periodeDatoTil må være etter periodeDatoFra i samvÆrsfradragPeriodeListe: datoFra=2018-04-01, datoTil=2018-03-01",
                 "DATO_FRA_ETTER_DATO_TIL",
             ),
         )
@@ -1184,8 +1184,8 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.BARNETILSYN.navn,
                     listOf(
-                        SjablonNokkel(SjablonNøkkelNavn.STØNAD_TYPE.navn, "64"),
-                        SjablonNokkel(SjablonNøkkelNavn.TILSYN_TYPE.navn, "DO"),
+                        SjablonNøkkel(SjablonNøkkelNavn.STØNAD_TYPE.navn, "64"),
+                        SjablonNøkkel(SjablonNøkkelNavn.TILSYN_TYPE.navn, "DO"),
                     ),
                     listOf(SjablonInnhold(SjablonInnholdNavn.BARNETILSYN_BELØP.navn, BigDecimal.valueOf(358))),
                 ),
@@ -1197,8 +1197,8 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.BARNETILSYN.navn,
                     listOf(
-                        SjablonNokkel(SjablonNøkkelNavn.STØNAD_TYPE.navn, "64"),
-                        SjablonNokkel(SjablonNøkkelNavn.TILSYN_TYPE.navn, "DU"),
+                        SjablonNøkkel(SjablonNøkkelNavn.STØNAD_TYPE.navn, "64"),
+                        SjablonNøkkel(SjablonNøkkelNavn.TILSYN_TYPE.navn, "DU"),
                     ),
                     listOf(SjablonInnhold(SjablonInnholdNavn.BARNETILSYN_BELØP.navn, BigDecimal.valueOf(257))),
                 ),
@@ -1210,8 +1210,8 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.BARNETILSYN.navn,
                     listOf(
-                        SjablonNokkel(SjablonNøkkelNavn.STØNAD_TYPE.navn, "64"),
-                        SjablonNokkel(SjablonNøkkelNavn.TILSYN_TYPE.navn, "HO"),
+                        SjablonNøkkel(SjablonNøkkelNavn.STØNAD_TYPE.navn, "64"),
+                        SjablonNøkkel(SjablonNøkkelNavn.TILSYN_TYPE.navn, "HO"),
                     ),
                     listOf(SjablonInnhold(SjablonInnholdNavn.BARNETILSYN_BELØP.navn, BigDecimal.valueOf(589))),
                 ),
@@ -1223,8 +1223,8 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.BARNETILSYN.navn,
                     listOf(
-                        SjablonNokkel(SjablonNøkkelNavn.STØNAD_TYPE.navn, "64"),
-                        SjablonNokkel(SjablonNøkkelNavn.TILSYN_TYPE.navn, "HU"),
+                        SjablonNøkkel(SjablonNøkkelNavn.STØNAD_TYPE.navn, "64"),
+                        SjablonNøkkel(SjablonNøkkelNavn.TILSYN_TYPE.navn, "HU"),
                     ),
                     listOf(SjablonInnhold(SjablonInnholdNavn.BARNETILSYN_BELØP.navn, BigDecimal.valueOf(643))),
                 ),
@@ -1238,7 +1238,7 @@ object TestUtil {
                 Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("9999-12-31")),
                 Sjablon(
                     SjablonNavn.BIDRAGSEVNE.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.BOSTATUS.navn, "EN")),
+                    listOf(SjablonNøkkel(SjablonNøkkelNavn.BOSTATUS.navn, "EN")),
                     listOf(
                         SjablonInnhold(SjablonInnholdNavn.BOUTGIFT_BELØP.navn, BigDecimal.valueOf(9764)),
                         SjablonInnhold(SjablonInnholdNavn.UNDERHOLD_BELØP.navn, BigDecimal.valueOf(9818)),
@@ -1251,7 +1251,7 @@ object TestUtil {
                 Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("9999-12-31")),
                 Sjablon(
                     SjablonNavn.BIDRAGSEVNE.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.BOSTATUS.navn, "GS")),
+                    listOf(SjablonNøkkel(SjablonNøkkelNavn.BOSTATUS.navn, "GS")),
                     listOf(
                         SjablonInnhold(SjablonInnholdNavn.BOUTGIFT_BELØP.navn, BigDecimal.valueOf(5981)),
                         SjablonInnhold(SjablonInnholdNavn.UNDERHOLD_BELØP.navn, BigDecimal.valueOf(8313)),
@@ -1268,7 +1268,7 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.FORBRUKSUTGIFTER.navn,
                     listOf(
-                        SjablonNokkel(
+                        SjablonNøkkel(
                             SjablonNøkkelNavn.ALDER_TOM.navn,
                             "18",
                         ),
@@ -1283,7 +1283,7 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.FORBRUKSUTGIFTER.navn,
                     listOf(
-                        SjablonNokkel(
+                        SjablonNøkkel(
                             SjablonNøkkelNavn.ALDER_TOM.navn,
                             "5",
                         ),
@@ -1298,7 +1298,7 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.FORBRUKSUTGIFTER.navn,
                     listOf(
-                        SjablonNokkel(
+                        SjablonNøkkel(
                             SjablonNøkkelNavn.ALDER_TOM.navn,
                             "99",
                         ),
@@ -1313,7 +1313,7 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.FORBRUKSUTGIFTER.navn,
                     listOf(
-                        SjablonNokkel(
+                        SjablonNøkkel(
                             SjablonNøkkelNavn.ALDER_TOM.navn,
                             "10",
                         ),
@@ -1328,7 +1328,7 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.FORBRUKSUTGIFTER.navn,
                     listOf(
-                        SjablonNokkel(
+                        SjablonNøkkel(
                             SjablonNøkkelNavn.ALDER_TOM.navn,
                             "14",
                         ),
@@ -1345,7 +1345,7 @@ object TestUtil {
                 Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("9999-12-31")),
                 Sjablon(
                     SjablonNavn.MAKS_FRADRAG.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "1")),
+                    listOf(SjablonNøkkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "1")),
                     listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELØP.navn, BigDecimal.valueOf(2083.33))),
                 ),
             ),
@@ -1355,7 +1355,7 @@ object TestUtil {
                 Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("9999-12-31")),
                 Sjablon(
                     SjablonNavn.MAKS_FRADRAG.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "2")),
+                    listOf(SjablonNøkkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "2")),
                     listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELØP.navn, BigDecimal.valueOf(3333))),
                 ),
             ),
@@ -1365,7 +1365,7 @@ object TestUtil {
                 Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("9999-12-31")),
                 Sjablon(
                     SjablonNavn.MAKS_FRADRAG.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "3")),
+                    listOf(SjablonNøkkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "3")),
                     listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELØP.navn, BigDecimal.valueOf(4583))),
                 ),
             ),
@@ -1375,7 +1375,7 @@ object TestUtil {
                 Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("9999-12-31")),
                 Sjablon(
                     SjablonNavn.MAKS_FRADRAG.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "4")),
+                    listOf(SjablonNøkkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "4")),
                     listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELØP.navn, BigDecimal.valueOf(5833))),
                 ),
             ),
@@ -1385,7 +1385,7 @@ object TestUtil {
                 Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("9999-12-31")),
                 Sjablon(
                     SjablonNavn.MAKS_FRADRAG.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "5")),
+                    listOf(SjablonNøkkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "5")),
                     listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELØP.navn, BigDecimal.valueOf(7083))),
                 ),
             ),
@@ -1395,7 +1395,7 @@ object TestUtil {
                 Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("9999-12-31")),
                 Sjablon(
                     SjablonNavn.MAKS_FRADRAG.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "6")),
+                    listOf(SjablonNøkkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "6")),
                     listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELØP.navn, BigDecimal.valueOf(8333))),
                 ),
             ),
@@ -1405,7 +1405,7 @@ object TestUtil {
                 Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("9999-12-31")),
                 Sjablon(
                     SjablonNavn.MAKS_FRADRAG.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "7")),
+                    listOf(SjablonNøkkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "7")),
                     listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELØP.navn, BigDecimal.valueOf(9583))),
                 ),
             ),
@@ -1415,7 +1415,7 @@ object TestUtil {
                 Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("9999-12-31")),
                 Sjablon(
                     SjablonNavn.MAKS_FRADRAG.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "8")),
+                    listOf(SjablonNøkkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "8")),
                     listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELØP.navn, BigDecimal.valueOf(10833))),
                 ),
             ),
@@ -1425,7 +1425,7 @@ object TestUtil {
                 Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("9999-12-31")),
                 Sjablon(
                     SjablonNavn.MAKS_FRADRAG.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "99")),
+                    listOf(SjablonNøkkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "99")),
                     listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_FRADRAG_BELØP.navn, BigDecimal.valueOf(12083))),
                 ),
             ),
@@ -1438,7 +1438,7 @@ object TestUtil {
                 Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("9999-12-31")),
                 Sjablon(
                     SjablonNavn.MAKS_TILSYN.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "1")),
+                    listOf(SjablonNøkkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "1")),
                     listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_TILSYN_BELØP.navn, BigDecimal.valueOf(6333))),
                 ),
             ),
@@ -1448,7 +1448,7 @@ object TestUtil {
                 Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("9999-12-31")),
                 Sjablon(
                     SjablonNavn.MAKS_TILSYN.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "2")),
+                    listOf(SjablonNøkkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "2")),
                     listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_TILSYN_BELØP.navn, BigDecimal.valueOf(8264))),
                 ),
             ),
@@ -1458,7 +1458,7 @@ object TestUtil {
                 Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("9999-12-31")),
                 Sjablon(
                     SjablonNavn.MAKS_TILSYN.navn,
-                    listOf(SjablonNokkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "99")),
+                    listOf(SjablonNøkkel(SjablonNøkkelNavn.ANTALL_BARN_TOM.navn, "99")),
                     listOf(SjablonInnhold(SjablonInnholdNavn.MAKS_TILSYN_BELØP.navn, BigDecimal.valueOf(9364))),
                 ),
             ),
@@ -1472,8 +1472,8 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.SAMVÆRSFRADRAG.navn,
                     listOf(
-                        SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "00"),
-                        SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "99"),
+                        SjablonNøkkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "00"),
+                        SjablonNøkkel(SjablonNøkkelNavn.ALDER_TOM.navn, "99"),
                     ),
                     listOf(
                         SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.valueOf(1)),
@@ -1489,8 +1489,8 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.SAMVÆRSFRADRAG.navn,
                     listOf(
-                        SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "01"),
-                        SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "5"),
+                        SjablonNøkkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "01"),
+                        SjablonNøkkel(SjablonNøkkelNavn.ALDER_TOM.navn, "5"),
                     ),
                     listOf(
                         SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.valueOf(3)),
@@ -1506,8 +1506,8 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.SAMVÆRSFRADRAG.navn,
                     listOf(
-                        SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "01"),
-                        SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "10"),
+                        SjablonNøkkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "01"),
+                        SjablonNøkkel(SjablonNøkkelNavn.ALDER_TOM.navn, "10"),
                     ),
                     listOf(
                         SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.valueOf(3)),
@@ -1523,8 +1523,8 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.SAMVÆRSFRADRAG.navn,
                     listOf(
-                        SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "01"),
-                        SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "14"),
+                        SjablonNøkkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "01"),
+                        SjablonNøkkel(SjablonNøkkelNavn.ALDER_TOM.navn, "14"),
                     ),
                     listOf(
                         SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.valueOf(3)),
@@ -1540,8 +1540,8 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.SAMVÆRSFRADRAG.navn,
                     listOf(
-                        SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "01"),
-                        SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "18"),
+                        SjablonNøkkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "01"),
+                        SjablonNøkkel(SjablonNøkkelNavn.ALDER_TOM.navn, "18"),
                     ),
                     listOf(
                         SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.valueOf(3)),
@@ -1557,8 +1557,8 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.SAMVÆRSFRADRAG.navn,
                     listOf(
-                        SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "01"),
-                        SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "99"),
+                        SjablonNøkkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "01"),
+                        SjablonNøkkel(SjablonNøkkelNavn.ALDER_TOM.navn, "99"),
                     ),
                     listOf(
                         SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.valueOf(3)),
@@ -1574,8 +1574,8 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.SAMVÆRSFRADRAG.navn,
                     listOf(
-                        SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "02"),
-                        SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "5"),
+                        SjablonNøkkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "02"),
+                        SjablonNøkkel(SjablonNøkkelNavn.ALDER_TOM.navn, "5"),
                     ),
                     listOf(
                         SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
@@ -1591,8 +1591,8 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.SAMVÆRSFRADRAG.navn,
                     listOf(
-                        SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "02"),
-                        SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "10"),
+                        SjablonNøkkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "02"),
+                        SjablonNøkkel(SjablonNøkkelNavn.ALDER_TOM.navn, "10"),
                     ),
                     listOf(
                         SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
@@ -1608,8 +1608,8 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.SAMVÆRSFRADRAG.navn,
                     listOf(
-                        SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "02"),
-                        SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "14"),
+                        SjablonNøkkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "02"),
+                        SjablonNøkkel(SjablonNøkkelNavn.ALDER_TOM.navn, "14"),
                     ),
                     listOf(
                         SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
@@ -1625,8 +1625,8 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.SAMVÆRSFRADRAG.navn,
                     listOf(
-                        SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "02"),
-                        SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "18"),
+                        SjablonNøkkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "02"),
+                        SjablonNøkkel(SjablonNøkkelNavn.ALDER_TOM.navn, "18"),
                     ),
                     listOf(
                         SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
@@ -1642,8 +1642,8 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.SAMVÆRSFRADRAG.navn,
                     listOf(
-                        SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "02"),
-                        SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "99"),
+                        SjablonNøkkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "02"),
+                        SjablonNøkkel(SjablonNøkkelNavn.ALDER_TOM.navn, "99"),
                     ),
                     listOf(
                         SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
@@ -1659,8 +1659,8 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.SAMVÆRSFRADRAG.navn,
                     listOf(
-                        SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "03"),
-                        SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "5"),
+                        SjablonNøkkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "03"),
+                        SjablonNøkkel(SjablonNøkkelNavn.ALDER_TOM.navn, "5"),
                     ),
                     listOf(
                         SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
@@ -1676,8 +1676,8 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.SAMVÆRSFRADRAG.navn,
                     listOf(
-                        SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "03"),
-                        SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "10"),
+                        SjablonNøkkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "03"),
+                        SjablonNøkkel(SjablonNøkkelNavn.ALDER_TOM.navn, "10"),
                     ),
                     listOf(
                         SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
@@ -1693,8 +1693,8 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.SAMVÆRSFRADRAG.navn,
                     listOf(
-                        SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "03"),
-                        SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "14"),
+                        SjablonNøkkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "03"),
+                        SjablonNøkkel(SjablonNøkkelNavn.ALDER_TOM.navn, "14"),
                     ),
                     listOf(
                         SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
@@ -1710,8 +1710,8 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.SAMVÆRSFRADRAG.navn,
                     listOf(
-                        SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "03"),
-                        SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "18"),
+                        SjablonNøkkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "03"),
+                        SjablonNøkkel(SjablonNøkkelNavn.ALDER_TOM.navn, "18"),
                     ),
                     listOf(
                         SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
@@ -1727,8 +1727,8 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.SAMVÆRSFRADRAG.navn,
                     listOf(
-                        SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "03"),
-                        SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "99"),
+                        SjablonNøkkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "03"),
+                        SjablonNøkkel(SjablonNøkkelNavn.ALDER_TOM.navn, "99"),
                     ),
                     listOf(
                         SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
@@ -1744,8 +1744,8 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.SAMVÆRSFRADRAG.navn,
                     listOf(
-                        SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "04"),
-                        SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "5"),
+                        SjablonNøkkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "04"),
+                        SjablonNøkkel(SjablonNøkkelNavn.ALDER_TOM.navn, "5"),
                     ),
                     listOf(
                         SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
@@ -1761,8 +1761,8 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.SAMVÆRSFRADRAG.navn,
                     listOf(
-                        SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "04"),
-                        SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "10"),
+                        SjablonNøkkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "04"),
+                        SjablonNøkkel(SjablonNøkkelNavn.ALDER_TOM.navn, "10"),
                     ),
                     listOf(
                         SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
@@ -1778,8 +1778,8 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.SAMVÆRSFRADRAG.navn,
                     listOf(
-                        SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "04"),
-                        SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "14"),
+                        SjablonNøkkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "04"),
+                        SjablonNøkkel(SjablonNøkkelNavn.ALDER_TOM.navn, "14"),
                     ),
                     listOf(
                         SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
@@ -1795,8 +1795,8 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.SAMVÆRSFRADRAG.navn,
                     listOf(
-                        SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "04"),
-                        SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "18"),
+                        SjablonNøkkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "04"),
+                        SjablonNøkkel(SjablonNøkkelNavn.ALDER_TOM.navn, "18"),
                     ),
                     listOf(
                         SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),
@@ -1812,8 +1812,8 @@ object TestUtil {
                 Sjablon(
                     SjablonNavn.SAMVÆRSFRADRAG.navn,
                     listOf(
-                        SjablonNokkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "04"),
-                        SjablonNokkel(SjablonNøkkelNavn.ALDER_TOM.navn, "99"),
+                        SjablonNøkkel(SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, "04"),
+                        SjablonNøkkel(SjablonNøkkelNavn.ALDER_TOM.navn, "99"),
                     ),
                     listOf(
                         SjablonInnhold(SjablonInnholdNavn.ANTALL_DAGER_TOM.navn, BigDecimal.ZERO),

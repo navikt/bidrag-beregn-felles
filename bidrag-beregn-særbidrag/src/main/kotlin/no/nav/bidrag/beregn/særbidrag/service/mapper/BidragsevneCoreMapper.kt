@@ -1,11 +1,12 @@
 package no.nav.bidrag.beregn.særbidrag.service.mapper
 
+import no.nav.bidrag.beregn.core.dto.BarnIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
+import no.nav.bidrag.beregn.core.dto.VoksneIHusstandenPeriodeCore
+import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto.BeregnBidragsevneGrunnlagCore
 import no.nav.bidrag.beregn.særbidrag.core.felles.bo.SjablonListe
-import no.nav.bidrag.beregn.særbidrag.core.felles.dto.BarnIHusstandenPeriodeCore
-import no.nav.bidrag.beregn.særbidrag.core.felles.dto.VoksneIHusstandenPeriodeCore
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
@@ -22,12 +23,13 @@ internal object BidragsevneCoreMapper : CoreMapper() {
         // Mapper grunnlagstyper til input for core
         val inntektBPPeriodeCoreListe =
             mapInntekt(
-                beregnSærbidragrunnlag = beregnGrunnlag,
+                beregnGrunnlag = beregnGrunnlag,
                 referanseTilRolle = finnReferanseTilRolle(
                     grunnlagListe = beregnGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
                 ),
                 innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntekt(sjablonListe.sjablonSjablontallResponse),
+                erSærbidrag = true,
             )
         val barnIHusstandenPeriodeCoreListe = mapBarnIHusstanden(beregnGrunnlag)
         val voksneIHusstandenPeriodeCoreListe = mapVoksneIHusstanden(beregnGrunnlag)

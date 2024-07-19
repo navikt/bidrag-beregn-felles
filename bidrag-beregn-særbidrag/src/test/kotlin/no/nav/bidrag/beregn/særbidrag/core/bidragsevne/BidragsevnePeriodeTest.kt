@@ -70,13 +70,6 @@ internal class BidragsevnePeriodeTest {
         }.withMessageContaining("Bostatus voksne i husstand mangler data for periode")
     }
 
-    @DisplayName("Avvik når BostatusVoksneIHusstand er utenfor beregningsperiode")
-    @Test
-    fun skalDanneAvvikNårBostatusVoksneIHusstandErUtenforBeregningsperiode() {
-        val avvikListe = bidragsevnePeriode.validerInput(byggBeregnBidragsevneGrunnlag(avvikVoksneIHusstand = true))
-        assertThat(avvikListe).hasSize(1)
-    }
-
     private fun byggBeregnBidragsevneGrunnlag(avvikBarnIHusstand: Boolean = false, avvikVoksneIHusstand: Boolean = false) = BeregnBidragsevneGrunnlag(
         beregnDatoFra = LocalDate.parse("2020-01-01"),
         beregnDatoTil = LocalDate.parse("2020-02-01"),
@@ -136,7 +129,7 @@ internal class BidragsevnePeriodeTest {
             sjablonPeriode = Periode(datoFom = LocalDate.parse("2020-01-01"), datoTil = null),
             sjablon = Sjablon(
                 navn = SjablonTallNavn.TRYGDEAVGIFT_PROSENT.navn,
-                nokkelListe = emptyList(),
+                nøkkelListe = emptyList(),
                 innholdListe = listOf(SjablonInnhold(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = BigDecimal.valueOf(7.8))),
             ),
         ),

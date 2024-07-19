@@ -55,13 +55,13 @@ class ForskuddBeregning {
             }
 
             // Over maks inntektsgrense for forskudd (REGEL 4)
-            !erUnderInntektsgrense(maksInntektsgrense, bidragsmottakerInntekt) -> {
+            !erUnderInntektsgrense(inntektsgrense = maksInntektsgrense, inntekt = bidragsmottakerInntekt) -> {
                 resultatkode = Resultatkode.AVSLAG_HØY_INNTEKT
                 regel = "REGEL 4"
             }
 
             // Under maks inntektsgrense for fullt forskudd (REGEL 5/6)
-            erUnderInntektsgrense(sjablonverdier.inntektsgrense100ProsentForskuddBeløp, bidragsmottakerInntekt) -> {
+            erUnderInntektsgrense(inntektsgrense = sjablonverdier.inntektsgrense100ProsentForskuddBeløp, inntekt = bidragsmottakerInntekt) -> {
                 resultatkode =
                     if (grunnlag.søknadsbarnAlder.alder >= 11) {
                         Resultatkode.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT
@@ -107,7 +107,7 @@ class ForskuddBeregning {
         }
 
         return ResultatBeregning(
-            beløp = beregnForskudd(resultatkode = resultatkode, forskuddssats75ProsentBelop = sjablonverdier.forskuddssats75ProsentBeløp),
+            beløp = beregnForskudd(resultatkode = resultatkode, forskuddssats75ProsentBeløp = sjablonverdier.forskuddssats75ProsentBeløp),
             kode = resultatkode,
             regel = regel,
             sjablonListe = byggSjablonliste(sjablonPeriodeListe = grunnlag.sjablonListe, sjablonverdier = sjablonverdier),
@@ -179,27 +179,27 @@ class ForskuddBeregning {
 
     private fun hentPeriode(sjablonPeriodeListe: List<SjablonPeriode>, sjablonNavn: String): Periode {
         val sjablonperiode = sjablonPeriodeListe.find { it.sjablon.navn == sjablonNavn }
-        return sjablonperiode?.getPeriode() ?: Periode(LocalDate.MIN, LocalDate.MAX)
+        return sjablonperiode?.getPeriode() ?: Periode(datoFom = LocalDate.MIN, datoTil = LocalDate.MAX)
     }
 
     // Beregner forskuddsbeløp basert på resultatkode. Resultatet avrundes til nærmeste tikrone.
     // Utgangspunktet er sjablon 0038 (75% sats), men med utgangspunkt i den simuleres bruk av
     // sjablon 0005 (100% sats) for å få beregningen lik som i Bisys og i samsvar med det som står på nav.no.
-    private fun beregnForskudd(resultatkode: Resultatkode, forskuddssats75ProsentBelop: BigDecimal): BigDecimal {
-        val uavrundetForskuddssats100ProsentBeløp = forskuddssats75ProsentBelop.divide(prosent75, 5, RoundingMode.HALF_UP)
+    private fun beregnForskudd(resultatkode: Resultatkode, forskuddssats75ProsentBeløp: BigDecimal): BigDecimal {
+        val uavrundetForskuddssats100ProsentBeløp = forskuddssats75ProsentBeløp.divide(prosent75, 5, RoundingMode.HALF_UP)
         val avrundetForskuddssats100ProsentBeløp = avrund(uavrundetForskuddssats100ProsentBeløp)
 
         return when (resultatkode) {
             Resultatkode.REDUSERT_FORSKUDD_50_PROSENT -> avrund(uavrundetForskuddssats100ProsentBeløp.multiply(prosent50))
-            Resultatkode.ORDINÆRT_FORSKUDD_75_PROSENT -> forskuddssats75ProsentBelop
+            Resultatkode.ORDINÆRT_FORSKUDD_75_PROSENT -> forskuddssats75ProsentBeløp
             Resultatkode.FORHØYET_FORSKUDD_100_PROSENT -> avrund(uavrundetForskuddssats100ProsentBeløp)
             Resultatkode.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT -> avrund(avrundetForskuddssats100ProsentBeløp.multiply(prosent125))
             else -> BigDecimal.ZERO
         }
     }
 
-    private fun avrund(belop: BigDecimal): BigDecimal {
-        return belop.divide(BigDecimal.TEN, 0, RoundingMode.HALF_UP).multiply(BigDecimal.TEN)
+    private fun avrund(beløp: BigDecimal): BigDecimal {
+        return beløp.divide(BigDecimal.TEN, 0, RoundingMode.HALF_UP).multiply(BigDecimal.TEN)
     }
 
     private fun erUnderInntektsgrense(inntektsgrense: BigDecimal, inntekt: BigDecimal) = inntekt.compareTo(inntektsgrense) < 1

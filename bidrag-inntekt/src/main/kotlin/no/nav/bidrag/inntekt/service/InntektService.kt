@@ -25,7 +25,7 @@ class InntektService(
             TransformerInntekterResponse(
                 versjon = APP_VERSJON,
                 summertMånedsinntektListe =
-                ainntektService.beregnMaanedsinntekt(
+                ainntektService.beregnMånedsinntekt(
                     ainntektListeInn = transformerInntekterRequest.ainntektsposter,
                     ainntektHentetDato = transformerInntekterRequest.ainntektHentetDato,
                 ),

@@ -12,6 +12,8 @@ import no.nav.bidrag.beregn.core.bo.SjablonInnhold
 import no.nav.bidrag.beregn.core.bo.SjablonPeriode
 import no.nav.bidrag.beregn.core.bo.SjablonPeriodeNavnVerdi
 import no.nav.bidrag.beregn.core.dto.AvvikCore
+import no.nav.bidrag.beregn.core.dto.BarnIHusstandenPeriodeCore
+import no.nav.bidrag.beregn.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.bo.Alder
 import no.nav.bidrag.beregn.forskudd.core.bo.BarnIHusstanden
@@ -28,11 +30,9 @@ import no.nav.bidrag.beregn.forskudd.core.bo.ResultatPeriode
 import no.nav.bidrag.beregn.forskudd.core.bo.Sivilstand
 import no.nav.bidrag.beregn.forskudd.core.bo.SivilstandPeriode
 import no.nav.bidrag.beregn.forskudd.core.bo.Søknadsbarn
-import no.nav.bidrag.beregn.forskudd.core.dto.BarnIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnetForskuddResultatCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BostatusPeriodeCore
-import no.nav.bidrag.beregn.forskudd.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatBeregningCore
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore
@@ -118,7 +118,7 @@ object TestUtil {
             sjablonPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = null),
             sjablon = Sjablon(
                 navn = SjablonTallNavn.FORSKUDDSSATS_BELØP.navn,
-                nokkelListe = emptyList(),
+                nøkkelListe = emptyList(),
                 innholdListe = listOf(SjablonInnhold(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = BigDecimal.valueOf(1710))),
             ),
         ),
@@ -126,7 +126,7 @@ object TestUtil {
             sjablonPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = null),
             sjablon = Sjablon(
                 navn = SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR.navn,
-                nokkelListe = emptyList(),
+                nøkkelListe = emptyList(),
                 innholdListe = listOf(SjablonInnhold(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = BigDecimal.valueOf(320))),
             ),
         ),
@@ -134,7 +134,7 @@ object TestUtil {
             sjablonPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = null),
             sjablon = Sjablon(
                 navn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELØP.navn,
-                nokkelListe = emptyList(),
+                nøkkelListe = emptyList(),
                 innholdListe = listOf(SjablonInnhold(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = BigDecimal.valueOf(270200))),
             ),
         ),
@@ -142,7 +142,7 @@ object TestUtil {
             sjablonPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = null),
             sjablon = Sjablon(
                 navn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELØP.navn,
-                nokkelListe = emptyList(),
+                nøkkelListe = emptyList(),
                 innholdListe = listOf(SjablonInnhold(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = BigDecimal.valueOf(419700))),
             ),
         ),
@@ -150,7 +150,7 @@ object TestUtil {
             sjablonPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = null),
             sjablon = Sjablon(
                 navn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP.navn,
-                nokkelListe = emptyList(),
+                nøkkelListe = emptyList(),
                 innholdListe = listOf(SjablonInnhold(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = BigDecimal.valueOf(336500))),
             ),
         ),
@@ -158,7 +158,7 @@ object TestUtil {
             sjablonPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = null),
             sjablon = Sjablon(
                 navn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP.navn,
-                nokkelListe = emptyList(),
+                nøkkelListe = emptyList(),
                 innholdListe = listOf(SjablonInnhold(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = BigDecimal.valueOf(61700))),
             ),
         ),
@@ -166,7 +166,7 @@ object TestUtil {
             sjablonPeriode = Periode(datoFom = LocalDate.parse("2017-01-01"), datoTil = null),
             sjablon = Sjablon(
                 navn = SjablonTallNavn.FORSKUDDSSATS_75PROSENT_BELØP.navn,
-                nokkelListe = emptyList(),
+                nøkkelListe = emptyList(),
                 innholdListe = listOf(SjablonInnhold(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = BigDecimal.valueOf(1280))),
             ),
         ),
@@ -217,7 +217,7 @@ object TestUtil {
                 BarnIHusstandenPeriodeCore(
                     referanse = BARN_I_HUSSTANDEN_REFERANSE_1,
                     periode = PeriodeCore(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2020-01-01")),
-                    antall = 1,
+                    antall = 1.0,
                     grunnlagsreferanseListe = emptyList(),
                 ),
             )

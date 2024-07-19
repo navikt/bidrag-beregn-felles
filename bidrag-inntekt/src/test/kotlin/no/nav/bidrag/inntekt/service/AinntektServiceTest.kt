@@ -589,7 +589,7 @@ class AinntektServiceTest : AbstractServiceTest() {
             val ainntektService = AinntektService()
 
             val transformerteInntekter =
-                ainntektService.beregnMaanedsinntekt(ainntektListeInn = inntektRequest.ainntektsposter, ainntektHentetDato = ainntektHentetDato)
+                ainntektService.beregnMånedsinntekt(ainntektListeInn = inntektRequest.ainntektsposter, ainntektHentetDato = ainntektHentetDato)
 
             TestUtil.printJson(transformerteInntekter)
 

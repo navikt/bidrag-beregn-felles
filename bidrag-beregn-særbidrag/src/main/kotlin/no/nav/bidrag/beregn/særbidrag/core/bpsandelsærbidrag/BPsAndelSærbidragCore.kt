@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag
 
 import no.nav.bidrag.beregn.core.bo.Avvik
 import no.nav.bidrag.beregn.core.bo.Periode
+import no.nav.bidrag.beregn.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.bo.BeregnBPsAndelSærbidragGrunnlag
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.bo.BeregnBPsAndelSærbidragResultat
@@ -15,7 +16,6 @@ import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.ResultatPerio
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.UtgiftPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.periode.BPsAndelSærbidragPeriode
 import no.nav.bidrag.beregn.særbidrag.core.felles.FellesCore
-import no.nav.bidrag.beregn.særbidrag.core.felles.dto.InntektPeriodeCore
 
 internal class BPsAndelSærbidragCore(
     private val bPsAndelSærbidragPeriode: BPsAndelSærbidragPeriode = BPsAndelSærbidragPeriode(),

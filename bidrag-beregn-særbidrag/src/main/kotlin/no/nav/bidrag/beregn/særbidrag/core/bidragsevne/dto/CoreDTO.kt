@@ -1,13 +1,13 @@
 package no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto
 
 import no.nav.bidrag.beregn.core.dto.AvvikCore
+import no.nav.bidrag.beregn.core.dto.BarnIHusstandenPeriodeCore
+import no.nav.bidrag.beregn.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonResultatGrunnlagCore
-import no.nav.bidrag.beregn.særbidrag.core.felles.dto.BarnIHusstandenPeriodeCore
+import no.nav.bidrag.beregn.core.dto.VoksneIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.felles.dto.IResultatPeriode
-import no.nav.bidrag.beregn.særbidrag.core.felles.dto.InntektPeriodeCore
-import no.nav.bidrag.beregn.særbidrag.core.felles.dto.VoksneIHusstandenPeriodeCore
 import java.math.BigDecimal
 import java.time.LocalDate
 

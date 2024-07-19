@@ -2,7 +2,10 @@ package no.nav.bidrag.beregn.særbidrag.core.bidragsevne
 
 import no.nav.bidrag.beregn.core.bo.Avvik
 import no.nav.bidrag.beregn.core.bo.Periode
+import no.nav.bidrag.beregn.core.dto.BarnIHusstandenPeriodeCore
+import no.nav.bidrag.beregn.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
+import no.nav.bidrag.beregn.core.dto.VoksneIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.bo.BarnIHusstandPeriode
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.bo.BeregnBidragsevneGrunnlag
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.bo.BeregnBidragsevneResultat
@@ -15,9 +18,6 @@ import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto.ResultatBeregningCor
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto.ResultatPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.periode.BidragsevnePeriode
 import no.nav.bidrag.beregn.særbidrag.core.felles.FellesCore
-import no.nav.bidrag.beregn.særbidrag.core.felles.dto.BarnIHusstandenPeriodeCore
-import no.nav.bidrag.beregn.særbidrag.core.felles.dto.InntektPeriodeCore
-import no.nav.bidrag.beregn.særbidrag.core.felles.dto.VoksneIHusstandenPeriodeCore
 
 internal class BidragsevneCore(private val bidragsevnePeriode: BidragsevnePeriode = BidragsevnePeriode()) : FellesCore() {
 

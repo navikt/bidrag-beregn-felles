@@ -106,6 +106,7 @@ class BidragsevnePeriode(private val bidragsevneberegning: BidragsevneBeregning 
     }
 
     // Validerer at input-verdier til bidragsevneberegning er gyldige
+    // Setter alle valideringer til false ettersom det bare er en periode
     fun validerInput(grunnlag: BeregnBidragsevneGrunnlag): List<Avvik> {
         // Sjekk beregn dato fra/til
         val avvikListe =
@@ -122,10 +123,10 @@ class BidragsevnePeriode(private val bidragsevneberegning: BidragsevneBeregning 
                 dataElement = "inntektPeriodeListe",
                 periodeListe = grunnlag.inntektPeriodeListe.map { it.getPeriode() },
                 sjekkOverlappendePerioder = false,
-                sjekkOppholdMellomPerioder = true,
+                sjekkOppholdMellomPerioder = false,
                 sjekkDatoTilNull = false,
-                sjekkDatoStartSluttAvPerioden = true,
-                sjekkBeregnPeriode = true,
+                sjekkDatoStartSluttAvPerioden = false,
+                sjekkBeregnPeriode = false,
             ),
         )
 
@@ -139,8 +140,8 @@ class BidragsevnePeriode(private val bidragsevneberegning: BidragsevneBeregning 
                 sjekkOverlappendePerioder = false,
                 sjekkOppholdMellomPerioder = false,
                 sjekkDatoTilNull = false,
-                sjekkDatoStartSluttAvPerioden = true,
-                sjekkBeregnPeriode = true,
+                sjekkDatoStartSluttAvPerioden = false,
+                sjekkBeregnPeriode = false,
             ),
         )
 
@@ -151,11 +152,11 @@ class BidragsevnePeriode(private val bidragsevneberegning: BidragsevneBeregning 
                 beregnDatoTil = grunnlag.beregnDatoTil,
                 dataElement = "voksneIHusstandPeriodeListe",
                 periodeListe = grunnlag.voksneIHusstandPeriodeListe.map { it.getPeriode() },
-                sjekkOverlappendePerioder = true,
-                sjekkOppholdMellomPerioder = true,
-                sjekkDatoTilNull = true,
-                sjekkDatoStartSluttAvPerioden = true,
-                sjekkBeregnPeriode = true,
+                sjekkOverlappendePerioder = false,
+                sjekkOppholdMellomPerioder = false,
+                sjekkDatoTilNull = false,
+                sjekkDatoStartSluttAvPerioden = false,
+                sjekkBeregnPeriode = false,
             ),
         )
 

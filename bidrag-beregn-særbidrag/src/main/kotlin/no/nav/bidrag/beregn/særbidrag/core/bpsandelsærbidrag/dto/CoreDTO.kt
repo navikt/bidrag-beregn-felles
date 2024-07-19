@@ -1,11 +1,11 @@
 package no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto
 
 import no.nav.bidrag.beregn.core.dto.AvvikCore
+import no.nav.bidrag.beregn.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonResultatGrunnlagCore
 import no.nav.bidrag.beregn.særbidrag.core.felles.dto.IResultatPeriode
-import no.nav.bidrag.beregn.særbidrag.core.felles.dto.InntektPeriodeCore
 import java.math.BigDecimal
 import java.time.LocalDate
 

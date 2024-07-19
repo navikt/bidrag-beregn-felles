@@ -168,9 +168,10 @@ internal class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning 
         val barn11ÅrDato = fødselsdato.plusYears(11).with(firstDayOfMonth())
         val barn18ÅrDato = fødselsdato.plusYears(18).with(firstDayOfNextMonth())
 
-        var alderStartPeriode = 0
-        if (!barn11ÅrDato.isAfter(beregnDatoFra)) {
-            alderStartPeriode = if (!barn18ÅrDato.isAfter(beregnDatoFra)) 18 else 11
+        val alderStartPeriode = when {
+            !barn18ÅrDato.isAfter(beregnDatoFra) -> 18
+            !barn11ÅrDato.isAfter(beregnDatoFra) -> 11
+            else -> 0
         }
 
         // Barn fyller 11 år i perioden
@@ -178,66 +179,31 @@ internal class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning 
 
         // Barn fyller 18 år i perioden
         val barn18ÅrIPerioden = barn18ÅrDato.isAfter(beregnDatoFra.minusDays(1)) && barn18ÅrDato.isBefore(beregnDatoTil.plusDays(1))
+
         if (barn11ÅrIPerioden) {
-            bruddAlderListe.add(
-                AlderPeriode(
-                    referanse = "",
-                    alderPeriode = Periode(datoFom = beregnDatoFra.with(firstDayOfMonth()), datoTil = barn11ÅrDato.with(firstDayOfMonth())),
-                    alder = 0,
-                ),
-            )
+            bruddAlderListe.add(leggTilPeriode(datoFom = beregnDatoFra, datoTil = barn11ÅrDato, alder = 0))
             if (barn18ÅrIPerioden) {
-                bruddAlderListe.add(
-                    AlderPeriode(
-                        referanse = "",
-                        alderPeriode = Periode(datoFom = barn11ÅrDato.with(firstDayOfMonth()), datoTil = barn18ÅrDato.with(firstDayOfMonth())),
-                        alder = 11,
-                    ),
-                )
-                bruddAlderListe.add(
-                    AlderPeriode(
-                        referanse = "",
-                        alderPeriode = Periode(datoFom = barn18ÅrDato.with(firstDayOfMonth()), datoTil = null),
-                        alder = 18,
-                    ),
-                )
+                bruddAlderListe.add(leggTilPeriode(datoFom = barn11ÅrDato, datoTil = barn18ÅrDato, alder = 11))
+                bruddAlderListe.add(leggTilPeriode(datoFom = barn18ÅrDato, datoTil = null, alder = 18))
             } else {
-                bruddAlderListe.add(
-                    AlderPeriode(
-                        referanse = "",
-                        alderPeriode = Periode(datoFom = barn11ÅrDato.with(firstDayOfMonth()), datoTil = null),
-                        alder = 11,
-                    ),
-                )
+                bruddAlderListe.add(leggTilPeriode(datoFom = barn11ÅrDato, datoTil = null, alder = 11))
             }
         } else {
             if (barn18ÅrIPerioden) {
-                bruddAlderListe.add(
-                    AlderPeriode(
-                        referanse = "",
-                        alderPeriode = Periode(datoFom = beregnDatoFra.with(firstDayOfMonth()), datoTil = barn18ÅrDato.with(firstDayOfMonth())),
-                        alder = 11,
-                    ),
-                )
-                bruddAlderListe.add(
-                    AlderPeriode(
-                        referanse = "",
-                        alderPeriode = Periode(datoFom = barn18ÅrDato.with(firstDayOfMonth()), datoTil = null),
-                        alder = 18,
-                    ),
-                )
+                bruddAlderListe.add(leggTilPeriode(datoFom = beregnDatoFra, datoTil = barn18ÅrDato, alder = 11))
+                bruddAlderListe.add(leggTilPeriode(datoFom = barn18ÅrDato, datoTil = null, alder = 18))
             } else {
-                bruddAlderListe.add(
-                    AlderPeriode(
-                        referanse = "",
-                        alderPeriode = Periode(datoFom = beregnDatoFra.with(firstDayOfMonth()), datoTil = null),
-                        alder = alderStartPeriode,
-                    ),
-                )
+                bruddAlderListe.add(leggTilPeriode(datoFom = beregnDatoFra, datoTil = null, alder = alderStartPeriode))
             }
         }
         return bruddAlderListe
     }
+
+    private fun leggTilPeriode(datoFom: LocalDate, datoTil: LocalDate?, alder: Int) = AlderPeriode(
+        referanse = "",
+        alderPeriode = Periode(datoFom = datoFom.with(firstDayOfMonth()), datoTil = datoTil?.with(firstDayOfMonth())),
+        alder = alder,
+    )
 
     // Validerer at input-verdier til forskuddsberegning er gyldige
     fun validerInput(grunnlag: BeregnForskuddGrunnlag): List<Avvik> {

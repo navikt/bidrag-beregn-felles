@@ -74,13 +74,6 @@ internal class SærbidragPeriodeTest {
         }.withMessageContaining("Grunnlagsobjekt BP_ANDEL_SÆRBIDRAG mangler data for periode")
     }
 
-    @DisplayName("Avvik når BetaltAvBP er utenfor beregningsperiode")
-    @Test
-    fun skalDanneAvvikNårBetaltAvBPErUtenforBeregningsperiode() {
-        val avvikListe = særbidragPeriode.validerInput(byggBeregnSærbidragGrunnlag(avvikBetaltAvBP = true))
-        assertThat(avvikListe).hasSize(1)
-    }
-
     private fun byggBeregnSærbidragGrunnlag(
         avvikBetaltAvBP: Boolean = false,
         avvikBidragsevne: Boolean = false,

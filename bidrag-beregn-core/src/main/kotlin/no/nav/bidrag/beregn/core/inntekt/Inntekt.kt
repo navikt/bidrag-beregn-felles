@@ -54,12 +54,12 @@ data class InntektPeriodeGrunnlagUtenInntektType(
 
 data class PeriodisertInntekt(
     val periode: Periode,
-    val summertBelop: BigDecimal,
-    var fordelSaerfradragBelop: BigDecimal,
-    val sjablon0004FordelSkatteklasse2Belop: BigDecimal,
-    val sjablon0030OvreInntektsgrenseBelop: BigDecimal,
-    val sjablon0031NedreInntektsgrenseBelop: BigDecimal,
-    val sjablon0039FordelSaerfradragBelop: BigDecimal,
+    val summertBeløp: BigDecimal,
+    var fordelSærfradragBeløp: BigDecimal,
+    val sjablon0004FordelSkatteklasse2Beløp: BigDecimal,
+    val sjablon0030ØvreInntektsgrenseBeløp: BigDecimal,
+    val sjablon0031NedreInntektsgrenseBeløp: BigDecimal,
+    val sjablon0039FordelSærfradragBeløp: BigDecimal,
     val deltFordel: Boolean,
     val skatteklasse2: Boolean,
 )

@@ -1,6 +1,7 @@
 package no.nav.bidrag.beregn.særbidrag.service.mapper
 
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
+import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.BeregnBPsAndelSærbidragGrunnlagCore
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.UtgiftPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.felles.bo.SjablonListe
@@ -21,32 +22,35 @@ internal object BPAndelSærbidragCoreMapper : CoreMapper() {
         // Mapper grunnlagstyper til input for core
         val inntektBPPeriodeCoreListe =
             mapInntekt(
-                beregnSærbidragrunnlag = beregnGrunnlag,
+                beregnGrunnlag = beregnGrunnlag,
                 referanseTilRolle = finnReferanseTilRolle(
                     grunnlagListe = beregnGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
                 ),
                 innslagKapitalinntektSjablonverdi = innslagKapitalinntektSjablonverdi,
+                erSærbidrag = true,
             )
 
         val inntektBMPeriodeCoreListe =
             mapInntekt(
-                beregnSærbidragrunnlag = beregnGrunnlag,
+                beregnGrunnlag = beregnGrunnlag,
                 referanseTilRolle = finnReferanseTilRolle(
                     grunnlagListe = beregnGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
                 ),
                 innslagKapitalinntektSjablonverdi = innslagKapitalinntektSjablonverdi,
+                erSærbidrag = true,
             )
 
         val inntektSBPeriodeCoreListe =
             mapInntekt(
-                beregnSærbidragrunnlag = beregnGrunnlag,
+                beregnGrunnlag = beregnGrunnlag,
                 referanseTilRolle = finnReferanseTilRolle(
                     grunnlagListe = beregnGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_SØKNADSBARN,
                 ),
                 innslagKapitalinntektSjablonverdi = innslagKapitalinntektSjablonverdi,
+                erSærbidrag = true,
             )
 
         val utgiftPeriodeCoreListe = mapUtgift(beregnGrunnlag)
