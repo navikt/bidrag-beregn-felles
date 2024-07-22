@@ -17,7 +17,7 @@
         <java.version>21</java.version>
         <kotlin.code.style>official</kotlin.code.style>
         <jackson.version>2.17.2</jackson.version>
-        <kotest.version>5.9.0</kotest.version>
+        <kotest.version>5.9.1</kotest.version>
         <swagger.version>2.2.22</swagger.version>
         <ktlint.version>1.2.1</ktlint.version>
         <bidrag-felles.version>2024.07.15.075500</bidrag-felles.version>
