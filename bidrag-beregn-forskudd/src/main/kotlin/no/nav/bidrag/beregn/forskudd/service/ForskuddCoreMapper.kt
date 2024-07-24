@@ -13,6 +13,7 @@ import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BostatusPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SivilstandPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
@@ -43,7 +44,7 @@ internal object ForskuddCoreMapper : CoreMapper() {
             innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntekt(sjablontallListe),
         )
         val sivilstandPeriodeCoreListe = mapSivilstand(beregnForskuddGrunnlag)
-        val barnIHusstandenPeriodeCoreListe = mapBarnIHusstanden(beregnForskuddGrunnlag)
+        val barnIHusstandenPeriodeCoreListe = mapBarnIHusstanden(beregnForskuddGrunnlag, referanseBidragsmottaker)
 
         // Validerer at alle nødvendige grunnlag er med
         validerGrunnlag(
@@ -146,7 +147,10 @@ internal object ForskuddCoreMapper : CoreMapper() {
         }
     }
 
-    private fun mapBarnIHusstanden(beregnForskuddGrunnlag: BeregnGrunnlag): List<BarnIHusstandenPeriodeCore> {
+    private fun mapBarnIHusstanden(
+        beregnForskuddGrunnlag: BeregnGrunnlag,
+        referanseBidragsmottaker: Grunnlagsreferanse,
+    ): List<BarnIHusstandenPeriodeCore> {
         try {
             val barnIHusstandenGrunnlagListe =
                 beregnForskuddGrunnlag.grunnlagListe
@@ -167,6 +171,7 @@ internal object ForskuddCoreMapper : CoreMapper() {
             return akkumulerOgPeriodiser(
                 grunnlagListe = barnIHusstandenGrunnlagListe,
                 beregnForskuddGrunnlag.søknadsbarnReferanse,
+                referanseBidragsmottaker,
                 BarnIHusstandenPeriodeCore::class.java,
             )
         } catch (e: Exception) {

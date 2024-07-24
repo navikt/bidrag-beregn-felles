@@ -12,6 +12,7 @@ import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BostatusPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 
 internal object BidragsevneCoreMapper : CoreMapper() {
@@ -21,18 +22,19 @@ internal object BidragsevneCoreMapper : CoreMapper() {
         sjablonListe: SjablonListe,
     ): BeregnBidragsevneGrunnlagCore {
         // Mapper grunnlagstyper til input for core
+        val referanseTilRolle = finnReferanseTilRolle(
+            grunnlagListe = beregnGrunnlag.grunnlagListe,
+            grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
+        )
         val inntektBPPeriodeCoreListe =
             mapInntekt(
                 beregnGrunnlag = beregnGrunnlag,
-                referanseTilRolle = finnReferanseTilRolle(
-                    grunnlagListe = beregnGrunnlag.grunnlagListe,
-                    grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
-                ),
+                referanseTilRolle = referanseTilRolle,
                 innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntekt(sjablonListe.sjablonSjablontallResponse),
                 erSærbidrag = true,
             )
-        val barnIHusstandenPeriodeCoreListe = mapBarnIHusstanden(beregnGrunnlag)
-        val voksneIHusstandenPeriodeCoreListe = mapVoksneIHusstanden(beregnGrunnlag)
+        val barnIHusstandenPeriodeCoreListe = mapBarnIHusstanden(beregnGrunnlag, referanseTilRolle)
+        val voksneIHusstandenPeriodeCoreListe = mapVoksneIHusstanden(beregnGrunnlag, referanseTilRolle)
         val sjablonPeriodeCoreListe = ArrayList<SjablonPeriodeCore>()
 
         // Henter aktuelle sjabloner
@@ -70,7 +72,7 @@ internal object BidragsevneCoreMapper : CoreMapper() {
         )
     }
 
-    private fun mapBarnIHusstanden(beregnGrunnlag: BeregnGrunnlag): List<BarnIHusstandenPeriodeCore> {
+    private fun mapBarnIHusstanden(beregnGrunnlag: BeregnGrunnlag, referanseTilRolle: Grunnlagsreferanse): List<BarnIHusstandenPeriodeCore> {
         try {
             val barnIHusstandenGrunnlagListe =
                 beregnGrunnlag.grunnlagListe
@@ -101,7 +103,8 @@ internal object BidragsevneCoreMapper : CoreMapper() {
 
             return akkumulerOgPeriodiser(
                 grunnlagListe = barnIHusstandenGrunnlagListe,
-                referanse = beregnGrunnlag.søknadsbarnReferanse,
+                søknadsbarnreferanse = beregnGrunnlag.søknadsbarnReferanse,
+                gjelderReferanse = referanseTilRolle,
                 clazz = BarnIHusstandenPeriodeCore::class.java,
             )
         } catch (e: Exception) {
@@ -111,7 +114,7 @@ internal object BidragsevneCoreMapper : CoreMapper() {
         }
     }
 
-    private fun mapVoksneIHusstanden(beregnGrunnlag: BeregnGrunnlag): List<VoksneIHusstandenPeriodeCore> {
+    private fun mapVoksneIHusstanden(beregnGrunnlag: BeregnGrunnlag, referanseTilRolle: Grunnlagsreferanse): List<VoksneIHusstandenPeriodeCore> {
         try {
             val voksneIHusstandenGrunnlagListe =
                 beregnGrunnlag.grunnlagListe
@@ -137,6 +140,7 @@ internal object BidragsevneCoreMapper : CoreMapper() {
             return akkumulerOgPeriodiser(
                 voksneIHusstandenGrunnlagListe,
                 beregnGrunnlag.søknadsbarnReferanse,
+                referanseTilRolle,
                 VoksneIHusstandenPeriodeCore::class.java,
             )
         } catch (e: Exception) {
