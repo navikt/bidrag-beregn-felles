@@ -91,7 +91,8 @@ abstract class CoreMapper {
                         referanse = opprettDelberegningreferanse(
                             type = Grunnlagstype.DELBEREGNING_SUM_INNTEKT,
                             periode = ÅrMånedsperiode(fom = beregnGrunnlag.periode.fom, til = beregnGrunnlag.periode.til),
-                            søknadsbarnReferanse = referanseTilRolle,
+                            gjelderReferanse = referanseTilRolle,
+                            søknadsbarnReferanse = beregnGrunnlag.søknadsbarnReferanse,
                         ),
                         periode = PeriodeCore(
                             datoFom = beregnGrunnlag.periode.toDatoperiode().fom,
@@ -104,7 +105,8 @@ abstract class CoreMapper {
             } else {
                 akkumulerOgPeriodiser(
                     grunnlagListe = inntektGrunnlagListe,
-                    referanse = referanseTilRolle,
+                    søknadsbarnreferanse = beregnGrunnlag.søknadsbarnReferanse,
+                    gjelderReferanse = referanseTilRolle,
                     clazz = InntektPeriodeCore::class.java,
                 )
             }
@@ -179,7 +181,12 @@ abstract class CoreMapper {
     }
 
     // Lager en gruppert liste hvor grunnlaget er akkumulert pr bruddperiode, med en liste over tilhørende grunnlagsreferanser
-    fun <T : Delberegning> akkumulerOgPeriodiser(grunnlagListe: List<T>, referanse: String, clazz: Class<T>): List<T> {
+    fun <T : Delberegning> akkumulerOgPeriodiser(
+        grunnlagListe: List<T>,
+        søknadsbarnreferanse: String,
+        gjelderReferanse: String,
+        clazz: Class<T>,
+    ): List<T> {
         // Lager unik, sortert liste over alle bruddatoer og legger evt. null-forekomst bakerst
         val bruddatoListe = grunnlagListe
             .flatMap { listOf(it.periode.datoFom, it.periode.datoTil) }
@@ -195,15 +202,30 @@ abstract class CoreMapper {
         // Returnerer en gruppert og akkumulert liste, med en liste over tilhørende grunnlagsreferanser, pr bruddperiode
         return when (clazz) {
             InntektPeriodeCore::class.java -> {
-                akkumulerOgPeriodiserInntekter(grunnlagListe as List<InntektPeriodeCore>, periodeListe, referanse) as List<T>
+                akkumulerOgPeriodiserInntekter(
+                    grunnlagListe as List<InntektPeriodeCore>,
+                    periodeListe,
+                    søknadsbarnreferanse,
+                    gjelderReferanse,
+                ) as List<T>
             }
 
             BarnIHusstandenPeriodeCore::class.java -> {
-                akkumulerOgPeriodiserBarnIHusstanden(grunnlagListe as List<BarnIHusstandenPeriodeCore>, periodeListe, referanse) as List<T>
+                akkumulerOgPeriodiserBarnIHusstanden(
+                    grunnlagListe as List<BarnIHusstandenPeriodeCore>,
+                    periodeListe,
+                    søknadsbarnreferanse,
+                    gjelderReferanse,
+                ) as List<T>
             }
 
             VoksneIHusstandenPeriodeCore::class.java -> {
-                akkumulerOgPeriodiserVoksneIHusstanden(grunnlagListe as List<VoksneIHusstandenPeriodeCore>, periodeListe, referanse) as List<T>
+                akkumulerOgPeriodiserVoksneIHusstanden(
+                    grunnlagListe as List<VoksneIHusstandenPeriodeCore>,
+                    periodeListe,
+                    søknadsbarnreferanse,
+                    gjelderReferanse,
+                ) as List<T>
             }
 
             else -> {
@@ -216,7 +238,8 @@ abstract class CoreMapper {
     private fun akkumulerOgPeriodiserInntekter(
         inntektGrunnlagListe: List<InntektPeriodeCore>,
         periodeListe: List<Periode>,
-        referanse: Grunnlagsreferanse,
+        søknadsbarnreferanse: Grunnlagsreferanse,
+        gjelderReferanse: Grunnlagsreferanse,
     ): List<InntektPeriodeCore> = periodeListe
         .map { periode ->
             val filtrertGrunnlagsliste = filtrerGrunnlagsliste(grunnlagsliste = inntektGrunnlagListe, periode = periode)
@@ -225,7 +248,8 @@ abstract class CoreMapper {
                 referanse = opprettDelberegningreferanse(
                     type = Grunnlagstype.DELBEREGNING_SUM_INNTEKT,
                     periode = ÅrMånedsperiode(fom = periode.datoFom, til = periode.datoTil),
-                    søknadsbarnReferanse = referanse,
+                    søknadsbarnReferanse = søknadsbarnreferanse,
+                    gjelderReferanse = gjelderReferanse,
                 ),
                 periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
                 beløp = filtrertGrunnlagsliste.sumOf { it.beløp },
@@ -238,6 +262,7 @@ abstract class CoreMapper {
         barnIHusstandenGrunnlagListe: List<BarnIHusstandenPeriodeCore>,
         periodeListe: List<Periode>,
         søknadsbarnReferanse: Grunnlagsreferanse,
+        gjelderReferanse: Grunnlagsreferanse,
     ): List<BarnIHusstandenPeriodeCore> = periodeListe
         .map { periode ->
             val filtrertGrunnlagsliste = filtrerGrunnlagsliste(grunnlagsliste = barnIHusstandenGrunnlagListe, periode = periode)
@@ -247,6 +272,7 @@ abstract class CoreMapper {
                     type = Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND,
                     periode = ÅrMånedsperiode(fom = periode.datoFom, til = periode.datoTil),
                     søknadsbarnReferanse = søknadsbarnReferanse,
+                    gjelderReferanse = gjelderReferanse,
                 ),
                 periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
                 antall = filtrertGrunnlagsliste.sumOf { it.antall },
@@ -259,6 +285,7 @@ abstract class CoreMapper {
         voksneIHusstandenGrunnlagListe: List<VoksneIHusstandenPeriodeCore>,
         periodeListe: List<Periode>,
         søknadsbarnReferanse: Grunnlagsreferanse,
+        gjelderReferanse: Grunnlagsreferanse,
     ): List<VoksneIHusstandenPeriodeCore> = periodeListe
         .map { periode ->
             val filtrertGrunnlagsliste = filtrerGrunnlagsliste(grunnlagsliste = voksneIHusstandenGrunnlagListe, periode = periode)
@@ -268,6 +295,7 @@ abstract class CoreMapper {
                     type = Grunnlagstype.DELBEREGNING_VOKSNE_I_HUSSTAND,
                     periode = ÅrMånedsperiode(fom = periode.datoFom, til = periode.datoTil),
                     søknadsbarnReferanse = søknadsbarnReferanse,
+                    gjelderReferanse = gjelderReferanse,
                 ),
                 periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
                 borMedAndre = filtrertGrunnlagsliste.any { it.borMedAndre },

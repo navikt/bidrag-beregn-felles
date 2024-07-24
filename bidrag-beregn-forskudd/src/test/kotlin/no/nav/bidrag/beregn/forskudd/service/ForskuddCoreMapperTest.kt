@@ -268,6 +268,7 @@ internal class ForskuddCoreMapperTest {
                 ForskuddCoreMapper,
                 "mapBarnIHusstanden",
                 forskuddGrunnlag,
+                "Referanse_Bidragsmottaker",
             ) as List<BarnIHusstandenPeriodeCore>
 
         assertAll(
