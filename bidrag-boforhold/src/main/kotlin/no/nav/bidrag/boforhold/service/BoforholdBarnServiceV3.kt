@@ -354,6 +354,8 @@ internal class BoforholdBarnServiceV3 {
                         } else {
                             if (liste[indeks].bostatus == Bostatuskode.DOKUMENTERT_SKOLEGANG) {
                                 Bostatuskode.DOKUMENTERT_SKOLEGANG
+                            } else if (liste[indeks].bostatus == Bostatuskode.REGNES_IKKE_SOM_BARN) {
+                                Bostatuskode.REGNES_IKKE_SOM_BARN
                             } else {
                                 Bostatuskode.IKKE_MED_FORELDER
                             }
