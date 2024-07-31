@@ -1096,4 +1096,42 @@ internal class BoforholdBarnServiceV3Test {
             resultat[0].kilde shouldBe Kilde.OFFENTLIG
         }
     }
+
+    @Test
+    fun `Særbidrag - Test at det genereres periode med riktig status for 18 åring - offentlig periode`() {
+        boforholdBarnServiceV3 = BoforholdBarnServiceV3()
+        val mottatteBoforhold = TestUtil.byggUtenPeriodeEtterAttenårsdagOffentligV3Særbidrag()
+        val virkningstidspunkt = LocalDate.of(2021, 5, 1)
+        val resultat = boforholdBarnServiceV3.beregnBoforholdBarn(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 5
+            //
+            resultat[0].periodeFom shouldBe LocalDate.of(2021, 5, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2022, 1, 31)
+            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2022, 2, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2022, 12, 31)
+            resultat[1].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2023, 1, 1)
+            resultat[2].periodeTom shouldBe LocalDate.of(2023, 3, 31)
+            resultat[2].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[2].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[3].periodeFom shouldBe LocalDate.of(2023, 4, 1)
+            resultat[3].periodeTom shouldBe LocalDate.of(2023, 12, 31)
+            resultat[3].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
+            resultat[3].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[4].periodeFom shouldBe LocalDate.of(2024, 1, 1)
+            resultat[4].periodeTom shouldBe null
+            resultat[4].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[4].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
 }

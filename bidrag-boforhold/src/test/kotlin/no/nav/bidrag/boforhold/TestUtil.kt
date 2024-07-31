@@ -8,6 +8,7 @@ import no.nav.bidrag.boforhold.dto.Bostatus
 import no.nav.bidrag.boforhold.dto.EndreBostatus
 import no.nav.bidrag.boforhold.dto.Husstandsmedlemmer
 import no.nav.bidrag.boforhold.response.RelatertPerson
+import no.nav.bidrag.domene.enums.behandling.TypeBehandling
 import no.nav.bidrag.domene.enums.diverse.Kilde
 import no.nav.bidrag.domene.enums.diverse.TypeEndring
 import no.nav.bidrag.domene.enums.person.Bostatuskode
@@ -2565,6 +2566,31 @@ class TestUtil {
                 ),
                 behandledeBostatusopplysninger = emptyList(),
                 endreBostatus = null,
+            ),
+        )
+
+        fun byggUtenPeriodeEtterAttenårsdagOffentligV3Særbidrag() = listOf(
+            BoforholdBarnRequestV3(
+                gjelderPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2005, 3, 17),
+                relasjon = Familierelasjon.BARN,
+                innhentedeOffentligeOpplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2021, 1, 12),
+                        periodeTom = LocalDate.of(2022, 1, 3),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 1, 17),
+                        periodeTom = LocalDate.of(2023, 12, 12),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                ),
+                behandledeBostatusopplysninger = emptyList(),
+                endreBostatus = null,
+                typeBehandling = TypeBehandling.SÆRBIDRAG,
             ),
         )
 

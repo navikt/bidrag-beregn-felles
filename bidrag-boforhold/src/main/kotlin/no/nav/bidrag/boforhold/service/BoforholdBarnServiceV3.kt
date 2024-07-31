@@ -4,6 +4,7 @@ import no.nav.bidrag.boforhold.dto.BoforholdBarnRequestV3
 import no.nav.bidrag.boforhold.dto.BoforholdResponseV2
 import no.nav.bidrag.boforhold.dto.Bostatus
 import no.nav.bidrag.commons.util.secureLogger
+import no.nav.bidrag.domene.enums.behandling.TypeBehandling
 import no.nav.bidrag.domene.enums.diverse.Kilde
 import no.nav.bidrag.domene.enums.diverse.TypeEndring
 import no.nav.bidrag.domene.enums.person.Bostatuskode
@@ -111,13 +112,16 @@ internal class BoforholdBarnServiceV3 {
         // Finner 18-årsdagen til barnet, settes lik første dag i måneden etter 18-årsdagen
         val attenårFraDato = beregnetAttenÅrFraDato(boforholdRequest.fødselsdato)
 
+        val typeBehandling = boforholdRequest.typeBehandling!!
+
         if (boforholdRequest.endreBostatus == null) {
             if (behandledeOpplysninger.isNotEmpty()) {
                 // virkningstidspunkt eller offentlige perioder er endret, juster og fyll inn med offentlig informasjon.
                 val komplettOffentligTidslinje =
                     fyllUtMedPerioderBarnetIkkeBorIHusstanden(Kilde.OFFENTLIG, startdatoBeregning, justerteOffentligePerioder)
                 // Justerer offentlige perioder mot 18-årsdager og lager bruddperiode hvis barnet fyllet 18 år i perioden bor i husstanden
-                val offentligePerioderJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, komplettOffentligTidslinje)
+                val offentligePerioderJustertMotAttenårsdag =
+                    justerMotAttenårsdag(attenårFraDato, typeBehandling, komplettOffentligTidslinje)
                 val sammenslåtteBehandledeOgOffentligePerioder =
                     slåSammenPrimærOgSekundærperioder(behandledeOpplysninger, offentligePerioderJustertMotAttenårsdag)
 
@@ -155,7 +159,7 @@ internal class BoforholdBarnServiceV3 {
                 val komplettOffentligTidslinje =
                     fyllUtMedPerioderBarnetIkkeBorIHusstanden(Kilde.OFFENTLIG, startdatoBeregning, justerteOffentligePerioder)
                 // Justerer offentlige perioder mot 18-årsdager og lager bruddperiode hvis barnet fyllet 18 år i perioden bor i husstanden
-                val offentligePerioderJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, komplettOffentligTidslinje)
+                val offentligePerioderJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, typeBehandling, komplettOffentligTidslinje)
                 // Slår sammen sammenhengende perioder med lik Bostatuskode.
                 return slåSammenPerioderOgJusterPeriodeTom(offentligePerioderJustertMotAttenårsdag)
             }
@@ -180,7 +184,7 @@ internal class BoforholdBarnServiceV3 {
         // Lager komplett tidslinje basert på offentlige opplysninger for å kunne sjekke alle perioder mot offentlige perioder. Alle beregnede
         // perioder som her helt innenfor en offentlig periode med lik bostatuskode får kilde = OFFENTLIG.
         val komplettOffentligTidslinje = fyllUtMedPerioderBarnetIkkeBorIHusstanden(Kilde.OFFENTLIG, startdatoBeregning, justerteOffentligePerioder)
-        val offentligePerioderJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, komplettOffentligTidslinje)
+        val offentligePerioderJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, typeBehandling, komplettOffentligTidslinje)
 
         return oppdaterteBehandledeOpplysninger.map {
             BoforholdResponseV2(
@@ -339,7 +343,11 @@ internal class BoforholdBarnServiceV3 {
         return sammenhengendePerioderListe.sortedBy { it.periodeFom }
     }
 
-    private fun justerMotAttenårsdag(attenårFraDato: LocalDate, liste: List<BoforholdResponseV2>): List<BoforholdResponseV2> {
+    private fun justerMotAttenårsdag(
+        attenårFraDato: LocalDate,
+        typeBehandling: TypeBehandling,
+        liste: List<BoforholdResponseV2>,
+    ): List<BoforholdResponseV2> {
         val listeJustertMotAttenårsdag = mutableListOf<BoforholdResponseV2>()
 
         if (attenårFraDato.isAfter(LocalDate.now())) {
@@ -361,7 +369,17 @@ internal class BoforholdBarnServiceV3 {
                             }
                         }
                     } else {
-                        Bostatuskode.REGNES_IKKE_SOM_BARN
+                        // For forskudd skal status alltid settes til REGNES_IKKE_SOM_BARN etter fyllte 18 år, uansett bostatus.
+                        // For andre behandlingstyper skal status bare endres til REGNES_IKKE_SOM_BARN hvis barnet bor med forelder.
+                        if (typeBehandling == TypeBehandling.FORSKUDD) {
+                            Bostatuskode.REGNES_IKKE_SOM_BARN
+                        } else {
+                            if (liste[indeks].bostatus == Bostatuskode.MED_FORELDER) {
+                                Bostatuskode.REGNES_IKKE_SOM_BARN
+                            } else {
+                                Bostatuskode.IKKE_MED_FORELDER
+                            }
+                        }
                     }
 
                 // Perioder som avsluttes før 18årsdag skrives til returliste.
@@ -615,6 +633,7 @@ internal class BoforholdBarnServiceV3 {
         val endredePerioder = mutableListOf<BoforholdResponseV2>()
         val nyBostatus = boforholdRequest.endreBostatus!!.nyBostatus
         val originalBostatus = boforholdRequest.endreBostatus.originalBostatus
+        val typeBehandling = boforholdRequest.typeBehandling!!
 
         when (boforholdRequest.endreBostatus.typeEndring) {
             TypeEndring.SLETTET -> {
@@ -656,7 +675,8 @@ internal class BoforholdBarnServiceV3 {
                     return emptyList()
                 } else {
                     // Justerer perioder mot 18årsdag. Dette må gjøres siden periodeTom er endret på periode før den som er slettet.
-                    val endredePerioderJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, endredePerioder)
+                    val endredePerioderJustertMotAttenårsdag =
+                        justerMotAttenårsdag(attenårFraDato, typeBehandling, endredePerioder)
                     // Gjør en sammenslåing av perioder med lik bostatuskode og justerer periodeTom
                     return slåSammenPerioderOgJusterPeriodeTom(endredePerioderJustertMotAttenårsdag)
                 }
@@ -682,7 +702,7 @@ internal class BoforholdBarnServiceV3 {
                     ),
                 )
                 // Justerer perioder mot 18årsdag
-                val nyBostatusJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, endredePerioder)
+                val nyBostatusJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, typeBehandling, endredePerioder)
                 val sammenslåttListe = slåSammenPrimærOgSekundærperioder(nyBostatusJustertMotAttenårsdag, behandledeOpplysninger)
                 return slåSammenPerioderOgJusterPeriodeTom(sammenslåttListe)
             }
@@ -720,7 +740,7 @@ internal class BoforholdBarnServiceV3 {
                         }
                     }
                     // Justerer perioder mot 18årsdag
-                    val endredePerioderJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, endredePerioder)
+                    val endredePerioderJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, typeBehandling, endredePerioder)
                     return slåSammenPerioderOgJusterPeriodeTom(endredePerioderJustertMotAttenårsdag)
                 }
 
@@ -756,7 +776,7 @@ internal class BoforholdBarnServiceV3 {
                     )
 
                     // Justerer perioder mot 18årsdag
-                    val nyPeriodeJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, nyPeriode)
+                    val nyPeriodeJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, typeBehandling, nyPeriode)
                     // Gjør en sammenslåing av perioder med lik bostatuskode og justerer periodeTom
                     val sammenslåttListe = slåSammenPrimærOgSekundærperioder(nyPeriodeJustertMotAttenårsdag, endredePerioder)
                     return slåSammenPerioderOgJusterPeriodeTom(sammenslåttListe)
@@ -855,19 +875,8 @@ internal class BoforholdBarnServiceV3 {
                             }
                         }
                     }
-//
-//                    endredePerioder.add(
-//                        BoforholdResponseV2(
-//                            gjelderPersonId = boforholdRequest.gjelderPersonId,
-//                            periodeFom = nyBostatus.periodeTom.plusDays(1),
-//                            periodeTom = originalBostatus.periodeTom,
-//                            bostatus = originalBostatus.bostatusKode!!,
-//                            fødselsdato = boforholdRequest.fødselsdato,
-//                            kilde = originalBostatus.kilde,
-//                        ),
-//                    )
                 }
-                val endredePerioderJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, endredePerioder)
+                val endredePerioderJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, typeBehandling, endredePerioder)
                 return slåSammenPerioderOgJusterPeriodeTom(endredePerioderJustertMotAttenårsdag)
             }
         }
