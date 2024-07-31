@@ -8,7 +8,6 @@ import no.nav.bidrag.boforhold.dto.Bostatus
 import no.nav.bidrag.boforhold.dto.EndreBostatus
 import no.nav.bidrag.boforhold.dto.Husstandsmedlemmer
 import no.nav.bidrag.boforhold.response.RelatertPerson
-import no.nav.bidrag.domene.enums.behandling.TypeBehandling
 import no.nav.bidrag.domene.enums.diverse.Kilde
 import no.nav.bidrag.domene.enums.diverse.TypeEndring
 import no.nav.bidrag.domene.enums.person.Bostatuskode
@@ -2590,7 +2589,6 @@ class TestUtil {
                 ),
                 behandledeBostatusopplysninger = emptyList(),
                 endreBostatus = null,
-                typeBehandling = TypeBehandling.SÆRBIDRAG,
             ),
         )
 

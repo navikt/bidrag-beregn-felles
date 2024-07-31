@@ -12,6 +12,7 @@ import no.nav.bidrag.boforhold.service.BoforholdAndreVoksneService
 import no.nav.bidrag.boforhold.service.BoforholdBarnServiceV2
 import no.nav.bidrag.boforhold.service.BoforholdBarnServiceV3
 import no.nav.bidrag.boforhold.service.BoforholdServiceV1
+import no.nav.bidrag.domene.enums.behandling.TypeBehandling
 import java.time.LocalDate
 
 /**
@@ -31,8 +32,10 @@ class BoforholdApi {
         private val boforholdBarnServiceV3 = BoforholdBarnServiceV3()
         fun beregnBoforholdBarnV3(
             virkningstidspunkt: LocalDate,
+            // Angir hvilken type behandling som kaller beregningen
+            typeBehandling: TypeBehandling? = TypeBehandling.FORSKUDD,
             boforholdBarnRequestV3Liste: List<BoforholdBarnRequestV3>,
-        ): List<BoforholdResponseV2> = boforholdBarnServiceV3.beregnBoforholdBarn(virkningstidspunkt, boforholdBarnRequestV3Liste)
+        ): List<BoforholdResponseV2> = boforholdBarnServiceV3.beregnBoforholdBarn(virkningstidspunkt, typeBehandling, boforholdBarnRequestV3Liste)
 
         private val boforholdAndreVoksneService = BoforholdAndreVoksneService()
         fun beregnBoforholdAndreVoksne(virkningstidspunkt: LocalDate, boforholdVoksneRequest: BoforholdVoksneRequest): List<Bostatus> =
