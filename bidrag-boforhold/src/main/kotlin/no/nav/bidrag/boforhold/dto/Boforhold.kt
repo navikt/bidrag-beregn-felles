@@ -1,7 +1,6 @@
 package no.nav.bidrag.boforhold.dto
 
 import com.fasterxml.jackson.annotation.JsonAlias
-import no.nav.bidrag.domene.enums.behandling.TypeBehandling
 import no.nav.bidrag.domene.enums.diverse.Kilde
 import no.nav.bidrag.domene.enums.diverse.TypeEndring
 import no.nav.bidrag.domene.enums.person.Bostatuskode
@@ -34,8 +33,6 @@ data class BoforholdBarnRequestV3(
     val behandledeBostatusopplysninger: List<Bostatus>,
     // Endret bostatus
     val endreBostatus: EndreBostatus?,
-    // Angir hvilken type behandling som kaller beregningen
-    val typeBehandling: TypeBehandling? = TypeBehandling.FORSKUDD,
 )
 
 data class BoforholdVoksneRequest(

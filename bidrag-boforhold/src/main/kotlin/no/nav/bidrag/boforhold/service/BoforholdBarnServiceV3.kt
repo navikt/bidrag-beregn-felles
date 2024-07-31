@@ -12,7 +12,11 @@ import no.nav.bidrag.domene.enums.person.Familierelasjon
 import java.time.LocalDate
 
 internal class BoforholdBarnServiceV3 {
-    fun beregnBoforholdBarn(virkningstidspunkt: LocalDate, boforholdGrunnlagListe: List<BoforholdBarnRequestV3>): List<BoforholdResponseV2> {
+    fun beregnBoforholdBarn(
+        virkningstidspunkt: LocalDate,
+        typeBehandling: TypeBehandling?,
+        boforholdGrunnlagListe: List<BoforholdBarnRequestV3>,
+    ): List<BoforholdResponseV2> {
         secureLogger.info { "Beregner bostatus for BM/BPs egne barn V3. Input: $virkningstidspunkt $boforholdGrunnlagListe" }
 
         val resultat = mutableListOf<BoforholdResponseV2>()
@@ -25,7 +29,7 @@ internal class BoforholdBarnServiceV3 {
             .sortedWith(
                 compareBy { it.gjelderPersonId },
             ).forEach { barn ->
-                resultat.addAll(beregnPerioderForBarn(virkningstidspunkt, barn))
+                resultat.addAll(beregnPerioderForBarn(virkningstidspunkt, typeBehandling!!, barn))
             }
 
         secureLogger.info { "Resultat av beregning bostatus for BM/BPs egne barn V3: $resultat" }
@@ -33,7 +37,11 @@ internal class BoforholdBarnServiceV3 {
         return resultat
     }
 
-    private fun beregnPerioderForBarn(virkningstidspunkt: LocalDate, boforholdRequest: BoforholdBarnRequestV3): List<BoforholdResponseV2> {
+    private fun beregnPerioderForBarn(
+        virkningstidspunkt: LocalDate,
+        typeBehandling: TypeBehandling,
+        boforholdRequest: BoforholdBarnRequestV3,
+    ): List<BoforholdResponseV2> {
         // 1. endreBoforhold = null. Beregning gjøres da enten på offentlige opplysninger eller behandledeBostatusopplysninger.
         //    1a. Hvis behandledeBostatusopplysninger er utfyllt og innhentedeOffentligeOpplysninger er utfyllt:
         //        behandledeBostatusopplysninger skal da justeres mot virkningstidspunkt. Perioder i behandledeBostatusopplysninger sjekkes mot
@@ -112,8 +120,6 @@ internal class BoforholdBarnServiceV3 {
         // Finner 18-årsdagen til barnet, settes lik første dag i måneden etter 18-årsdagen
         val attenårFraDato = beregnetAttenÅrFraDato(boforholdRequest.fødselsdato)
 
-        val typeBehandling = boforholdRequest.typeBehandling!!
-
         if (boforholdRequest.endreBostatus == null) {
             if (behandledeOpplysninger.isNotEmpty()) {
                 // virkningstidspunkt eller offentlige perioder er endret, juster og fyll inn med offentlig informasjon.
@@ -165,7 +171,8 @@ internal class BoforholdBarnServiceV3 {
             }
         }
 
-        val oppdaterteBehandledeOpplysninger = behandleEndringer(startdatoBeregning, attenårFraDato, boforholdRequest, behandledeOpplysninger)
+        val oppdaterteBehandledeOpplysninger =
+            behandleEndringer(startdatoBeregning, attenårFraDato, typeBehandling, boforholdRequest, behandledeOpplysninger)
 
         if (behandledeOpplysninger.isEmpty()) {
             // Det finnes ingen behandlede perioder og den nye bostatusperioden skal returneres sammen med genererte perioder
@@ -627,13 +634,13 @@ internal class BoforholdBarnServiceV3 {
     private fun behandleEndringer(
         startdatoBeregning: LocalDate,
         attenårFraDato: LocalDate,
+        typeBehandling: TypeBehandling,
         boforholdRequest: BoforholdBarnRequestV3,
         behandledeOpplysninger: List<BoforholdResponseV2>,
     ): List<BoforholdResponseV2> {
         val endredePerioder = mutableListOf<BoforholdResponseV2>()
         val nyBostatus = boforholdRequest.endreBostatus!!.nyBostatus
         val originalBostatus = boforholdRequest.endreBostatus.originalBostatus
-        val typeBehandling = boforholdRequest.typeBehandling!!
 
         when (boforholdRequest.endreBostatus.typeEndring) {
             TypeEndring.SLETTET -> {
