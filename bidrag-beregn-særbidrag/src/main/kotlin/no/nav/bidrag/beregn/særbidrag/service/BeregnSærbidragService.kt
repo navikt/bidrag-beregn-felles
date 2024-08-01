@@ -737,7 +737,7 @@ internal class BeregnSærbidragService(
             grunnlagDtoListe.add(
                 GrunnlagDto(
                     referanse = referanse,
-                    type = Grunnlagstype.SJABLON,
+                    type = Grunnlagstype.SJABLON_TRINNVIS_SKATTESATS,
                     innhold = POJONode(
                         SjablonTrinnvisSkattesatsPeriode(
                             periode = ÅrMånedsperiode(periode.datoFom, periode.datoTil),
@@ -771,7 +771,7 @@ internal class BeregnSærbidragService(
             grunnlagDtoListe.add(
                 GrunnlagDto(
                     referanse = referanse,
-                    type = Grunnlagstype.SJABLON,
+                    type = Grunnlagstype.SJABLON_BIDRAGSEVNE,
                     innhold = POJONode(
                         SjablonBidragsevnePeriode(
                             periode = ÅrMånedsperiode(periode.datoFom, periode.datoTil),
