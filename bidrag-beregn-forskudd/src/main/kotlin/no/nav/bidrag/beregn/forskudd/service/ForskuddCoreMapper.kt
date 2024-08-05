@@ -170,8 +170,8 @@ internal object ForskuddCoreMapper : CoreMapper() {
                     }
             return akkumulerOgPeriodiser(
                 grunnlagListe = barnIHusstandenGrunnlagListe,
-                beregnForskuddGrunnlag.søknadsbarnReferanse,
-                referanseBidragsmottaker,
+                søknadsbarnreferanse = beregnForskuddGrunnlag.søknadsbarnReferanse,
+                gjelderReferanse = referanseBidragsmottaker,
                 BarnIHusstandenPeriodeCore::class.java,
             )
         } catch (e: Exception) {
