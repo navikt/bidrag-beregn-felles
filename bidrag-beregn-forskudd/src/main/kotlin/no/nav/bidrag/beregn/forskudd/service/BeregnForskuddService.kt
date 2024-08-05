@@ -22,6 +22,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBarnIHusst
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningForskudd
+import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragsmottaker
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettSluttberegningreferanse
 
 private val logger = KotlinLogging.logger {}
@@ -181,6 +182,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
                 sumInntektListe = sumInntektListe,
                 beregnGrunnlag = forskuddGrunnlag,
                 innslagKapitalinntektSjablon = innslagKapitalinntektSjablon,
+                referanseTilRolle = forskuddGrunnlag.grunnlagListe.bidragsmottaker?.referanse,
             ),
         )
 
