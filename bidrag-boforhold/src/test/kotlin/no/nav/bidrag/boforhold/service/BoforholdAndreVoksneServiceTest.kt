@@ -100,7 +100,7 @@ internal class BoforholdAndreVoksneServiceTest {
             resultat[1].periodeFom shouldBe LocalDate.of(2023, 9, 1)
             resultat[1].periodeTom shouldBe null
             resultat[1].bostatus shouldBe Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE
-            resultat[1].kilde shouldBe Kilde.MANUELL
+            resultat[1].kilde shouldBe Kilde.OFFENTLIG
 
             // Beregning 2
             resultat2.size shouldBe 2
@@ -112,7 +112,7 @@ internal class BoforholdAndreVoksneServiceTest {
             resultat2[1].periodeFom shouldBe LocalDate.of(2024, 2, 1)
             resultat2[1].periodeTom shouldBe null
             resultat2[1].bostatus shouldBe Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE
-            resultat2[1].kilde shouldBe Kilde.MANUELL
+            resultat2[1].kilde shouldBe Kilde.OFFENTLIG
 
             // Beregning 3
             resultat3.size shouldBe 1
@@ -148,6 +148,42 @@ internal class BoforholdAndreVoksneServiceTest {
             resultat[2].periodeTom shouldBe null
             resultat[2].bostatus shouldBe Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE
             resultat[2].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
+
+    @Test
+    fun `Test at kilde for bor_ikke_med_andre_voksne settes til offentlig når det ikke finnes offentlige perioder`() {
+        boforholdAndreVoksneService = BoforholdAndreVoksneService()
+        val mottatteBoforhold = TestUtil.byggIngenOffentligeOpplysningerNyManuellPeriode()
+        val virkningstidspunkt = LocalDate.of(2024, 1, 1)
+        val resultat = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 1
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2024, 1, 1)
+            resultat[0].periodeTom shouldBe null
+            resultat[0].bostatus shouldBe Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
+
+    @Test
+    fun `Test at kilde for bor_ikke_med_andre_voksne settes til offentlig når det ikke finnes noen perioder`() {
+        boforholdAndreVoksneService = BoforholdAndreVoksneService()
+        val mottatteBoforhold = TestUtil.byggIngenPerioder()
+        val virkningstidspunkt = LocalDate.of(2024, 1, 1)
+        val resultat = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 1
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2024, 1, 1)
+            resultat[0].periodeTom shouldBe null
+            resultat[0].bostatus shouldBe Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
         }
     }
 }
