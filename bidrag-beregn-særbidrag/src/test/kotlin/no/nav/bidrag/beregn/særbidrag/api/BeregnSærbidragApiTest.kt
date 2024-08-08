@@ -26,6 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 import java.math.BigDecimal
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.time.YearMonth
 
 @ExtendWith(MockitoExtension::class)
 internal class BeregnSærbidragApiTest {
@@ -300,6 +301,33 @@ internal class BeregnSærbidragApiTest {
         forventetAntallBarnIHusstand = 0.0
         forventetVoksneIHusstand = false
         utførBeregningerOgEvaluerResultat()
+    }
+
+    @Test
+    @DisplayName("skal kalle core og returnere et resultat - beløpet er mindre enn forskuddssats")
+    fun skalReturnereResultatBeløpetErUnderForskuddssats() {
+        // Skal returnere uten å beregne pga for lavt godkjent beløp
+        filnavn = "src/test/resources/testfiler/særbidrag_eksempel_beløp_under_forskuddssats.json"
+        val request = lesFilOgByggRequest(filnavn)
+        val totalSærbidragResultat = beregnSærbidragService.beregn(request)
+        val beregnetSærbidragPeriodeListe = totalSærbidragResultat.beregnetSærbidragPeriodeListe
+        val grunnlagliste = totalSærbidragResultat.grunnlagListe
+
+        TestUtil.printJson(totalSærbidragResultat)
+
+        assertAll(
+            { assertThat(totalSærbidragResultat).isNotNull },
+
+            // Resultat
+            { assertThat(beregnetSærbidragPeriodeListe).hasSize(1) },
+            { assertThat(beregnetSærbidragPeriodeListe[0].periode.fom).isEqualTo(YearMonth.parse("2020-08")) },
+            { assertThat(beregnetSærbidragPeriodeListe[0].periode.til).isEqualTo(YearMonth.parse("2020-09")) },
+            { assertThat(beregnetSærbidragPeriodeListe[0].resultat.beløp).isEqualTo(BigDecimal.ZERO) },
+            { assertThat(beregnetSærbidragPeriodeListe[0].resultat.resultatkode).isEqualTo(Resultatkode.RESULTAT_MINDRE_ENN_FORSKUDD) },
+            { assertThat(beregnetSærbidragPeriodeListe[0].grunnlagsreferanseListe).hasSize(1) },
+            { assertThat(grunnlagliste).hasSize(3) },
+
+        )
     }
 
     private fun utførBeregningerOgEvaluerResultat() {

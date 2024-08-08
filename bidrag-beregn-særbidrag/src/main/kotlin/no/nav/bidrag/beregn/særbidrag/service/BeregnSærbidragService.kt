@@ -26,6 +26,7 @@ import no.nav.bidrag.beregn.særbidrag.service.mapper.SærbidragCoreMapper
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
 import no.nav.bidrag.commons.service.sjablon.Sjablontall
 import no.nav.bidrag.commons.util.secureLogger
+import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
@@ -39,6 +40,7 @@ import no.nav.bidrag.transport.behandling.beregning.særbidrag.ResultatPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBarnIHusstand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndelSærbidrag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUtgift
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningVoksneIHustand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonBidragsevnePeriode
@@ -46,6 +48,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeri
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonTrinnvisSkattesats
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonTrinnvisSkattesatsPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningSærbidrag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettSluttberegningreferanse
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
@@ -97,6 +100,22 @@ internal class BeregnSærbidragService(
             grunnlagListe = beregnGrunnlag.grunnlagListe,
             grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
         )
+
+        // Sjekker om godkjent beløp er mindre enn sats for fullt forskudd. Det gjøres ingen beregning hvis det er tilfelle.
+        val delberegningUtgift = try {
+            beregnGrunnlag.grunnlagListe
+                .filtrerOgKonverterBasertPåEgenReferanse<DelberegningUtgift>(Grunnlagstype.DELBEREGNING_UTGIFT)
+        } catch (e: Exception) {
+            throw IllegalArgumentException(
+                "Ugyldig input ved beregning av særlige utgifter. Innhold i Grunnlagstype.DELBEREGNING_UTGIFT er ikke gyldig: " + e.message,
+            )
+        }.first()
+
+        val forskuddssats = sjablonListe.sjablonSjablontallResponse.firstOrNull { it.typeSjablon == SjablonTallNavn.FORSKUDDSSATS_BELØP.id }
+
+        if (delberegningUtgift.innhold.sumGodkjent < forskuddssats?.verdi) {
+            return lagResponsGodkjentBeløpUnderForskuddssats(beregnGrunnlag, forskuddssats!!)
+        }
 
         // Bidragsevne
         val bidragsevneGrunnlagTilCore =
@@ -605,44 +624,42 @@ internal class BeregnSærbidragService(
         resultatPeriodeCoreListe: List<ResultatPeriodeCore>,
         grunnlagReferanseListe: MutableList<GrunnlagDto>,
         søknadsbarnReferanse: String,
-    ): List<ResultatPeriode> {
-        return resultatPeriodeCoreListe.map { resultatPeriode ->
+    ): List<ResultatPeriode> = resultatPeriodeCoreListe.map { resultatPeriode ->
 
-            val sluttberegningReferanse = opprettSluttberegningreferanse(
-                barnreferanse = søknadsbarnReferanse,
-                periode = ÅrMånedsperiode(fom = resultatPeriode.periode.datoFom, til = resultatPeriode.periode.datoTil),
-            )
+        val sluttberegningReferanse = opprettSluttberegningreferanse(
+            barnreferanse = søknadsbarnReferanse,
+            periode = ÅrMånedsperiode(fom = resultatPeriode.periode.datoFom, til = resultatPeriode.periode.datoTil),
+        )
 
-            // Oppretter sluttberegning, som legges til i grunnlagslista
-            grunnlagReferanseListe.add(
-                0,
-                GrunnlagDto(
-                    referanse = sluttberegningReferanse,
-                    type = Grunnlagstype.SLUTTBEREGNING_SÆRBIDRAG,
-                    innhold = POJONode(
-                        SluttberegningSærbidrag(
-                            periode = ÅrMånedsperiode(resultatPeriode.periode.datoFom, resultatPeriode.periode.datoTil),
-                            beregnetBeløp = resultatPeriode.resultat.beregnetBeløp,
-                            resultatKode = resultatPeriode.resultat.resultatKode,
-                            resultatBeløp = resultatPeriode.resultat.resultatBeløp,
-                        ),
+        // Oppretter sluttberegning, som legges til i grunnlagslista
+        grunnlagReferanseListe.add(
+            0,
+            GrunnlagDto(
+                referanse = sluttberegningReferanse,
+                type = Grunnlagstype.SLUTTBEREGNING_SÆRBIDRAG,
+                innhold = POJONode(
+                    SluttberegningSærbidrag(
+                        periode = ÅrMånedsperiode(resultatPeriode.periode.datoFom, resultatPeriode.periode.datoTil),
+                        beregnetBeløp = resultatPeriode.resultat.beregnetBeløp,
+                        resultatKode = resultatPeriode.resultat.resultatKode,
+                        resultatBeløp = resultatPeriode.resultat.resultatBeløp,
                     ),
-                    grunnlagsreferanseListe = resultatPeriode.grunnlagsreferanseListe.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it }),
-                    gjelderReferanse = søknadsbarnReferanse,
                 ),
-            )
+                grunnlagsreferanseListe = resultatPeriode.grunnlagsreferanseListe.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it }),
+                gjelderReferanse = søknadsbarnReferanse,
+            ),
+        )
 
-            // Oppretter resultatperioder, som refererer til sluttberegning
-            ResultatPeriode(
-                periode = ÅrMånedsperiode(fom = resultatPeriode.periode.datoFom, til = resultatPeriode.periode.datoTil),
-                resultat =
-                ResultatBeregning(
-                    beløp = resultatPeriode.resultat.beregnetBeløp,
-                    resultatkode = resultatPeriode.resultat.resultatKode,
-                ),
-                grunnlagsreferanseListe = listOf(sluttberegningReferanse),
-            )
-        }
+        // Oppretter resultatperioder, som refererer til sluttberegning
+        ResultatPeriode(
+            periode = ÅrMånedsperiode(fom = resultatPeriode.periode.datoFom, til = resultatPeriode.periode.datoTil),
+            resultat =
+            ResultatBeregning(
+                beløp = resultatPeriode.resultat.beregnetBeløp,
+                resultatkode = resultatPeriode.resultat.resultatKode,
+            ),
+            grunnlagsreferanseListe = listOf(sluttberegningReferanse),
+        )
     }
 
     // ===============================================================================================================================================
@@ -786,7 +803,7 @@ internal class BeregnSærbidragService(
         return grunnlagDtoListe
     }
 
-    // Referansene for sjablon TrinnvisSkattesats og Bidrgsevne er basert på at de splittes opp i core. I mapSjablonxxx slås de sammen til en sjablon
+    // Referansene for sjablon TrinnvisSkattesats og Bidragsevne er basert på at de splittes opp i core. I mapSjablonxxx slås de sammen til en sjablon
     // pr periode og det må reflekteres i grunnlagsreferanselisten
     private fun justerReferanserForSjabloner(resultatPeriodeListe: List<no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto.ResultatPeriodeCore>) {
         val sjablonTrinnvisSkattesats = "Sjablon_TrinnvisSkattesats"
@@ -809,5 +826,46 @@ internal class BeregnSærbidragService(
                 resultatPeriode.grunnlagsreferanseListe.add("${sjablonBidragsevne}_${referanseBoutgift.takeLast(8)}")
             }
         }
+    }
+
+    private fun lagResponsGodkjentBeløpUnderForskuddssats(beregnGrunnlag: BeregnGrunnlag, forskuddssats: Sjablontall): BeregnetSærbidragResultat {
+        val grunnlagForskuddssats = mapSjablontallForskuddssats(forskuddssats)
+        val grunnlagDelberegningUtgift = beregnGrunnlag.grunnlagListe.first { it.type == Grunnlagstype.DELBEREGNING_UTGIFT }
+        val referanseSluttberegning = opprettSluttberegningreferanse(
+            barnreferanse = beregnGrunnlag.søknadsbarnReferanse,
+            periode = ÅrMånedsperiode(fom = beregnGrunnlag.periode.fom, til = beregnGrunnlag.periode.til),
+        )
+
+        val sluttberegning = GrunnlagDto(
+            referanse = referanseSluttberegning,
+            type = Grunnlagstype.SLUTTBEREGNING_SÆRBIDRAG,
+            innhold = POJONode(
+                SluttberegningSærbidrag(
+                    periode = ÅrMånedsperiode(beregnGrunnlag.periode.fom, beregnGrunnlag.periode.til),
+                    beregnetBeløp = BigDecimal.ZERO,
+                    resultatKode = Resultatkode.RESULTAT_MINDRE_ENN_FORSKUDD,
+                    resultatBeløp = BigDecimal.ZERO,
+                ),
+            ),
+            grunnlagsreferanseListe = listOf(grunnlagForskuddssats.referanse, grunnlagDelberegningUtgift.referanse),
+            gjelderReferanse = beregnGrunnlag.søknadsbarnReferanse,
+        )
+
+        return BeregnetSærbidragResultat(
+            beregnetSærbidragPeriodeListe = listOf(
+                ResultatPeriode(
+                    periode = ÅrMånedsperiode(
+                        fom = beregnGrunnlag.periode.fom,
+                        til = beregnGrunnlag.periode.til,
+                    ),
+                    resultat = ResultatBeregning(
+                        beløp = BigDecimal.ZERO,
+                        resultatkode = Resultatkode.RESULTAT_MINDRE_ENN_FORSKUDD,
+                    ),
+                    listOf(referanseSluttberegning),
+                ),
+            ),
+            grunnlagListe = listOf(grunnlagDelberegningUtgift, sluttberegning, grunnlagForskuddssats),
+        )
     }
 }
