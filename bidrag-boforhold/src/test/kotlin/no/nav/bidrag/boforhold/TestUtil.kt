@@ -4335,5 +4335,27 @@ class TestUtil {
             endreBostatus = null,
 
         )
+
+        fun byggIngenOffentligeOpplysningerNyManuellPeriode() = BoforholdVoksneRequest(
+            innhentedeOffentligeOpplysninger = emptyList(),
+            behandledeBostatusopplysninger = emptyList(),
+            endreBostatus = EndreBostatus(
+                typeEndring = TypeEndring.NY,
+                nyBostatus = Bostatus(
+                    periodeFom = LocalDate.of(2024, 1, 1),
+                    periodeTom = null,
+                    bostatus = Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE,
+                    kilde = Kilde.MANUELL,
+                ),
+                originalBostatus = null,
+            ),
+
+        )
+
+        fun byggIngenPerioder() = BoforholdVoksneRequest(
+            innhentedeOffentligeOpplysninger = emptyList(),
+            behandledeBostatusopplysninger = emptyList(),
+            endreBostatus = null,
+        )
     }
 }

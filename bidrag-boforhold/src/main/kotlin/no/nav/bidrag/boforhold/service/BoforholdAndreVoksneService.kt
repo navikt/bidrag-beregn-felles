@@ -34,7 +34,7 @@ internal class BoforholdAndreVoksneService {
                 )
             }
 
-        val sammenslåtteBostatusperioder =
+        val sammenslåtteOffentligePerioder =
             slåSammenBostatusperioder(
                 justerteOffentligeBostatusperioder.filter {
                     it.periodeTom == null ||
@@ -44,28 +44,15 @@ internal class BoforholdAndreVoksneService {
 
         return beregnPerioder(
             virkningstidspunkt,
-            sammenslåtteBostatusperioder,
+            sammenslåtteOffentligePerioder,
             boforholdVoksne.behandledeBostatusopplysninger,
             boforholdVoksne.endreBostatus,
-        ).let {
-            // Hvis det ikke finnes noen perioder så betyr det at BP ikke bor med andre voksne.
-            // TODO: Magnus kan dette løses på en annen måte?
-            it.ifEmpty {
-                listOf(
-                    Bostatus(
-                        periodeFom = virkningstidspunkt,
-                        periodeTom = null,
-                        bostatus = Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE,
-                        kilde = Kilde.OFFENTLIG,
-                    ),
-                )
-            }
-        }
+        )
     }
 
     private fun beregnPerioder(
         virkningstidspunkt: LocalDate,
-        justerteOffentligePerioder: List<Bostatus>,
+        sammenslåtteOffentligePerioder: List<Bostatus>,
         behandledeBostatusopplysninger: List<Bostatus>,
         endreBostatus: EndreBostatus?,
     ): List<Bostatus> {
@@ -113,12 +100,7 @@ internal class BoforholdAndreVoksneService {
                 )
             }
 
-        if (justerteOffentligePerioder.isEmpty() && behandledeOpplysninger.isEmpty() && endreBostatus == null) {
-            // Ingen perioder innenfor beregningsperiode. Dette skal ikke forekomme.
-            return emptyList()
-        }
-
-        val komplettOffentligTidslinje = fyllUtMedBorIkkeMedAndreVoksnePerioder(Kilde.OFFENTLIG, virkningstidspunkt, justerteOffentligePerioder)
+        val komplettOffentligTidslinje = fyllUtMedBorIkkeMedAndreVoksnePerioder(Kilde.OFFENTLIG, virkningstidspunkt, sammenslåtteOffentligePerioder)
 
         if (endreBostatus == null) {
             if (behandledeOpplysninger.isNotEmpty()) {
@@ -151,12 +133,7 @@ internal class BoforholdAndreVoksneService {
                 }
             }
             // Førstegangs beregning av boforhold for BP. Beregn fra innhentede offentlige opplysninger.
-            if (komplettOffentligTidslinje.isEmpty()) {
-                return emptyList()
-            } else {
-                // Slår sammen sammenhengende perioder med lik Bostatuskode.
-                return slåSammenPerioderOgJusterPeriodeTom(komplettOffentligTidslinje)
-            }
+            return slåSammenPerioderOgJusterPeriodeTom(komplettOffentligTidslinje)
         }
 
         val oppdaterteBehandledeOpplysninger = behandleEndringer(virkningstidspunkt, endreBostatus, behandledeOpplysninger)
@@ -167,14 +144,32 @@ internal class BoforholdAndreVoksneService {
 
             if (endreBostatus.typeEndring != TypeEndring.NY) {
                 // Feilsituasjon. Må alltid være ny hvis det ikke finnes perioder fra før.
-                return emptyList()
+                return slåSammenPerioderOgJusterPeriodeTom(komplettOffentligTidslinje)
             }
 
-            return slåSammenPrimærOgSekundærperioder(oppdaterteBehandledeOpplysninger, komplettOffentligTidslinje)
+            return slåSammenPrimærOgSekundærperioder(oppdaterteBehandledeOpplysninger, komplettOffentligTidslinje).map {
+                Bostatus(
+                    periodeFom = it.periodeFom,
+                    periodeTom = it.periodeTom,
+                    bostatus = it.bostatus,
+                    kilde = if (it.kilde == Kilde.MANUELL) {
+                        if (beregnetPeriodeErInnenforOffentligPeriodeMedLikBostatuskode(
+                                it,
+                                komplettOffentligTidslinje,
+                            )
+                        ) {
+                            Kilde.OFFENTLIG
+                        } else {
+                            Kilde.MANUELL
+                        }
+                    } else {
+                        it.kilde
+                    },
+                )
+            }
         }
 
         // Det finnes både behandlede og endrede perioder
-
         return oppdaterteBehandledeOpplysninger.map {
             Bostatus(
                 periodeFom = it.periodeFom,
@@ -195,6 +190,17 @@ internal class BoforholdAndreVoksneService {
 
     private fun fyllUtMedBorIkkeMedAndreVoksnePerioder(kilde: Kilde, virkningstidspunkt: LocalDate, liste: List<Bostatus>): List<Bostatus> {
         val sammenhengendePerioderListe = mutableListOf<Bostatus>()
+
+        if (liste.isEmpty()) {
+            return listOf(
+                Bostatus(
+                    periodeFom = virkningstidspunkt,
+                    periodeTom = null,
+                    bostatus = Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE,
+                    kilde = kilde,
+                ),
+            )
+        }
 
         for (indeks in liste.sortedBy { it.periodeFom }.indices) {
 //            Sjekker første forekomst og danner periode mellom virkningstidspunkt og første forekomst hvis det er opphold
