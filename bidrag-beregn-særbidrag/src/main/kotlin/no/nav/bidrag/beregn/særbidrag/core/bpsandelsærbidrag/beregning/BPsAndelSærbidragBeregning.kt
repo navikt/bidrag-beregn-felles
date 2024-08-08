@@ -24,7 +24,7 @@ class BPsAndelSærbidragBeregning : FellesBeregning() {
         var inntektSB = grunnlag.inntektSB?.inntektBeløp ?: BigDecimal.ZERO
 
         // Tester om barnets inntekt er høyere enn 100 ganger sats for forhøyet forskudd. I så fall skal ikke BPs andel regnes ut.
-        val barnetErSelvforsorget = (inntektSB > forskuddssats.multiply(BigDecimal.valueOf(100)))
+        val barnetErSelvforsorget = (inntektSB >= forskuddssats.multiply(BigDecimal.valueOf(100)))
 
         if (!barnetErSelvforsorget) {
             inntektSB = (inntektSB - forskuddssats.multiply(BigDecimal.valueOf(30))).coerceAtLeast(BigDecimal.ZERO)

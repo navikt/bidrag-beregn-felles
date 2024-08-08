@@ -149,20 +149,34 @@ abstract class BeregnService {
     private fun lagGrunnlagsreferanselisteInntekt(
         grunnlagsreferanseliste: List<String>,
         innslagKapitalinntektSjablon: Sjablontall?,
-    ): List<Grunnlagsreferanse> {
-        return if (grunnlagsreferanseliste.any { it.contains("kapitalinntekt", ignoreCase = true) }) {
-            if (innslagKapitalinntektSjablon != null) {
-                grunnlagsreferanseliste + opprettSjablonreferanse(
-                    navn = SjablonTallNavn.fromId(innslagKapitalinntektSjablon.typeSjablon!!).navn,
-                    periode = ÅrMånedsperiode(fom = innslagKapitalinntektSjablon.datoFom!!, til = innslagKapitalinntektSjablon.datoTom),
-                )
-            } else {
-                grunnlagsreferanseliste
-            }
+    ): List<Grunnlagsreferanse> = if (grunnlagsreferanseliste.any { it.contains("kapitalinntekt", ignoreCase = true) }) {
+        if (innslagKapitalinntektSjablon != null) {
+            grunnlagsreferanseliste + opprettSjablonreferanse(
+                navn = SjablonTallNavn.fromId(innslagKapitalinntektSjablon.typeSjablon!!).navn,
+                periode = ÅrMånedsperiode(fom = innslagKapitalinntektSjablon.datoFom!!, til = innslagKapitalinntektSjablon.datoTom),
+            )
         } else {
             grunnlagsreferanseliste
         }
+    } else {
+        grunnlagsreferanseliste
     }
+
+    // Mapper ut grunnlag for sjablon 0005 hvis forskuddssats er brukt i beregningen
+    fun mapSjablontallForskuddssats(forskuddssatsSjablon: Sjablontall) = GrunnlagDto(
+        referanse = opprettSjablonreferanse(
+            navn = SjablonTallNavn.fromId(forskuddssatsSjablon.typeSjablon!!).navn,
+            periode = ÅrMånedsperiode(fom = forskuddssatsSjablon.datoFom!!, til = forskuddssatsSjablon.datoTom),
+        ),
+        type = Grunnlagstype.SJABLON,
+        innhold = POJONode(
+            SjablonSjablontallPeriode(
+                periode = ÅrMånedsperiode(forskuddssatsSjablon.datoFom!!, forskuddssatsSjablon.datoTom),
+                sjablon = SjablonTallNavn.fromId(forskuddssatsSjablon.typeSjablon!!),
+                verdi = forskuddssatsSjablon.verdi!!,
+            ),
+        ),
+    )
 
     // Mapper ut grunnlag for sjablon 0006 hvis kapitalinntekt er brukt i beregningen
     fun mapSjablontallKapitalinntektGrunnlag(innslagKapitalinntektSjablon: Sjablontall) = GrunnlagDto(
