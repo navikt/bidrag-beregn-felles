@@ -323,7 +323,7 @@ internal class BeregnSærbidragApiTest {
             { assertThat(beregnetSærbidragPeriodeListe[0].periode.fom).isEqualTo(YearMonth.parse("2020-08")) },
             { assertThat(beregnetSærbidragPeriodeListe[0].periode.til).isEqualTo(YearMonth.parse("2020-09")) },
             { assertThat(beregnetSærbidragPeriodeListe[0].resultat.beløp).isEqualTo(BigDecimal.ZERO) },
-            { assertThat(beregnetSærbidragPeriodeListe[0].resultat.resultatkode).isEqualTo(Resultatkode.GODKJENT_BELØP_LAVERE_ENN_FORSKUDDSSATS) },
+            { assertThat(beregnetSærbidragPeriodeListe[0].resultat.resultatkode).isEqualTo(Resultatkode.GODKJENT_BELØP_ER_LAVERE_ENN_FORSKUDDSSATS) },
             { assertThat(beregnetSærbidragPeriodeListe[0].grunnlagsreferanseListe).hasSize(1) },
             { assertThat(grunnlagliste).hasSize(3) },
 
