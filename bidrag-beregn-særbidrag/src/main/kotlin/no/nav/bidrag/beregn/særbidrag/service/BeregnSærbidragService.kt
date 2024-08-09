@@ -843,7 +843,7 @@ internal class BeregnSærbidragService(
                 SluttberegningSærbidrag(
                     periode = ÅrMånedsperiode(beregnGrunnlag.periode.fom, beregnGrunnlag.periode.til),
                     beregnetBeløp = BigDecimal.ZERO,
-                    resultatKode = Resultatkode.GODKJENT_BELØP_LAVERE_ENN_FORSKUDDSSATS,
+                    resultatKode = Resultatkode.GODKJENT_BELØP_ER_LAVERE_ENN_FORSKUDDSSATS,
                     resultatBeløp = BigDecimal.ZERO,
                 ),
             ),
@@ -860,7 +860,7 @@ internal class BeregnSærbidragService(
                     ),
                     resultat = ResultatBeregning(
                         beløp = BigDecimal.ZERO,
-                        resultatkode = Resultatkode.GODKJENT_BELØP_LAVERE_ENN_FORSKUDDSSATS,
+                        resultatkode = Resultatkode.GODKJENT_BELØP_ER_LAVERE_ENN_FORSKUDDSSATS,
                     ),
                     listOf(referanseSluttberegning),
                 ),
