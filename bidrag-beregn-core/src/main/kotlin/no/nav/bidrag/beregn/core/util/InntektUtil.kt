@@ -9,7 +9,6 @@ import no.nav.bidrag.beregn.core.inntekt.PeriodisertInntekt
 import no.nav.bidrag.beregn.core.periode.Periodiserer
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.domene.enums.inntekt.Inntektstype
-import no.nav.bidrag.domene.enums.inntekt.Inntektstype.Companion.inngårIInntektRapporteringer
 import no.nav.bidrag.domene.enums.rolle.Rolle
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import no.nav.bidrag.domene.enums.vedtak.Formål
@@ -476,5 +475,5 @@ object InntektUtil {
 
     // Sjekker om inntekten er kapitalinntekt
     fun erKapitalinntekt(inntektsrapportering: Inntektsrapportering) =
-        inntektsrapportering in Inntektstype.KAPITALINNTEKT.inngårIInntektRapporteringer()
+        inntektsrapportering in listOf(Inntektsrapportering.KAPITALINNTEKT, Inntektsrapportering.KAPITALINNTEKT_EGNE_OPPLYSNINGER)
 }

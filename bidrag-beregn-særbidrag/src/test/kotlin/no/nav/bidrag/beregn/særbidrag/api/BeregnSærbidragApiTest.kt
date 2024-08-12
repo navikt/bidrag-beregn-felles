@@ -330,6 +330,34 @@ internal class BeregnSærbidragApiTest {
         )
     }
 
+    @Test
+    @DisplayName("skal kalle core og returnere et resultat - _eksempel_inntekt_skjønn_mangler_dokumentasjon")
+    fun skalKalleCoreOgReturnereEtResultat_særbidrag_eksempel_inntekt_skjønn_mangler_dokumentasjon() {
+        // Enkel beregning med full evne, ett barn
+        filnavn = "src/test/resources/testfiler/særbidrag_eksempel_inntekt_skjønn_mangler_dokumentasjon.json"
+        val request = lesFilOgByggRequest(filnavn)
+        val totalSærbidragResultat = beregnSærbidragService.beregn(request)
+
+        TestUtil.printJson(totalSærbidragResultat)
+
+        val referanseBP = request.grunnlagListe
+            .filter { it.type == Grunnlagstype.PERSON_BIDRAGSPLIKTIG }
+            .map { it.referanse }
+            .first()
+
+        val objectMapper = ObjectMapper()
+
+        val delberegningSumInntektBPListe = totalSærbidragResultat.grunnlagListe
+            .filter { it.type == Grunnlagstype.DELBEREGNING_SUM_INNTEKT }
+            .filter { it.gjelderReferanse == referanseBP }
+        val delberegningSumInntektBPResultat = objectMapper.treeToValue(delberegningSumInntektBPListe[0].innhold, DelberegningSumInntekt::class.java)
+
+        assertAll(
+            { assertThat(totalSærbidragResultat).isNotNull },
+            { assertThat(delberegningSumInntektBPResultat.skattepliktigInntekt).isEqualTo(BigDecimal.valueOf(50000)) },
+        )
+    }
+
     private fun utførBeregningerOgEvaluerResultat() {
         val request = lesFilOgByggRequest(filnavn)
 
