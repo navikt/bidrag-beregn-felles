@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.særbidrag
 
 import no.nav.bidrag.beregn.særbidrag.service.BeregnSærbidragService
 import no.nav.bidrag.commons.service.sjablon.EnableSjablonProvider
+import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.særbidrag.BeregnetSærbidragResultat
 import org.springframework.stereotype.Service
@@ -28,5 +29,6 @@ import org.springframework.stereotype.Service
 class BeregnSærbidragApi {
     private val service = BeregnSærbidragService()
 
-    fun beregn(beregnSærbidragGrunnlag: BeregnGrunnlag): BeregnetSærbidragResultat = service.beregn(beregnSærbidragGrunnlag)
+    fun beregn(beregnSærbidragGrunnlag: BeregnGrunnlag, vedtakstype: Vedtakstype): BeregnetSærbidragResultat =
+        service.beregn(beregnSærbidragGrunnlag, vedtakstype)
 }

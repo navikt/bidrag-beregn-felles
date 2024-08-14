@@ -6,6 +6,7 @@ import no.nav.bidrag.beregn.særbidrag.service.BeregnSærbidragService
 import no.nav.bidrag.beregn.særbidrag.testdata.SjablonApiStub
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
+import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBarnIHusstand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
@@ -305,11 +306,11 @@ internal class BeregnSærbidragApiTest {
 
     @Test
     @DisplayName("skal kalle core og returnere et resultat - beløpet er mindre enn forskuddssats")
-    fun skalReturnereResultatBeløpetErUnderForskuddssats() {
+    fun skalReturnereResultatBeløpetErUnderForskuddssatsFastsettelse() {
         // Skal returnere uten å beregne pga for lavt godkjent beløp
         filnavn = "src/test/resources/testfiler/særbidrag_eksempel_beløp_under_forskuddssats.json"
         val request = lesFilOgByggRequest(filnavn)
-        val totalSærbidragResultat = beregnSærbidragService.beregn(request)
+        val totalSærbidragResultat = beregnSærbidragService.beregn(request, Vedtakstype.FASTSETTELSE)
         val beregnetSærbidragPeriodeListe = totalSærbidragResultat.beregnetSærbidragPeriodeListe
         val grunnlagliste = totalSærbidragResultat.grunnlagListe
 
@@ -331,12 +332,38 @@ internal class BeregnSærbidragApiTest {
     }
 
     @Test
+    @DisplayName("skal kalle core og returnere et resultat - sjekk på om beløpet er mindre enn forskuddssats skal ikke gjøres for Endring")
+    fun skalIkkeReturnereResultatBeløpetErUnderForskuddssatsEndring() {
+        // Skal returnere uten å beregne pga for lavt godkjent beløp
+        filnavn = "src/test/resources/testfiler/særbidrag_eksempel_beløp_under_forskuddssats.json"
+        val request = lesFilOgByggRequest(filnavn)
+        val totalSærbidragResultat = beregnSærbidragService.beregn(request, Vedtakstype.ENDRING)
+        val beregnetSærbidragPeriodeListe = totalSærbidragResultat.beregnetSærbidragPeriodeListe
+        val grunnlagliste = totalSærbidragResultat.grunnlagListe
+
+        TestUtil.printJson(totalSærbidragResultat)
+
+        assertAll(
+            { assertThat(totalSærbidragResultat).isNotNull },
+
+            // Resultat
+            { assertThat(beregnetSærbidragPeriodeListe).hasSize(1) },
+            {
+                assertThat(
+                    beregnetSærbidragPeriodeListe[0].resultat.resultatkode,
+                ).isNotEqualTo(Resultatkode.GODKJENT_BELØP_ER_LAVERE_ENN_FORSKUDDSSATS)
+            },
+
+        )
+    }
+
+    @Test
     @DisplayName("skal kalle core og returnere et resultat - _eksempel_inntekt_skjønn_mangler_dokumentasjon")
     fun skalKalleCoreOgReturnereEtResultat_særbidrag_eksempel_inntekt_skjønn_mangler_dokumentasjon() {
         // Enkel beregning med full evne, ett barn
         filnavn = "src/test/resources/testfiler/særbidrag_eksempel_inntekt_skjønn_mangler_dokumentasjon.json"
         val request = lesFilOgByggRequest(filnavn)
-        val totalSærbidragResultat = beregnSærbidragService.beregn(request)
+        val totalSærbidragResultat = beregnSærbidragService.beregn(request, Vedtakstype.FASTSETTELSE)
 
         TestUtil.printJson(totalSærbidragResultat)
 
@@ -361,7 +388,7 @@ internal class BeregnSærbidragApiTest {
     private fun utførBeregningerOgEvaluerResultat() {
         val request = lesFilOgByggRequest(filnavn)
 
-        val totalSærbidragResultat = beregnSærbidragService.beregn(request)
+        val totalSærbidragResultat = beregnSærbidragService.beregn(request, Vedtakstype.FASTSETTELSE)
 
         TestUtil.printJson(totalSærbidragResultat)
 

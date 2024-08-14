@@ -11,6 +11,7 @@ import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.BeregnBPsAnde
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.SærbidragCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BeregnSærbidragGrunnlagCore
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
+import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -73,7 +74,7 @@ internal class BeregnSærbidragServiceTest {
         `when`(særbidragCoreMock.beregnSærbidrag(capture(beregnSærbidragGrunnlagCoreCaptor)))
             .thenReturn(TestUtil.dummySærbidragResultatCore())
 
-        val beregnSærbidragResultat = beregnSærbidragService.beregn(TestUtil.byggTotalSærbidragGrunnlag())
+        val beregnSærbidragResultat = beregnSærbidragService.beregn(TestUtil.byggTotalSærbidragGrunnlag(), Vedtakstype.FASTSETTELSE)
 
         assertAll(
             { assertNotNull(beregnSærbidragResultat) },
@@ -89,7 +90,7 @@ internal class BeregnSærbidragServiceTest {
             .thenReturn(TestUtil.dummyBidragsevneResultatCoreMedAvvik())
 
         assertThatExceptionOfType(UgyldigInputException::class.java)
-            .isThrownBy { beregnSærbidragService.beregn(TestUtil.byggTotalSærbidragGrunnlag()) }
+            .isThrownBy { beregnSærbidragService.beregn(TestUtil.byggTotalSærbidragGrunnlag(), Vedtakstype.FASTSETTELSE) }
             .withMessageContaining("Ugyldig input ved beregning av bidragsevne. Følgende avvik ble funnet:")
             .withMessageContaining("beregnDatoFra kan ikke være null")
             .withMessageContaining("periodeDatoTil må være etter periodeDatoFra")
@@ -104,7 +105,7 @@ internal class BeregnSærbidragServiceTest {
             .thenReturn(TestUtil.dummyBPsAndelSærbidragResultatCoreMedAvvik())
 
         assertThatExceptionOfType(UgyldigInputException::class.java)
-            .isThrownBy { beregnSærbidragService.beregn(TestUtil.byggTotalSærbidragGrunnlag()) }
+            .isThrownBy { beregnSærbidragService.beregn(TestUtil.byggTotalSærbidragGrunnlag(), Vedtakstype.FASTSETTELSE) }
             .withMessageContaining("Ugyldig input ved beregning av BPs andel av særbidrag. Følgende avvik ble funnet:")
             .withMessageContaining("beregnDatoFra kan ikke være null")
             .withMessageContaining("periodeDatoTil må være etter periodeDatoFra")
@@ -121,7 +122,7 @@ internal class BeregnSærbidragServiceTest {
             .thenReturn(TestUtil.dummySærbidragResultatCoreMedAvvik())
 
         assertThatExceptionOfType(UgyldigInputException::class.java)
-            .isThrownBy { beregnSærbidragService.beregn(TestUtil.byggTotalSærbidragGrunnlag()) }
+            .isThrownBy { beregnSærbidragService.beregn(TestUtil.byggTotalSærbidragGrunnlag(), Vedtakstype.FASTSETTELSE) }
             .withMessageContaining("Ugyldig input ved beregning av særbidrag. Følgende avvik ble funnet:")
             .withMessageContaining("beregnDatoFra kan ikke være null")
             .withMessageContaining("periodeDatoTil må være etter periodeDatoFra")
