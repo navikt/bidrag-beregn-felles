@@ -31,6 +31,7 @@ import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.felles.valider
@@ -60,7 +61,7 @@ internal class BeregnSærbidragService(
     private val bpAndelSærbidragCore: BPsAndelSærbidragCore = BPsAndelSærbidragCore(),
     private val særbidragCore: SærbidragCore = SærbidragCore(),
 ) : BeregnService() {
-    fun beregn(grunnlag: BeregnGrunnlag): BeregnetSærbidragResultat {
+    fun beregn(grunnlag: BeregnGrunnlag, vedtakstype: Vedtakstype): BeregnetSærbidragResultat {
         secureLogger.debug { "Særbidragberegning - følgende request mottatt: ${tilJson(grunnlag)}" }
 
         // Kontroll av inputdata
@@ -80,7 +81,7 @@ internal class BeregnSærbidragService(
         val sjablonListe = hentSjabloner()
 
         // Bygger grunnlag til core og utfører delberegninger
-        return utførDelberegninger(beregnGrunnlag = grunnlag, sjablontallMap = sjablontallMap, sjablonListe = sjablonListe)
+        return utførDelberegninger(beregnGrunnlag = grunnlag, sjablontallMap = sjablontallMap, sjablonListe = sjablonListe, vedtakstype = vedtakstype)
     }
 
     // ==================================================================================================================================================
@@ -89,6 +90,7 @@ internal class BeregnSærbidragService(
         beregnGrunnlag: BeregnGrunnlag,
         sjablontallMap: Map<String, SjablonTallNavn>,
         sjablonListe: SjablonListe,
+        vedtakstype: Vedtakstype,
     ): BeregnetSærbidragResultat {
         val grunnlagReferanseListe = mutableListOf<GrunnlagDto>()
 
@@ -101,20 +103,22 @@ internal class BeregnSærbidragService(
             grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
         )
 
-        // Sjekker om godkjent beløp er mindre enn sats for fullt forskudd. Det gjøres ingen beregning hvis det er tilfelle.
-        val delberegningUtgift = try {
-            beregnGrunnlag.grunnlagListe
-                .filtrerOgKonverterBasertPåEgenReferanse<DelberegningUtgift>(Grunnlagstype.DELBEREGNING_UTGIFT)
-        } catch (e: Exception) {
-            throw IllegalArgumentException(
-                "Ugyldig input ved beregning av særlige utgifter. Innhold i Grunnlagstype.DELBEREGNING_UTGIFT er ikke gyldig: " + e.message,
-            )
-        }.first()
+        // For fastsettelse så skal det Sjekkes om godkjent beløp er mindre enn sats for fullt forskudd. Det gjøres ingen beregning hvis det er tilfelle.
+        if (vedtakstype == Vedtakstype.FASTSETTELSE) {
+            val delberegningUtgift = try {
+                beregnGrunnlag.grunnlagListe
+                    .filtrerOgKonverterBasertPåEgenReferanse<DelberegningUtgift>(Grunnlagstype.DELBEREGNING_UTGIFT)
+            } catch (e: Exception) {
+                throw IllegalArgumentException(
+                    "Ugyldig input ved beregning av særlige utgifter. Innhold i Grunnlagstype.DELBEREGNING_UTGIFT er ikke gyldig: " + e.message,
+                )
+            }.first()
 
-        val forskuddssats = sjablonListe.sjablonSjablontallResponse.firstOrNull { it.typeSjablon == SjablonTallNavn.FORSKUDDSSATS_BELØP.id }
+            val forskuddssats = sjablonListe.sjablonSjablontallResponse.firstOrNull { it.typeSjablon == SjablonTallNavn.FORSKUDDSSATS_BELØP.id }
 
-        if (delberegningUtgift.innhold.sumGodkjent < forskuddssats?.verdi) {
-            return lagResponsGodkjentBeløpUnderForskuddssats(beregnGrunnlag, forskuddssats!!)
+            if (delberegningUtgift.innhold.sumGodkjent < forskuddssats?.verdi) {
+                return lagResponsGodkjentBeløpUnderForskuddssats(beregnGrunnlag, forskuddssats!!)
+            }
         }
 
         // Bidragsevne
