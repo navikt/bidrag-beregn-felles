@@ -12,6 +12,6 @@ import org.springframework.stereotype.Service
 class ValiderSærbidragForBeregningService {
     private val service = BeregnSærbidragService()
 
-    fun erGodkjentBeløpLavereEnnForskuddssats(vedtakstype: Vedtakstype, delberegningUtgift: DelberegningUtgift): Boolean =
-        service.validerForBeregning(vedtakstype, delberegningUtgift) == Resultatkode.GODKJENT_BELØP_ER_LAVERE_ENN_FORSKUDDSSATS
+    fun validerForBeregning(vedtakstype: Vedtakstype, delberegningUtgift: DelberegningUtgift): Resultatkode? =
+        service.validerForBeregning(vedtakstype, delberegningUtgift)
 }
