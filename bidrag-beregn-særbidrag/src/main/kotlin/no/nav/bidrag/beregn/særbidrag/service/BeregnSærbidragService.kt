@@ -84,6 +84,17 @@ internal class BeregnSærbidragService(
         return utførDelberegninger(beregnGrunnlag = grunnlag, sjablontallMap = sjablontallMap, sjablonListe = sjablonListe, vedtakstype = vedtakstype)
     }
 
+    fun validerForBeregning(
+        vedtakstype: Vedtakstype,
+        delberegningUtgift: DelberegningUtgift,
+        sjablonListe: SjablonListe = hentSjabloner(),
+    ): Resultatkode? = if (vedtakstype == Vedtakstype.FASTSETTELSE) {
+        val forskuddssats = sjablonListe.sjablonSjablontallResponse.firstOrNull { it.typeSjablon == SjablonTallNavn.FORSKUDDSSATS_BELØP.id }
+        if (delberegningUtgift.sumGodkjent < forskuddssats?.verdi) Resultatkode.GODKJENT_BELØP_ER_LAVERE_ENN_FORSKUDDSSATS else null
+    } else {
+        null
+    }
+
     // ==================================================================================================================================================
     // Bygger grunnlag til core og kaller delberegninger
     private fun utførDelberegninger(
@@ -114,9 +125,10 @@ internal class BeregnSærbidragService(
                 )
             }.first()
 
-            val forskuddssats = sjablonListe.sjablonSjablontallResponse.firstOrNull { it.typeSjablon == SjablonTallNavn.FORSKUDDSSATS_BELØP.id }
-
-            if (delberegningUtgift.innhold.sumGodkjent < forskuddssats?.verdi) {
+            validerForBeregning(vedtakstype, delberegningUtgift.innhold, sjablonListe).takeIf {
+                it == Resultatkode.GODKJENT_BELØP_ER_LAVERE_ENN_FORSKUDDSSATS
+            }?.let {
+                val forskuddssats = sjablonListe.sjablonSjablontallResponse.firstOrNull { it.typeSjablon == SjablonTallNavn.FORSKUDDSSATS_BELØP.id }
                 return lagResponsGodkjentBeløpUnderForskuddssats(beregnGrunnlag, forskuddssats!!)
             }
         }
