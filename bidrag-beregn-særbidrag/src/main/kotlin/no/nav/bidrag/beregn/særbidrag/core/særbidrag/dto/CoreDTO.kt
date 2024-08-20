@@ -53,5 +53,5 @@ data class ResultatPeriodeCore(
 data class ResultatBeregningCore(
     val beregnetBeløp: BigDecimal,
     val resultatKode: Resultatkode,
-    val resultatBeløp: BigDecimal,
+    val resultatBeløp: BigDecimal?,
 )

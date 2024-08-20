@@ -38,7 +38,7 @@ internal class BeregnSærbidragApiTest {
     private lateinit var forventetBPAndelSærbidragBeløp: BigDecimal
     private lateinit var forventetSærbidragBeregnetBeløp: BigDecimal
     private lateinit var forventetSærbidragResultatKode: Resultatkode
-    private lateinit var forventetSærbidragResultatBeløp: BigDecimal
+    private var forventetSærbidragResultatBeløp: BigDecimal? = null
     private lateinit var forventetSumInntektBP: BigDecimal
     private lateinit var forventetSumInntektBM: BigDecimal
     private lateinit var forventetSumInntektSB: BigDecimal
@@ -103,9 +103,9 @@ internal class BeregnSærbidragApiTest {
         forventetBidragsevneBeløp = BigDecimal.valueOf(6149)
         forventetBPAndelSærbidragProsent = BigDecimal.valueOf(55.7)
         forventetBPAndelSærbidragBeløp = BigDecimal.valueOf(6684)
-        forventetSærbidragBeregnetBeløp = BigDecimal.ZERO
+        forventetSærbidragBeregnetBeløp = BigDecimal.valueOf(6684)
         forventetSærbidragResultatKode = Resultatkode.SÆRBIDRAG_IKKE_FULL_BIDRAGSEVNE
-        forventetSærbidragResultatBeløp = BigDecimal.ZERO
+        forventetSærbidragResultatBeløp = null
         forventetSumInntektBP = BigDecimal.valueOf(410000)
         forventetSumInntektBM = BigDecimal.valueOf(325655)
         forventetSumInntektSB = BigDecimal.ZERO
@@ -122,9 +122,9 @@ internal class BeregnSærbidragApiTest {
         forventetBidragsevneBeløp = BigDecimal.valueOf(6149)
         forventetBPAndelSærbidragProsent = BigDecimal.valueOf(55.7)
         forventetBPAndelSærbidragBeløp = BigDecimal.valueOf(6684)
-        forventetSærbidragBeregnetBeløp = BigDecimal.ZERO
+        forventetSærbidragBeregnetBeløp = BigDecimal.valueOf(6684)
         forventetSærbidragResultatKode = Resultatkode.SÆRBIDRAG_IKKE_FULL_BIDRAGSEVNE
-        forventetSærbidragResultatBeløp = BigDecimal.ZERO
+        forventetSærbidragResultatBeløp = null
         forventetSumInntektBP = BigDecimal.valueOf(410000)
         forventetSumInntektBM = BigDecimal.valueOf(325655)
         forventetSumInntektSB = BigDecimal.ZERO
@@ -179,9 +179,9 @@ internal class BeregnSærbidragApiTest {
         forventetBidragsevneBeløp = BigDecimal.valueOf(6149)
         forventetBPAndelSærbidragProsent = BigDecimal.valueOf(55.7)
         forventetBPAndelSærbidragBeløp = BigDecimal.valueOf(6684)
-        forventetSærbidragBeregnetBeløp = BigDecimal.ZERO
+        forventetSærbidragBeregnetBeløp = BigDecimal.valueOf(6684)
         forventetSærbidragResultatKode = Resultatkode.SÆRBIDRAG_IKKE_FULL_BIDRAGSEVNE
-        forventetSærbidragResultatBeløp = BigDecimal.ZERO
+        forventetSærbidragResultatBeløp = null
         forventetSumInntektBP = BigDecimal.valueOf(410000)
         forventetSumInntektBM = BigDecimal.valueOf(325655)
         forventetSumInntektSB = BigDecimal.ZERO
@@ -198,9 +198,9 @@ internal class BeregnSærbidragApiTest {
         forventetBidragsevneBeløp = BigDecimal.valueOf(6149)
         forventetBPAndelSærbidragProsent = BigDecimal.valueOf(55.7)
         forventetBPAndelSærbidragBeløp = BigDecimal.valueOf(6684)
-        forventetSærbidragBeregnetBeløp = BigDecimal.ZERO
+        forventetSærbidragBeregnetBeløp = BigDecimal.valueOf(6684)
         forventetSærbidragResultatKode = Resultatkode.SÆRBIDRAG_IKKE_FULL_BIDRAGSEVNE
-        forventetSærbidragResultatBeløp = BigDecimal.ZERO
+        forventetSærbidragResultatBeløp = null
         forventetSumInntektBP = BigDecimal.valueOf(410000)
         forventetSumInntektBM = BigDecimal.valueOf(325655)
         forventetSumInntektSB = BigDecimal.ZERO
@@ -238,7 +238,7 @@ internal class BeregnSærbidragApiTest {
         forventetBPAndelSærbidragBeløp = BigDecimal.ZERO
         forventetSærbidragBeregnetBeløp = BigDecimal.ZERO
         forventetSærbidragResultatKode = Resultatkode.SÆRBIDRAG_IKKE_FULL_BIDRAGSEVNE
-        forventetSærbidragResultatBeløp = BigDecimal.ZERO
+        forventetSærbidragResultatBeløp = null
         forventetSumInntektBP = BigDecimal.ZERO
         forventetSumInntektBM = BigDecimal.valueOf(325655)
         forventetSumInntektSB = BigDecimal.ZERO
@@ -257,7 +257,7 @@ internal class BeregnSærbidragApiTest {
         forventetBPAndelSærbidragBeløp = BigDecimal.valueOf(4242)
         forventetSærbidragBeregnetBeløp = BigDecimal.valueOf(4242)
         forventetSærbidragResultatKode = Resultatkode.SÆRBIDRAG_INNVILGET
-        forventetSærbidragResultatBeløp = BigDecimal.valueOf(2242)
+        forventetSærbidragResultatBeløp = BigDecimal.valueOf(4242)
         forventetSumInntektBP = BigDecimal.valueOf(500000)
         forventetSumInntektBM = BigDecimal.valueOf(325655)
         forventetSumInntektSB = BigDecimal.ZERO
@@ -276,7 +276,7 @@ internal class BeregnSærbidragApiTest {
         forventetBPAndelSærbidragBeløp = BigDecimal.valueOf(4242)
         forventetSærbidragBeregnetBeløp = BigDecimal.valueOf(4242)
         forventetSærbidragResultatKode = Resultatkode.SÆRBIDRAG_INNVILGET
-        forventetSærbidragResultatBeløp = BigDecimal.ZERO
+        forventetSærbidragResultatBeløp = BigDecimal.valueOf(4242)
         forventetSumInntektBP = BigDecimal.valueOf(500000)
         forventetSumInntektBM = BigDecimal.valueOf(325655)
         forventetSumInntektSB = BigDecimal.ZERO
@@ -295,7 +295,7 @@ internal class BeregnSærbidragApiTest {
         forventetBPAndelSærbidragBeløp = BigDecimal.ZERO
         forventetSærbidragBeregnetBeløp = BigDecimal.ZERO
         forventetSærbidragResultatKode = Resultatkode.BARNET_ER_SELVFORSØRGET
-        forventetSærbidragResultatBeløp = BigDecimal.ZERO
+        forventetSærbidragResultatBeløp = null
         forventetSumInntektBP = BigDecimal.valueOf(500000)
         forventetSumInntektBM = BigDecimal.valueOf(325655)
         forventetSumInntektSB = BigDecimal.valueOf(200000)
@@ -323,7 +323,7 @@ internal class BeregnSærbidragApiTest {
             { assertThat(beregnetSærbidragPeriodeListe).hasSize(1) },
             { assertThat(beregnetSærbidragPeriodeListe[0].periode.fom).isEqualTo(YearMonth.parse("2020-08")) },
             { assertThat(beregnetSærbidragPeriodeListe[0].periode.til).isEqualTo(YearMonth.parse("2020-09")) },
-            { assertThat(beregnetSærbidragPeriodeListe[0].resultat.beløp).isEqualTo(BigDecimal.ZERO) },
+            { assertThat(beregnetSærbidragPeriodeListe[0].resultat.beløp).isNull() },
             { assertThat(beregnetSærbidragPeriodeListe[0].resultat.resultatkode).isEqualTo(Resultatkode.GODKJENT_BELØP_ER_LAVERE_ENN_FORSKUDDSSATS) },
             { assertThat(beregnetSærbidragPeriodeListe[0].grunnlagsreferanseListe).hasSize(1) },
             { assertThat(grunnlagliste).hasSize(3) },
@@ -452,7 +452,7 @@ internal class BeregnSærbidragApiTest {
             // Resultat
             { assertThat(totalSærbidragResultat.beregnetSærbidragPeriodeListe).hasSize(1) },
             { assertThat(totalSærbidragResultat.beregnetSærbidragPeriodeListe).isNotNull },
-            { assertThat(totalSærbidragResultat.beregnetSærbidragPeriodeListe[0].resultat.beløp).isEqualTo(forventetSærbidragBeregnetBeløp) },
+            { assertThat(totalSærbidragResultat.beregnetSærbidragPeriodeListe[0].resultat.beløp).isEqualTo(forventetSærbidragResultatBeløp) },
             {
                 assertThat(totalSærbidragResultat.beregnetSærbidragPeriodeListe[0].resultat.resultatkode).isEqualTo(
                     forventetSærbidragResultatKode,
