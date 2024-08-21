@@ -67,7 +67,7 @@ internal class SærbidragBeregningTest {
         assertAll(
             { assertThat(beregnetBeløp).isEqualTo(bPsAndelBeløp) },
             { assertThat(resultatKode).isEqualTo(Resultatkode.SÆRBIDRAG_INNVILGET) },
-            { assertThat(resultatBeløp).isEqualTo(maxOf(BigDecimal.ZERO, bPsAndelBeløp.subtract(beløpBetaltAvBP))) },
+            { assertThat(resultatBeløp).isEqualTo(bPsAndelBeløp) },
         )
     }
 
@@ -94,7 +94,7 @@ internal class SærbidragBeregningTest {
         assertAll(
             { assertThat(beregnetBeløp).isEqualTo(bPsAndelBeløp) },
             { assertThat(resultatKode).isEqualTo(Resultatkode.SÆRBIDRAG_INNVILGET) },
-            { assertThat(resultatBeløp).isEqualTo(maxOf(BigDecimal.ZERO, bPsAndelBeløp.subtract(beløpBetaltAvBP))) },
+            { assertThat(resultatBeløp).isEqualTo(maxOf(BigDecimal.ZERO, bPsAndelBeløp)) },
         )
     }
 
@@ -119,9 +119,9 @@ internal class SærbidragBeregningTest {
         val (beregnetBeløp, resultatKode, resultatBeløp) = særbidragBeregning.beregn(grunnlagBeregningPeriodisert)
 
         assertAll(
-            { assertThat(beregnetBeløp).isEqualTo(BigDecimal.ZERO) },
+            { assertThat(beregnetBeløp).isEqualTo(bPsAndelBeløp) },
             { assertThat(resultatKode).isEqualTo(Resultatkode.SÆRBIDRAG_IKKE_FULL_BIDRAGSEVNE) },
-            { assertThat(resultatBeløp).isEqualTo(BigDecimal.ZERO) },
+            { assertThat(resultatBeløp).isNull() },
         )
     }
 
@@ -146,9 +146,9 @@ internal class SærbidragBeregningTest {
         val (beregnetBeløp, resultatKode, resultatBeløp) = særbidragBeregning.beregn(grunnlagBeregningPeriodisert)
 
         assertAll(
-            { assertThat(beregnetBeløp).isEqualTo(BigDecimal.ZERO) },
+            { assertThat(beregnetBeløp).isEqualTo(bPsAndelBeløp) },
             { assertThat(resultatKode).isEqualTo(Resultatkode.BARNET_ER_SELVFORSØRGET) },
-            { assertThat(resultatBeløp).isEqualTo(BigDecimal.ZERO) },
+            { assertThat(resultatBeløp).isNull() },
         )
     }
 }

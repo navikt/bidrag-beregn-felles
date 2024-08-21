@@ -31,7 +31,7 @@ data class ResultatPeriode(
 data class ResultatBeregning(
     val beregnetBeløp: BigDecimal,
     val resultatKode: Resultatkode,
-    val resultatBeløp: BigDecimal,
+    val resultatBeløp: BigDecimal?,
 )
 
 // Grunnlag beregning

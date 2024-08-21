@@ -671,7 +671,7 @@ internal class BeregnSærbidragService(
             periode = ÅrMånedsperiode(fom = resultatPeriode.periode.datoFom, til = resultatPeriode.periode.datoTil),
             resultat =
             ResultatBeregning(
-                beløp = resultatPeriode.resultat.beregnetBeløp,
+                beløp = resultatPeriode.resultat.resultatBeløp,
                 resultatkode = resultatPeriode.resultat.resultatKode,
             ),
             grunnlagsreferanseListe = listOf(sluttberegningReferanse),
@@ -860,7 +860,7 @@ internal class BeregnSærbidragService(
                     periode = ÅrMånedsperiode(beregnGrunnlag.periode.fom, beregnGrunnlag.periode.til),
                     beregnetBeløp = BigDecimal.ZERO,
                     resultatKode = Resultatkode.GODKJENT_BELØP_ER_LAVERE_ENN_FORSKUDDSSATS,
-                    resultatBeløp = BigDecimal.ZERO,
+                    resultatBeløp = null,
                 ),
             ),
             grunnlagsreferanseListe = listOf(grunnlagForskuddssats.referanse, grunnlagDelberegningUtgift.referanse),
@@ -875,7 +875,7 @@ internal class BeregnSærbidragService(
                         til = beregnGrunnlag.periode.til,
                     ),
                     resultat = ResultatBeregning(
-                        beløp = BigDecimal.ZERO,
+                        beløp = null,
                         resultatkode = Resultatkode.GODKJENT_BELØP_ER_LAVERE_ENN_FORSKUDDSSATS,
                     ),
                     listOf(referanseSluttberegning),
