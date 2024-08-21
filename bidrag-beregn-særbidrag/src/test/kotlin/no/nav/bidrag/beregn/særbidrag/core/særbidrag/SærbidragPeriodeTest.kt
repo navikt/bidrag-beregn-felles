@@ -137,7 +137,7 @@ internal class SærbidragPeriodeTest {
                     datoTil = LocalDate.parse("2021-02-01"),
                 )
             },
-            andelFaktor = BigDecimal.valueOf(60),
+            andelFaktor = BigDecimal.valueOf(0.60),
             andelBeløp = BigDecimal.valueOf(6000),
             barnetErSelvforsørget = false,
         ),

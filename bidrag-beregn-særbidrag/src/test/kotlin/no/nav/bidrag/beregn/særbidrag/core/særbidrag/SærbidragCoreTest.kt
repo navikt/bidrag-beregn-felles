@@ -94,7 +94,7 @@ internal class SærbidragCoreTest {
             BPsAndelSærbidragPeriodeCore(
                 referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,
                 periode = PeriodeCore(datoFom = LocalDate.parse("2020-01-01"), datoTil = LocalDate.parse("2020-02-01")),
-                andelFaktor = BigDecimal.valueOf(100000),
+                andelFaktor = BigDecimal.valueOf(1.5),
                 andelBeløp = BigDecimal.valueOf(20000),
                 barnetErSelvforsørget = false,
             ),
@@ -125,7 +125,7 @@ internal class SærbidragCoreTest {
                     bidragsevne = Bidragsevne(referanse = TestUtil.BIDRAGSEVNE_REFERANSE, beløp = BigDecimal.valueOf(1000)),
                     bPsAndelSærbidrag = BPsAndelSærbidrag(
                         referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,
-                        andelFaktor = BigDecimal.valueOf(60),
+                        andelFaktor = BigDecimal.valueOf(0.60),
                         andelBeløp = BigDecimal.valueOf(8000),
                         barnetErSelvforsørget = false,
                     ),
