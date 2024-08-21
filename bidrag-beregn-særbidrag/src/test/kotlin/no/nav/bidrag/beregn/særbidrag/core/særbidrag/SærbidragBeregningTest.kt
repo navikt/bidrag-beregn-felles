@@ -29,7 +29,7 @@ internal class SærbidragBeregningTest {
             bidragsevne = Bidragsevne(referanse = TestUtil.BIDRAGSEVNE_REFERANSE, beløp = bidragsevneBeløp),
             bPsAndelSærbidrag = BPsAndelSærbidrag(
                 referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,
-                andelProsent = BigDecimal.valueOf(60.6),
+                andelFaktor = BigDecimal.valueOf(60.6),
                 andelBeløp = bPsAndelBeløp,
                 barnetErSelvforsørget = false,
             ),
@@ -56,7 +56,7 @@ internal class SærbidragBeregningTest {
             bidragsevne = Bidragsevne(referanse = TestUtil.BIDRAGSEVNE_REFERANSE, beløp = bidragsevneBeløp),
             bPsAndelSærbidrag = BPsAndelSærbidrag(
                 referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,
-                andelProsent = BigDecimal.valueOf(60.6),
+                andelFaktor = BigDecimal.valueOf(60.6),
                 andelBeløp = bPsAndelBeløp,
                 barnetErSelvforsørget = false,
             ),
@@ -83,7 +83,7 @@ internal class SærbidragBeregningTest {
             bidragsevne = Bidragsevne(referanse = TestUtil.BIDRAGSEVNE_REFERANSE, beløp = bidragsevneBeløp),
             bPsAndelSærbidrag = BPsAndelSærbidrag(
                 referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,
-                andelProsent = BigDecimal.valueOf(60.6),
+                andelFaktor = BigDecimal.valueOf(60.6),
                 andelBeløp = bPsAndelBeløp,
                 barnetErSelvforsørget = false,
             ),
@@ -110,7 +110,7 @@ internal class SærbidragBeregningTest {
             bidragsevne = Bidragsevne(referanse = TestUtil.BIDRAGSEVNE_REFERANSE, beløp = bidragsevneBeløp),
             bPsAndelSærbidrag = BPsAndelSærbidrag(
                 referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,
-                andelProsent = BigDecimal.valueOf(60.6),
+                andelFaktor = BigDecimal.valueOf(60.6),
                 andelBeløp = bPsAndelBeløp,
                 barnetErSelvforsørget = true,
             ),
@@ -137,7 +137,7 @@ internal class SærbidragBeregningTest {
             bidragsevne = Bidragsevne(referanse = TestUtil.BIDRAGSEVNE_REFERANSE, beløp = bidragsevneBeløp),
             bPsAndelSærbidrag = BPsAndelSærbidrag(
                 referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,
-                andelProsent = BigDecimal.valueOf(60.6),
+                andelFaktor = BigDecimal.valueOf(60.6),
                 andelBeløp = bPsAndelBeløp,
                 barnetErSelvforsørget = true,
             ),

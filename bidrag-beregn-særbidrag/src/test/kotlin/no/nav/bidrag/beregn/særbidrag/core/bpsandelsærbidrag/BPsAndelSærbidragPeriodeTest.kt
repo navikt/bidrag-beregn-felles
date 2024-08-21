@@ -110,7 +110,7 @@ internal class BPsAndelSærbidragPeriodeTest {
 
     private fun byggResultatBeregning(): ResultatBeregning {
         return ResultatBeregning(
-            resultatAndelProsent = BigDecimal.valueOf(60),
+            resultatAndelFaktor = BigDecimal.valueOf(60),
             resultatAndelBeløp = BigDecimal.valueOf(6000),
             barnetErSelvforsørget = false,
             sjablonListe = emptyList(),

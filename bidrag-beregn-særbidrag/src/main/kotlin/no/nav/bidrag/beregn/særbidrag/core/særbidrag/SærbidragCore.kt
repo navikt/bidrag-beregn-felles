@@ -68,7 +68,7 @@ internal class SærbidragCore(private val særbidragPeriode: SærbidragPeriode =
             BPsAndelSærbidragPeriode(
                 referanse = it.referanse,
                 periode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
-                andelProsent = it.andelProsent,
+                andelFaktor = it.andelFaktor,
                 andelBeløp = it.andelBeløp,
                 barnetErSelvforsørget = it.barnetErSelvforsørget,
             )
