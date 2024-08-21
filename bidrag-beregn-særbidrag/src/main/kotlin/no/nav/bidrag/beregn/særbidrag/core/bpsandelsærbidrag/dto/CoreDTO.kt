@@ -40,7 +40,7 @@ data class ResultatPeriodeCore(
 ) : IResultatPeriode
 
 data class ResultatBeregningCore(
-    val resultatAndelProsent: BigDecimal,
+    val resultatAndelFaktor: BigDecimal,
     val resultatAndelBeløp: BigDecimal,
     val barnetErSelvforsørget: Boolean,
 )

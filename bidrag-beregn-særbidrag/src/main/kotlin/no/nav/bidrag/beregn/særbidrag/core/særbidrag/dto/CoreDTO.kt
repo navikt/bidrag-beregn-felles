@@ -32,7 +32,7 @@ data class BidragsevnePeriodeCore(
 data class BPsAndelSærbidragPeriodeCore(
     val referanse: String,
     val periode: PeriodeCore,
-    val andelProsent: BigDecimal,
+    val andelFaktor: BigDecimal,
     val andelBeløp: BigDecimal,
     val barnetErSelvforsørget: Boolean,
 )

@@ -621,7 +621,7 @@ internal class BeregnSærbidragService(
                 innhold = POJONode(
                     DelberegningBidragspliktigesAndelSærbidrag(
                         periode = ÅrMånedsperiode(fom = bPsAndelSærbidrag.periode.datoFom, til = bPsAndelSærbidrag.periode.datoTil),
-                        andelProsent = bPsAndelSærbidrag.andelProsent,
+                        andelFaktor = bPsAndelSærbidrag.andelFaktor,
                         andelBeløp = bPsAndelSærbidrag.andelBeløp,
                         barnetErSelvforsørget = bPsAndelSærbidrag.barnetErSelvforsørget,
                     ),

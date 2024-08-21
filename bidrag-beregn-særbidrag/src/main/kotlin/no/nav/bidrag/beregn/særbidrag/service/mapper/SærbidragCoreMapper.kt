@@ -49,7 +49,7 @@ internal object SærbidragCoreMapper : CoreMapper() {
                             søknadsbarnReferanse = beregnGrunnlag.søknadsbarnReferanse,
                         ),
                         periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
-                        andelProsent = resultatBeregning.resultatAndelProsent,
+                        andelFaktor = resultatBeregning.resultatAndelFaktor,
                         andelBeløp = resultatBeregning.resultatAndelBeløp,
                         barnetErSelvforsørget = resultatBeregning.barnetErSelvforsørget,
                     )

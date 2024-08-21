@@ -14,7 +14,7 @@ class BPsAndelSærbidragBeregning : FellesBeregning() {
         // Henter sjablonverdier
         val sjablonNavnVerdiMap = hentSjablonVerdier(grunnlag.sjablonListe)
 
-        var andelProsent = BigDecimal.ZERO
+        var andelFaktor = BigDecimal.ZERO
         var andelBeløp = BigDecimal.ZERO
         val forskuddssats = sjablonNavnVerdiMap[SjablonTallNavn.FORSKUDDSSATS_BELØP.navn] ?: BigDecimal.ZERO
 
@@ -29,15 +29,15 @@ class BPsAndelSærbidragBeregning : FellesBeregning() {
         if (!barnetErSelvforsorget) {
             inntektSB = (inntektSB - forskuddssats.multiply(BigDecimal.valueOf(30))).coerceAtLeast(BigDecimal.ZERO)
 
-            andelProsent = (inntektBP * BigDecimal.valueOf(100))
-                .divide(inntektBP + inntektBM + inntektSB, 1, RoundingMode.HALF_UP)
-                .coerceAtMost(BigDecimal.valueOf(83.3333333333))
+            andelFaktor = (inntektBP)
+                .divide(inntektBP + inntektBM + inntektSB, 4, RoundingMode.HALF_UP)
+                .coerceAtMost(BigDecimal.valueOf(0.833333333333))
 
-            andelBeløp = (grunnlag.utgift.beløp * andelProsent / BigDecimal.valueOf(100)).setScale(0, RoundingMode.HALF_UP)
+            andelBeløp = (grunnlag.utgift.beløp * andelFaktor).setScale(0, RoundingMode.HALF_UP)
         }
 
         return ResultatBeregning(
-            resultatAndelProsent = andelProsent,
+            resultatAndelFaktor = andelFaktor,
             resultatAndelBeløp = andelBeløp,
             barnetErSelvforsørget = barnetErSelvforsorget,
             sjablonListe = byggSjablonResultatListe(sjablonNavnVerdiMap = sjablonNavnVerdiMap, sjablonPeriodeListe = grunnlag.sjablonListe),

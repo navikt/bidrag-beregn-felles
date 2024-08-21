@@ -15,7 +15,7 @@ data class BidragsevnePeriode(val referanse: String, private val periode: Period
 data class BPsAndelSærbidragPeriode(
     val referanse: String,
     private val periode: Periode,
-    val andelProsent: BigDecimal,
+    val andelFaktor: BigDecimal,
     val andelBeløp: BigDecimal,
     val barnetErSelvforsørget: Boolean,
 ) : PeriodisertGrunnlag {

@@ -69,7 +69,7 @@ internal class BPsAndelSærbidragCore(
         ResultatPeriodeCore(
             periode = PeriodeCore(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
             resultat = ResultatBeregningCore(
-                resultatAndelProsent = it.resultat.resultatAndelProsent,
+                resultatAndelFaktor = it.resultat.resultatAndelFaktor,
                 resultatAndelBeløp = it.resultat.resultatAndelBeløp,
                 barnetErSelvforsørget = it.resultat.barnetErSelvforsørget,
             ),
