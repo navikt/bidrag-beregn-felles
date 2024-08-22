@@ -12,6 +12,7 @@ import no.nav.bidrag.domene.enums.diverse.PlussMinus
 import no.nav.bidrag.inntekt.service.Beskrivelser
 import no.nav.bidrag.inntekt.service.YtelserService
 import no.nav.bidrag.transport.behandling.inntekt.request.Ainntektspost
+import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.Month
@@ -74,10 +75,10 @@ open class InntektUtil {
 
         // Brukes av bidrag-behandling for riktig visning fortegn på kapitalinntekter
         @Suppress("unused")
-        fun kapitalinntektFaktor(postKode: String): Int {
+        fun kapitalinntektFaktor(postKode: String): BigDecimal {
             return hentMappingerKapitalinntekt().find { it.fulltNavnInntektspost == postKode }?.let {
-                if (it.plussMinus == PlussMinus.MINUS) -1 else 1
-            } ?: 1
+                if (it.plussMinus == PlussMinus.MINUS) BigDecimal(-1) else BigDecimal.ONE
+            } ?: BigDecimal.ONE
         }
     }
 }
