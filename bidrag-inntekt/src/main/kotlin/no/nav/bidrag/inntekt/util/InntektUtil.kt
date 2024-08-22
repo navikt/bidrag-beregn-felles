@@ -74,7 +74,7 @@ open class InntektUtil {
 
         // Brukes av bidrag-behandling for riktig visning fortegn på kapitalinntekter
         @Suppress("unused")
-        fun inntektFaktorMultiplikator(postKode: String): Int {
+        fun kapitalinntektFaktor(postKode: String): Int {
             return hentMappingerKapitalinntekt().find { it.fulltNavnInntektspost == postKode }?.let {
                 if (it.plussMinus == PlussMinus.MINUS) -1 else 1
             } ?: 1
