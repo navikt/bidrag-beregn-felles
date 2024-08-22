@@ -236,7 +236,7 @@ object TestUtil {
             no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.ResultatPeriodeCore(
                 periode = PeriodeCore(datoFom = LocalDate.parse("2020-08-01"), datoTil = LocalDate.parse("2020-09-01")),
                 resultat = no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.ResultatBeregningCore(
-                    resultatAndelFaktor = BigDecimal.valueOf(10),
+                    resultatAndelFaktor = BigDecimal.valueOf(0.10),
                     resultatAndelBeløp = BigDecimal.valueOf(100),
                     barnetErSelvforsørget = false,
                 ),

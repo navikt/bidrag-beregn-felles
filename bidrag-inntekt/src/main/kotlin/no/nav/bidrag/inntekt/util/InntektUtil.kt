@@ -8,6 +8,7 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import de.focus_shift.jollyday.core.HolidayCalendar
 import de.focus_shift.jollyday.core.HolidayManager
 import de.focus_shift.jollyday.core.ManagerParameters
+import no.nav.bidrag.domene.enums.diverse.PlussMinus
 import no.nav.bidrag.inntekt.service.Beskrivelser
 import no.nav.bidrag.inntekt.service.YtelserService
 import no.nav.bidrag.transport.behandling.inntekt.request.Ainntektspost
@@ -69,6 +70,14 @@ open class InntektUtil {
             val fil = YtelserService::class.java.getResource("/files/mapping_ytelser.yaml")
                 ?: throw RuntimeException("Fant ingen fil på sti mapping_ytelser.yaml")
             return objectmapper.readValue(fil)
+        }
+
+        // Brukes av bidrag-behandling for riktig visning fortegn på kapitalinntekter
+        @Suppress("unused")
+        fun kapitalinntektFaktor(postKode: String): Int {
+            return hentMappingerKapitalinntekt().find { it.fulltNavnInntektspost == postKode }?.let {
+                if (it.plussMinus == PlussMinus.MINUS) -1 else 1
+            } ?: 1
         }
     }
 }
