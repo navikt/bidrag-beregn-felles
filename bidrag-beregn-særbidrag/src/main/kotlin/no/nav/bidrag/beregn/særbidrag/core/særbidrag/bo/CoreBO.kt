@@ -53,7 +53,7 @@ data class Bidragsevne(
 
 data class BPsAndelSærbidrag(
     val referanse: String,
-    val andelProsent: BigDecimal,
+    val andelFaktor: BigDecimal,
     val andelBeløp: BigDecimal,
     val barnetErSelvforsørget: Boolean,
 )

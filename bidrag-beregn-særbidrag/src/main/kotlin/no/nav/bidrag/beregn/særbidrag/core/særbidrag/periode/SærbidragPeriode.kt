@@ -75,7 +75,7 @@ class SærbidragPeriode(private val særbidragBeregning: SærbidragBeregning = S
                 .map {
                     BPsAndelSærbidrag(
                         referanse = it.referanse,
-                        andelProsent = it.andelProsent,
+                        andelFaktor = it.andelFaktor,
                         andelBeløp = it.andelBeløp,
                         barnetErSelvforsørget = it.barnetErSelvforsørget,
                     )
