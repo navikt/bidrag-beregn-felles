@@ -1,21 +1,19 @@
-package no.nav.bidrag.vedtak
+package no.nav.bidrag.beregn.vedtak
 
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.vedtak.Innkrevingstype
 import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
 import no.nav.bidrag.domene.ident.Personident
-import no.nav.bidrag.transport.behandling.vedtak.response.VedtakDto
+import no.nav.bidrag.transport.behandling.vedtak.response.VedtakForStønad
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakPeriodeDto
-import no.nav.bidrag.transport.behandling.vedtak.response.søknadId
-import no.nav.bidrag.transport.behandling.vedtak.response.søknadKlageRefId
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 
 @Service
 class Vedtaksfiltrering {
 
-    fun finneManueltVedtakTilEvnevurdering(vedtak: Collection<VedtakDto>, personidentSøknadsbarn: Personident): VedtakDto? {
+    fun finneSisteManuelleVedtak(vedtak: Collection<VedtakForStønad>, personidentSøknadsbarn: Personident): VedtakForStønad? {
 
         val iterator = Vedtaksiterator(vedtak.filter { it.filtrereBortIrrelevanteVedtak() }.tilVedtaksdetaljer())
 
@@ -49,7 +47,7 @@ class Vedtaksfiltrering {
             // Håndtere resultat fra annet vedtak
             if (vedtaksdetaljer.vedtak.erResultatFraAnnetVedtak()) {
                 iterator.hoppeTilBeløp(vedtaksdetaljer.periode.beløp)
-                require(iterator.hasNext(), { "Fant ikke tidligere manuelt vedtak i vedtak ${vedtaksdetaljer.vedtak.id}" })
+                require(iterator.hasNext(), { "Fant ikke tidligere manuelt vedtak i vedtak ${vedtaksdetaljer.vedtak.vedtaksid}" })
                 return iterator.next().vedtak
             }
 
@@ -65,16 +63,19 @@ class Vedtaksfiltrering {
         throw IllegalStateException("Fant ikke tidligere vedtak")
     }
 
-    private fun VedtakDto.filtrereBortIrrelevanteVedtak(): Boolean {
+    private fun VedtakForStønad.filtrereBortIrrelevanteVedtak(): Boolean {
         if (this.erAutomatiskVedtak()) return false
-        val bidragMedInnkreving = this.stønadsendringListe.filter { Stønadstype.BIDRAG == it.type && Innkrevingstype.MED_INNKREVING == it.innkreving }
-        return bidragMedInnkreving.erEndring()
+        require(
+            this.stønadsendring.type == Stønadstype.BIDRAG && this.stønadsendring.innkreving == Innkrevingstype.MED_INNKREVING,
+            { "Ikke stønadstype bidrag med innkreving" }
+        )
+        return this.erEndring()
     }
 }
 
 data class Vedtaksdetaljer(
     var erOmgjort: Boolean = false,
-    val vedtak: VedtakDto,
+    val vedtak: VedtakForStønad,
     val periode: VedtakPeriodeDto,
 )
 
@@ -104,7 +105,7 @@ class Vedtaksiterator(vedtakssamling: Collection<Vedtaksdetaljer>) : Iterator<Ve
     private fun forberedeNeste() {
         while (iterator.hasNext()) {
             val vedtaksdetaljer = iterator.next()
-            if (vedtaksdetaljer.vedtak.stønadsendringListe.erEndring() && vedtaksdetaljer.vedtak.erKlage()) {
+            if (vedtaksdetaljer.vedtak.stønadsendring.erEndring() && vedtaksdetaljer.vedtak.erKlage()) {
                 omgjorteVedtak.plus(vedtaksdetaljer.vedtak.idTilOmgjortVedtak())
             }
             vedtaksdetaljer.erOmgjort = omgjorteVedtak.contains(vedtaksdetaljer.vedtak.idTilOmgjortVedtak())
@@ -116,13 +117,13 @@ class Vedtaksiterator(vedtakssamling: Collection<Vedtaksdetaljer>) : Iterator<Ve
     }
 
     fun hoppeTilOmgjørtVedtak(omgjørVedtaksid: Long) {
-        while (nesteVedtak != null && nesteVedtak!!.vedtak.id != omgjørVedtaksid) {
+        while (nesteVedtak != null && nesteVedtak!!.vedtak.vedtaksid != omgjørVedtaksid) {
             forberedeNeste()
         }
     }
 
     fun hoppeTilPåklagetVedtak(referanseTilPåklagetVedtak: Long) {
-        while (nesteVedtak != null && nesteVedtak!!.vedtak.søknadId != referanseTilPåklagetVedtak) {
+        while (nesteVedtak != null && nesteVedtak!!.vedtak.søknadsid != referanseTilPåklagetVedtak) {
             forberedeNeste()
         }
     }
@@ -138,9 +139,8 @@ class Vedtaksiterator(vedtakssamling: Collection<Vedtaksdetaljer>) : Iterator<Ve
         return beløpB != null && beløpA.compareTo(beløpB) == 0
     }
 
-
     fun hoppeTilOmgjortVedtak(idTilOmgjortVedtak: Long) {
-        while (nesteVedtak != null && nesteVedtak!!.vedtak.id != idTilOmgjortVedtak) {
+        while (nesteVedtak != null && nesteVedtak!!.vedtak.vedtaksid != idTilOmgjortVedtak) {
             forberedeNeste()
         }
     }
