@@ -17,25 +17,29 @@ class Vedtaksfiltrering {
 
     fun finneManueltVedtakTilEvnevurdering(vedtak: Collection<VedtakDto>, personidentSøknadsbarn: Personident): VedtakDto? {
 
-        val eksludereVedtakstyper = setOf(Vedtakstype.INDEKSREGULERING)
-
-        val iterator = Vedtaksiterator(vedtak.filter { !eksludereVedtakstyper.contains(it.type) }
-            .filter { !it.erKlage() }
-            .filter { it.filtrereBortIrrelevanteVedtak() }.tilVedtaksperioder())
+        val iterator = Vedtaksiterator(vedtak.filter { it.filtrereBortIrrelevanteVedtak() }.tilVedtaksdetaljer())
 
         while (iterator.hasNext()) {
-            val vedtaksperiode = iterator.next()
+            val vedtaksdetaljer = iterator.next()
+
+
+            // Hopp over dersom vedtaket ikke er endring eller det er omgjort.
+            if (!vedtaksdetaljer.vedtak.erEndring() || vedtaksdetaljer.erOmgjort) {
+                continue;
+            }
+
             // Dersom resultatet er Ingen endring 12% skal vedtaket hoppes over.
-            if (vedtaksperiode.vedtak.erIngenEndringPga12Prosentregel()) {
+            if (vedtaksdetaljer.vedtak.erIngenEndringPga12Prosentregel()) {
                 // Dersom dette er resultatet av en klage skal det hoppes til det påklagde vedtaket.
-                if (vedtaksperiode.vedtak.erKlage()) {
+                if (vedtaksdetaljer.vedtak.erKlage()) {
                     // Hopp til påklaget vedtak
-                    iterator.hoppeTilPåklagetVedtak(vedtaksperiode.vedtak.søknadKlageRefId!!)
+                    vedtaksdetaljer.vedtak.omgjørVedtaksid()?.let { iterator.hoppeTilOmgjortVedtak(it.toLong()) }
+                        ?: iterator.hoppeTilPåklagetVedtak(vedtaksdetaljer.vedtak.søknadKlageRefId!!)
                     // Hopp over dette vedtaket, ettersom dette enten er eller skulle vært Ingen endring 12%
                     iterator.next()
-                } else if (vedtaksperiode.vedtak.erOmgjøring()) {
+                } else if (vedtaksdetaljer.vedtak.erOmgjøring()) {
                     // Hopp til påklaget vedtak
-                    iterator.hoppeTilOmgjortVedtak(vedtaksperiode.vedtak.idTilOmgjortVedtak()!!)
+                    iterator.hoppeTilOmgjortVedtak(vedtaksdetaljer.vedtak.idTilOmgjortVedtak()!!)
                     // Hopp over dette vedtaket, ettersom dette enten er eller skulle vært Ingen endring 12%
                     iterator.next()
                 }
@@ -43,13 +47,18 @@ class Vedtaksfiltrering {
             }
 
             // Håndtere resultat fra annet vedtak
-            if (vedtaksperiode.vedtak.erResultatFraAnnetVedtak()) {
-                iterator.hoppeTilBeløp(vedtaksperiode.periode.beløp)
-                require(iterator.hasNext(), { "Fant ikke tidligere manuelt vedtak i vedtak ${vedtaksperiode.vedtak.id}" })
+            if (vedtaksdetaljer.vedtak.erResultatFraAnnetVedtak()) {
+                iterator.hoppeTilBeløp(vedtaksdetaljer.periode.beløp)
+                require(iterator.hasNext(), { "Fant ikke tidligere manuelt vedtak i vedtak ${vedtaksdetaljer.vedtak.id}" })
                 return iterator.next().vedtak
             }
 
-            return vedtaksperiode.vedtak
+            // Hopp over indeksregulering
+            if (Vedtakstype.INDEKSREGULERING == vedtaksdetaljer.vedtak.type) {
+                continue
+            }
+
+            return vedtaksdetaljer.vedtak
         }
 
         secureLogger.error { "Fant ikke tidligere vedtak for barn med personident $personidentSøknadsbarn" }
@@ -57,21 +66,23 @@ class Vedtaksfiltrering {
     }
 
     private fun VedtakDto.filtrereBortIrrelevanteVedtak(): Boolean {
-        if (this.erKlage() || this.erAutomatiskVedtak()) return false
+        if (this.erAutomatiskVedtak()) return false
         val bidragMedInnkreving = this.stønadsendringListe.filter { Stønadstype.BIDRAG == it.type && Innkrevingstype.MED_INNKREVING == it.innkreving }
-        return !bidragMedInnkreving.omgjørVedtak() && bidragMedInnkreving.erEndring()
+        return bidragMedInnkreving.erEndring()
     }
 }
 
-data class Vedtaksperiode(
+data class Vedtaksdetaljer(
+    var erOmgjort: Boolean = false,
     val vedtak: VedtakDto,
     val periode: VedtakPeriodeDto,
 )
 
-class Vedtaksiterator(vedtakssamling: Collection<Vedtaksperiode>) : Iterator<Vedtaksperiode> {
+class Vedtaksiterator(vedtakssamling: Collection<Vedtaksdetaljer>) : Iterator<Vedtaksdetaljer> {
 
-    private val iterator: Iterator<Vedtaksperiode> = vedtakssamling.asSequence().sortedByDescending { it.periode.delytelseId }.iterator()
-    private var nesteVedtak: Vedtaksperiode? = null
+    private val iterator: Iterator<Vedtaksdetaljer> = vedtakssamling.asSequence().sortedByDescending { it.periode.delytelseId }.iterator()
+    private var nesteVedtak: Vedtaksdetaljer? = null
+    private var omgjorteVedtak = emptySet<Long>()
 
     init {
         forberedeNeste()
@@ -81,18 +92,32 @@ class Vedtaksiterator(vedtakssamling: Collection<Vedtaksperiode>) : Iterator<Ved
         return nesteVedtak != null
     }
 
-    override fun next(): Vedtaksperiode {
+    override fun next(): Vedtaksdetaljer {
         if (!hasNext()) {
             throw NoSuchElementException("Har ikke flere vedtak å iterere over.")
         }
-        return nesteVedtak!!
+        val neste = nesteVedtak
+        forberedeNeste()
+        return neste!!
     }
 
     private fun forberedeNeste() {
-        if (iterator.hasNext()) {
-            nesteVedtak = iterator.next()
-        } else {
-            nesteVedtak = null
+        while (iterator.hasNext()) {
+            val vedtaksdetaljer = iterator.next()
+            if (vedtaksdetaljer.vedtak.stønadsendringListe.erEndring() && vedtaksdetaljer.vedtak.erKlage()) {
+                omgjorteVedtak.plus(vedtaksdetaljer.vedtak.idTilOmgjortVedtak())
+            }
+            vedtaksdetaljer.erOmgjort = omgjorteVedtak.contains(vedtaksdetaljer.vedtak.idTilOmgjortVedtak())
+            nesteVedtak = vedtaksdetaljer
+            return
+        }
+
+        nesteVedtak = null
+    }
+
+    fun hoppeTilOmgjørtVedtak(omgjørVedtaksid: Long) {
+        while (nesteVedtak != null && nesteVedtak!!.vedtak.id != omgjørVedtaksid) {
+            forberedeNeste()
         }
     }
 

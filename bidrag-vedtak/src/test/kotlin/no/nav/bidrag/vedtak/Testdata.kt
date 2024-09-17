@@ -2,6 +2,7 @@ package no.nav.bidrag.vedtak
 
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.rolle.Rolletype
+import no.nav.bidrag.domene.enums.vedtak.BehandlingsrefKilde
 import no.nav.bidrag.domene.enums.vedtak.Beslutningstype
 import no.nav.bidrag.domene.enums.vedtak.Engangsbeløptype
 import no.nav.bidrag.domene.enums.vedtak.Innkrevingstype
@@ -11,7 +12,9 @@ import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
 import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.organisasjon.Enhetsnummer
 import no.nav.bidrag.domene.sak.Saksnummer
+import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
+import no.nav.bidrag.transport.behandling.vedtak.response.BehandlingsreferanseDto
 import no.nav.bidrag.transport.behandling.vedtak.response.EngangsbeløpDto
 import no.nav.bidrag.transport.behandling.vedtak.response.StønadsendringDto
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakDto
@@ -19,6 +22,8 @@ import no.nav.bidrag.transport.behandling.vedtak.response.VedtakPeriodeDto
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.Year
+import java.time.YearMonth
 
 data class Testperson(
     val navn: String,
@@ -27,23 +32,108 @@ data class Testperson(
     val rolletype: Rolletype
 )
 
-val bm  = Testperson("Varig Mottaker", Personident("12345612345"), LocalDate.now().minusYears(38), Rolletype.BIDRAGSMOTTAKER)
+data class OppretteVedtakRequest(
+    val fom: Årstall,
+    val til: Årstall? = null,
+    val beløp: Beløp = Beløp.B1000,
+    val kilde: Vedtakskilde = Vedtakskilde.MANUELT,
+    val beslutningsårsak: Beslutningsårsak = Beslutningsårsak.INNVILGETT_VEDTAK,
+    val omgjørVedtak: Int? = null,
+)
+
+val bm = Testperson("Varig Mottaker", Personident("12345612345"), LocalDate.now().minusYears(38), Rolletype.BIDRAGSMOTTAKER)
 val bp = Testperson("Pliktig Giver", Personident("23456732165"), LocalDate.now().minusYears(43), Rolletype.BIDRAGSPLIKTIG)
 val ba1 = Testperson("Født Først", Personident("01234599999"), LocalDate.now().minusYears(13), Rolletype.BARN)
 val ba2 = Testperson("Den Yngste", Personident("01234599999"), LocalDate.now().minusYears(3), Rolletype.BARN)
+val saksnummer: Saksnummer = Saksnummer("1234567")
+
+val y12 = Year.now().minusYears(12)
+val y10 = Year.now().minusYears(10)
+
+enum class Årstall(val år: Year) {
+    Y2K14(Year.of(2014)), Y2K16(Year.of(2016)), Y2K18(Year.of(2018)), Y2K19(Year.of(2019)), Y2K20(Year.of(2020)),
+    Y2K21(Year.of(2021)), Y2K22(Year.of(2022)), Y2K23(Year.of(2023)), Y2K24(Year.of(2024)),
+    R10(Year.now().minusYears(10)), R12(Year.now().minusYears(12));
+}
+
+enum class Beløp(val verdi: BigDecimal) {
+    B800(BigDecimal.valueOf(800)), B1000(BigDecimal.valueOf(100)), B1070(BigDecimal.valueOf(1070)), B1200(BigDecimal.valueOf(1200)), B1300(
+        BigDecimal.valueOf(
+            1300
+        )
+    ),
+    B5000(BigDecimal.valueOf(5000)),
+}
+
+fun oppretteVedtakssett(requests: Set<OppretteVedtakRequest>): Set<VedtakDto> {
+    var vedtaksid: Long = 1
+    var delytelsesid = 10000
+
+    return requests.map { request ->
+        val vedtakstype = when (request.beslutningsårsak) {
+            Beslutningsårsak.INDEKSREGULERING -> Vedtakstype.INDEKSREGULERING
+            else -> Vedtakstype.FASTSETTELSE
+        }
+
+        oppretteVedtak(
+            id = vedtaksid++,
+            vedtakstype = request.omgjørVedtak?.let { Vedtakstype.KLAGE } ?: vedtakstype,
+            stønadsendringer = listOf(
+                oppretteStønadsendring(
+                    skyldner = bp.personident,
+                    mottaker = bm.personident,
+                    kravhaver = ba1.personident,
+                    omgjørVedtaksid = request.omgjørVedtak,
+                    stønadstype = Stønadstype.BIDRAG,
+                    perioder = listOf(
+                        oppretteVedtaksperiode(
+                            delytelsesid++.toString(),
+                            request.fom.år.atMonth(1),
+                            request.til?.år?.atMonth(1),
+                            request.beløp.verdi,
+                            request.beslutningsårsak
+                        )
+                    ),
+                    saksnummer = saksnummer
+                )
+            ),
+            engangsbeløp = emptyList(),
+            kilde = request.kilde,
+            vedtakstidspunkt = request.fom.år.atDay(1).atStartOfDay(),
+        )
+    }.toSet()
+}
+
+fun oppretteVedtaksperiode(
+    delytelsesid: String,
+    fom: YearMonth,
+    tom: YearMonth?,
+    beløp: BigDecimal,
+    beslutningsårsak: Beslutningsårsak = Beslutningsårsak.INNVILGETT_VEDTAK
+): VedtakPeriodeDto {
+    return VedtakPeriodeDto(
+        beløp = beløp,
+        delytelseId = delytelsesid,
+        periode = ÅrMånedsperiode(fom, tom),
+        resultatkode = beslutningsårsak.kode,
+        valutakode = null,
+        grunnlagReferanseListe = emptyList()
+    )
+}
 
 fun oppretteVedtak(
+    id: Long,
     stønadsendringer: List<StønadsendringDto>,
     engangsbeløp: List<EngangsbeløpDto>,
+    vedtakstidspunkt: LocalDateTime,
     vedtakstype: Vedtakstype = Vedtakstype.FASTSETTELSE,
     kilde: Vedtakskilde = Vedtakskilde.MANUELT,
-    vedtakstidspunkt: LocalDateTime = LocalDateTime.now(),
-
 ): VedtakDto {
     return VedtakDto(
+        id = id,
         stønadsendringListe = stønadsendringer,
         engangsbeløpListe = engangsbeløp,
-        behandlingsreferanseListe = emptyList(),
+        behandlingsreferanseListe = if (Vedtakstype.KLAGE == vedtakstype) oppretteBehandlingsreferanseForKlage() else emptyList(),
         grunnlagListe = emptyList(),
         enhetsnummer = Enhetsnummer("1234"),
         vedtakstidspunkt = vedtakstidspunkt,
@@ -58,23 +148,15 @@ fun oppretteVedtak(
     )
 }
 
-fun oppretteEngangsbeløp() = EngangsbeløpDto(
-    type = Engangsbeløptype.SÆRBIDRAG,
-    sak = Saksnummer("1234"),
-    beløp = BigDecimal(100),
-    resultatkode = Resultatkode.AVSLAG.name,
-    beslutning = Beslutningstype.ENDRING,
-    delytelseId = "DelytelseId",
-    eksternReferanse = "EksternReferanse",
-    grunnlagReferanseListe = emptyList(),
-    innkreving = Innkrevingstype.MED_INNKREVING,
-    kravhaver = Personident(""),
-    mottaker = Personident(""),
-    omgjørVedtakId = null,
-    referanse = "Referanse",
-    skyldner = Personident(""),
-    valutakode = "Valutakode",
-)
+fun oppretteBehandlingsreferanseForKlage(): List<BehandlingsreferanseDto> {
+    val søknadsid = 229190
+    return listOf(
+        BehandlingsreferanseDto(
+            kilde = BehandlingsrefKilde.BISYS_KLAGE_REF_SØKNAD,
+            referanse = søknadsid.toString()
+        )
+    )
+}
 
 fun oppretteStønadsendring(
     skyldner: Personident,
@@ -104,7 +186,24 @@ fun oppretteStønadsendring(
     type = stønadstype,
 )
 
+fun oppretteEngangsbeløp() = EngangsbeløpDto(
+    type = Engangsbeløptype.SÆRBIDRAG,
+    sak = Saksnummer("1234"),
+    beløp = BigDecimal(100),
+    resultatkode = Resultatkode.AVSLAG.name,
+    beslutning = Beslutningstype.ENDRING,
+    delytelseId = "DelytelseId",
+    eksternReferanse = "EksternReferanse",
+    grunnlagReferanseListe = emptyList(),
+    innkreving = Innkrevingstype.MED_INNKREVING,
+    kravhaver = Personident(""),
+    mottaker = Personident(""),
+    omgjørVedtakId = null,
+    referanse = "Referanse",
+    skyldner = Personident(""),
+    valutakode = "Valutakode",
+)
 
-enum class Resultatkode(val kode: String){
+enum class Resultatkode(val kode: String) {
 
 }
