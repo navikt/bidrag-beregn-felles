@@ -51,6 +51,7 @@
         <module>bidrag-inntekt</module>
         <module>bidrag-sivilstand</module>
         <module>bidrag-beregn-særbidrag</module>
+        <module>bidrag-beregn-barnebidrag</module>
     </modules>
     <repositories>
         <repository>
