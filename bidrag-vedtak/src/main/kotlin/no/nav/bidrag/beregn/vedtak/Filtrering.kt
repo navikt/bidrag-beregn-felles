@@ -7,6 +7,8 @@ import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
 import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakForStønad
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakPeriodeDto
+import no.nav.bidrag.transport.behandling.vedtak.response.søknadKlageRefId
+import no.nav.bidrag.transport.behandling.vedtak.response.søknadsid
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 
@@ -14,16 +16,14 @@ import java.math.BigDecimal
 class Vedtaksfiltrering {
 
     fun finneSisteManuelleVedtak(vedtak: Collection<VedtakForStønad>, personidentSøknadsbarn: Personident): VedtakForStønad? {
-
         val iterator = Vedtaksiterator(vedtak.filter { it.filtrereBortIrrelevanteVedtak() }.tilVedtaksdetaljer())
 
         while (iterator.hasNext()) {
             val vedtaksdetaljer = iterator.next()
 
-
             // Hopp over dersom vedtaket ikke er endring eller det er omgjort.
             if (!vedtaksdetaljer.vedtak.erEndring() || vedtaksdetaljer.erOmgjort) {
-                continue;
+                continue
             }
 
             // Dersom resultatet er Ingen endring 12% skal vedtaket hoppes over.
@@ -47,7 +47,7 @@ class Vedtaksfiltrering {
             // Håndtere resultat fra annet vedtak
             if (vedtaksdetaljer.vedtak.erResultatFraAnnetVedtak()) {
                 iterator.hoppeTilBeløp(vedtaksdetaljer.periode.beløp)
-                require(iterator.hasNext(), { "Fant ikke tidligere manuelt vedtak i vedtak ${vedtaksdetaljer.vedtak.vedtaksid}" })
+                require(iterator.hasNext()) { "Fant ikke tidligere manuelt vedtak i vedtak ${vedtaksdetaljer.vedtak.vedtaksid}" }
                 return iterator.next().vedtak
             }
 
@@ -67,8 +67,7 @@ class Vedtaksfiltrering {
         if (this.erAutomatiskVedtak()) return false
         require(
             this.stønadsendring.type == Stønadstype.BIDRAG && this.stønadsendring.innkreving == Innkrevingstype.MED_INNKREVING,
-            { "Ikke stønadstype bidrag med innkreving" }
-        )
+        ) { "Ikke stønadstype bidrag med innkreving" }
         return this.erEndring()
     }
 }
@@ -145,6 +144,3 @@ class Vedtaksiterator(vedtakssamling: Collection<Vedtaksdetaljer>) : Iterator<Ve
         }
     }
 }
-
-
-
