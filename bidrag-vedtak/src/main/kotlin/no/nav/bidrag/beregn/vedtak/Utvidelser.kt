@@ -2,43 +2,47 @@ package no.nav.bidrag.beregn.vedtak
 
 import no.nav.bidrag.domene.enums.vedtak.BehandlingsrefKilde
 import no.nav.bidrag.domene.enums.vedtak.Beslutningstype
+import no.nav.bidrag.domene.enums.vedtak.Innkrevingstype
+import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.enums.vedtak.Vedtakskilde
 import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
 import no.nav.bidrag.transport.behandling.vedtak.response.StønadsendringDto
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakForStønad
 import no.nav.bidrag.transport.behandling.vedtak.response.søknadKlageRefId
 
-fun StønadsendringDto.erEndring() = Beslutningstype.ENDRING == this.beslutning
+fun StønadsendringDto.erEndring() = Beslutningstype.ENDRING == beslutning
 
-fun VedtakForStønad.erEndring() = Vedtakstype.ENDRING == this.type || this.stønadsendring.erEndring()
+fun VedtakForStønad.erEndring() = Vedtakstype.ENDRING == type || stønadsendring.erEndring()
 
-private fun List<StønadsendringDto>.erAvvisning() = this.find { Beslutningstype.AVVIST == it.beslutning } != null
+fun VedtakForStønad.erBidrag() = stønadsendring.type == Stønadstype.BIDRAG
 
-private fun List<StønadsendringDto>.erStadfestelse() = this.any {
-    Beslutningstype.STADFESTELSE == it.beslutning
-} || this.any { p -> p.periodeListe.any { Beslutningsårsak.IKKE_FRITATT_ETTER_KLAGE.kode == it.resultatkode } }
+fun VedtakForStønad.er18årsbidrag() = stønadsendring.type == Stønadstype.BIDRAG18AAR
+
+fun VedtakForStønad.erOppfostringsbidrag() = stønadsendring.type == Stønadstype.OPPFOSTRINGSBIDRAG
+
+fun VedtakForStønad.erInnkreving() =  stønadsendring.innkreving == Innkrevingstype.MED_INNKREVING
 
 fun VedtakForStønad.erResultatFraAnnetVedtak() =
     this.stønadsendring.periodeListe.any { Beslutningsårsak.RESULTAT_FRA_ANNET_VEDTAK.kode == it.resultatkode }
 
-fun VedtakForStønad.erKlage() = Vedtakstype.KLAGE == this.type || this.søknadKlageRefId != null
+fun VedtakForStønad.erKlage() = Vedtakstype.KLAGE == type || søknadKlageRefId != null
 
 fun VedtakForStønad.erAutomatiskVedtak() = Vedtakskilde.AUTOMATISK == kilde
 
-fun VedtakForStønad.omgjørVedtaksid() = this.stønadsendring.omgjørVedtakId
+fun VedtakForStønad.omgjørVedtaksid() = stønadsendring.omgjørVedtakId
 
 fun VedtakForStønad.erOmgjøring() =
-    Vedtakstype.ENDRING == this.type && Vedtakskilde.MANUELT == this.kilde && this.stønadsendring.omgjørVedtak() && !this.behandlingsreferanser.any {
+    Vedtakstype.ENDRING == type && Vedtakskilde.MANUELT == kilde && stønadsendring.omgjørVedtak() && !behandlingsreferanser.any {
         BehandlingsrefKilde.BISYS_KLAGE_REF_SØKNAD == it.kilde
     }
 
-fun VedtakForStønad.idTilOmgjortVedtak() = this.stønadsendring.omgjørVedtakId?.toLong()
+fun VedtakForStønad.idTilOmgjortVedtak() = stønadsendring.omgjørVedtakId?.toLong()
 
-fun StønadsendringDto.omgjørVedtak() = this.omgjørVedtakId != null
+fun StønadsendringDto.omgjørVedtak() = omgjørVedtakId != null
 
-fun VedtakForStønad.erIngenEndringPga12Prosentregel() = this.stønadsendring.erIngenEndring12Prosent()
+fun VedtakForStønad.erIngenEndringPga12Prosentregel() = stønadsendring.erIngenEndring12Prosent()
 
-fun StønadsendringDto.erIngenEndring12Prosent() = this.periodeListe.any { Beslutningsårsak.INGEN_ENDRING_12_PROSENT.kode == it.resultatkode }
+fun StønadsendringDto.erIngenEndring12Prosent() = periodeListe.any { Beslutningsårsak.INGEN_ENDRING_12_PROSENT.kode == it.resultatkode }
 
 fun VedtakForStønad.tilVedtaksdetaljer(): Collection<Vedtaksdetaljer> = stønadsendring.periodeListe.map {
     Vedtaksdetaljer(

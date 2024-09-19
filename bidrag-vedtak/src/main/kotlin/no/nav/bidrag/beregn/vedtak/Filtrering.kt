@@ -1,8 +1,6 @@
 package no.nav.bidrag.beregn.vedtak
 
 import no.nav.bidrag.commons.util.secureLogger
-import no.nav.bidrag.domene.enums.vedtak.Innkrevingstype
-import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
 import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakForStønad
@@ -64,11 +62,8 @@ class Vedtaksfiltrering {
     }
 
     private fun VedtakForStønad.filtrereBortIrrelevanteVedtak(): Boolean {
-        if (this.erAutomatiskVedtak()) return false
-        require(
-            this.stønadsendring.type == Stønadstype.BIDRAG && this.stønadsendring.innkreving == Innkrevingstype.MED_INNKREVING,
-        ) { "Ikke stønadstype bidrag med innkreving" }
-        return this.erEndring()
+        if (erAutomatiskVedtak()) return false
+        return erInnkreving() && (erBidrag() || er18årsbidrag() || erOppfostringsbidrag() || erEndring())
     }
 }
 
