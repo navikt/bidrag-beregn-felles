@@ -32,9 +32,10 @@ data class OppretteVedtakRequest(
     val fom: Årstall,
     val til: Årstall? = null,
     val beløp: Beløp = Beløp.B1000,
-    val kilde: Vedtakskilde = Vedtakskilde.MANUELT,
     val beslutningsårsak: Beslutningsårsak = Beslutningsårsak.INNVILGETT_VEDTAK,
+    val stønadstype: Stønadstype = Stønadstype.BIDRAG,
     val omgjørVedtak: Int? = null,
+    val kilde: Vedtakskilde = Vedtakskilde.MANUELT,
 )
 
 val bm = Testperson("Varig Mottaker", Personident("12345612345"), LocalDate.now().minusYears(38), Rolletype.BIDRAGSMOTTAKER)
@@ -80,7 +81,7 @@ fun oppretteVedtakssett(requests: Set<OppretteVedtakRequest>): Set<VedtakForStø
                 mottaker = bm.personident,
                 kravhaver = ba1.personident,
                 omgjørVedtaksid = request.omgjørVedtak,
-                stønadstype = Stønadstype.BIDRAG,
+                stønadstype = request.stønadstype,
                 perioder = listOf(
                     oppretteVedtaksperiode(
                         delytelsesid++.toString(),
