@@ -1,6 +1,7 @@
 package no.nav.bidrag.beregn.vedtak
 
 import io.kotest.assertions.assertSoftly
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import no.nav.bidrag.beregn.vedtak.Beløp.B1000
@@ -27,6 +28,27 @@ import kotlin.test.Test
 class VedtaksfiltreringTest {
 
     val vedtaksfiltrering: Vedtaksfiltrering = Vedtaksfiltrering()
+
+    @Test
+    fun `skal returnere null hvis ingen manuelle vedtak`() {
+
+        // gitt
+        val vedtakssett = oppretteVedtakssett(
+            setOf(
+                OppretteVedtakRequest(Y2K20, Y2K22, B1000,  Beslutningsårsak.INDEKSREGULERING),
+                OppretteVedtakRequest(Y2K22, null, B1200, Beslutningsårsak.INDEKSREGULERING,),
+                OppretteVedtakRequest(Y2K23, Y2K24, B1200, Beslutningsårsak.INDEKSREGULERING),
+                OppretteVedtakRequest(Y2K24, null, B1200, Beslutningsårsak.INDEKSREGULERING),
+            ),
+        )
+
+        // hvis
+        val vedtak = vedtaksfiltrering.finneSisteManuelleVedtak(vedtakssett, ba1.personident)
+
+        // så
+        vedtak.shouldBeNull()
+    }
+
 
     @Test
     fun `skal hente ut oppfostringsbidrag`() {
