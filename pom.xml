@@ -32,9 +32,9 @@
         <maven-source.version>3.3.1</maven-source.version>
         <maven-surefire.version>3.4.0</maven-surefire.version>
         <maven-deploy.version>3.1.3</maven-deploy.version>
-        <maven-failsafe.version>3.2.5</maven-failsafe.version>
+        <maven-failsafe.version>3.5.0</maven-failsafe.version>
         <maven-resources.version>3.3.1</maven-resources.version>
-        <maven-release.version>3.0.1</maven-release.version>
+        <maven-release.version>3.1.1</maven-release.version>
         <maven-antrun.version>3.1.0</maven-antrun.version>
         <maven-jar.version>3.4.1</maven-jar.version>
         <flatten-maven.version>1.6.0</flatten-maven.version>
@@ -51,6 +51,7 @@
         <module>bidrag-inntekt</module>
         <module>bidrag-sivilstand</module>
         <module>bidrag-beregn-særbidrag</module>
+        <module>bidrag-vedtak</module>
     </modules>
     <repositories>
         <repository>
