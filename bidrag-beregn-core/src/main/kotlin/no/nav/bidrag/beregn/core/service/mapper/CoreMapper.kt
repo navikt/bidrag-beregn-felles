@@ -45,7 +45,15 @@ abstract class CoreMapper {
         .firstOrNull { it.type == grunnlagstype }?.referanse ?: throw NoSuchElementException("Grunnlagstype $grunnlagstype mangler i input")
 
     fun finnPersonFraReferanse(grunnlagListe: List<GrunnlagDto>, referanse: String): Person {
-        val barn = grunnlagListe.filtrerOgKonverterBasertPåEgenReferanse<Person>(Grunnlagstype.BARN)
+        val grunnlagstype: Grunnlagstype
+        grunnlagstype = when {
+            referanse.contains(Grunnlagstype.PERSON_BIDRAGSMOTTAKER.name) -> Grunnlagstype.PERSON_BIDRAGSMOTTAKER
+            referanse.contains(Grunnlagstype.PERSON_BIDRAGSPLIKTIG.name) -> Grunnlagstype.PERSON_BIDRAGSPLIKTIG
+            referanse.contains(Grunnlagstype.PERSON_SØKNADSBARN.name) -> Grunnlagstype.PERSON_SØKNADSBARN
+            referanse.contains(Grunnlagstype.BARN.name) -> Grunnlagstype.BARN
+            else -> throw IllegalArgumentException("Ugyldig referanse: $referanse")
+        }
+        val barn = grunnlagListe.filtrerOgKonverterBasertPåEgenReferanse<Person>(grunnlagstype)
             .filter { it.referanse == referanse }
 
         return Person(

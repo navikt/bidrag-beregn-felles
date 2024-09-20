@@ -288,7 +288,7 @@ internal class BeregnSærbidragService(
 
 //        håndterAvvik(sumLøpendeBidragResultatFraCore.avvikListe, "sum løpende bidrag")
 
-        secureLogger.debug { "Sum løpende bidrag - resultat av beregning: ${tilJson(sumLøpendeBidragResultatFraCore.resultatPeriodeListe)}" }
+        secureLogger.debug { "Sum løpende bidrag - resultat av beregning: ${tilJson(sumLøpendeBidragResultatFraCore.resultatPeriode)}" }
 
         return sumLøpendeBidragResultatFraCore
     }
@@ -340,6 +340,9 @@ internal class BeregnSærbidragService(
         // Henter sjabloner for bidragsevne
         val sjablonBidragsevneListe = SjablonProvider.hentSjablonBidragsevne()
 
+        // Henter sjabloner for samværsfradrag
+        val sjablonSamværsfradragListe = SjablonProvider.hentSjablonSamværsfradrag()
+
         // Henter sjabloner for trinnvis skattesats
         val sjablonTrinnvisSkattesatsListe = SjablonProvider.hentSjablonTrinnvisSkattesats()
 
@@ -347,6 +350,7 @@ internal class BeregnSærbidragService(
             sjablonSjablontallResponse = sjablontallListe,
             sjablonBidragsevneResponse = sjablonBidragsevneListe,
             sjablonTrinnvisSkattesatsResponse = sjablonTrinnvisSkattesatsListe,
+            sjablonSamværsfradragResponse = sjablonSamværsfradragListe,
         )
     }
 
@@ -457,8 +461,8 @@ internal class BeregnSærbidragService(
     ): MutableList<GrunnlagDto> {
         val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
         val grunnlagReferanseListe =
-            resultatFraCore.resultatPeriodeListe
-                .flatMap { it.grunnlagsreferanseListe }
+            resultatFraCore.resultatPeriode
+                .grunnlagsreferanseListe
                 .distinct()
 
         // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
@@ -708,14 +712,12 @@ internal class BeregnSærbidragService(
         innhold = POJONode(
             DelberegningSumLøpendeBidrag(
                 periode = ÅrMånedsperiode(fom = sumLøpendeBidrag.periode.datoFom, til = sumLøpendeBidrag.periode.datoTil),
-                beløp = sumLøpendeBidrag.sum,
+                sum = sumLøpendeBidrag.sum,
             ),
         ),
-        grunnlagsreferanseListe = beregnSumLøpendeBidragResultatCore.resultatPeriodeListe
-            .firstOrNull { resultatPeriode -> resultatPeriode.periode.datoFom == sumLøpendeBidrag.periode.datoFom }
-            ?.grunnlagsreferanseListe
-            ?.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it })
-            ?: emptyList(),
+        grunnlagsreferanseListe = beregnSumLøpendeBidragResultatCore.resultatPeriode
+            .grunnlagsreferanseListe
+            .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it }),
         gjelderReferanse = bidragspliktigReferanse,
     )
 
@@ -1014,4 +1016,4 @@ internal class BeregnSærbidragService(
     }
 }
 
-data class DelberegningSumLøpendeBidrag(override val periode: ÅrMånedsperiode, val beløp: BigDecimal) : Delberegning
+data class DelberegningSumLøpendeBidrag(override val periode: ÅrMånedsperiode, val sum: BigDecimal) : Delberegning

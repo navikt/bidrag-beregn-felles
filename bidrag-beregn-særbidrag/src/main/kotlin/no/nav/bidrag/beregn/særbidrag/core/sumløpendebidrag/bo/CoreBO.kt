@@ -15,7 +15,7 @@ import java.math.BigDecimal
 
 // Resultatperiode
 
-data class BeregnSumLøpendeBidragResultat(val resultatPeriodeListe: List<ResultatPeriode>)
+data class BeregnSumLøpendeBidragResultat(val resultatPeriode: ResultatPeriode)
 
 // data class ResultatPeriode(val periode: Periode, val resultat: ResultatBeregning, val grunnlag: GrunnlagBeregning)
 data class ResultatPeriode(val periode: Periode, val resultat: ResultatBeregning, val grunnlag: LøpendeBidragGrunnlagCore)

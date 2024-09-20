@@ -14,6 +14,7 @@ import no.nav.bidrag.beregn.core.dto.AvvikCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto.BeregnBidragsevneResultatCore
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.BeregnBPsAndelSærbidragResultatCore
+import no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.dto.BeregnSumLøpendeBidragResultatCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BeregnSærbidragResultatCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.ResultatBeregningCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.ResultatPeriodeCore
@@ -228,6 +229,26 @@ object TestUtil {
             resultatPeriodeListe = bidragPeriodeResultatListe,
             sjablonListe = mutableListOf(),
             avvikListe = emptyList(),
+        )
+    }
+
+    // Bygger opp BeregnBidragsevneResultatCore
+    fun dummySumLøpendeBidragResultatCore(): BeregnSumLøpendeBidragResultatCore {
+        val resultat = no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.dto.ResultatPeriodeCore(
+            periode = PeriodeCore(datoFom = LocalDate.parse("2020-08-01"), datoTil = LocalDate.parse("2020-09-01")),
+            resultat = no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.dto.ResultatBeregningCore(BigDecimal.valueOf(100)),
+            grunnlagsreferanseListe = mutableListOf(
+                INNTEKT_REFERANSE,
+                SKATTEKLASSE_REFERANSE,
+                BOSTATUS_REFERANSE,
+                BARN_I_HUSSTANDEN_REFERANSE,
+                SAMVÆRSKLASSE_REFERANSE,
+            ),
+        )
+
+        return BeregnSumLøpendeBidragResultatCore(
+            resultatPeriode = resultat,
+            sjablonListe = mutableListOf(),
         )
     }
 

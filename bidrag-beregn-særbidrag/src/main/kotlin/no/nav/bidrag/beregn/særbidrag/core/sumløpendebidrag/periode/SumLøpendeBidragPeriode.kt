@@ -19,15 +19,14 @@ class SumLøpendeBidragPeriode(private val sumLøpendeBidragBeregning: SumLøpen
 //                sjablonPeriodeListe = sjablonliste,
 //            )
 
-        val resultatListe = listOf(
+        val resultat =
             ResultatPeriode(
                 periode = Periode(grunnlag.beregnDatoFra, grunnlag.beregnDatoTil),
                 resultat = sumLøpendeBidragBeregning.beregn(grunnlag),
                 grunnlag = grunnlag,
-            ),
-        )
+            )
 
-        return BeregnSumLøpendeBidragResultat(resultatListe)
+        return BeregnSumLøpendeBidragResultat(resultat)
     }
 
     // Validerer at input-verdier til beregning av sum løpende bidrag er gyldige

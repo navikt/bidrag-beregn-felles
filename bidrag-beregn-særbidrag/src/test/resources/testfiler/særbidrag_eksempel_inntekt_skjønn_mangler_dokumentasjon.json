@@ -211,5 +211,15 @@
     },
     "grunnlagsreferanseListe" : [ "utgiftsposter", "utgift_direkte_betalt" ],
     "gjelderReferanse" : null
-  } ]
+  },
+    {
+      "referanse": "løpende_bidrag_grunnlag_bidragspliktig",
+      "type": "LØPENDE_BIDRAG",
+      "innhold": {
+        "løpendeBidragListe": []
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragspliktig"
+    }
+  ]
 }

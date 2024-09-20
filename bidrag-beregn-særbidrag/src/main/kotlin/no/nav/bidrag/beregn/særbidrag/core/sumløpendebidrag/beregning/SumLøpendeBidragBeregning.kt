@@ -27,7 +27,7 @@ class SumLøpendeBidragBeregning : FellesBeregning() {
             totaltLøpendeBidrag += it.løpendeBeløp
             totaltBeregnetSamværsfradrag += hentSjablonSamværsfradrag(
                 sjablonPeriodeListe = sjablonliste,
-                samværsklasse = it.samværsklasse.toString(),
+                samværsklasse = it.samværsklasse.bisysKode,
                 alderBarn = finnAlder(it.fødselsdatoBarn),
             )
             totaltBidragRedusertMedBeløp += it.beregnetBeløp.minus(it.faktiskBeløp)

@@ -41,20 +41,26 @@ internal object SærbidragCoreMapper : CoreMapper() {
                     )
                 }
 
-        // Løper gjennom output fra beregning av sum løpende bidrag og bygger opp ny input-liste til core
-        val sumLøpendeBidragPeriodeCoreListe =
-            beregnSumLøpendeBidragResultatCore.resultatPeriodeListe
-                .map { (periode, resultatBeregning): no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.dto.ResultatPeriodeCore ->
-                    SumLøpendeBidragPeriodeCore(
-                        referanse = opprettDelberegningreferanse(
-                            type = Grunnlagstype.DELBEREGNING_SUM_LØPENDE_BIDRAG,
-                            periode = ÅrMånedsperiode(fom = periode.datoFom, til = periode.datoTil),
-                            søknadsbarnReferanse = beregnGrunnlag.søknadsbarnReferanse,
-                        ),
-                        periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
-                        sum = resultatBeregning.sum,
-                    )
-                }.first()
+        // Leser output fra beregning av sum løpende bidrag og bygger opp input til core
+
+        val resultatPeriode = beregnSumLøpendeBidragResultatCore.resultatPeriode
+
+        val sumLøpendeBidragPeriodeCore =
+            SumLøpendeBidragPeriodeCore(
+                referanse = opprettDelberegningreferanse(
+                    type = Grunnlagstype.DELBEREGNING_SUM_LØPENDE_BIDRAG,
+                    periode = ÅrMånedsperiode(
+                        fom = resultatPeriode.periode.datoFom,
+                        til = resultatPeriode.periode.datoTil,
+                    ),
+                    søknadsbarnReferanse = beregnGrunnlag.søknadsbarnReferanse,
+                ),
+                periode = PeriodeCore(
+                    datoFom = resultatPeriode.periode.datoFom,
+                    datoTil = resultatPeriode.periode.datoTil,
+                ),
+                sum = resultatPeriode.resultat.sum,
+            )
 
         // Løper gjennom output fra beregning av BPs andel særbidrag og bygger opp ny input-liste til core
         val bpAndelSærbidragPeriodeCoreListe =
@@ -79,7 +85,7 @@ internal object SærbidragCoreMapper : CoreMapper() {
             søknadsbarnPersonId = mapSøknadsbarn(beregnGrunnlag)!!.verdi,
             betaltAvBpPeriodeListe = mapUtgift(beregnGrunnlag),
             bidragsevnePeriodeListe = bidragsevnePeriodeCoreListe,
-            sumLøpendeBidrag = sumLøpendeBidragPeriodeCoreListe,
+            sumLøpendeBidrag = sumLøpendeBidragPeriodeCore,
             bPsAndelSærbidragPeriodeListe = bpAndelSærbidragPeriodeCoreListe,
         )
     }

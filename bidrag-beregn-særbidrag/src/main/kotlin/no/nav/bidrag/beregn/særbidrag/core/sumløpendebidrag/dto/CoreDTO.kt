@@ -38,11 +38,7 @@ data class LøpendeBidragCore(
 )
 
 // Resultatperiode
-data class BeregnSumLøpendeBidragResultatCore(
-    val resultatPeriodeListe: List<ResultatPeriodeCore>,
-    val sjablonListe: MutableList<SjablonResultatGrunnlagCore>,
-//    val avvikListe: List<AvvikCore>,
-)
+data class BeregnSumLøpendeBidragResultatCore(val resultatPeriode: ResultatPeriodeCore, val sjablonListe: List<SjablonResultatGrunnlagCore>)
 
 data class ResultatPeriodeCore(
     override val periode: PeriodeCore,

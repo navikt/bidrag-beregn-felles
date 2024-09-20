@@ -33,18 +33,16 @@ internal class SumLøpendeBidragCore(private val sumLøpendeBidragPeriode: SumL�
 //    )
 
     private fun mapFraBusinessObject(resultat: BeregnSumLøpendeBidragResultat) = BeregnSumLøpendeBidragResultatCore(
-        resultatPeriodeListe = mapResultatPeriode(resultat.resultatPeriodeListe),
-        sjablonListe = mapSjablonGrunnlagListe(resultat.resultatPeriodeListe).toMutableList(),
+        resultatPeriode = mapResultatPeriode(resultat.resultatPeriode),
+        sjablonListe = mapSjablonGrunnlagListe(resultat.resultatPeriode),
 //        avvikListe = mapAvvik(avvikListe),
     )
 
-    private fun mapResultatPeriode(resultatPeriodeListe: List<ResultatPeriode>) = resultatPeriodeListe.map {
-        ResultatPeriodeCore(
-            periode = PeriodeCore(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
-            resultat = ResultatBeregningCore(it.resultat.sum),
-            grunnlagsreferanseListe = mapReferanseListe(it).sorted().toMutableList(),
-        )
-    }
+    private fun mapResultatPeriode(resultatPeriode: ResultatPeriode) = ResultatPeriodeCore(
+        periode = PeriodeCore(datoFom = resultatPeriode.periode.datoFom, datoTil = resultatPeriode.periode.datoTil),
+        resultat = ResultatBeregningCore(resultatPeriode.resultat.sum),
+        grunnlagsreferanseListe = mapReferanseListe(resultatPeriode).sorted().toMutableList(),
+    )
 
     private fun mapReferanseListe(resultatPeriode: ResultatPeriode): List<String> {
         val sjablonListe = resultatPeriode.resultat.sjablonListe
@@ -54,8 +52,8 @@ internal class SumLøpendeBidragCore(private val sumLøpendeBidragPeriode: SumL�
         return referanseListe.sorted()
     }
 
-    private fun mapSjablonGrunnlagListe(resultatPeriodeListe: List<ResultatPeriode>) = resultatPeriodeListe
-        .map { it.resultat.sjablonListe }
-        .flatMap { mapSjablonListe(it) }
+    private fun mapSjablonGrunnlagListe(resultatPeriode: ResultatPeriode) = resultatPeriode
+        .resultat.sjablonListe
+        .flatMap { mapSjablonListe(listOf(it)) }
         .distinct()
 }
