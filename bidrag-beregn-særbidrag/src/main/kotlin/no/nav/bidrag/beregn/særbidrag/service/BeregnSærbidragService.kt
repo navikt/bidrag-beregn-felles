@@ -13,15 +13,20 @@ import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.BPsAndelSærbidra
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.BeregnBPsAndelSærbidragGrunnlagCore
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.BeregnBPsAndelSærbidragResultatCore
 import no.nav.bidrag.beregn.særbidrag.core.felles.bo.SjablonListe
+import no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.SumLøpendeBidragCore
+import no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.dto.BeregnSumLøpendeBidragResultatCore
+import no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.dto.LøpendeBidragGrunnlagCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.SærbidragCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BPsAndelSærbidragPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BeregnSærbidragGrunnlagCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BeregnSærbidragResultatCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BidragsevnePeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.ResultatPeriodeCore
+import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.SumLøpendeBidragPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.service.mapper.BPAndelSærbidragCoreMapper
 import no.nav.bidrag.beregn.særbidrag.service.mapper.BPAndelSærbidragCoreMapper.finnReferanseTilRolle
 import no.nav.bidrag.beregn.særbidrag.service.mapper.BidragsevneCoreMapper
+import no.nav.bidrag.beregn.særbidrag.service.mapper.SumLøpendeBidragCoreMapper
 import no.nav.bidrag.beregn.særbidrag.service.mapper.SærbidragCoreMapper
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
 import no.nav.bidrag.commons.service.sjablon.Sjablontall
@@ -38,6 +43,7 @@ import no.nav.bidrag.transport.behandling.beregning.felles.valider
 import no.nav.bidrag.transport.behandling.beregning.særbidrag.BeregnetSærbidragResultat
 import no.nav.bidrag.transport.behandling.beregning.særbidrag.ResultatBeregning
 import no.nav.bidrag.transport.behandling.beregning.særbidrag.ResultatPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.Delberegning
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBarnIHusstand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndelSærbidrag
@@ -58,6 +64,7 @@ import java.time.format.DateTimeFormatter
 @Service
 internal class BeregnSærbidragService(
     private val bidragsevneCore: BidragsevneCore = BidragsevneCore(),
+    private val sumLøpendeBidragCore: SumLøpendeBidragCore = SumLøpendeBidragCore(),
     private val bpAndelSærbidragCore: BPsAndelSærbidragCore = BPsAndelSærbidragCore(),
     private val særbidragCore: SærbidragCore = SærbidragCore(),
 ) : BeregnService() {
@@ -158,6 +165,24 @@ internal class BeregnSærbidragService(
             ),
         )
 
+        // Sum løpende bidrag
+        val sumLøpendeBidragGrunnlagCore =
+            SumLøpendeBidragCoreMapper.mapSumLøpendeBidragGrunnlagTilCore(
+                beregnGrunnlag = beregnGrunnlag,
+                sjablonListe = sjablonListe,
+            )
+
+        val sumLøpendeBidragResultatFraCore = beregnSumLøpendeBidrag(sumLøpendeBidragGrunnlagCore)
+
+        grunnlagReferanseListe.addAll(
+            lagGrunnlagslisteSumLøpendeBidrag(
+                beregnGrunnlag = beregnGrunnlag,
+                resultatFraCore = sumLøpendeBidragResultatFraCore,
+                grunnlagTilCore = sumLøpendeBidragGrunnlagCore,
+                bidragspliktigReferanse = bidragspliktigReferanse,
+            ),
+        )
+
         // BPs andel av særbidrag
         val bpAndelSærbidragGrunnlagTilCore =
             BPAndelSærbidragCoreMapper.mapBPsAndelSærbidragGrunnlagTilCore(
@@ -184,6 +209,7 @@ internal class BeregnSærbidragService(
             SærbidragCoreMapper.mapSærbidragGrunnlagTilCore(
                 beregnGrunnlag = beregnGrunnlag,
                 beregnBidragsevneResultatCore = bidragsevneResultatFraCore,
+                beregnSumLøpendeBidragResultatCore = sumLøpendeBidragResultatFraCore,
                 beregnBPsAndelSærbidragResultatCore = bpAndelSærbidragResultatFraCore,
             )
 
@@ -194,6 +220,7 @@ internal class BeregnSærbidragService(
                 resultatFraCore = særbidragResultatFraCore,
                 grunnlagTilCore = særbidragGrunnlagTilCore,
                 bidragsevneResultatFraCore = bidragsevneResultatFraCore,
+                sumLøpendeBidragResultatCore = sumLøpendeBidragResultatFraCore,
                 bpAndelSærbidragResultatFraCore = bpAndelSærbidragResultatFraCore,
                 bidragspliktigReferanse = bidragspliktigReferanse,
             ),
@@ -245,6 +272,25 @@ internal class BeregnSærbidragService(
         secureLogger.debug { "Bidragsevne - resultat av beregning: ${tilJson(bidragsevneResultatFraCore.resultatPeriodeListe)}" }
 
         return bidragsevneResultatFraCore
+    }
+
+    // Kaller core for beregning av sum løpende bidrag
+    private fun beregnSumLøpendeBidrag(løpendeBidragGrunnlagCore: LøpendeBidragGrunnlagCore): BeregnSumLøpendeBidragResultatCore {
+        secureLogger.debug { "Sum løpende bidrag - grunnlag for beregning: ${tilJson(løpendeBidragGrunnlagCore)}" }
+
+        // Kaller core-modulen for beregning av sum løpende bidrag
+        val sumLøpendeBidragResultatFraCore =
+            try {
+                sumLøpendeBidragCore.beregnSumLøpendeBidrag(løpendeBidragGrunnlagCore)
+            } catch (e: Exception) {
+                throw UgyldigInputException("Ugyldig input ved beregning av bidragsevne: " + e.message)
+            }
+
+//        håndterAvvik(sumLøpendeBidragResultatFraCore.avvikListe, "sum løpende bidrag")
+
+        secureLogger.debug { "Sum løpende bidrag - resultat av beregning: ${tilJson(sumLøpendeBidragResultatFraCore.resultatPeriodeListe)}" }
+
+        return sumLøpendeBidragResultatFraCore
     }
 
     // Kaller core for beregning av BPs andel av særbidrag
@@ -398,6 +444,38 @@ internal class BeregnSærbidragService(
         return resultatGrunnlagListe
     }
 
+    // ===============================================================================================================================================
+
+    // Lager en liste over resultatgrunnlag for delberegning sum løpende bidrag som inneholder:
+    //   - mottatte grunnlag som er brukt i beregningen
+    //   - sjablon for samværsfradrag
+    private fun lagGrunnlagslisteSumLøpendeBidrag(
+        beregnGrunnlag: BeregnGrunnlag,
+        resultatFraCore: BeregnSumLøpendeBidragResultatCore,
+        grunnlagTilCore: LøpendeBidragGrunnlagCore,
+        bidragspliktigReferanse: String,
+    ): MutableList<GrunnlagDto> {
+        val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
+        val grunnlagReferanseListe =
+            resultatFraCore.resultatPeriodeListe
+                .flatMap { it.grunnlagsreferanseListe }
+                .distinct()
+
+        // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
+        resultatGrunnlagListe.addAll(
+            mapMottatteGrunnlag(
+                grunnlagListe = beregnGrunnlag.grunnlagListe,
+                grunnlagReferanseListe = grunnlagReferanseListe,
+            ),
+        )
+
+        // Mapper ut grunnlag og justerer referanser basert på lister over sjabloner som er brukt i beregningen
+        resultatGrunnlagListe.addAll(mapSjablonSamværsfradragGrunnlag(resultatFraCore.sjablonListe))
+//        justerReferanserForSjabloner(resultatFraCore.resultatPeriodeListe)
+
+        return resultatGrunnlagListe
+    }
+
     // Lager en liste over resultatgrunnlag for delberegning BPs andel særbidrag som inneholder:
     //   - mottatte grunnlag som er brukt i beregningen
     //   - "delberegninger" som er brukt i beregningen (og mottatte grunnlag som er brukt i delberegningene)
@@ -496,6 +574,7 @@ internal class BeregnSærbidragService(
         resultatFraCore: BeregnSærbidragResultatCore,
         grunnlagTilCore: BeregnSærbidragGrunnlagCore,
         bidragsevneResultatFraCore: BeregnBidragsevneResultatCore,
+        sumLøpendeBidragResultatCore: BeregnSumLøpendeBidragResultatCore,
         bpAndelSærbidragResultatFraCore: BeregnBPsAndelSærbidragResultatCore,
         bidragspliktigReferanse: String,
     ): MutableList<GrunnlagDto> {
@@ -508,6 +587,7 @@ internal class BeregnSærbidragService(
         // Filtrerer ut delberegninger som er brukt som grunnlag
         val bidragsevneListe = grunnlagTilCore.bidragsevnePeriodeListe
             .filter { grunnlagReferanseListe.contains(it.referanse) }
+        val sumLøpendeBidrag = grunnlagTilCore.sumLøpendeBidrag
         val bPsAndelSærbidragListe = grunnlagTilCore.bPsAndelSærbidragPeriodeListe
             .filter { grunnlagReferanseListe.contains(it.referanse) }
 
@@ -516,6 +596,15 @@ internal class BeregnSærbidragService(
             mapDelberegningBidragsevne(
                 bidragsevneListe = bidragsevneListe,
                 bidragsevneResultatFraCore = bidragsevneResultatFraCore,
+                bidragspliktigReferanse = bidragspliktigReferanse,
+            ),
+        )
+
+        // Mapper ut delberegning sum løpende bidrag
+        resultatGrunnlagListe.add(
+            mapDelberegningSumLøpendeBidrag(
+                sumLøpendeBidrag = sumLøpendeBidrag,
+                beregnSumLøpendeBidragResultatCore = sumLøpendeBidragResultatCore,
                 bidragspliktigReferanse = bidragspliktigReferanse,
             ),
         )
@@ -607,6 +696,28 @@ internal class BeregnSærbidragService(
                 gjelderReferanse = bidragspliktigReferanse,
             )
         }
+
+    // Mapper ut DelberegningSumLøpendeBidrag
+    private fun mapDelberegningSumLøpendeBidrag(
+        sumLøpendeBidrag: SumLøpendeBidragPeriodeCore,
+        beregnSumLøpendeBidragResultatCore: BeregnSumLøpendeBidragResultatCore,
+        bidragspliktigReferanse: String,
+    ) = GrunnlagDto(
+        referanse = sumLøpendeBidrag.referanse,
+        type = bestemGrunnlagstype(sumLøpendeBidrag.referanse),
+        innhold = POJONode(
+            DelberegningSumLøpendeBidrag(
+                periode = ÅrMånedsperiode(fom = sumLøpendeBidrag.periode.datoFom, til = sumLøpendeBidrag.periode.datoTil),
+                beløp = sumLøpendeBidrag.sum,
+            ),
+        ),
+        grunnlagsreferanseListe = beregnSumLøpendeBidragResultatCore.resultatPeriodeListe
+            .firstOrNull { resultatPeriode -> resultatPeriode.periode.datoFom == sumLøpendeBidrag.periode.datoFom }
+            ?.grunnlagsreferanseListe
+            ?.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it })
+            ?: emptyList(),
+        gjelderReferanse = bidragspliktigReferanse,
+    )
 
     // Mapper ut DelberegningBpsAndelSærbidrag
     private fun mapDelberegningBpsAndelSærbidrag(
@@ -729,7 +840,7 @@ internal class BeregnSærbidragService(
             )
         }
 
-    // Mapper ut grunnlag basert på liste over sjabloner av type Bidragsevne som er brukt i beregningen
+    // Mapper ut grunnlag basert på liste over sjabloner av type Trinnvis Skattesats som er brukt i beregningen
     private fun mapSjablonTrinnvisSkattesatsGrunnlag(sjablonListe: List<SjablonResultatGrunnlagCore>): List<GrunnlagDto> {
         val grunnlagDtoListe = mutableListOf<GrunnlagDto>()
 
@@ -784,7 +895,7 @@ internal class BeregnSærbidragService(
         return grunnlagDtoListe
     }
 
-    // Mapper ut grunnlag basert på liste over sjabloner av type TrinnvisSkattesats som er brukt i beregningen
+    // Mapper ut grunnlag basert på liste over sjabloner for bidragsevne som er brukt i beregningen
     private fun mapSjablonBidragsevneGrunnlag(sjablonListe: List<SjablonResultatGrunnlagCore>): List<GrunnlagDto> {
         val grunnlagDtoListe = mutableListOf<GrunnlagDto>()
 
@@ -818,6 +929,23 @@ internal class BeregnSærbidragService(
 
         return grunnlagDtoListe
     }
+
+    // Mapper ut sjablon for samværsfradrag
+    private fun mapSjablonSamværsfradragGrunnlag(sjablonListe: List<SjablonResultatGrunnlagCore>) = sjablonListe
+        .filter { sjablon -> sjablon.navn == SjablonInnholdNavn.FRADRAG_BELØP.navn }
+        .map {
+            GrunnlagDto(
+                referanse = it.referanse,
+                type = Grunnlagstype.SJABLON_SAMVARSFRADRAG,
+                innhold = POJONode(
+                    SjablonSjablontallPeriode(
+                        periode = ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil),
+                        sjablon = SjablonTallNavn.from(it.navn),
+                        verdi = it.verdi,
+                    ),
+                ),
+            )
+        }
 
     // Referansene for sjablon TrinnvisSkattesats og Bidragsevne er basert på at de splittes opp i core. I mapSjablonxxx slås de sammen til en sjablon
     // pr periode og det må reflekteres i grunnlagsreferanselisten
@@ -885,3 +1013,5 @@ internal class BeregnSærbidragService(
         )
     }
 }
+
+data class DelberegningSumLøpendeBidrag(override val periode: ÅrMånedsperiode, val beløp: BigDecimal) : Delberegning

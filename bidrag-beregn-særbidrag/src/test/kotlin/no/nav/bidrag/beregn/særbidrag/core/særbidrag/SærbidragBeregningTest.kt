@@ -1,17 +1,20 @@
 package no.nav.bidrag.beregn.særbidrag.core.særbidrag
 
+import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.særbidrag.TestUtil
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.beregning.SærbidragBeregning
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BPsAndelSærbidrag
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BetaltAvBp
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.Bidragsevne
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.GrunnlagBeregning
+import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.SumLøpendeBidragPeriode
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
+import java.time.LocalDate
 
 internal class SærbidragBeregningTest {
 
@@ -23,6 +26,7 @@ internal class SærbidragBeregningTest {
         val beløpBetaltAvBP = BigDecimal.ZERO
         val bPsAndelBeløp = BigDecimal.valueOf(4000)
         val bidragsevneBeløp = BigDecimal.valueOf(11000)
+        val sumLøpendeBidrag = BigDecimal.valueOf(10000)
 
         val grunnlagBeregningPeriodisert = GrunnlagBeregning(
             betaltAvBp = BetaltAvBp(referanse = TestUtil.BETALT_AV_BP_REFERANSE, beløp = beløpBetaltAvBP),
@@ -32,6 +36,11 @@ internal class SærbidragBeregningTest {
                 andelFaktor = BigDecimal.valueOf(0.606),
                 andelBeløp = bPsAndelBeløp,
                 barnetErSelvforsørget = false,
+            ),
+            sumLøpendeBidrag = SumLøpendeBidragPeriode(
+                referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG,
+                periode = Periode(LocalDate.now(), LocalDate.now()),
+                sum = sumLøpendeBidrag,
             ),
         )
 
@@ -50,6 +59,7 @@ internal class SærbidragBeregningTest {
         val beløpBetaltAvBP = BigDecimal.valueOf(2000)
         val bPsAndelBeløp = BigDecimal.valueOf(4000)
         val bidragsevneBeløp = BigDecimal.valueOf(11000)
+        val sumLøpendeBidrag = BigDecimal.valueOf(10000)
 
         val grunnlagBeregningPeriodisert = GrunnlagBeregning(
             betaltAvBp = BetaltAvBp(referanse = TestUtil.BETALT_AV_BP_REFERANSE, beløp = beløpBetaltAvBP),
@@ -59,6 +69,11 @@ internal class SærbidragBeregningTest {
                 andelFaktor = BigDecimal.valueOf(0.606),
                 andelBeløp = bPsAndelBeløp,
                 barnetErSelvforsørget = false,
+            ),
+            sumLøpendeBidrag = SumLøpendeBidragPeriode(
+                referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG,
+                periode = Periode(LocalDate.now(), LocalDate.now()),
+                sum = sumLøpendeBidrag,
             ),
         )
 
@@ -77,6 +92,7 @@ internal class SærbidragBeregningTest {
         val beløpBetaltAvBP = BigDecimal.valueOf(5000)
         val bPsAndelBeløp = BigDecimal.valueOf(4000)
         val bidragsevneBeløp = BigDecimal.valueOf(11000)
+        val sumLøpendeBidrag = BigDecimal.valueOf(10000)
 
         val grunnlagBeregningPeriodisert = GrunnlagBeregning(
             betaltAvBp = BetaltAvBp(referanse = TestUtil.BETALT_AV_BP_REFERANSE, beløp = beløpBetaltAvBP),
@@ -86,6 +102,11 @@ internal class SærbidragBeregningTest {
                 andelFaktor = BigDecimal.valueOf(0.606),
                 andelBeløp = bPsAndelBeløp,
                 barnetErSelvforsørget = false,
+            ),
+            sumLøpendeBidrag = SumLøpendeBidragPeriode(
+                referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG,
+                periode = Periode(LocalDate.now(), LocalDate.now()),
+                sum = sumLøpendeBidrag,
             ),
         )
 
@@ -104,6 +125,7 @@ internal class SærbidragBeregningTest {
         val beløpBetaltAvBP = BigDecimal.valueOf(5000)
         val bPsAndelBeløp = BigDecimal.valueOf(4000)
         val bidragsevneBeløp = BigDecimal.valueOf(2000)
+        val sumLøpendeBidrag = BigDecimal.valueOf(10000)
 
         val grunnlagBeregningPeriodisert = GrunnlagBeregning(
             betaltAvBp = BetaltAvBp(referanse = TestUtil.BETALT_AV_BP_REFERANSE, beløp = beløpBetaltAvBP),
@@ -113,6 +135,11 @@ internal class SærbidragBeregningTest {
                 andelFaktor = BigDecimal.valueOf(0.606),
                 andelBeløp = bPsAndelBeløp,
                 barnetErSelvforsørget = true,
+            ),
+            sumLøpendeBidrag = SumLøpendeBidragPeriode(
+                referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG,
+                periode = Periode(LocalDate.now(), LocalDate.now()),
+                sum = sumLøpendeBidrag,
             ),
         )
 
@@ -131,6 +158,7 @@ internal class SærbidragBeregningTest {
         val beløpBetaltAvBP = BigDecimal.valueOf(5000)
         val bPsAndelBeløp = BigDecimal.valueOf(4000)
         val bidragsevneBeløp = BigDecimal.valueOf(11000)
+        val sumLøpendeBidrag = BigDecimal.valueOf(10000)
 
         val grunnlagBeregningPeriodisert = GrunnlagBeregning(
             betaltAvBp = BetaltAvBp(referanse = TestUtil.BETALT_AV_BP_REFERANSE, beløp = beløpBetaltAvBP),
@@ -140,6 +168,11 @@ internal class SærbidragBeregningTest {
                 andelFaktor = BigDecimal.valueOf(0.606),
                 andelBeløp = bPsAndelBeløp,
                 barnetErSelvforsørget = true,
+            ),
+            sumLøpendeBidrag = SumLøpendeBidragPeriode(
+                referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG,
+                periode = Periode(LocalDate.now(), LocalDate.now()),
+                sum = sumLøpendeBidrag,
             ),
         )
 

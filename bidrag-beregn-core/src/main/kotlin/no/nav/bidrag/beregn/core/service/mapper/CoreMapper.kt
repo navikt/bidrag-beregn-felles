@@ -12,6 +12,7 @@ import no.nav.bidrag.beregn.core.dto.VoksneIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.core.util.InntektUtil.erKapitalinntekt
 import no.nav.bidrag.beregn.core.util.InntektUtil.justerKapitalinntekt
 import no.nav.bidrag.commons.service.sjablon.Bidragsevne
+import no.nav.bidrag.commons.service.sjablon.Samværsfradrag
 import no.nav.bidrag.commons.service.sjablon.Sjablontall
 import no.nav.bidrag.commons.service.sjablon.TrinnvisSkattesats
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -24,6 +25,8 @@ import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
+import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåFremmedReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
 import java.math.BigDecimal
@@ -40,6 +43,17 @@ abstract class CoreMapper {
 
     fun finnReferanseTilRolle(grunnlagListe: List<GrunnlagDto>, grunnlagstype: Grunnlagstype) = grunnlagListe
         .firstOrNull { it.type == grunnlagstype }?.referanse ?: throw NoSuchElementException("Grunnlagstype $grunnlagstype mangler i input")
+
+    fun finnPersonFraReferanse(grunnlagListe: List<GrunnlagDto>, referanse: String): Person {
+        val barn = grunnlagListe.filtrerOgKonverterBasertPåEgenReferanse<Person>(Grunnlagstype.BARN)
+            .filter { it.referanse == referanse }
+
+        return Person(
+            ident = barn.first().innhold.ident,
+            fødselsdato = barn.first().innhold.fødselsdato,
+            navn = barn.first().innhold.navn,
+        )
+    }
 
     fun mapInntekt(
         beregnGrunnlag: BeregnGrunnlag,
@@ -124,39 +138,35 @@ abstract class CoreMapper {
         sjablonSjablontallListe: List<Sjablontall>,
         sjablontallMap: Map<String, SjablonTallNavn>,
         criteria: (SjablonTallNavn) -> Boolean,
-    ): List<SjablonPeriodeCore> {
-        return sjablonSjablontallListe
-            .filter { !(it.datoFom!!.isAfter(beregnDatoTil) || it.datoTom!!.isBefore(beregnDatoFra)) }
-            .filter { criteria(sjablontallMap.getOrDefault(it.typeSjablon, SjablonTallNavn.DUMMY)) }
-            .map {
-                SjablonPeriodeCore(
-                    periode = PeriodeCore(datoFom = it.datoFom!!, datoTil = justerTilDato(it.datoTom)),
-                    navn = sjablontallMap.getOrDefault(it.typeSjablon, SjablonTallNavn.DUMMY).navn,
-                    nøkkelListe = emptyList(),
-                    innholdListe = listOf(SjablonInnholdCore(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = it.verdi!!)),
-                )
-            }
-    }
+    ): List<SjablonPeriodeCore> = sjablonSjablontallListe
+        .filter { !(it.datoFom!!.isAfter(beregnDatoTil) || it.datoTom!!.isBefore(beregnDatoFra)) }
+        .filter { criteria(sjablontallMap.getOrDefault(it.typeSjablon, SjablonTallNavn.DUMMY)) }
+        .map {
+            SjablonPeriodeCore(
+                periode = PeriodeCore(datoFom = it.datoFom!!, datoTil = justerTilDato(it.datoTom)),
+                navn = sjablontallMap.getOrDefault(it.typeSjablon, SjablonTallNavn.DUMMY).navn,
+                nøkkelListe = emptyList(),
+                innholdListe = listOf(SjablonInnholdCore(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = it.verdi!!)),
+            )
+        }
 
     fun mapSjablonBidragsevne(
         beregnDatoFra: LocalDate,
         beregnDatoTil: LocalDate,
         sjablonBidragsevneListe: List<Bidragsevne>,
-    ): List<SjablonPeriodeCore> {
-        return sjablonBidragsevneListe
-            .filter { !(it.datoFom!!.isAfter(beregnDatoTil) || it.datoTom!!.isBefore(beregnDatoFra)) }
-            .map {
-                SjablonPeriodeCore(
-                    periode = PeriodeCore(datoFom = it.datoFom!!, datoTil = justerTilDato(it.datoTom)),
-                    navn = SjablonNavn.BIDRAGSEVNE.navn,
-                    nøkkelListe = listOf(SjablonNøkkelCore(navn = SjablonNøkkelNavn.BOSTATUS.navn, verdi = it.bostatus!!)),
-                    innholdListe = listOf(
-                        SjablonInnholdCore(navn = SjablonInnholdNavn.BOUTGIFT_BELØP.navn, verdi = it.belopBoutgift!!),
-                        SjablonInnholdCore(navn = SjablonInnholdNavn.UNDERHOLD_BELØP.navn, verdi = it.belopUnderhold!!),
-                    ),
-                )
-            }
-    }
+    ): List<SjablonPeriodeCore> = sjablonBidragsevneListe
+        .filter { !(it.datoFom!!.isAfter(beregnDatoTil) || it.datoTom!!.isBefore(beregnDatoFra)) }
+        .map {
+            SjablonPeriodeCore(
+                periode = PeriodeCore(datoFom = it.datoFom!!, datoTil = justerTilDato(it.datoTom)),
+                navn = SjablonNavn.BIDRAGSEVNE.navn,
+                nøkkelListe = listOf(SjablonNøkkelCore(navn = SjablonNøkkelNavn.BOSTATUS.navn, verdi = it.bostatus!!)),
+                innholdListe = listOf(
+                    SjablonInnholdCore(navn = SjablonInnholdNavn.BOUTGIFT_BELØP.navn, verdi = it.belopBoutgift!!),
+                    SjablonInnholdCore(navn = SjablonInnholdNavn.UNDERHOLD_BELØP.navn, verdi = it.belopUnderhold!!),
+                ),
+            )
+        }
 
     // Mapper sjabloner av typen trinnvis skattesats
     // Filtrerer bort de sjablonene som ikke er innenfor intervallet beregnDatoFra-beregnDatoTil
@@ -164,21 +174,39 @@ abstract class CoreMapper {
         beregnDatoFra: LocalDate,
         beregnDatoTil: LocalDate,
         sjablonTrinnvisSkattesatsListe: List<TrinnvisSkattesats>,
-    ): List<SjablonPeriodeCore> {
-        return sjablonTrinnvisSkattesatsListe
-            .filter { !(it.datoFom!!.isAfter(beregnDatoTil) || it.datoTom!!.isBefore(beregnDatoFra)) }
-            .map {
-                SjablonPeriodeCore(
-                    periode = PeriodeCore(datoFom = it.datoFom!!, datoTil = justerTilDato(it.datoTom)),
-                    navn = SjablonNavn.TRINNVIS_SKATTESATS.navn,
-                    nøkkelListe = emptyList(),
-                    innholdListe = listOf(
-                        SjablonInnholdCore(navn = SjablonInnholdNavn.INNTEKTSGRENSE_BELØP.navn, verdi = it.inntektgrense!!),
-                        SjablonInnholdCore(navn = SjablonInnholdNavn.SKATTESATS_PROSENT.navn, verdi = it.sats!!),
-                    ),
-                )
-            }
-    }
+    ): List<SjablonPeriodeCore> = sjablonTrinnvisSkattesatsListe
+        .filter { !(it.datoFom!!.isAfter(beregnDatoTil) || it.datoTom!!.isBefore(beregnDatoFra)) }
+        .map {
+            SjablonPeriodeCore(
+                periode = PeriodeCore(datoFom = it.datoFom!!, datoTil = justerTilDato(it.datoTom)),
+                navn = SjablonNavn.TRINNVIS_SKATTESATS.navn,
+                nøkkelListe = emptyList(),
+                innholdListe = listOf(
+                    SjablonInnholdCore(navn = SjablonInnholdNavn.INNTEKTSGRENSE_BELØP.navn, verdi = it.inntektgrense!!),
+                    SjablonInnholdCore(navn = SjablonInnholdNavn.SKATTESATS_PROSENT.navn, verdi = it.sats!!),
+                ),
+            )
+        }
+
+    fun mapSjablonSamværsfradrag(
+        beregnDatoFra: LocalDate,
+        beregnDatoTil: LocalDate,
+        sjablonSamværsfradragListe: List<Samværsfradrag>,
+    ): List<SjablonPeriodeCore> = sjablonSamværsfradragListe
+        .filter { !(it.datoFom!!.isAfter(beregnDatoTil) || it.datoTom!!.isBefore(beregnDatoFra)) }
+        .map {
+            SjablonPeriodeCore(
+                periode = PeriodeCore(datoFom = it.datoFom!!, datoTil = justerTilDato(it.datoTom)),
+                navn = SjablonNavn.SAMVÆRSFRADRAG.navn,
+                nøkkelListe = listOf(
+                    SjablonNøkkelCore(navn = SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, verdi = it.samvaersklasse!!),
+                    SjablonNøkkelCore(navn = SjablonNøkkelNavn.ALDER_TOM.navn, verdi = it.alderTom!!.toString()),
+                ),
+                innholdListe = listOf(
+                    SjablonInnholdCore(navn = SjablonInnholdNavn.FRADRAG_BELØP.navn, verdi = it.belopFradrag!!),
+                ),
+            )
+        }
 
     // Lager en gruppert liste hvor grunnlaget er akkumulert pr bruddperiode, med en liste over tilhørende grunnlagsreferanser
     fun <T : Delberegning> akkumulerOgPeriodiser(
@@ -309,22 +337,19 @@ abstract class CoreMapper {
             (periode.datoTil == null || periode.datoTil.isAfter(grunnlag.periode.datoFom))
     }
 
-    private fun justerTilDato(dato: LocalDate?): LocalDate? {
-        return if (dato == null || dato == maxDato) {
-            null
-        } else if (dato.dayOfMonth != 1) {
-            dato.plusMonths(1).withDayOfMonth(1)
-        } else {
-            dato
-        }
+    private fun justerTilDato(dato: LocalDate?): LocalDate? = if (dato == null || dato == maxDato) {
+        null
+    } else if (dato.dayOfMonth != 1) {
+        dato.plusMonths(1).withDayOfMonth(1)
+    } else {
+        dato
     }
 
     // Setter til-dato for grunnlaget til null hvis det er lik eller etter beregnDatoTil
-    fun mapDatoTil(grunnlagPeriode: ÅrMånedsperiode, beregnPeriodeTil: YearMonth?): LocalDate? {
-        return if (grunnlagPeriode.til == null || (beregnPeriodeTil != null && (!grunnlagPeriode.til!!.isBefore(beregnPeriodeTil)))) {
+    fun mapDatoTil(grunnlagPeriode: ÅrMånedsperiode, beregnPeriodeTil: YearMonth?): LocalDate? =
+        if (grunnlagPeriode.til == null || (beregnPeriodeTil != null && (!grunnlagPeriode.til!!.isBefore(beregnPeriodeTil)))) {
             null
         } else {
             grunnlagPeriode.toDatoperiode().til
         }
-    }
 }

@@ -5,7 +5,7 @@ import no.nav.bidrag.beregn.core.bo.Sjablon
 import no.nav.bidrag.beregn.core.bo.SjablonInnhold
 import no.nav.bidrag.beregn.core.bo.SjablonPeriode
 import no.nav.bidrag.beregn.særbidrag.TestUtil
-import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.BidragsevneCoreTest.MockitoHelper.any
+import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.SumLøpendeBidragCoreCoreTest.MockitoHelper.any
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.beregning.BidragsevneBeregning
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.bo.BarnIHusstandPeriode
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.bo.BeregnBidragsevneGrunnlag
@@ -135,10 +135,8 @@ internal class BidragsevnePeriodeTest {
         ),
     )
 
-    private fun byggResultatBeregning(): ResultatBeregning {
-        return ResultatBeregning(
-            beløp = BigDecimal.valueOf(666),
-            sjablonListe = emptyList(),
-        )
-    }
+    private fun byggResultatBeregning(): ResultatBeregning = ResultatBeregning(
+        beløp = BigDecimal.valueOf(666),
+        sjablonListe = emptyList(),
+    )
 }

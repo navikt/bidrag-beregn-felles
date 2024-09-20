@@ -108,14 +108,12 @@ internal class BPsAndelSærbidragPeriodeTest {
         ),
     )
 
-    private fun byggResultatBeregning(): ResultatBeregning {
-        return ResultatBeregning(
-            resultatAndelFaktor = BigDecimal.valueOf(0.60),
-            resultatAndelBeløp = BigDecimal.valueOf(6000),
-            barnetErSelvforsørget = false,
-            sjablonListe = emptyList(),
-        )
-    }
+    private fun byggResultatBeregning(): ResultatBeregning = ResultatBeregning(
+        resultatAndelFaktor = BigDecimal.valueOf(0.60),
+        resultatAndelBeløp = BigDecimal.valueOf(6000),
+        barnetErSelvforsørget = false,
+        sjablonListe = emptyList(),
+    )
 
     companion object MockitoHelper {
         fun <T> any(): T = Mockito.any()

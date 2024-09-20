@@ -81,7 +81,4 @@ data class InntektSumPost(
     val grunnlagreferanseListe: Set<String> = mutableSetOf(),
 )
 
-data class Periode(
-    val periodeFra: YearMonth,
-    val periodeTil: YearMonth?,
-)
+data class Periode(val periodeFra: YearMonth, val periodeTil: YearMonth?)

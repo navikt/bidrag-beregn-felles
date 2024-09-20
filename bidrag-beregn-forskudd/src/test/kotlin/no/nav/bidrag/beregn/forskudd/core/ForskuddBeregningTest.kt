@@ -678,9 +678,7 @@ internal class ForskuddBeregningTest {
         )
     }
 
-    private fun avrund(beløp: BigDecimal): BigDecimal {
-        return beløp.divide(BigDecimal.TEN, 0, RoundingMode.HALF_UP).multiply(BigDecimal.TEN)
-    }
+    private fun avrund(beløp: BigDecimal): BigDecimal = beløp.divide(BigDecimal.TEN, 0, RoundingMode.HALF_UP).multiply(BigDecimal.TEN)
 
     private fun lagGrunnlag(
         inntekt: List<Inntekt>,

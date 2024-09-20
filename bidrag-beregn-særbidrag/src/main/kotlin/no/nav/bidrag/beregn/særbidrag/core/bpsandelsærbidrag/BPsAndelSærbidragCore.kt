@@ -17,9 +17,7 @@ import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.UtgiftPeriode
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.periode.BPsAndelSærbidragPeriode
 import no.nav.bidrag.beregn.særbidrag.core.felles.FellesCore
 
-internal class BPsAndelSærbidragCore(
-    private val bPsAndelSærbidragPeriode: BPsAndelSærbidragPeriode = BPsAndelSærbidragPeriode(),
-) : FellesCore() {
+internal class BPsAndelSærbidragCore(private val bPsAndelSærbidragPeriode: BPsAndelSærbidragPeriode = BPsAndelSærbidragPeriode()) : FellesCore() {
 
     fun beregnBPsAndelSærbidrag(grunnlag: BeregnBPsAndelSærbidragGrunnlagCore): BeregnBPsAndelSærbidragResultatCore {
         val beregnBPsAndelSærbidragGrunnlag = mapTilBusinessObject(grunnlag)

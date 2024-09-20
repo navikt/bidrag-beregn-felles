@@ -18,18 +18,16 @@ class SkattegrunnlagService {
     fun beregnSkattegrunnlag(
         skattegrunnlagListe: List<SkattegrunnlagForLigningsår>,
         inntektsrapportering: Inntektsrapportering,
-    ): List<SummertÅrsinntekt> {
-        return if (skattegrunnlagListe.isNotEmpty()) {
-            val mapping =
-                if (inntektsrapportering == Inntektsrapportering.KAPITALINNTEKT) hentMappingerKapitalinntekt() else hentMappingerLigs()
-            beregnInntekt(
-                skattegrunnlagListe = skattegrunnlagListe,
-                mapping = mapping,
-                inntektRapportering = inntektsrapportering,
-            )
-        } else {
-            emptyList()
-        }
+    ): List<SummertÅrsinntekt> = if (skattegrunnlagListe.isNotEmpty()) {
+        val mapping =
+            if (inntektsrapportering == Inntektsrapportering.KAPITALINNTEKT) hentMappingerKapitalinntekt() else hentMappingerLigs()
+        beregnInntekt(
+            skattegrunnlagListe = skattegrunnlagListe,
+            mapping = mapping,
+            inntektRapportering = inntektsrapportering,
+        )
+    } else {
+        emptyList()
     }
 
     private fun beregnInntekt(
@@ -85,21 +83,8 @@ class SkattegrunnlagService {
     }
 }
 
-data class Post(
-    val fulltNavnInntektspost: String,
-)
+data class Post(val fulltNavnInntektspost: String)
 
-data class PostKonfig(
-    val plussMinus: String,
-    val sekkepost: String,
-    val fom: String,
-    val tom: String,
-)
+data class PostKonfig(val plussMinus: String, val sekkepost: String, val fom: String, val tom: String)
 
-data class MappingPoster(
-    val fulltNavnInntektspost: String,
-    val plussMinus: PlussMinus,
-    val sekkepost: Boolean,
-    val fom: Year,
-    val tom: Year,
-)
+data class MappingPoster(val fulltNavnInntektspost: String, val plussMinus: PlussMinus, val sekkepost: Boolean, val fom: Year, val tom: Year)

@@ -12,6 +12,10 @@ data class BidragsevnePeriode(val referanse: String, private val periode: Period
     override fun getPeriode(): Periode = periode
 }
 
+data class SumLøpendeBidragPeriode(val referanse: String, private val periode: Periode, val sum: BigDecimal) : PeriodisertGrunnlag {
+    override fun getPeriode(): Periode = periode
+}
+
 data class BPsAndelSærbidragPeriode(
     val referanse: String,
     private val periode: Periode,

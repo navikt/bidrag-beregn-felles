@@ -93,6 +93,7 @@ class SærbidragPeriode(private val særbidragBeregning: SærbidragBeregning = S
                     betaltAvBp = betaltAvBp,
                     bidragsevne = bidragsevne,
                     bPsAndelSærbidrag = bPsAndelSærbidrag,
+                    sumLøpendeBidrag = grunnlag.sumLøpendeBidragPeriode,
                 )
 
             grunnlag.periodeResultatListe.add(

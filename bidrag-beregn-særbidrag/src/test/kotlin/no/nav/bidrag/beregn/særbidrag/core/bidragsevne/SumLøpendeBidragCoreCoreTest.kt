@@ -38,7 +38,7 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 @ExtendWith(MockitoExtension::class)
-internal class BidragsevneCoreTest {
+internal class SumLøpendeBidragCoreCoreTest {
 
     private lateinit var bidragsevneCore: BidragsevneCore
 
@@ -169,14 +169,12 @@ internal class BidragsevneCoreTest {
         return BeregnBidragsevneResultat(periodeResultatListe)
     }
 
-    private fun byggAvvik(): List<Avvik> {
-        return listOf(
-            Avvik(
-                avvikTekst = "beregnDatoTil må være etter beregnDatoFra",
-                avvikType = Avvikstype.DATO_FOM_ETTER_DATO_TIL,
-            ),
-        )
-    }
+    private fun byggAvvik(): List<Avvik> = listOf(
+        Avvik(
+            avvikTekst = "beregnDatoTil må være etter beregnDatoFra",
+            avvikType = Avvikstype.DATO_FOM_ETTER_DATO_TIL,
+        ),
+    )
 
     companion object MockitoHelper {
         fun <T> any(): T = Mockito.any()

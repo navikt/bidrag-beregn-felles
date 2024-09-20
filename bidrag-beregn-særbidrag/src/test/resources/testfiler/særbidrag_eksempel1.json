@@ -149,6 +149,25 @@
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "løpende_bidrag_grunnlag_bidragspliktig",
+      "type": "LØPENDE_BIDRAG",
+      "innhold": {
+        "løpendeBidragListe": [
+          {
+            "saksnummer": "1234567",
+            "type": "BIDRAG",
+            "løpendeBeløp": 100,
+            "samværsklasse": "SAMVÆRSKLASSE_1",
+            "beregnetBeløp": 100,
+            "faktiskBeløp": 100,
+            "gjelderBarn": "Person_Søknadsbarn"
+          }
+        ]
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragspliktig"
     }
   ]
 }

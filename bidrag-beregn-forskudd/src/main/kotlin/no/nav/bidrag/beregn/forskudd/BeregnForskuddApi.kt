@@ -28,7 +28,5 @@ import org.springframework.stereotype.Service
 class BeregnForskuddApi {
     private val service = BeregnForskuddService()
 
-    fun beregn(beregnForskuddGrunnlag: BeregnGrunnlag): BeregnetForskuddResultat {
-        return service.beregn(beregnForskuddGrunnlag)
-    }
+    fun beregn(beregnForskuddGrunnlag: BeregnGrunnlag): BeregnetForskuddResultat = service.beregn(beregnForskuddGrunnlag)
 }
