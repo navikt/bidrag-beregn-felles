@@ -43,10 +43,10 @@ import no.nav.bidrag.transport.behandling.beregning.felles.valider
 import no.nav.bidrag.transport.behandling.beregning.særbidrag.BeregnetSærbidragResultat
 import no.nav.bidrag.transport.behandling.beregning.særbidrag.ResultatBeregning
 import no.nav.bidrag.transport.behandling.beregning.særbidrag.ResultatPeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.Delberegning
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBarnIHusstand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndelSærbidrag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSumLøpendeBidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUtgift
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningVoksneIHustand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
@@ -871,7 +871,7 @@ internal class BeregnSærbidragService(
             filtrertListeInntektGrense.forEach {
                 sjablonTrinnvisSkattesatsListe.add(
                     SjablonTrinnvisSkattesats(
-                        inntekstgrense = it.verdi.intValueExact(),
+                        inntektsgrense = it.verdi.intValueExact(),
                         sats = filtrertListeSats[indeks].verdi,
                     ),
                 )
@@ -1015,5 +1015,3 @@ internal class BeregnSærbidragService(
         )
     }
 }
-
-data class DelberegningSumLøpendeBidrag(override val periode: ÅrMånedsperiode, val sum: BigDecimal) : Delberegning

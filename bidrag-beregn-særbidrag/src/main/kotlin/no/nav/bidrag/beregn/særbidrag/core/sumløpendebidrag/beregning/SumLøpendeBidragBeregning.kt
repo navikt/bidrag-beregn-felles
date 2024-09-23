@@ -28,20 +28,20 @@ class SumLøpendeBidragBeregning : FellesBeregning() {
             totaltBeregnetSamværsfradrag += hentSjablonSamværsfradrag(
                 sjablonPeriodeListe = sjablonliste,
                 samværsklasse = it.samværsklasse.bisysKode,
-                alderBarn = finnAlder(it.fødselsdatoBarn),
+                alderBarn = finnAlder(LocalDate.now(), it.fødselsdatoBarn),
             )
             totaltBidragRedusertMedBeløp += it.beregnetBeløp.minus(it.faktiskBeløp)
         }
 
         return ResultatBeregning(
-            sum = totaltLøpendeBidrag.plus(totaltBeregnetSamværsfradrag).minus(totaltBidragRedusertMedBeløp),
+            sum = totaltLøpendeBidrag.plus(totaltBeregnetSamværsfradrag).plus(totaltBidragRedusertMedBeløp),
             sjablonListe = byggSjablonResultatListe(sjablonNavnVerdiMap = emptyMap(), sjablonPeriodeListe = grunnlag.sjablonPeriodeListe),
 
         )
     }
 
-    private fun finnAlder(fødselsdato: LocalDate): Int {
-        val alder = fødselsdato.until(LocalDate.now()).years
+    fun finnAlder(dato: LocalDate, fødselsdato: LocalDate): Int {
+        val alder = fødselsdato.until(dato).years
         return alder
     }
 

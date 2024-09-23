@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.særbidrag.api
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.beregn.særbidrag.TestUtil
+import no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.beregning.SumLøpendeBidragBeregning
 import no.nav.bidrag.beregn.særbidrag.service.BeregnSærbidragService
 import no.nav.bidrag.beregn.særbidrag.testdata.SjablonApiStub
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
@@ -12,6 +13,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBarnIHusst
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndelSærbidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSumInntekt
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSumLøpendeBidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningVoksneIHustand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningSærbidrag
@@ -23,10 +25,12 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
+import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
 import java.math.BigDecimal
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.time.LocalDate
 import java.time.YearMonth
 
 @ExtendWith(MockitoExtension::class)
@@ -34,6 +38,7 @@ internal class BeregnSærbidragApiTest {
     private lateinit var filnavn: String
 
     private lateinit var forventetBidragsevneBeløp: BigDecimal
+    private lateinit var forventetSumLøpendeBidrag: BigDecimal
     private lateinit var forventetBPAndelSærbidragFaktor: BigDecimal
     private lateinit var forventetBPAndelSærbidragBeløp: BigDecimal
     private lateinit var forventetSærbidragBeregnetBeløp: BigDecimal
@@ -48,10 +53,15 @@ internal class BeregnSærbidragApiTest {
     @Mock
     private lateinit var beregnSærbidragService: BeregnSærbidragService
 
+    // Mock SumLøpendeBidragBeregning
+    @Mock
+    var mockSumLøpendeBidragBeregning = Mockito.mock(SumLøpendeBidragBeregning::class.java)
+
     @BeforeEach
     fun initMock() {
         SjablonApiStub().settOppSjablonStub()
         beregnSærbidragService = BeregnSærbidragService()
+        mockSumLøpendeBidragBeregning = SumLøpendeBidragBeregning()
     }
 
     // Eksempel 1-8 refererer til de opprinnelige eksemplene til John, men er modifisert til å ikke ta hensyn til løpende bidrag
@@ -63,6 +73,7 @@ internal class BeregnSærbidragApiTest {
         // Enkel beregning med full evne, ett barn
         filnavn = "src/test/resources/testfiler/særbidrag_eksempel1.json"
         forventetBidragsevneBeløp = BigDecimal.valueOf(11069)
+        forventetSumLøpendeBidrag = BigDecimal.valueOf(773)
         forventetBPAndelSærbidragFaktor = BigDecimal.valueOf(0.6056)
         forventetBPAndelSærbidragBeløp = BigDecimal.valueOf(4239)
         forventetSærbidragBeregnetBeløp = BigDecimal.valueOf(4239)
@@ -82,6 +93,7 @@ internal class BeregnSærbidragApiTest {
         // Enkel beregning med full evne, to barn (tilpasset opprinnelig eksempel med 2 løpende bidrag)
         filnavn = "src/test/resources/testfiler/særbidrag_eksempel2.json"
         forventetBidragsevneBeløp = BigDecimal.valueOf(6696)
+        forventetSumLøpendeBidrag = BigDecimal.ZERO
         forventetBPAndelSærbidragFaktor = BigDecimal.valueOf(0.4967)
         forventetBPAndelSærbidragBeløp = BigDecimal.valueOf(2980)
         forventetSærbidragBeregnetBeløp = BigDecimal.valueOf(2980)
@@ -98,9 +110,31 @@ internal class BeregnSærbidragApiTest {
     @Test
     @DisplayName("skal kalle core og returnere et resultat - eksempel 3")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel03() {
-        // Enkel beregning med full evne, to barn (tilpasset opprinnelig eksempel med 2 løpende bidrag)
+        // Enkel beregning med evne lavere enn summen av løpende bidrag
+        // Samværsfradrag: 1048.-
+        val dato = LocalDate.now()
+
+        Mockito.`when`(
+            (
+                mockSumLøpendeBidragBeregning.finnAlder(
+                    dato,
+                    LocalDate.of(2015, 12, 17),
+                )
+                ),
+        ).thenReturn(4)
+
+        Mockito.`when`(
+            (
+                mockSumLøpendeBidragBeregning.finnAlder(
+                    dato,
+                    LocalDate.of(2004, 2, 1),
+                )
+                ),
+        ).thenReturn(16)
+
         filnavn = "src/test/resources/testfiler/særbidrag_eksempel3.json"
         forventetBidragsevneBeløp = BigDecimal.valueOf(6149)
+        forventetSumLøpendeBidrag = BigDecimal.valueOf(6150)
         forventetBPAndelSærbidragFaktor = BigDecimal.valueOf(0.5573)
         forventetBPAndelSærbidragBeløp = BigDecimal.valueOf(6688)
         forventetSærbidragBeregnetBeløp = BigDecimal.valueOf(6688)
@@ -412,6 +446,11 @@ internal class BeregnSærbidragApiTest {
             .filter { it.type == Grunnlagstype.DELBEREGNING_BIDRAGSEVNE }
         val bidragsevneResultat = objectMapper.treeToValue(delberegningBidragsevneListe[0].innhold, DelberegningBidragsevne::class.java)
 
+        val sumLøpendeBidragResultat = totalSærbidragResultat.grunnlagListe
+            .filter { it.type == Grunnlagstype.DELBEREGNING_SUM_LØPENDE_BIDRAG }
+            .map { objectMapper.treeToValue(it.innhold, DelberegningSumLøpendeBidrag::class.java) }
+            .first()
+
         val delberegningBPAndelSærbidragListe = totalSærbidragResultat.grunnlagListe
             .filter { it.type == Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL_SÆRBIDRAG }
         val bPAndelSærbidragResultat =
@@ -468,6 +507,9 @@ internal class BeregnSærbidragApiTest {
             // Delberegning Bidragsevne
             { assertThat(delberegningBidragsevneListe).hasSize(1) },
             { assertThat(bidragsevneResultat.beløp).isEqualTo(forventetBidragsevneBeløp) },
+
+            // Delberegning sumLøpendeBidrag
+            { assertThat(sumLøpendeBidragResultat.sum).isEqualTo(forventetSumLøpendeBidrag) },
 
             // Delberegning BP's andel særbidrag
             { assertThat(delberegningBPAndelSærbidragListe).hasSize(1) },

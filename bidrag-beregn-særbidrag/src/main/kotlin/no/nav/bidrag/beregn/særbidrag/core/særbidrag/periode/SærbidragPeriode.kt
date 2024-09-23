@@ -39,6 +39,7 @@ class SærbidragPeriode(private val særbidragBeregning: SærbidragBeregning = S
     private fun lagGrunnlagTilBeregning(periodeGrunnlag: BeregnSærbidragGrunnlag, grunnlagTilBeregning: BeregnSærbidragListeGrunnlag) {
         grunnlagTilBeregning.betaltAvBpPeriodeListe = periodeGrunnlag.betaltAvBpPeriodeListe.map { it }
         grunnlagTilBeregning.bidragsevnePeriodeListe = periodeGrunnlag.bidragsevnePeriodeListe.map { it }
+        grunnlagTilBeregning.sumLøpendeBidragPeriode = periodeGrunnlag.sumLøpendeBidrag
         grunnlagTilBeregning.bPsAndelSærbidragPeriodeListe = periodeGrunnlag.bPsAndelSærbidragPeriodeListe.map { it }
     }
 

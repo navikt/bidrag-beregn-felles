@@ -161,7 +161,7 @@
             "løpendeBeløp": 100,
             "samværsklasse": "SAMVÆRSKLASSE_1",
             "beregnetBeløp": 100,
-            "faktiskBeløp": 100,
+            "faktiskBeløp": 50,
             "gjelderBarn": "PERSON_SØKNADSBARN"
           }
         ]

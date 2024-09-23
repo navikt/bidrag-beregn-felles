@@ -21,12 +21,7 @@ import java.time.LocalDateTime
 import java.time.Year
 import java.time.YearMonth
 
-data class Testperson(
-    val navn: String,
-    val personident: Personident,
-    val fødselsdato: LocalDate,
-    val rolletype: Rolletype
-)
+data class Testperson(val navn: String, val personident: Personident, val fødselsdato: LocalDate, val rolletype: Rolletype)
 
 data class OppretteVedtakRequest(
     val fom: Årstall,
@@ -48,16 +43,28 @@ val y12 = Year.now().minusYears(12)
 val y10 = Year.now().minusYears(10)
 
 enum class Årstall(val år: Year) {
-    Y2K14(Year.of(2014)), Y2K16(Year.of(2016)), Y2K18(Year.of(2018)), Y2K19(Year.of(2019)), Y2K20(Year.of(2020)),
-    Y2K21(Year.of(2021)), Y2K22(Year.of(2022)), Y2K23(Year.of(2023)), Y2K24(Year.of(2024)),
-    R10(Year.now().minusYears(10)), R12(Year.now().minusYears(12));
+    Y2K14(Year.of(2014)),
+    Y2K16(Year.of(2016)),
+    Y2K18(Year.of(2018)),
+    Y2K19(Year.of(2019)),
+    Y2K20(Year.of(2020)),
+    Y2K21(Year.of(2021)),
+    Y2K22(Year.of(2022)),
+    Y2K23(Year.of(2023)),
+    Y2K24(Year.of(2024)),
+    R10(Year.now().minusYears(10)),
+    R12(Year.now().minusYears(12)),
 }
 
 enum class Beløp(val verdi: BigDecimal) {
-    B800(BigDecimal.valueOf(800)), B1000(BigDecimal.valueOf(100)), B1070(BigDecimal.valueOf(1070)), B1200(BigDecimal.valueOf(1200)), B1300(
+    B800(BigDecimal.valueOf(800)),
+    B1000(BigDecimal.valueOf(100)),
+    B1070(BigDecimal.valueOf(1070)),
+    B1200(BigDecimal.valueOf(1200)),
+    B1300(
         BigDecimal.valueOf(
-            1300
-        )
+            1300,
+        ),
     ),
     B5000(BigDecimal.valueOf(5000)),
 }
@@ -88,10 +95,10 @@ fun oppretteVedtakssett(requests: Set<OppretteVedtakRequest>): Set<VedtakForStø
                         request.fom.år.atMonth(1),
                         request.til?.år?.atMonth(1),
                         request.beløp.verdi,
-                        request.beslutningsårsak
-                    )
+                        request.beslutningsårsak,
+                    ),
                 ),
-                saksnummer = saksnummer
+                saksnummer = saksnummer,
             ),
             kilde = request.kilde,
             vedtakstidspunkt = request.fom.år.atDay(1).atStartOfDay(),
@@ -104,17 +111,15 @@ fun oppretteVedtaksperiode(
     fom: YearMonth,
     tom: YearMonth?,
     beløp: BigDecimal,
-    beslutningsårsak: Beslutningsårsak = Beslutningsårsak.INNVILGETT_VEDTAK
-): VedtakPeriodeDto {
-    return VedtakPeriodeDto(
-        beløp = beløp,
-        delytelseId = delytelsesid,
-        periode = ÅrMånedsperiode(fom, tom),
-        resultatkode = beslutningsårsak.kode,
-        valutakode = null,
-        grunnlagReferanseListe = emptyList()
-    )
-}
+    beslutningsårsak: Beslutningsårsak = Beslutningsårsak.INNVILGETT_VEDTAK,
+): VedtakPeriodeDto = VedtakPeriodeDto(
+    beløp = beløp,
+    delytelseId = delytelsesid,
+    periode = ÅrMånedsperiode(fom, tom),
+    resultatkode = beslutningsårsak.kode,
+    valutakode = null,
+    grunnlagReferanseListe = emptyList(),
+)
 
 fun oppretteVedtak(
     id: Long,
@@ -122,24 +127,22 @@ fun oppretteVedtak(
     vedtakstidspunkt: LocalDateTime,
     vedtakstype: Vedtakstype = Vedtakstype.FASTSETTELSE,
     kilde: Vedtakskilde = Vedtakskilde.MANUELT,
-): VedtakForStønad {
-    return VedtakForStønad(
-        vedtaksid = id,
-        stønadsendring = stønadsendring,
-        behandlingsreferanser = if (Vedtakstype.KLAGE == vedtakstype) oppretteBehandlingsreferanseForKlage() else emptyList(),
-        vedtakstidspunkt = vedtakstidspunkt,
-        kilde = kilde,
-        type = vedtakstype,
-    )
-}
+): VedtakForStønad = VedtakForStønad(
+    vedtaksid = id,
+    stønadsendring = stønadsendring,
+    behandlingsreferanser = if (Vedtakstype.KLAGE == vedtakstype) oppretteBehandlingsreferanseForKlage() else emptyList(),
+    vedtakstidspunkt = vedtakstidspunkt,
+    kilde = kilde,
+    type = vedtakstype,
+)
 
 fun oppretteBehandlingsreferanseForKlage(): List<BehandlingsreferanseDto> {
     val søknadsid = 229190
     return listOf(
         BehandlingsreferanseDto(
             kilde = BehandlingsrefKilde.BISYS_KLAGE_REF_SØKNAD,
-            referanse = søknadsid.toString()
-        )
+            referanse = søknadsid.toString(),
+        ),
     )
 }
 
@@ -155,7 +158,7 @@ fun oppretteStønadsendring(
     omgjørVedtaksid: Int? = null,
     grunnlagsreferanser: List<Grunnlagsreferanse> = emptyList(),
     perioder: List<VedtakPeriodeDto>,
-    innkrevingstype: Innkrevingstype = Innkrevingstype.MED_INNKREVING
+    innkrevingstype: Innkrevingstype = Innkrevingstype.MED_INNKREVING,
 ) = StønadsendringDto(
     beslutning = beslutningstype,
     eksternReferanse = eksternReferanse,

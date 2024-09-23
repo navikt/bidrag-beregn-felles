@@ -30,11 +30,10 @@ class VedtaksfiltreringTest {
 
     @Test
     fun `skal hente ut oppfostringsbidrag`() {
-
         // gitt
         val vedtakssett = oppretteVedtakssett(
             setOf(
-                OppretteVedtakRequest(Y2K20, Y2K22, B1000,  Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
+                OppretteVedtakRequest(Y2K20, Y2K22, B1000, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
                 OppretteVedtakRequest(Y2K22, null, B1200, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG, Stønadstype.OPPFOSTRINGSBIDRAG),
                 OppretteVedtakRequest(Y2K23, Y2K24, B1200, Beslutningsårsak.INDEKSREGULERING),
                 OppretteVedtakRequest(Y2K24, null, B1200, Beslutningsårsak.INDEKSREGULERING),
@@ -57,7 +56,6 @@ class VedtaksfiltreringTest {
 
     @Test
     fun `skal hente ut 18-årsbidrag`() {
-
         // gitt
         val vedtakssett = oppretteVedtakssett(
             setOf(
@@ -67,10 +65,10 @@ class VedtaksfiltreringTest {
                     null,
                     B1200,
                     beslutningsårsak = Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG,
-                    stønadstype = Stønadstype.BIDRAG18AAR
+                    stønadstype = Stønadstype.BIDRAG18AAR,
                 ),
-                OppretteVedtakRequest(Y2K23, Y2K24, B1200,  Beslutningsårsak.INDEKSREGULERING),
-                OppretteVedtakRequest(Y2K24, null, B1200,  Beslutningsårsak.INDEKSREGULERING),
+                OppretteVedtakRequest(Y2K23, Y2K24, B1200, Beslutningsårsak.INDEKSREGULERING),
+                OppretteVedtakRequest(Y2K24, null, B1200, Beslutningsårsak.INDEKSREGULERING),
             ),
         )
 
@@ -90,14 +88,13 @@ class VedtaksfiltreringTest {
 
     @Test
     fun `skal hoppe over indeksregulering`() {
-
         // gitt
         val vedtakssett = oppretteVedtakssett(
             setOf(
                 OppretteVedtakRequest(Y2K20, Y2K22, B1000, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
-                OppretteVedtakRequest(Y2K22, null, B1200,  Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
-                OppretteVedtakRequest(Y2K23, Y2K24, B1200,  Beslutningsårsak.INDEKSREGULERING),
-                OppretteVedtakRequest(Y2K24, null, B1200,  Beslutningsårsak.INDEKSREGULERING),
+                OppretteVedtakRequest(Y2K22, null, B1200, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
+                OppretteVedtakRequest(Y2K23, Y2K24, B1200, Beslutningsårsak.INDEKSREGULERING),
+                OppretteVedtakRequest(Y2K24, null, B1200, Beslutningsårsak.INDEKSREGULERING),
             ),
         )
 
@@ -117,12 +114,11 @@ class VedtaksfiltreringTest {
 
     @Test
     fun `skal hoppe over ved 12 prosen ingen endring`() {
-
         // gitt
         val vedtakssett = oppretteVedtakssett(
             setOf(
-                OppretteVedtakRequest(Y2K20, Y2K22, B1000,  Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
-                OppretteVedtakRequest(Y2K22, null, B1200,  Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
+                OppretteVedtakRequest(Y2K20, Y2K22, B1000, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
+                OppretteVedtakRequest(Y2K22, null, B1200, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
                 OppretteVedtakRequest(Y2K23, Y2K24, B1200, Beslutningsårsak.INGEN_ENDRING_12_PROSENT),
                 OppretteVedtakRequest(Y2K24, null, B1200, Beslutningsårsak.INGEN_ENDRING_12_PROSENT),
             ),
@@ -143,14 +139,13 @@ class VedtaksfiltreringTest {
 
     @Test
     fun `skal hoppe over originalt vedtak ved klage og 12-prosent-ingen-endring`() {
-
         // gitt
         val vedtakssett = oppretteVedtakssett(
             setOf(
                 OppretteVedtakRequest(Y2K14, Y2K16, B800, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
                 OppretteVedtakRequest(Y2K16, Y2K18, B1000, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
                 OppretteVedtakRequest(Y2K18, Y2K19, B1070, Beslutningsårsak.INDEKSREGULERING),
-                OppretteVedtakRequest(Y2K19, Y2K20, B800, Beslutningsårsak.INGEN_ENDRING_12_PROSENT, omgjørVedtak = 2)
+                OppretteVedtakRequest(Y2K19, Y2K20, B800, Beslutningsårsak.INGEN_ENDRING_12_PROSENT, omgjørVedtak = 2),
             ),
         )
 
@@ -168,7 +163,6 @@ class VedtaksfiltreringTest {
 
     @Test
     fun `skal hoppe til opprinnelig vedtak hvis resultat fra annet vedtak`() {
-
         // gitt
         val vedtakssett = oppretteVedtakssett(
             setOf(
@@ -176,8 +170,8 @@ class VedtaksfiltreringTest {
                 OppretteVedtakRequest(Y2K16, Y2K18, B1200),
                 OppretteVedtakRequest(Y2K18, Y2K19, B1300),
                 OppretteVedtakRequest(Y2K19, Y2K20, B1200, Beslutningsårsak.RESULTAT_FRA_ANNET_VEDTAK),
-                OppretteVedtakRequest(Y2K20, Y2K22, B5000, kilde = Vedtakskilde.AUTOMATISK)
-            )
+                OppretteVedtakRequest(Y2K20, Y2K22, B5000, kilde = Vedtakskilde.AUTOMATISK),
+            ),
         )
 
         // hvis
@@ -194,7 +188,6 @@ class VedtaksfiltreringTest {
 
     @Test
     fun `skal hente første manuelle vedtak i vedtaksrekke`() {
-
         // gitt
         val vedtakssett = oppretteVedtakssett(
             setOf(
@@ -215,6 +208,3 @@ class VedtaksfiltreringTest {
         }
     }
 }
-
-
-

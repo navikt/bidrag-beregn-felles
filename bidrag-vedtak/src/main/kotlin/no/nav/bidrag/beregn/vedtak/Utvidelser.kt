@@ -20,7 +20,7 @@ fun VedtakForStønad.er18årsbidrag() = stønadsendring.type == Stønadstype.BID
 
 fun VedtakForStønad.erOppfostringsbidrag() = stønadsendring.type == Stønadstype.OPPFOSTRINGSBIDRAG
 
-fun VedtakForStønad.erInnkreving() =  stønadsendring.innkreving == Innkrevingstype.MED_INNKREVING
+fun VedtakForStønad.erInnkreving() = stønadsendring.innkreving == Innkrevingstype.MED_INNKREVING
 
 fun VedtakForStønad.erResultatFraAnnetVedtak() =
     this.stønadsendring.periodeListe.any { Beslutningsårsak.RESULTAT_FRA_ANNET_VEDTAK.kode == it.resultatkode }
@@ -31,8 +31,10 @@ fun VedtakForStønad.erAutomatiskVedtak() = Vedtakskilde.AUTOMATISK == kilde
 
 fun VedtakForStønad.omgjørVedtaksid() = stønadsendring.omgjørVedtakId
 
-fun VedtakForStønad.erOmgjøring() =
-    Vedtakstype.ENDRING == type && Vedtakskilde.MANUELT == kilde && stønadsendring.omgjørVedtak() && !behandlingsreferanser.any {
+fun VedtakForStønad.erOmgjøring() = Vedtakstype.ENDRING == type &&
+    Vedtakskilde.MANUELT == kilde &&
+    stønadsendring.omgjørVedtak() &&
+    !behandlingsreferanser.any {
         BehandlingsrefKilde.BISYS_KLAGE_REF_SØKNAD == it.kilde
     }
 

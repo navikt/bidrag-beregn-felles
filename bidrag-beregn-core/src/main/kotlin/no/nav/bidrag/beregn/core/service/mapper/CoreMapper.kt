@@ -50,7 +50,7 @@ abstract class CoreMapper {
             referanse.contains(Grunnlagstype.PERSON_BIDRAGSMOTTAKER.name) -> Grunnlagstype.PERSON_BIDRAGSMOTTAKER
             referanse.contains(Grunnlagstype.PERSON_BIDRAGSPLIKTIG.name) -> Grunnlagstype.PERSON_BIDRAGSPLIKTIG
             referanse.contains(Grunnlagstype.PERSON_SØKNADSBARN.name) -> Grunnlagstype.PERSON_SØKNADSBARN
-            referanse.contains(Grunnlagstype.BARN.name) -> Grunnlagstype.BARN
+            referanse.contains(Grunnlagstype.PERSON_BARN_BIDRAGSPLIKTIG.name) -> Grunnlagstype.PERSON_BARN_BIDRAGSPLIKTIG
             else -> throw IllegalArgumentException("Ugyldig referanse: $referanse")
         }
         val barn = grunnlagListe.filtrerOgKonverterBasertPåEgenReferanse<Person>(grunnlagstype)

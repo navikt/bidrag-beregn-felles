@@ -3,18 +3,29 @@
     "fom": "2020-08",
     "til": "2020-09"
   },
-  "søknadsbarnReferanse": "Person_Søknadsbarn",
+  "søknadsbarnReferanse": "PERSON_SØKNADSBARN",
   "grunnlagListe": [
     {
-      "referanse": "Person_Søknadsbarn",
+      "referanse": "PERSON_SØKNADSBARN",
       "type": "PERSON_SØKNADSBARN",
       "innhold": {
         "ident": "11111111110",
         "navn": "Trengende Søknadsbarn",
-        "fødselsdato": "2006-02-01"
+        "fødselsdato": "2004-02-01"
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": null
+    },
+    {
+      "referanse" : "person_PERSON_BARN_BIDRAGSPLIKTIG_20151217_102",
+      "type" : "PERSON_BARN_BIDRAGSPLIKTIG",
+      "innhold" : {
+        "ident" : "12121250511",
+        "navn" : null,
+        "fødselsdato" : "2015-12-17"
+      },
+      "grunnlagsreferanseListe" : [ ],
+      "gjelderReferanse" : null
     },
     {
       "referanse": "Person_Bidragsmottaker",
@@ -154,7 +165,26 @@
       "referanse": "løpende_bidrag_grunnlag_bidragspliktig",
       "type": "LØPENDE_BIDRAG",
       "innhold": {
-        "løpendeBidragListe": []
+        "løpendeBidragListe": [
+          {
+            "saksnummer": "1234567",
+            "type": "BIDRAG",
+            "løpendeBeløp": 120,
+            "samværsklasse": "SAMVÆRSKLASSE_1",
+            "beregnetBeløp": 100,
+            "faktiskBeløp": 50,
+            "gjelderBarn": "PERSON_SØKNADSBARN"
+          },
+          {
+            "saksnummer": "2345678",
+            "type": "BIDRAG",
+            "løpendeBeløp": 4150,
+            "samværsklasse": "SAMVÆRSKLASSE_2",
+            "beregnetBeløp": 3000,
+            "faktiskBeløp": 2841,
+            "gjelderBarn": "person_PERSON_BARN_BIDRAGSPLIKTIG_20151217_102"
+          }
+        ]
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Bidragspliktig"

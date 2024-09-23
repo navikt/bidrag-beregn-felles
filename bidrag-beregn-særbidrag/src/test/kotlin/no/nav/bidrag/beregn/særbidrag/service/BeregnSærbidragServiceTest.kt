@@ -65,6 +65,8 @@ internal class BeregnSærbidragServiceTest {
         every { SjablonProvider.hentSjablonBidragsevne() } returns TestUtil.dummySjablonBidragsevneListe()
         every { SjablonProvider.hentSjablonTrinnvisSkattesats() } returns TestUtil.dummySjablonTrinnvisSkattesatsListe()
 
+//        every { SumLøpendeBidragBeregning.SjablonProvider.hentSjablonTrinnvisSkattesats() } returns TestUtil.dummySjablonTrinnvisSkattesatsListe()
+
         beregnSærbidragService = BeregnSærbidragService(
             bidragsevneCore = bidragsevneCoreMock,
             sumLøpendeBidragCore = sumLøpendeBidragCoreMock,
