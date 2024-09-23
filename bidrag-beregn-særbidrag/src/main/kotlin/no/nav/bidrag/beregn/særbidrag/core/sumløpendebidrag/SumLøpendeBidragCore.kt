@@ -13,29 +13,14 @@ import no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.periode.SumLøpend
 internal class SumLøpendeBidragCore(private val sumLøpendeBidragPeriode: SumLøpendeBidragPeriode = SumLøpendeBidragPeriode()) : FellesCore() {
 
     fun beregnSumLøpendeBidrag(grunnlag: LøpendeBidragGrunnlagCore): BeregnSumLøpendeBidragResultatCore {
-//        val beregnSumLøpendeBidragGrunnlag = mapTilBusinessObject(grunnlag)
-//        val avvikListe = sumLøpendeBidragPeriode.validerInput(grunnlag)
         val beregnSumLøpendeBidragResultat =
-//            if (avvikListe.isEmpty()) {
             sumLøpendeBidragPeriode.beregnPerioder(grunnlag)
-//            } else {
-//                BeregnSumLøpendeBidragResultat(emptyList())
-//            }
         return mapFraBusinessObject(resultat = beregnSumLøpendeBidragResultat)
-//        return mapFraBusinessObject(avvikListe = avvikListe, resultat = beregnSumLøpendeBidragResultat)
     }
-
-//    private fun mapTilBusinessObject(grunnlag: BeregnSumLøpendeBidragGrunnlagCore) = GrunnlagBeregning(
-//        beregnDatoFra = grunnlag.beregnDatoFra,
-//        beregnDatoTil = grunnlag.beregnDatoTil,
-//        løpendeBidragCoreListe = grunnlag.løpendeBidragCoreListe,
-//        sjablonPeriodeListe = mapSjablonPeriodeListe(grunnlag.sjablonPeriodeListe),
-//    )
 
     private fun mapFraBusinessObject(resultat: BeregnSumLøpendeBidragResultat) = BeregnSumLøpendeBidragResultatCore(
         resultatPeriode = mapResultatPeriode(resultat.resultatPeriode),
         sjablonListe = mapSjablonGrunnlagListe(resultat.resultatPeriode),
-//        avvikListe = mapAvvik(avvikListe),
     )
 
     private fun mapResultatPeriode(resultatPeriode: ResultatPeriode) = ResultatPeriodeCore(

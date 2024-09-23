@@ -17,12 +17,12 @@
       "gjelderReferanse": null
     },
     {
-      "referanse" : "person_PERSON_BARN_BIDRAGSPLIKTIG_20151217_102",
+      "referanse" : "person_PERSON_BARN_BIDRAGSPLIKTIG_20051217_102",
       "type" : "PERSON_BARN_BIDRAGSPLIKTIG",
       "innhold" : {
         "ident" : "12121250511",
         "navn" : null,
-        "fødselsdato" : "2015-12-17"
+        "fødselsdato" : "2005-12-17"
       },
       "grunnlagsreferanseListe" : [ ],
       "gjelderReferanse" : null
@@ -64,7 +64,7 @@
         "valgt": true
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Søknadsbarn"
+      "gjelderReferanse": "PERSON_SØKNADSBARN"
     },
     {
       "referanse": "BeregningInntektRapportering_Ainntekt_BM_202008",
@@ -130,7 +130,7 @@
         "relatertTilPart": "Person_Bidragspliktig"
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Søknadsbarn"
+      "gjelderReferanse": "PERSON_SØKNADSBARN"
     },
     {
       "referanse": "Bostatus_Bidragspliktig_202008",
@@ -169,7 +169,7 @@
           {
             "saksnummer": "1234567",
             "type": "BIDRAG",
-            "løpendeBeløp": 120,
+            "løpendeBeløp": 464,
             "samværsklasse": "SAMVÆRSKLASSE_1",
             "beregnetBeløp": 100,
             "faktiskBeløp": 50,
@@ -178,11 +178,11 @@
           {
             "saksnummer": "2345678",
             "type": "BIDRAG",
-            "løpendeBeløp": 4150,
+            "løpendeBeløp": 2800,
             "samværsklasse": "SAMVÆRSKLASSE_2",
-            "beregnetBeløp": 3000,
-            "faktiskBeløp": 2841,
-            "gjelderBarn": "person_PERSON_BARN_BIDRAGSPLIKTIG_20151217_102"
+            "beregnetBeløp": 2600,
+            "faktiskBeløp": 2450,
+            "gjelderBarn": "person_PERSON_BARN_BIDRAGSPLIKTIG_20051217_102"
           }
         ]
       },

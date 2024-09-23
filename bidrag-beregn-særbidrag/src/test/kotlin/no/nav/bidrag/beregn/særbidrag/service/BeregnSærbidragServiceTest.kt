@@ -114,6 +114,8 @@ internal class BeregnSærbidragServiceTest {
     fun skalKasteUgyldigInputExceptionVedFeilReturFraBPsAndelSærbidragCore() {
         `when`(bidragsevneCoreMock.beregnBidragsevne(capture(beregnBidragsevneGrunnlagCoreCaptor)))
             .thenReturn(TestUtil.dummyBidragsevneResultatCore())
+        `when`(sumLøpendeBidragCoreMock.beregnSumLøpendeBidrag(capture(sumLøpendeBidragGrunnlagCoreCaptor)))
+            .thenReturn(TestUtil.dummySumLøpendeBidragResultatCore())
         `when`(bpAndelSærbidragCoreMock.beregnBPsAndelSærbidrag(capture(beregnBPsAndelSærbidragGrunnlagCoreCaptor)))
             .thenReturn(TestUtil.dummyBPsAndelSærbidragResultatCoreMedAvvik())
 
@@ -129,6 +131,8 @@ internal class BeregnSærbidragServiceTest {
     fun skalKasteUgyldigInputExceptionVedFeilReturFraSærbidragCore() {
         `when`(bidragsevneCoreMock.beregnBidragsevne(capture(beregnBidragsevneGrunnlagCoreCaptor)))
             .thenReturn(TestUtil.dummyBidragsevneResultatCore())
+        `when`(sumLøpendeBidragCoreMock.beregnSumLøpendeBidrag(capture(sumLøpendeBidragGrunnlagCoreCaptor)))
+            .thenReturn(TestUtil.dummySumLøpendeBidragResultatCore())
         `when`(bpAndelSærbidragCoreMock.beregnBPsAndelSærbidrag(capture(beregnBPsAndelSærbidragGrunnlagCoreCaptor)))
             .thenReturn(TestUtil.dummyBPsAndelSærbidragResultatCore())
         `when`(særbidragCoreMock.beregnSærbidrag(capture(beregnSærbidragGrunnlagCoreCaptor)))

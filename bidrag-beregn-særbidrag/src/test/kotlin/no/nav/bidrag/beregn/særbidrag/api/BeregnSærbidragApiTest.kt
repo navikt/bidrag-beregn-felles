@@ -30,7 +30,6 @@ import org.mockito.junit.jupiter.MockitoExtension
 import java.math.BigDecimal
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.time.LocalDate
 import java.time.YearMonth
 
 @ExtendWith(MockitoExtension::class)
@@ -112,26 +111,6 @@ internal class BeregnSærbidragApiTest {
     fun skalKalleCoreOgReturnereEtResultat_Eksempel03() {
         // Enkel beregning med evne lavere enn summen av løpende bidrag
         // Samværsfradrag: 1048.-
-        val dato = LocalDate.now()
-
-        Mockito.`when`(
-            (
-                mockSumLøpendeBidragBeregning.finnAlder(
-                    dato,
-                    LocalDate.of(2015, 12, 17),
-                )
-                ),
-        ).thenReturn(4)
-
-        Mockito.`when`(
-            (
-                mockSumLøpendeBidragBeregning.finnAlder(
-                    dato,
-                    LocalDate.of(2004, 2, 1),
-                )
-                ),
-        ).thenReturn(16)
-
         filnavn = "src/test/resources/testfiler/særbidrag_eksempel3.json"
         forventetBidragsevneBeløp = BigDecimal.valueOf(6149)
         forventetSumLøpendeBidrag = BigDecimal.valueOf(6150)
@@ -154,6 +133,7 @@ internal class BeregnSærbidragApiTest {
         // Beregning med manglende evne, to barn (tilpasset opprinnelig eksempel med 2 løpende bidrag)
         filnavn = "src/test/resources/testfiler/særbidrag_eksempel4.json"
         forventetBidragsevneBeløp = BigDecimal.valueOf(6149)
+        forventetSumLøpendeBidrag = BigDecimal.valueOf(9623)
         forventetBPAndelSærbidragFaktor = BigDecimal.valueOf(0.5573)
         forventetBPAndelSærbidragBeløp = BigDecimal.valueOf(6688)
         forventetSærbidragBeregnetBeløp = BigDecimal.valueOf(6688)
@@ -173,6 +153,7 @@ internal class BeregnSærbidragApiTest {
         // Beregning med manglende evne, to barn (tilpasset opprinnelig eksempel med 2 løpende bidrag)
         filnavn = "src/test/resources/testfiler/særbidrag_eksempel5.json"
         forventetBidragsevneBeløp = BigDecimal.valueOf(9962)
+        forventetSumLøpendeBidrag = BigDecimal.ZERO
         forventetBPAndelSærbidragFaktor = BigDecimal.valueOf(0.6281)
         forventetBPAndelSærbidragBeløp = BigDecimal.valueOf(7537)
         forventetSærbidragBeregnetBeløp = BigDecimal.valueOf(7537)
@@ -192,6 +173,7 @@ internal class BeregnSærbidragApiTest {
         // Enkel beregning med full evne, to barn (tilpasset opprinnelig eksempel med 2 løpende bidrag)
         filnavn = "src/test/resources/testfiler/særbidrag_eksempel6.json"
         forventetBidragsevneBeløp = BigDecimal.valueOf(10891)
+        forventetSumLøpendeBidrag = BigDecimal.ZERO
         forventetBPAndelSærbidragFaktor = BigDecimal.valueOf(0.5512)
         forventetBPAndelSærbidragBeløp = BigDecimal.valueOf(6614)
         forventetSærbidragBeregnetBeløp = BigDecimal.valueOf(6614)
@@ -211,6 +193,7 @@ internal class BeregnSærbidragApiTest {
         // Beregning med manglende evne, to barn (tilpasset opprinnelig eksempel med 2 løpende bidrag)
         filnavn = "src/test/resources/testfiler/særbidrag_eksempel7.json"
         forventetBidragsevneBeløp = BigDecimal.valueOf(6149)
+        forventetSumLøpendeBidrag = BigDecimal.valueOf(9623)
         forventetBPAndelSærbidragFaktor = BigDecimal.valueOf(0.5573)
         forventetBPAndelSærbidragBeløp = BigDecimal.valueOf(6688)
         forventetSærbidragBeregnetBeløp = BigDecimal.valueOf(6688)
@@ -230,6 +213,7 @@ internal class BeregnSærbidragApiTest {
         // Beregning med manglende evne, to barn (tilpasset opprinnelig eksempel med 2 løpende bidrag)
         filnavn = "src/test/resources/testfiler/særbidrag_eksempel8.json"
         forventetBidragsevneBeløp = BigDecimal.valueOf(6149)
+        forventetSumLøpendeBidrag = BigDecimal.valueOf(9623)
         forventetBPAndelSærbidragFaktor = BigDecimal.valueOf(0.5573)
         forventetBPAndelSærbidragBeløp = BigDecimal.valueOf(6688)
         forventetSærbidragBeregnetBeløp = BigDecimal.valueOf(6688)
@@ -249,6 +233,7 @@ internal class BeregnSærbidragApiTest {
         // Beregning med full evne, hvor barn regnes som voksen
         filnavn = "src/test/resources/testfiler/særbidrag_eksempel_barn_regnes_som_voksen.json"
         forventetBidragsevneBeløp = BigDecimal.valueOf(19091)
+        forventetSumLøpendeBidrag = BigDecimal.ZERO
         forventetBPAndelSærbidragFaktor = BigDecimal.valueOf(0.6281)
         forventetBPAndelSærbidragBeløp = BigDecimal.valueOf(7537)
         forventetSærbidragBeregnetBeløp = BigDecimal.valueOf(7537)
@@ -268,6 +253,7 @@ internal class BeregnSærbidragApiTest {
         // Beregning hvor BP's inntekt mangler
         filnavn = "src/test/resources/testfiler/særbidrag_eksempel_BPs_inntekt_mangler.json"
         forventetBidragsevneBeløp = BigDecimal.ZERO
+        forventetSumLøpendeBidrag = BigDecimal.ZERO
         forventetBPAndelSærbidragFaktor = BigDecimal("0.0000")
         forventetBPAndelSærbidragBeløp = BigDecimal.ZERO
         forventetSærbidragBeregnetBeløp = BigDecimal.ZERO
@@ -287,6 +273,7 @@ internal class BeregnSærbidragApiTest {
         // Enkel beregning med full evne, hvor deler av utgift er betalt av BP
         filnavn = "src/test/resources/testfiler/særbidrag_eksempel_deler_av_utgift_betalt_av_BP.json"
         forventetBidragsevneBeløp = BigDecimal.valueOf(11069)
+        forventetSumLøpendeBidrag = BigDecimal.ZERO
         forventetBPAndelSærbidragFaktor = BigDecimal.valueOf(0.6056)
         forventetBPAndelSærbidragBeløp = BigDecimal.valueOf(4239)
         forventetSærbidragBeregnetBeløp = BigDecimal.valueOf(4239)
@@ -306,6 +293,7 @@ internal class BeregnSærbidragApiTest {
         // Enkel beregning med full evne, hvor BP har betalt for mye ifht godkjent beløp
         filnavn = "src/test/resources/testfiler/særbidrag_eksempel_BP_har_betalt_mer_enn_godkjent_beløp.json"
         forventetBidragsevneBeløp = BigDecimal.valueOf(11069)
+        forventetSumLøpendeBidrag = BigDecimal.ZERO
         forventetBPAndelSærbidragFaktor = BigDecimal.valueOf(0.6056)
         forventetBPAndelSærbidragBeløp = BigDecimal.valueOf(4239)
         forventetSærbidragBeregnetBeløp = BigDecimal.valueOf(4239)
@@ -325,6 +313,7 @@ internal class BeregnSærbidragApiTest {
         // Enkel beregning med full evne, hvor barnet er selvforsørget
         filnavn = "src/test/resources/testfiler/særbidrag_eksempel_barnet_er_selvforsørget.json"
         forventetBidragsevneBeløp = BigDecimal.valueOf(11069)
+        forventetSumLøpendeBidrag = BigDecimal.ZERO
         forventetBPAndelSærbidragFaktor = BigDecimal.ZERO
         forventetBPAndelSærbidragBeløp = BigDecimal.ZERO
         forventetSærbidragBeregnetBeløp = BigDecimal.ZERO

@@ -11,14 +11,6 @@ class SumLøpendeBidragPeriode(private val sumLøpendeBidragBeregning: SumLøpen
 
     fun beregnPerioder(grunnlag: LøpendeBidragGrunnlagCore): BeregnSumLøpendeBidragResultat {
         // Kaller beregningsmodulen for å beregne resultat
-//        val beregningGrunnlag =
-//            GrunnlagBeregning(
-//                beregnDatoFra = grunnlag.beregnDatoFra,
-//                beregnDatoTil = grunnlag.beregnDatoTil,
-//                løpendeBidragCoreListe = grunnlag.løpendeBidragCoreListe,
-//                sjablonPeriodeListe = sjablonliste,
-//            )
-
         val resultat =
             ResultatPeriode(
                 periode = Periode(grunnlag.beregnDatoFra, grunnlag.beregnDatoTil),
@@ -28,17 +20,4 @@ class SumLøpendeBidragPeriode(private val sumLøpendeBidragBeregning: SumLøpen
 
         return BeregnSumLøpendeBidragResultat(resultat)
     }
-
-    // Validerer at input-verdier til beregning av sum løpende bidrag er gyldige
-    // Setter alle valideringer til false ettersom det bare er en periode
-//    fun validerInput(grunnlag: LøpendeBidragGrunnlagCore): List<Avvik> {
-//        // Sjekk beregn dato fra/til
-//        val avvikListe =
-//            PeriodeUtil.validerBeregnPeriodeInput(
-//                beregnDatoFom = grunnlag.beregnDatoFra,
-//                beregnDatoTil = grunnlag.beregnDatoTil,
-//            ).toMutableList()
-//
-//        return avvikListe
-//    }
 }

@@ -56,14 +56,6 @@ internal object SumLøpendeBidragCoreMapper : CoreMapper() {
             grunnlagsreferanseListe = emptyList(),
             sjablonPeriodeListe = sjablonPeriodeListe,
         )
-
-//        return BeregnSumLøpendeBidragGrunnlagCore(
-//            beregnDatoFra = beregnGrunnlag.periode.fom.atDay(1),
-//            beregnDatoTil = beregnGrunnlag.periode.til!!.atDay(1),
-//            referanse = grunnlag.first().referanse,
-//            løpendeBidragCoreListe = løpendeBidragCore,
-//            sjablonPeriodeListe = sjablonPeriodeCoreListe,
-//        )
     }
 
     private fun finnFødselsdatoBarn(beregnGrunnlag: List<GrunnlagDto>, referanse: String): LocalDate =

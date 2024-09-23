@@ -10,15 +10,6 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagInnhold
 import java.math.BigDecimal
 import java.time.LocalDate
 
-// Grunnlag periode
-// data class BeregnSumLøpendeBidragGrunnlagCore(
-//    val beregnDatoFra: LocalDate,
-//    val beregnDatoTil: LocalDate,
-//    val referanse: String,
-//    val løpendeBidragCoreListe: List<LøpendeBidragCore>,
-//    val sjablonPeriodeListe: List<SjablonPeriodeCore>,
-// )
-
 data class LøpendeBidragGrunnlagCore(
     val beregnDatoFra: LocalDate,
     val beregnDatoTil: LocalDate,
