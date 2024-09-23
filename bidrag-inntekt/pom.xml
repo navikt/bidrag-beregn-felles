@@ -14,7 +14,7 @@
     <properties>
         <revision>1.0-SNAPSHOT</revision>
         <wiremock.version>2.35.2</wiremock.version>
-        <jollyday.version>0.30.0</jollyday.version>
+        <jollyday.version>0.32.0</jollyday.version>
     </properties>
 
     <dependencies>

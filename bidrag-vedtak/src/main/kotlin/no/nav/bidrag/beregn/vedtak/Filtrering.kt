@@ -13,6 +13,14 @@ import java.math.BigDecimal
 @Service
 class Vedtaksfiltrering {
 
+    /**
+     * Finner siste manuelle vedtak i en samling vedtak knyttet til en bestemt stønad. Returnerer null dersom metoden
+     * ikke finner noe manuelt vedtak. Dette kan ansees som en unntaktstilstand.
+     *
+     * @param vedtak samling vedtak for stønad som sendes inn til metoden
+     * @param personidentSøknadsbarn personidenSøknadsbarn typisk fødselsnummer til søknadsbarnet stønaden og vedtakene gjelder for
+     * @return siste manuelle vedtak for stønaden
+     */
     fun finneSisteManuelleVedtak(vedtak: Collection<VedtakForStønad>, personidentSøknadsbarn: Personident): VedtakForStønad? {
         val iterator = Vedtaksiterator(vedtak.filter { it.filtrereBortIrrelevanteVedtak() }.tilVedtaksdetaljer())
 
@@ -57,8 +65,8 @@ class Vedtaksfiltrering {
             return vedtaksdetaljer.vedtak
         }
 
-        secureLogger.error { "Fant ikke tidligere vedtak for barn med personident $personidentSøknadsbarn" }
-        throw IllegalStateException("Fant ikke tidligere vedtak")
+        secureLogger.warn { "Fant ikke tidligere vedtak for barn med personident $personidentSøknadsbarn" }
+        return null
     }
 
     private fun VedtakForStønad.filtrereBortIrrelevanteVedtak(): Boolean {
