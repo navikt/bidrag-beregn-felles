@@ -31,12 +31,11 @@ class VedtaksfiltreringTest {
 
     @Test
     fun `skal returnere null hvis ingen manuelle vedtak`() {
-
         // gitt
         val vedtakssett = oppretteVedtakssett(
             setOf(
-                OppretteVedtakRequest(Y2K20, Y2K22, B1000,  Beslutningsårsak.INDEKSREGULERING),
-                OppretteVedtakRequest(Y2K22, null, B1200, Beslutningsårsak.INDEKSREGULERING,),
+                OppretteVedtakRequest(Y2K20, Y2K22, B1000, Beslutningsårsak.INDEKSREGULERING),
+                OppretteVedtakRequest(Y2K22, null, B1200, Beslutningsårsak.INDEKSREGULERING),
                 OppretteVedtakRequest(Y2K23, Y2K24, B1200, Beslutningsårsak.INDEKSREGULERING),
                 OppretteVedtakRequest(Y2K24, null, B1200, Beslutningsårsak.INDEKSREGULERING),
             ),
@@ -48,7 +47,6 @@ class VedtaksfiltreringTest {
         // så
         vedtak.shouldBeNull()
     }
-
 
     @Test
     fun `skal hente ut oppfostringsbidrag`() {
