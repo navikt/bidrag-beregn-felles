@@ -168,8 +168,8 @@ class YtelserServiceOvergangsstønad {
         return summertInntektPostListeTilÅrsinntekt
     }
 
-    private fun beregnInntektOmgjortTilÅrsbeløp(beløp: BigDecimal, antallMånederMedDataIPerioden: Int): BigDecimal {
-        return if (antallMånederMedDataIPerioden == 0) {
+    private fun beregnInntektOmgjortTilÅrsbeløp(beløp: BigDecimal, antallMånederMedDataIPerioden: Int): BigDecimal =
+        if (antallMånederMedDataIPerioden == 0) {
             BigDecimal.ZERO
         } else {
             val skalertBeløp = beløp.setScale(10, RoundingMode.HALF_UP) // Øker scale for bedre presisjon
@@ -177,7 +177,6 @@ class YtelserServiceOvergangsstønad {
             val årligInntekt = månedligInntekt.multiply(BigDecimal.valueOf(12))
             årligInntekt
         }
-    }
 
     // Summerer og grupperer ainntekter pr år
     private fun summerAarsinntekter(

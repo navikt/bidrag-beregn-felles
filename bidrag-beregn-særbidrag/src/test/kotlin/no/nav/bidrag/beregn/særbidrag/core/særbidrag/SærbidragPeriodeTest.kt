@@ -8,6 +8,7 @@ import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BeregnSærbidragGrunnl
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BetaltAvBpPeriode
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BidragsevnePeriode
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.ResultatBeregning
+import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.SumLøpendeBidragPeriode
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.periode.SærbidragPeriode
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import org.assertj.core.api.Assertions.assertThat
@@ -84,6 +85,7 @@ internal class SærbidragPeriodeTest {
         søknadsbarnPersonId = "11111111110",
         betaltAvBpPeriodeListe = lagBetaltAvBPGrunnlag(avvikBetaltAvBP),
         bidragsevnePeriodeListe = lagBidragsevneGrunnlag(avvikBidragsevne),
+        sumLøpendeBidrag = lagSumLøpendeBidragGrunnlag(),
         bPsAndelSærbidragPeriodeListe = lagBPsAndelSærbidragGrunnlag(avvikBPsAndelSærbidrag),
     )
 
@@ -123,6 +125,16 @@ internal class SærbidragPeriodeTest {
         ),
     )
 
+    private fun lagSumLøpendeBidragGrunnlag() = SumLøpendeBidragPeriode(
+        referanse = TestUtil.BIDRAGSEVNE_REFERANSE,
+        Periode(
+            datoFom = LocalDate.parse("2020-01-01"),
+            datoTil = LocalDate.parse("2020-02-01"),
+        ),
+        sum = BigDecimal.valueOf(5000),
+
+    )
+
     private fun lagBPsAndelSærbidragGrunnlag(avvik: Boolean) = listOf(
         BPsAndelSærbidragPeriode(
             referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,
@@ -143,13 +155,11 @@ internal class SærbidragPeriodeTest {
         ),
     )
 
-    private fun byggResultatBeregning(): ResultatBeregning {
-        return ResultatBeregning(
-            beregnetBeløp = BigDecimal.valueOf(6000),
-            resultatKode = Resultatkode.SÆRBIDRAG_INNVILGET,
-            resultatBeløp = BigDecimal.valueOf(4000),
-        )
-    }
+    private fun byggResultatBeregning(): ResultatBeregning = ResultatBeregning(
+        beregnetBeløp = BigDecimal.valueOf(6000),
+        resultatKode = Resultatkode.SÆRBIDRAG_INNVILGET,
+        resultatBeløp = BigDecimal.valueOf(4000),
+    )
 
     companion object MockitoHelper {
         fun <T> any(): T = Mockito.any()

@@ -97,46 +97,44 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
     private fun lagSluttperiodeOgResultatperioder(
         resultatPeriodeCoreListe: List<ResultatPeriodeCore>,
         grunnlagReferanseListe: MutableList<GrunnlagDto>,
-    ): List<ResultatPeriode> {
-        return resultatPeriodeCoreListe.map { resultatPeriode ->
+    ): List<ResultatPeriode> = resultatPeriodeCoreListe.map { resultatPeriode ->
 
-            val søknadsbarnReferanse = grunnlagReferanseListe.filter { it.type == Grunnlagstype.PERSON_SØKNADSBARN }.map { it.referanse }.first()
-            val sluttberegningReferanse = opprettSluttberegningreferanse(
-                barnreferanse = søknadsbarnReferanse,
-                periode = ÅrMånedsperiode(fom = resultatPeriode.periode.datoFom, til = resultatPeriode.periode.datoTil),
-            )
+        val søknadsbarnReferanse = grunnlagReferanseListe.filter { it.type == Grunnlagstype.PERSON_SØKNADSBARN }.map { it.referanse }.first()
+        val sluttberegningReferanse = opprettSluttberegningreferanse(
+            barnreferanse = søknadsbarnReferanse,
+            periode = ÅrMånedsperiode(fom = resultatPeriode.periode.datoFom, til = resultatPeriode.periode.datoTil),
+        )
 
-            // Oppretter sluttberegning, som legges til i grunnlagslista
-            grunnlagReferanseListe.add(
-                0,
-                GrunnlagDto(
-                    referanse = sluttberegningReferanse,
-                    type = Grunnlagstype.SLUTTBEREGNING_FORSKUDD,
-                    innhold = POJONode(
-                        SluttberegningForskudd(
-                            periode = ÅrMånedsperiode(resultatPeriode.periode.datoFom, resultatPeriode.periode.datoTil),
-                            beløp = resultatPeriode.resultat.beløp,
-                            resultatKode = resultatPeriode.resultat.kode,
-                            aldersgruppe = resultatPeriode.resultat.aldersgruppe,
-                        ),
+        // Oppretter sluttberegning, som legges til i grunnlagslista
+        grunnlagReferanseListe.add(
+            0,
+            GrunnlagDto(
+                referanse = sluttberegningReferanse,
+                type = Grunnlagstype.SLUTTBEREGNING_FORSKUDD,
+                innhold = POJONode(
+                    SluttberegningForskudd(
+                        periode = ÅrMånedsperiode(resultatPeriode.periode.datoFom, resultatPeriode.periode.datoTil),
+                        beløp = resultatPeriode.resultat.beløp,
+                        resultatKode = resultatPeriode.resultat.kode,
+                        aldersgruppe = resultatPeriode.resultat.aldersgruppe,
                     ),
-                    grunnlagsreferanseListe = resultatPeriode.grunnlagsreferanseListe,
-                    gjelderReferanse = søknadsbarnReferanse,
                 ),
-            )
+                grunnlagsreferanseListe = resultatPeriode.grunnlagsreferanseListe,
+                gjelderReferanse = søknadsbarnReferanse,
+            ),
+        )
 
-            // Oppretter resultatperioder, som refererer til sluttberegning
-            ResultatPeriode(
-                periode = ÅrMånedsperiode(fom = resultatPeriode.periode.datoFom, til = resultatPeriode.periode.datoTil),
-                resultat =
-                ResultatBeregning(
-                    belop = resultatPeriode.resultat.beløp,
-                    kode = resultatPeriode.resultat.kode,
-                    regel = resultatPeriode.resultat.regel,
-                ),
-                grunnlagsreferanseListe = listOf(sluttberegningReferanse),
-            )
-        }
+        // Oppretter resultatperioder, som refererer til sluttberegning
+        ResultatPeriode(
+            periode = ÅrMånedsperiode(fom = resultatPeriode.periode.datoFom, til = resultatPeriode.periode.datoTil),
+            resultat =
+            ResultatBeregning(
+                belop = resultatPeriode.resultat.beløp,
+                kode = resultatPeriode.resultat.kode,
+                regel = resultatPeriode.resultat.regel,
+            ),
+            grunnlagsreferanseListe = listOf(sluttberegningReferanse),
+        )
     }
 
     // Lager en liste over resultatgrunnlag som inneholder:

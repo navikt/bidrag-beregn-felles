@@ -28,8 +28,8 @@ class KontantstøtteService {
     }
 
     // Summerer kontantstøtte for angitt barn
-    fun beregnKontantstøttePerBarn(kontantstøtteListePerBarn: List<Kontantstøtte>): List<SummertÅrsinntekt> {
-        return if (kontantstøtteListePerBarn.isNotEmpty()) {
+    fun beregnKontantstøttePerBarn(kontantstøtteListePerBarn: List<Kontantstøtte>): List<SummertÅrsinntekt> =
+        if (kontantstøtteListePerBarn.isNotEmpty()) {
             val kontantstøtteListeUt = mutableListOf<SummertÅrsinntekt>()
             val barnPersonId = kontantstøtteListePerBarn.first().barnPersonId
 
@@ -53,11 +53,8 @@ class KontantstøtteService {
         } else {
             emptyList()
         }
-    }
 
-    private fun finnPeriodeTil(periodeTil: LocalDate?): YearMonth? {
-        return periodeTil?.minusMonths(1)?.let {
-            YearMonth.of(it.year, it.month)
-        }
+    private fun finnPeriodeTil(periodeTil: LocalDate?): YearMonth? = periodeTil?.minusMonths(1)?.let {
+        YearMonth.of(it.year, it.month)
     }
 }

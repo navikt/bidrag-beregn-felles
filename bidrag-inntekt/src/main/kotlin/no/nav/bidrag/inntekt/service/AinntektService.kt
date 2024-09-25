@@ -103,17 +103,15 @@ class AinntektService {
         // Avviker fra default hvis beløp skal regnes om til årsverdi
         multiplikator: Int = 1,
         scale: Int = 0,
-    ): List<InntektPost> {
-        return inntektPostListe
-            .groupBy(InntektPost::kode)
-            .map {
-                InntektPost(
-                    kode = it.key,
-                    beløp = it.value.sumOf(InntektPost::beløp).multiply(BigDecimal.valueOf(multiplikator.toLong()))
-                        .setScale(scale, RoundingMode.HALF_UP),
-                )
-            }
-    }
+    ): List<InntektPost> = inntektPostListe
+        .groupBy(InntektPost::kode)
+        .map {
+            InntektPost(
+                kode = it.key,
+                beløp = it.value.sumOf(InntektPost::beløp).multiply(BigDecimal.valueOf(multiplikator.toLong()))
+                    .setScale(scale, RoundingMode.HALF_UP),
+            )
+        }
 
     // Summerer og grupperer ainntekter pr år
     private fun summerAarsinntekter(
@@ -359,8 +357,4 @@ class AinntektService {
     }
 }
 
-data class Detaljpost(
-    val beløp: BigDecimal,
-    val kode: String,
-    val referanse: String,
-)
+data class Detaljpost(val beløp: BigDecimal, val kode: String, val referanse: String)

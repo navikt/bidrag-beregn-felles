@@ -15,12 +15,10 @@ import java.time.LocalDate
 class SivilstandApi {
     companion object {
         private val serviceV1 = SivilstandServiceV1()
-        fun beregnV1(virkningstidspunkt: LocalDate, sivilstandGrunnlagDtoListe: List<SivilstandGrunnlagDto>): SivilstandBeregnet {
-            return serviceV1.beregn(virkningstidspunkt, sivilstandGrunnlagDtoListe)
-        }
+        fun beregnV1(virkningstidspunkt: LocalDate, sivilstandGrunnlagDtoListe: List<SivilstandGrunnlagDto>): SivilstandBeregnet =
+            serviceV1.beregn(virkningstidspunkt, sivilstandGrunnlagDtoListe)
         private val serviceV2 = SivilstandServiceV2()
-        fun beregnV2(virkningstidspunkt: LocalDate, sivilstandRequest: SivilstandRequest): List<Sivilstand> {
-            return serviceV2.beregn(virkningstidspunkt, sivilstandRequest)
-        }
+        fun beregnV2(virkningstidspunkt: LocalDate, sivilstandRequest: SivilstandRequest): List<Sivilstand> =
+            serviceV2.beregn(virkningstidspunkt, sivilstandRequest)
     }
 }

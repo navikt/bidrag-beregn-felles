@@ -14,6 +14,7 @@ import no.nav.bidrag.beregn.core.dto.AvvikCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto.BeregnBidragsevneResultatCore
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.BeregnBPsAndelSærbidragResultatCore
+import no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.dto.BeregnSumLøpendeBidragResultatCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BeregnSærbidragResultatCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.ResultatBeregningCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.ResultatPeriodeCore
@@ -35,6 +36,7 @@ import no.nav.bidrag.transport.behandling.beregning.særbidrag.BeregnetSærbidra
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUtgift
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.LøpendeBidragGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
@@ -52,6 +54,7 @@ object TestUtil {
     const val VOKSNE_I_HUSSTANDEN_REFERANSE = "VOKSNE_I_HUSSTANDEN_REFERANSE"
     private const val SAMVÆRSKLASSE_REFERANSE = "SAMVÆRSKLASSE_REFERANSE"
     const val UTGIFT_REFERANSE = "UTGIFT_REFERANSE"
+    const val LØPENDE_BIDRAG_GRUNNLAG = "LØPENDE_BIDRAG_GRUNNLAG"
 
     fun byggTotalSærbidragGrunnlag(): BeregnGrunnlag {
         val grunnlagListe = ArrayList<GrunnlagDto>()
@@ -179,6 +182,19 @@ object TestUtil {
                 gjelderReferanse = "Person_Bidragsmottaker",
             ),
         )
+        grunnlagListe.add(
+            GrunnlagDto(
+                referanse = "løpende_Bidrag_grunnlag",
+                type = Grunnlagstype.LØPENDE_BIDRAG,
+                innhold = POJONode(
+                    LøpendeBidragGrunnlag(
+                        løpendeBidragListe = emptyList(),
+                    ),
+                ),
+                grunnlagsreferanseListe = emptyList(),
+                gjelderReferanse = "Person_Bidragspliktig",
+            ),
+        )
 
         return BeregnGrunnlag(
             periode = ÅrMånedsperiode(fom = LocalDate.parse("2020-08-01"), til = LocalDate.parse("2020-09-01")),
@@ -213,6 +229,26 @@ object TestUtil {
             resultatPeriodeListe = bidragPeriodeResultatListe,
             sjablonListe = mutableListOf(),
             avvikListe = emptyList(),
+        )
+    }
+
+    // Bygger opp BeregnBidragsevneResultatCore
+    fun dummySumLøpendeBidragResultatCore(): BeregnSumLøpendeBidragResultatCore {
+        val resultat = no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.dto.ResultatPeriodeCore(
+            periode = PeriodeCore(datoFom = LocalDate.parse("2020-08-01"), datoTil = LocalDate.parse("2020-09-01")),
+            resultat = no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.dto.ResultatBeregningCore(BigDecimal.valueOf(100)),
+            grunnlagsreferanseListe = mutableListOf(
+                INNTEKT_REFERANSE,
+                SKATTEKLASSE_REFERANSE,
+                BOSTATUS_REFERANSE,
+                BARN_I_HUSSTANDEN_REFERANSE,
+                SAMVÆRSKLASSE_REFERANSE,
+            ),
+        )
+
+        return BeregnSumLøpendeBidragResultatCore(
+            resultatPeriode = resultat,
+            sjablonListe = mutableListOf(),
         )
     }
 
@@ -1104,25 +1140,15 @@ object TestUtil {
         return sjablonTrinnvisSkattesatsListe
     }
 
-    fun byggDummySærbidragGrunnlag(): BeregnGrunnlag {
-        return byggDummySærbidragGrunnlag("")
-    }
+    fun byggDummySærbidragGrunnlag(): BeregnGrunnlag = byggDummySærbidragGrunnlag("")
 
-    fun byggSærbidragGrunnlagUtenBeregningsperiodeTil(): BeregnGrunnlag {
-        return byggDummySærbidragGrunnlag("beregningsperiodeTil")
-    }
+    fun byggSærbidragGrunnlagUtenBeregningsperiodeTil(): BeregnGrunnlag = byggDummySærbidragGrunnlag("beregningsperiodeTil")
 
-    fun byggSærbidragGrunnlagUtenGrunnlagListe(): BeregnGrunnlag {
-        return byggDummySærbidragGrunnlag("grunnlagListe")
-    }
+    fun byggSærbidragGrunnlagUtenGrunnlagListe(): BeregnGrunnlag = byggDummySærbidragGrunnlag("grunnlagListe")
 
-    fun byggSærbidragGrunnlagUtenReferanse(): BeregnGrunnlag {
-        return byggDummySærbidragGrunnlag("referanse")
-    }
+    fun byggSærbidragGrunnlagUtenReferanse(): BeregnGrunnlag = byggDummySærbidragGrunnlag("referanse")
 
-    fun byggSærbidragGrunnlagUtenInnhold(): BeregnGrunnlag {
-        return byggDummySærbidragGrunnlag("innhold")
-    }
+    fun byggSærbidragGrunnlagUtenInnhold(): BeregnGrunnlag = byggDummySærbidragGrunnlag("innhold")
 
     // Bygger opp BeregnGrunnlag
     private fun byggDummySærbidragGrunnlag(nullVerdi: String): BeregnGrunnlag {

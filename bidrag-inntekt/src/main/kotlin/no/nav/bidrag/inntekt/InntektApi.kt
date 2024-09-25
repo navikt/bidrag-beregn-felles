@@ -26,9 +26,7 @@ import org.springframework.stereotype.Service
  *  Åpne outbound traffik for `KODEVERK_URL` i nais konfigurasjonen
  */
 @Service
-class InntektApi(
-    @Value("\${KODEVERK_URL}") val url: String,
-) {
+class InntektApi(@Value("\${KODEVERK_URL}") val url: String) {
     private val inntektService: InntektService = InntektService()
 
     @PostConstruct
@@ -36,7 +34,5 @@ class InntektApi(
         KodeverkProvider.initialiser(url)
     }
 
-    fun transformerInntekter(request: TransformerInntekterRequest): TransformerInntekterResponse {
-        return inntektService.transformerInntekter(request)
-    }
+    fun transformerInntekter(request: TransformerInntekterRequest): TransformerInntekterResponse = inntektService.transformerInntekter(request)
 }

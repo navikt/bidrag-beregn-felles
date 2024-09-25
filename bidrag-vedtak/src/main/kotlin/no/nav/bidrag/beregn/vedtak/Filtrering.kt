@@ -75,11 +75,7 @@ class Vedtaksfiltrering {
     }
 }
 
-data class Vedtaksdetaljer(
-    var erOmgjort: Boolean = false,
-    val vedtak: VedtakForStønad,
-    val periode: VedtakPeriodeDto,
-)
+data class Vedtaksdetaljer(var erOmgjort: Boolean = false, val vedtak: VedtakForStønad, val periode: VedtakPeriodeDto)
 
 class Vedtaksiterator(vedtakssamling: Collection<Vedtaksdetaljer>) : Iterator<Vedtaksdetaljer> {
 
@@ -91,9 +87,7 @@ class Vedtaksiterator(vedtakssamling: Collection<Vedtaksdetaljer>) : Iterator<Ve
         forberedeNeste()
     }
 
-    override fun hasNext(): Boolean {
-        return nesteVedtak != null
-    }
+    override fun hasNext(): Boolean = nesteVedtak != null
 
     override fun next(): Vedtaksdetaljer {
         if (!hasNext()) {

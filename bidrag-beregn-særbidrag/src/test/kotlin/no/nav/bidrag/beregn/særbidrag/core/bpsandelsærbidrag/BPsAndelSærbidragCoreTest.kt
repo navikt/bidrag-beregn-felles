@@ -194,9 +194,7 @@ internal class BPsAndelSærbidragCoreTest {
         return BeregnBPsAndelSærbidragResultat(periodeResultatListe)
     }
 
-    private fun byggAvvik(): List<Avvik> {
-        return listOf(
-            Avvik(avvikTekst = "beregnDatoTil må være etter beregnDatoFra", avvikType = Avvikstype.DATO_FOM_ETTER_DATO_TIL),
-        )
-    }
+    private fun byggAvvik(): List<Avvik> = listOf(
+        Avvik(avvikTekst = "beregnDatoTil må være etter beregnDatoFra", avvikType = Avvikstype.DATO_FOM_ETTER_DATO_TIL),
+    )
 }

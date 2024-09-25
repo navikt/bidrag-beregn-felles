@@ -23,22 +23,11 @@ data class BeregnForskuddGrunnlagCore(
     var sjablonPeriodeListe: List<SjablonPeriodeCore>,
 )
 
-data class SøknadsbarnCore(
-    val referanse: String,
-    val fødselsdato: LocalDate,
-)
+data class SøknadsbarnCore(val referanse: String, val fødselsdato: LocalDate)
 
-data class BostatusPeriodeCore(
-    val referanse: String,
-    val periode: PeriodeCore,
-    val kode: String,
-)
+data class BostatusPeriodeCore(val referanse: String, val periode: PeriodeCore, val kode: String)
 
-data class SivilstandPeriodeCore(
-    val referanse: String,
-    val periode: PeriodeCore,
-    val kode: String,
-)
+data class SivilstandPeriodeCore(val referanse: String, val periode: PeriodeCore, val kode: String)
 
 // Resultat
 data class BeregnetForskuddResultatCore(
@@ -47,15 +36,6 @@ data class BeregnetForskuddResultatCore(
     val avvikListe: List<AvvikCore>,
 )
 
-data class ResultatPeriodeCore(
-    val periode: PeriodeCore,
-    val resultat: ResultatBeregningCore,
-    val grunnlagsreferanseListe: List<String>,
-)
+data class ResultatPeriodeCore(val periode: PeriodeCore, val resultat: ResultatBeregningCore, val grunnlagsreferanseListe: List<String>)
 
-data class ResultatBeregningCore(
-    val beløp: BigDecimal,
-    val kode: Resultatkode,
-    val regel: String,
-    val aldersgruppe: AldersgruppeForskudd,
-)
+data class ResultatBeregningCore(val beløp: BigDecimal, val kode: Resultatkode, val regel: String, val aldersgruppe: AldersgruppeForskudd)

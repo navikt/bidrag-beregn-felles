@@ -34,6 +34,4 @@ data class ResultatPeriodeCore(
     override val grunnlagsreferanseListe: MutableList<String>,
 ) : IResultatPeriode
 
-data class ResultatBeregningCore(
-    val beløp: BigDecimal,
-)
+data class ResultatBeregningCore(val beløp: BigDecimal)

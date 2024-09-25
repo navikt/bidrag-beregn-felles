@@ -27,8 +27,8 @@ class BarnetilleggPensjonService {
     }
 
     // Summerer barentillegg for angitt barn
-    fun beregnBarnetilleggPerBarn(barnetilleggListePerBarn: List<Barnetillegg>): List<SummertÅrsinntekt> {
-        return if (barnetilleggListePerBarn.isNotEmpty()) {
+    fun beregnBarnetilleggPerBarn(barnetilleggListePerBarn: List<Barnetillegg>): List<SummertÅrsinntekt> =
+        if (barnetilleggListePerBarn.isNotEmpty()) {
             val barnetilleggListeUt = mutableListOf<SummertÅrsinntekt>()
             val barnPersonId = barnetilleggListePerBarn.first().barnPersonId
 
@@ -52,11 +52,8 @@ class BarnetilleggPensjonService {
         } else {
             emptyList()
         }
-    }
 
-    private fun finnPeriodeTil(periodeTil: LocalDate?): YearMonth? {
-        return periodeTil?.minusMonths(1)?.let {
-            YearMonth.of(it.year, it.month)
-        }
+    private fun finnPeriodeTil(periodeTil: LocalDate?): YearMonth? = periodeTil?.minusMonths(1)?.let {
+        YearMonth.of(it.year, it.month)
     }
 }

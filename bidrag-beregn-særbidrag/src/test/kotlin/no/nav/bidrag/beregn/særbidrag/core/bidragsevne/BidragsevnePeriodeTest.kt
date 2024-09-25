@@ -135,10 +135,8 @@ internal class BidragsevnePeriodeTest {
         ),
     )
 
-    private fun byggResultatBeregning(): ResultatBeregning {
-        return ResultatBeregning(
-            beløp = BigDecimal.valueOf(666),
-            sjablonListe = emptyList(),
-        )
-    }
+    private fun byggResultatBeregning(): ResultatBeregning = ResultatBeregning(
+        beløp = BigDecimal.valueOf(666),
+        sjablonListe = emptyList(),
+    )
 }
