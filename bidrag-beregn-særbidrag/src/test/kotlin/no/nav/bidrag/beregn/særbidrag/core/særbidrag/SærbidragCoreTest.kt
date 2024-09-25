@@ -4,7 +4,7 @@ import no.nav.bidrag.beregn.core.bo.Avvik
 import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.særbidrag.TestUtil
-import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.SumLøpendeBidragCoreCoreTest
+import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.BidragsevneCoreTest
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BPsAndelSærbidrag
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BeregnSærbidragResultat
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BetaltAvBp
@@ -52,7 +52,7 @@ internal class SærbidragCoreTest {
     @DisplayName("Beregning med ugyldig input gir avvik")
     @Test
     fun beregningMedUgyldigInputGirAvvik() {
-        `when`(særbidragPeriodeMock.validerInput(SumLøpendeBidragCoreCoreTest.any())).thenReturn(avvikListe)
+        `when`(særbidragPeriodeMock.validerInput(BidragsevneCoreTest.any())).thenReturn(avvikListe)
 
         val resultatCore = særbidragCore.beregnSærbidrag(beregnSærbidragGrunnlagCore)
 
@@ -65,8 +65,8 @@ internal class SærbidragCoreTest {
     @DisplayName("Beregning med gyldig input gir korrekt resultat")
     @Test
     fun beregningMedGyldigInputGirKorrektResultat() {
-        `when`(særbidragPeriodeMock.validerInput(SumLøpendeBidragCoreCoreTest.any())).thenReturn(emptyList())
-        `when`(særbidragPeriodeMock.beregnPerioder(SumLøpendeBidragCoreCoreTest.any())).thenReturn(beregnSærbidragPeriodeResultat)
+        `when`(særbidragPeriodeMock.validerInput(BidragsevneCoreTest.any())).thenReturn(emptyList())
+        `when`(særbidragPeriodeMock.beregnPerioder(BidragsevneCoreTest.any())).thenReturn(beregnSærbidragPeriodeResultat)
 
         val resultatCore = særbidragCore.beregnSærbidrag(beregnSærbidragGrunnlagCore)
 

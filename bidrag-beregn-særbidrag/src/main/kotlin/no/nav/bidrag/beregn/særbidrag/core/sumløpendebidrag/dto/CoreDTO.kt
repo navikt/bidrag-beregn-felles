@@ -22,6 +22,7 @@ data class LøpendeBidragGrunnlagCore(
 data class LøpendeBidragCore(
     val saksnummer: Saksnummer,
     val fødselsdatoBarn: LocalDate,
+    val referanseBarn: String,
     val løpendeBeløp: BigDecimal,
     val samværsklasse: Samværsklasse,
     val beregnetBeløp: BigDecimal,

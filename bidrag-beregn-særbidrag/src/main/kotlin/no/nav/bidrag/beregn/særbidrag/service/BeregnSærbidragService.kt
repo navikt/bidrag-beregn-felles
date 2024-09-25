@@ -51,6 +51,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUtgift
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningVoksneIHustand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonBidragsevnePeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSamværsfradragPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonTrinnvisSkattesats
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonTrinnvisSkattesatsPeriode
@@ -178,8 +179,6 @@ internal class BeregnSærbidragService(
             lagGrunnlagslisteSumLøpendeBidrag(
                 beregnGrunnlag = beregnGrunnlag,
                 resultatFraCore = sumLøpendeBidragResultatFraCore,
-                grunnlagTilCore = sumLøpendeBidragGrunnlagCore,
-                bidragspliktigReferanse = bidragspliktigReferanse,
             ),
         )
 
@@ -456,8 +455,6 @@ internal class BeregnSærbidragService(
     private fun lagGrunnlagslisteSumLøpendeBidrag(
         beregnGrunnlag: BeregnGrunnlag,
         resultatFraCore: BeregnSumLøpendeBidragResultatCore,
-        grunnlagTilCore: LøpendeBidragGrunnlagCore,
-        bidragspliktigReferanse: String,
     ): MutableList<GrunnlagDto> {
         val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
         val grunnlagReferanseListe =
@@ -475,7 +472,6 @@ internal class BeregnSærbidragService(
 
         // Mapper ut grunnlag og justerer referanser basert på lister over sjabloner som er brukt i beregningen
         resultatGrunnlagListe.addAll(mapSjablonSamværsfradragGrunnlag(resultatFraCore.sjablonListe))
-//        justerReferanserForSjabloner(resultatFraCore.resultatPeriodeListe)
 
         return resultatGrunnlagListe
     }
@@ -933,21 +929,27 @@ internal class BeregnSærbidragService(
     }
 
     // Mapper ut sjablon for samværsfradrag
-    private fun mapSjablonSamværsfradragGrunnlag(sjablonListe: List<SjablonResultatGrunnlagCore>) = sjablonListe
-        .filter { sjablon -> sjablon.navn == SjablonInnholdNavn.FRADRAG_BELØP.navn }
-        .map {
-            GrunnlagDto(
-                referanse = it.referanse,
-                type = Grunnlagstype.SJABLON_SAMVARSFRADRAG,
-                innhold = POJONode(
-                    SjablonSjablontallPeriode(
-                        periode = ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil),
-                        sjablon = SjablonTallNavn.from(it.navn),
-                        verdi = it.verdi,
+    private fun mapSjablonSamværsfradragGrunnlag(sjablonListe: List<SjablonResultatGrunnlagCore>): List<GrunnlagDto> {
+        val samværsfradrag = sjablonListe.firstOrNull { it.navn == SjablonInnholdNavn.FRADRAG_BELØP.navn }
+
+        // Danner nytt grunnlag
+        val periode = sjablonListe.firstOrNull { it.navn == SjablonNavn.SAMVÆRSFRADRAG.navn }?.periode
+        val referanse = "Sjablon_Samværsfradrag_${periode?.datoFom?.format(DateTimeFormatter.ofPattern("yyyyMMdd"))}"
+        val grunnlagDtoListe = sjablonListe.filter { sjablon -> sjablon.navn == SjablonNavn.SAMVÆRSFRADRAG.navn }
+            .map {
+                GrunnlagDto(
+                    referanse = referanse,
+                    type = Grunnlagstype.SJABLON_SAMVARSFRADRAG,
+                    innhold = POJONode(
+                        SjablonSamværsfradragPeriode(
+                            periode = ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil),
+                            beløpFradrag = samværsfradrag?.verdi ?: BigDecimal.ZERO,
+                        ),
                     ),
-                ),
-            )
-        }
+                )
+            }
+        return grunnlagDtoListe
+    }
 
     // Referansene for sjablon TrinnvisSkattesats og Bidragsevne er basert på at de splittes opp i core. I mapSjablonxxx slås de sammen til en sjablon
     // pr periode og det må reflekteres i grunnlagsreferanselisten

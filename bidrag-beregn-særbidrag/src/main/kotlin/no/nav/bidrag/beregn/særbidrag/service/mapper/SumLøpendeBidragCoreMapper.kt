@@ -47,6 +47,7 @@ internal object SumLøpendeBidragCoreMapper : CoreMapper() {
                 LøpendeBidragCore(
                     saksnummer = it.saksnummer,
                     fødselsdatoBarn = finnFødselsdatoBarn(beregnGrunnlag.grunnlagListe, it.gjelderBarn),
+                    referanseBarn = it.gjelderBarn,
                     løpendeBeløp = it.løpendeBeløp,
                     samværsklasse = it.samværsklasse,
                     beregnetBeløp = it.beregnetBeløp,

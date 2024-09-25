@@ -162,7 +162,7 @@
       "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {
-      "referanse": "løpende_bidrag_grunnlag_bidragspliktig",
+      "referanse": "løpende_bidrag_grunnlag_bidragspliktig_202008_202009",
       "type": "LØPENDE_BIDRAG",
       "innhold": {
         "løpendeBidragListe": [

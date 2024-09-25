@@ -38,7 +38,7 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 @ExtendWith(MockitoExtension::class)
-internal class SumLøpendeBidragCoreCoreTest {
+internal class BidragsevneCoreTest {
 
     private lateinit var bidragsevneCore: BidragsevneCore
 

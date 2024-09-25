@@ -33,6 +33,7 @@ internal class SumLøpendeBidragCore(private val sumLøpendeBidragPeriode: SumL�
         val sjablonListe = resultatPeriode.resultat.sjablonListe
         val referanseListe = mutableListOf<String>()
         referanseListe.add(resultatPeriode.grunnlag.referanse)
+        referanseListe.addAll(resultatPeriode.grunnlag.grunnlagsreferanseListe)
         referanseListe.addAll(sjablonListe.map { lagSjablonReferanse(it) }.distinct())
         return referanseListe.sorted()
     }

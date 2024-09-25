@@ -20,37 +20,46 @@ class SumLøpendeBidragBeregning : FellesBeregning() {
         var totaltBeregnetSamværsfradrag = BigDecimal.ZERO
         var totaltBidragRedusertMedBeløp = BigDecimal.ZERO
 
+        var sjablonNavnVerdiMap = HashMap<String, BigDecimal>()
+
         val sjablonliste =
             grunnlag.sjablonPeriodeListe.filter { it.getPeriode().overlapperMed(Periode(grunnlag.beregnDatoFra, grunnlag.beregnDatoTil)) }
 
         grunnlag.løpendeBidragCoreListe.forEach {
-            totaltLøpendeBidrag += it.løpendeBeløp
-            totaltBeregnetSamværsfradrag += hentSjablonSamværsfradrag(
+            sjablonNavnVerdiMap = hentSjablonSamværsfradrag(
                 sjablonPeriodeListe = sjablonliste,
                 samværsklasse = it.samværsklasse.bisysKode,
-                alderBarn = finnAlder(LocalDate.now(), it.fødselsdatoBarn),
+                alderBarn = finnAlder(it.fødselsdatoBarn),
             )
+
+            totaltLøpendeBidrag += it.løpendeBeløp
+            totaltBeregnetSamværsfradrag += sjablonNavnVerdiMap[SjablonNavn.SAMVÆRSFRADRAG.navn] ?: BigDecimal.ZERO
             totaltBidragRedusertMedBeløp += it.beregnetBeløp.minus(it.faktiskBeløp)
         }
 
         return ResultatBeregning(
             sum = totaltLøpendeBidrag.plus(totaltBeregnetSamværsfradrag).plus(totaltBidragRedusertMedBeløp),
-            sjablonListe = byggSjablonResultatListe(sjablonNavnVerdiMap = emptyMap(), sjablonPeriodeListe = grunnlag.sjablonPeriodeListe),
+            sjablonListe = byggSjablonResultatListe(sjablonNavnVerdiMap = sjablonNavnVerdiMap, sjablonPeriodeListe = grunnlag.sjablonPeriodeListe),
 
         )
     }
 
-    fun finnAlder(dato: LocalDate, fødselsdato: LocalDate): Int {
-        val alder = fødselsdato.until(dato).years
+    fun finnAlder(fødselsdato: LocalDate): Int {
+        val alder = fødselsdato.until(LocalDate.now()).years
         return alder
     }
 
     // Henter sjablonverdier
-    private fun hentSjablonSamværsfradrag(sjablonPeriodeListe: List<SjablonPeriode>, samværsklasse: String, alderBarn: Int): BigDecimal {
+    private fun hentSjablonSamværsfradrag(
+        sjablonPeriodeListe: List<SjablonPeriode>,
+        samværsklasse: String,
+        alderBarn: Int,
+    ): HashMap<String, BigDecimal> {
+        val sjablonNavnVerdiMap = HashMap<String, BigDecimal>()
         val sjablonListe = sjablonPeriodeListe.map { it.sjablon }.toList()
 
         // Samværsfradrag
-        val samværsfradrag =
+        sjablonNavnVerdiMap[SjablonNavn.SAMVÆRSFRADRAG.navn] =
             SjablonUtil.hentSjablonverdi(
                 sjablonListe = sjablonListe,
                 sjablonNavn = SjablonNavn.SAMVÆRSFRADRAG,
@@ -61,6 +70,6 @@ class SumLøpendeBidragBeregning : FellesBeregning() {
                 sjablonNøkkelVerdi = alderBarn,
                 sjablonInnholdNavn = SjablonInnholdNavn.FRADRAG_BELØP,
             )
-        return samværsfradrag
+        return sjablonNavnVerdiMap
     }
 }
