@@ -40,12 +40,20 @@ class Vedtaksfiltrering {
                     vedtaksdetaljer.vedtak.omgjørVedtaksid()?.let { iterator.hoppeTilOmgjortVedtak(it.toLong()) }
                         ?: iterator.hoppeTilPåklagetVedtak(vedtaksdetaljer.vedtak.søknadKlageRefId!!)
                     // Hopp over dette vedtaket, ettersom dette enten er eller skulle vært Ingen endring 12%
-                    iterator.next()
+                    if (iterator.hasNext()) iterator.next()
+                    else {
+                        secureLogger.warn { "Fant ikke tidligere vedtak for barn med personident $personidentSøknadsbarn" }
+                        return null
+                    }
                 } else if (vedtaksdetaljer.vedtak.erOmgjøring()) {
                     // Hopp til påklaget vedtak
                     iterator.hoppeTilOmgjortVedtak(vedtaksdetaljer.vedtak.idTilOmgjortVedtak()!!)
                     // Hopp over dette vedtaket, ettersom dette enten er eller skulle vært Ingen endring 12%
-                    iterator.next()
+                    if (iterator.hasNext()) iterator.next()
+                    else {
+                        secureLogger.warn { "Fant ikke tidligere vedtak for barn med personident $personidentSøknadsbarn" }
+                        return null
+                    }
                 }
                 continue
             }
@@ -110,12 +118,6 @@ class Vedtaksiterator(vedtakssamling: Collection<Vedtaksdetaljer>) : Iterator<Ve
         }
 
         nesteVedtak = null
-    }
-
-    fun hoppeTilOmgjørtVedtak(omgjørVedtaksid: Long) {
-        while (nesteVedtak != null && nesteVedtak!!.vedtak.vedtaksid != omgjørVedtaksid) {
-            forberedeNeste()
-        }
     }
 
     fun hoppeTilPåklagetVedtak(referanseTilPåklagetVedtak: Long) {
