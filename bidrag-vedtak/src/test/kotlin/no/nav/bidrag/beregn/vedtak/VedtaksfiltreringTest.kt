@@ -182,6 +182,24 @@ class VedtaksfiltreringTest {
     }
 
     @Test
+    fun `skal returnere null hvis referert vedtak ikke finnes`() {
+        // gitt
+        val vedtakssett = oppretteVedtakssett(
+            setOf(
+                OppretteVedtakRequest(Y2K16, Y2K18, B1000, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
+                OppretteVedtakRequest(Y2K18, Y2K19, B1070, Beslutningsårsak.INDEKSREGULERING),
+                OppretteVedtakRequest(Y2K19, Y2K20, B800, Beslutningsårsak.INGEN_ENDRING_12_PROSENT, omgjørVedtak = 0),
+            ),
+        )
+
+        // hvis
+        val vedtak = vedtaksfiltrering.finneSisteManuelleVedtak(vedtakssett, ba1.personident)
+
+        // så
+        vedtak.shouldBeNull()
+    }
+
+    @Test
     fun `skal hoppe til opprinnelig vedtak hvis resultat fra annet vedtak`() {
         // gitt
         val vedtakssett = oppretteVedtakssett(

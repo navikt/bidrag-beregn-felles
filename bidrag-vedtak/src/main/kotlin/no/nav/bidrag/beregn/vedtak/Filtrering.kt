@@ -120,12 +120,6 @@ class Vedtaksiterator(vedtakssamling: Collection<Vedtaksdetaljer>) : Iterator<Ve
         nesteVedtak = null
     }
 
-    fun hoppeTilOmgjørtVedtak(omgjørVedtaksid: Long) {
-        while (nesteVedtak != null && nesteVedtak!!.vedtak.vedtaksid != omgjørVedtaksid) {
-            forberedeNeste()
-        }
-    }
-
     fun hoppeTilPåklagetVedtak(referanseTilPåklagetVedtak: Long) {
         while (nesteVedtak != null && nesteVedtak!!.vedtak.søknadsid != referanseTilPåklagetVedtak) {
             forberedeNeste()
