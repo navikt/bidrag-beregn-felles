@@ -758,7 +758,7 @@ internal class BeregnSærbidragService(
             filtrertListeInntektGrense.forEach {
                 sjablonTrinnvisSkattesatsListe.add(
                     SjablonTrinnvisSkattesats(
-                        inntekstgrense = it.verdi.intValueExact(),
+                        inntektsgrense = it.verdi.intValueExact(),
                         sats = filtrertListeSats[indeks].verdi,
                     ),
                 )

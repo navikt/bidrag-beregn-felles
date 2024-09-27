@@ -14,7 +14,6 @@
   <properties>
     <revision>1.0-SNAPSHOT</revision>
     <guava.version>33.2.1-jre</guava.version>
-    <kotlin.version>2.0.20</kotlin.version>
   </properties>
 
   <dependencies>
@@ -24,8 +23,7 @@
     </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-stdlib-jdk8</artifactId>
-      <version>${kotlin.version}</version>
+      <artifactId>kotlin-stdlib</artifactId>
     </dependency>
 
     <dependency>
@@ -44,6 +42,10 @@
     <dependency>
       <groupId>no.nav.bidrag</groupId>
       <artifactId>bidrag-commons-felles</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>no.nav.bidrag</groupId>
+      <artifactId>bidrag-commons-test-felles</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
@@ -75,43 +77,19 @@
       <artifactId>mockk-jvm</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-test</artifactId>
-      <version>${kotlin.version}</version>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
   <build>
-    <sourceDirectory>src/main/kotlin</sourceDirectory>
-    <testSourceDirectory>src/test/kotlin</testSourceDirectory>
+    <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+    <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
 
     <plugins>
       <plugin>
         <groupId>org.jetbrains.kotlin</groupId>
         <artifactId>kotlin-maven-plugin</artifactId>
-        <version>${kotlin.version}</version>
-        <executions>
-          <execution>
-            <id>compile</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>test-compile</id>
-            <phase>test-compile</phase>
-            <goals>
-              <goal>test-compile</goal>
-            </goals>
-          </execution>
-        </executions>
         <configuration>
           <compilerPlugins>
             <plugin>spring</plugin>
           </compilerPlugins>
-          <jvmTarget>1.8</jvmTarget>
         </configuration>
         <dependencies>
           <dependency>

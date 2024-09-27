@@ -29,5 +29,5 @@ class BeregnBarnebidragApi {
 
     fun beregnBarnebidrag(beregnBarnebidragGrunnlag: BeregnGrunnlag) = service.beregnBarnebidrag(beregnBarnebidragGrunnlag)
 
-    fun beregnUnderholdskostnad(beregnBarnebidragGrunnlag: BeregnGrunnlag) = service.beregnUnderholdskostnad(beregnBarnebidragGrunnlag)
+    fun beregnUnderholdskostnad(beregnBarnebidragGrunnlag: BeregnGrunnlag) = null
 }
