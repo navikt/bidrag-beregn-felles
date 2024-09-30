@@ -18,7 +18,7 @@
         <kotlin.code.style>official</kotlin.code.style>
         <jackson.version>2.17.2</jackson.version>
         <kotest.version>5.9.1</kotest.version>
-        <swagger.version>2.2.23</swagger.version>
+        <swagger.version>2.2.24</swagger.version>
         <ktlint.version>1.3.1</ktlint.version>
         <bidrag-felles.version>2024.09.24.192807</bidrag-felles.version>
         <spring-boot.version>3.3.4</spring-boot.version>
