@@ -44,8 +44,10 @@ class SumLøpendeBidragBeregning : FellesBeregning() {
         )
     }
 
-    fun finnAlder(fødselsdato: LocalDate): Int {
-        val alder = fødselsdato.until(LocalDate.now()).years
+    private fun finnAlder(fødselsdato: LocalDate): Int {
+        // Fødselsdato skal alltid settes til 1 juli i barnets fødeår
+        val justertFødselsdato = fødselsdato.withMonth(7).withDayOfMonth(1)
+        val alder = justertFødselsdato.until(LocalDate.now()).years
         return alder
     }
 
