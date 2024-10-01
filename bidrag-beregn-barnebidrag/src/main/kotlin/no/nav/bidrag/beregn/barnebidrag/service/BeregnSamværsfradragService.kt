@@ -75,13 +75,13 @@ internal object BeregnSamværsfradragService : BeregnService() {
         return lagBruddPeriodeListe(periodeListe, beregningsperiode)
     }
 
-    // Lager bruddperioder for alder basert på verdier i sjablon SAMVÆRSFRADRAG
+    // Lager bruddperioder for alder basert på verdier i sjablon SAMVÆRSFRADRAG. Alder regnes som om barnet er født 1. juli i fødselsåret.
     private fun lagAlderBruddPerioder(
         sjablonSamværsfradragPerioder: List<SjablonSamværsfradragPeriodeGrunnlag>,
         søknadsbarnPeriodeGrunnlag: SøknadsbarnPeriodeGrunnlag,
     ): List<ÅrMånedsperiode> = hentAlderTomListe(sjablonSamværsfradragPerioder)
         .map {
-            val alderBruddDato = søknadsbarnPeriodeGrunnlag.fødselsdato.plusYears(it.toLong())
+            val alderBruddDato = søknadsbarnPeriodeGrunnlag.fødselsdato.withMonth(7).withDayOfMonth(1).plusYears(it.toLong())
             ÅrMånedsperiode(alderBruddDato, alderBruddDato)
         }
 
@@ -93,9 +93,9 @@ internal object BeregnSamværsfradragService : BeregnService() {
         // Lager liste over gyldige alderTom-verdier
         val alderTomListe = hentAlderTomListe(samværsfradragPeriodeGrunnlag.sjablonSamværsfradragPeriodeListe)
 
-        // Finner barnets faktiske alder
+        // Finner barnets faktiske alder. Alder regnes som om barnet er født 1. juli i fødselsåret.
         val faktiskAlder = Period.between(
-            samværsfradragPeriodeGrunnlag.søknadsbarnPeriodeGrunnlag.fødselsdato,
+            samværsfradragPeriodeGrunnlag.søknadsbarnPeriodeGrunnlag.fødselsdato.withMonth(7).withDayOfMonth(1),
             bruddPeriode.fom.atDay(1),
         ).years
 

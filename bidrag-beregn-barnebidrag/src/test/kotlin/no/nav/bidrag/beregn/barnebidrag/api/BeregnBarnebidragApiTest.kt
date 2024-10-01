@@ -5,8 +5,13 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnebidragService
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
-import no.nav.bidrag.domene.enums.beregning.Resultatkode
+import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
+import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsfradrag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -23,18 +28,6 @@ import java.text.SimpleDateFormat
 internal class BeregnBarnebidragApiTest {
     private lateinit var filnavn: String
 
-    private lateinit var forventetBidragsevneBeløp: BigDecimal
-    private lateinit var forventetBPAndelSærbidragFaktor: BigDecimal
-    private lateinit var forventetBPAndelSærbidragBeløp: BigDecimal
-    private lateinit var forventetSærbidragBeregnetBeløp: BigDecimal
-    private lateinit var forventetSærbidragResultatKode: Resultatkode
-    private var forventetSærbidragResultatBeløp: BigDecimal? = null
-    private lateinit var forventetSumInntektBP: BigDecimal
-    private lateinit var forventetSumInntektBM: BigDecimal
-    private lateinit var forventetSumInntektSB: BigDecimal
-    private var forventetAntallBarnIHusstand: Double = 0.0
-    private var forventetVoksneIHusstand: Boolean = false
-
     @Mock
     private lateinit var beregnBarnebidragService: BeregnBarnebidragService
 
@@ -48,15 +41,59 @@ internal class BeregnBarnebidragApiTest {
     // De øvrige eksemplene er lagt til for å teste spesiell logikk
 
     @Test
-    @DisplayName("skal kalle core og returnere et resultat - eksempel 1")
-    fun skalKalleCoreOgReturnereEtResultat_Eksempel01() {
-        filnavn = "src/test/resources/testfiler/barnebidrag_eksempelNY.json"
-        val request = lesFilOgByggRequest(filnavn)
-
-        val totalBarnebidragResultat = beregnBarnebidragService.beregnBarnebidrag(request)
-
-        printJson(totalBarnebidragResultat)
+    @DisplayName("Test av samværsfradrag - eksempel 1")
+    fun testSamværsfradrag_Eksempel01() {
+        filnavn = "src/test/resources/testfiler/samværsfradrag_eksempel1.json"
+        utførBeregningerOgEvaluerResultat()
     }
+
+    private fun utførBeregningerOgEvaluerResultat() {
+        val request = lesFilOgByggRequest(filnavn)
+        val totalBarnebidragResultat = beregnBarnebidragService.beregnBarnebidrag(request)
+        printJson(totalBarnebidragResultat)
+
+        val objectMapper = ObjectMapper()
+        val alleReferanser = hentAlleReferanser(totalBarnebidragResultat)
+        val alleRefererteReferanser = hentAlleRefererteReferanser(totalBarnebidragResultat)
+
+        val delberegningSamværsfradragListe = totalBarnebidragResultat
+            .filter { it.type == Grunnlagstype.DELBEREGNING_SAMVÆRSFRADRAG }
+        val samværsfradragResultatListe = mutableListOf<DelberegningSamværsfradrag>()
+        for (delberegning in delberegningSamværsfradragListe) {
+            samværsfradragResultatListe.add(objectMapper.treeToValue(delberegning.innhold, DelberegningSamværsfradrag::class.java))
+        }
+
+        assertAll(
+            { assertThat(totalBarnebidragResultat).isNotNull },
+            { assertThat(samværsfradragResultatListe).isNotNull },
+            { assertThat(samværsfradragResultatListe).hasSize(6) },
+
+            // Delberegning Samværsfradrag
+            { assertThat(samværsfradragResultatListe[0].periode).isEqualTo(ÅrMånedsperiode("2021-05", "2021-07")) },
+            { assertThat(samværsfradragResultatListe[0].beløp).isEqualTo(BigDecimal.valueOf(353)) },
+            { assertThat(samværsfradragResultatListe[1].periode).isEqualTo(ÅrMånedsperiode("2021-07", "2022-07")) },
+            { assertThat(samværsfradragResultatListe[1].beløp).isEqualTo(BigDecimal.valueOf(354)) },
+            { assertThat(samværsfradragResultatListe[2].periode).isEqualTo(ÅrMånedsperiode("2022-07", "2023-01")) },
+            { assertThat(samværsfradragResultatListe[2].beløp).isEqualTo(BigDecimal.valueOf(365)) },
+            { assertThat(samværsfradragResultatListe[3].periode).isEqualTo(ÅrMånedsperiode("2023-01", "2023-07")) },
+            { assertThat(samværsfradragResultatListe[3].beløp).isEqualTo(BigDecimal.valueOf(1209)) },
+            { assertThat(samværsfradragResultatListe[4].periode).isEqualTo(ÅrMånedsperiode("2023-07", "2024-07")) },
+            { assertThat(samværsfradragResultatListe[4].beløp).isEqualTo(BigDecimal.valueOf(1760)) },
+            { assertThat(samværsfradragResultatListe[5].periode).isEqualTo(ÅrMånedsperiode("2024-07", "2024-10")) },
+            { assertThat(samværsfradragResultatListe[5].beløp).isEqualTo(BigDecimal.valueOf(1813)) },
+
+            // Referanser
+            { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
+        )
+    }
+
+    fun hentAlleReferanser(totalBarnebidragResultat: List<GrunnlagDto>) = totalBarnebidragResultat
+        .map { it.referanse }
+        .distinct()
+
+    fun hentAlleRefererteReferanser(totalBarnebidragResultat: List<GrunnlagDto>) = totalBarnebidragResultat
+        .flatMap { it.grunnlagsreferanseListe }
+        .distinct()
 
     private fun lesFilOgByggRequest(filnavn: String): BeregnGrunnlag {
         var json = ""
