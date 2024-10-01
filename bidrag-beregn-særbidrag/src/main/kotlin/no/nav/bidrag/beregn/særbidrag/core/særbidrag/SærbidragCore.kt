@@ -101,9 +101,10 @@ private fun mapResultatPeriode(resultatPeriodeListe: List<ResultatPeriode>) = re
 }
 
 private fun mapReferanseListe(resultatPeriode: ResultatPeriode): List<String> {
-    val (beløpBetaltAvBp, bidragsevne, sumLøpendeBidrag, bPsAndelSærbidrag) = resultatPeriode.grunnlag
+    val (_, bidragsevne, sumLøpendeBidrag, bPsAndelSærbidrag) = resultatPeriode.grunnlag
     val referanseListe = mutableListOf<String>()
-    referanseListe.add(beløpBetaltAvBp.referanse)
+    // Ikke nødvendig
+    //    referanseListe.add(beløpBetaltAvBp.referanse)
     referanseListe.add(bidragsevne.referanse)
     referanseListe.add(sumLøpendeBidrag.referanse)
     referanseListe.add(bPsAndelSærbidrag.referanse)
