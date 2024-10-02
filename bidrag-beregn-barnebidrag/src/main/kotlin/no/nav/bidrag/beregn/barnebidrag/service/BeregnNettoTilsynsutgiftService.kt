@@ -22,9 +22,9 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
 import java.time.Period
 
-internal object BeregnSamværsfradragService : BeregnService() {
+internal object BeregnNettoTilsynsutgiftService : BeregnService() {
 
-    fun delberegningSamværsfradrag(mottattGrunnlag: BeregnGrunnlag, sjablonGrunnlag: List<GrunnlagDto>): List<GrunnlagDto> {
+    fun delberegningNettoTilsynsutgift(mottattGrunnlag: BeregnGrunnlag, sjablonGrunnlag: List<GrunnlagDto>): List<GrunnlagDto> {
         val samværsfradragPeriodeGrunnlag = mapSamværsfradragGrunnlag(mottattGrunnlag, sjablonGrunnlag)
 
         val bruddPeriodeListe = lagBruddPeriodeListeSamværsfradrag(samværsfradragPeriodeGrunnlag, mottattGrunnlag.periode)

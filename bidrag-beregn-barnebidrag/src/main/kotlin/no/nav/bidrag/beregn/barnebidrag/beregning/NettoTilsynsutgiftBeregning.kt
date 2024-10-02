@@ -3,7 +3,7 @@ package no.nav.bidrag.beregn.barnebidrag.beregning
 import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragBeregningResultat
 
-internal object SamværsfradragBeregning {
+internal object NettoTilsynsutgiftBeregning {
     fun beregn(grunnlag: SamværsfradragBeregningGrunnlag): SamværsfradragBeregningResultat {
         val samværsklasse = grunnlag.samværsklasseBeregningGrunnlag.samværsklasse
         val alder = grunnlag.søknadsbarn.alder

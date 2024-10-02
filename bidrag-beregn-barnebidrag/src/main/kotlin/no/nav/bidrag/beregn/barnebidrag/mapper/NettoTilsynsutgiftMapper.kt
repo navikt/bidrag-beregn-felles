@@ -14,7 +14,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.SamværsklassePeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSamværsfradragPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 
-internal object SamværsfradragMapper : CoreMapper() {
+internal object NettoTilsynsutgiftMapper : CoreMapper() {
     fun mapSamværsfradragGrunnlag(mottattGrunnlag: BeregnGrunnlag, sjablonGrunnlag: List<GrunnlagDto>): SamværsfradragPeriodeGrunnlag =
         SamværsfradragPeriodeGrunnlag(
             beregningsperiode = mottattGrunnlag.periode,
