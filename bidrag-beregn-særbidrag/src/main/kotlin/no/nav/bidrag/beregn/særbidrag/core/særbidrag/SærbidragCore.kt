@@ -63,6 +63,8 @@ internal class SærbidragCore(private val særbidragPeriode: SærbidragPeriode =
             referanse = it.referanse,
             periode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
             beløp = it.beløp,
+            skatt = it.skatt,
+            underholdBarnEgenHusstand = it.underholdBarnEgenHusstand,
         )
     }
 
@@ -81,8 +83,10 @@ private fun mapBPsAndelSærbidragPeriodeListe(bPsAndelSærbidragPeriodeListeCore
         BPsAndelSærbidragPeriode(
             referanse = it.referanse,
             periode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
-            andelFaktor = it.andelFaktor,
+            endeligAndelFaktor = it.endeligAndelFaktor,
             andelBeløp = it.andelBeløp,
+            beregnetAndelFaktor = it.beregnetAndelFaktor,
+            barnEndeligInntekt = it.barnEndeligInntekt,
             barnetErSelvforsørget = it.barnetErSelvforsørget,
         )
     }

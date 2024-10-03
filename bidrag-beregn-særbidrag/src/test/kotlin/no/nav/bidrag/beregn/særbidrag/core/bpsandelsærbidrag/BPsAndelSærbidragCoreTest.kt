@@ -161,8 +161,10 @@ internal class BPsAndelSærbidragCoreTest {
             ResultatPeriode(
                 periode = Periode(datoFom = LocalDate.parse("2020-01-01"), datoTil = LocalDate.parse("2020-02-01")),
                 resultat = ResultatBeregning(
-                    resultatAndelFaktor = BigDecimal.valueOf(0.10),
-                    resultatAndelBeløp = BigDecimal.valueOf(1000),
+                    endeligAndelFaktor = BigDecimal.valueOf(0.10),
+                    andelBeløp = BigDecimal.valueOf(1000),
+                    beregnetAndelFaktor = BigDecimal.valueOf(0.10),
+                    barnEndeligInntekt = BigDecimal.ZERO,
                     barnetErSelvforsørget = false,
                     sjablonListe = listOf(
                         SjablonPeriodeNavnVerdi(

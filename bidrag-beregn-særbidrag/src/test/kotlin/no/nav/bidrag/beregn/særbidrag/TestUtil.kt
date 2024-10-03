@@ -33,6 +33,7 @@ import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.særbidrag.BeregnetSærbidragResultat
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUtgift
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
@@ -215,7 +216,17 @@ object TestUtil {
         bidragPeriodeResultatListe.add(
             no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto.ResultatPeriodeCore(
                 periode = PeriodeCore(datoFom = LocalDate.parse("2020-08-01"), datoTil = LocalDate.parse("2020-09-01")),
-                resultat = no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto.ResultatBeregningCore(BigDecimal.valueOf(100)),
+                resultat = no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto.ResultatBeregningCore(
+                    beløp = BigDecimal.valueOf(100),
+                    skatt = DelberegningBidragsevne.Skatt(
+                        minstefradrag = BigDecimal.valueOf(80000),
+                        skattAlminneligInntekt = BigDecimal.valueOf(80000),
+                        trinnskatt = BigDecimal.valueOf(20000),
+                        trygdeavgift = BigDecimal.valueOf(30000),
+                        sumSkatt = BigDecimal.valueOf(130000),
+                    ),
+                    underholdBarnEgenHusstand = BigDecimal.valueOf(10000),
+                ),
                 grunnlagsreferanseListe = mutableListOf(
                     INNTEKT_REFERANSE,
                     SKATTEKLASSE_REFERANSE,
@@ -272,8 +283,10 @@ object TestUtil {
             no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.ResultatPeriodeCore(
                 periode = PeriodeCore(datoFom = LocalDate.parse("2020-08-01"), datoTil = LocalDate.parse("2020-09-01")),
                 resultat = no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.ResultatBeregningCore(
-                    resultatAndelFaktor = BigDecimal.valueOf(0.10),
-                    resultatAndelBeløp = BigDecimal.valueOf(100),
+                    endeligAndelFaktor = BigDecimal.valueOf(0.10),
+                    andelBeløp = BigDecimal.valueOf(100),
+                    beregnetAndelFaktor = BigDecimal.valueOf(0.10),
+                    barnEndeligInntekt = BigDecimal.ZERO,
                     barnetErSelvforsørget = false,
                 ),
                 grunnlagsreferanseListe = mutableListOf(

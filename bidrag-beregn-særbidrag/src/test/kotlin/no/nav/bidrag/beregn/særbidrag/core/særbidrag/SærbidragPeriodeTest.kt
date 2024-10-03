@@ -11,6 +11,7 @@ import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.ResultatBeregning
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.SumLøpendeBidragPeriode
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.periode.SærbidragPeriode
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.BeforeEach
@@ -122,6 +123,14 @@ internal class SærbidragPeriodeTest {
                 )
             },
             beløp = BigDecimal.valueOf(5000),
+            skatt = DelberegningBidragsevne.Skatt(
+                minstefradrag = BigDecimal.valueOf(80000),
+                skattAlminneligInntekt = BigDecimal.valueOf(90000),
+                trinnskatt = BigDecimal.valueOf(10000),
+                trygdeavgift = BigDecimal.valueOf(50000),
+                sumSkatt = BigDecimal.valueOf(150000),
+            ),
+            underholdBarnEgenHusstand = BigDecimal.valueOf(10000),
         ),
     )
 
@@ -149,8 +158,10 @@ internal class SærbidragPeriodeTest {
                     datoTil = LocalDate.parse("2021-02-01"),
                 )
             },
-            andelFaktor = BigDecimal.valueOf(0.60),
+            endeligAndelFaktor = BigDecimal.valueOf(0.60),
             andelBeløp = BigDecimal.valueOf(6000),
+            beregnetAndelFaktor = BigDecimal.valueOf(0.60),
+            barnEndeligInntekt = BigDecimal.ZERO,
             barnetErSelvforsørget = false,
         ),
     )

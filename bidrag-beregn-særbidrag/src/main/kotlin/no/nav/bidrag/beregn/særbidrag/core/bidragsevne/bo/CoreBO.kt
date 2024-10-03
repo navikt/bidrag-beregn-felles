@@ -3,6 +3,7 @@ package no.nav.bidrag.beregn.særbidrag.core.bidragsevne.bo
 import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.bo.SjablonPeriode
 import no.nav.bidrag.beregn.core.bo.SjablonPeriodeNavnVerdi
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -21,7 +22,12 @@ data class BeregnBidragsevneResultat(val resultatPeriodeListe: List<ResultatPeri
 
 data class ResultatPeriode(val periode: Periode, val resultat: ResultatBeregning, val grunnlag: GrunnlagBeregning)
 
-data class ResultatBeregning(val beløp: BigDecimal, val sjablonListe: List<SjablonPeriodeNavnVerdi>)
+data class ResultatBeregning(
+    val beløp: BigDecimal,
+    val skatt: DelberegningBidragsevne.Skatt,
+    val underholdBarnEgenHusstand: BigDecimal,
+    val sjablonListe: List<SjablonPeriodeNavnVerdi>,
+)
 
 // Grunnlag beregning
 data class GrunnlagBeregning(

@@ -35,4 +35,10 @@ data class ResultatPeriodeCore(
     override val grunnlagsreferanseListe: MutableList<String>,
 ) : IResultatPeriode
 
-data class ResultatBeregningCore(val resultatAndelFaktor: BigDecimal, val resultatAndelBeløp: BigDecimal, val barnetErSelvforsørget: Boolean)
+data class ResultatBeregningCore(
+    val endeligAndelFaktor: BigDecimal,
+    val andelBeløp: BigDecimal,
+    val beregnetAndelFaktor: BigDecimal,
+    val barnEndeligInntekt: BigDecimal,
+    val barnetErSelvforsørget: Boolean,
+)

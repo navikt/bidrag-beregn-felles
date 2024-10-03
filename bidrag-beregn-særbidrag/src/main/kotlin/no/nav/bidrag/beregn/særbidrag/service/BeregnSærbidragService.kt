@@ -45,7 +45,7 @@ import no.nav.bidrag.transport.behandling.beregning.særbidrag.ResultatBeregning
 import no.nav.bidrag.transport.behandling.beregning.særbidrag.ResultatPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBarnIHusstand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndelSærbidrag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSumLøpendeBidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUtgift
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningVoksneIHustand
@@ -686,6 +686,8 @@ internal class BeregnSærbidragService(
                     DelberegningBidragsevne(
                         periode = ÅrMånedsperiode(fom = bidragsevne.periode.datoFom, til = bidragsevne.periode.datoTil),
                         beløp = bidragsevne.beløp,
+                        skatt = bidragsevne.skatt,
+                        underholdBarnEgenHusstand = bidragsevne.underholdBarnEgenHusstand,
                     ),
                 ),
                 grunnlagsreferanseListe = bidragsevneResultatFraCore.resultatPeriodeListe
@@ -728,10 +730,12 @@ internal class BeregnSærbidragService(
                 referanse = bPsAndelSærbidrag.referanse,
                 type = bestemGrunnlagstype(bPsAndelSærbidrag.referanse),
                 innhold = POJONode(
-                    DelberegningBidragspliktigesAndelSærbidrag(
+                    DelberegningBidragspliktigesAndel(
                         periode = ÅrMånedsperiode(fom = bPsAndelSærbidrag.periode.datoFom, til = bPsAndelSærbidrag.periode.datoTil),
-                        andelFaktor = bPsAndelSærbidrag.andelFaktor,
+                        endeligAndelFaktor = bPsAndelSærbidrag.endeligAndelFaktor,
                         andelBeløp = bPsAndelSærbidrag.andelBeløp,
+                        beregnetAndelFaktor = bPsAndelSærbidrag.beregnetAndelFaktor,
+                        barnEndeligInntekt = bPsAndelSærbidrag.barnEndeligInntekt,
                         barnetErSelvforsørget = bPsAndelSærbidrag.barnetErSelvforsørget,
                     ),
                 ),
@@ -943,6 +947,10 @@ internal class BeregnSærbidragService(
                     innhold = POJONode(
                         SjablonSamværsfradragPeriode(
                             periode = ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil),
+                            samværsklasse = "",
+                            alderTom = 0,
+                            antallDagerTom = 0,
+                            antallNetterTom = 0,
                             beløpFradrag = samværsfradrag?.verdi ?: BigDecimal.ZERO,
                         ),
                     ),

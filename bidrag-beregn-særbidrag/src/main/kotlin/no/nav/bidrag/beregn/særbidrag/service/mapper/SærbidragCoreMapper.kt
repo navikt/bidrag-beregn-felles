@@ -38,6 +38,8 @@ internal object SærbidragCoreMapper : CoreMapper() {
                         ),
                         periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
                         beløp = resultatBeregning.beløp,
+                        skatt = resultatBeregning.skatt,
+                        underholdBarnEgenHusstand = resultatBeregning.underholdBarnEgenHusstand,
                     )
                 }
 
@@ -68,13 +70,15 @@ internal object SærbidragCoreMapper : CoreMapper() {
                 .map { (periode, resultatBeregning): no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.ResultatPeriodeCore ->
                     BPsAndelSærbidragPeriodeCore(
                         referanse = opprettDelberegningreferanse(
-                            type = Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL_SÆRBIDRAG,
+                            type = Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL,
                             periode = ÅrMånedsperiode(fom = periode.datoFom, til = periode.datoTil),
                             søknadsbarnReferanse = beregnGrunnlag.søknadsbarnReferanse,
                         ),
                         periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
-                        andelFaktor = resultatBeregning.resultatAndelFaktor,
-                        andelBeløp = resultatBeregning.resultatAndelBeløp,
+                        endeligAndelFaktor = resultatBeregning.endeligAndelFaktor,
+                        andelBeløp = resultatBeregning.andelBeløp,
+                        beregnetAndelFaktor = resultatBeregning.beregnetAndelFaktor,
+                        barnEndeligInntekt = resultatBeregning.barnEndeligInntekt,
                         barnetErSelvforsørget = resultatBeregning.barnetErSelvforsørget,
                     )
                 }
