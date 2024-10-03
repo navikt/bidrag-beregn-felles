@@ -68,7 +68,7 @@ class SumLøpendeBidragBeregning : FellesBeregning() {
                 sjablonNøkkelListe = listOf(
                     SjablonNøkkel(navn = SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, verdi = samværsklasse),
                 ),
-                SjablonNøkkelNavn.ALDER_TOM,
+                sjablonNøkkelNavn = SjablonNøkkelNavn.ALDER_TOM,
                 sjablonNøkkelVerdi = alderBarn,
                 sjablonInnholdNavn = SjablonInnholdNavn.FRADRAG_BELØP,
             )

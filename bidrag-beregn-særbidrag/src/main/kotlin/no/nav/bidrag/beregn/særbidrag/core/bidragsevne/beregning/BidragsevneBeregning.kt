@@ -10,6 +10,7 @@ import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonNøkkelNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode
@@ -85,6 +86,14 @@ class BidragsevneBeregning : FellesBeregning() {
 
         return ResultatBeregning(
             beløp = månedligBidragsevne,
+            skatt = DelberegningBidragsevne.Skatt(
+                minstefradrag = minstefradrag.setScale(0, RoundingMode.HALF_UP),
+                skattAlminnelgInntekt = skattAlminnelig.setScale(0, RoundingMode.HALF_UP),
+                trinnskatt = skattetrinnBeløp.setScale(0, RoundingMode.HALF_UP),
+                trygdeavgift = trygdeavgift.setScale(0, RoundingMode.HALF_UP),
+                sumSkatt = skattAlminnelig.add(skattetrinnBeløp).add(trygdeavgift).setScale(0, RoundingMode.HALF_UP),
+            ),
+            underholdBarnEgenHusstand = underholdEgneBarn.setScale(0, RoundingMode.HALF_UP),
             sjablonListe = byggSjablonResultatListe(sjablonNavnVerdiMap = sjablonNavnVerdiMap, sjablonPeriodeListe = grunnlag.sjablonListe),
         )
     }

@@ -38,6 +38,8 @@ internal object SærbidragCoreMapper : CoreMapper() {
                         ),
                         periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
                         beløp = resultatBeregning.beløp,
+                        skatt = resultatBeregning.skatt,
+                        underholdBarnEgenHusstand = resultatBeregning.underholdBarnEgenHusstand,
                     )
                 }
 
@@ -73,8 +75,10 @@ internal object SærbidragCoreMapper : CoreMapper() {
                             søknadsbarnReferanse = beregnGrunnlag.søknadsbarnReferanse,
                         ),
                         periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
-                        andelFaktor = resultatBeregning.resultatAndelFaktor,
-                        andelBeløp = resultatBeregning.resultatAndelBeløp,
+                        endeligAndelFaktor = resultatBeregning.endeligAndelFaktor,
+                        andelBeløp = resultatBeregning.andelBeløp,
+                        beregnetAndelFaktor = resultatBeregning.beregnetAndelFaktor,
+                        barnEndeligInntekt = resultatBeregning.barnEndeligInntekt,
                         barnetErSelvforsørget = resultatBeregning.barnetErSelvforsørget,
                     )
                 }

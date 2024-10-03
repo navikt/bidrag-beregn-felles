@@ -67,8 +67,10 @@ internal class BPsAndelSærbidragCore(private val bPsAndelSærbidragPeriode: BPs
         ResultatPeriodeCore(
             periode = PeriodeCore(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
             resultat = ResultatBeregningCore(
-                resultatAndelFaktor = it.resultat.resultatAndelFaktor,
-                resultatAndelBeløp = it.resultat.resultatAndelBeløp,
+                endeligAndelFaktor = it.resultat.endeligAndelFaktor,
+                andelBeløp = it.resultat.andelBeløp,
+                beregnetAndelFaktor = it.resultat.beregnetAndelFaktor,
+                barnEndeligInntekt = it.resultat.barnEndeligInntekt,
                 barnetErSelvforsørget = it.resultat.barnetErSelvforsørget,
             ),
             grunnlagsreferanseListe = mapReferanseListe(it).sorted().toMutableList(),

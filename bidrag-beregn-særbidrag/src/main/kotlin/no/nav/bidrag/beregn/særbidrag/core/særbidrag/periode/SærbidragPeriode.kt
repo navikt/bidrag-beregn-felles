@@ -67,7 +67,14 @@ class SærbidragPeriode(private val særbidragBeregning: SærbidragBeregning = S
 
             val bidragsevne = grunnlag.bidragsevnePeriodeListe.stream()
                 .filter { it.getPeriode().overlapperMed(beregningsperiode) }
-                .map { Bidragsevne(referanse = it.referanse, beløp = it.beløp) }
+                .map {
+                    Bidragsevne(
+                        referanse = it.referanse,
+                        beløp = it.beløp,
+                        skatt = it.skatt,
+                        underholdBarnEgenHusstand = it.underholdBarnEgenHusstand,
+                    )
+                }
                 .findFirst()
                 .orElseThrow { IllegalArgumentException("Grunnlagsobjekt BIDRAGSEVNE mangler data for periode: ${beregningsperiode.getPeriode()}") }
 
@@ -76,8 +83,10 @@ class SærbidragPeriode(private val særbidragBeregning: SærbidragBeregning = S
                 .map {
                     BPsAndelSærbidrag(
                         referanse = it.referanse,
-                        andelFaktor = it.andelFaktor,
+                        endeligAndelFaktor = it.endeligAndelFaktor,
                         andelBeløp = it.andelBeløp,
+                        beregnetAndelFaktor = it.beregnetAndelFaktor,
+                        barnEndeligInntekt = it.barnEndeligInntekt,
                         barnetErSelvforsørget = it.barnetErSelvforsørget,
                     )
                 }

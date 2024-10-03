@@ -15,6 +15,7 @@ import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.bo.VoksneIHusstandPeriod
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.periode.BidragsevnePeriode
 import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.BeforeEach
@@ -137,6 +138,15 @@ internal class BidragsevnePeriodeTest {
 
     private fun byggResultatBeregning(): ResultatBeregning = ResultatBeregning(
         beløp = BigDecimal.valueOf(666),
+        skatt = DelberegningBidragsevne.Skatt(
+            minstefradrag = BigDecimal.valueOf(80000),
+            skattAlminnelgInntekt = BigDecimal.valueOf(80000),
+            trinnskatt = BigDecimal.valueOf(20000),
+            trygdeavgift = BigDecimal.valueOf(30000),
+            sumSkatt = BigDecimal.valueOf(130000),
+        ),
+        underholdBarnEgenHusstand = BigDecimal.valueOf(10000),
+
         sjablonListe = emptyList(),
     )
 }

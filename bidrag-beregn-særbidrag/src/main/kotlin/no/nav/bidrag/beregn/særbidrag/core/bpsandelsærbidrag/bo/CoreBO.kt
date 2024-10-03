@@ -24,8 +24,10 @@ data class BeregnBPsAndelSærbidragResultat(val resultatPeriodeListe: List<Resul
 data class ResultatPeriode(val periode: Periode, val resultat: ResultatBeregning, val grunnlag: GrunnlagBeregning)
 
 data class ResultatBeregning(
-    val resultatAndelFaktor: BigDecimal,
-    val resultatAndelBeløp: BigDecimal,
+    val endeligAndelFaktor: BigDecimal,
+    val andelBeløp: BigDecimal,
+    val beregnetAndelFaktor: BigDecimal,
+    val barnEndeligInntekt: BigDecimal,
     val barnetErSelvforsørget: Boolean,
     val sjablonListe: List<SjablonPeriodeNavnVerdi>,
 )

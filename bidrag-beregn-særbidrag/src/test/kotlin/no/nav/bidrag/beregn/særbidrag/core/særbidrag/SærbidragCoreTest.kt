@@ -21,6 +21,7 @@ import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.SumLøpendeBidragPeri
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.periode.SærbidragPeriode
 import no.nav.bidrag.domene.enums.beregning.Avvikstype
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -88,6 +89,14 @@ internal class SærbidragCoreTest {
             BidragsevnePeriodeCore(
                 referanse = TestUtil.BIDRAGSEVNE_REFERANSE,
                 periode = PeriodeCore(datoFom = LocalDate.parse("2020-01-01"), datoTil = LocalDate.parse("2020-02-01")),
+                skatt = DelberegningBidragsevne.Skatt(
+                    minstefradrag = BigDecimal.valueOf(80000),
+                    skattAlminnelgInntekt = BigDecimal.valueOf(80000),
+                    trinnskatt = BigDecimal.valueOf(20000),
+                    trygdeavgift = BigDecimal.valueOf(30000),
+                    sumSkatt = BigDecimal.valueOf(130000),
+                ),
+                underholdBarnEgenHusstand = BigDecimal.valueOf(10000),
                 beløp = BigDecimal.valueOf(100000),
             ),
         )
@@ -102,8 +111,10 @@ internal class SærbidragCoreTest {
             BPsAndelSærbidragPeriodeCore(
                 referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,
                 periode = PeriodeCore(datoFom = LocalDate.parse("2020-01-01"), datoTil = LocalDate.parse("2020-02-01")),
-                andelFaktor = BigDecimal.valueOf(1.5),
+                endeligAndelFaktor = BigDecimal.valueOf(1.5),
                 andelBeløp = BigDecimal.valueOf(20000),
+                beregnetAndelFaktor = BigDecimal.valueOf(1.5),
+                barnEndeligInntekt = BigDecimal.ZERO,
                 barnetErSelvforsørget = false,
             ),
         )
@@ -131,7 +142,18 @@ internal class SærbidragCoreTest {
                 ),
                 grunnlag = GrunnlagBeregning(
                     betaltAvBp = BetaltAvBp(referanse = TestUtil.BETALT_AV_BP_REFERANSE, beløp = BigDecimal.ZERO),
-                    bidragsevne = Bidragsevne(referanse = TestUtil.BIDRAGSEVNE_REFERANSE, beløp = BigDecimal.valueOf(1000)),
+                    bidragsevne = Bidragsevne(
+                        referanse = TestUtil.BIDRAGSEVNE_REFERANSE,
+                        beløp = BigDecimal.valueOf(1000),
+                        skatt = DelberegningBidragsevne.Skatt(
+                            minstefradrag = BigDecimal.valueOf(80000),
+                            skattAlminnelgInntekt = BigDecimal.valueOf(90000),
+                            trinnskatt = BigDecimal.valueOf(10000),
+                            trygdeavgift = BigDecimal.valueOf(50000),
+                            sumSkatt = BigDecimal.valueOf(150000),
+                        ),
+                        underholdBarnEgenHusstand = BigDecimal.valueOf(10000),
+                    ),
                     sumLøpendeBidrag = SumLøpendeBidragPeriode(
                         referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG,
                         periode = Periode(LocalDate.parse("2020-01-01"), LocalDate.parse("2020-02-01")),
@@ -139,8 +161,10 @@ internal class SærbidragCoreTest {
                     ),
                     bPsAndelSærbidrag = BPsAndelSærbidrag(
                         referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,
-                        andelFaktor = BigDecimal.valueOf(0.60),
+                        endeligAndelFaktor = BigDecimal.valueOf(0.60),
                         andelBeløp = BigDecimal.valueOf(8000),
+                        beregnetAndelFaktor = BigDecimal.valueOf(0.60),
+                        barnEndeligInntekt = BigDecimal.ZERO,
                         barnetErSelvforsørget = false,
                     ),
                 ),
