@@ -29,7 +29,7 @@ internal class SærbidragBeregningTest {
         val bidragsevneBeløp = BigDecimal.valueOf(11000)
         val skatt = DelberegningBidragsevne.Skatt(
             minstefradrag = BigDecimal.valueOf(80000),
-            skattAlminnelgInntekt = BigDecimal.valueOf(90000),
+            skattAlminneligInntekt = BigDecimal.valueOf(90000),
             trinnskatt = BigDecimal.valueOf(10000),
             trygdeavgift = BigDecimal.valueOf(50000),
             sumSkatt = BigDecimal.valueOf(150000),
@@ -77,7 +77,7 @@ internal class SærbidragBeregningTest {
         val bidragsevneBeløp = BigDecimal.valueOf(11000)
         val skatt = DelberegningBidragsevne.Skatt(
             minstefradrag = BigDecimal.valueOf(80000),
-            skattAlminnelgInntekt = BigDecimal.valueOf(90000),
+            skattAlminneligInntekt = BigDecimal.valueOf(90000),
             trinnskatt = BigDecimal.valueOf(10000),
             trygdeavgift = BigDecimal.valueOf(50000),
             sumSkatt = BigDecimal.valueOf(150000),
@@ -125,7 +125,7 @@ internal class SærbidragBeregningTest {
         val bidragsevneBeløp = BigDecimal.valueOf(11000)
         val skatt = DelberegningBidragsevne.Skatt(
             minstefradrag = BigDecimal.valueOf(80000),
-            skattAlminnelgInntekt = BigDecimal.valueOf(90000),
+            skattAlminneligInntekt = BigDecimal.valueOf(90000),
             trinnskatt = BigDecimal.valueOf(10000),
             trygdeavgift = BigDecimal.valueOf(50000),
             sumSkatt = BigDecimal.valueOf(150000),
@@ -173,7 +173,7 @@ internal class SærbidragBeregningTest {
         val bidragsevneBeløp = BigDecimal.valueOf(2000)
         val skatt = DelberegningBidragsevne.Skatt(
             minstefradrag = BigDecimal.valueOf(80000),
-            skattAlminnelgInntekt = BigDecimal.valueOf(90000),
+            skattAlminneligInntekt = BigDecimal.valueOf(90000),
             trinnskatt = BigDecimal.valueOf(10000),
             trygdeavgift = BigDecimal.valueOf(50000),
             sumSkatt = BigDecimal.valueOf(150000),
@@ -221,7 +221,7 @@ internal class SærbidragBeregningTest {
         val bidragsevneBeløp = BigDecimal.valueOf(11000)
         val skatt = DelberegningBidragsevne.Skatt(
             minstefradrag = BigDecimal.valueOf(80000),
-            skattAlminnelgInntekt = BigDecimal.valueOf(90000),
+            skattAlminneligInntekt = BigDecimal.valueOf(90000),
             trinnskatt = BigDecimal.valueOf(10000),
             trygdeavgift = BigDecimal.valueOf(50000),
             sumSkatt = BigDecimal.valueOf(150000),

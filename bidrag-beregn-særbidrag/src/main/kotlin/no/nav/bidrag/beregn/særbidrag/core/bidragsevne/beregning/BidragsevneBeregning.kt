@@ -88,7 +88,7 @@ class BidragsevneBeregning : FellesBeregning() {
             beløp = månedligBidragsevne,
             skatt = DelberegningBidragsevne.Skatt(
                 minstefradrag = minstefradrag.setScale(0, RoundingMode.HALF_UP),
-                skattAlminnelgInntekt = skattAlminnelig.setScale(0, RoundingMode.HALF_UP),
+                skattAlminneligInntekt = skattAlminnelig.setScale(0, RoundingMode.HALF_UP),
                 trinnskatt = skattetrinnBeløp.setScale(0, RoundingMode.HALF_UP),
                 trygdeavgift = trygdeavgift.setScale(0, RoundingMode.HALF_UP),
                 sumSkatt = skattAlminnelig.add(skattetrinnBeløp).add(trygdeavgift).setScale(0, RoundingMode.HALF_UP),

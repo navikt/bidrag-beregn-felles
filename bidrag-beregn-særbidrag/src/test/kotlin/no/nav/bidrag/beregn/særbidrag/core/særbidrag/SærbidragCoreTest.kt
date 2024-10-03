@@ -91,7 +91,7 @@ internal class SærbidragCoreTest {
                 periode = PeriodeCore(datoFom = LocalDate.parse("2020-01-01"), datoTil = LocalDate.parse("2020-02-01")),
                 skatt = DelberegningBidragsevne.Skatt(
                     minstefradrag = BigDecimal.valueOf(80000),
-                    skattAlminnelgInntekt = BigDecimal.valueOf(80000),
+                    skattAlminneligInntekt = BigDecimal.valueOf(80000),
                     trinnskatt = BigDecimal.valueOf(20000),
                     trygdeavgift = BigDecimal.valueOf(30000),
                     sumSkatt = BigDecimal.valueOf(130000),
@@ -147,7 +147,7 @@ internal class SærbidragCoreTest {
                         beløp = BigDecimal.valueOf(1000),
                         skatt = DelberegningBidragsevne.Skatt(
                             minstefradrag = BigDecimal.valueOf(80000),
-                            skattAlminnelgInntekt = BigDecimal.valueOf(90000),
+                            skattAlminneligInntekt = BigDecimal.valueOf(90000),
                             trinnskatt = BigDecimal.valueOf(10000),
                             trygdeavgift = BigDecimal.valueOf(50000),
                             sumSkatt = BigDecimal.valueOf(150000),

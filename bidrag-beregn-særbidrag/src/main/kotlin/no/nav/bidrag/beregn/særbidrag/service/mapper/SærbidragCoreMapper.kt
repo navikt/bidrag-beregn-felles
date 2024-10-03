@@ -70,7 +70,7 @@ internal object SærbidragCoreMapper : CoreMapper() {
                 .map { (periode, resultatBeregning): no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.ResultatPeriodeCore ->
                     BPsAndelSærbidragPeriodeCore(
                         referanse = opprettDelberegningreferanse(
-                            type = Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL_SÆRBIDRAG,
+                            type = Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL,
                             periode = ÅrMånedsperiode(fom = periode.datoFom, til = periode.datoTil),
                             søknadsbarnReferanse = beregnGrunnlag.søknadsbarnReferanse,
                         ),

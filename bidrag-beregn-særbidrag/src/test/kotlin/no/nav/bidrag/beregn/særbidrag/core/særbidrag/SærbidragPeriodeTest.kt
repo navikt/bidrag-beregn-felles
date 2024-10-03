@@ -125,7 +125,7 @@ internal class SærbidragPeriodeTest {
             beløp = BigDecimal.valueOf(5000),
             skatt = DelberegningBidragsevne.Skatt(
                 minstefradrag = BigDecimal.valueOf(80000),
-                skattAlminnelgInntekt = BigDecimal.valueOf(90000),
+                skattAlminneligInntekt = BigDecimal.valueOf(90000),
                 trinnskatt = BigDecimal.valueOf(10000),
                 trygdeavgift = BigDecimal.valueOf(50000),
                 sumSkatt = BigDecimal.valueOf(150000),

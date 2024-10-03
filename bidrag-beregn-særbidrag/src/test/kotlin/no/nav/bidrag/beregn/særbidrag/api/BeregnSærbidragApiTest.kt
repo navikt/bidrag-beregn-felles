@@ -441,7 +441,7 @@ internal class BeregnSærbidragApiTest {
             .first()
 
         val delberegningBPAndelSærbidragListe = totalSærbidragResultat.grunnlagListe
-            .filter { it.type == Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL_SÆRBIDRAG }
+            .filter { it.type == Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL }
         val bPAndelSærbidragResultat =
             objectMapper.treeToValue(delberegningBPAndelSærbidragListe[0].innhold, DelberegningBidragspliktigesAndel::class.java)
 

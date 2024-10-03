@@ -220,7 +220,7 @@ object TestUtil {
                     beløp = BigDecimal.valueOf(100),
                     skatt = DelberegningBidragsevne.Skatt(
                         minstefradrag = BigDecimal.valueOf(80000),
-                        skattAlminnelgInntekt = BigDecimal.valueOf(80000),
+                        skattAlminneligInntekt = BigDecimal.valueOf(80000),
                         trinnskatt = BigDecimal.valueOf(20000),
                         trygdeavgift = BigDecimal.valueOf(30000),
                         sumSkatt = BigDecimal.valueOf(130000),
