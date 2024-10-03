@@ -163,6 +163,33 @@ class AinntektService {
                 )
         }
 
+        // Lager map for opprinnelig vedtakstidspunkt med beløp 0 hvis det ikke finnes poster som matcher
+        vedtakstidspunktOpprinneligeVedtak.forEach {
+            var key = KEY_3MND_OV + "_" + it.toString()
+            if (!ainntektMap.containsKey(key)) {
+                val periode = bestemPeriode(key, it)
+                ainntektMap[key] =
+                    InntektSumPost(
+                        sumInntekt = BigDecimal.ZERO,
+                        periodeFra = periode.periodeFra,
+                        periodeTil = periode.periodeTil,
+                        inntektPostListe = mutableListOf(),
+                    )
+            }
+
+            key = KEY_12MND_OV + "_" + it.toString()
+            if (!ainntektMap.containsKey(key)) {
+                val periode = bestemPeriode(key, it)
+                ainntektMap[key] =
+                    InntektSumPost(
+                        sumInntekt = BigDecimal.ZERO,
+                        periodeFra = periode.periodeFra,
+                        periodeTil = periode.periodeTil,
+                        inntektPostListe = mutableListOf(),
+                    )
+            }
+        }
+
         return ainntektMap.toMap()
     }
 
