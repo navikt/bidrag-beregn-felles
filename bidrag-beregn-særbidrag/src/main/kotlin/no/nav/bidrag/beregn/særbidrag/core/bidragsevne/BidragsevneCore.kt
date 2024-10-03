@@ -18,6 +18,7 @@ import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto.ResultatBeregningCor
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto.ResultatPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.periode.BidragsevnePeriode
 import no.nav.bidrag.beregn.særbidrag.core.felles.FellesCore
+import java.util.Collections.emptyList
 
 internal class BidragsevneCore(private val bidragsevnePeriode: BidragsevnePeriode = BidragsevnePeriode()) : FellesCore() {
 
@@ -77,7 +78,11 @@ internal class BidragsevneCore(private val bidragsevnePeriode: BidragsevnePeriod
     private fun mapResultatPeriode(resultatPeriodeListe: List<ResultatPeriode>) = resultatPeriodeListe.map {
         ResultatPeriodeCore(
             periode = PeriodeCore(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
-            resultat = ResultatBeregningCore(it.resultat.beløp),
+            resultat = ResultatBeregningCore(
+                beløp = it.resultat.beløp,
+                skatt = it.resultat.skatt,
+                underholdBarnEgenHusstand = it.resultat.underholdBarnEgenHusstand,
+            ),
             grunnlagsreferanseListe = mapReferanseListe(it).sorted().toMutableList(),
         )
     }

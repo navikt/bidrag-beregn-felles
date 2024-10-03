@@ -25,6 +25,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.util.Collections.emptyList
 
 @ExtendWith(MockitoExtension::class)
 internal class BPsAndelSærbidragPeriodeTest {
@@ -108,14 +109,14 @@ internal class BPsAndelSærbidragPeriodeTest {
         ),
     )
 
-    private fun byggResultatBeregning(): ResultatBeregning {
-        return ResultatBeregning(
-            resultatAndelFaktor = BigDecimal.valueOf(0.60),
-            resultatAndelBeløp = BigDecimal.valueOf(6000),
-            barnetErSelvforsørget = false,
-            sjablonListe = emptyList(),
-        )
-    }
+    private fun byggResultatBeregning(): ResultatBeregning = ResultatBeregning(
+        endeligAndelFaktor = BigDecimal.valueOf(0.60),
+        andelBeløp = BigDecimal.valueOf(6000),
+        beregnetAndelFaktor = BigDecimal.valueOf(0.60),
+        barnEndeligInntekt = BigDecimal.ZERO,
+        barnetErSelvforsørget = false,
+        sjablonListe = emptyList(),
+    )
 
     companion object MockitoHelper {
         fun <T> any(): T = Mockito.any()

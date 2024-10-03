@@ -23,9 +23,7 @@ data class InntektPeriodeGrunnlag(
             skatteklasse2 = inntektPeriodeGrunnlag.skatteklasse2,
         )
 
-    override fun getPeriode(): Periode {
-        return inntektPeriode
-    }
+    override fun getPeriode(): Periode = inntektPeriode
 }
 
 // TODO Midlertidig duplisert InntektPeriodeGrunnlag. Denne bør etterhvert erstatte InntektPeriodeGrunnlag (dvs. bruke String i stedet for InntektType)
@@ -47,9 +45,7 @@ data class InntektPeriodeGrunnlagUtenInntektType(
             skatteklasse2 = inntektPeriodeGrunnlag.skatteklasse2,
         )
 
-    override fun getPeriode(): Periode {
-        return inntektPeriode
-    }
+    override fun getPeriode(): Periode = inntektPeriode
 }
 
 data class PeriodisertInntekt(

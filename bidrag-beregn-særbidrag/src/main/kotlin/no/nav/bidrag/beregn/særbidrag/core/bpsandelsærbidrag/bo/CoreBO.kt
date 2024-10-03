@@ -18,20 +18,16 @@ data class BeregnBPsAndelSærbidragGrunnlag(
 )
 
 // Resultatperiode
-data class BeregnBPsAndelSærbidragResultat(
-    val resultatPeriodeListe: List<ResultatPeriode>,
-)
+data class BeregnBPsAndelSærbidragResultat(val resultatPeriodeListe: List<ResultatPeriode>)
 
 // Resultat
-data class ResultatPeriode(
-    val periode: Periode,
-    val resultat: ResultatBeregning,
-    val grunnlag: GrunnlagBeregning,
-)
+data class ResultatPeriode(val periode: Periode, val resultat: ResultatBeregning, val grunnlag: GrunnlagBeregning)
 
 data class ResultatBeregning(
-    val resultatAndelFaktor: BigDecimal,
-    val resultatAndelBeløp: BigDecimal,
+    val endeligAndelFaktor: BigDecimal,
+    val andelBeløp: BigDecimal,
+    val beregnetAndelFaktor: BigDecimal,
+    val barnEndeligInntekt: BigDecimal,
     val barnetErSelvforsørget: Boolean,
     val sjablonListe: List<SjablonPeriodeNavnVerdi>,
 )
@@ -45,15 +41,9 @@ data class GrunnlagBeregning(
     val sjablonListe: List<SjablonPeriode>,
 )
 
-data class Utgift(
-    val referanse: String,
-    val beløp: BigDecimal,
-)
+data class Utgift(val referanse: String, val beløp: BigDecimal)
 
-data class Inntekt(
-    val referanse: String,
-    val inntektBeløp: BigDecimal,
-)
+data class Inntekt(val referanse: String, val inntektBeløp: BigDecimal)
 
 // Hjelpeklasser
 data class BeregnBPsAndelSærbidragListeGrunnlag(

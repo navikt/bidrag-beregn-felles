@@ -8,13 +8,15 @@ import no.nav.bidrag.beregn.særbidrag.core.felles.FellesBeregning
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.util.HashMap
 
 class BPsAndelSærbidragBeregning : FellesBeregning() {
     fun beregn(grunnlag: GrunnlagBeregning): ResultatBeregning {
         // Henter sjablonverdier
         val sjablonNavnVerdiMap = hentSjablonVerdier(grunnlag.sjablonListe)
 
-        var andelFaktor = BigDecimal.ZERO
+        var endeligAndelFaktor = BigDecimal.ZERO
+        var beregnetAndelFaktor = BigDecimal.ZERO
         var andelBeløp = BigDecimal.ZERO
         val forskuddssats = sjablonNavnVerdiMap[SjablonTallNavn.FORSKUDDSSATS_BELØP.navn] ?: BigDecimal.ZERO
 
@@ -28,17 +30,16 @@ class BPsAndelSærbidragBeregning : FellesBeregning() {
 
         if (!barnetErSelvforsorget) {
             inntektSB = (inntektSB - forskuddssats.multiply(BigDecimal.valueOf(30))).coerceAtLeast(BigDecimal.ZERO)
-
-            andelFaktor = (inntektBP)
-                .divide(inntektBP + inntektBM + inntektSB, 4, RoundingMode.HALF_UP)
-                .coerceAtMost(BigDecimal.valueOf(0.833333333333))
-
-            andelBeløp = (grunnlag.utgift.beløp * andelFaktor).setScale(0, RoundingMode.HALF_UP)
+            beregnetAndelFaktor = inntektBP.divide(inntektBP + inntektBM + inntektSB, 4, RoundingMode.HALF_UP)
+            endeligAndelFaktor = beregnetAndelFaktor.coerceAtMost(BigDecimal.valueOf(0.833333333333))
+            andelBeløp = (grunnlag.utgift.beløp * endeligAndelFaktor).setScale(0, RoundingMode.HALF_UP)
         }
 
         return ResultatBeregning(
-            resultatAndelFaktor = andelFaktor,
-            resultatAndelBeløp = andelBeløp,
+            endeligAndelFaktor = endeligAndelFaktor,
+            andelBeløp = andelBeløp,
+            beregnetAndelFaktor = beregnetAndelFaktor,
+            barnEndeligInntekt = inntektSB,
             barnetErSelvforsørget = barnetErSelvforsorget,
             sjablonListe = byggSjablonResultatListe(sjablonNavnVerdiMap = sjablonNavnVerdiMap, sjablonPeriodeListe = grunnlag.sjablonListe),
         )

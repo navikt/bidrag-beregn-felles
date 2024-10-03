@@ -11,12 +11,8 @@ import org.springframework.core.io.ClassPathResource
 import java.io.IOException
 import java.time.Year
 
-fun hentMappingerKapitalinntekt(): List<MappingPoster> {
-    return hentMapping("/files/mapping_kaps.yaml")
-}
-fun hentMappingerLigs(): List<MappingPoster> {
-    return hentMapping("/files/mapping_ligs.yaml")
-}
+fun hentMappingerKapitalinntekt(): List<MappingPoster> = hentMapping("/files/mapping_kaps.yaml")
+fun hentMappingerLigs(): List<MappingPoster> = hentMapping("/files/mapping_ligs.yaml")
 private fun hentMapping(path: String): List<MappingPoster> {
     try {
         val objectMapper = ObjectMapper(YAMLFactory())

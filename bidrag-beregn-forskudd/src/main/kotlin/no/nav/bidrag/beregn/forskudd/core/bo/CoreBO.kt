@@ -8,6 +8,7 @@ import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.util.Collections.emptyList
 
 // Grunnlag periode
 data class BeregnForskuddGrunnlag(
@@ -21,21 +22,12 @@ data class BeregnForskuddGrunnlag(
     val sjablonPeriodeListe: List<SjablonPeriode>,
 )
 
-data class Søknadsbarn(
-    val referanse: String,
-    val fødselsdato: LocalDate,
-)
+data class Søknadsbarn(val referanse: String, val fødselsdato: LocalDate)
 
 // Resultat periode
-data class BeregnForskuddResultat(
-    val beregnetForskuddPeriodeListe: List<ResultatPeriode>,
-)
+data class BeregnForskuddResultat(val beregnetForskuddPeriodeListe: List<ResultatPeriode>)
 
-data class ResultatPeriode(
-    val periode: Periode,
-    val resultat: ResultatBeregning,
-    val grunnlag: GrunnlagBeregning,
-)
+data class ResultatPeriode(val periode: Periode, val resultat: ResultatBeregning, val grunnlag: GrunnlagBeregning)
 
 // Grunnlag beregning
 data class GrunnlagBeregning(
@@ -47,39 +39,18 @@ data class GrunnlagBeregning(
     val sjablonListe: List<SjablonPeriode>,
 )
 
-data class Inntekt(
-    val referanse: String,
-    val type: String,
-    val beløp: BigDecimal,
-)
+data class Inntekt(val referanse: String, val type: String, val beløp: BigDecimal)
 
-data class Sivilstand(
-    val referanse: String,
-    val kode: Sivilstandskode,
-)
+data class Sivilstand(val referanse: String, val kode: Sivilstandskode)
 
-data class BarnIHusstanden(
-    val referanse: String,
-    val antall: Int,
-)
+data class BarnIHusstanden(val referanse: String, val antall: Int)
 
-data class Alder(
-    val referanse: String,
-    val alder: Int,
-)
+data class Alder(val referanse: String, val alder: Int)
 
-data class Bostatus(
-    val referanse: String,
-    val kode: Bostatuskode,
-)
+data class Bostatus(val referanse: String, val kode: Bostatuskode)
 
 // Resultat beregning
-data class ResultatBeregning(
-    val beløp: BigDecimal,
-    val kode: Resultatkode,
-    val regel: String,
-    val sjablonListe: List<SjablonPeriodeNavnVerdi>,
-)
+data class ResultatBeregning(val beløp: BigDecimal, val kode: Resultatkode, val regel: String, val sjablonListe: List<SjablonPeriodeNavnVerdi>)
 
 // Hjelpeklasser
 data class GrunnlagTilBeregning(

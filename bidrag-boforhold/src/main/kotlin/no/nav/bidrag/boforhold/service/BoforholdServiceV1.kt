@@ -7,7 +7,7 @@ import no.nav.bidrag.domene.enums.person.Bostatuskode
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
-internal class BoforholdServiceV1() {
+internal class BoforholdServiceV1 {
     fun beregnEgneBarn(virkningstidspunkt: LocalDate, boforholdGrunnlagListe: List<RelatertPerson>): List<BoforholdBeregnet> {
         secureLogger.info { "Beregner bostatus for BMs egne barn. Input: $virkningstidspunkt $boforholdGrunnlagListe" }
 
@@ -290,11 +290,8 @@ internal class BoforholdServiceV1() {
         return listeJustertMotAttenårsdag
     }
 
-    private fun personenHarFylt18År(fødselsdato: LocalDate, dato: LocalDate): Boolean {
-        return ChronoUnit.YEARS.between(fødselsdato.plusMonths(1).withDayOfMonth(1), dato) >= 18
-    }
+    private fun personenHarFylt18År(fødselsdato: LocalDate, dato: LocalDate): Boolean =
+        ChronoUnit.YEARS.between(fødselsdato.plusMonths(1).withDayOfMonth(1), dato) >= 18
 
-    private fun beregnetAttenÅrFraDato(fødselsdato: LocalDate): LocalDate {
-        return fødselsdato.plusYears(18).plusMonths(1).withDayOfMonth(1)
-    }
+    private fun beregnetAttenÅrFraDato(fødselsdato: LocalDate): LocalDate = fødselsdato.plusYears(18).plusMonths(1).withDayOfMonth(1)
 }

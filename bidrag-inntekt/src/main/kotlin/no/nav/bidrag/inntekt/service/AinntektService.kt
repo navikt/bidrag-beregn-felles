@@ -103,17 +103,15 @@ class AinntektService {
         // Avviker fra default hvis beløp skal regnes om til årsverdi
         multiplikator: Int = 1,
         scale: Int = 0,
-    ): List<InntektPost> {
-        return inntektPostListe
-            .groupBy(InntektPost::kode)
-            .map {
-                InntektPost(
-                    kode = it.key,
-                    beløp = it.value.sumOf(InntektPost::beløp).multiply(BigDecimal.valueOf(multiplikator.toLong()))
-                        .setScale(scale, RoundingMode.HALF_UP),
-                )
-            }
-    }
+    ): List<InntektPost> = inntektPostListe
+        .groupBy(InntektPost::kode)
+        .map {
+            InntektPost(
+                kode = it.key,
+                beløp = it.value.sumOf(InntektPost::beløp).multiply(BigDecimal.valueOf(multiplikator.toLong()))
+                    .setScale(scale, RoundingMode.HALF_UP),
+            )
+        }
 
     // Summerer og grupperer ainntekter pr år
     private fun summerAarsinntekter(
@@ -163,6 +161,33 @@ class AinntektService {
                     periodeTil = periode.periodeTil,
                     inntektPostListe = mutableListOf(),
                 )
+        }
+
+        // Lager map for opprinnelig vedtakstidspunkt med beløp 0 hvis det ikke finnes poster som matcher
+        vedtakstidspunktOpprinneligeVedtak.forEach {
+            var key = KEY_3MND_OV + "_" + it.toString()
+            if (!ainntektMap.containsKey(key)) {
+                val periode = bestemPeriode(key, it)
+                ainntektMap[key] =
+                    InntektSumPost(
+                        sumInntekt = BigDecimal.ZERO,
+                        periodeFra = periode.periodeFra,
+                        periodeTil = periode.periodeTil,
+                        inntektPostListe = mutableListOf(),
+                    )
+            }
+
+            key = KEY_12MND_OV + "_" + it.toString()
+            if (!ainntektMap.containsKey(key)) {
+                val periode = bestemPeriode(key, it)
+                ainntektMap[key] =
+                    InntektSumPost(
+                        sumInntekt = BigDecimal.ZERO,
+                        periodeFra = periode.periodeFra,
+                        periodeTil = periode.periodeTil,
+                        inntektPostListe = mutableListOf(),
+                    )
+            }
         }
 
         return ainntektMap.toMap()
@@ -359,8 +384,4 @@ class AinntektService {
     }
 }
 
-data class Detaljpost(
-    val beløp: BigDecimal,
-    val kode: String,
-    val referanse: String,
-)
+data class Detaljpost(val beløp: BigDecimal, val kode: String, val referanse: String)

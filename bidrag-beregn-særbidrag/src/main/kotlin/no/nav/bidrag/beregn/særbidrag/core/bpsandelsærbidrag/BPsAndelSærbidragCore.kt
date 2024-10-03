@@ -16,10 +16,9 @@ import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.ResultatPerio
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.UtgiftPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.periode.BPsAndelSærbidragPeriode
 import no.nav.bidrag.beregn.særbidrag.core.felles.FellesCore
+import java.util.Collections.emptyList
 
-internal class BPsAndelSærbidragCore(
-    private val bPsAndelSærbidragPeriode: BPsAndelSærbidragPeriode = BPsAndelSærbidragPeriode(),
-) : FellesCore() {
+internal class BPsAndelSærbidragCore(private val bPsAndelSærbidragPeriode: BPsAndelSærbidragPeriode = BPsAndelSærbidragPeriode()) : FellesCore() {
 
     fun beregnBPsAndelSærbidrag(grunnlag: BeregnBPsAndelSærbidragGrunnlagCore): BeregnBPsAndelSærbidragResultatCore {
         val beregnBPsAndelSærbidragGrunnlag = mapTilBusinessObject(grunnlag)
@@ -69,8 +68,10 @@ internal class BPsAndelSærbidragCore(
         ResultatPeriodeCore(
             periode = PeriodeCore(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
             resultat = ResultatBeregningCore(
-                resultatAndelFaktor = it.resultat.resultatAndelFaktor,
-                resultatAndelBeløp = it.resultat.resultatAndelBeløp,
+                endeligAndelFaktor = it.resultat.endeligAndelFaktor,
+                andelBeløp = it.resultat.andelBeløp,
+                beregnetAndelFaktor = it.resultat.beregnetAndelFaktor,
+                barnEndeligInntekt = it.resultat.barnEndeligInntekt,
                 barnetErSelvforsørget = it.resultat.barnetErSelvforsørget,
             ),
             grunnlagsreferanseListe = mapReferanseListe(it).sorted().toMutableList(),

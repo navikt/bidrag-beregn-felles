@@ -34,6 +34,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.util.Collections.emptyList
 
 @ExtendWith(MockitoExtension::class)
 internal class BPsAndelSærbidragCoreTest {
@@ -161,8 +162,10 @@ internal class BPsAndelSærbidragCoreTest {
             ResultatPeriode(
                 periode = Periode(datoFom = LocalDate.parse("2020-01-01"), datoTil = LocalDate.parse("2020-02-01")),
                 resultat = ResultatBeregning(
-                    resultatAndelFaktor = BigDecimal.valueOf(0.10),
-                    resultatAndelBeløp = BigDecimal.valueOf(1000),
+                    endeligAndelFaktor = BigDecimal.valueOf(0.10),
+                    andelBeløp = BigDecimal.valueOf(1000),
+                    beregnetAndelFaktor = BigDecimal.valueOf(0.10),
+                    barnEndeligInntekt = BigDecimal.ZERO,
                     barnetErSelvforsørget = false,
                     sjablonListe = listOf(
                         SjablonPeriodeNavnVerdi(
@@ -194,9 +197,7 @@ internal class BPsAndelSærbidragCoreTest {
         return BeregnBPsAndelSærbidragResultat(periodeResultatListe)
     }
 
-    private fun byggAvvik(): List<Avvik> {
-        return listOf(
-            Avvik(avvikTekst = "beregnDatoTil må være etter beregnDatoFra", avvikType = Avvikstype.DATO_FOM_ETTER_DATO_TIL),
-        )
-    }
+    private fun byggAvvik(): List<Avvik> = listOf(
+        Avvik(avvikTekst = "beregnDatoTil må være etter beregnDatoFra", avvikType = Avvikstype.DATO_FOM_ETTER_DATO_TIL),
+    )
 }

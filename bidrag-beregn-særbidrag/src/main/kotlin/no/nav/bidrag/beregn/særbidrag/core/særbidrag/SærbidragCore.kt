@@ -10,6 +10,7 @@ import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BeregnSærbidragResult
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BetaltAvBpPeriode
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BidragsevnePeriode
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.ResultatPeriode
+import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.SumLøpendeBidragPeriode
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BPsAndelSærbidragPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BeregnSærbidragGrunnlagCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BeregnSærbidragResultatCore
@@ -17,7 +18,9 @@ import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BetaltAvBpPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BidragsevnePeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.ResultatBeregningCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.ResultatPeriodeCore
+import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.SumLøpendeBidragPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.periode.SærbidragPeriode
+import java.util.Collections.emptyList
 
 internal class SærbidragCore(private val særbidragPeriode: SærbidragPeriode = SærbidragPeriode()) : FellesCore() {
 
@@ -39,6 +42,7 @@ internal class SærbidragCore(private val særbidragPeriode: SærbidragPeriode =
         søknadsbarnPersonId = grunnlag.søknadsbarnPersonId,
         betaltAvBpPeriodeListe = mapBetaltAvBpPeriodeListe(grunnlag.betaltAvBpPeriodeListe),
         bidragsevnePeriodeListe = mapBidragsevnePeriodeListe(grunnlag.bidragsevnePeriodeListe),
+        sumLøpendeBidrag = mapSumLøpendeBidrag(grunnlag.sumLøpendeBidrag),
         bPsAndelSærbidragPeriodeListe = mapBPsAndelSærbidragPeriodeListe(grunnlag.bPsAndelSærbidragPeriodeListe),
     )
 
@@ -60,39 +64,54 @@ internal class SærbidragCore(private val særbidragPeriode: SærbidragPeriode =
             referanse = it.referanse,
             periode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
             beløp = it.beløp,
+            skatt = it.skatt,
+            underholdBarnEgenHusstand = it.underholdBarnEgenHusstand,
         )
     }
 
-    private fun mapBPsAndelSærbidragPeriodeListe(bPsAndelSærbidragPeriodeListeCore: List<BPsAndelSærbidragPeriodeCore>) =
-        bPsAndelSærbidragPeriodeListeCore.map {
-            BPsAndelSærbidragPeriode(
-                referanse = it.referanse,
-                periode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
-                andelFaktor = it.andelFaktor,
-                andelBeløp = it.andelBeløp,
-                barnetErSelvforsørget = it.barnetErSelvforsørget,
-            )
-        }
+    private fun mapSumLøpendeBidrag(sumLøpendeBidragPeriodeCore: SumLøpendeBidragPeriodeCore) = SumLøpendeBidragPeriode(
+        referanse = sumLøpendeBidragPeriodeCore.referanse,
+        periode = Periode(
+            datoFom = sumLøpendeBidragPeriodeCore.periode.datoFom,
+            datoTil = sumLøpendeBidragPeriodeCore.periode.datoTil,
+        ),
+        sum = sumLøpendeBidragPeriodeCore.sum,
+    )
+}
 
-    private fun mapResultatPeriode(resultatPeriodeListe: List<ResultatPeriode>) = resultatPeriodeListe.map {
-        ResultatPeriodeCore(
-            periode = PeriodeCore(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
-            søknadsbarnPersonId = it.søknadsbarnPersonId,
-            resultat = ResultatBeregningCore(
-                beregnetBeløp = it.resultat.beregnetBeløp,
-                resultatKode = it.resultat.resultatKode,
-                resultatBeløp = it.resultat.resultatBeløp,
-            ),
-            grunnlagsreferanseListe = mapReferanseListe(it).sorted().toMutableList(),
+private fun mapBPsAndelSærbidragPeriodeListe(bPsAndelSærbidragPeriodeListeCore: List<BPsAndelSærbidragPeriodeCore>) =
+    bPsAndelSærbidragPeriodeListeCore.map {
+        BPsAndelSærbidragPeriode(
+            referanse = it.referanse,
+            periode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
+            endeligAndelFaktor = it.endeligAndelFaktor,
+            andelBeløp = it.andelBeløp,
+            beregnetAndelFaktor = it.beregnetAndelFaktor,
+            barnEndeligInntekt = it.barnEndeligInntekt,
+            barnetErSelvforsørget = it.barnetErSelvforsørget,
         )
     }
 
-    private fun mapReferanseListe(resultatPeriode: ResultatPeriode): List<String> {
-        val (beløpBetaltAvBp, bidragsevne, bPsAndelSærbidrag) = resultatPeriode.grunnlag
-        val referanseListe = mutableListOf<String>()
-        referanseListe.add(beløpBetaltAvBp.referanse)
-        referanseListe.add(bidragsevne.referanse)
-        referanseListe.add(bPsAndelSærbidrag.referanse)
-        return referanseListe.sorted()
-    }
+private fun mapResultatPeriode(resultatPeriodeListe: List<ResultatPeriode>) = resultatPeriodeListe.map {
+    ResultatPeriodeCore(
+        periode = PeriodeCore(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
+        søknadsbarnPersonId = it.søknadsbarnPersonId,
+        resultat = ResultatBeregningCore(
+            beregnetBeløp = it.resultat.beregnetBeløp,
+            resultatKode = it.resultat.resultatKode,
+            resultatBeløp = it.resultat.resultatBeløp,
+        ),
+        grunnlagsreferanseListe = mapReferanseListe(it).sorted().toMutableList(),
+    )
+}
+
+private fun mapReferanseListe(resultatPeriode: ResultatPeriode): List<String> {
+    val (_, bidragsevne, sumLøpendeBidrag, bPsAndelSærbidrag) = resultatPeriode.grunnlag
+    val referanseListe = mutableListOf<String>()
+    // Ikke nødvendig
+    //    referanseListe.add(beløpBetaltAvBp.referanse)
+    referanseListe.add(bidragsevne.referanse)
+    referanseListe.add(sumLøpendeBidrag.referanse)
+    referanseListe.add(bPsAndelSærbidrag.referanse)
+    return referanseListe.sorted()
 }

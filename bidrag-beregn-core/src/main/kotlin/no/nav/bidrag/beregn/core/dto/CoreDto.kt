@@ -2,18 +2,13 @@ package no.nav.bidrag.beregn.core.dto
 
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.util.Collections.emptyList
 
 // Felles Periode
-data class PeriodeCore(
-    val datoFom: LocalDate,
-    val datoTil: LocalDate?,
-)
+data class PeriodeCore(val datoFom: LocalDate, val datoTil: LocalDate?)
 
 // Felles Avvik
-data class AvvikCore(
-    val avvikTekst: String,
-    val avvikType: String,
-)
+data class AvvikCore(val avvikTekst: String, val avvikType: String)
 
 // Felles Delberegninger
 interface Delberegning {
@@ -51,30 +46,12 @@ data class SjablonPeriodeCore(
     val innholdListe: List<SjablonInnholdCore>,
 )
 
-data class SjablonCore(
-    val navn: String,
-    val nøkkelListe: List<SjablonNøkkelCore>? = emptyList(),
-    val innholdListe: List<SjablonInnholdCore>,
-)
+data class SjablonCore(val navn: String, val nøkkelListe: List<SjablonNøkkelCore>? = emptyList(), val innholdListe: List<SjablonInnholdCore>)
 
-data class SjablonNøkkelCore(
-    val navn: String,
-    val verdi: String,
-)
+data class SjablonNøkkelCore(val navn: String, val verdi: String)
 
-data class SjablonInnholdCore(
-    val navn: String,
-    val verdi: BigDecimal,
-)
+data class SjablonInnholdCore(val navn: String, val verdi: BigDecimal)
 
-data class SjablonNavnVerdiCore(
-    val navn: String,
-    val verdi: BigDecimal,
-)
+data class SjablonNavnVerdiCore(val navn: String, val verdi: BigDecimal)
 
-data class SjablonResultatGrunnlagCore(
-    val referanse: String,
-    val periode: PeriodeCore,
-    val navn: String,
-    val verdi: BigDecimal,
-)
+data class SjablonResultatGrunnlagCore(val referanse: String, val periode: PeriodeCore, val navn: String, val verdi: BigDecimal)

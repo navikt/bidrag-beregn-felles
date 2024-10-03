@@ -14,6 +14,8 @@ import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BostatusPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
+import java.util.ArrayList
+import java.util.Collections.emptyList
 
 internal object BidragsevneCoreMapper : CoreMapper() {
     fun mapBidragsevneGrunnlagTilCore(
@@ -78,8 +80,10 @@ internal object BidragsevneCoreMapper : CoreMapper() {
                 beregnGrunnlag.grunnlagListe
                     .filtrerOgKonverterBasertPåEgenReferanse<BostatusPeriode>(Grunnlagstype.BOSTATUS_PERIODE)
                     .filter {
-                        it.innhold.bostatus == Bostatuskode.MED_FORELDER || it.innhold.bostatus == Bostatuskode.IKKE_MED_FORELDER ||
-                            it.innhold.bostatus == Bostatuskode.DOKUMENTERT_SKOLEGANG || it.innhold.bostatus == Bostatuskode.DELT_BOSTED ||
+                        it.innhold.bostatus == Bostatuskode.MED_FORELDER ||
+                            it.innhold.bostatus == Bostatuskode.IKKE_MED_FORELDER ||
+                            it.innhold.bostatus == Bostatuskode.DOKUMENTERT_SKOLEGANG ||
+                            it.innhold.bostatus == Bostatuskode.DELT_BOSTED ||
                             it.innhold.bostatus == Bostatuskode.REGNES_IKKE_SOM_BARN
                     }
                     .map {
@@ -120,7 +124,8 @@ internal object BidragsevneCoreMapper : CoreMapper() {
                 beregnGrunnlag.grunnlagListe
                     .filtrerOgKonverterBasertPåEgenReferanse<BostatusPeriode>(Grunnlagstype.BOSTATUS_PERIODE)
                     .filter {
-                        it.innhold.bostatus == Bostatuskode.REGNES_IKKE_SOM_BARN || it.innhold.bostatus == Bostatuskode.BOR_MED_ANDRE_VOKSNE ||
+                        it.innhold.bostatus == Bostatuskode.REGNES_IKKE_SOM_BARN ||
+                            it.innhold.bostatus == Bostatuskode.BOR_MED_ANDRE_VOKSNE ||
                             it.innhold.bostatus == Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE
                     }
                     .map {

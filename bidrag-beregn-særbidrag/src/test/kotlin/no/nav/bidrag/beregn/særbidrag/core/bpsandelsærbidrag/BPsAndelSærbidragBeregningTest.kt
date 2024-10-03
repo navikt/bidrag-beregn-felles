@@ -29,8 +29,8 @@ class BPsAndelSærbidragBeregningTest {
         val resultat = bPsAndelSærbidragBeregning.beregn(grunnlag)
 
         assertAll(
-            { assertThat(resultat.resultatAndelFaktor).isGreaterThan(BigDecimal.ZERO) },
-            { assertThat(resultat.resultatAndelBeløp).isGreaterThan(BigDecimal.ZERO) },
+            { assertThat(resultat.endeligAndelFaktor).isGreaterThan(BigDecimal.ZERO) },
+            { assertThat(resultat.andelBeløp).isGreaterThan(BigDecimal.ZERO) },
             { assertThat(resultat.barnetErSelvforsørget).isFalse() },
         )
     }
@@ -48,8 +48,8 @@ class BPsAndelSærbidragBeregningTest {
         val resultat = bPsAndelSærbidragBeregning.beregn(grunnlag)
 
         assertAll(
-            { assertThat(resultat.resultatAndelFaktor).isGreaterThan(BigDecimal.ZERO) },
-            { assertThat(resultat.resultatAndelBeløp).isGreaterThan(BigDecimal.ZERO) },
+            { assertThat(resultat.endeligAndelFaktor).isGreaterThan(BigDecimal.ZERO) },
+            { assertThat(resultat.andelBeløp).isGreaterThan(BigDecimal.ZERO) },
             { assertThat(resultat.barnetErSelvforsørget).isFalse() },
         )
     }
@@ -67,8 +67,8 @@ class BPsAndelSærbidragBeregningTest {
         val resultat = bPsAndelSærbidragBeregning.beregn(grunnlag)
 
         assertAll(
-            { assertThat(resultat.resultatAndelFaktor).isEqualTo(BigDecimal.valueOf(0.833333333333)) },
-            { assertThat(resultat.resultatAndelBeløp).isGreaterThan(BigDecimal.ZERO) },
+            { assertThat(resultat.endeligAndelFaktor).isEqualTo(BigDecimal.valueOf(0.833333333333)) },
+            { assertThat(resultat.andelBeløp).isGreaterThan(BigDecimal.ZERO) },
             { assertThat(resultat.barnetErSelvforsørget).isFalse() },
         )
     }
@@ -86,8 +86,8 @@ class BPsAndelSærbidragBeregningTest {
         val resultat = bPsAndelSærbidragBeregning.beregn(grunnlag)
 
         assertAll(
-            { assertThat(resultat.resultatAndelFaktor).isEqualTo(BigDecimal.ZERO) },
-            { assertThat(resultat.resultatAndelBeløp).isEqualTo(BigDecimal.ZERO) },
+            { assertThat(resultat.endeligAndelFaktor).isEqualTo(BigDecimal.ZERO) },
+            { assertThat(resultat.andelBeløp).isEqualTo(BigDecimal.ZERO) },
             { assertThat(resultat.barnetErSelvforsørget).isTrue() },
         )
     }

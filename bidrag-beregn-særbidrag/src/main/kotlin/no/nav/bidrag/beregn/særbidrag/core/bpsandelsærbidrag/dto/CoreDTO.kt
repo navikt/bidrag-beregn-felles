@@ -20,11 +20,7 @@ data class BeregnBPsAndelSærbidragGrunnlagCore(
     var sjablonPeriodeListe: List<SjablonPeriodeCore>,
 )
 
-data class UtgiftPeriodeCore(
-    val referanse: String,
-    val periode: PeriodeCore,
-    val beløp: BigDecimal,
-)
+data class UtgiftPeriodeCore(val referanse: String, val periode: PeriodeCore, val beløp: BigDecimal)
 
 // Resultatperiode
 data class BeregnBPsAndelSærbidragResultatCore(
@@ -40,7 +36,9 @@ data class ResultatPeriodeCore(
 ) : IResultatPeriode
 
 data class ResultatBeregningCore(
-    val resultatAndelFaktor: BigDecimal,
-    val resultatAndelBeløp: BigDecimal,
+    val endeligAndelFaktor: BigDecimal,
+    val andelBeløp: BigDecimal,
+    val beregnetAndelFaktor: BigDecimal,
+    val barnEndeligInntekt: BigDecimal,
     val barnetErSelvforsørget: Boolean,
 )

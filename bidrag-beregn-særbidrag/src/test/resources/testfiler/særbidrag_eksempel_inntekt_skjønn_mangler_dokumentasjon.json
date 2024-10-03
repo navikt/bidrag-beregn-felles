@@ -1,215 +1,255 @@
 {
-  "periode" : {
-    "fom" : "2024-08",
-    "til" : "2024-09"
+  "periode": {
+    "fom": "2024-08",
+    "til": "2024-09"
   },
-  "søknadsbarnReferanse" : "person_PERSON_SØKNADSBARN_20050916_101",
-  "grunnlagListe" : [ {
-    "referanse" : "person_PERSON_BIDRAGSMOTTAKER_19720829_100",
-    "type" : "PERSON_BIDRAGSMOTTAKER",
-    "innhold" : {
-      "ident" : "29487249651",
-      "navn" : null,
-      "fødselsdato" : "1972-08-29"
-    },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderReferanse" : null
-  }, {
-    "referanse" : "person_PERSON_BIDRAGSPLIKTIG_19781115_99",
-    "type" : "PERSON_BIDRAGSPLIKTIG",
-    "innhold" : {
-      "ident" : "15517829118",
-      "navn" : null,
-      "fødselsdato" : "1978-11-15"
-    },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderReferanse" : null
-  }, {
-    "referanse" : "person_PERSON_SØKNADSBARN_20050916_101",
-    "type" : "PERSON_SØKNADSBARN",
-    "innhold" : {
-      "ident" : "16490550511",
-      "navn" : null,
-      "fødselsdato" : "2005-09-16"
-    },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderReferanse" : null
-  }, {
-    "referanse" : "bostatus_person_PERSON_HUSSTANDSMEDLEM_20220726_169_20240801",
-    "type" : "BOSTATUS_PERIODE",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-08",
-        "til" : null
+  "søknadsbarnReferanse": "person_PERSON_SØKNADSBARN_20050916_101",
+  "grunnlagListe": [
+    {
+      "referanse": "person_PERSON_BIDRAGSMOTTAKER_19720829_100",
+      "type": "PERSON_BIDRAGSMOTTAKER",
+      "innhold": {
+        "ident": "29487249651",
+        "navn": null,
+        "fødselsdato": "1972-08-29"
       },
-      "bostatus" : "MED_FORELDER",
-      "relatertTilPart" : "person_PERSON_BIDRAGSPLIKTIG_19781115_99",
-      "manueltRegistrert" : false
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
     },
-    "grunnlagsreferanseListe" : [ "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19781115_99_person_PERSON_HUSSTANDSMEDLEM_20220726_169" ],
-    "gjelderReferanse" : "person_PERSON_HUSSTANDSMEDLEM_20220726_169"
-  }, {
-    "referanse" : "bostatus_person_PERSON_SØKNADSBARN_20050916_101_20240801",
-    "type" : "BOSTATUS_PERIODE",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-08",
-        "til" : null
+    {
+      "referanse": "person_PERSON_BIDRAGSPLIKTIG_19781115_99",
+      "type": "PERSON_BIDRAGSPLIKTIG",
+      "innhold": {
+        "ident": "15517829118",
+        "navn": null,
+        "fødselsdato": "1978-11-15"
       },
-      "bostatus" : "REGNES_IKKE_SOM_BARN",
-      "relatertTilPart" : "person_PERSON_BIDRAGSPLIKTIG_19781115_99",
-      "manueltRegistrert" : false
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
     },
-    "grunnlagsreferanseListe" : [ "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19781115_99_person_PERSON_SØKNADSBARN_20050916_101" ],
-    "gjelderReferanse" : "person_PERSON_SØKNADSBARN_20050916_101"
-  }, {
-    "referanse" : "bostatus_person_PERSON_BIDRAGSPLIKTIG_19781115_99_20240801",
-    "type" : "BOSTATUS_PERIODE",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-08",
-        "til" : null
+    {
+      "referanse": "person_PERSON_SØKNADSBARN_20050916_101",
+      "type": "PERSON_SØKNADSBARN",
+      "innhold": {
+        "ident": "16490550511",
+        "navn": null,
+        "fødselsdato": "2005-09-16"
       },
-      "bostatus" : "BOR_MED_ANDRE_VOKSNE",
-      "relatertTilPart" : "person_PERSON_BIDRAGSPLIKTIG_19781115_99",
-      "manueltRegistrert" : true
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
     },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderReferanse" : "person_PERSON_BIDRAGSPLIKTIG_19781115_99"
-  }, {
-    "referanse" : "bostatus_person_PERSON_HUSSTANDSMEDLEM_20170707_166_20240801",
-    "type" : "BOSTATUS_PERIODE",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-08",
-        "til" : null
+    {
+      "referanse": "bostatus_person_PERSON_HUSSTANDSMEDLEM_20220726_169_20240801",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": null
+        },
+        "bostatus": "MED_FORELDER",
+        "relatertTilPart": "person_PERSON_BIDRAGSPLIKTIG_19781115_99",
+        "manueltRegistrert": false
       },
-      "bostatus" : "IKKE_MED_FORELDER",
-      "relatertTilPart" : "person_PERSON_BIDRAGSPLIKTIG_19781115_99",
-      "manueltRegistrert" : false
+      "grunnlagsreferanseListe": [
+        "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19781115_99_person_PERSON_HUSSTANDSMEDLEM_20220726_169"
+      ],
+      "gjelderReferanse": "person_PERSON_HUSSTANDSMEDLEM_20220726_169"
     },
-    "grunnlagsreferanseListe" : [ "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19781115_99_person_PERSON_HUSSTANDSMEDLEM_20170707_166" ],
-    "gjelderReferanse" : "person_PERSON_HUSSTANDSMEDLEM_20170707_166"
-  }, {
-    "referanse" : "bostatus_person_PERSON_HUSSTANDSMEDLEM_20150513_167_20240801",
-    "type" : "BOSTATUS_PERIODE",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-08",
-        "til" : null
+    {
+      "referanse": "bostatus_person_PERSON_SØKNADSBARN_20050916_101_20240801",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": null
+        },
+        "bostatus": "REGNES_IKKE_SOM_BARN",
+        "relatertTilPart": "person_PERSON_BIDRAGSPLIKTIG_19781115_99",
+        "manueltRegistrert": false
       },
-      "bostatus" : "MED_FORELDER",
-      "relatertTilPart" : "person_PERSON_BIDRAGSPLIKTIG_19781115_99",
-      "manueltRegistrert" : false
+      "grunnlagsreferanseListe": [
+        "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19781115_99_person_PERSON_SØKNADSBARN_20050916_101"
+      ],
+      "gjelderReferanse": "person_PERSON_SØKNADSBARN_20050916_101"
     },
-    "grunnlagsreferanseListe" : [ "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19781115_99_person_PERSON_HUSSTANDSMEDLEM_20150513_167" ],
-    "gjelderReferanse" : "person_PERSON_HUSSTANDSMEDLEM_20150513_167"
-  }, {
-    "referanse" : "person_PERSON_HUSSTANDSMEDLEM_20220726_169",
-    "type" : "PERSON_HUSSTANDSMEDLEM",
-    "innhold" : {
-      "ident" : "26472252274",
-      "navn" : null,
-      "fødselsdato" : "2022-07-26"
-    },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderReferanse" : null
-  }, {
-    "referanse" : "person_PERSON_HUSSTANDSMEDLEM_20170707_166",
-    "type" : "PERSON_HUSSTANDSMEDLEM",
-    "innhold" : {
-      "ident" : "07471780639",
-      "navn" : null,
-      "fødselsdato" : "2017-07-07"
-    },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderReferanse" : null
-  }, {
-    "referanse" : "person_PERSON_HUSSTANDSMEDLEM_20150513_167",
-    "type" : "PERSON_HUSSTANDSMEDLEM",
-    "innhold" : {
-      "ident" : "13451585880",
-      "navn" : null,
-      "fødselsdato" : "2015-05-13"
-    },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderReferanse" : null
-  }, {
-    "referanse" : "inntekt_SKJØNN_MANGLER_DOKUMENTASJON_person_PERSON_SØKNADSBARN_20050916_101_20240801_584",
-    "type" : "INNTEKT_RAPPORTERING_PERIODE",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-08",
-        "til" : null
+    {
+      "referanse": "bostatus_person_PERSON_BIDRAGSPLIKTIG_19781115_99_20240801",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": null
+        },
+        "bostatus": "BOR_MED_ANDRE_VOKSNE",
+        "relatertTilPart": "person_PERSON_BIDRAGSPLIKTIG_19781115_99",
+        "manueltRegistrert": true
       },
-      "manueltRegistrert" : true,
-      "opprinneligPeriode" : null,
-      "versjon" : null,
-      "inntektsrapportering" : "SKJØNN_MANGLER_DOKUMENTASJON",
-      "gjelderBarn" : null,
-      "beløp" : 30000,
-      "valgt" : true,
-      "inntekstpostListe" : [ ]
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19781115_99"
     },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderReferanse" : "person_PERSON_SØKNADSBARN_20050916_101"
-  }, {
-    "referanse" : "inntekt_SKJØNN_MANGLER_DOKUMENTASJON_person_PERSON_BIDRAGSPLIKTIG_19781115_99_20240801_585",
-    "type" : "INNTEKT_RAPPORTERING_PERIODE",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-08",
-        "til" : null
+    {
+      "referanse": "bostatus_person_PERSON_HUSSTANDSMEDLEM_20170707_166_20240801",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": null
+        },
+        "bostatus": "IKKE_MED_FORELDER",
+        "relatertTilPart": "person_PERSON_BIDRAGSPLIKTIG_19781115_99",
+        "manueltRegistrert": false
       },
-      "manueltRegistrert" : true,
-      "opprinneligPeriode" : null,
-      "versjon" : null,
-      "inntektsrapportering" : "SKJØNN_MANGLER_DOKUMENTASJON",
-      "gjelderBarn" : null,
-      "beløp" : 50000,
-      "valgt" : true,
-      "inntekstpostListe" : [ ]
+      "grunnlagsreferanseListe": [
+        "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19781115_99_person_PERSON_HUSSTANDSMEDLEM_20170707_166"
+      ],
+      "gjelderReferanse": "person_PERSON_HUSSTANDSMEDLEM_20170707_166"
     },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderReferanse" : "person_PERSON_BIDRAGSPLIKTIG_19781115_99"
-  }, {
-    "referanse" : "inntekt_AINNTEKT_person_PERSON_BIDRAGSMOTTAKER_19720829_100_20230101_20231231_451",
-    "type" : "INNTEKT_RAPPORTERING_PERIODE",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-08",
-        "til" : null
+    {
+      "referanse": "bostatus_person_PERSON_HUSSTANDSMEDLEM_20150513_167_20240801",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": null
+        },
+        "bostatus": "MED_FORELDER",
+        "relatertTilPart": "person_PERSON_BIDRAGSPLIKTIG_19781115_99",
+        "manueltRegistrert": false
       },
-      "manueltRegistrert" : false,
-      "opprinneligPeriode" : {
-        "fom" : "2023-01",
-        "til" : "2024-01"
-      },
-      "versjon" : "2024.08.01.144303_14dcb50",
-      "inntektsrapportering" : "AINNTEKT",
-      "gjelderBarn" : null,
-      "beløp" : 125000,
-      "valgt" : true,
-      "inntekstpostListe" : [ {
-        "kode" : "fastloenn",
-        "inntekstype" : null,
-        "beløp" : 125000
-      } ]
+      "grunnlagsreferanseListe": [
+        "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19781115_99_person_PERSON_HUSSTANDSMEDLEM_20150513_167"
+      ],
+      "gjelderReferanse": "person_PERSON_HUSSTANDSMEDLEM_20150513_167"
     },
-    "grunnlagsreferanseListe" : [ "innhentet_ainntekt_person_PERSON_BIDRAGSMOTTAKER_19720829_100" ],
-    "gjelderReferanse" : "person_PERSON_BIDRAGSMOTTAKER_19720829_100"
-  }, {
-    "referanse" : "delberegning_utgift",
-    "type" : "DELBEREGNING_UTGIFT",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-08",
-        "til" : "2024-09"
+    {
+      "referanse": "person_PERSON_HUSSTANDSMEDLEM_20220726_169",
+      "type": "PERSON_HUSSTANDSMEDLEM",
+      "innhold": {
+        "ident": "26472252274",
+        "navn": null,
+        "fødselsdato": "2022-07-26"
       },
-      "sumBetaltAvBp" : 123,
-      "sumGodkjent" : 5000
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
     },
-    "grunnlagsreferanseListe" : [ "utgiftsposter", "utgift_direkte_betalt" ],
-    "gjelderReferanse" : null
-  } ]
+    {
+      "referanse": "person_PERSON_HUSSTANDSMEDLEM_20170707_166",
+      "type": "PERSON_HUSSTANDSMEDLEM",
+      "innhold": {
+        "ident": "07471780639",
+        "navn": null,
+        "fødselsdato": "2017-07-07"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "person_PERSON_HUSSTANDSMEDLEM_20150513_167",
+      "type": "PERSON_HUSSTANDSMEDLEM",
+      "innhold": {
+        "ident": "13451585880",
+        "navn": null,
+        "fødselsdato": "2015-05-13"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "inntekt_SKJØNN_MANGLER_DOKUMENTASJON_person_PERSON_SØKNADSBARN_20050916_101_20240801_584",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": null
+        },
+        "manueltRegistrert": true,
+        "opprinneligPeriode": null,
+        "versjon": null,
+        "inntektsrapportering": "SKJØNN_MANGLER_DOKUMENTASJON",
+        "gjelderBarn": null,
+        "beløp": 30000,
+        "valgt": true,
+        "inntekstpostListe": []
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "person_PERSON_SØKNADSBARN_20050916_101"
+    },
+    {
+      "referanse": "inntekt_SKJØNN_MANGLER_DOKUMENTASJON_person_PERSON_BIDRAGSPLIKTIG_19781115_99_20240801_585",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": null
+        },
+        "manueltRegistrert": true,
+        "opprinneligPeriode": null,
+        "versjon": null,
+        "inntektsrapportering": "SKJØNN_MANGLER_DOKUMENTASJON",
+        "gjelderBarn": null,
+        "beløp": 50000,
+        "valgt": true,
+        "inntekstpostListe": []
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19781115_99"
+    },
+    {
+      "referanse": "inntekt_AINNTEKT_person_PERSON_BIDRAGSMOTTAKER_19720829_100_20230101_20231231_451",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": null
+        },
+        "manueltRegistrert": false,
+        "opprinneligPeriode": {
+          "fom": "2023-01",
+          "til": "2024-01"
+        },
+        "versjon": "2024.08.01.144303_14dcb50",
+        "inntektsrapportering": "AINNTEKT",
+        "gjelderBarn": null,
+        "beløp": 125000,
+        "valgt": true,
+        "inntekstpostListe": [
+          {
+            "kode": "fastloenn",
+            "inntekstype": null,
+            "beløp": 125000
+          }
+        ]
+      },
+      "grunnlagsreferanseListe": [
+        "innhentet_ainntekt_person_PERSON_BIDRAGSMOTTAKER_19720829_100"
+      ],
+      "gjelderReferanse": "person_PERSON_BIDRAGSMOTTAKER_19720829_100"
+    },
+    {
+      "referanse": "delberegning_utgift",
+      "type": "DELBEREGNING_UTGIFT",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": "2024-09"
+        },
+        "sumBetaltAvBp": 123,
+        "sumGodkjent": 5000
+      },
+      "grunnlagsreferanseListe": [
+        "utgiftsposter",
+        "utgift_direkte_betalt"
+      ],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "løpende_bidrag_grunnlag_bidragspliktig",
+      "type": "LØPENDE_BIDRAG",
+      "innhold": {
+        "løpendeBidragListe": []
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19781115_99"
+    }
+  ]
 }

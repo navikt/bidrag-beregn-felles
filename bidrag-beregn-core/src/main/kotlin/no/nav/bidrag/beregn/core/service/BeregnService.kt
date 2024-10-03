@@ -27,6 +27,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBase
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettSjablonreferanse
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
+import javax.sound.midi.Sequence
 
 abstract class BeregnService {
     fun håndterAvvik(avvikListe: List<AvvikCore>, kontekst: String) {
@@ -98,8 +99,8 @@ abstract class BeregnService {
         referanse.contains(Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND.name) -> Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND
         referanse.contains(Grunnlagstype.DELBEREGNING_VOKSNE_I_HUSSTAND.name) -> Grunnlagstype.DELBEREGNING_VOKSNE_I_HUSSTAND
         referanse.contains(Grunnlagstype.DELBEREGNING_BIDRAGSEVNE.name) -> Grunnlagstype.DELBEREGNING_BIDRAGSEVNE
-        referanse.contains(Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL_SÆRBIDRAG.name) ->
-            Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL_SÆRBIDRAG
+        referanse.contains(Grunnlagstype.DELBEREGNING_SUM_LØPENDE_BIDRAG.name) -> Grunnlagstype.DELBEREGNING_SUM_LØPENDE_BIDRAG
+        referanse.contains(Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL.name) -> Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL
 
         else -> throw IllegalArgumentException("Ikke i stand til å utlede grunnlagstype for referanse: $referanse")
     }
