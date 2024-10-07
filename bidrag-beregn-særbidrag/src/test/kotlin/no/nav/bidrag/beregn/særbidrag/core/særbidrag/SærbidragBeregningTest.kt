@@ -9,6 +9,7 @@ import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.Bidragsevne
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.GrunnlagBeregning
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.SumLøpendeBidragPeriode
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.DisplayName
@@ -26,19 +27,34 @@ internal class SærbidragBeregningTest {
         val beløpBetaltAvBP = BigDecimal.ZERO
         val bPsAndelBeløp = BigDecimal.valueOf(4000)
         val bidragsevneBeløp = BigDecimal.valueOf(11000)
+        val skatt = DelberegningBidragsevne.Skatt(
+            minstefradrag = BigDecimal.valueOf(80000),
+            skattAlminneligInntekt = BigDecimal.valueOf(90000),
+            trinnskatt = BigDecimal.valueOf(10000),
+            trygdeavgift = BigDecimal.valueOf(50000),
+            sumSkatt = BigDecimal.valueOf(150000),
+        )
+        val underholdBarnEgenHusstand = BigDecimal.valueOf(10000)
         val sumLøpendeBidrag = BigDecimal.valueOf(10000)
 
         val grunnlagBeregningPeriodisert = GrunnlagBeregning(
             betaltAvBp = BetaltAvBp(referanse = TestUtil.BETALT_AV_BP_REFERANSE, beløp = beløpBetaltAvBP),
-            bidragsevne = Bidragsevne(referanse = TestUtil.BIDRAGSEVNE_REFERANSE, beløp = bidragsevneBeløp),
+            bidragsevne = Bidragsevne(
+                referanse = TestUtil.BIDRAGSEVNE_REFERANSE,
+                beløp = bidragsevneBeløp,
+                skatt = skatt,
+                underholdBarnEgenHusstand = underholdBarnEgenHusstand,
+            ),
             bPsAndelSærbidrag = BPsAndelSærbidrag(
                 referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,
-                andelFaktor = BigDecimal.valueOf(0.606),
+                endeligAndelFaktor = BigDecimal.valueOf(0.606),
                 andelBeløp = bPsAndelBeløp,
+                beregnetAndelFaktor = BigDecimal.valueOf(0.606),
+                barnEndeligInntekt = BigDecimal.ZERO,
                 barnetErSelvforsørget = false,
             ),
             sumLøpendeBidrag = SumLøpendeBidragPeriode(
-                referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG,
+                referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG_REFERANSE,
                 periode = Periode(LocalDate.now(), LocalDate.now()),
                 sumLøpendeBidrag = sumLøpendeBidrag,
             ),
@@ -59,19 +75,34 @@ internal class SærbidragBeregningTest {
         val beløpBetaltAvBP = BigDecimal.valueOf(2000)
         val bPsAndelBeløp = BigDecimal.valueOf(4000)
         val bidragsevneBeløp = BigDecimal.valueOf(11000)
+        val skatt = DelberegningBidragsevne.Skatt(
+            minstefradrag = BigDecimal.valueOf(80000),
+            skattAlminneligInntekt = BigDecimal.valueOf(90000),
+            trinnskatt = BigDecimal.valueOf(10000),
+            trygdeavgift = BigDecimal.valueOf(50000),
+            sumSkatt = BigDecimal.valueOf(150000),
+        )
+        val underholdBarnEgenHusstand = BigDecimal.valueOf(10000)
         val sumLøpendeBidrag = BigDecimal.valueOf(10000)
 
         val grunnlagBeregningPeriodisert = GrunnlagBeregning(
             betaltAvBp = BetaltAvBp(referanse = TestUtil.BETALT_AV_BP_REFERANSE, beløp = beløpBetaltAvBP),
-            bidragsevne = Bidragsevne(referanse = TestUtil.BIDRAGSEVNE_REFERANSE, beløp = bidragsevneBeløp),
+            bidragsevne = Bidragsevne(
+                referanse = TestUtil.BIDRAGSEVNE_REFERANSE,
+                beløp = bidragsevneBeløp,
+                skatt = skatt,
+                underholdBarnEgenHusstand = underholdBarnEgenHusstand,
+            ),
             bPsAndelSærbidrag = BPsAndelSærbidrag(
                 referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,
-                andelFaktor = BigDecimal.valueOf(0.606),
+                endeligAndelFaktor = BigDecimal.valueOf(0.606),
                 andelBeløp = bPsAndelBeløp,
+                beregnetAndelFaktor = BigDecimal.valueOf(0.606),
+                barnEndeligInntekt = BigDecimal.ZERO,
                 barnetErSelvforsørget = false,
             ),
             sumLøpendeBidrag = SumLøpendeBidragPeriode(
-                referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG,
+                referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG_REFERANSE,
                 periode = Periode(LocalDate.now(), LocalDate.now()),
                 sumLøpendeBidrag = sumLøpendeBidrag,
             ),
@@ -92,19 +123,34 @@ internal class SærbidragBeregningTest {
         val beløpBetaltAvBP = BigDecimal.valueOf(5000)
         val bPsAndelBeløp = BigDecimal.valueOf(4000)
         val bidragsevneBeløp = BigDecimal.valueOf(11000)
+        val skatt = DelberegningBidragsevne.Skatt(
+            minstefradrag = BigDecimal.valueOf(80000),
+            skattAlminneligInntekt = BigDecimal.valueOf(90000),
+            trinnskatt = BigDecimal.valueOf(10000),
+            trygdeavgift = BigDecimal.valueOf(50000),
+            sumSkatt = BigDecimal.valueOf(150000),
+        )
+        val underholdBarnEgenHusstand = BigDecimal.valueOf(10000)
         val sumLøpendeBidrag = BigDecimal.valueOf(10000)
 
         val grunnlagBeregningPeriodisert = GrunnlagBeregning(
             betaltAvBp = BetaltAvBp(referanse = TestUtil.BETALT_AV_BP_REFERANSE, beløp = beløpBetaltAvBP),
-            bidragsevne = Bidragsevne(referanse = TestUtil.BIDRAGSEVNE_REFERANSE, beløp = bidragsevneBeløp),
+            bidragsevne = Bidragsevne(
+                referanse = TestUtil.BIDRAGSEVNE_REFERANSE,
+                beløp = bidragsevneBeløp,
+                skatt = skatt,
+                underholdBarnEgenHusstand = underholdBarnEgenHusstand,
+            ),
             bPsAndelSærbidrag = BPsAndelSærbidrag(
                 referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,
-                andelFaktor = BigDecimal.valueOf(0.606),
+                endeligAndelFaktor = BigDecimal.valueOf(0.606),
                 andelBeløp = bPsAndelBeløp,
+                beregnetAndelFaktor = BigDecimal.valueOf(0.606),
+                barnEndeligInntekt = BigDecimal.ZERO,
                 barnetErSelvforsørget = false,
             ),
             sumLøpendeBidrag = SumLøpendeBidragPeriode(
-                referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG,
+                referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG_REFERANSE,
                 periode = Periode(LocalDate.now(), LocalDate.now()),
                 sumLøpendeBidrag = sumLøpendeBidrag,
             ),
@@ -125,19 +171,34 @@ internal class SærbidragBeregningTest {
         val beløpBetaltAvBP = BigDecimal.valueOf(5000)
         val bPsAndelBeløp = BigDecimal.valueOf(4000)
         val bidragsevneBeløp = BigDecimal.valueOf(2000)
+        val skatt = DelberegningBidragsevne.Skatt(
+            minstefradrag = BigDecimal.valueOf(80000),
+            skattAlminneligInntekt = BigDecimal.valueOf(90000),
+            trinnskatt = BigDecimal.valueOf(10000),
+            trygdeavgift = BigDecimal.valueOf(50000),
+            sumSkatt = BigDecimal.valueOf(150000),
+        )
+        val underholdBarnEgenHusstand = BigDecimal.valueOf(10000)
         val sumLøpendeBidrag = BigDecimal.valueOf(10000)
 
         val grunnlagBeregningPeriodisert = GrunnlagBeregning(
             betaltAvBp = BetaltAvBp(referanse = TestUtil.BETALT_AV_BP_REFERANSE, beløp = beløpBetaltAvBP),
-            bidragsevne = Bidragsevne(referanse = TestUtil.BIDRAGSEVNE_REFERANSE, beløp = bidragsevneBeløp),
+            bidragsevne = Bidragsevne(
+                referanse = TestUtil.BIDRAGSEVNE_REFERANSE,
+                beløp = bidragsevneBeløp,
+                skatt = skatt,
+                underholdBarnEgenHusstand = underholdBarnEgenHusstand,
+            ),
             bPsAndelSærbidrag = BPsAndelSærbidrag(
                 referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,
-                andelFaktor = BigDecimal.valueOf(0.606),
+                endeligAndelFaktor = BigDecimal.valueOf(0.606),
                 andelBeløp = bPsAndelBeløp,
+                beregnetAndelFaktor = BigDecimal.valueOf(0.606),
+                barnEndeligInntekt = BigDecimal.ZERO,
                 barnetErSelvforsørget = true,
             ),
             sumLøpendeBidrag = SumLøpendeBidragPeriode(
-                referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG,
+                referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG_REFERANSE,
                 periode = Periode(LocalDate.now(), LocalDate.now()),
                 sumLøpendeBidrag = sumLøpendeBidrag,
             ),
@@ -158,19 +219,34 @@ internal class SærbidragBeregningTest {
         val beløpBetaltAvBP = BigDecimal.valueOf(5000)
         val bPsAndelBeløp = BigDecimal.valueOf(4000)
         val bidragsevneBeløp = BigDecimal.valueOf(11000)
+        val skatt = DelberegningBidragsevne.Skatt(
+            minstefradrag = BigDecimal.valueOf(80000),
+            skattAlminneligInntekt = BigDecimal.valueOf(90000),
+            trinnskatt = BigDecimal.valueOf(10000),
+            trygdeavgift = BigDecimal.valueOf(50000),
+            sumSkatt = BigDecimal.valueOf(150000),
+        )
+        val underholdBarnEgenHusstand = BigDecimal.valueOf(10000)
         val sumLøpendeBidrag = BigDecimal.valueOf(10000)
 
         val grunnlagBeregningPeriodisert = GrunnlagBeregning(
             betaltAvBp = BetaltAvBp(referanse = TestUtil.BETALT_AV_BP_REFERANSE, beløp = beløpBetaltAvBP),
-            bidragsevne = Bidragsevne(referanse = TestUtil.BIDRAGSEVNE_REFERANSE, beløp = bidragsevneBeløp),
+            bidragsevne = Bidragsevne(
+                referanse = TestUtil.BIDRAGSEVNE_REFERANSE,
+                beløp = bidragsevneBeløp,
+                skatt = skatt,
+                underholdBarnEgenHusstand = underholdBarnEgenHusstand,
+            ),
             bPsAndelSærbidrag = BPsAndelSærbidrag(
                 referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,
-                andelFaktor = BigDecimal.valueOf(0.606),
+                endeligAndelFaktor = BigDecimal.valueOf(0.606),
                 andelBeløp = bPsAndelBeløp,
+                beregnetAndelFaktor = BigDecimal.valueOf(0.606),
+                barnEndeligInntekt = BigDecimal.ZERO,
                 barnetErSelvforsørget = true,
             ),
             sumLøpendeBidrag = SumLøpendeBidragPeriode(
-                referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG,
+                referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG_REFERANSE,
                 periode = Periode(LocalDate.now(), LocalDate.now()),
                 sumLøpendeBidrag = sumLøpendeBidrag,
             ),

@@ -34,7 +34,7 @@ class SumLøpendeBidragBeregning : FellesBeregning() {
                 alderBarn = finnAlder(it.fødselsdatoBarn),
             )
 
-            val samværsfradrag = sjablonNavnVerdiMap[SjablonNavn.SAMVÆRSFRADRAG.navn] ?: BigDecimal.ZERO
+            val samværsfradrag = sjablonNavnVerdiMap[SjablonNavn.SAMVÆRSFRADRAG.navn + "_" + it.samværsklasse.bisysKode] ?: BigDecimal.ZERO
             val resultat = it.løpendeBeløp + samværsfradrag + (it.beregnetBeløp - it.faktiskBeløp)
 
             beregningPerBarnListe.add(
@@ -78,14 +78,14 @@ class SumLøpendeBidragBeregning : FellesBeregning() {
         val sjablonListe = sjablonPeriodeListe.map { it.sjablon }.toList()
 
         // Samværsfradrag
-        sjablonNavnVerdiMap[SjablonNavn.SAMVÆRSFRADRAG.navn + samværsklasse + alderBarn] =
+        sjablonNavnVerdiMap[SjablonNavn.SAMVÆRSFRADRAG.navn + "_" + samværsklasse] =
             SjablonUtil.hentSjablonverdi(
                 sjablonListe = sjablonListe,
                 sjablonNavn = SjablonNavn.SAMVÆRSFRADRAG,
                 sjablonNøkkelListe = listOf(
                     SjablonNøkkel(navn = SjablonNøkkelNavn.SAMVÆRSKLASSE.navn, verdi = samværsklasse),
                 ),
-                SjablonNøkkelNavn.ALDER_TOM,
+                sjablonNøkkelNavn = SjablonNøkkelNavn.ALDER_TOM,
                 sjablonNøkkelVerdi = alderBarn,
                 sjablonInnholdNavn = SjablonInnholdNavn.FRADRAG_BELØP,
             )

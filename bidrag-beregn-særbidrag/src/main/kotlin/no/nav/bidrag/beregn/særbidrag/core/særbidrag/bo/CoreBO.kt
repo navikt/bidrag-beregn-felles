@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo
 
 import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -34,9 +35,21 @@ data class GrunnlagBeregning(
 
 data class BetaltAvBp(val referanse: String, val beløp: BigDecimal)
 
-data class Bidragsevne(val referanse: String, val beløp: BigDecimal)
+data class Bidragsevne(
+    val referanse: String,
+    val beløp: BigDecimal,
+    val skatt: DelberegningBidragsevne.Skatt,
+    val underholdBarnEgenHusstand: BigDecimal,
+)
 
-data class BPsAndelSærbidrag(val referanse: String, val andelFaktor: BigDecimal, val andelBeløp: BigDecimal, val barnetErSelvforsørget: Boolean)
+data class BPsAndelSærbidrag(
+    val referanse: String,
+    val endeligAndelFaktor: BigDecimal,
+    val andelBeløp: BigDecimal,
+    val beregnetAndelFaktor: BigDecimal,
+    val barnEndeligInntekt: BigDecimal,
+    val barnetErSelvforsørget: Boolean,
+)
 
 // Hjelpeklasser
 data class BeregnSærbidragListeGrunnlag(

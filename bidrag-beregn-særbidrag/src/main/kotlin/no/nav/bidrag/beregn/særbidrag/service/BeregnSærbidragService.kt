@@ -686,6 +686,8 @@ internal class BeregnSærbidragService(
                     DelberegningBidragsevne(
                         periode = ÅrMånedsperiode(fom = bidragsevne.periode.datoFom, til = bidragsevne.periode.datoTil),
                         beløp = bidragsevne.beløp,
+                        skatt = bidragsevne.skatt,
+                        underholdBarnEgenHusstand = bidragsevne.underholdBarnEgenHusstand,
                     ),
                 ),
                 grunnlagsreferanseListe = bidragsevneResultatFraCore.resultatPeriodeListe
@@ -731,8 +733,10 @@ internal class BeregnSærbidragService(
                 innhold = POJONode(
                     DelberegningBidragspliktigesAndel(
                         periode = ÅrMånedsperiode(fom = bPsAndelSærbidrag.periode.datoFom, til = bPsAndelSærbidrag.periode.datoTil),
-                        andelFaktor = bPsAndelSærbidrag.andelFaktor,
+                        endeligAndelFaktor = bPsAndelSærbidrag.endeligAndelFaktor,
                         andelBeløp = bPsAndelSærbidrag.andelBeløp,
+                        beregnetAndelFaktor = bPsAndelSærbidrag.beregnetAndelFaktor,
+                        barnEndeligInntekt = bPsAndelSærbidrag.barnEndeligInntekt,
                         barnetErSelvforsørget = bPsAndelSærbidrag.barnetErSelvforsørget,
                     ),
                 ),
@@ -944,6 +948,10 @@ internal class BeregnSærbidragService(
                     innhold = POJONode(
                         SjablonSamværsfradragPeriode(
                             periode = ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil),
+                            samværsklasse = "",
+                            alderTom = 0,
+                            antallDagerTom = 0,
+                            antallNetterTom = 0,
                             beløpFradrag = samværsfradrag?.verdi ?: BigDecimal.ZERO,
                         ),
                     ),

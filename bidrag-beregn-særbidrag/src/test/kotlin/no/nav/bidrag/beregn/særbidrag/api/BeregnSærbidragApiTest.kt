@@ -503,7 +503,7 @@ internal class BeregnSærbidragApiTest {
             // Delberegning BP's andel særbidrag
             { assertThat(delberegningBPAndelSærbidragListe).hasSize(1) },
             { assertThat(bPAndelSærbidragResultat.andelBeløp).isEqualTo(forventetBPAndelSærbidragBeløp) },
-            { assertThat(bPAndelSærbidragResultat.andelFaktor).isEqualTo(forventetBPAndelSærbidragFaktor) },
+            { assertThat(bPAndelSærbidragResultat.endeligAndelFaktor).isEqualTo(forventetBPAndelSærbidragFaktor) },
 
             // Delberegning Sum inntekt BP
             { assertThat(delberegningSumInntektBPListe).hasSize(1) },
