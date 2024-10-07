@@ -59,7 +59,8 @@ internal object SærbidragCoreMapper : CoreMapper() {
                     datoFom = resultatPeriode.periode.datoFom,
                     datoTil = resultatPeriode.periode.datoTil,
                 ),
-                sum = resultatPeriode.resultat.sum,
+                sumLøpendeBidrag = resultatPeriode.resultat.sumLøpendeBidrag,
+                beregningPerBarn = resultatPeriode.resultat.beregningPerBarn,
             )
 
         // Løper gjennom output fra beregning av BPs andel særbidrag og bygger opp ny input-liste til core
@@ -68,7 +69,7 @@ internal object SærbidragCoreMapper : CoreMapper() {
                 .map { (periode, resultatBeregning): no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.ResultatPeriodeCore ->
                     BPsAndelSærbidragPeriodeCore(
                         referanse = opprettDelberegningreferanse(
-                            type = Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL_SÆRBIDRAG,
+                            type = Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL,
                             periode = ÅrMånedsperiode(fom = periode.datoFom, til = periode.datoTil),
                             søknadsbarnReferanse = beregnGrunnlag.søknadsbarnReferanse,
                         ),

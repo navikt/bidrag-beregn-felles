@@ -40,7 +40,7 @@ internal class SærbidragBeregningTest {
             sumLøpendeBidrag = SumLøpendeBidragPeriode(
                 referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG,
                 periode = Periode(LocalDate.now(), LocalDate.now()),
-                sum = sumLøpendeBidrag,
+                sumLøpendeBidrag = sumLøpendeBidrag,
             ),
         )
 
@@ -73,7 +73,7 @@ internal class SærbidragBeregningTest {
             sumLøpendeBidrag = SumLøpendeBidragPeriode(
                 referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG,
                 periode = Periode(LocalDate.now(), LocalDate.now()),
-                sum = sumLøpendeBidrag,
+                sumLøpendeBidrag = sumLøpendeBidrag,
             ),
         )
 
@@ -106,7 +106,7 @@ internal class SærbidragBeregningTest {
             sumLøpendeBidrag = SumLøpendeBidragPeriode(
                 referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG,
                 periode = Periode(LocalDate.now(), LocalDate.now()),
-                sum = sumLøpendeBidrag,
+                sumLøpendeBidrag = sumLøpendeBidrag,
             ),
         )
 
@@ -139,7 +139,7 @@ internal class SærbidragBeregningTest {
             sumLøpendeBidrag = SumLøpendeBidragPeriode(
                 referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG,
                 periode = Periode(LocalDate.now(), LocalDate.now()),
-                sum = sumLøpendeBidrag,
+                sumLøpendeBidrag = sumLøpendeBidrag,
             ),
         )
 
@@ -172,7 +172,7 @@ internal class SærbidragBeregningTest {
             sumLøpendeBidrag = SumLøpendeBidragPeriode(
                 referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG,
                 periode = Periode(LocalDate.now(), LocalDate.now()),
-                sum = sumLøpendeBidrag,
+                sumLøpendeBidrag = sumLøpendeBidrag,
             ),
         )
 

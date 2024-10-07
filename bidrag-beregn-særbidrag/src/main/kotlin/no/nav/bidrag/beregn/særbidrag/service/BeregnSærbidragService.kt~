@@ -46,6 +46,7 @@ import no.nav.bidrag.transport.behandling.beregning.særbidrag.ResultatPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBarnIHusstand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndelSærbidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSumLøpendeBidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUtgift
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningVoksneIHustand

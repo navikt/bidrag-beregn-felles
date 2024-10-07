@@ -11,7 +11,7 @@ import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBarnIHusstand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndelSærbidrag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSumInntekt
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSumLøpendeBidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningVoksneIHustand
@@ -441,9 +441,9 @@ internal class BeregnSærbidragApiTest {
             .first()
 
         val delberegningBPAndelSærbidragListe = totalSærbidragResultat.grunnlagListe
-            .filter { it.type == Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL_SÆRBIDRAG }
+            .filter { it.type == Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL }
         val bPAndelSærbidragResultat =
-            objectMapper.treeToValue(delberegningBPAndelSærbidragListe[0].innhold, DelberegningBidragspliktigesAndelSærbidrag::class.java)
+            objectMapper.treeToValue(delberegningBPAndelSærbidragListe[0].innhold, DelberegningBidragspliktigesAndel::class.java)
 
         val sluttberegningSærbidragListe = totalSærbidragResultat.grunnlagListe
             .filter { it.type == Grunnlagstype.SLUTTBEREGNING_SÆRBIDRAG }
@@ -498,7 +498,7 @@ internal class BeregnSærbidragApiTest {
             { assertThat(bidragsevneResultat.beløp).isEqualTo(forventetBidragsevneBeløp) },
 
             // Delberegning sumLøpendeBidrag
-            { assertThat(sumLøpendeBidragResultat.sum).isEqualTo(forventetSumLøpendeBidrag) },
+            { assertThat(sumLøpendeBidragResultat.sumLøpendeBidrag).isEqualTo(forventetSumLøpendeBidrag) },
 
             // Delberegning BP's andel særbidrag
             { assertThat(delberegningBPAndelSærbidragListe).hasSize(1) },

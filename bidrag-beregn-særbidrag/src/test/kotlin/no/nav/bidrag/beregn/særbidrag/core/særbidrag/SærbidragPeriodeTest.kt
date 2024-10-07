@@ -131,7 +131,7 @@ internal class SærbidragPeriodeTest {
             datoFom = LocalDate.parse("2020-01-01"),
             datoTil = LocalDate.parse("2020-02-01"),
         ),
-        sum = BigDecimal.valueOf(5000),
+        sumLøpendeBidrag = BigDecimal.valueOf(5000),
 
     )
 

@@ -95,7 +95,7 @@ internal class SærbidragCoreTest {
         val sumLøpendeBidragPeriode = SumLøpendeBidragPeriodeCore(
             referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG,
             periode = PeriodeCore(datoFom = LocalDate.parse("2020-01-01"), datoTil = LocalDate.parse("2020-02-01")),
-            sum = BigDecimal.valueOf(10000),
+            sumLøpendeBidrag = BigDecimal.valueOf(10000),
         )
 
         val bPsAndelSærbidragPeriodeListe = listOf(
@@ -135,7 +135,7 @@ internal class SærbidragCoreTest {
                     sumLøpendeBidrag = SumLøpendeBidragPeriode(
                         referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG,
                         periode = Periode(LocalDate.parse("2020-01-01"), LocalDate.parse("2020-02-01")),
-                        sum = BigDecimal.valueOf(10000),
+                        sumLøpendeBidrag = BigDecimal.valueOf(10000),
                     ),
                     bPsAndelSærbidrag = BPsAndelSærbidrag(
                         referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,

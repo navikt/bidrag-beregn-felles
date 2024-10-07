@@ -58,6 +58,6 @@ internal class SumLøpendeBidragBeregningTest {
         )
         val resultat = sumLøpendeBidragBeregning.beregn(grunnlag)
 
-        assertThat(resultat.sum).isEqualTo(BigDecimal.valueOf(10770))
+        assertThat(resultat.sumLøpendeBidrag).isEqualTo(BigDecimal.valueOf(10770))
     }
 }
