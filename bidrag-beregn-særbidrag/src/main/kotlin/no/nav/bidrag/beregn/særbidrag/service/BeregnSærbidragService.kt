@@ -939,11 +939,11 @@ internal class BeregnSærbidragService(
 
         // Danner nytt grunnlag
         val periode = sjablonListe.firstOrNull { it.navn.startsWith(SjablonNavn.SAMVÆRSFRADRAG.navn) }?.periode
-        val referanse = "Sjablon_Samværsfradrag_${periode?.datoFom?.format(DateTimeFormatter.ofPattern("yyyyMMdd"))}"
+//        val referanse = "Sjablon_Samværsfradrag_${periode?.datoFom?.format(DateTimeFormatter.ofPattern("yyyyMMdd"))}"
         val grunnlagDtoListe = sjablonListe.filter { sjablon -> sjablon.navn.startsWith(SjablonNavn.SAMVÆRSFRADRAG.navn) }
             .map {
                 GrunnlagDto(
-                    referanse = referanse,
+                    referanse = it.referanse,
                     type = Grunnlagstype.SJABLON_SAMVARSFRADRAG,
                     innhold = POJONode(
                         SjablonSamværsfradragPeriode(
