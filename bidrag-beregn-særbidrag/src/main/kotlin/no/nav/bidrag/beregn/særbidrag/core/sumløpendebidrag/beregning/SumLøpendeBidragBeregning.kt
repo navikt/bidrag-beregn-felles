@@ -27,14 +27,15 @@ class SumLøpendeBidragBeregning : FellesBeregning() {
             grunnlag.sjablonPeriodeListe.filter { it.getPeriode().overlapperMed(Periode(grunnlag.beregnDatoFra, grunnlag.beregnDatoTil)) }
 
         grunnlag.løpendeBidragCoreListe.forEach {
-            sjablonNavnVerdiMap = hentSjablonSamværsfradrag(
+            hentSjablonSamværsfradrag(
                 sjablonNavnVerdiMap = sjablonNavnVerdiMap,
                 sjablonPeriodeListe = sjablonliste,
                 samværsklasse = it.samværsklasse.bisysKode,
                 alderBarn = finnAlder(it.fødselsdatoBarn),
+                referanseBarn = it.referanseBarn,
             )
 
-            val samværsfradrag = sjablonNavnVerdiMap[SjablonNavn.SAMVÆRSFRADRAG.navn + "_" + it.samværsklasse.bisysKode] ?: BigDecimal.ZERO
+            val samværsfradrag = sjablonNavnVerdiMap[SjablonNavn.SAMVÆRSFRADRAG.navn + "_" + it.referanseBarn] ?: BigDecimal.ZERO
             val resultat = it.løpendeBeløp + samværsfradrag + (it.beregnetBeløp - it.faktiskBeløp)
 
             beregningPerBarnListe.add(
@@ -73,12 +74,13 @@ class SumLøpendeBidragBeregning : FellesBeregning() {
         sjablonPeriodeListe: List<SjablonPeriode>,
         samværsklasse: String,
         alderBarn: Int,
+        referanseBarn: String,
     ): HashMap<String, BigDecimal> {
 //        val sjablonNavnVerdiMap = HashMap<String, BigDecimal>()
         val sjablonListe = sjablonPeriodeListe.map { it.sjablon }.toList()
 
         // Samværsfradrag
-        sjablonNavnVerdiMap[SjablonNavn.SAMVÆRSFRADRAG.navn + "_" + samværsklasse] =
+        sjablonNavnVerdiMap[SjablonNavn.SAMVÆRSFRADRAG.navn + "_" + referanseBarn] =
             SjablonUtil.hentSjablonverdi(
                 sjablonListe = sjablonListe,
                 sjablonNavn = SjablonNavn.SAMVÆRSFRADRAG,
