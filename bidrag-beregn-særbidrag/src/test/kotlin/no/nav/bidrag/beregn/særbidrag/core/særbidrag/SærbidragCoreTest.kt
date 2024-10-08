@@ -21,6 +21,9 @@ import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.SumLøpendeBidragPeri
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.periode.SærbidragPeriode
 import no.nav.bidrag.domene.enums.beregning.Avvikstype
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
+import no.nav.bidrag.domene.ident.Personident
+import no.nav.bidrag.domene.sak.Saksnummer
+import no.nav.bidrag.transport.behandling.felles.grunnlag.BeregningSumLøpendeBidragPerBarn
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -102,9 +105,20 @@ internal class SærbidragCoreTest {
         )
 
         val sumLøpendeBidragPeriode = SumLøpendeBidragPeriodeCore(
-            referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG,
+            referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG_REFERANSE,
             periode = PeriodeCore(datoFom = LocalDate.parse("2020-01-01"), datoTil = LocalDate.parse("2020-02-01")),
-            sum = BigDecimal.valueOf(10000),
+            sumLøpendeBidrag = BigDecimal.valueOf(1000),
+            beregningPerBarn = listOf(
+                BeregningSumLøpendeBidragPerBarn(
+                    personidentBarn = Personident("1"),
+                    saksnummer = Saksnummer("1"),
+                    løpendeBeløp = BigDecimal.valueOf(800),
+                    samværsfradrag = BigDecimal.valueOf(100),
+                    beregnetBeløp = BigDecimal.valueOf(700),
+                    faktiskBeløp = BigDecimal.valueOf(600),
+                    resultat = BigDecimal.valueOf(1000),
+                ),
+            ),
         )
 
         val bPsAndelSærbidragPeriodeListe = listOf(
@@ -155,9 +169,9 @@ internal class SærbidragCoreTest {
                         underholdBarnEgenHusstand = BigDecimal.valueOf(10000),
                     ),
                     sumLøpendeBidrag = SumLøpendeBidragPeriode(
-                        referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG,
+                        referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG_REFERANSE,
                         periode = Periode(LocalDate.parse("2020-01-01"), LocalDate.parse("2020-02-01")),
-                        sum = BigDecimal.valueOf(10000),
+                        sumLøpendeBidrag = BigDecimal.valueOf(10000),
                     ),
                     bPsAndelSærbidrag = BPsAndelSærbidrag(
                         referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,

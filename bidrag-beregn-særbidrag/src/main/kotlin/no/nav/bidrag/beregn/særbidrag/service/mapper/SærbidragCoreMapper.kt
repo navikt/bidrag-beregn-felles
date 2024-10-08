@@ -61,7 +61,8 @@ internal object SærbidragCoreMapper : CoreMapper() {
                     datoFom = resultatPeriode.periode.datoFom,
                     datoTil = resultatPeriode.periode.datoTil,
                 ),
-                sum = resultatPeriode.resultat.sum,
+                sumLøpendeBidrag = resultatPeriode.resultat.sumLøpendeBidrag,
+                beregningPerBarn = resultatPeriode.resultat.beregningPerBarn,
             )
 
         // Løper gjennom output fra beregning av BPs andel særbidrag og bygger opp ny input-liste til core

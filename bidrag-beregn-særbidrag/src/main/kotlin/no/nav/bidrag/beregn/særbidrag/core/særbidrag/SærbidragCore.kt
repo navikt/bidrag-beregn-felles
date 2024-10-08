@@ -74,7 +74,7 @@ internal class SærbidragCore(private val særbidragPeriode: SærbidragPeriode =
             datoFom = sumLøpendeBidragPeriodeCore.periode.datoFom,
             datoTil = sumLøpendeBidragPeriodeCore.periode.datoTil,
         ),
-        sum = sumLøpendeBidragPeriodeCore.sum,
+        sumLøpendeBidrag = sumLøpendeBidragPeriodeCore.sumLøpendeBidrag,
     )
 }
 

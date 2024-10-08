@@ -249,8 +249,7 @@ object TestUtil {
             periode = PeriodeCore(datoFom = LocalDate.parse("2020-08-01"), datoTil = LocalDate.parse("2020-09-01")),
             resultat = no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.dto.ResultatBeregningCore(
                 BigDecimal.valueOf(100),
-                emptyList(),
-            ),
+                emptyList()),
             grunnlagsreferanseListe = mutableListOf(
                 LØPENDE_BIDRAG_GRUNNLAG_REFERANSE,
             ),

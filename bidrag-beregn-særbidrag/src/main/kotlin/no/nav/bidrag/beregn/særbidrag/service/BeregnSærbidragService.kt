@@ -710,7 +710,8 @@ internal class BeregnSærbidragService(
         innhold = POJONode(
             DelberegningSumLøpendeBidrag(
                 periode = ÅrMånedsperiode(fom = sumLøpendeBidrag.periode.datoFom, til = sumLøpendeBidrag.periode.datoTil),
-                sum = sumLøpendeBidrag.sum,
+                sumLøpendeBidrag = sumLøpendeBidrag.sumLøpendeBidrag,
+                beregningPerBarn = sumLøpendeBidrag.beregningPerBarn,
             ),
         ),
         grunnlagsreferanseListe = beregnSumLøpendeBidragResultatCore.resultatPeriode
@@ -934,15 +935,15 @@ internal class BeregnSærbidragService(
 
     // Mapper ut sjablon for samværsfradrag
     private fun mapSjablonSamværsfradragGrunnlag(sjablonListe: List<SjablonResultatGrunnlagCore>): List<GrunnlagDto> {
-        val samværsfradrag = sjablonListe.firstOrNull { it.navn == SjablonInnholdNavn.FRADRAG_BELØP.navn }
+//        val samværsfradrag = sjablonListe.firstOrNull { it.navn == SjablonInnholdNavn.FRADRAG_BELØP.navn }
 
         // Danner nytt grunnlag
-        val periode = sjablonListe.firstOrNull { it.navn == SjablonNavn.SAMVÆRSFRADRAG.navn }?.periode
-        val referanse = "Sjablon_Samværsfradrag_${periode?.datoFom?.format(DateTimeFormatter.ofPattern("yyyyMMdd"))}"
-        val grunnlagDtoListe = sjablonListe.filter { sjablon -> sjablon.navn == SjablonNavn.SAMVÆRSFRADRAG.navn }
+        val periode = sjablonListe.firstOrNull { it.navn.startsWith(SjablonNavn.SAMVÆRSFRADRAG.navn) }?.periode
+//        val referanse = "Sjablon_Samværsfradrag_${periode?.datoFom?.format(DateTimeFormatter.ofPattern("yyyyMMdd"))}"
+        val grunnlagDtoListe = sjablonListe.filter { sjablon -> sjablon.navn.startsWith(SjablonNavn.SAMVÆRSFRADRAG.navn) }
             .map {
                 GrunnlagDto(
-                    referanse = referanse,
+                    referanse = it.referanse,
                     type = Grunnlagstype.SJABLON_SAMVARSFRADRAG,
                     innhold = POJONode(
                         SjablonSamværsfradragPeriode(
@@ -951,7 +952,7 @@ internal class BeregnSærbidragService(
                             alderTom = 0,
                             antallDagerTom = 0,
                             antallNetterTom = 0,
-                            beløpFradrag = samværsfradrag?.verdi ?: BigDecimal.ZERO,
+                            beløpFradrag = it.verdi,
                         ),
                     ),
                 )

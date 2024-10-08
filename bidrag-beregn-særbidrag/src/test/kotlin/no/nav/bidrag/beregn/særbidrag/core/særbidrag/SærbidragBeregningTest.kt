@@ -54,9 +54,9 @@ internal class SærbidragBeregningTest {
                 barnetErSelvforsørget = false,
             ),
             sumLøpendeBidrag = SumLøpendeBidragPeriode(
-                referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG,
+                referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG_REFERANSE,
                 periode = Periode(LocalDate.now(), LocalDate.now()),
-                sum = sumLøpendeBidrag,
+                sumLøpendeBidrag = sumLøpendeBidrag,
             ),
         )
 
@@ -102,9 +102,9 @@ internal class SærbidragBeregningTest {
                 barnetErSelvforsørget = false,
             ),
             sumLøpendeBidrag = SumLøpendeBidragPeriode(
-                referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG,
+                referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG_REFERANSE,
                 periode = Periode(LocalDate.now(), LocalDate.now()),
-                sum = sumLøpendeBidrag,
+                sumLøpendeBidrag = sumLøpendeBidrag,
             ),
         )
 
@@ -150,9 +150,9 @@ internal class SærbidragBeregningTest {
                 barnetErSelvforsørget = false,
             ),
             sumLøpendeBidrag = SumLøpendeBidragPeriode(
-                referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG,
+                referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG_REFERANSE,
                 periode = Periode(LocalDate.now(), LocalDate.now()),
-                sum = sumLøpendeBidrag,
+                sumLøpendeBidrag = sumLøpendeBidrag,
             ),
         )
 
@@ -198,9 +198,9 @@ internal class SærbidragBeregningTest {
                 barnetErSelvforsørget = true,
             ),
             sumLøpendeBidrag = SumLøpendeBidragPeriode(
-                referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG,
+                referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG_REFERANSE,
                 periode = Periode(LocalDate.now(), LocalDate.now()),
-                sum = sumLøpendeBidrag,
+                sumLøpendeBidrag = sumLøpendeBidrag,
             ),
         )
 
@@ -246,9 +246,9 @@ internal class SærbidragBeregningTest {
                 barnetErSelvforsørget = true,
             ),
             sumLøpendeBidrag = SumLøpendeBidragPeriode(
-                referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG,
+                referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG_REFERANSE,
                 periode = Periode(LocalDate.now(), LocalDate.now()),
-                sum = sumLøpendeBidrag,
+                sumLøpendeBidrag = sumLøpendeBidrag,
             ),
         )
 
