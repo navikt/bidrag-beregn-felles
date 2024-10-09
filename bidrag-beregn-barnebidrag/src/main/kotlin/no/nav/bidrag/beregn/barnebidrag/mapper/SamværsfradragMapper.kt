@@ -1,9 +1,9 @@
 package no.nav.bidrag.beregn.barnebidrag.mapper
 
-import no.nav.bidrag.beregn.barnebidrag.data.SamværsfradragPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.data.SamværsklassePeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.data.SjablonSamværsfradragPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.data.SøknadsbarnPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SamværsklassePeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSamværsfradragPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
@@ -19,8 +19,8 @@ internal object SamværsfradragMapper : CoreMapper() {
         SamværsfradragPeriodeGrunnlag(
             beregningsperiode = mottattGrunnlag.periode,
             søknadsbarnPeriodeGrunnlag = mapSøknadsbarn(mottattGrunnlag),
-            samværsklassePeriodeListe = mapSamværsklasse(mottattGrunnlag),
-            sjablonSamværsfradragPeriodeListe = mapSjablonSamværsfradrag(sjablonGrunnlag),
+            samværsklassePeriodeGrunnlagListe = mapSamværsklasse(mottattGrunnlag),
+            sjablonSamværsfradragPeriodeGrunnlagListe = mapSjablonSamværsfradrag(sjablonGrunnlag),
         )
 
     private fun mapSøknadsbarn(beregnGrunnlag: BeregnGrunnlag): SøknadsbarnPeriodeGrunnlag {

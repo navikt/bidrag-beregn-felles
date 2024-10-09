@@ -26,6 +26,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåFremmedReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
@@ -33,15 +34,20 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.YearMonth
 import java.util.Collections.emptyList
-import java.util.NoSuchElementException
 
 abstract class CoreMapper {
     private val maxDato = LocalDate.parse("9999-12-31")
 
     // Henter sjablonverdi for innslag kapitalinntekt
     // TODO Pt ligger det bare en gyldig sjablonverdi (uforandret siden 2003). Logikken her må utvides hvis det legges inn nye sjablonverdier
-    fun finnInnslagKapitalinntekt(sjablontallListe: List<Sjablontall>): BigDecimal =
+    fun finnInnslagKapitalinntektFraSjablontall(sjablontallListe: List<Sjablontall>): BigDecimal =
         sjablontallListe.firstOrNull { it.typeSjablon == SjablonTallNavn.INNSLAG_KAPITALINNTEKT_BELØP.id }?.verdi ?: BigDecimal.ZERO
+
+    fun finnInnslagKapitalinntektFraGrunnlag(sjablonListe: List<GrunnlagDto>): BigDecimal =
+        sjablonListe
+            .filter { it.referanse.contains("SJABLONTALL") }
+            .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>()
+            .firstOrNull { it.innhold.sjablon == SjablonTallNavn.INNSLAG_KAPITALINNTEKT_BELØP }?.innhold?.verdi ?: BigDecimal.ZERO
 
     fun finnReferanseTilRolle(grunnlagListe: List<GrunnlagDto>, grunnlagstype: Grunnlagstype) = grunnlagListe
         .firstOrNull { it.type == grunnlagstype }?.referanse ?: throw NoSuchElementException("Grunnlagstype $grunnlagstype mangler i input")
@@ -300,7 +306,7 @@ abstract class CoreMapper {
             BarnIHusstandenPeriodeCore(
                 referanse = opprettDelberegningreferanse(
                     type = Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND,
-                    periode = ÅrMånedsperiode(fom = periode.datoFom, til = periode.datoTil),
+                    periode = ÅrMånedsperiode(fom = periode.datoFom, til = null),
                     søknadsbarnReferanse = søknadsbarnReferanse,
                     gjelderReferanse = gjelderReferanse,
                 ),
@@ -323,7 +329,7 @@ abstract class CoreMapper {
             VoksneIHusstandenPeriodeCore(
                 referanse = opprettDelberegningreferanse(
                     type = Grunnlagstype.DELBEREGNING_VOKSNE_I_HUSSTAND,
-                    periode = ÅrMånedsperiode(fom = periode.datoFom, til = periode.datoTil),
+                    periode = ÅrMånedsperiode(fom = periode.datoFom, til = null),
                     søknadsbarnReferanse = søknadsbarnReferanse,
                     gjelderReferanse = gjelderReferanse,
                 ),

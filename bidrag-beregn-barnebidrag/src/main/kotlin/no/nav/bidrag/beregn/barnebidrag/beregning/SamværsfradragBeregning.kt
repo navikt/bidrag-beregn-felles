@@ -1,7 +1,7 @@
 package no.nav.bidrag.beregn.barnebidrag.beregning
 
-import no.nav.bidrag.beregn.barnebidrag.data.SamværsfradragBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.data.SamværsfradragBeregningResultat
+import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragBeregningGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragBeregningResultat
 
 internal object SamværsfradragBeregning {
     fun beregn(grunnlag: SamværsfradragBeregningGrunnlag): SamværsfradragBeregningResultat {

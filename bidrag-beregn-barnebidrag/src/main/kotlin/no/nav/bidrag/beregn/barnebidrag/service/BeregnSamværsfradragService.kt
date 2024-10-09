@@ -2,17 +2,18 @@ package no.nav.bidrag.beregn.barnebidrag.service
 
 import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.barnebidrag.beregning.SamværsfradragBeregning
-import no.nav.bidrag.beregn.barnebidrag.data.SamværsfradragBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.data.SamværsfradragPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.data.SamværsfradragPeriodeResultat
-import no.nav.bidrag.beregn.barnebidrag.data.SamværsklasseBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.data.SjablonSamværsfradragBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.data.SjablonSamværsfradragPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.data.SøknadsbarnBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.data.SøknadsbarnPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragBeregningGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragPeriodeResultat
+import no.nav.bidrag.beregn.barnebidrag.bo.SamværsklasseBeregningGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSamværsfradragBeregningGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSamværsfradragPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnBeregningGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.mapper.SamværsfradragMapper.finnReferanseTilRolle
 import no.nav.bidrag.beregn.barnebidrag.mapper.SamværsfradragMapper.mapSamværsfradragGrunnlag
 import no.nav.bidrag.beregn.core.service.BeregnService
+import no.nav.bidrag.commons.service.sjablon.SjablonProvider
 import no.nav.bidrag.domene.enums.beregning.Samværsklasse
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
@@ -24,11 +25,20 @@ import java.time.Period
 
 internal object BeregnSamværsfradragService : BeregnService() {
 
-    fun delberegningSamværsfradrag(mottattGrunnlag: BeregnGrunnlag, sjablonGrunnlag: List<GrunnlagDto>): List<GrunnlagDto> {
+    fun delberegningSamværsfradrag(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
+
+        // Lager sjablon grunnlagsobjekter
+        val sjablonGrunnlag = lagSjablonGrunnlagsobjekter(mottattGrunnlag.periode)
+
+        // Mapper ut grunnlag som skal brukes for å beregne samværsfradrag
         val samværsfradragPeriodeGrunnlag = mapSamværsfradragGrunnlag(mottattGrunnlag, sjablonGrunnlag)
 
+        // Lager liste over bruddperioder
         val bruddPeriodeListe = lagBruddPeriodeListeSamværsfradrag(samværsfradragPeriodeGrunnlag, mottattGrunnlag.periode)
+
         val samværsfradragBeregningResultatListe = mutableListOf<SamværsfradragPeriodeResultat>()
+
+        // Løper gjennom hver bruddperiode og beregner samværsfradrag
         bruddPeriodeListe.forEach { bruddPeriode ->
             val samværsfradragBeregningGrunnlag = lagSamværsfradragBeregningGrunnlag(samværsfradragPeriodeGrunnlag, bruddPeriode)
             samværsfradragBeregningResultatListe.add(
@@ -57,17 +67,21 @@ internal object BeregnSamværsfradragService : BeregnService() {
         return resultatGrunnlagListe.sortedBy { it.referanse }
     }
 
+    // Lager grunnlagsobjekter for sjabloner (ett objekt pr sjablonverdi som er innenfor perioden)
+    private fun lagSjablonGrunnlagsobjekter(periode: ÅrMånedsperiode): List<GrunnlagDto> =
+        mapSjablonSamværsfradragGrunnlag(periode, SjablonProvider.hentSjablonSamværsfradrag())
+
     // Lager en liste over alle bruddperioder basert på grunnlag som skal brukes i beregningen
     private fun lagBruddPeriodeListeSamværsfradrag(
         grunnlagListe: SamværsfradragPeriodeGrunnlag,
         beregningsperiode: ÅrMånedsperiode,
     ): List<ÅrMånedsperiode> {
         val periodeListe = sequenceOf(grunnlagListe.beregningsperiode)
-            .plus(grunnlagListe.samværsklassePeriodeListe.asSequence().map { it.samværsklassePeriode.periode })
-            .plus(grunnlagListe.sjablonSamværsfradragPeriodeListe.asSequence().map { it.sjablonSamværsfradragPeriode.periode })
+            .plus(grunnlagListe.samværsklassePeriodeGrunnlagListe.asSequence().map { it.samværsklassePeriode.periode })
+            .plus(grunnlagListe.sjablonSamværsfradragPeriodeGrunnlagListe.asSequence().map { it.sjablonSamværsfradragPeriode.periode })
             .plus(
                 lagAlderBruddPerioder(
-                    sjablonSamværsfradragPerioder = grunnlagListe.sjablonSamværsfradragPeriodeListe,
+                    sjablonSamværsfradragPerioder = grunnlagListe.sjablonSamværsfradragPeriodeGrunnlagListe,
                     søknadsbarnPeriodeGrunnlag = grunnlagListe.søknadsbarnPeriodeGrunnlag,
                 ).asSequence(),
             )
@@ -91,7 +105,7 @@ internal object BeregnSamværsfradragService : BeregnService() {
         bruddPeriode: ÅrMånedsperiode,
     ): SamværsfradragBeregningGrunnlag {
         // Lager liste over gyldige alderTom-verdier
-        val alderTomListe = hentAlderTomListe(samværsfradragPeriodeGrunnlag.sjablonSamværsfradragPeriodeListe)
+        val alderTomListe = hentAlderTomListe(samværsfradragPeriodeGrunnlag.sjablonSamværsfradragPeriodeGrunnlagListe)
 
         // Finner barnets faktiske alder. Alder regnes som om barnet er født 1. juli i fødselsåret.
         val faktiskAlder = Period.between(
@@ -107,11 +121,11 @@ internal object BeregnSamværsfradragService : BeregnService() {
                 referanse = samværsfradragPeriodeGrunnlag.søknadsbarnPeriodeGrunnlag.referanse,
                 alder = alderTom,
             ),
-            samværsklasseBeregningGrunnlag = samværsfradragPeriodeGrunnlag.samværsklassePeriodeListe
+            samværsklasseBeregningGrunnlag = samværsfradragPeriodeGrunnlag.samværsklassePeriodeGrunnlagListe
                 .firstOrNull { it.samværsklassePeriode.periode.inneholder(bruddPeriode) }
                 ?.let { SamværsklasseBeregningGrunnlag(referanse = it.referanse, samværsklasse = it.samværsklassePeriode.samværsklasse) }
                 ?: throw IllegalArgumentException("Ingen samværsklasse funnet for periode $bruddPeriode"),
-            sjablonSamværsfradragBeregningGrunnlagListe = samværsfradragPeriodeGrunnlag.sjablonSamværsfradragPeriodeListe
+            sjablonSamværsfradragBeregningGrunnlagListe = samværsfradragPeriodeGrunnlag.sjablonSamværsfradragPeriodeGrunnlagListe
                 .filter { it.sjablonSamværsfradragPeriode.periode.inneholder(bruddPeriode) }
                 .map {
                     SjablonSamværsfradragBeregningGrunnlag(

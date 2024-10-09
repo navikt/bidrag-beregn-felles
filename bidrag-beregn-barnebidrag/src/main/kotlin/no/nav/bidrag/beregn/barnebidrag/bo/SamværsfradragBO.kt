@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.barnebidrag.data
+package no.nav.bidrag.beregn.barnebidrag.bo
 
 import no.nav.bidrag.domene.enums.beregning.Samværsklasse
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
@@ -10,8 +10,8 @@ import java.time.LocalDate
 data class SamværsfradragPeriodeGrunnlag(
     val beregningsperiode: ÅrMånedsperiode,
     val søknadsbarnPeriodeGrunnlag: SøknadsbarnPeriodeGrunnlag,
-    val samværsklassePeriodeListe: List<SamværsklassePeriodeGrunnlag>,
-    var sjablonSamværsfradragPeriodeListe: List<SjablonSamværsfradragPeriodeGrunnlag>,
+    val samværsklassePeriodeGrunnlagListe: List<SamværsklassePeriodeGrunnlag>,
+    var sjablonSamværsfradragPeriodeGrunnlagListe: List<SjablonSamværsfradragPeriodeGrunnlag>,
 )
 
 data class SøknadsbarnPeriodeGrunnlag(val referanse: String, val fødselsdato: LocalDate)
