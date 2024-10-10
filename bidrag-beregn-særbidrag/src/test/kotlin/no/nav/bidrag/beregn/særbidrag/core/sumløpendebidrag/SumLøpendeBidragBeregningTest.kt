@@ -32,6 +32,7 @@ internal class SumLøpendeBidragBeregningTest {
                     personidentBarn = Personident("04050078901"),
                     referanseBarn = "referanseBarn",
                     løpendeBeløp = BigDecimal.valueOf(1200),
+                    valutakode = "NOK",
                     samværsklasse = Samværsklasse.SAMVÆRSKLASSE_1, // 528
                     beregnetBeløp = BigDecimal.valueOf(1000),
                     faktiskBeløp = BigDecimal.valueOf(900),
@@ -42,6 +43,7 @@ internal class SumLøpendeBidragBeregningTest {
                     personidentBarn = Personident("040501678901"),
                     referanseBarn = "referanseBarn2",
                     løpendeBeløp = BigDecimal.valueOf(1350),
+                    valutakode = "NOK",
                     samværsklasse = Samværsklasse.SAMVÆRSKLASSE_2, // 1749
                     beregnetBeløp = BigDecimal.valueOf(1155),
                     faktiskBeløp = BigDecimal.valueOf(1010),
@@ -52,6 +54,7 @@ internal class SumLøpendeBidragBeregningTest {
                     personidentBarn = Personident("04050278901"),
                     referanseBarn = "referanseBarn3",
                     løpendeBeløp = BigDecimal.valueOf(2140),
+                    valutakode = "NOK",
                     samværsklasse = Samværsklasse.SAMVÆRSKLASSE_3, // 3528
                     beregnetBeløp = BigDecimal.valueOf(1730),
                     faktiskBeløp = BigDecimal.valueOf(1700),

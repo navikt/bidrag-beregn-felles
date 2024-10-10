@@ -51,6 +51,7 @@ internal object SumLøpendeBidragCoreMapper : CoreMapper() {
                     personidentBarn = finnPersonidentBarn(beregnGrunnlag.grunnlagListe, it.gjelderBarn),
                     referanseBarn = it.gjelderBarn,
                     løpendeBeløp = it.løpendeBeløp,
+                    valutakode = it.valutakode,
                     samværsklasse = it.samværsklasse,
                     beregnetBeløp = it.beregnetBeløp,
                     faktiskBeløp = it.faktiskBeløp,
