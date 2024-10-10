@@ -27,6 +27,7 @@ data class LøpendeBidragCore(
     val personidentBarn: Personident,
     val referanseBarn: String,
     val løpendeBeløp: BigDecimal,
+    val valutakode: String,
     val samværsklasse: Samværsklasse,
     val beregnetBeløp: BigDecimal,
     val faktiskBeløp: BigDecimal,
