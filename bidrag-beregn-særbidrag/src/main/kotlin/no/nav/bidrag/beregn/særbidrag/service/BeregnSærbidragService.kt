@@ -97,7 +97,9 @@ internal class BeregnSærbidragService(
         delberegningUtgift: DelberegningUtgift,
         sjablonListe: SjablonListe = hentSjabloner(),
     ): Resultatkode? = if (vedtakstype == Vedtakstype.FASTSETTELSE) {
-        val forskuddssats = sjablonListe.sjablonSjablontallResponse.firstOrNull { it.typeSjablon == SjablonTallNavn.FORSKUDDSSATS_BELØP.id }
+        val forskuddssats = sjablonListe.sjablonSjablontallResponse
+            .filter { it.typeSjablon == SjablonTallNavn.FORSKUDDSSATS_BELØP.id }
+            .maxBy { it.datoTom ?: it.datoFom!! }
         if (delberegningUtgift.sumGodkjent < forskuddssats?.verdi) Resultatkode.GODKJENT_BELØP_ER_LAVERE_ENN_FORSKUDDSSATS else null
     } else {
         null
@@ -136,7 +138,9 @@ internal class BeregnSærbidragService(
             validerForBeregning(vedtakstype, delberegningUtgift.innhold, sjablonListe).takeIf {
                 it == Resultatkode.GODKJENT_BELØP_ER_LAVERE_ENN_FORSKUDDSSATS
             }?.let {
-                val forskuddssats = sjablonListe.sjablonSjablontallResponse.firstOrNull { it.typeSjablon == SjablonTallNavn.FORSKUDDSSATS_BELØP.id }
+                val forskuddssats = sjablonListe.sjablonSjablontallResponse
+                    .filter { it.typeSjablon == SjablonTallNavn.FORSKUDDSSATS_BELØP.id }
+                    .maxBy { it.datoTom ?: it.datoFom!! }
                 return lagResponsGodkjentBeløpUnderForskuddssats(beregnGrunnlag, forskuddssats!!)
             }
         }
