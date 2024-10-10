@@ -37,14 +37,12 @@ open class InntektUtil {
         }
 
         // Finner siste hele år som skal rapporteres
-        fun finnSisteAarSomSkalRapporteres(ainntektHentetTidspunkt: LocalDate): Int {
-            return if ((ainntektHentetTidspunkt.month == Month.JANUARY) &&
-                (ainntektHentetTidspunkt.dayOfMonth <= finnCutOffDag(ainntektHentetTidspunkt))
-            ) {
-                ainntektHentetTidspunkt.year.minus(2)
-            } else {
-                ainntektHentetTidspunkt.year.minus(1)
-            }
+        fun finnSisteAarSomSkalRapporteres(ainntektHentetTidspunkt: LocalDate): Int = if ((ainntektHentetTidspunkt.month == Month.JANUARY) &&
+            (ainntektHentetTidspunkt.dayOfMonth <= finnCutOffDag(ainntektHentetTidspunkt))
+        ) {
+            ainntektHentetTidspunkt.year.minus(2)
+        } else {
+            ainntektHentetTidspunkt.year.minus(1)
         }
 
         // Finner ut hvilken dato i måneden ainntekt ble hentet som er fristen arbeidsgiver har for å levere a-meldingen for forrige måned.
@@ -75,14 +73,10 @@ open class InntektUtil {
 
         // Brukes av bidrag-behandling for riktig visning fortegn på kapitalinntekter
         @Suppress("unused")
-        fun kapitalinntektFaktor(postKode: String): BigDecimal {
-            return hentMappingerKapitalinntekt().find { it.fulltNavnInntektspost == postKode }?.let {
-                if (it.plussMinus == PlussMinus.MINUS) BigDecimal(-1) else BigDecimal.ONE
-            } ?: BigDecimal.ONE
-        }
+        fun kapitalinntektFaktor(postKode: String): BigDecimal = hentMappingerKapitalinntekt().find { it.fulltNavnInntektspost == postKode }?.let {
+            if (it.plussMinus == PlussMinus.MINUS) BigDecimal(-1) else BigDecimal.ONE
+        } ?: BigDecimal.ONE
     }
 }
 
-fun String.isNumeric(): Boolean {
-    return this.all { it.isDigit() }
-}
+fun String.isNumeric(): Boolean = this.all { it.isDigit() }

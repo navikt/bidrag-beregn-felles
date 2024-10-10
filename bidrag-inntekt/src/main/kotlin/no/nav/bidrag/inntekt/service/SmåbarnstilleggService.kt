@@ -35,9 +35,7 @@ class SmåbarnstilleggService {
         return småbarnstilleggListeUt.sortedWith(compareBy({ it.inntektRapportering.toString() }, { it.periode.fom }))
     }
 
-    private fun finnPeriodeTil(periodeTil: LocalDate?): YearMonth? {
-        return periodeTil?.minusMonths(1)?.let {
-            YearMonth.of(it.year, it.month)
-        }
+    private fun finnPeriodeTil(periodeTil: LocalDate?): YearMonth? = periodeTil?.minusMonths(1)?.let {
+        YearMonth.of(it.year, it.month)
     }
 }

@@ -1380,6 +1380,24 @@ class TestUtil {
             endreSivilstand = null,
         )
 
+        fun gyldigFomLikFødselsdatoUgiftÉnStatus() = SivilstandRequest(
+            fødselsdatoBM = LocalDate.parse("1980-01-01"),
+            innhentedeOffentligeOpplysninger =
+            listOf(
+                SivilstandGrunnlagDto(
+                    personId = "12345678901",
+                    type = SivilstandskodePDL.UGIFT,
+                    gyldigFom = null,
+                    bekreftelsesdato = null,
+                    master = "FREG",
+                    registrert = LocalDateTime.parse("2023-06-13T14:44:16"),
+                    historisk = false,
+                ),
+            ),
+            behandledeSivilstandsopplysninger = emptyList(),
+            endreSivilstand = null,
+        )
+
         fun aktivPeriodeErFørVirkningstidspunkt() = SivilstandRequest(
             fødselsdatoBM = LocalDate.parse("1980-01-01"),
             innhentedeOffentligeOpplysninger =

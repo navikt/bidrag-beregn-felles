@@ -158,6 +158,15 @@
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "løpende_bidrag_grunnlag_bidragspliktig",
+      "type": "LØPENDE_BIDRAG",
+      "innhold": {
+        "løpendeBidragListe": []
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragspliktig"
     }
   ]
 }

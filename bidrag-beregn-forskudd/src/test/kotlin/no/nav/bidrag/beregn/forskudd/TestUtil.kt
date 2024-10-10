@@ -172,9 +172,7 @@ object TestUtil {
         ),
     )
 
-    fun byggForskuddGrunnlagCore(): BeregnForskuddGrunnlagCore {
-        return byggForskuddGrunnlagCore(Bostatuskode.MED_FORELDER.toString())
-    }
+    fun byggForskuddGrunnlagCore(): BeregnForskuddGrunnlagCore = byggForskuddGrunnlagCore(Bostatuskode.MED_FORELDER.toString())
 
     fun byggForskuddGrunnlagCore(bostatus: String): BeregnForskuddGrunnlagCore {
         val søknadsbarn = SøknadsbarnCore(referanse = SØKNADSBARN_REFERANSE, fødselsdato = LocalDate.parse("2006-05-12"))
@@ -307,13 +305,10 @@ object TestUtil {
         return BeregnForskuddResultat(periodeResultatListe)
     }
 
-    fun byggAvvikListe(): List<Avvik> {
-        return listOf(Avvik(avvikTekst = "beregnDatoTil må være etter beregnDatoFra", avvikType = Avvikstype.DATO_FOM_ETTER_DATO_TIL))
-    }
+    fun byggAvvikListe(): List<Avvik> =
+        listOf(Avvik(avvikTekst = "beregnDatoTil må være etter beregnDatoFra", avvikType = Avvikstype.DATO_FOM_ETTER_DATO_TIL))
 
-    fun byggForskuddGrunnlag(): BeregnForskuddGrunnlag {
-        return byggForskuddGrunnlag(beregnDatoFra = "2017-01-01", beregnDatoTil = "2019-08-01")
-    }
+    fun byggForskuddGrunnlag(): BeregnForskuddGrunnlag = byggForskuddGrunnlag(beregnDatoFra = "2017-01-01", beregnDatoTil = "2019-08-01")
 
     fun byggForskuddGrunnlag(beregnDatoFra: String, beregnDatoTil: String): BeregnForskuddGrunnlag {
         val fodselsdato = LocalDate.parse("2006-12-19")
@@ -707,25 +702,15 @@ object TestUtil {
 
     // SERVICE
 
-    fun byggDummyForskuddGrunnlag(): BeregnGrunnlag {
-        return byggDummyForskuddGrunnlag("")
-    }
+    fun byggDummyForskuddGrunnlag(): BeregnGrunnlag = byggDummyForskuddGrunnlag("")
 
-    fun byggForskuddGrunnlagUtenBeregningsperiodeTil(): BeregnGrunnlag {
-        return byggDummyForskuddGrunnlag("beregningsperiodeTil")
-    }
+    fun byggForskuddGrunnlagUtenBeregningsperiodeTil(): BeregnGrunnlag = byggDummyForskuddGrunnlag("beregningsperiodeTil")
 
-    fun byggForskuddGrunnlagUtenGrunnlagListe(): BeregnGrunnlag {
-        return byggDummyForskuddGrunnlag("grunnlagListe")
-    }
+    fun byggForskuddGrunnlagUtenGrunnlagListe(): BeregnGrunnlag = byggDummyForskuddGrunnlag("grunnlagListe")
 
-    fun byggForskuddGrunnlagUtenReferanse(): BeregnGrunnlag {
-        return byggDummyForskuddGrunnlag("referanse")
-    }
+    fun byggForskuddGrunnlagUtenReferanse(): BeregnGrunnlag = byggDummyForskuddGrunnlag("referanse")
 
-    fun byggForskuddGrunnlagUtenInnhold(): BeregnGrunnlag {
-        return byggDummyForskuddGrunnlag("innhold")
-    }
+    fun byggForskuddGrunnlagUtenInnhold(): BeregnGrunnlag = byggDummyForskuddGrunnlag("innhold")
 
     // Bygger opp BeregnGrunnlag
     private fun byggDummyForskuddGrunnlag(nullVerdi: String): BeregnGrunnlag {

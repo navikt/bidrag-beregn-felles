@@ -10,7 +10,7 @@ import no.nav.bidrag.transport.behandling.grunnlag.response.SivilstandGrunnlagDt
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
-internal class SivilstandServiceV1() {
+internal class SivilstandServiceV1 {
     fun beregn(virkningstidspunkt: LocalDate, sivilstandGrunnlagDtoListe: List<SivilstandGrunnlagDto>): SivilstandBeregnet {
         var status = Status.OK
 
@@ -218,19 +218,12 @@ internal class SivilstandServiceV1() {
         return sammenslåttSivilstandV1Liste.filter { it.periodeTom == null || it.periodeTom.isAfter(virkningstidspunkt.minusDays(1)) }
     }
 
-    private fun hentFørsteDagIMåneden(dato: LocalDate): LocalDate {
-        return LocalDate.of(dato.year, dato.month, 1)
-    }
+    private fun hentFørsteDagIMåneden(dato: LocalDate): LocalDate = LocalDate.of(dato.year, dato.month, 1)
 
-    private fun hentSisteDagIMåneden(dato: LocalDate): LocalDate {
-        return LocalDate.of(dato.year, dato.month, dato.month.length(dato.isLeapYear))
-    }
+    private fun hentSisteDagIMåneden(dato: LocalDate): LocalDate = LocalDate.of(dato.year, dato.month, dato.month.length(dato.isLeapYear))
 
-    private fun hentSisteDagIForrigeMåned(dato: LocalDate): LocalDate {
-        return LocalDate.of(dato.year, dato.month, dato.month.length(dato.isLeapYear)).minusMonths(1)
-    }
+    private fun hentSisteDagIForrigeMåned(dato: LocalDate): LocalDate =
+        LocalDate.of(dato.year, dato.month, dato.month.length(dato.isLeapYear)).minusMonths(1)
 
-    private fun hentFørsteDagINesteMåned(dato: LocalDate): LocalDate {
-        return LocalDate.of(dato.year, dato.month, 1).plusMonths(1)
-    }
+    private fun hentFørsteDagINesteMåned(dato: LocalDate): LocalDate = LocalDate.of(dato.year, dato.month, 1).plusMonths(1)
 }

@@ -49,6 +49,9 @@ internal class SivilstandServiceV2 {
 
         // Beregner offentlige perioder som er hentet inn. Hvis det ikke er hentet inn offentlige opplysninger så returneres en periode med
         // Sivilstandskode = UKJENT og Kilde = OFFENTLIG.
+
+        secureLogger.info { "Beregner sivilstand for BM. Input: $virkningstidspunkt $sivilstandRequest" }
+
         val offentligePerioder = behandleOffentligePerioder(virkningstidspunkt, sivilstandRequest)
 
         // Filterer først bort alle perioder med behandlede opplysninger som avsluttes før virkningstidspunkt
@@ -115,7 +118,7 @@ internal class SivilstandServiceV2 {
             // 2a + 2b
             // Det finnes både behandlede og endrede perioder
 
-            return oppdaterteBehandledeOpplysninger.map {
+            val resultat = oppdaterteBehandledeOpplysninger.map {
                 Sivilstand(
                     periodeFom = it.periodeFom,
                     periodeTom = it.periodeTom,
@@ -135,6 +138,10 @@ internal class SivilstandServiceV2 {
                     },
                 )
             }
+
+            secureLogger.info { "Beregner sivilstand for BM. Resultat: $resultat" }
+
+            return resultat
         }
     }
 

@@ -8,6 +8,7 @@ import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonResultatGrunnlagCore
 import no.nav.bidrag.beregn.core.dto.VoksneIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.felles.dto.IResultatPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -34,6 +35,4 @@ data class ResultatPeriodeCore(
     override val grunnlagsreferanseListe: MutableList<String>,
 ) : IResultatPeriode
 
-data class ResultatBeregningCore(
-    val beløp: BigDecimal,
-)
+data class ResultatBeregningCore(val beløp: BigDecimal, val skatt: DelberegningBidragsevne.Skatt, val underholdBarnEgenHusstand: BigDecimal)

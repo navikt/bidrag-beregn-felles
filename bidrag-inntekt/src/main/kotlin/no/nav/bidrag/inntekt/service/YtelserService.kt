@@ -73,16 +73,14 @@ class YtelserService {
     }
 
     // Grupperer og summerer poster som har samme kode/beskrivelse
-    private fun grupperOgSummerDetaljposter(inntektPostListe: List<InntektPost>): List<InntektPost> {
-        return inntektPostListe
-            .groupBy(InntektPost::kode)
-            .map {
-                InntektPost(
-                    kode = it.key,
-                    beløp = it.value.sumOf(InntektPost::beløp).setScale(0, RoundingMode.HALF_UP),
-                )
-            }
-    }
+    private fun grupperOgSummerDetaljposter(inntektPostListe: List<InntektPost>): List<InntektPost> = inntektPostListe
+        .groupBy(InntektPost::kode)
+        .map {
+            InntektPost(
+                kode = it.key,
+                beløp = it.value.sumOf(InntektPost::beløp).setScale(0, RoundingMode.HALF_UP),
+            )
+        }
 
     // Summerer og grupperer ainntekter pr år
     private fun summerAarsinntekter(ainntektsposter: List<Ainntektspost>): Map<String, InntektSumPost> {
@@ -135,6 +133,4 @@ class YtelserService {
     }
 }
 
-data class Beskrivelser(
-    val beskrivelser: List<String>,
-)
+data class Beskrivelser(val beskrivelser: List<String>)

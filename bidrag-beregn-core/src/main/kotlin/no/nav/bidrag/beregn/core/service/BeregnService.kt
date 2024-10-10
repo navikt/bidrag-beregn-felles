@@ -98,8 +98,8 @@ abstract class BeregnService {
         referanse.contains(Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND.name) -> Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND
         referanse.contains(Grunnlagstype.DELBEREGNING_VOKSNE_I_HUSSTAND.name) -> Grunnlagstype.DELBEREGNING_VOKSNE_I_HUSSTAND
         referanse.contains(Grunnlagstype.DELBEREGNING_BIDRAGSEVNE.name) -> Grunnlagstype.DELBEREGNING_BIDRAGSEVNE
-        referanse.contains(Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL_SÆRBIDRAG.name) ->
-            Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL_SÆRBIDRAG
+        referanse.contains(Grunnlagstype.DELBEREGNING_SUM_LØPENDE_BIDRAG.name) -> Grunnlagstype.DELBEREGNING_SUM_LØPENDE_BIDRAG
+        referanse.contains(Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL.name) -> Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL
 
         else -> throw IllegalArgumentException("Ikke i stand til å utlede grunnlagstype for referanse: $referanse")
     }
@@ -195,22 +195,16 @@ abstract class BeregnService {
     )
 
     // Lager liste over bruddperioder
-    fun lagBruddPeriodeListe(
-        periodeListe: Sequence<ÅrMånedsperiode>,
-        beregningsperiode: ÅrMånedsperiode
-    ): List<ÅrMånedsperiode> {
-        return periodeListe
-            .flatMap { sequenceOf(it.fom, it.til) }                      // Flater ut perioder til en sekvens av ÅrMåned-elementer
-            .distinct()                                                  // Fjerner evt. duplikater
-            .filter { it == null || beregningsperiode.inneholder(it) }   // Filtrerer ut datoer utenfor beregningsperiode
-            .filter { it != null || (beregningsperiode.til == null) }    // Filtrerer ut null hvis beregningsperiode.til ikke er null
-            .sortedBy { it }                                             // Sorterer datoer
-            .sortedWith(compareBy { it == null })                        // Legger evt. null-verdi bakerst
-            .zipWithNext()                                               // Lager periodepar
-            .map { ÅrMånedsperiode(it.first!!, it.second) }              // Mapper til ÅrMånedperiode
-            .toList()
-    }
-
+    fun lagBruddPeriodeListe(periodeListe: Sequence<ÅrMånedsperiode>, beregningsperiode: ÅrMånedsperiode): List<ÅrMånedsperiode> = periodeListe
+        .flatMap { sequenceOf(it.fom, it.til) } // Flater ut perioder til en sekvens av ÅrMåned-elementer
+        .distinct() // Fjerner evt. duplikater
+        .filter { it == null || beregningsperiode.inneholder(it) } // Filtrerer ut datoer utenfor beregningsperiode
+        .filter { it != null || (beregningsperiode.til == null) } // Filtrerer ut null hvis beregningsperiode.til ikke er null
+        .sortedBy { it } // Sorterer datoer
+        .sortedWith(compareBy { it == null }) // Legger evt. null-verdi bakerst
+        .zipWithNext() // Lager periodepar
+        .map { ÅrMånedsperiode(it.first!!, it.second) } // Mapper til ÅrMånedperiode
+        .toList()
 
     fun tilJson(json: Any): String {
         val objectMapper = ObjectMapper()

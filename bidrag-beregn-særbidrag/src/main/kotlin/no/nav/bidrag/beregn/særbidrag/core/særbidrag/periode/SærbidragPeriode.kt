@@ -39,6 +39,7 @@ class SærbidragPeriode(private val særbidragBeregning: SærbidragBeregning = S
     private fun lagGrunnlagTilBeregning(periodeGrunnlag: BeregnSærbidragGrunnlag, grunnlagTilBeregning: BeregnSærbidragListeGrunnlag) {
         grunnlagTilBeregning.betaltAvBpPeriodeListe = periodeGrunnlag.betaltAvBpPeriodeListe.map { it }
         grunnlagTilBeregning.bidragsevnePeriodeListe = periodeGrunnlag.bidragsevnePeriodeListe.map { it }
+        grunnlagTilBeregning.sumLøpendeBidragPeriode = periodeGrunnlag.sumLøpendeBidrag
         grunnlagTilBeregning.bPsAndelSærbidragPeriodeListe = periodeGrunnlag.bPsAndelSærbidragPeriodeListe.map { it }
     }
 
@@ -66,7 +67,14 @@ class SærbidragPeriode(private val særbidragBeregning: SærbidragBeregning = S
 
             val bidragsevne = grunnlag.bidragsevnePeriodeListe.stream()
                 .filter { it.getPeriode().overlapperMed(beregningsperiode) }
-                .map { Bidragsevne(referanse = it.referanse, beløp = it.beløp) }
+                .map {
+                    Bidragsevne(
+                        referanse = it.referanse,
+                        beløp = it.beløp,
+                        skatt = it.skatt,
+                        underholdBarnEgenHusstand = it.underholdBarnEgenHusstand,
+                    )
+                }
                 .findFirst()
                 .orElseThrow { IllegalArgumentException("Grunnlagsobjekt BIDRAGSEVNE mangler data for periode: ${beregningsperiode.getPeriode()}") }
 
@@ -75,8 +83,10 @@ class SærbidragPeriode(private val særbidragBeregning: SærbidragBeregning = S
                 .map {
                     BPsAndelSærbidrag(
                         referanse = it.referanse,
-                        andelFaktor = it.andelFaktor,
+                        endeligAndelFaktor = it.endeligAndelFaktor,
                         andelBeløp = it.andelBeløp,
+                        beregnetAndelFaktor = it.beregnetAndelFaktor,
+                        barnEndeligInntekt = it.barnEndeligInntekt,
                         barnetErSelvforsørget = it.barnetErSelvforsørget,
                     )
                 }
@@ -93,6 +103,7 @@ class SærbidragPeriode(private val særbidragBeregning: SærbidragBeregning = S
                     betaltAvBp = betaltAvBp,
                     bidragsevne = bidragsevne,
                     bPsAndelSærbidrag = bPsAndelSærbidrag,
+                    sumLøpendeBidrag = grunnlag.sumLøpendeBidragPeriode,
                 )
 
             grunnlag.periodeResultatListe.add(
