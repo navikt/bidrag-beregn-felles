@@ -30,11 +30,11 @@ class SumLøpendeBidragBeregning : FellesBeregning() {
         grunnlag.løpendeBidragCoreListe.forEach {
             val beregnetBeløpAvrundet = it.beregnetBeløp
                 .divide(
-                    BigDecimal.valueOf(10),
+                    BigDecimal.TEN,
                     0,
                     RoundingMode.HALF_UP,
                 ).multiply(
-                    BigDecimal.valueOf(10),
+                    BigDecimal.TEN,
                 )
 
             hentSjablonSamværsfradrag(
