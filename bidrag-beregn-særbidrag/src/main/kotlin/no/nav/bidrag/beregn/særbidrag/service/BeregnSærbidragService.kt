@@ -50,6 +50,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSumLøpend
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUtgift
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningVoksneIHustand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
+import no.nav.bidrag.transport.behandling.felles.grunnlag.LøpendeBidragGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonBidragsevnePeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSamværsfradragPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
@@ -105,6 +106,9 @@ internal class BeregnSærbidragService(
         null
     }
 
+    fun validerValutakode(LøpendeBidragGrunnlag: LøpendeBidragGrunnlag): Boolean =
+        LøpendeBidragGrunnlag.løpendeBidragListe.all { it.valutakode == "NOK" }
+
     // ==================================================================================================================================================
     // Bygger grunnlag til core og kaller delberegninger
     private fun utførDelberegninger(
@@ -141,7 +145,7 @@ internal class BeregnSærbidragService(
                 val forskuddssats = sjablonListe.sjablonSjablontallResponse
                     .filter { it.typeSjablon == SjablonTallNavn.FORSKUDDSSATS_BELØP.id }
                     .maxBy { it.datoTom ?: it.datoFom!! }
-                return lagResponsGodkjentBeløpUnderForskuddssats(beregnGrunnlag, forskuddssats!!)
+                return lagResponsGodkjentBeløpUnderForskuddssats(beregnGrunnlag, forskuddssats)
             }
         }
 
