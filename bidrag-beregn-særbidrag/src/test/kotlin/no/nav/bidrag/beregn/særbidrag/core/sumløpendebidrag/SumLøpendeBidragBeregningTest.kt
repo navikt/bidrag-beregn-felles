@@ -34,7 +34,7 @@ internal class SumLøpendeBidragBeregningTest {
                     løpendeBeløp = BigDecimal.valueOf(1200),
                     valutakode = "NOK",
                     samværsklasse = Samværsklasse.SAMVÆRSKLASSE_1, // 528
-                    beregnetBeløp = BigDecimal.valueOf(1000),
+                    beregnetBeløp = BigDecimal.valueOf(1004),
                     faktiskBeløp = BigDecimal.valueOf(900),
                 ),
                 LøpendeBidragCore(
@@ -45,7 +45,7 @@ internal class SumLøpendeBidragBeregningTest {
                     løpendeBeløp = BigDecimal.valueOf(1350),
                     valutakode = "NOK",
                     samværsklasse = Samværsklasse.SAMVÆRSKLASSE_2, // 1749
-                    beregnetBeløp = BigDecimal.valueOf(1155),
+                    beregnetBeløp = BigDecimal.valueOf(1164),
                     faktiskBeløp = BigDecimal.valueOf(1010),
                 ),
                 LøpendeBidragCore(
@@ -56,7 +56,7 @@ internal class SumLøpendeBidragBeregningTest {
                     løpendeBeløp = BigDecimal.valueOf(2140),
                     valutakode = "NOK",
                     samværsklasse = Samværsklasse.SAMVÆRSKLASSE_3, // 3528
-                    beregnetBeløp = BigDecimal.valueOf(1730),
+                    beregnetBeløp = BigDecimal.valueOf(1725),
                     faktiskBeløp = BigDecimal.valueOf(1700),
                 ),
             ),
@@ -65,6 +65,6 @@ internal class SumLøpendeBidragBeregningTest {
         )
         val resultat = sumLøpendeBidragBeregning.beregn(grunnlag)
 
-        assertThat(resultat.sumLøpendeBidrag).isEqualTo(BigDecimal.valueOf(10770))
+        assertThat(resultat.sumLøpendeBidrag).isEqualTo(BigDecimal.valueOf(10775))
     }
 }
