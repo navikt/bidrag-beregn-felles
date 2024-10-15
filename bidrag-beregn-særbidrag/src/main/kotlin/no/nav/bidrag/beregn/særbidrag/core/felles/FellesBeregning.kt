@@ -36,6 +36,7 @@ open class FellesBeregning {
     private fun modifiserSjablonNavn(sjablonNavn: String) = when {
         sjablonNavn == "UnderholdBeløp" || sjablonNavn == "BoutgiftBeløp" -> "Bidragsevne"
         sjablonNavn.startsWith("Trinnvis") -> "TrinnvisSkattesats"
+        sjablonNavn.startsWith("Samværsfradrag") -> "Samværsfradrag"
         else -> sjablonNavn
     }
 }

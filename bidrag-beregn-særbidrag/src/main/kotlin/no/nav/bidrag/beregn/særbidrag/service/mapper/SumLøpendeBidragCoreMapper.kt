@@ -11,6 +11,7 @@ import no.nav.bidrag.beregn.særbidrag.core.felles.bo.SjablonListe
 import no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.dto.LøpendeBidragCore
 import no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.dto.LøpendeBidragGrunnlagCore
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
+import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.LøpendeBidragGrunnlag
@@ -48,8 +49,10 @@ internal object SumLøpendeBidragCoreMapper : CoreMapper() {
                 LøpendeBidragCore(
                     saksnummer = it.saksnummer,
                     fødselsdatoBarn = finnFødselsdatoBarn(beregnGrunnlag.grunnlagListe, it.gjelderBarn),
+                    personidentBarn = finnPersonidentBarn(beregnGrunnlag.grunnlagListe, it.gjelderBarn),
                     referanseBarn = it.gjelderBarn,
                     løpendeBeløp = it.løpendeBeløp,
+                    valutakode = it.valutakode,
                     samværsklasse = it.samværsklasse,
                     beregnetBeløp = it.beregnetBeløp,
                     faktiskBeløp = it.faktiskBeløp,
@@ -62,6 +65,9 @@ internal object SumLøpendeBidragCoreMapper : CoreMapper() {
 
     private fun finnFødselsdatoBarn(beregnGrunnlag: List<GrunnlagDto>, referanse: String): LocalDate =
         finnPersonFraReferanse(beregnGrunnlag, referanse).fødselsdato
+
+    private fun finnPersonidentBarn(beregnGrunnlag: List<GrunnlagDto>, referanse: String): Personident =
+        finnPersonFraReferanse(beregnGrunnlag, referanse).ident!!
 
     private fun mapSjablonPeriodeListe(sjablonPeriodeListeCore: List<SjablonPeriodeCore>): List<SjablonPeriode> {
         val sjablonPeriodeListe = mutableListOf<SjablonPeriode>()

@@ -956,4 +956,23 @@ internal class SivilstandServiceV2Test {
             resultat[1].kilde shouldBe Kilde.OFFENTLIG
         }
     }
+
+    @Test
+    fun `Test at gyldigFom blir satt lik BMs fødselsdato ved kun én status UGIFT`() {
+        sivilstandServiceV2 = SivilstandServiceV2()
+        val mottattSivilstand = TestUtil.gyldigFomLikFødselsdatoUgiftÉnStatus()
+
+        val virkningstidspunkt1 = LocalDate.of(2022, 8, 1)
+        val resultat = sivilstandServiceV2.beregn(virkningstidspunkt1, mottattSivilstand)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 1
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2022, 8, 1)
+            resultat[0].periodeTom shouldBe null
+            resultat[0].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
 }

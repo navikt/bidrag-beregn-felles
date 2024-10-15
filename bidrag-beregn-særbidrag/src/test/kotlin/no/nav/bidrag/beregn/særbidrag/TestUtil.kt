@@ -55,7 +55,7 @@ object TestUtil {
     const val VOKSNE_I_HUSSTANDEN_REFERANSE = "VOKSNE_I_HUSSTANDEN_REFERANSE"
     private const val SAMVÆRSKLASSE_REFERANSE = "SAMVÆRSKLASSE_REFERANSE"
     const val UTGIFT_REFERANSE = "UTGIFT_REFERANSE"
-    const val LØPENDE_BIDRAG_GRUNNLAG = "LØPENDE_BIDRAG_GRUNNLAG"
+    const val LØPENDE_BIDRAG_GRUNNLAG_REFERANSE = "LØPENDE_BIDRAG_GRUNNLAG"
 
     fun byggTotalSærbidragGrunnlag(): BeregnGrunnlag {
         val grunnlagListe = ArrayList<GrunnlagDto>()
@@ -243,17 +243,16 @@ object TestUtil {
         )
     }
 
-    // Bygger opp BeregnBidragsevneResultatCore
+    // Bygger opp BeregnSumLøpendeBidragResultatCore
     fun dummySumLøpendeBidragResultatCore(): BeregnSumLøpendeBidragResultatCore {
         val resultat = no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.dto.ResultatPeriodeCore(
             periode = PeriodeCore(datoFom = LocalDate.parse("2020-08-01"), datoTil = LocalDate.parse("2020-09-01")),
-            resultat = no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.dto.ResultatBeregningCore(BigDecimal.valueOf(100)),
+            resultat = no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.dto.ResultatBeregningCore(
+                BigDecimal.valueOf(100),
+                emptyList(),
+            ),
             grunnlagsreferanseListe = mutableListOf(
-                INNTEKT_REFERANSE,
-                SKATTEKLASSE_REFERANSE,
-                BOSTATUS_REFERANSE,
-                BARN_I_HUSSTANDEN_REFERANSE,
-                SAMVÆRSKLASSE_REFERANSE,
+                LØPENDE_BIDRAG_GRUNNLAG_REFERANSE,
             ),
         )
 

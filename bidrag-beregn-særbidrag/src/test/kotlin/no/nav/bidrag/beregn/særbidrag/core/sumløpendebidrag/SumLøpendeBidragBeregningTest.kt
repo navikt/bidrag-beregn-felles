@@ -5,6 +5,7 @@ import no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.beregning.SumLøpe
 import no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.dto.LøpendeBidragCore
 import no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.dto.LøpendeBidragGrunnlagCore
 import no.nav.bidrag.domene.enums.beregning.Samværsklasse
+import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Saksnummer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
@@ -29,28 +30,34 @@ internal class SumLøpendeBidragBeregningTest {
                 LøpendeBidragCore(
                     saksnummer = Saksnummer("1"),
                     fødselsdatoBarn = LocalDate.of(2000, 5, 4),
+                    personidentBarn = Personident("04050078901"),
                     referanseBarn = "referanseBarn",
                     løpendeBeløp = BigDecimal.valueOf(1200),
+                    valutakode = "NOK",
                     samværsklasse = Samværsklasse.SAMVÆRSKLASSE_1, // 528
-                    beregnetBeløp = BigDecimal.valueOf(1000),
+                    beregnetBeløp = BigDecimal.valueOf(1004),
                     faktiskBeløp = BigDecimal.valueOf(900),
                 ),
                 LøpendeBidragCore(
                     saksnummer = Saksnummer("2"),
                     fødselsdatoBarn = LocalDate.of(2001, 5, 4),
+                    personidentBarn = Personident("040501678901"),
                     referanseBarn = "referanseBarn2",
                     løpendeBeløp = BigDecimal.valueOf(1350),
+                    valutakode = "NOK",
                     samværsklasse = Samværsklasse.SAMVÆRSKLASSE_2, // 1749
-                    beregnetBeløp = BigDecimal.valueOf(1155),
+                    beregnetBeløp = BigDecimal.valueOf(1164),
                     faktiskBeløp = BigDecimal.valueOf(1010),
                 ),
                 LøpendeBidragCore(
                     saksnummer = Saksnummer("3"),
                     fødselsdatoBarn = LocalDate.of(2002, 5, 4),
+                    personidentBarn = Personident("04050278901"),
                     referanseBarn = "referanseBarn3",
                     løpendeBeløp = BigDecimal.valueOf(2140),
+                    valutakode = "NOK",
                     samværsklasse = Samværsklasse.SAMVÆRSKLASSE_3, // 3528
-                    beregnetBeløp = BigDecimal.valueOf(1730),
+                    beregnetBeløp = BigDecimal.valueOf(1725),
                     faktiskBeløp = BigDecimal.valueOf(1700),
                 ),
             ),
@@ -59,6 +66,6 @@ internal class SumLøpendeBidragBeregningTest {
         )
         val resultat = sumLøpendeBidragBeregning.beregn(grunnlag)
 
-        assertThat(resultat.sum).isEqualTo(BigDecimal.valueOf(10770))
+        assertThat(resultat.sumLøpendeBidrag).isEqualTo(BigDecimal.valueOf(10775))
     }
 }

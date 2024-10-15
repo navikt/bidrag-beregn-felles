@@ -498,7 +498,7 @@ internal class BeregnSærbidragApiTest {
             { assertThat(bidragsevneResultat.beløp).isEqualTo(forventetBidragsevneBeløp) },
 
             // Delberegning sumLøpendeBidrag
-            { assertThat(sumLøpendeBidragResultat.sum).isEqualTo(forventetSumLøpendeBidrag) },
+            { assertThat(sumLøpendeBidragResultat.sumLøpendeBidrag).isEqualTo(forventetSumLøpendeBidrag) },
 
             // Delberegning BP's andel særbidrag
             { assertThat(delberegningBPAndelSærbidragListe).hasSize(1) },

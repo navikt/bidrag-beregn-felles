@@ -10,16 +10,17 @@ import no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.dto.LøpendeBidrag
 import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonNøkkelNavn
+import no.nav.bidrag.transport.behandling.felles.grunnlag.BeregningSumLøpendeBidragPerBarn
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.time.LocalDate
-import java.util.HashMap
 
 class SumLøpendeBidragBeregning : FellesBeregning() {
 
     fun beregn(grunnlag: LøpendeBidragGrunnlagCore): ResultatBeregning {
-        var totaltLøpendeBidrag = BigDecimal.ZERO
-        var totaltBeregnetSamværsfradrag = BigDecimal.ZERO
-        var totaltBidragRedusertMedBeløp = BigDecimal.ZERO
+        var sumLøpendeBidrag = BigDecimal.ZERO
+
+        val beregningPerBarnListe = mutableListOf<BeregningSumLøpendeBidragPerBarn>()
 
         var sjablonNavnVerdiMap = HashMap<String, BigDecimal>()
 
@@ -27,19 +28,44 @@ class SumLøpendeBidragBeregning : FellesBeregning() {
             grunnlag.sjablonPeriodeListe.filter { it.getPeriode().overlapperMed(Periode(grunnlag.beregnDatoFra, grunnlag.beregnDatoTil)) }
 
         grunnlag.løpendeBidragCoreListe.forEach {
-            sjablonNavnVerdiMap = hentSjablonSamværsfradrag(
+            val beregnetBeløpAvrundet = it.beregnetBeløp
+                .divide(
+                    BigDecimal.TEN,
+                    0,
+                    RoundingMode.HALF_UP,
+                ).multiply(
+                    BigDecimal.TEN,
+                )
+
+            hentSjablonSamværsfradrag(
+                sjablonNavnVerdiMap = sjablonNavnVerdiMap,
                 sjablonPeriodeListe = sjablonliste,
                 samværsklasse = it.samværsklasse.bisysKode,
                 alderBarn = finnAlder(it.fødselsdatoBarn),
+                referanseBarn = it.referanseBarn,
             )
 
-            totaltLøpendeBidrag += it.løpendeBeløp
-            totaltBeregnetSamværsfradrag += sjablonNavnVerdiMap[SjablonNavn.SAMVÆRSFRADRAG.navn] ?: BigDecimal.ZERO
-            totaltBidragRedusertMedBeløp += it.beregnetBeløp.minus(it.faktiskBeløp)
+            val samværsfradrag = sjablonNavnVerdiMap[SjablonNavn.SAMVÆRSFRADRAG.navn + "_" + it.referanseBarn] ?: BigDecimal.ZERO
+            val resultat = it.løpendeBeløp + samværsfradrag + (beregnetBeløpAvrundet - it.faktiskBeløp)
+
+            beregningPerBarnListe.add(
+                BeregningSumLøpendeBidragPerBarn(
+                    personidentBarn = it.personidentBarn,
+                    saksnummer = it.saksnummer,
+                    løpendeBeløp = it.løpendeBeløp,
+                    samværsfradrag = samværsfradrag,
+                    beregnetBeløp = beregnetBeløpAvrundet,
+                    faktiskBeløp = it.faktiskBeløp,
+                    resultat = resultat,
+                ),
+            )
+
+            sumLøpendeBidrag += resultat
         }
 
         return ResultatBeregning(
-            sum = totaltLøpendeBidrag.plus(totaltBeregnetSamværsfradrag).plus(totaltBidragRedusertMedBeløp),
+            sumLøpendeBidrag = sumLøpendeBidrag,
+            beregningPerBarn = beregningPerBarnListe,
             sjablonListe = byggSjablonResultatListe(sjablonNavnVerdiMap = sjablonNavnVerdiMap, sjablonPeriodeListe = grunnlag.sjablonPeriodeListe),
 
         )
@@ -54,15 +80,17 @@ class SumLøpendeBidragBeregning : FellesBeregning() {
 
     // Henter sjablonverdier
     private fun hentSjablonSamværsfradrag(
+        sjablonNavnVerdiMap: HashMap<String, BigDecimal>,
         sjablonPeriodeListe: List<SjablonPeriode>,
         samværsklasse: String,
         alderBarn: Int,
+        referanseBarn: String,
     ): HashMap<String, BigDecimal> {
-        val sjablonNavnVerdiMap = HashMap<String, BigDecimal>()
+//        val sjablonNavnVerdiMap = HashMap<String, BigDecimal>()
         val sjablonListe = sjablonPeriodeListe.map { it.sjablon }.toList()
 
         // Samværsfradrag
-        sjablonNavnVerdiMap[SjablonNavn.SAMVÆRSFRADRAG.navn] =
+        sjablonNavnVerdiMap[SjablonNavn.SAMVÆRSFRADRAG.navn + "_" + referanseBarn] =
             SjablonUtil.hentSjablonverdi(
                 sjablonListe = sjablonListe,
                 sjablonNavn = SjablonNavn.SAMVÆRSFRADRAG,

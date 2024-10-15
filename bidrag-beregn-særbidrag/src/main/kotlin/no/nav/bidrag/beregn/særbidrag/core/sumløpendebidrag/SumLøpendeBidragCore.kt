@@ -25,7 +25,7 @@ internal class SumLøpendeBidragCore(private val sumLøpendeBidragPeriode: SumL�
 
     private fun mapResultatPeriode(resultatPeriode: ResultatPeriode) = ResultatPeriodeCore(
         periode = PeriodeCore(datoFom = resultatPeriode.periode.datoFom, datoTil = resultatPeriode.periode.datoTil),
-        resultat = ResultatBeregningCore(resultatPeriode.resultat.sum),
+        resultat = ResultatBeregningCore(resultatPeriode.resultat.sumLøpendeBidrag, resultatPeriode.resultat.beregningPerBarn),
         grunnlagsreferanseListe = mapReferanseListe(resultatPeriode).sorted().toMutableList(),
     )
 

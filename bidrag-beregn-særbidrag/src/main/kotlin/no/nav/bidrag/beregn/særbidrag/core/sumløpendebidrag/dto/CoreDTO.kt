@@ -5,7 +5,9 @@ import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonResultatGrunnlagCore
 import no.nav.bidrag.beregn.særbidrag.core.felles.dto.IResultatPeriode
 import no.nav.bidrag.domene.enums.beregning.Samværsklasse
+import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Saksnummer
+import no.nav.bidrag.transport.behandling.felles.grunnlag.BeregningSumLøpendeBidragPerBarn
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagInnhold
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -22,8 +24,10 @@ data class LøpendeBidragGrunnlagCore(
 data class LøpendeBidragCore(
     val saksnummer: Saksnummer,
     val fødselsdatoBarn: LocalDate,
+    val personidentBarn: Personident,
     val referanseBarn: String,
     val løpendeBeløp: BigDecimal,
+    val valutakode: String,
     val samværsklasse: Samværsklasse,
     val beregnetBeløp: BigDecimal,
     val faktiskBeløp: BigDecimal,
@@ -38,4 +42,4 @@ data class ResultatPeriodeCore(
     override val grunnlagsreferanseListe: MutableList<String>,
 ) : IResultatPeriode
 
-data class ResultatBeregningCore(val sum: BigDecimal)
+data class ResultatBeregningCore(val sumLøpendeBidrag: BigDecimal, val beregningPerBarn: List<BeregningSumLøpendeBidragPerBarn>)

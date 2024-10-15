@@ -5,7 +5,6 @@ import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SamværsklassePeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSamværsfradragPeriode
 import java.math.BigDecimal
-import java.time.LocalDate
 
 data class SamværsfradragPeriodeGrunnlag(
     val beregningsperiode: ÅrMånedsperiode,
@@ -13,8 +12,6 @@ data class SamværsfradragPeriodeGrunnlag(
     val samværsklassePeriodeGrunnlagListe: List<SamværsklassePeriodeGrunnlag>,
     var sjablonSamværsfradragPeriodeGrunnlagListe: List<SjablonSamværsfradragPeriodeGrunnlag>,
 )
-
-data class SøknadsbarnPeriodeGrunnlag(val referanse: String, val fødselsdato: LocalDate)
 
 data class SamværsklassePeriodeGrunnlag(val referanse: String, val samværsklassePeriode: SamværsklassePeriode)
 
