@@ -194,6 +194,18 @@ abstract class BeregnService {
         ),
     )
 
+    // Lager liste over bruddperioder
+    fun lagBruddPeriodeListe(periodeListe: Sequence<ÅrMånedsperiode>, beregningsperiode: ÅrMånedsperiode): List<ÅrMånedsperiode> = periodeListe
+        .flatMap { sequenceOf(it.fom, it.til) } // Flater ut perioder til en sekvens av ÅrMåned-elementer
+        .distinct() // Fjerner evt. duplikater
+        .filter { it == null || beregningsperiode.inneholder(it) } // Filtrerer ut datoer utenfor beregningsperiode
+        .filter { it != null || (beregningsperiode.til == null) } // Filtrerer ut null hvis beregningsperiode.til ikke er null
+        .sortedBy { it } // Sorterer datoer
+        .sortedWith(compareBy { it == null }) // Legger evt. null-verdi bakerst
+        .zipWithNext() // Lager periodepar
+        .map { ÅrMånedsperiode(it.first!!, it.second) } // Mapper til ÅrMånedperiode
+        .toList()
+
     fun tilJson(json: Any): String {
         val objectMapper = ObjectMapper()
         objectMapper.registerKotlinModule()

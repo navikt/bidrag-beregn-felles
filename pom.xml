@@ -51,6 +51,7 @@
         <module>bidrag-inntekt</module>
         <module>bidrag-sivilstand</module>
         <module>bidrag-beregn-særbidrag</module>
+        <module>bidrag-beregn-barnebidrag</module>
         <module>bidrag-vedtak</module>
     </modules>
     <repositories>
@@ -124,6 +125,12 @@
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-stdlib</artifactId>
                 <version>${kotlin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.bidrag</groupId>
+                <artifactId>bidrag-commons-test-felles</artifactId>
+                <version>${bidrag-felles.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>io.kotest</groupId>
