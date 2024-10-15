@@ -97,7 +97,7 @@ abstract class BeregnService {
                 grunnlagsreferanseListe = lagGrunnlagsreferanselisteInntekt(
                     grunnlagsreferanseliste = it.grunnlagsreferanseListe,
                     innslagKapitalinntektSjablon = innslagKapitalinntektSjablon,
-                ),
+                ).sorted(),
                 gjelderReferanse = referanseTilRolle,
             )
         }
@@ -208,7 +208,7 @@ abstract class BeregnService {
     protected fun mapSjablonSjablontallGrunnlag(
         periode: ÅrMånedsperiode,
         sjablonListe: List<Sjablontall>,
-        delberegning: (SjablonTallNavn) -> Boolean
+        delberegning: (SjablonTallNavn) -> Boolean,
     ): List<GrunnlagDto> {
         val sjablontallMap = HashMap<String, SjablonTallNavn>()
         for (sjablonTallNavn in SjablonTallNavn.entries) {
@@ -223,7 +223,7 @@ abstract class BeregnService {
             .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
             .map {
                 GrunnlagDto(
-                    referanse = lagSjablonReferanse("SJABLONTALL_${sjablontallMap[it.typeSjablon]!!.navn}", it.datoFom!!),
+                    referanse = lagSjablonReferanse("Sjablontall_${sjablontallMap[it.typeSjablon]!!.navn}", it.datoFom!!),
                     type = Grunnlagstype.SJABLON,
                     innhold = POJONode(
                         SjablonSjablontallPeriode(
@@ -309,25 +309,19 @@ abstract class BeregnService {
     private fun justerSjablonTomDato(datoTom: LocalDate): LocalDate? = if (datoTom == LocalDate.parse("9999-12-31")) null else datoTom.plusMonths(1)
 
     private fun lagSjablonReferanse(sjablonNavn: String, fomDato: LocalDate, postfix: String = ""): String =
-        "Sjablon_${sjablonNavn}_${fomDato.format(DateTimeFormatter.ofPattern("yyyyMMdd"))}$postfix"
+        "sjablon_${sjablonNavn}_${fomDato.format(DateTimeFormatter.ofPattern("yyyyMM"))}$postfix"
 
     // Lager liste over bruddperioder
-    fun lagBruddPeriodeListe(
-        periodeListe: Sequence<ÅrMånedsperiode>,
-        beregningsperiode: ÅrMånedsperiode
-    ): List<ÅrMånedsperiode> {
-        return periodeListe
-            .flatMap { sequenceOf(it.fom, it.til) }                      // Flater ut perioder til en sekvens av ÅrMåned-elementer
-            .distinct()                                                  // Fjerner evt. duplikater
-            .filter { it == null || beregningsperiode.inneholder(it) }   // Filtrerer ut datoer utenfor beregningsperiode
-            .filter { it != null || (beregningsperiode.til == null) }    // Filtrerer ut null hvis beregningsperiode.til ikke er null
-            .sortedBy { it }                                             // Sorterer datoer
-            .sortedWith(compareBy { it == null })                        // Legger evt. null-verdi bakerst
-            .zipWithNext()                                               // Lager periodepar
-            .map { ÅrMånedsperiode(it.first!!, it.second) }              // Mapper til ÅrMånedperiode
-            .toList()
-    }
-
+    fun lagBruddPeriodeListe(periodeListe: Sequence<ÅrMånedsperiode>, beregningsperiode: ÅrMånedsperiode): List<ÅrMånedsperiode> = periodeListe
+        .flatMap { sequenceOf(it.fom, it.til) } // Flater ut perioder til en sekvens av ÅrMåned-elementer
+        .distinct() // Fjerner evt. duplikater
+        .filter { it == null || beregningsperiode.inneholder(it) } // Filtrerer ut datoer utenfor beregningsperiode
+        .filter { it != null || (beregningsperiode.til == null) } // Filtrerer ut null hvis beregningsperiode.til ikke er null
+        .sortedBy { it } // Sorterer datoer
+        .sortedWith(compareBy { it == null }) // Legger evt. null-verdi bakerst
+        .zipWithNext() // Lager periodepar
+        .map { ÅrMånedsperiode(it.first!!, it.second) } // Mapper til ÅrMånedperiode
+        .toList()
 
     fun tilJson(json: Any): String {
         val objectMapper = ObjectMapper()

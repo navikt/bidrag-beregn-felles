@@ -20,25 +20,13 @@ data class BidragsevnePeriodeGrunnlag(
     var sjablonTrinnvisSkattesatsPeriodeGrunnlagListe: List<SjablonTrinnvisSkattesatsPeriodeGrunnlag>,
 )
 
-data class SjablonSjablontallPeriodeGrunnlag(
-    val referanse: String,
-    val sjablonSjablontallPeriode: SjablonSjablontallPeriode
-)
+data class SjablonSjablontallPeriodeGrunnlag(val referanse: String, val sjablonSjablontallPeriode: SjablonSjablontallPeriode)
 
-data class SjablonBidragsevnePeriodeGrunnlag(
-    val referanse: String,
-    val sjablonBidragsevnePeriode: SjablonBidragsevnePeriode
-)
+data class SjablonBidragsevnePeriodeGrunnlag(val referanse: String, val sjablonBidragsevnePeriode: SjablonBidragsevnePeriode)
 
-data class SjablonTrinnvisSkattesatsPeriodeGrunnlag(
-    val referanse: String,
-    val sjablonTrinnvisSkattesatsPeriode: SjablonTrinnvisSkattesatsPeriode
-)
+data class SjablonTrinnvisSkattesatsPeriodeGrunnlag(val referanse: String, val sjablonTrinnvisSkattesatsPeriode: SjablonTrinnvisSkattesatsPeriode)
 
-data class BidragsevnePeriodeResultat(
-    val periode: ÅrMånedsperiode,
-    val resultat: BidragsevneBeregningResultat
-)
+data class BidragsevnePeriodeResultat(val periode: ÅrMånedsperiode, val resultat: BidragsevneBeregningResultat)
 
 data class BidragsevneBeregningGrunnlag(
     val inntektBPBeregningGrunnlag: InntektBeregningGrunnlag,
@@ -49,38 +37,17 @@ data class BidragsevneBeregningGrunnlag(
     val sjablonTrinnvisSkattesatsBeregningGrunnlag: SjablonTrinnvisSkattesatsBeregningGrunnlag,
 )
 
-data class InntektBeregningGrunnlag(
-    val referanse: String,
-    val sumInntekt: BigDecimal
-)
+data class InntektBeregningGrunnlag(val referanse: String, val sumInntekt: BigDecimal)
 
-data class BarnIHusstandenBeregningGrunnlag(
-    val referanse: String,
-    val antallBarn: Double
-)
+data class BarnIHusstandenBeregningGrunnlag(val referanse: String, val antallBarn: Double)
 
-data class VoksneIHusstandenBeregningGrunnlag(
-    val referanse: String,
-    val borMedAndre: Boolean
-)
+data class VoksneIHusstandenBeregningGrunnlag(val referanse: String, val borMedAndre: Boolean)
 
-data class SjablonSjablontallBeregningGrunnlag(
-    val referanse: String,
-    val type: String,
-    val verdi: Double,
-)
+data class SjablonSjablontallBeregningGrunnlag(val referanse: String, val type: String, val verdi: Double)
 
-data class SjablonBidragsevneBeregningGrunnlag(
-    val referanse: String,
-    val bostatus: String,
-    val boutgift: BigDecimal,
-    val underhold: BigDecimal,
-)
+data class SjablonBidragsevneBeregningGrunnlag(val referanse: String, val bostatus: String, val boutgift: BigDecimal, val underhold: BigDecimal)
 
-data class SjablonTrinnvisSkattesatsBeregningGrunnlag(
-    val referanse: String,
-    val trinnliste: List<SjablonTrinnvisSkattesats>,
-)
+data class SjablonTrinnvisSkattesatsBeregningGrunnlag(val referanse: String, val trinnliste: List<SjablonTrinnvisSkattesats>)
 
 data class BidragsevneBeregningResultat(
     val bidragsevne: BigDecimal,

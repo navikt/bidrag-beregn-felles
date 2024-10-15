@@ -43,11 +43,10 @@ abstract class CoreMapper {
     fun finnInnslagKapitalinntektFraSjablontall(sjablontallListe: List<Sjablontall>): BigDecimal =
         sjablontallListe.firstOrNull { it.typeSjablon == SjablonTallNavn.INNSLAG_KAPITALINNTEKT_BELØP.id }?.verdi ?: BigDecimal.ZERO
 
-    fun finnInnslagKapitalinntektFraGrunnlag(sjablonListe: List<GrunnlagDto>): BigDecimal =
-        sjablonListe
-            .filter { it.referanse.contains("SJABLONTALL") }
-            .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>()
-            .firstOrNull { it.innhold.sjablon == SjablonTallNavn.INNSLAG_KAPITALINNTEKT_BELØP }?.innhold?.verdi ?: BigDecimal.ZERO
+    fun finnInnslagKapitalinntektFraGrunnlag(sjablonListe: List<GrunnlagDto>): BigDecimal = sjablonListe
+        .filter { it.referanse.uppercase().contains("SJABLONTALL") }
+        .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>()
+        .firstOrNull { it.innhold.sjablon == SjablonTallNavn.INNSLAG_KAPITALINNTEKT_BELØP }?.innhold?.verdi ?: BigDecimal.ZERO
 
     fun finnReferanseTilRolle(grunnlagListe: List<GrunnlagDto>, grunnlagstype: Grunnlagstype) = grunnlagListe
         .firstOrNull { it.type == grunnlagstype }?.referanse ?: throw NoSuchElementException("Grunnlagstype $grunnlagstype mangler i input")

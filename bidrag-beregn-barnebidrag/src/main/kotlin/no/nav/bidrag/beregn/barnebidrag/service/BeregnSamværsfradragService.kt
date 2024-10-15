@@ -26,7 +26,6 @@ import java.time.Period
 internal object BeregnSamværsfradragService : BeregnService() {
 
     fun delberegningSamværsfradrag(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
-
         // Lager sjablon grunnlagsobjekter
         val sjablonGrunnlag = lagSjablonGrunnlagsobjekter(mottattGrunnlag.periode)
 

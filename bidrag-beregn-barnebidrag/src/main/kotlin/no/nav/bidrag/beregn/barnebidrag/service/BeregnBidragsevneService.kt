@@ -33,7 +33,6 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningref
 internal object BeregnBidragsevneService : BeregnService() {
 
     fun delberegningBidragsevne(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
-
         val referanseTilBP = finnReferanseTilRolle(
             grunnlagListe = mottattGrunnlag.grunnlagListe,
             grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
@@ -79,7 +78,7 @@ internal object BeregnBidragsevneService : BeregnService() {
                 bidragsevneBeregningResultatListe = bidragsevneBeregningResultatListe,
                 innslagKapitalinntektSjablon = innslagKapitalinntektSjablon,
                 referanseTilBP = referanseTilBP,
-            )
+            ),
         )
 
         // Mapper ut grunnlag for delberegning bidragsevne
@@ -120,7 +119,6 @@ internal object BeregnBidragsevneService : BeregnService() {
         bidragsevnePeriodeGrunnlag: BidragsevnePeriodeGrunnlag,
         bruddPeriode: ÅrMånedsperiode,
     ): BidragsevneBeregningGrunnlag {
-
         val borMedAndre = bidragsevnePeriodeGrunnlag.voksneIHusstandenPeriodeGrunnlagListe
             .firstOrNull { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
             ?.borMedAndre
@@ -223,8 +221,12 @@ internal object BeregnBidragsevneService : BeregnService() {
             GrunnlagDto(
                 referanse = opprettDelberegningreferanse(
                     type = Grunnlagstype.DELBEREGNING_BIDRAGSEVNE,
-                    periode = it.periode,
+                    periode = ÅrMånedsperiode(fom = it.periode.fom, til = null),
                     søknadsbarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
+                    gjelderReferanse = finnReferanseTilRolle(
+                        grunnlagListe = mottattGrunnlag.grunnlagListe,
+                        grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
+                    ),
                 ),
                 type = Grunnlagstype.DELBEREGNING_BIDRAGSEVNE,
                 innhold = POJONode(
@@ -241,7 +243,7 @@ internal object BeregnBidragsevneService : BeregnService() {
                         underholdBarnEgenHusstand = it.resultat.underholdBarnEgenHusstand,
                     ),
                 ),
-                grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe,
+                grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe.sorted(),
                 gjelderReferanse = finnReferanseTilRolle(
                     grunnlagListe = mottattGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
@@ -249,13 +251,12 @@ internal object BeregnBidragsevneService : BeregnService() {
             )
         }
 
-
     private fun mapDelberegninger(
         mottattGrunnlag: BeregnGrunnlag,
         bidragsevnePeriodeGrunnlag: BidragsevnePeriodeGrunnlag,
         bidragsevneBeregningResultatListe: List<BidragsevnePeriodeResultat>,
         innslagKapitalinntektSjablon: Sjablontall?,
-        referanseTilBP: String
+        referanseTilBP: String,
     ): List<GrunnlagDto> {
         val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
         val grunnlagReferanseListe =
@@ -295,7 +296,6 @@ internal object BeregnBidragsevneService : BeregnService() {
             ),
         )
 
-
         // Lager en liste av referanser som refereres til av delberegningene og mapper ut tilhørende grunnlag
         val delberegningReferanseListe =
             sumInntektListe.flatMap { it.grunnlagsreferanseListe }
@@ -315,10 +315,10 @@ internal object BeregnBidragsevneService : BeregnService() {
                         referanse = it.referanse,
                         type = it.type,
                         innhold = it.innhold,
-                        grunnlagsreferanseListe = it.grunnlagsreferanseListe,
+                        grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
                         gjelderReferanse = it.gjelderReferanse,
                     )
-                }
+                },
         )
 
         return resultatGrunnlagListe
@@ -337,7 +337,7 @@ internal object BeregnBidragsevneService : BeregnService() {
                             antallBarn = it.antall,
                         ),
                     ),
-                    grunnlagsreferanseListe = it.grunnlagsreferanseListe,
+                    grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
                     gjelderReferanse = bidragspliktigReferanse,
                 )
             }
@@ -355,7 +355,7 @@ internal object BeregnBidragsevneService : BeregnService() {
                             borMedAndreVoksne = it.borMedAndre,
                         ),
                     ),
-                    grunnlagsreferanseListe = it.grunnlagsreferanseListe,
+                    grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
                     gjelderReferanse = bidragspliktigReferanse,
                 )
             }
@@ -364,7 +364,7 @@ internal object BeregnBidragsevneService : BeregnService() {
     // TODO Bør synkes med som ligger i CoreMapper. Pt ligger det bare en gyldig sjablonverdi (uforandret siden 2003).
     // TODO Logikken her må utvides hvis det legges inn nye sjablonverdier
     private fun finnInnslagKapitalinntektFraGrunnlag(sjablonListe: List<GrunnlagDto>): Sjablontall? = sjablonListe
-        .filter { it.referanse.contains("SJABLONTALL") }
+        .filter { it.referanse.uppercase().contains("SJABLONTALL") }
         .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>()
         .firstOrNull { it.innhold.sjablon == SjablonTallNavn.INNSLAG_KAPITALINNTEKT_BELØP }
         ?.let { innslagKapitalinntektSjablon ->

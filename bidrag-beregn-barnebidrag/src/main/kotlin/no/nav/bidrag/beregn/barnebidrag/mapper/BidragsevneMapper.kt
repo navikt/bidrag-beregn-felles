@@ -23,7 +23,6 @@ import java.util.Collections
 
 internal object BidragsevneMapper : CoreMapper() {
     fun mapBidragsevneGrunnlag(mottattGrunnlag: BeregnGrunnlag, sjablonGrunnlag: List<GrunnlagDto>): BidragsevnePeriodeGrunnlag {
-
         val referanseTilBP = finnReferanseTilRolle(
             grunnlagListe = mottattGrunnlag.grunnlagListe,
             grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
@@ -47,7 +46,7 @@ internal object BidragsevneMapper : CoreMapper() {
         )
     }
 
-    //TODO: Flytte til CoreMapper? (ligger pt også i BidragsevneCoreMapper under særbidrag)
+    // TODO: Flytte til CoreMapper? (ligger pt også i BidragsevneCoreMapper under særbidrag)
     private fun mapBarnIHusstanden(beregnGrunnlag: BeregnGrunnlag, referanseTilRolle: Grunnlagsreferanse): List<BarnIHusstandenPeriodeCore> {
         try {
             val barnIHusstandenGrunnlagListe =
@@ -92,7 +91,7 @@ internal object BidragsevneMapper : CoreMapper() {
         }
     }
 
-    //TODO: Flytte til CoreMapper? (ligger pt også i BidragsevneCoreMapper under særbidrag)
+    // TODO: Flytte til CoreMapper? (ligger pt også i BidragsevneCoreMapper under særbidrag)
     private fun mapVoksneIHusstanden(beregnGrunnlag: BeregnGrunnlag, referanseTilRolle: Grunnlagsreferanse): List<VoksneIHusstandenPeriodeCore> {
         try {
             val voksneIHusstandenGrunnlagListe =
@@ -130,11 +129,11 @@ internal object BidragsevneMapper : CoreMapper() {
         }
     }
 
-    //TODO Flytte til CoreMapper
+    // TODO Flytte til CoreMapper
     private fun mapSjablonSjablontall(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonSjablontallPeriodeGrunnlag> {
         try {
             return sjablonGrunnlag
-                .filter { it.referanse.contains("SJABLONTALL") }
+                .filter { it.referanse.uppercase().contains("SJABLONTALL") }
                 .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>()
                 .map {
                     SjablonSjablontallPeriodeGrunnlag(

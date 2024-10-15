@@ -8,9 +8,9 @@ import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsfradrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
+import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.fail
@@ -26,7 +26,7 @@ import java.nio.file.Paths
 import java.text.SimpleDateFormat
 
 @ExtendWith(MockitoExtension::class)
-internal class BeregnBarnebidragApiTest {
+internal class BeregnSamværsfradragApiTest {
     private lateinit var filnavn: String
 
     @Mock
@@ -39,24 +39,10 @@ internal class BeregnBarnebidragApiTest {
     }
 
     @Test
-    @DisplayName("Test av samværsfradrag - eksempel 1")
+    @DisplayName("Samværsfradrag - eksempel med flere perioder")
     fun testSamværsfradrag_Eksempel01() {
-        filnavn = "src/test/resources/testfiler/samværsfradrag_eksempel1.json"
+        filnavn = "src/test/resources/testfiler/samværsfradrag/samværsfradrag_eksempel_med_flere_perioder.json"
         utførBeregningerOgEvaluerResultatSamværsfradrag()
-    }
-
-    @Test
-    @DisplayName("Test av bidragsevne - eksempel 1")
-    fun testBidragsevne_Eksempel01() {
-        filnavn = "src/test/resources/testfiler/bidragsevne_eksempel1.json"
-        utførBeregningerOgEvaluerResultatBidragsevne()
-    }
-
-    @Test
-    @DisplayName("Test av bidragsevne - eksempel 2")
-    fun testBidragsevne_Eksempel02() {
-        filnavn = "src/test/resources/testfiler/bidragsevne_eksempel2.json"
-        utførBeregningerOgEvaluerResultatBidragsevne()
     }
 
     private fun utførBeregningerOgEvaluerResultatSamværsfradrag() {
@@ -64,16 +50,17 @@ internal class BeregnBarnebidragApiTest {
         val samværsfradragResultat = beregnBarnebidragService.beregnSamværsfradrag(request)
         printJson(samværsfradragResultat)
 
-        val objectMapper = ObjectMapper()
         val alleReferanser = hentAlleReferanser(samværsfradragResultat)
         val alleRefererteReferanser = hentAlleRefererteReferanser(samværsfradragResultat)
 
-        val delberegningSamværsfradragListe = samværsfradragResultat
-            .filter { it.type == Grunnlagstype.DELBEREGNING_SAMVÆRSFRADRAG }
-        val samværsfradragResultatListe = mutableListOf<DelberegningSamværsfradrag>()
-        for (delberegning in delberegningSamværsfradragListe) {
-            samværsfradragResultatListe.add(objectMapper.treeToValue(delberegning.innhold, DelberegningSamværsfradrag::class.java))
-        }
+        val samværsfradragResultatListe = samværsfradragResultat
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningSamværsfradrag>(Grunnlagstype.DELBEREGNING_SAMVÆRSFRADRAG)
+            .map {
+                DelberegningSamværsfradrag(
+                    periode = it.innhold.periode,
+                    beløp = it.innhold.beløp,
+                )
+            }
 
         assertAll(
             { assertThat(samværsfradragResultat).isNotNull },
@@ -93,46 +80,6 @@ internal class BeregnBarnebidragApiTest {
             { assertThat(samværsfradragResultatListe[4].beløp).isEqualTo(BigDecimal.valueOf(1760)) },
             { assertThat(samværsfradragResultatListe[5].periode).isEqualTo(ÅrMånedsperiode("2024-07", "2024-10")) },
             { assertThat(samværsfradragResultatListe[5].beløp).isEqualTo(BigDecimal.valueOf(1813)) },
-
-            // Referanser
-            { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
-        )
-    }
-
-    private fun utførBeregningerOgEvaluerResultatBidragsevne() {
-        val request = lesFilOgByggRequest(filnavn)
-        val bidragsevneResultat = beregnBarnebidragService.beregnBidragsevne(request)
-        printJson(bidragsevneResultat)
-
-        val objectMapper = ObjectMapper()
-        val alleReferanser = hentAlleReferanser(bidragsevneResultat)
-        val alleRefererteReferanser = hentAlleRefererteReferanser(bidragsevneResultat)
-
-        val delberegningBidragsevneListe = bidragsevneResultat
-            .filter { it.type == Grunnlagstype.DELBEREGNING_BIDRAGSEVNE }
-        val bidragsevneResultatListe = mutableListOf<DelberegningBidragsevne>()
-        for (delberegning in delberegningBidragsevneListe) {
-            bidragsevneResultatListe.add(objectMapper.treeToValue(delberegning.innhold, DelberegningBidragsevne::class.java))
-        }
-
-        assertAll(
-            { assertThat(bidragsevneResultat).isNotNull },
-            { assertThat(bidragsevneResultatListe).isNotNull },
-//            { assertThat(bidragsevneResultatListe).hasSize(6) },
-
-            // Delberegning Bidragsevne
-//            { assertThat(bidragsevneResultatListe[0].periode).isEqualTo(ÅrMånedsperiode("2021-05", "2021-07")) },
-//            { assertThat(bidragsevneResultatListe[0].beløp).isEqualTo(BigDecimal.valueOf(353)) },
-//            { assertThat(bidragsevneResultatListe[1].periode).isEqualTo(ÅrMånedsperiode("2021-07", "2022-07")) },
-//            { assertThat(bidragsevneResultatListe[1].beløp).isEqualTo(BigDecimal.valueOf(354)) },
-//            { assertThat(bidragsevneResultatListe[2].periode).isEqualTo(ÅrMånedsperiode("2022-07", "2023-01")) },
-//            { assertThat(bidragsevneResultatListe[2].beløp).isEqualTo(BigDecimal.valueOf(365)) },
-//            { assertThat(bidragsevneResultatListe[3].periode).isEqualTo(ÅrMånedsperiode("2023-01", "2023-07")) },
-//            { assertThat(bidragsevneResultatListe[3].beløp).isEqualTo(BigDecimal.valueOf(1209)) },
-//            { assertThat(bidragsevneResultatListe[4].periode).isEqualTo(ÅrMånedsperiode("2023-07", "2024-07")) },
-//            { assertThat(bidragsevneResultatListe[4].beløp).isEqualTo(BigDecimal.valueOf(1760)) },
-//            { assertThat(bidragsevneResultatListe[5].periode).isEqualTo(ÅrMånedsperiode("2024-07", "2024-10")) },
-//            { assertThat(bidragsevneResultatListe[5].beløp).isEqualTo(BigDecimal.valueOf(1813)) },
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
