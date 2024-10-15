@@ -12,6 +12,7 @@ import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonNøkkelNavn
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeregningSumLøpendeBidragPerBarn
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.time.LocalDate
 
 class SumLøpendeBidragBeregning : FellesBeregning() {
@@ -27,6 +28,15 @@ class SumLøpendeBidragBeregning : FellesBeregning() {
             grunnlag.sjablonPeriodeListe.filter { it.getPeriode().overlapperMed(Periode(grunnlag.beregnDatoFra, grunnlag.beregnDatoTil)) }
 
         grunnlag.løpendeBidragCoreListe.forEach {
+            val beregnetBeløpAvrundet = it.beregnetBeløp
+                .divide(
+                    BigDecimal.TEN,
+                    0,
+                    RoundingMode.HALF_UP,
+                ).multiply(
+                    BigDecimal.TEN,
+                )
+
             hentSjablonSamværsfradrag(
                 sjablonNavnVerdiMap = sjablonNavnVerdiMap,
                 sjablonPeriodeListe = sjablonliste,
@@ -36,7 +46,7 @@ class SumLøpendeBidragBeregning : FellesBeregning() {
             )
 
             val samværsfradrag = sjablonNavnVerdiMap[SjablonNavn.SAMVÆRSFRADRAG.navn + "_" + it.referanseBarn] ?: BigDecimal.ZERO
-            val resultat = it.løpendeBeløp + samværsfradrag + (it.beregnetBeløp - it.faktiskBeløp)
+            val resultat = it.løpendeBeløp + samværsfradrag + (beregnetBeløpAvrundet - it.faktiskBeløp)
 
             beregningPerBarnListe.add(
                 BeregningSumLøpendeBidragPerBarn(
@@ -44,7 +54,7 @@ class SumLøpendeBidragBeregning : FellesBeregning() {
                     saksnummer = it.saksnummer,
                     løpendeBeløp = it.løpendeBeløp,
                     samværsfradrag = samværsfradrag,
-                    beregnetBeløp = it.beregnetBeløp,
+                    beregnetBeløp = beregnetBeløpAvrundet,
                     faktiskBeløp = it.faktiskBeløp,
                     resultat = resultat,
                 ),

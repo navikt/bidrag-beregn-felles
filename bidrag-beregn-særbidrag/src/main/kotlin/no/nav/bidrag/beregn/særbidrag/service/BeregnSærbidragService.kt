@@ -50,6 +50,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSumLøpend
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUtgift
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningVoksneIHustand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
+import no.nav.bidrag.transport.behandling.felles.grunnlag.LøpendeBidragGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonBidragsevnePeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSamværsfradragPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
@@ -97,11 +98,16 @@ internal class BeregnSærbidragService(
         delberegningUtgift: DelberegningUtgift,
         sjablonListe: SjablonListe = hentSjabloner(),
     ): Resultatkode? = if (vedtakstype == Vedtakstype.FASTSETTELSE) {
-        val forskuddssats = sjablonListe.sjablonSjablontallResponse.firstOrNull { it.typeSjablon == SjablonTallNavn.FORSKUDDSSATS_BELØP.id }
+        val forskuddssats = sjablonListe.sjablonSjablontallResponse
+            .filter { it.typeSjablon == SjablonTallNavn.FORSKUDDSSATS_BELØP.id }
+            .maxBy { it.datoTom ?: it.datoFom!! }
         if (delberegningUtgift.sumGodkjent < forskuddssats?.verdi) Resultatkode.GODKJENT_BELØP_ER_LAVERE_ENN_FORSKUDDSSATS else null
     } else {
         null
     }
+
+    fun validerValutakode(LøpendeBidragGrunnlag: LøpendeBidragGrunnlag): Boolean =
+        LøpendeBidragGrunnlag.løpendeBidragListe.all { it.valutakode == "NOK" }
 
     // ==================================================================================================================================================
     // Bygger grunnlag til core og kaller delberegninger
@@ -136,8 +142,10 @@ internal class BeregnSærbidragService(
             validerForBeregning(vedtakstype, delberegningUtgift.innhold, sjablonListe).takeIf {
                 it == Resultatkode.GODKJENT_BELØP_ER_LAVERE_ENN_FORSKUDDSSATS
             }?.let {
-                val forskuddssats = sjablonListe.sjablonSjablontallResponse.firstOrNull { it.typeSjablon == SjablonTallNavn.FORSKUDDSSATS_BELØP.id }
-                return lagResponsGodkjentBeløpUnderForskuddssats(beregnGrunnlag, forskuddssats!!)
+                val forskuddssats = sjablonListe.sjablonSjablontallResponse
+                    .filter { it.typeSjablon == SjablonTallNavn.FORSKUDDSSATS_BELØP.id }
+                    .maxBy { it.datoTom ?: it.datoFom!! }
+                return lagResponsGodkjentBeløpUnderForskuddssats(beregnGrunnlag, forskuddssats)
             }
         }
 
