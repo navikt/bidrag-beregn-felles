@@ -9,13 +9,15 @@ import java.math.BigDecimal
 data class NettoTilsynsutgiftPeriodeGrunnlag(
     val beregningsperiode: ÅrMånedsperiode,
     val faktiskTilsynsutgiftListe: List<FaktiskTilsynsutgift>,
+    val kostpengerListe: List<Kostpenger>,
+    val tilleggsstønadListe: List<Tilleggstønad>,
     var sjablonMaksTilsynsbeløpPeriodeGrunnlagListe: List<SjablonMaksTilsynsbeløpPeriodeGrunnlag>,
     var sjablonMaksFradragsbeløpPeriodeGrunnlagListe: List<SjablonMaksTilsynsbeløpPeriodeGrunnlag>,
 )
 
 data class FaktiskTilsynsutgift(val referanseBarn: String, val beløp: BigDecimal)
-
-// data class SamværsklassePeriodeGrunnlag(val referanse: String, val samværsklassePeriode: SamværsklassePeriode)
+data class Kostpenger(val referanseBarn: String, val beløp: BigDecimal)
+data class Tilleggstønad(val referanseBarn: String, val beløp: BigDecimal)
 
 data class SjablonMaksTilsynsbeløpPeriodeGrunnlag(val referanse: String, val sjablonMaksTilsynsbeløpPeriode: SjablonMaksTilsynPeriode)
 

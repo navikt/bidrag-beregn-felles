@@ -1,8 +1,8 @@
 package no.nav.bidrag.beregn.barnebidrag.mapper
 
-import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.NettoTilsynsutgiftPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SamværsklassePeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSamværsfradragPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SjablonNettoTilsynsutgiftPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -11,16 +11,16 @@ import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SamværsklassePeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSamværsfradragPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonNettoTilsynsutgiftPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 
 internal object NettoTilsynsutgiftMapper : CoreMapper() {
-    fun mapSamværsfradragGrunnlag(mottattGrunnlag: BeregnGrunnlag, sjablonGrunnlag: List<GrunnlagDto>): SamværsfradragPeriodeGrunnlag =
-        SamværsfradragPeriodeGrunnlag(
+    fun mapNettoTilsynsutgiftGrunnlag(mottattGrunnlag: BeregnGrunnlag, sjablonGrunnlag: List<GrunnlagDto>): NettoTilsynsutgiftPeriodeGrunnlag =
+        NettoTilsynsutgiftPeriodeGrunnlag(
             beregningsperiode = mottattGrunnlag.periode,
             søknadsbarnPeriodeGrunnlag = mapSøknadsbarn(mottattGrunnlag),
             samværsklassePeriodeListe = mapSamværsklasse(mottattGrunnlag),
-            sjablonSamværsfradragPeriodeListe = mapSjablonSamværsfradrag(sjablonGrunnlag),
+            sjablonNettoTilsynsutgiftPeriodeListe = mapSjablonNettoTilsynsutgift(sjablonGrunnlag),
         )
 
     private fun mapSøknadsbarn(beregnGrunnlag: BeregnGrunnlag): SøknadsbarnPeriodeGrunnlag {
@@ -54,20 +54,20 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
         }
     }
 
-    private fun mapSjablonSamværsfradrag(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonSamværsfradragPeriodeGrunnlag> {
+    private fun mapSjablonNettoTilsynsutgift(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonNettoTilsynsutgiftPeriodeGrunnlag> {
         try {
             return sjablonGrunnlag
                 .filter { it.referanse.contains(SjablonNavn.SAMVÆRSFRADRAG.navn) }
-                .filtrerOgKonverterBasertPåEgenReferanse<SjablonSamværsfradragPeriode>()
+                .filtrerOgKonverterBasertPåEgenReferanse<SjablonNettoTilsynsutgiftPeriode>()
                 .map {
-                    SjablonSamværsfradragPeriodeGrunnlag(
+                    SjablonNettoTilsynsutgiftPeriodeGrunnlag(
                         referanse = it.referanse,
-                        sjablonSamværsfradragPeriode = it.innhold,
+                        sjablonNettoTilsynsutgiftPeriode = it.innhold,
                     )
                 }
         } catch (e: Exception) {
             throw IllegalArgumentException(
-                "Feil ved uthenting av sjablon for samværsfradrag: " + e.message,
+                "Feil ved uthenting av sjablon for nettoTilsynsutgift: " + e.message,
             )
         }
     }

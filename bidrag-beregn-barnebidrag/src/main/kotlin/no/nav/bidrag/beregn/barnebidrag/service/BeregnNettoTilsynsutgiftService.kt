@@ -1,56 +1,53 @@
 package no.nav.bidrag.beregn.barnebidrag.service
 
 import com.fasterxml.jackson.databind.node.POJONode
-import no.nav.bidrag.beregn.barnebidrag.beregning.SamværsfradragBeregning
-import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragPeriodeResultat
+import no.nav.bidrag.beregn.barnebidrag.beregning.NettoTilsynsutgiftBeregning
+import no.nav.bidrag.beregn.barnebidrag.bo.NettoTilsynsutgiftBeregningGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.NettoTilsynsutgiftPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.NettoTilsynsutgiftPeriodeResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.SamværsklasseBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSamværsfradragBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSamværsfradragPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.mapper.SamværsfradragMapper.finnReferanseTilRolle
-import no.nav.bidrag.beregn.barnebidrag.mapper.SamværsfradragMapper.mapSamværsfradragGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.finnReferanseTilRolle
+import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.mapNettoTilsynsutgiftGrunnlag
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.domene.enums.beregning.Samværsklasse
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsfradrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
 import java.time.Period
 
 internal object BeregnNettoTilsynsutgiftService : BeregnService() {
 
-    fun delberegningNettoTilsynsutgift(mottattGrunnlag: BeregnGrunnlag, sjablonGrunnlag: List<GrunnlagDto>): List<GrunnlagDto> {
-        val samværsfradragPeriodeGrunnlag = mapSamværsfradragGrunnlag(mottattGrunnlag, sjablonGrunnlag)
+    fun delberegningNettoTilsynsutgift(grunnlag: BeregnGrunnlag, sjablonGrunnlag: List<GrunnlagDto>): List<GrunnlagDto> {
+        val nettoTilsynsutgiftPeriodeGrunnlag = mapNettoTilsynsutgiftGrunnlag(grunnlag, sjablonGrunnlag)
 
-        val bruddPeriodeListe = lagBruddPeriodeListeSamværsfradrag(samværsfradragPeriodeGrunnlag, mottattGrunnlag.periode)
-        val samværsfradragBeregningResultatListe = mutableListOf<SamværsfradragPeriodeResultat>()
+        val bruddPeriodeListe = lagBruddPeriodeListeNettoTilsynsutgift(nettoTilsynsutgiftPeriodeGrunnlag, grunnlag.periode)
+        val nettoTilsynsutgiftBeregningResultatListe = mutableListOf<NettoTilsynsutgiftPeriodeResultat>()
         bruddPeriodeListe.forEach { bruddPeriode ->
-            val samværsfradragBeregningGrunnlag = lagSamværsfradragBeregningGrunnlag(samværsfradragPeriodeGrunnlag, bruddPeriode)
-            samværsfradragBeregningResultatListe.add(
-                SamværsfradragPeriodeResultat(
+            val nettoTilsynsutgiftBeregningGrunnlag = lagNettoTilsynsutgiftBeregningGrunnlag(nettoTilsynsutgiftPeriodeGrunnlag, bruddPeriode)
+            nettoTilsynsutgiftBeregningResultatListe.add(
+                NettoTilsynsutgiftPeriodeResultat(
                     periode = bruddPeriode,
-                    resultat = SamværsfradragBeregning.beregn(samværsfradragBeregningGrunnlag),
+                    resultat = NettoTilsynsutgiftBeregning.beregn(nettoTilsynsutgiftBeregningGrunnlag),
                 ),
             )
         }
 
         // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
-        val resultatGrunnlagListe = mapSamværsfradragResultatGrunnlag(
-            samværsfradragBeregningResultatListe = samværsfradragBeregningResultatListe,
-            mottattGrunnlag = mottattGrunnlag,
+        val resultatGrunnlagListe = mapNettoTilsynsutgiftResultatGrunnlag(
+            nettoTilsynsutgiftBeregningResultatListe = nettoTilsynsutgiftBeregningResultatListe,
+            mottattGrunnlag = grunnlag,
             sjablonGrunnlag = sjablonGrunnlag,
         )
 
-        // Mapper ut grunnlag for delberegning samværsfradrag
+        // Mapper ut grunnlag for delberegning nettoTilsynsutgift
         resultatGrunnlagListe.addAll(
-            mapDelberegningSamværsfradrag(
-                samværsfradragPeriodeResultatListe = samværsfradragBeregningResultatListe,
-                mottattGrunnlag = mottattGrunnlag,
+            mapDelberegningNettoTilsynsutgift(
+                nettoTilsynsutgiftPeriodeResultatListe = nettoTilsynsutgiftBeregningResultatListe,
+                mottattGrunnlag = grunnlag,
             ),
         )
 
@@ -58,16 +55,16 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
     }
 
     // Lager en liste over alle bruddperioder basert på grunnlag som skal brukes i beregningen
-    private fun lagBruddPeriodeListeSamværsfradrag(
-        grunnlagListe: SamværsfradragPeriodeGrunnlag,
+    private fun lagBruddPeriodeListeNettoTilsynsutgift(
+        grunnlagListe: NettoTilsynsutgiftPeriodeGrunnlag,
         beregningsperiode: ÅrMånedsperiode,
     ): List<ÅrMånedsperiode> {
         val periodeListe = sequenceOf(grunnlagListe.beregningsperiode)
             .plus(grunnlagListe.samværsklassePeriodeListe.asSequence().map { it.samværsklassePeriode.periode })
-            .plus(grunnlagListe.sjablonSamværsfradragPeriodeListe.asSequence().map { it.sjablonSamværsfradragPeriode.periode })
+            .plus(grunnlagListe.sjablonNettoTilsynsutgiftPeriodeListe.asSequence().map { it.sjablonNettoTilsynsutgiftPeriode.periode })
             .plus(
                 lagAlderBruddPerioder(
-                    sjablonSamværsfradragPerioder = grunnlagListe.sjablonSamværsfradragPeriodeListe,
+                    sjablonNettoTilsynsutgiftPerioder = grunnlagListe.sjablonNettoTilsynsutgiftPeriodeListe,
                     søknadsbarnPeriodeGrunnlag = grunnlagListe.søknadsbarnPeriodeGrunnlag,
                 ).asSequence(),
             )
@@ -77,69 +74,69 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
 
     // Lager bruddperioder for alder basert på verdier i sjablon SAMVÆRSFRADRAG
     private fun lagAlderBruddPerioder(
-        sjablonSamværsfradragPerioder: List<SjablonSamværsfradragPeriodeGrunnlag>,
+        sjablonNettoTilsynsutgiftPerioder: List<SjablonNettoTilsynsutgiftPeriodeGrunnlag>,
         søknadsbarnPeriodeGrunnlag: SøknadsbarnPeriodeGrunnlag,
-    ): List<ÅrMånedsperiode> = hentAlderTomListe(sjablonSamværsfradragPerioder)
+    ): List<ÅrMånedsperiode> = hentAlderTomListe(sjablonNettoTilsynsutgiftPerioder)
         .map {
             val alderBruddDato = søknadsbarnPeriodeGrunnlag.fødselsdato.plusYears(it.toLong())
             ÅrMånedsperiode(alderBruddDato, alderBruddDato)
         }
 
-    // Lager grunnlag for samværsfradragberegning som ligger innenfor bruddPeriode
-    private fun lagSamværsfradragBeregningGrunnlag(
-        samværsfradragPeriodeGrunnlag: SamværsfradragPeriodeGrunnlag,
+    // Lager grunnlag for nettoTilsynsutgiftberegning som ligger innenfor bruddPeriode
+    private fun lagNettoTilsynsutgiftBeregningGrunnlag(
+        nettoTilsynsutgiftPeriodeGrunnlag: NettoTilsynsutgiftPeriodeGrunnlag,
         bruddPeriode: ÅrMånedsperiode,
-    ): SamværsfradragBeregningGrunnlag {
+    ): NettoTilsynsutgiftBeregningGrunnlag {
         // Lager liste over gyldige alderTom-verdier
-        val alderTomListe = hentAlderTomListe(samværsfradragPeriodeGrunnlag.sjablonSamværsfradragPeriodeListe)
+        val alderTomListe = hentAlderTomListe(nettoTilsynsutgiftPeriodeGrunnlag.sjablonNettoTilsynsutgiftPeriodeListe)
 
         // Finner barnets faktiske alder
         val faktiskAlder = Period.between(
-            samværsfradragPeriodeGrunnlag.søknadsbarnPeriodeGrunnlag.fødselsdato,
+            nettoTilsynsutgiftPeriodeGrunnlag.søknadsbarnPeriodeGrunnlag.fødselsdato,
             bruddPeriode.fom.atDay(1),
         ).years
 
         // Finner den nærmeste alderTom som er større enn eller lik faktisk alder (til bruk for å hente ut sjablonverdi)
         val alderTom = alderTomListe.firstOrNull { faktiskAlder <= it } ?: alderTomListe.last()
 
-        return SamværsfradragBeregningGrunnlag(
+        return NettoTilsynsutgiftBeregningGrunnlag(
             søknadsbarn = SøknadsbarnBeregningGrunnlag(
-                referanse = samværsfradragPeriodeGrunnlag.søknadsbarnPeriodeGrunnlag.referanse,
+                referanse = nettoTilsynsutgiftPeriodeGrunnlag.søknadsbarnPeriodeGrunnlag.referanse,
                 alder = alderTom,
             ),
-            samværsklasseBeregningGrunnlag = samværsfradragPeriodeGrunnlag.samværsklassePeriodeListe
+            samværsklasseBeregningGrunnlag = nettoTilsynsutgiftPeriodeGrunnlag.samværsklassePeriodeListe
                 .firstOrNull { it.samværsklassePeriode.periode.inneholder(bruddPeriode) }
                 ?.let { SamværsklasseBeregningGrunnlag(referanse = it.referanse, samværsklasse = it.samværsklassePeriode.samværsklasse) }
                 ?: throw IllegalArgumentException("Ingen samværsklasse funnet for periode $bruddPeriode"),
-            sjablonSamværsfradragBeregningGrunnlagListe = samværsfradragPeriodeGrunnlag.sjablonSamværsfradragPeriodeListe
-                .filter { it.sjablonSamværsfradragPeriode.periode.inneholder(bruddPeriode) }
+            sjablonNettoTilsynsutgiftBeregningGrunnlagListe = nettoTilsynsutgiftPeriodeGrunnlag.sjablonNettoTilsynsutgiftPeriodeListe
+                .filter { it.sjablonNettoTilsynsutgiftPeriode.periode.inneholder(bruddPeriode) }
                 .map {
-                    SjablonSamværsfradragBeregningGrunnlag(
+                    SjablonNettoTilsynsutgiftBeregningGrunnlag(
                         referanse = it.referanse,
-                        samværsklasse = Samværsklasse.fromBisysKode(it.sjablonSamværsfradragPeriode.samværsklasse)
-                            ?: throw IllegalArgumentException("Ugyldig samværsklasse: ${it.sjablonSamværsfradragPeriode.samværsklasse}"),
-                        alderTom = it.sjablonSamværsfradragPeriode.alderTom,
-                        beløpFradrag = it.sjablonSamværsfradragPeriode.beløpFradrag,
+                        samværsklasse = Samværsklasse.fromBisysKode(it.sjablonNettoTilsynsutgiftPeriode.samværsklasse)
+                            ?: throw IllegalArgumentException("Ugyldig samværsklasse: ${it.sjablonNettoTilsynsutgiftPeriode.samværsklasse}"),
+                        alderTom = it.sjablonNettoTilsynsutgiftPeriode.alderTom,
+                        beløpFradrag = it.sjablonNettoTilsynsutgiftPeriode.beløpFradrag,
                     )
                 },
         )
     }
 
     // Lager liste over gyldige alderTom-verdier
-    private fun hentAlderTomListe(sjablonSamværsfradragPerioder: List<SjablonSamværsfradragPeriodeGrunnlag>): List<Int> =
-        sjablonSamværsfradragPerioder
-            .map { it.sjablonSamværsfradragPeriode.alderTom }
+    private fun hentAlderTomListe(sjablonNettoTilsynsutgiftPerioder: List<SjablonNettoTilsynsutgiftPeriodeGrunnlag>): List<Int> =
+        sjablonNettoTilsynsutgiftPerioder
+            .map { it.sjablonNettoTilsynsutgiftPeriode.alderTom }
             .distinct()
             .sorted()
 
-    private fun mapSamværsfradragResultatGrunnlag(
-        samværsfradragBeregningResultatListe: List<SamværsfradragPeriodeResultat>,
+    private fun mapNettoTilsynsutgiftResultatGrunnlag(
+        nettoTilsynsutgiftBeregningResultatListe: List<NettoTilsynsutgiftPeriodeResultat>,
         mottattGrunnlag: BeregnGrunnlag,
         sjablonGrunnlag: List<GrunnlagDto>,
     ): MutableList<GrunnlagDto> {
         val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
         val grunnlagReferanseListe =
-            samværsfradragBeregningResultatListe
+            nettoTilsynsutgiftBeregningResultatListe
                 .flatMap { it.resultat.grunnlagsreferanseListe }
                 .distinct()
 
@@ -175,11 +172,11 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
             )
         }
 
-    // Mapper ut DelberegningSamværsfradrag
-    private fun mapDelberegningSamværsfradrag(
-        samværsfradragPeriodeResultatListe: List<SamværsfradragPeriodeResultat>,
+    // Mapper ut DelberegningNettoTilsynsutgift
+    private fun mapDelberegningNettoTilsynsutgift(
+        nettoTilsynsutgiftPeriodeResultatListe: List<NettoTilsynsutgiftPeriodeResultat>,
         mottattGrunnlag: BeregnGrunnlag,
-    ): List<GrunnlagDto> = samværsfradragPeriodeResultatListe
+    ): List<GrunnlagDto> = nettoTilsynsutgiftPeriodeResultatListe
         .map {
             GrunnlagDto(
                 referanse = opprettDelberegningreferanse(
@@ -189,7 +186,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                 ),
                 type = Grunnlagstype.DELBEREGNING_SAMVÆRSFRADRAG,
                 innhold = POJONode(
-                    DelberegningSamværsfradrag(
+                    DelberegningNettoTilsynsutgift(
                         periode = it.periode,
                         beløp = it.resultat.beløpFradrag,
                     ),
