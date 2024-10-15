@@ -62,6 +62,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettSluttberegningr
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.time.format.DateTimeFormatter
+import java.util.Collections.emptyList
 
 @Service
 internal class BeregnSærbidragService(

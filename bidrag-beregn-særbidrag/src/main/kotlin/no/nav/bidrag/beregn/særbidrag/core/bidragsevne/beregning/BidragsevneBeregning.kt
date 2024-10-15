@@ -14,6 +14,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevn
 import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode
+import java.util.HashMap
 
 class BidragsevneBeregning : FellesBeregning() {
 

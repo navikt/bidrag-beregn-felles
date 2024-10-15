@@ -18,6 +18,7 @@ import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto.ResultatBeregningCor
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto.ResultatPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.periode.BidragsevnePeriode
 import no.nav.bidrag.beregn.særbidrag.core.felles.FellesCore
+import java.util.Collections.emptyList
 
 internal class BidragsevneCore(private val bidragsevnePeriode: BidragsevnePeriode = BidragsevnePeriode()) : FellesCore() {
 

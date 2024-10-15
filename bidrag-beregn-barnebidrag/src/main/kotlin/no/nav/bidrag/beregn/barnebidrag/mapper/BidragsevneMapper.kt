@@ -1,78 +1,52 @@
-package no.nav.bidrag.beregn.særbidrag.service.mapper
+package no.nav.bidrag.beregn.barnebidrag.mapper
 
+import no.nav.bidrag.beregn.barnebidrag.bo.BidragsevnePeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SjablonBidragsevnePeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSjablontallPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SjablonTrinnvisSkattesatsPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.dto.BarnIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
-import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
 import no.nav.bidrag.beregn.core.dto.VoksneIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
-import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto.BeregnBidragsevneGrunnlagCore
-import no.nav.bidrag.beregn.særbidrag.core.felles.bo.SjablonListe
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.person.Bostatuskode
-import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BostatusPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonBidragsevnePeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonTrinnvisSkattesatsPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
-import java.util.Collections.emptyList
+import java.util.Collections
 
-internal object BidragsevneCoreMapper : CoreMapper() {
-    fun mapBidragsevneGrunnlagTilCore(
-        beregnGrunnlag: BeregnGrunnlag,
-        sjablontallMap: Map<String, SjablonTallNavn>,
-        sjablonListe: SjablonListe,
-    ): BeregnBidragsevneGrunnlagCore {
-        // Mapper grunnlagstyper til input for core
-        val referanseTilRolle = finnReferanseTilRolle(
-            grunnlagListe = beregnGrunnlag.grunnlagListe,
+internal object BidragsevneMapper : CoreMapper() {
+    fun mapBidragsevneGrunnlag(mottattGrunnlag: BeregnGrunnlag, sjablonGrunnlag: List<GrunnlagDto>): BidragsevnePeriodeGrunnlag {
+        val referanseTilBP = finnReferanseTilRolle(
+            grunnlagListe = mottattGrunnlag.grunnlagListe,
             grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
         )
-        val inntektBPPeriodeCoreListe =
-            mapInntekt(
-                beregnGrunnlag = beregnGrunnlag,
-                referanseTilRolle = referanseTilRolle,
-                innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntektFraSjablontall(sjablonListe.sjablonSjablontallResponse),
-                erSærbidrag = true,
-            )
-        val barnIHusstandenPeriodeCoreListe = mapBarnIHusstanden(beregnGrunnlag, referanseTilRolle)
-        val voksneIHusstandenPeriodeCoreListe = mapVoksneIHusstanden(beregnGrunnlag, referanseTilRolle)
-        val sjablonPeriodeCoreListe = ArrayList<SjablonPeriodeCore>()
 
-        // Henter aktuelle sjabloner
-        sjablonPeriodeCoreListe.addAll(
-            mapSjablonSjablontall(
-                beregnDatoFra = beregnGrunnlag.periode.fom.atDay(1),
-                beregnDatoTil = beregnGrunnlag.periode.til!!.atDay(1),
-                sjablonSjablontallListe = sjablonListe.sjablonSjablontallResponse,
-                sjablontallMap = sjablontallMap,
-                criteria = { it.bidragsevne },
+        return BidragsevnePeriodeGrunnlag(
+            beregningsperiode = mottattGrunnlag.periode,
+            inntektBPPeriodeGrunnlagListe = mapInntekt(
+                beregnGrunnlag = mottattGrunnlag,
+                referanseTilRolle = finnReferanseTilRolle(
+                    grunnlagListe = mottattGrunnlag.grunnlagListe,
+                    grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
+                ),
+                innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntektFraGrunnlag(sjablonGrunnlag),
             ),
-        )
-        sjablonPeriodeCoreListe.addAll(
-            mapSjablonBidragsevne(
-                beregnDatoFra = beregnGrunnlag.periode.fom.atDay(1),
-                beregnDatoTil = beregnGrunnlag.periode.til!!.atDay(1),
-                sjablonBidragsevneListe = sjablonListe.sjablonBidragsevneResponse,
-            ),
-        )
-        sjablonPeriodeCoreListe.addAll(
-            mapSjablonTrinnvisSkattesats(
-                beregnDatoFra = beregnGrunnlag.periode.fom.atDay(1),
-                beregnDatoTil = beregnGrunnlag.periode.til!!.atDay(1),
-                sjablonTrinnvisSkattesatsListe = sjablonListe.sjablonTrinnvisSkattesatsResponse,
-            ),
-        )
-
-        return BeregnBidragsevneGrunnlagCore(
-            beregnDatoFra = beregnGrunnlag.periode.fom.atDay(1),
-            beregnDatoTil = beregnGrunnlag.periode.til!!.atDay(1),
-            inntektPeriodeListe = inntektBPPeriodeCoreListe,
-            barnIHusstandenPeriodeListe = barnIHusstandenPeriodeCoreListe,
-            voksneIHusstandenPeriodeListe = voksneIHusstandenPeriodeCoreListe,
-            sjablonPeriodeListe = sjablonPeriodeCoreListe,
+            barnIHusstandenPeriodeGrunnlagListe = mapBarnIHusstanden(mottattGrunnlag, referanseTilBP),
+            voksneIHusstandenPeriodeGrunnlagListe = mapVoksneIHusstanden(mottattGrunnlag, referanseTilBP),
+            sjablonSjablontallPeriodeGrunnlagListe = mapSjablonSjablontall(sjablonGrunnlag),
+            sjablonBidragsevnePeriodeGrunnlagListe = mapSjablonBidragsevne(sjablonGrunnlag),
+            sjablonTrinnvisSkattesatsPeriodeGrunnlagListe = mapSjablonTrinnvisSkattesats(sjablonGrunnlag),
         )
     }
 
+    // TODO: Flytte til CoreMapper? (ligger pt også i BidragsevneCoreMapper under særbidrag)
     private fun mapBarnIHusstanden(beregnGrunnlag: BeregnGrunnlag, referanseTilRolle: Grunnlagsreferanse): List<BarnIHusstandenPeriodeCore> {
         try {
             val barnIHusstandenGrunnlagListe =
@@ -100,7 +74,7 @@ internal object BidragsevneCoreMapper : CoreMapper() {
                                 Bostatuskode.DELT_BOSTED -> 0.5
                                 else -> 1.0
                             },
-                            grunnlagsreferanseListe = emptyList(),
+                            grunnlagsreferanseListe = Collections.emptyList(),
                         )
                     }
 
@@ -117,6 +91,7 @@ internal object BidragsevneCoreMapper : CoreMapper() {
         }
     }
 
+    // TODO: Flytte til CoreMapper? (ligger pt også i BidragsevneCoreMapper under særbidrag)
     private fun mapVoksneIHusstanden(beregnGrunnlag: BeregnGrunnlag, referanseTilRolle: Grunnlagsreferanse): List<VoksneIHusstandenPeriodeCore> {
         try {
             val voksneIHusstandenGrunnlagListe =
@@ -137,7 +112,7 @@ internal object BidragsevneCoreMapper : CoreMapper() {
                             ),
                             borMedAndre = it.innhold.bostatus == Bostatuskode.REGNES_IKKE_SOM_BARN ||
                                 it.innhold.bostatus == Bostatuskode.BOR_MED_ANDRE_VOKSNE,
-                            grunnlagsreferanseListe = emptyList(),
+                            grunnlagsreferanseListe = Collections.emptyList(),
                         )
                     }
 
@@ -150,6 +125,61 @@ internal object BidragsevneCoreMapper : CoreMapper() {
         } catch (e: Exception) {
             throw IllegalArgumentException(
                 "Ugyldig input ved beregning av særlige utgifter. Innhold i Grunnlagstype.BOSTATUS_PERIODE er ikke gyldig: " + e.message,
+            )
+        }
+    }
+
+    // TODO Flytte til CoreMapper
+    private fun mapSjablonSjablontall(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonSjablontallPeriodeGrunnlag> {
+        try {
+            return sjablonGrunnlag
+                .filter { it.referanse.uppercase().contains("SJABLONTALL") }
+                .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>()
+                .map {
+                    SjablonSjablontallPeriodeGrunnlag(
+                        referanse = it.referanse,
+                        sjablonSjablontallPeriode = it.innhold,
+                    )
+                }
+        } catch (e: Exception) {
+            throw IllegalArgumentException(
+                "Feil ved uthenting av sjablon for sjablontall: " + e.message,
+            )
+        }
+    }
+
+    private fun mapSjablonBidragsevne(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonBidragsevnePeriodeGrunnlag> {
+        try {
+            return sjablonGrunnlag
+                .filter { it.referanse.contains(SjablonNavn.BIDRAGSEVNE.navn) }
+                .filtrerOgKonverterBasertPåEgenReferanse<SjablonBidragsevnePeriode>()
+                .map {
+                    SjablonBidragsevnePeriodeGrunnlag(
+                        referanse = it.referanse,
+                        sjablonBidragsevnePeriode = it.innhold,
+                    )
+                }
+        } catch (e: Exception) {
+            throw IllegalArgumentException(
+                "Feil ved uthenting av sjablon for bidragsevne: " + e.message,
+            )
+        }
+    }
+
+    private fun mapSjablonTrinnvisSkattesats(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonTrinnvisSkattesatsPeriodeGrunnlag> {
+        try {
+            return sjablonGrunnlag
+                .filter { it.referanse.contains(SjablonNavn.TRINNVIS_SKATTESATS.navn) }
+                .filtrerOgKonverterBasertPåEgenReferanse<SjablonTrinnvisSkattesatsPeriode>()
+                .map {
+                    SjablonTrinnvisSkattesatsPeriodeGrunnlag(
+                        referanse = it.referanse,
+                        sjablonTrinnvisSkattesatsPeriode = it.innhold,
+                    )
+                }
+        } catch (e: Exception) {
+            throw IllegalArgumentException(
+                "Feil ved uthenting av sjablon for trinnvis skattesats: " + e.message,
             )
         }
     }

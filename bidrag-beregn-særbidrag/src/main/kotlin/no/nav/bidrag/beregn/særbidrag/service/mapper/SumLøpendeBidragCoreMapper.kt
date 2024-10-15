@@ -17,6 +17,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.LøpendeBidragGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import java.time.LocalDate
+import java.util.Collections.emptyList
 
 internal object SumLøpendeBidragCoreMapper : CoreMapper() {
     fun mapSumLøpendeBidragGrunnlagTilCore(beregnGrunnlag: BeregnGrunnlag, sjablonListe: SjablonListe): LøpendeBidragGrunnlagCore {

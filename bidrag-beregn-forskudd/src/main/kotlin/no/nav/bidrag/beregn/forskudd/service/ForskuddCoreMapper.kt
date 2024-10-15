@@ -41,7 +41,7 @@ internal object ForskuddCoreMapper : CoreMapper() {
         val inntektPeriodeCoreListe = mapInntekt(
             beregnGrunnlag = beregnForskuddGrunnlag,
             referanseTilRolle = referanseBidragsmottaker,
-            innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntekt(sjablontallListe),
+            innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntektFraSjablontall(sjablontallListe),
         )
         val sivilstandPeriodeCoreListe = mapSivilstand(beregnForskuddGrunnlag)
         val barnIHusstandenPeriodeCoreListe = mapBarnIHusstanden(beregnForskuddGrunnlag, referanseBidragsmottaker)

@@ -25,6 +25,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.util.Collections.emptyList
 
 @ExtendWith(MockitoExtension::class)
 internal class BPsAndelSærbidragPeriodeTest {

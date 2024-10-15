@@ -8,6 +8,7 @@ import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.util.Collections.emptyList
 
 // Grunnlag periode
 data class BeregnForskuddGrunnlag(

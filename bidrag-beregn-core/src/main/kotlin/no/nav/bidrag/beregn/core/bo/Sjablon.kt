@@ -1,6 +1,7 @@
 package no.nav.bidrag.beregn.core.bo
 
 import java.math.BigDecimal
+import java.util.Collections.emptyList
 
 // Nye sjablonklasser
 data class Sjablon(val navn: String, val nøkkelListe: List<SjablonNøkkel>? = emptyList(), val innholdListe: List<SjablonInnhold>)
