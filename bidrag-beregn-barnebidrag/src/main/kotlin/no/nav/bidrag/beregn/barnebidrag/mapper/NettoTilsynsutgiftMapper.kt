@@ -19,8 +19,8 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
         SamværsfradragPeriodeGrunnlag(
             beregningsperiode = mottattGrunnlag.periode,
             søknadsbarnPeriodeGrunnlag = mapSøknadsbarn(mottattGrunnlag),
-            samværsklassePeriodeListe = mapSamværsklasse(mottattGrunnlag),
-            sjablonSamværsfradragPeriodeListe = mapSjablonSamværsfradrag(sjablonGrunnlag),
+            samværsklassePeriodeGrunnlagListe = mapSamværsklasse(mottattGrunnlag),
+            sjablonSamværsfradragPeriodeGrunnlagListe = mapSjablonSamværsfradrag(sjablonGrunnlag),
         )
 
     private fun mapSøknadsbarn(beregnGrunnlag: BeregnGrunnlag): SøknadsbarnPeriodeGrunnlag {
