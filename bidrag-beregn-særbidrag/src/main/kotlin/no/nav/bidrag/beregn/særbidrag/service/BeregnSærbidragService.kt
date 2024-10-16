@@ -706,7 +706,7 @@ internal class BeregnSærbidragService(
             )
         }
 
-    // Mapper ut DelberegningSumLøpendeBidrag
+    // Mapper ut DelberegningBPsBeregnedeTotalbidrag
     private fun mapDelberegningBPsBeregnedeTotalbidrag(
         bPsBeregnedeTotalbidrag: BPsBeregnedeTotalbidragPeriodeCore,
         beregnBPsBeregnedeTotalbidragResultatCore: BeregnBPsBeregnedeTotalbidragResultatCore,
