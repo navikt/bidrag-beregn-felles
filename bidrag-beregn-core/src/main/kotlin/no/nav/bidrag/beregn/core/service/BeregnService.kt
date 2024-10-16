@@ -9,12 +9,16 @@ import no.nav.bidrag.beregn.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.core.exception.UgyldigInputException
 import no.nav.bidrag.beregn.core.util.InntektUtil.erKapitalinntekt
 import no.nav.bidrag.beregn.core.util.InntektUtil.justerKapitalinntekt
+import no.nav.bidrag.commons.service.sjablon.Bidragsevne
+import no.nav.bidrag.commons.service.sjablon.Samværsfradrag
 import no.nav.bidrag.commons.service.sjablon.Sjablontall
+import no.nav.bidrag.commons.service.sjablon.TrinnvisSkattesats
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.domene.enums.inntekt.Inntektstype
 import no.nav.bidrag.domene.enums.inntekt.Inntektstype.Companion.inngårIInntektRapporteringer
+import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
@@ -22,11 +26,17 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSumInntekt
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonBidragsevnePeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSamværsfradragPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonTrinnvisSkattesats
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonTrinnvisSkattesatsPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettSjablonreferanse
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 abstract class BeregnService {
     fun håndterAvvik(avvikListe: List<AvvikCore>, kontekst: String) {
@@ -87,7 +97,7 @@ abstract class BeregnService {
                 grunnlagsreferanseListe = lagGrunnlagsreferanselisteInntekt(
                     grunnlagsreferanseliste = it.grunnlagsreferanseListe,
                     innslagKapitalinntektSjablon = innslagKapitalinntektSjablon,
-                ),
+                ).sorted(),
                 gjelderReferanse = referanseTilRolle,
             )
         }
@@ -193,6 +203,113 @@ abstract class BeregnService {
             ),
         ),
     )
+
+    // Lager grunnlagsobjekter for sjabloner av type Sjablontall som er av riktig delberegningstype og som er innenfor perioden
+    protected fun mapSjablonSjablontallGrunnlag(
+        periode: ÅrMånedsperiode,
+        sjablonListe: List<Sjablontall>,
+        delberegning: (SjablonTallNavn) -> Boolean,
+    ): List<GrunnlagDto> {
+        val sjablontallMap = HashMap<String, SjablonTallNavn>()
+        for (sjablonTallNavn in SjablonTallNavn.entries) {
+            if (delberegning(sjablonTallNavn)) {
+                sjablontallMap[sjablonTallNavn.id] = sjablonTallNavn
+            }
+        }
+
+        return sjablonListe
+            .filter { sjablontallMap.containsKey(it.typeSjablon) }
+            // TODO Sjekk om periode.overlapper er dekkende
+            .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
+            .map {
+                GrunnlagDto(
+                    referanse = lagSjablonReferanse("Sjablontall_${sjablontallMap[it.typeSjablon]!!.navn}", it.datoFom!!),
+                    type = Grunnlagstype.SJABLON,
+                    innhold = POJONode(
+                        SjablonSjablontallPeriode(
+                            periode = ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!)),
+                            sjablon = SjablonTallNavn.from(sjablontallMap[it.typeSjablon]!!.navn),
+                            verdi = it.verdi!!,
+                        ),
+                    ),
+                )
+            }
+    }
+
+    // Lager grunnlagsobjekter for sjabloner av type Bidragsevne som er innenfor perioden
+    protected fun mapSjablonBidragsevneGrunnlag(periode: ÅrMånedsperiode, sjablonListe: List<Bidragsevne>): List<GrunnlagDto> = sjablonListe
+        // TODO Sjekk om periode.overlapper er dekkende
+        .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
+        .map {
+            GrunnlagDto(
+                referanse = lagSjablonReferanse(SjablonNavn.BIDRAGSEVNE.navn, it.datoFom!!, "_${it.bostatus}"),
+                type = Grunnlagstype.SJABLON,
+                innhold = POJONode(
+                    SjablonBidragsevnePeriode(
+                        periode = ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!)),
+                        bostatus = it.bostatus!!,
+                        boutgiftBeløp = it.belopBoutgift!!,
+                        underholdBeløp = it.belopUnderhold!!,
+                    ),
+                ),
+            )
+        }
+
+    // Lager grunnlagsobjekter for sjabloner av type TrinnvisSkattesats som er innenfor perioden
+    protected fun mapSjablonTrinnvisSkattesatsGrunnlag(periode: ÅrMånedsperiode, sjablonListe: List<TrinnvisSkattesats>): List<GrunnlagDto> {
+        val periodeMap = mutableMapOf<ÅrMånedsperiode, MutableList<SjablonTrinnvisSkattesats>>()
+
+        sjablonListe
+            // TODO Sjekk om periode.overlapper er dekkende
+            .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
+            .sortedBy { it.datoFom }
+            .map {
+                val sjablonPeriode = ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!))
+                periodeMap.getOrPut(sjablonPeriode) { mutableListOf() }
+                    .add(SjablonTrinnvisSkattesats(inntektsgrense = it.inntektgrense!!.intValueExact(), sats = it.sats!!))
+            }
+
+        return periodeMap
+            .entries
+            .map {
+                GrunnlagDto(
+                    referanse = lagSjablonReferanse(SjablonNavn.TRINNVIS_SKATTESATS.navn, it.key.fom.atDay(1)),
+                    type = Grunnlagstype.SJABLON,
+                    innhold = POJONode(
+                        SjablonTrinnvisSkattesatsPeriode(
+                            periode = it.key,
+                            trinnliste = it.value,
+                        ),
+                    ),
+                )
+            }
+    }
+
+    // Lager grunnlagsobjekter for sjabloner av type Samværsfradrag som er innenfor perioden
+    protected fun mapSjablonSamværsfradragGrunnlag(periode: ÅrMånedsperiode, sjablonListe: List<Samværsfradrag>): List<GrunnlagDto> = sjablonListe
+        // TODO Sjekk om periode.overlapper er dekkende
+        .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
+        .map {
+            GrunnlagDto(
+                referanse = lagSjablonReferanse(SjablonNavn.SAMVÆRSFRADRAG.navn, it.datoFom!!, "_${it.samvaersklasse}_${it.alderTom}"),
+                type = Grunnlagstype.SJABLON,
+                innhold = POJONode(
+                    SjablonSamværsfradragPeriode(
+                        periode = ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!)),
+                        samværsklasse = it.samvaersklasse!!,
+                        alderTom = it.alderTom!!,
+                        antallDagerTom = it.antDagerTom!!,
+                        antallNetterTom = it.antNetterTom!!,
+                        beløpFradrag = it.belopFradrag!!,
+                    ),
+                ),
+            )
+        }
+
+    private fun justerSjablonTomDato(datoTom: LocalDate): LocalDate? = if (datoTom == LocalDate.parse("9999-12-31")) null else datoTom.plusMonths(1)
+
+    private fun lagSjablonReferanse(sjablonNavn: String, fomDato: LocalDate, postfix: String = ""): String =
+        "sjablon_${sjablonNavn}_${fomDato.format(DateTimeFormatter.ofPattern("yyyyMM"))}$postfix"
 
     // Lager liste over bruddperioder
     fun lagBruddPeriodeListe(periodeListe: Sequence<ÅrMånedsperiode>, beregningsperiode: ÅrMånedsperiode): List<ÅrMånedsperiode> = periodeListe

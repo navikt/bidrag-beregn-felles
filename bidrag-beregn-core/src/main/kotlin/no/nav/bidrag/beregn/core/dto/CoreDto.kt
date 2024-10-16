@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.core.dto
 
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.util.Collections.emptyList
 
 // Felles Periode
 data class PeriodeCore(val datoFom: LocalDate, val datoTil: LocalDate?)

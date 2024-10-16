@@ -54,6 +54,7 @@ import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.YearMonth
+import java.util.Collections.emptyList
 
 object TestUtil {
     private const val INNTEKT_REFERANSE_1 = "INNTEKT_REFERANSE_1"

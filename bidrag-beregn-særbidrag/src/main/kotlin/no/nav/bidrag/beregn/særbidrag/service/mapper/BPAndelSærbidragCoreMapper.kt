@@ -17,7 +17,7 @@ internal object BPAndelSærbidragCoreMapper : CoreMapper() {
         sjablontallMap: Map<String, SjablonTallNavn>,
         sjablonListe: SjablonListe,
     ): BeregnBPsAndelSærbidragGrunnlagCore {
-        val innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntekt(sjablonListe.sjablonSjablontallResponse)
+        val innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntektFraSjablontall(sjablonListe.sjablonSjablontallResponse)
 
         // Mapper grunnlagstyper til input for core
         val inntektBPPeriodeCoreListe =

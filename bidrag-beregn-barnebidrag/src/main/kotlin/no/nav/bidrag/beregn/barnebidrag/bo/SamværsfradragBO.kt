@@ -9,8 +9,8 @@ import java.math.BigDecimal
 data class SamværsfradragPeriodeGrunnlag(
     val beregningsperiode: ÅrMånedsperiode,
     val søknadsbarnPeriodeGrunnlag: SøknadsbarnPeriodeGrunnlag,
-    val samværsklassePeriodeListe: List<SamværsklassePeriodeGrunnlag>,
-    var sjablonSamværsfradragPeriodeListe: List<SjablonSamværsfradragPeriodeGrunnlag>,
+    val samværsklassePeriodeGrunnlagListe: List<SamværsklassePeriodeGrunnlag>,
+    var sjablonSamværsfradragPeriodeGrunnlagListe: List<SjablonSamværsfradragPeriodeGrunnlag>,
 )
 
 data class SamværsklassePeriodeGrunnlag(val referanse: String, val samværsklassePeriode: SamværsklassePeriode)

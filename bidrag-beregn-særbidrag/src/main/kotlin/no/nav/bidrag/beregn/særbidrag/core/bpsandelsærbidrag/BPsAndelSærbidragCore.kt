@@ -16,6 +16,7 @@ import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.ResultatPerio
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.UtgiftPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.periode.BPsAndelSærbidragPeriode
 import no.nav.bidrag.beregn.særbidrag.core.felles.FellesCore
+import java.util.Collections.emptyList
 
 internal class BPsAndelSærbidragCore(private val bPsAndelSærbidragPeriode: BPsAndelSærbidragPeriode = BPsAndelSærbidragPeriode()) : FellesCore() {
 

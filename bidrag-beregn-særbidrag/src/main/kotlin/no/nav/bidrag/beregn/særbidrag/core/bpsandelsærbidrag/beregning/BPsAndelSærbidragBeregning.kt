@@ -8,6 +8,7 @@ import no.nav.bidrag.beregn.særbidrag.core.felles.FellesBeregning
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.util.HashMap
 
 class BPsAndelSærbidragBeregning : FellesBeregning() {
     fun beregn(grunnlag: GrunnlagBeregning): ResultatBeregning {

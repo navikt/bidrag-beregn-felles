@@ -11,20 +11,27 @@ import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.finnReferanseTilRolle
 import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.mapNettoTilsynsutgiftGrunnlag
 import no.nav.bidrag.beregn.core.service.BeregnService
+import no.nav.bidrag.commons.service.sjablon.MaksTilsyn
+import no.nav.bidrag.commons.service.sjablon.SjablonProvider
 import no.nav.bidrag.domene.enums.beregning.Samværsklasse
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
+import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonMaksTilsynPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
 import java.time.Period
 
 internal object BeregnNettoTilsynsutgiftService : BeregnService() {
 
-    fun delberegningNettoTilsynsutgift(grunnlag: BeregnGrunnlag, sjablonGrunnlag: List<GrunnlagDto>): List<GrunnlagDto> {
-        val nettoTilsynsutgiftPeriodeGrunnlag = mapNettoTilsynsutgiftGrunnlag(grunnlag, sjablonGrunnlag)
+    fun delberegningNettoTilsynsutgift(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
+        // Lager sjablon grunnlagsobjekter
+        val sjablonGrunnlag = lagSjablonGrunnlagsobjekter(periode = mottattGrunnlag.periode)
 
-        val bruddPeriodeListe = lagBruddPeriodeListeNettoTilsynsutgift(nettoTilsynsutgiftPeriodeGrunnlag, grunnlag.periode)
+        val nettoTilsynsutgiftPeriodeGrunnlag = mapNettoTilsynsutgiftGrunnlag(mottattGrunnlag, sjablonGrunnlag)
+
+        val bruddPeriodeListe = lagBruddPeriodeListeNettoTilsynsutgift(nettoTilsynsutgiftPeriodeGrunnlag, mottattGrunnlag.periode)
         val nettoTilsynsutgiftBeregningResultatListe = mutableListOf<NettoTilsynsutgiftPeriodeResultat>()
         bruddPeriodeListe.forEach { bruddPeriode ->
             val nettoTilsynsutgiftBeregningGrunnlag = lagNettoTilsynsutgiftBeregningGrunnlag(nettoTilsynsutgiftPeriodeGrunnlag, bruddPeriode)
@@ -39,7 +46,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
         // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
         val resultatGrunnlagListe = mapNettoTilsynsutgiftResultatGrunnlag(
             nettoTilsynsutgiftBeregningResultatListe = nettoTilsynsutgiftBeregningResultatListe,
-            mottattGrunnlag = grunnlag,
+            mottattGrunnlag = mottattGrunnlag,
             sjablonGrunnlag = sjablonGrunnlag,
         )
 
@@ -47,7 +54,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
         resultatGrunnlagListe.addAll(
             mapDelberegningNettoTilsynsutgift(
                 nettoTilsynsutgiftPeriodeResultatListe = nettoTilsynsutgiftBeregningResultatListe,
-                mottattGrunnlag = grunnlag,
+                mottattGrunnlag = mottattGrunnlag,
             ),
         )
 
@@ -65,6 +72,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
             .plus(
                 lagAlderBruddPerioder(
                     sjablonNettoTilsynsutgiftPerioder = grunnlagListe.sjablonNettoTilsynsutgiftPeriodeListe,
+
                     søknadsbarnPeriodeGrunnlag = grunnlagListe.søknadsbarnPeriodeGrunnlag,
                 ).asSequence(),
             )
@@ -88,6 +96,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
         bruddPeriode: ÅrMånedsperiode,
     ): NettoTilsynsutgiftBeregningGrunnlag {
         // Lager liste over gyldige alderTom-verdier
+
         val alderTomListe = hentAlderTomListe(nettoTilsynsutgiftPeriodeGrunnlag.sjablonNettoTilsynsutgiftPeriodeListe)
 
         // Finner barnets faktiske alder
@@ -104,6 +113,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                 referanse = nettoTilsynsutgiftPeriodeGrunnlag.søknadsbarnPeriodeGrunnlag.referanse,
                 alder = alderTom,
             ),
+
             samværsklasseBeregningGrunnlag = nettoTilsynsutgiftPeriodeGrunnlag.samværsklassePeriodeListe
                 .firstOrNull { it.samværsklassePeriode.periode.inneholder(bruddPeriode) }
                 ?.let { SamværsklasseBeregningGrunnlag(referanse = it.referanse, samværsklasse = it.samværsklassePeriode.samværsklasse) }
@@ -195,6 +205,27 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                 gjelderReferanse = finnReferanseTilRolle(
                     grunnlagListe = mottattGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
+                ),
+            )
+        }
+
+    private fun lagSjablonGrunnlagsobjekter(periode: ÅrMånedsperiode): List<GrunnlagDto> =
+        mapSjablonBidragsevneGrunnlag(periode = periode, sjablonListe = SjablonProvider.hentSjablonMaksTilsyn()) +
+            mapSjablonTrinnvisSkattesatsGrunnlag(periode = periode, sjablonListe = SjablonProvider.hentSjablonMaksFradrag())
+
+    protected fun mapSjablonMaksTilsynGrunnlag(periode: ÅrMånedsperiode, sjablonListe: List<MaksTilsyn>): List<GrunnlagDto> = sjablonListe
+        // TODO Sjekk om periode.overlapper er dekkende
+        .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
+        .map {
+            GrunnlagDto(
+                referanse = lagSjablonReferanse(SjablonNavn.MAKS_TILSYN.navn, it.datoFom!!),
+                type = Grunnlagstype.SJABLON,
+                innhold = POJONode(
+                    SjablonMaksTilsynPeriode(
+                        periode = ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!)),
+                        antallBarnTom = it.antallBarnTom!!,
+                        maksBeløpTilsyn = it.maksBeløpTilsyn!!,
+                    ),
                 ),
             )
         }
