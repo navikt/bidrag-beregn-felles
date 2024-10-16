@@ -1,9 +1,9 @@
-package no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag
+package no.nav.bidrag.beregn.særbidrag.core.bpsberegnedetotalbidrag
 
 import no.nav.bidrag.beregn.særbidrag.TestUtil
-import no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.beregning.SumLøpendeBidragBeregning
-import no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.dto.LøpendeBidragCore
-import no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.dto.LøpendeBidragGrunnlagCore
+import no.nav.bidrag.beregn.særbidrag.core.bpsberegnedetotalbidrag.beregning.BPsBeregnedeTotalbidragBeregning
+import no.nav.bidrag.beregn.særbidrag.core.bpsberegnedetotalbidrag.dto.LøpendeBidragCore
+import no.nav.bidrag.beregn.særbidrag.core.bpsberegnedetotalbidrag.dto.LøpendeBidragGrunnlagCore
 import no.nav.bidrag.domene.enums.beregning.Samværsklasse
 import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Saksnummer
@@ -14,10 +14,10 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.Collections.emptyList
 
-internal class SumLøpendeBidragBeregningTest {
+internal class BPsBeregnedeTotalbidragBeregningTest {
 
     private val sjablonPeriodeListe = TestUtil.byggSjablonPeriodeListe()
-    private val sumLøpendeBidragBeregning = SumLøpendeBidragBeregning()
+    private val bPsBeregnedeTotalbidrag = BPsBeregnedeTotalbidragBeregning()
 
     @DisplayName("Beregning med flere saker og barn")
     @Test
@@ -64,8 +64,8 @@ internal class SumLøpendeBidragBeregningTest {
             grunnlagsreferanseListe = emptyList(),
             sjablonPeriodeListe = sjablonPeriodeListe,
         )
-        val resultat = sumLøpendeBidragBeregning.beregn(grunnlag)
+        val resultat = bPsBeregnedeTotalbidrag.beregn(grunnlag)
 
-        assertThat(resultat.sumLøpendeBidrag).isEqualTo(BigDecimal.valueOf(10775))
+        assertThat(resultat.bPsBeregnedeTotalbidrag).isEqualTo(BigDecimal.valueOf(10775))
     }
 }

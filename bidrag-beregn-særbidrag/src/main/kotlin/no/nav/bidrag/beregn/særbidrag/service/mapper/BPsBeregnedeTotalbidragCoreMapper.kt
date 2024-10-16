@@ -7,9 +7,9 @@ import no.nav.bidrag.beregn.core.bo.SjablonNøkkel
 import no.nav.bidrag.beregn.core.bo.SjablonPeriode
 import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
+import no.nav.bidrag.beregn.særbidrag.core.bpsberegnedetotalbidrag.dto.LøpendeBidragCore
+import no.nav.bidrag.beregn.særbidrag.core.bpsberegnedetotalbidrag.dto.LøpendeBidragGrunnlagCore
 import no.nav.bidrag.beregn.særbidrag.core.felles.bo.SjablonListe
-import no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.dto.LøpendeBidragCore
-import no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.dto.LøpendeBidragGrunnlagCore
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
@@ -19,8 +19,8 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBase
 import java.time.LocalDate
 import java.util.Collections.emptyList
 
-internal object SumLøpendeBidragCoreMapper : CoreMapper() {
-    fun mapSumLøpendeBidragGrunnlagTilCore(beregnGrunnlag: BeregnGrunnlag, sjablonListe: SjablonListe): LøpendeBidragGrunnlagCore {
+internal object BPsBeregnedeTotalbidragCoreMapper : CoreMapper() {
+    fun mapBPsBeregnedeTotalbidragGrunnlagTilCore(beregnGrunnlag: BeregnGrunnlag, sjablonListe: SjablonListe): LøpendeBidragGrunnlagCore {
         // Hent løpende bidrag
         val grunnlag =
             try {
