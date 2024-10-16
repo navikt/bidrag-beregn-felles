@@ -6,13 +6,13 @@ import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.særbidrag.TestUtil
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.BidragsevneCoreTest
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BPsAndelSærbidrag
-import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BPsBeregnedeTotalbidragPeriode
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BeregnSærbidragResultat
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BetaltAvBp
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.Bidragsevne
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.GrunnlagBeregning
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.ResultatBeregning
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.ResultatPeriode
+import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BPsBeregnedeTotalbidragPeriode
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BPsAndelSærbidragPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BPsBeregnedeTotalbidragPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BeregnSærbidragGrunnlagCore
