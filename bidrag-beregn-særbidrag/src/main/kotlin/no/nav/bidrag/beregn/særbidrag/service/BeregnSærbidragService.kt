@@ -942,12 +942,8 @@ internal class BeregnSærbidragService(
 
     // Mapper ut sjablon for samværsfradrag
     private fun mapSjablonSamværsfradragGrunnlag(sjablonListe: List<SjablonResultatGrunnlagCore>): List<GrunnlagDto> {
-//        val samværsfradrag = sjablonListe.firstOrNull { it.navn == SjablonInnholdNavn.FRADRAG_BELØP.navn }
-
         // Danner nytt grunnlag
-        val periode = sjablonListe.firstOrNull { it.navn.startsWith(SjablonNavn.SAMVÆRSFRADRAG.navn) }?.periode
-//        val referanse = "Sjablon_Samværsfradrag_${periode?.datoFom?.format(DateTimeFormatter.ofPattern("yyyyMMdd"))}"
-        val grunnlagDtoListe = sjablonListe.filter { sjablon -> sjablon.navn.startsWith(SjablonNavn.SAMVÆRSFRADRAG.navn) }
+        val grunnlagDtoListe = sjablonListe.filter { it.navn.startsWith(SjablonNavn.SAMVÆRSFRADRAG.navn) }
             .map {
                 GrunnlagDto(
                     referanse = it.referanse,
@@ -962,6 +958,7 @@ internal class BeregnSærbidragService(
                             beløpFradrag = it.verdi,
                         ),
                     ),
+                    gjelderReferanse = it.navn.substringAfter("Samværsfradrag_"),
                 )
             }
         return grunnlagDtoListe
