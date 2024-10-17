@@ -92,7 +92,6 @@ class BPsBeregnedeTotalbidragBeregning : FellesBeregning() {
         alderBarn: Int,
         referanseBarn: String,
     ): HashMap<String, BigDecimal> {
-//        val sjablonNavnVerdiMap = HashMap<String, BigDecimal>()
         val sjablonListe = sjablonPeriodeListe.map { it.sjablon }.toList()
 
         // Samværsfradrag

@@ -43,7 +43,7 @@ internal object SærbidragCoreMapper : CoreMapper() {
                     )
                 }
 
-        // Leser output fra beregning av sum løpende bidrag og bygger opp input til core
+        // Leser output fra beregning av bBPs beregnede totalbidrag og bygger opp input til core
 
         val resultatPeriode = beregnBPsBeregnedeTotalbidragResultatCore.resultatPeriode
 
