@@ -9,10 +9,10 @@ import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBPsBeregnedeTotalbidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBarnIHusstand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesBeregnedeTotalbidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSumInntekt
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningVoksneIHustand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
@@ -420,13 +420,13 @@ internal class BeregnSærbidragApiTest {
 
         val objectMapper = ObjectMapper()
         val bPsBeregnedeTotalbidragResultat = totalSærbidragResultat.grunnlagListe
-            .filter { it.type == Grunnlagstype.DELBEREGNING_BPS_BEREGNEDE_TOTALBIDRAG }
-            .map { objectMapper.treeToValue(it.innhold, DelberegningBPsBeregnedeTotalbidrag::class.java) }
+            .filter { it.type == Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_BEREGNEDE_TOTALBIDRAG }
+            .map { objectMapper.treeToValue(it.innhold, DelberegningBidragspliktigesBeregnedeTotalbidrag::class.java) }
             .first()
 
         assertAll(
             { assertThat(totalSærbidragResultat).isNotNull },
-            { assertThat(bPsBeregnedeTotalbidragResultat.bBPsBeregnedeTotalbidrag).isEqualTo(BigDecimal.valueOf(823)) },
+            { assertThat(bPsBeregnedeTotalbidragResultat.bidragspliktigesBeregnedeTotalbidrag).isEqualTo(BigDecimal.valueOf(823)) },
         )
     }
 
@@ -458,8 +458,8 @@ internal class BeregnSærbidragApiTest {
         val bidragsevneResultat = objectMapper.treeToValue(delberegningBidragsevneListe[0].innhold, DelberegningBidragsevne::class.java)
 
         val bPsBeregnedeTotalbidragResultat = totalSærbidragResultat.grunnlagListe
-            .filter { it.type == Grunnlagstype.DELBEREGNING_BPS_BEREGNEDE_TOTALBIDRAG }
-            .map { objectMapper.treeToValue(it.innhold, DelberegningBPsBeregnedeTotalbidrag::class.java) }
+            .filter { it.type == Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_BEREGNEDE_TOTALBIDRAG }
+            .map { objectMapper.treeToValue(it.innhold, DelberegningBidragspliktigesBeregnedeTotalbidrag::class.java) }
             .first()
 
         val delberegningBPAndelSærbidragListe = totalSærbidragResultat.grunnlagListe
@@ -520,7 +520,7 @@ internal class BeregnSærbidragApiTest {
             { assertThat(bidragsevneResultat.beløp).isEqualTo(forventetBidragsevneBeløp) },
 
             // Delberegning bPsBeregnedeTotalbidrag
-            { assertThat(bPsBeregnedeTotalbidragResultat.bBPsBeregnedeTotalbidrag).isEqualTo(forventetBPsBeregnedeTotalbidrag) },
+            { assertThat(bPsBeregnedeTotalbidragResultat.bidragspliktigesBeregnedeTotalbidrag).isEqualTo(forventetBPsBeregnedeTotalbidrag) },
 
             // Delberegning BP's andel særbidrag
             { assertThat(delberegningBPAndelSærbidragListe).hasSize(1) },

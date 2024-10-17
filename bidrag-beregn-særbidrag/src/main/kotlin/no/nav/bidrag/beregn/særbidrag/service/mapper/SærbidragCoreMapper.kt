@@ -50,7 +50,7 @@ internal object SærbidragCoreMapper : CoreMapper() {
         val bPsBeregnedeTotalbidragPeriodeCore =
             BPsBeregnedeTotalbidragPeriodeCore(
                 referanse = opprettDelberegningreferanse(
-                    type = Grunnlagstype.DELBEREGNING_BPS_BEREGNEDE_TOTALBIDRAG,
+                    type = Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_BEREGNEDE_TOTALBIDRAG,
                     periode = ÅrMånedsperiode(
                         fom = resultatPeriode.periode.datoFom,
                         til = resultatPeriode.periode.datoTil,
