@@ -43,10 +43,10 @@ import no.nav.bidrag.transport.behandling.beregning.felles.valider
 import no.nav.bidrag.transport.behandling.beregning.særbidrag.BeregnetSærbidragResultat
 import no.nav.bidrag.transport.behandling.beregning.særbidrag.ResultatBeregning
 import no.nav.bidrag.transport.behandling.beregning.særbidrag.ResultatPeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBPsBeregnedeTotalbidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBarnIHusstand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesBeregnedeTotalbidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUtgift
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningVoksneIHustand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
@@ -715,9 +715,9 @@ internal class BeregnSærbidragService(
         referanse = bPsBeregnedeTotalbidrag.referanse,
         type = bestemGrunnlagstype(bPsBeregnedeTotalbidrag.referanse),
         innhold = POJONode(
-            DelberegningBPsBeregnedeTotalbidrag(
+            DelberegningBidragspliktigesBeregnedeTotalbidrag(
                 periode = ÅrMånedsperiode(fom = bPsBeregnedeTotalbidrag.periode.datoFom, til = bPsBeregnedeTotalbidrag.periode.datoTil),
-                bBPsBeregnedeTotalbidrag = bPsBeregnedeTotalbidrag.bPsBeregnedeTotalbidrag,
+                bidragspliktigesBeregnedeTotalbidrag = bPsBeregnedeTotalbidrag.bPsBeregnedeTotalbidrag,
                 beregnetBidragPerBarnListe = bPsBeregnedeTotalbidrag.beregnetBidragPerBarnListe,
             ),
         ),

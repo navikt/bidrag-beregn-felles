@@ -21,7 +21,7 @@ import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BidragsevnePeriodeCor
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.periode.SærbidragPeriode
 import no.nav.bidrag.domene.enums.beregning.Avvikstype
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
-import no.nav.bidrag.domene.ident.Personident
+import no.nav.bidrag.domene.enums.beregning.Samværsklasse
 import no.nav.bidrag.domene.sak.Saksnummer
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeregnetBidragPerBarn
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
@@ -111,10 +111,12 @@ internal class SærbidragCoreTest {
             bPsBeregnedeTotalbidrag = BigDecimal.valueOf(1000),
             beregnetBidragPerBarnListe = listOf(
                 BeregnetBidragPerBarn(
-                    personidentBarn = Personident("1"),
+                    gjelderBarn = "referanse1",
                     saksnummer = Saksnummer("1"),
                     løpendeBeløp = BigDecimal.valueOf(800),
+                    valutakode = "NOK",
                     samværsfradrag = BigDecimal.valueOf(100),
+                    samværsklasse = Samværsklasse.SAMVÆRSKLASSE_1,
                     beregnetBeløp = BigDecimal.valueOf(700),
                     faktiskBeløp = BigDecimal.valueOf(600),
                     reduksjonUnderholdskostnad = BigDecimal.valueOf(100),

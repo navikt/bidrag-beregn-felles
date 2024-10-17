@@ -53,10 +53,12 @@ class BPsBeregnedeTotalbidragBeregning : FellesBeregning() {
 
             beregnetBidragPerBarnListe.add(
                 BeregnetBidragPerBarn(
-                    personidentBarn = it.personidentBarn,
+                    gjelderBarn = it.referanseBarn,
                     saksnummer = it.saksnummer,
                     løpendeBeløp = it.løpendeBeløp,
+                    valutakode = it.valutakode,
                     samværsfradrag = samværsfradrag,
+                    samværsklasse = it.samværsklasse,
                     beregnetBeløp = beregnetBeløpAvrundet,
                     faktiskBeløp = it.faktiskBeløp,
                     reduksjonUnderholdskostnad = reduksjonUnderholdskostnad,
