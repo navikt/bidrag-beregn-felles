@@ -39,15 +39,9 @@ class Vedtaksfiltrering {
                     ?: iterator.hoppeTilPåklagetVedtak(vedtaksdetaljer.vedtak.søknadKlageRefId!!)
                 continue
             } else if (vedtaksdetaljer.vedtak.erOmgjøring()) {
-                // Hopp til påklaget vedtak
+                // Hopp til omgjort vedtak
                 iterator.hoppeTilOmgjortVedtak(vedtaksdetaljer.vedtak.idTilOmgjortVedtak()!!)
-                // Hopp over dette vedtaket, ettersom dette enten er eller skulle vært Ingen endring 12%
-                if (iterator.hasNext()) {
-                    iterator.next()
-                } else {
-                    secureLogger.warn { "Fant ikke tidligere vedtak for barn med personident $personidentSøknadsbarn" }
-                    return null
-                }
+                continue
             }
 
             // Håndtere resultat fra annet vedtak
