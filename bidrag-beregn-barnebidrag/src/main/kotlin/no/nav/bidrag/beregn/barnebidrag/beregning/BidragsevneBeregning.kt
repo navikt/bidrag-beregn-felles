@@ -25,37 +25,30 @@ internal object BidragsevneBeregning {
 
         val sumInntekt = grunnlag.inntektBPBeregningGrunnlag.sumInntekt
 
-        val minstefradrag = minOf(
-            sumInntekt.multiply(sjablonverdiMinstefradragInntektProsent.divide(bigDecimal100, 10, RoundingMode.HALF_UP)),
-            sjablonverdiMinstefradragInntektBeløp,
-        )
+        val minstefradrag = (sumInntekt * (sjablonverdiMinstefradragInntektProsent.divide(bigDecimal100, 10, RoundingMode.HALF_UP)))
+            .min(sjablonverdiMinstefradragInntektBeløp)
 
-        val skattAlminneligInntekt = (sumInntekt.subtract(minstefradrag).subtract(sjablonverdiPersonfradragKlasse1Beløp))
-            .multiply(sjablonverdiSkattesatsAlminneligInntektProsent.divide(bigDecimal100, 10, RoundingMode.HALF_UP))
-            .max(BigDecimal.ZERO)
+        val skattAlminneligInntekt = ((sumInntekt - minstefradrag - sjablonverdiPersonfradragKlasse1Beløp) *
+            (sjablonverdiSkattesatsAlminneligInntektProsent.divide(bigDecimal100, 10, RoundingMode.HALF_UP)))
+            .coerceAtLeast(BigDecimal.ZERO)
 
-        val trygdeavgift = sumInntekt.multiply(sjablonverdiTrygdeavgiftProsent.divide(bigDecimal100, 10, RoundingMode.HALF_UP))
+        val trygdeavgift = sumInntekt * (sjablonverdiTrygdeavgiftProsent.divide(bigDecimal100, 10, RoundingMode.HALF_UP))
 
         val trinnskatt = beregnTrinnskatt(grunnlag = grunnlag, inntekt = sumInntekt)
 
-        val sumSkatt = skattAlminneligInntekt.add(trygdeavgift).add(trinnskatt)
+        val sumSkatt = skattAlminneligInntekt + trygdeavgift + trinnskatt
 
-        val boutgift = sjablonverdiBoutgiftBeløp.multiply(bigDecimal12)
+        val boutgift = sjablonverdiBoutgiftBeløp * bigDecimal12
 
-        val egetUnderhold = sjablonverdiEgetUnderholdBeløp.multiply(bigDecimal12)
+        val egetUnderhold = sjablonverdiEgetUnderholdBeløp * bigDecimal12
 
-        val underholdBarnEgenHusstand = sjablonverdiUnderholdEgneBarnIHusstandBeløp
-            .multiply(bigDecimal12)
-            .multiply(grunnlag.barnIHusstandenBeregningGrunnlag.antallBarn.toBigDecimal())
+        val underholdBarnEgenHusstand = sjablonverdiUnderholdEgneBarnIHusstandBeløp * bigDecimal12 *
+            grunnlag.barnIHusstandenBeregningGrunnlag.antallBarn.toBigDecimal()
 
         // Kalkulerer månedlig bidragsevne
-        val bidragsevne = sumInntekt
-            .subtract(sumSkatt)
-            .subtract(boutgift)
-            .subtract(egetUnderhold)
-            .subtract(underholdBarnEgenHusstand)
+        val bidragsevne = (sumInntekt - sumSkatt - boutgift - egetUnderhold - underholdBarnEgenHusstand)
             .divide(bigDecimal12, 10, RoundingMode.HALF_UP)
-            .max(BigDecimal.ZERO)
+            .coerceAtLeast(BigDecimal.ZERO)
 
         return BidragsevneBeregningResultat(
             bidragsevne = bidragsevne.setScale(0, RoundingMode.HALF_UP),

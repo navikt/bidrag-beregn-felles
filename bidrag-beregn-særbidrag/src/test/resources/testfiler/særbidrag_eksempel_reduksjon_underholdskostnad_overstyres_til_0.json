@@ -3,10 +3,10 @@
     "fom": "2020-08",
     "til": "2020-09"
   },
-  "søknadsbarnReferanse": "PERSON_SØKNADSBARN",
+  "søknadsbarnReferanse": "Person_Søknadsbarn",
   "grunnlagListe": [
     {
-      "referanse": "PERSON_SØKNADSBARN",
+      "referanse": "Person_Søknadsbarn",
       "type": "PERSON_SØKNADSBARN",
       "innhold": {
         "ident": "11111111110",
@@ -64,7 +64,7 @@
         "valgt": true
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "PERSON_SØKNADSBARN"
+      "gjelderReferanse": "Person_Søknadsbarn"
     },
     {
       "referanse": "BeregningInntektRapportering_Ainntekt_BM_202008",
@@ -130,7 +130,7 @@
         "relatertTilPart": "Person_Bidragspliktig"
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "PERSON_SØKNADSBARN"
+      "gjelderReferanse": "Person_Søknadsbarn"
     },
     {
       "referanse": "Bostatus_Bidragspliktig_202008",
@@ -173,7 +173,7 @@
             "samværsklasse": "SAMVÆRSKLASSE_1",
             "beregnetBeløp": 100,
             "faktiskBeløp": 200,
-            "gjelderBarn": "PERSON_SØKNADSBARN"
+            "gjelderBarn": "Person_Søknadsbarn"
           }
         ]
       },

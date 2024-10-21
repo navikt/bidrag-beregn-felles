@@ -50,7 +50,7 @@
       "gjelderReferanse": null
     },
     {
-      "referanse": "BeregningInntektRapportering_Ainntekt_Bidragspliktig_202309",
+      "referanse": "Mottatt_InntektRapportering_Ainntekt_Bidragspliktig_202309",
       "type": "INNTEKT_RAPPORTERING_PERIODE",
       "innhold": {
         "periode": {
@@ -67,7 +67,7 @@
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
-      "referanse": "BeregningInntektRapportering_Ainntekt_Bidragspliktig_202409",
+      "referanse": "Mottatt_InntektRapportering_Ainntekt_Bidragspliktig_202409",
       "type": "INNTEKT_RAPPORTERING_PERIODE",
       "innhold": {
         "periode": {

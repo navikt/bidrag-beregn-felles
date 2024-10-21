@@ -53,7 +53,7 @@
         "valgt": true
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "PERSON_SØKNADSBARN"
+      "gjelderReferanse": "Person_Søknadsbarn"
     },
     {
       "referanse": "BeregningInntektRapportering_Ainntekt_BM_202008",
