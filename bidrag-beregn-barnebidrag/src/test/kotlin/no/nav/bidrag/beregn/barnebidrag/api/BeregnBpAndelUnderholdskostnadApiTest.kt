@@ -119,7 +119,7 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
         val alleRefererteReferanser = hentAlleRefererteReferanser(bpAndelUnderholdskostnadResultat)
 
         val bpAndelUnderholdskostnadResultatListe = bpAndelUnderholdskostnadResultat
-            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningBidragspliktigesAndel>(Grunnlagstype.BPS_ANDEL_UNDERHOLDSKOSTNAD)
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningBidragspliktigesAndel>(Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL)
             .map {
                 DelberegningBidragspliktigesAndel(
                     periode = it.innhold.periode,
@@ -157,7 +157,7 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
         val alleRefererteReferanser = hentAlleRefererteReferanser(bpAndelUnderholdskostnadResultat)
 
         val bpAndelUnderholdskostnadResultatListe = bpAndelUnderholdskostnadResultat
-            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningBidragspliktigesAndel>(Grunnlagstype.BPS_ANDEL_UNDERHOLDSKOSTNAD)
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningBidragspliktigesAndel>(Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL)
             .map {
                 DelberegningBidragspliktigesAndel(
                     periode = it.innhold.periode,
