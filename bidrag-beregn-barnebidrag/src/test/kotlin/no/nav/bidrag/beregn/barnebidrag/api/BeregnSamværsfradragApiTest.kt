@@ -41,7 +41,7 @@ internal class BeregnSamværsfradragApiTest {
     @Test
     @DisplayName("Samværsfradrag - eksempel med flere perioder")
     fun testSamværsfradrag_Eksempel01() {
-        filnavn = "src/test/resources/testfiler/samværsfradrag/samværsfradrag_eksempel_med_flere_perioder.json"
+        filnavn = "src/test/resources/testfiler/samværsfradrag/samværsfradrag_eksempel_flere_perioder.json"
         utførBeregningerOgEvaluerResultatSamværsfradrag()
     }
 

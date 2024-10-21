@@ -197,7 +197,7 @@ internal object BeregnSamværsfradragService : BeregnService() {
             GrunnlagDto(
                 referanse = opprettDelberegningreferanse(
                     type = Grunnlagstype.DELBEREGNING_SAMVÆRSFRADRAG,
-                    periode = it.periode,
+                    periode = ÅrMånedsperiode(fom = it.periode.fom, til = null),
                     søknadsbarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
                 ),
                 type = Grunnlagstype.DELBEREGNING_SAMVÆRSFRADRAG,

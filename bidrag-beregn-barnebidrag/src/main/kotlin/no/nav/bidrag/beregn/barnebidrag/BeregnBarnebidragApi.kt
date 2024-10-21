@@ -27,7 +27,9 @@ import org.springframework.stereotype.Service
 class BeregnBarnebidragApi {
     private val service = BeregnBarnebidragService()
 
-    fun beregnSamværsfradrag(beregnGrunnlag: BeregnGrunnlag) = service.beregnSamværsfradrag(beregnGrunnlag)
+    fun beregnBidragsevne(beregnGrunnlag: BeregnGrunnlag) = service.beregnBidragsevne(beregnGrunnlag)
 
-//    fun beregnBidragsevne(beregnGrunnlag: BeregnGrunnlag) = service.beregnBidragsevne(beregnGrunnlag)
+    fun beregnBpsAndelUnderholdskostnad(beregnGrunnlag: BeregnGrunnlag) = service.beregnBpAndelUnderholdskostnad(beregnGrunnlag)
+
+    fun beregnSamværsfradrag(beregnGrunnlag: BeregnGrunnlag) = service.beregnSamværsfradrag(beregnGrunnlag)
 }
