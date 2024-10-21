@@ -1,0 +1,184 @@
+{
+  "periode": {
+    "fom": "2020-08",
+    "til": "2020-09"
+  },
+  "søknadsbarnReferanse": "PERSON_SØKNADSBARN",
+  "grunnlagListe": [
+    {
+      "referanse": "PERSON_SØKNADSBARN",
+      "type": "PERSON_SØKNADSBARN",
+      "innhold": {
+        "ident": "11111111110",
+        "navn": "Trengende Søknadsbarn",
+        "fødselsdato": "2004-02-01"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse" : "person_PERSON_BARN_BIDRAGSPLIKTIG_20051217_102",
+      "type" : "PERSON_BARN_BIDRAGSPLIKTIG",
+      "innhold" : {
+        "ident" : "12121250511",
+        "navn" : null,
+        "fødselsdato" : "2005-12-17"
+      },
+      "grunnlagsreferanseListe" : [ ],
+      "gjelderReferanse" : null
+    },
+    {
+      "referanse": "Person_Bidragsmottaker",
+      "type": "PERSON_BIDRAGSMOTTAKER",
+      "innhold": {
+        "ident": "22222222222",
+        "navn": "Søkende Bidragsmottaker",
+        "fødselsdato": "1982-05-05"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Person_Bidragspliktig",
+      "type": "PERSON_BIDRAGSPLIKTIG",
+      "innhold": {
+        "ident": "33333333333",
+        "navn": "Motvillig Bidragspliktig",
+        "fødselsdato": "1981-07-13"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "BeregningInntektRapportering_Ainntekt_SB_202008",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2020-08",
+          "til": "2020-09"
+        },
+        "inntektsrapportering": "AINNTEKT",
+        "gjelderBarn": null,
+        "beløp": 0,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "PERSON_SØKNADSBARN"
+    },
+    {
+      "referanse": "BeregningInntektRapportering_Ainntekt_BM_202008",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2020-08",
+          "til": "2020-09"
+        },
+        "inntektsrapportering": "AINNTEKT",
+        "gjelderBarn": null,
+        "beløp": 300000,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "BeregningInntektRapportering_UtvidetBarnetrygd_BM_202008",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2020-08",
+          "til": "2020-09"
+        },
+        "inntektsrapportering": "UTVIDET_BARNETRYGD",
+        "gjelderBarn": null,
+        "beløp": 25655,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "BeregningInntektRapportering_Ainntekt_BP_202008",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2020-08",
+          "til": "2020-09"
+        },
+        "inntektsrapportering": "AINNTEKT",
+        "gjelderBarn": null,
+        "beløp": 410000,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragspliktig"
+    },
+    {
+      "referanse": "Bostatus_Søknadsbarn_202008",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2020-08",
+          "til": "2020-09"
+        },
+        "bostatus": "IKKE_MED_FORELDER",
+        "manueltRegistrert": false,
+        "relatertTilPart": "Person_Bidragspliktig"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "PERSON_SØKNADSBARN"
+    },
+    {
+      "referanse": "Bostatus_Bidragspliktig_202008",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2020-08",
+          "til": "2020-09"
+        },
+        "bostatus": "BOR_IKKE_MED_ANDRE_VOKSNE",
+        "manueltRegistrert": false,
+        "relatertTilPart": "Person_Bidragspliktig"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragspliktig"
+    },
+    {
+      "referanse": "delberegning_DELBEREGNING_UTGIFT_Person_Søknadsbarn_202008_202009",
+      "type": "DELBEREGNING_UTGIFT",
+      "innhold": {
+        "periode": {
+          "fom": "2020-08",
+          "til": "2020-09"
+        },
+        "sumBetaltAvBp": 0,
+        "sumGodkjent": 12000
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "løpende_bidrag_grunnlag_bidragspliktig_202008_202009",
+      "type": "LØPENDE_BIDRAG",
+      "innhold": {
+        "løpendeBidragListe": [
+          {
+            "saksnummer": "1234567",
+            "type": "BIDRAG",
+            "løpendeBeløp": 200,
+            "samværsklasse": "SAMVÆRSKLASSE_1",
+            "beregnetBeløp": 100,
+            "faktiskBeløp": 200,
+            "gjelderBarn": "PERSON_SØKNADSBARN"
+          }
+        ]
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragspliktig"
+    }
+  ]
+}

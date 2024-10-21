@@ -4,11 +4,11 @@ import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.særbidrag.TestUtil
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.beregning.SærbidragBeregning
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BPsAndelSærbidragPeriode
+import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BPsBeregnedeTotalbidragPeriode
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BeregnSærbidragGrunnlag
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BetaltAvBpPeriode
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BidragsevnePeriode
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.ResultatBeregning
-import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.SumLøpendeBidragPeriode
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.periode.SærbidragPeriode
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
@@ -86,7 +86,7 @@ internal class SærbidragPeriodeTest {
         søknadsbarnPersonId = "11111111110",
         betaltAvBpPeriodeListe = lagBetaltAvBPGrunnlag(avvikBetaltAvBP),
         bidragsevnePeriodeListe = lagBidragsevneGrunnlag(avvikBidragsevne),
-        sumLøpendeBidrag = lagSumLøpendeBidragGrunnlag(),
+        bPsBeregnedeTotalbidrag = lagBPsBeregnedeTotalbidragGrunnlag(),
         bPsAndelSærbidragPeriodeListe = lagBPsAndelSærbidragGrunnlag(avvikBPsAndelSærbidrag),
     )
 
@@ -134,13 +134,13 @@ internal class SærbidragPeriodeTest {
         ),
     )
 
-    private fun lagSumLøpendeBidragGrunnlag() = SumLøpendeBidragPeriode(
+    private fun lagBPsBeregnedeTotalbidragGrunnlag() = BPsBeregnedeTotalbidragPeriode(
         referanse = TestUtil.BIDRAGSEVNE_REFERANSE,
         Periode(
             datoFom = LocalDate.parse("2020-01-01"),
             datoTil = LocalDate.parse("2020-02-01"),
         ),
-        sumLøpendeBidrag = BigDecimal.valueOf(5000),
+        bPsBeregnedeTotalbidrag = BigDecimal.valueOf(5000),
 
     )
 

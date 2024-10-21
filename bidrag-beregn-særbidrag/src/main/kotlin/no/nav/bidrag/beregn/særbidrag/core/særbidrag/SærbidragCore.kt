@@ -5,20 +5,20 @@ import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.felles.FellesCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BPsAndelSærbidragPeriode
+import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BPsBeregnedeTotalbidragPeriode
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BeregnSærbidragGrunnlag
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BeregnSærbidragResultat
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BetaltAvBpPeriode
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BidragsevnePeriode
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.ResultatPeriode
-import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.SumLøpendeBidragPeriode
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BPsAndelSærbidragPeriodeCore
+import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BPsBeregnedeTotalbidragPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BeregnSærbidragGrunnlagCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BeregnSærbidragResultatCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BetaltAvBpPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BidragsevnePeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.ResultatBeregningCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.ResultatPeriodeCore
-import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.SumLøpendeBidragPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.periode.SærbidragPeriode
 import java.util.Collections.emptyList
 
@@ -42,7 +42,7 @@ internal class SærbidragCore(private val særbidragPeriode: SærbidragPeriode =
         søknadsbarnPersonId = grunnlag.søknadsbarnPersonId,
         betaltAvBpPeriodeListe = mapBetaltAvBpPeriodeListe(grunnlag.betaltAvBpPeriodeListe),
         bidragsevnePeriodeListe = mapBidragsevnePeriodeListe(grunnlag.bidragsevnePeriodeListe),
-        sumLøpendeBidrag = mapSumLøpendeBidrag(grunnlag.sumLøpendeBidrag),
+        bPsBeregnedeTotalbidrag = mapBPsBeregnedeTotalbidrag(grunnlag.bPsBeregnedeTotalbidragPeriodeCore),
         bPsAndelSærbidragPeriodeListe = mapBPsAndelSærbidragPeriodeListe(grunnlag.bPsAndelSærbidragPeriodeListe),
     )
 
@@ -69,13 +69,13 @@ internal class SærbidragCore(private val særbidragPeriode: SærbidragPeriode =
         )
     }
 
-    private fun mapSumLøpendeBidrag(sumLøpendeBidragPeriodeCore: SumLøpendeBidragPeriodeCore) = SumLøpendeBidragPeriode(
-        referanse = sumLøpendeBidragPeriodeCore.referanse,
+    private fun mapBPsBeregnedeTotalbidrag(BPsBeregnedeTotalbidragPeriodeCore: BPsBeregnedeTotalbidragPeriodeCore) = BPsBeregnedeTotalbidragPeriode(
+        referanse = BPsBeregnedeTotalbidragPeriodeCore.referanse,
         periode = Periode(
-            datoFom = sumLøpendeBidragPeriodeCore.periode.datoFom,
-            datoTil = sumLøpendeBidragPeriodeCore.periode.datoTil,
+            datoFom = BPsBeregnedeTotalbidragPeriodeCore.periode.datoFom,
+            datoTil = BPsBeregnedeTotalbidragPeriodeCore.periode.datoTil,
         ),
-        sumLøpendeBidrag = sumLøpendeBidragPeriodeCore.sumLøpendeBidrag,
+        bPsBeregnedeTotalbidrag = BPsBeregnedeTotalbidragPeriodeCore.bPsBeregnedeTotalbidrag,
     )
 }
 
@@ -106,12 +106,12 @@ private fun mapResultatPeriode(resultatPeriodeListe: List<ResultatPeriode>) = re
 }
 
 private fun mapReferanseListe(resultatPeriode: ResultatPeriode): List<String> {
-    val (_, bidragsevne, sumLøpendeBidrag, bPsAndelSærbidrag) = resultatPeriode.grunnlag
+    val (_, bidragsevne, bPsBeregnedeTotalbidrag, bPsAndelSærbidrag) = resultatPeriode.grunnlag
     val referanseListe = mutableListOf<String>()
     // Ikke nødvendig
     //    referanseListe.add(beløpBetaltAvBp.referanse)
     referanseListe.add(bidragsevne.referanse)
-    referanseListe.add(sumLøpendeBidrag.referanse)
+    referanseListe.add(bPsBeregnedeTotalbidrag.referanse)
     referanseListe.add(bPsAndelSærbidrag.referanse)
     return referanseListe.sorted()
 }
