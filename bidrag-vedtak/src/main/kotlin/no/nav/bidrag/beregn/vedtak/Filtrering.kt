@@ -27,36 +27,20 @@ class Vedtaksfiltrering {
         while (iterator.hasNext()) {
             val vedtaksdetaljer = iterator.next()
 
-            // Hopp over dersom vedtaket ikke er endring eller det er omgjort.
-            if (!vedtaksdetaljer.vedtak.erEndring() || vedtaksdetaljer.erOmgjort) {
+            // Hopp over dersom vedtaket er omgjort.
+            if (vedtaksdetaljer.erOmgjort) {
                 continue
             }
 
-            // Dersom resultatet er Ingen endring 12% skal vedtaket hoppes over.
-            if (vedtaksdetaljer.vedtak.erIngenEndringPga12Prosentregel()) {
-                // Dersom dette er resultatet av en klage skal det hoppes til det påklagde vedtaket.
-                if (vedtaksdetaljer.vedtak.erKlage()) {
-                    // Hopp til påklaget vedtak
-                    vedtaksdetaljer.vedtak.omgjørVedtaksid()?.let { iterator.hoppeTilOmgjortVedtak(it.toLong()) }
-                        ?: iterator.hoppeTilPåklagetVedtak(vedtaksdetaljer.vedtak.søknadKlageRefId!!)
-                    // Hopp over dette vedtaket, ettersom dette enten er eller skulle vært Ingen endring 12%
-                    if (iterator.hasNext()) {
-                        iterator.next()
-                    } else {
-                        secureLogger.warn { "Fant ikke tidligere vedtak for barn med personident $personidentSøknadsbarn" }
-                        return null
-                    }
-                } else if (vedtaksdetaljer.vedtak.erOmgjøring()) {
-                    // Hopp til påklaget vedtak
-                    iterator.hoppeTilOmgjortVedtak(vedtaksdetaljer.vedtak.idTilOmgjortVedtak()!!)
-                    // Hopp over dette vedtaket, ettersom dette enten er eller skulle vært Ingen endring 12%
-                    if (iterator.hasNext()) {
-                        iterator.next()
-                    } else {
-                        secureLogger.warn { "Fant ikke tidligere vedtak for barn med personident $personidentSøknadsbarn" }
-                        return null
-                    }
-                }
+            // Dersom vedtaket gjelder klage, skal det hoppes til det påklagde vedtaket.
+            if (vedtaksdetaljer.vedtak.erKlage()) {
+                // Hopp til påklaget vedtak
+                vedtaksdetaljer.vedtak.omgjørVedtaksid()?.let { iterator.hoppeTilOmgjortVedtak(it.toLong()) }
+                    ?: iterator.hoppeTilPåklagetVedtak(vedtaksdetaljer.vedtak.søknadKlageRefId!!)
+                continue
+            } else if (vedtaksdetaljer.vedtak.erOmgjøring()) {
+                // Hopp til omgjort vedtak
+                iterator.hoppeTilOmgjortVedtak(vedtaksdetaljer.vedtak.idTilOmgjortVedtak()!!)
                 continue
             }
 
@@ -81,7 +65,7 @@ class Vedtaksfiltrering {
 
     private fun VedtakForStønad.filtrereBortIrrelevanteVedtak(): Boolean {
         if (erAutomatiskVedtak()) return false
-        return erInnkreving() && (erBidrag() || er18årsbidrag() || erOppfostringsbidrag() || erEndring())
+        return erInnkreving() && !erIkkeRelevant() && (erBidrag() || er18årsbidrag() || erOppfostringsbidrag())
     }
 }
 

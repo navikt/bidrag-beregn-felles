@@ -133,7 +133,7 @@ class VedtaksfiltreringTest {
     }
 
     @Test
-    fun `skal hoppe over ved 12 prosen ingen endring`() {
+    fun `skal ikke hoppe over ved 12 prosen ingen endring`() {
         // gitt
         val vedtakssett = oppretteVedtakssett(
             setOf(
@@ -151,14 +151,14 @@ class VedtaksfiltreringTest {
         assertSoftly {
             vedtak.shouldNotBeNull()
             vedtak.stønadsendring.shouldNotBeNull()
-            vedtak.stønadsendring.periodeListe.first().delytelseId shouldBe "10001"
-            vedtak.vedtakstidspunkt shouldBe Y2K22.år.atDay(1).atStartOfDay()
+            vedtak.stønadsendring.periodeListe.first().delytelseId shouldBe "10003"
+            vedtak.vedtakstidspunkt shouldBe Y2K24.år.atDay(1).atStartOfDay()
             vedtak.stønadsendring.periodeListe.first().beløp shouldBe B1200.verdi
         }
     }
 
     @Test
-    fun `skal hoppe over originalt vedtak ved klage og 12-prosent-ingen-endring`() {
+    fun `skal hoppe over klage`() {
         // gitt
         val vedtakssett = oppretteVedtakssett(
             setOf(
@@ -176,8 +176,8 @@ class VedtaksfiltreringTest {
         assertSoftly {
             vedtak.shouldNotBeNull()
             vedtak.stønadsendring.shouldNotBeNull()
-            vedtak.stønadsendring.periodeListe.first().delytelseId shouldBe "10000"
-            vedtak.vedtakstidspunkt shouldBe Y2K14.år.atDay(1).atStartOfDay()
+            vedtak.stønadsendring.periodeListe.first().delytelseId shouldBe "10001"
+            vedtak.vedtakstidspunkt shouldBe Y2K16.år.atDay(1).atStartOfDay()
         }
     }
 
