@@ -20,7 +20,7 @@ fun VedtakForStønad.erOppfostringsbidrag() = stønadsendring.type == Stønadsty
 
 fun VedtakForStønad.erInnkreving() = stønadsendring.innkreving == Innkrevingstype.MED_INNKREVING
 
-fun VedtakForStønad.erIkkeRelevant() = ikkeRelevanteVedtakstyper.contains(type) && !stønadsendring.erEndring()
+fun VedtakForStønad.erIkkeRelevant() = ikkeRelevanteVedtakstyper.contains(type) || !stønadsendring.erEndring()
 
 fun VedtakForStønad.erResultatFraAnnetVedtak() =
     this.stønadsendring.periodeListe.any { Beslutningsårsak.RESULTAT_FRA_ANNET_VEDTAK.kode == it.resultatkode }
