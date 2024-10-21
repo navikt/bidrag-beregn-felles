@@ -111,7 +111,7 @@ abstract class CoreMapper {
                     InntektPeriodeCore(
                         referanse = opprettDelberegningreferanse(
                             type = Grunnlagstype.DELBEREGNING_SUM_INNTEKT,
-                            periode = ÅrMånedsperiode(fom = beregnGrunnlag.periode.fom, til = beregnGrunnlag.periode.til),
+                            periode = ÅrMånedsperiode(fom = beregnGrunnlag.periode.fom, til = null),
                             gjelderReferanse = referanseTilRolle,
                             søknadsbarnReferanse = beregnGrunnlag.søknadsbarnReferanse,
                         ),
@@ -282,7 +282,7 @@ abstract class CoreMapper {
             InntektPeriodeCore(
                 referanse = opprettDelberegningreferanse(
                     type = Grunnlagstype.DELBEREGNING_SUM_INNTEKT,
-                    periode = ÅrMånedsperiode(fom = periode.datoFom, til = periode.datoTil),
+                    periode = ÅrMånedsperiode(fom = periode.datoFom, til = null),
                     søknadsbarnReferanse = søknadsbarnreferanse,
                     gjelderReferanse = gjelderReferanse,
                 ),
