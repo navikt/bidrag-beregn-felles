@@ -44,7 +44,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneSisteManuelleVedtak(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
 
         // så
         vedtak.shouldBeNull()
@@ -63,7 +63,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneSisteManuelleVedtak(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -86,7 +86,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneSisteManuelleVedtak(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -109,7 +109,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneSisteManuelleVedtak(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -132,7 +132,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneSisteManuelleVedtak(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -158,7 +158,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneSisteManuelleVedtak(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -190,7 +190,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneSisteManuelleVedtak(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -216,7 +216,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneSisteManuelleVedtak(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -242,7 +242,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneSisteManuelleVedtak(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -267,7 +267,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneSisteManuelleVedtak(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -288,7 +288,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneSisteManuelleVedtak(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
 
         // så
         vedtak.shouldBeNull()
@@ -303,12 +303,11 @@ class VedtaksfiltreringTest {
                 OppretteVedtakRequest(Y2K16, Y2K18, B1200),
                 OppretteVedtakRequest(Y2K18, Y2K19, B1300),
                 OppretteVedtakRequest(Y2K19, Y2K20, B1200, Beslutningsårsak.RESULTAT_FRA_ANNET_VEDTAK),
-                OppretteVedtakRequest(Y2K20, Y2K22, B5000, kilde = Vedtakskilde.AUTOMATISK),
             ),
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneSisteManuelleVedtak(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -320,17 +319,17 @@ class VedtaksfiltreringTest {
     }
 
     @Test
-    fun `skal hente første manuelle vedtak i vedtaksrekke`() {
+    fun `skal hente første relevante vedtak i vedtaksrekke`() {
         // gitt
         val vedtakssett = oppretteVedtakssett(
             setOf(
                 OppretteVedtakRequest(R12, R10, B1000, beslutningsårsak = Beslutningsårsak.INNVILGETT_VEDTAK),
-                OppretteVedtakRequest(R10, null, B1200, Beslutningsårsak.INNVILGETT_VEDTAK, kilde = Vedtakskilde.AUTOMATISK),
+                OppretteVedtakRequest(R10, null, B1200, Beslutningsårsak.INDEKSREGULERING, kilde = Vedtakskilde.AUTOMATISK),
             ),
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneSisteManuelleVedtak(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {

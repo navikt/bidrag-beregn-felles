@@ -20,7 +20,9 @@ fun VedtakForStønad.erOppfostringsbidrag() = stønadsendring.type == Stønadsty
 
 fun VedtakForStønad.erInnkreving() = stønadsendring.innkreving == Innkrevingstype.MED_INNKREVING
 
-fun VedtakForStønad.erIkkeRelevant() = ikkeRelevanteVedtakstyper.contains(type) || !stønadsendring.erEndring()
+fun VedtakForStønad.erIkkeRelevant() = ikkeRelevanteVedtakstyper.contains(type) || !stønadsendring.erEndring() || harIngenPerioder()
+
+fun VedtakForStønad.harIngenPerioder() = this.stønadsendring.periodeListe.isEmpty()
 
 fun VedtakForStønad.erResultatFraAnnetVedtak() =
     this.stønadsendring.periodeListe.any { Beslutningsårsak.RESULTAT_FRA_ANNET_VEDTAK.kode == it.resultatkode }
@@ -49,7 +51,7 @@ fun VedtakForStønad.tilVedtaksdetaljer(): Collection<Vedtaksdetaljer> = stønad
 
 fun Collection<VedtakForStønad>.tilVedtaksdetaljer() = this.flatMap { it.tilVedtaksdetaljer() }
 
-val ikkeRelevanteVedtakstyper = setOf(Vedtakstype.INDEKSREGULERING, Vedtakstype.ENDRING_MOTTAKER)
+val ikkeRelevanteVedtakstyper = setOf(Vedtakstype.INDEKSREGULERING)
 
 enum class Beslutningsårsak(val kode: String) {
     INGEN_ENDRING_12_PROSENT("VO"),
