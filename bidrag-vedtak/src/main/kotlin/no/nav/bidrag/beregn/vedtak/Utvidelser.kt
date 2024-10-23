@@ -12,8 +12,6 @@ import no.nav.bidrag.transport.behandling.vedtak.response.søknadKlageRefId
 
 fun StønadsendringDto.erEndring() = Beslutningstype.ENDRING == beslutning
 
-fun VedtakForStønad.erEndring() = Vedtakstype.ENDRING == type || stønadsendring.erEndring()
-
 fun VedtakForStønad.erBidrag() = stønadsendring.type == Stønadstype.BIDRAG
 
 fun VedtakForStønad.er18årsbidrag() = stønadsendring.type == Stønadstype.BIDRAG18AAR
@@ -22,7 +20,7 @@ fun VedtakForStønad.erOppfostringsbidrag() = stønadsendring.type == Stønadsty
 
 fun VedtakForStønad.erInnkreving() = stønadsendring.innkreving == Innkrevingstype.MED_INNKREVING
 
-fun VedtakForStønad.erIkkeRelevant() = ikkeRelevanteVedtakstyper.contains(type) && !stønadsendring.erEndring()
+fun VedtakForStønad.erIkkeRelevant() = ikkeRelevanteVedtakstyper.contains(type) || !stønadsendring.erEndring()
 
 fun VedtakForStønad.erResultatFraAnnetVedtak() =
     this.stønadsendring.periodeListe.any { Beslutningsårsak.RESULTAT_FRA_ANNET_VEDTAK.kode == it.resultatkode }
@@ -69,4 +67,5 @@ enum class Beslutningsårsak(val kode: String) {
     INNVILGETT_VEDTAK("IV"),
     KOSTNADSBEREGNET_BIDRAG("KBB"),
     RESULTAT_FRA_ANNET_VEDTAK("RAV"),
+    STADFESTELSE("SF"),
 }

@@ -29,8 +29,10 @@ data class OppretteVedtakRequest(
     val beløp: Beløp = Beløp.B1000,
     val beslutningsårsak: Beslutningsårsak = Beslutningsårsak.INNVILGETT_VEDTAK,
     val stønadstype: Stønadstype = Stønadstype.BIDRAG,
+    val vedtakstype: Vedtakstype = Vedtakstype.FASTSETTELSE,
     val omgjørVedtak: Int? = null,
     val kilde: Vedtakskilde = Vedtakskilde.MANUELT,
+    val beslutningstype: Beslutningstype = Beslutningstype.ENDRING,
 )
 
 val bm = Testperson("Varig Mottaker", Personident("12345612345"), LocalDate.now().minusYears(38), Rolletype.BIDRAGSMOTTAKER)
@@ -76,7 +78,7 @@ fun oppretteVedtakssett(requests: Set<OppretteVedtakRequest>): Set<VedtakForStø
     return requests.map { request ->
         val vedtakstype = when (request.beslutningsårsak) {
             Beslutningsårsak.INDEKSREGULERING -> Vedtakstype.INDEKSREGULERING
-            else -> Vedtakstype.FASTSETTELSE
+            else -> request.vedtakstype
         }
 
         oppretteVedtak(
@@ -84,6 +86,7 @@ fun oppretteVedtakssett(requests: Set<OppretteVedtakRequest>): Set<VedtakForStø
             vedtakstype = request.omgjørVedtak?.let { Vedtakstype.KLAGE } ?: vedtakstype,
             stønadsendring =
             oppretteStønadsendring(
+                beslutningstype = request.beslutningstype,
                 skyldner = bp.personident,
                 mottaker = bm.personident,
                 kravhaver = ba1.personident,
