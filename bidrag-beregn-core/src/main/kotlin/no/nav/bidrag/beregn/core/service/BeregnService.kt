@@ -54,7 +54,6 @@ abstract class BeregnService {
         innslagKapitalinntektSjablon: Sjablontall?,
         referanseTilRolle: String? = null,
     ) = sumInntektListe
-//        .filter { it.grunnlagsreferanseListe.isNotEmpty() }
         .map {
             GrunnlagDto(
                 referanse = it.referanse,

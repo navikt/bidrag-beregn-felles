@@ -22,7 +22,6 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
-import java.math.BigDecimal
 
 internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
 
@@ -126,23 +125,19 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
             underholdskostnadBeregningGrunnlag = bpAndelUnderholdskostnadPeriodeGrunnlag.underholdskostnadPeriodeGrunnlagListe
                 .firstOrNull { it.underholdskostnadPeriode.periode.inneholder(bruddPeriode) }
                 ?.let { UnderholdskostnadBeregningGrunnlag(referanse = it.referanse, beløp = it.underholdskostnadPeriode.beløp) }
-                ?: throw IllegalArgumentException("Ingen underholdskostnad funnet for periode $bruddPeriode"),
-            //TODO Skal det være mandatory å sende inn inntekt for BP?
+                ?: throw IllegalArgumentException("Underholdskostnad grunnlag mangler for periode $bruddPeriode"),
             inntektBPBeregningGrunnlag = bpAndelUnderholdskostnadPeriodeGrunnlag.inntektBPPeriodeGrunnlagListe
                 .firstOrNull { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
                 ?.let { InntektBeregningGrunnlag(referanse = it.referanse, sumInntekt = it.beløp) }
-                ?: throw IllegalArgumentException("Ingen inntekt funnet for bidragspliktig for periode $bruddPeriode"),
-            //TODO Skal det være mandatory å sende inn inntekt for BM?
+                ?: throw IllegalArgumentException("Delberegning sum inntekt for bidragspliktig mangler for periode $bruddPeriode"),
             inntektBMBeregningGrunnlag = bpAndelUnderholdskostnadPeriodeGrunnlag.inntektBMPeriodeGrunnlagListe
                 .firstOrNull { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
                 ?.let { InntektBeregningGrunnlag(referanse = it.referanse, sumInntekt = it.beløp) }
-                ?: throw IllegalArgumentException("Ingen inntekt funnet for bidragsmottaker for periode $bruddPeriode"),
-            //TODO Skal det være mandatory å sende inn inntekt for SB?
+                ?: throw IllegalArgumentException("Delberegning sum inntekt for bidragsmottaker mangler for periode $bruddPeriode"),
             inntektSBBeregningGrunnlag = bpAndelUnderholdskostnadPeriodeGrunnlag.inntektSBPeriodeGrunnlagListe
-                ?.filter { it.grunnlagsreferanseListe.isNotEmpty() }
-                ?.firstOrNull { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
+                .firstOrNull { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
                 ?.let { InntektBeregningGrunnlag(referanse = it.referanse, sumInntekt = it.beløp) }
-                ?: InntektBeregningGrunnlag(referanse = "", sumInntekt = BigDecimal.ZERO),
+                ?: throw IllegalArgumentException("Delberegning sum inntekt for søknadsbarn mangler for periode $bruddPeriode"),
             sjablonSjablontallBeregningGrunnlagListe = bpAndelUnderholdskostnadPeriodeGrunnlag.sjablonSjablontallPeriodeGrunnlagListe
                 .filter { it.sjablonSjablontallPeriode.periode.inneholder(bruddPeriode) }
                 .map {
@@ -207,7 +202,6 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
         .map {
             GrunnlagDto(
                 referanse = opprettDelberegningreferanse(
-//TODO Sjekk hvilken grunnlagstype som skal brukes her (BPS_ANDEL_UNDERHOLDSKOSTNAD vs DELBEREGNING_BPS_ANDEL)
                     type = Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL,
                     periode = ÅrMånedsperiode(fom = it.periode.fom, til = null),
                     søknadsbarnReferanse = mottattGrunnlag.søknadsbarnReferanse,

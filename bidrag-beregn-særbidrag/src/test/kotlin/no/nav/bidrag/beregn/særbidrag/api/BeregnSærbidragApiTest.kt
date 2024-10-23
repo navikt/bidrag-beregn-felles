@@ -21,7 +21,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -248,8 +247,6 @@ internal class BeregnSærbidragApiTest {
         utførBeregningerOgEvaluerResultat()
     }
 
-    //TODO TBD hva som skal skje hvis inntekt mangler for en av partene
-    @Disabled
     @Test
     @DisplayName("skal kalle core og returnere et resultat - BP's inntekt mangler")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel_BPsInntektMangler() {
