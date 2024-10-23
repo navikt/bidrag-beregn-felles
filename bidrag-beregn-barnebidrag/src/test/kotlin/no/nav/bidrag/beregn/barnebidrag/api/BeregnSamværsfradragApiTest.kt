@@ -13,6 +13,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -39,8 +40,19 @@ internal class BeregnSamværsfradragApiTest {
     }
 
     @Test
-    @DisplayName("Samværsfradrag - eksempel med flere perioder")
+    @DisplayName("Samværsfradrag - eksempel 1 - smaværsklasse mangler")
     fun testSamværsfradrag_Eksempel01() {
+        filnavn = "src/test/resources/testfiler/samværsfradrag/samværsfradrag_eksempel1.json"
+        val request = lesFilOgByggRequest(filnavn)
+        val exception = assertThrows(IllegalArgumentException::class.java) {
+            beregnBarnebidragService.beregnSamværsfradrag(request)
+        }
+        assertThat(exception.message).contains("Ingen samværsklasse funnet")
+    }
+
+    @Test
+    @DisplayName("Samværsfradrag - eksempel med flere perioder")
+    fun testSamværsfradrag_Eksempel_Flere_Perioder() {
         filnavn = "src/test/resources/testfiler/samværsfradrag/samværsfradrag_eksempel_flere_perioder.json"
         utførBeregningerOgEvaluerResultatSamværsfradrag()
     }
@@ -62,12 +74,20 @@ internal class BeregnSamværsfradragApiTest {
                 )
             }
 
+        val antallSamværsklasse = samværsfradragResultat
+            .filter { it.type == Grunnlagstype.SAMVÆRSKLASSE }
+            .size
+
+        val antallSjablon = samværsfradragResultat
+            .filter { it.type == Grunnlagstype.SJABLON }
+            .size
+
         assertAll(
             { assertThat(samværsfradragResultat).isNotNull },
             { assertThat(samværsfradragResultatListe).isNotNull },
             { assertThat(samværsfradragResultatListe).hasSize(6) },
 
-            // Delberegning Samværsfradrag
+            // Resultat
             { assertThat(samværsfradragResultatListe[0].periode).isEqualTo(ÅrMånedsperiode("2021-05", "2021-07")) },
             { assertThat(samværsfradragResultatListe[0].beløp).isEqualTo(BigDecimal.valueOf(353)) },
             { assertThat(samværsfradragResultatListe[1].periode).isEqualTo(ÅrMånedsperiode("2021-07", "2022-07")) },
@@ -80,6 +100,10 @@ internal class BeregnSamværsfradragApiTest {
             { assertThat(samværsfradragResultatListe[4].beløp).isEqualTo(BigDecimal.valueOf(1760)) },
             { assertThat(samværsfradragResultatListe[5].periode).isEqualTo(ÅrMånedsperiode("2024-07", "2024-10")) },
             { assertThat(samværsfradragResultatListe[5].beløp).isEqualTo(BigDecimal.valueOf(1813)) },
+
+            // Grunnlag
+            { assertThat(antallSamværsklasse).isEqualTo(2) },
+            { assertThat(antallSjablon).isEqualTo(6) },
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },

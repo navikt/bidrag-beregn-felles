@@ -13,6 +13,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -33,6 +34,14 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
     private lateinit var forventetBeregnetAndelFaktor: BigDecimal
     private lateinit var forventetBarnEndeligInntekt: BigDecimal
     private var forventetBarnetErSelvforsørget: Boolean = false
+    private var forventetAntallInntektRapporteringPeriodeBP: Int = 1
+    private var forventetAntallInntektRapporteringPeriodeBM: Int = 1
+    private var forventetAntallInntektRapporteringPeriodeSB: Int = 1
+    private var forventetAntallDelberegningSumInntektPeriodeBP: Int = 1
+    private var forventetAntallDelberegningSumInntektPeriodeBM: Int = 1
+    private var forventetAntallDelberegningSumInntektPeriodeSB: Int = 1
+    private var forventetAntallUnderholdskostnad: Int = 1
+    private var forventetAntallSjablon: Int = 6
 
     @Mock
     private lateinit var beregnBarnebidragService: BeregnBarnebidragService
@@ -52,6 +61,9 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
         forventetBeregnetAndelFaktor = BigDecimal.ZERO
         forventetBarnEndeligInntekt = BigDecimal.valueOf(200000)
         forventetBarnetErSelvforsørget = true
+        forventetAntallInntektRapporteringPeriodeBP = 1
+        forventetAntallInntektRapporteringPeriodeBM = 1
+        forventetAntallInntektRapporteringPeriodeSB = 1
         utførBeregningerOgEvaluerResultatBpAndelUnderholdskostnad()
     }
 
@@ -64,6 +76,9 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
         forventetBeregnetAndelFaktor = BigDecimal.valueOf(0.8765010080).setScale(10)
         forventetBarnEndeligInntekt = BigDecimal.valueOf(40900)
         forventetBarnetErSelvforsørget = false
+        forventetAntallInntektRapporteringPeriodeBP = 1
+        forventetAntallInntektRapporteringPeriodeBM = 1
+        forventetAntallInntektRapporteringPeriodeSB = 1
         utførBeregningerOgEvaluerResultatBpAndelUnderholdskostnad()
     }
 
@@ -76,6 +91,9 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
         forventetBeregnetAndelFaktor = BigDecimal.valueOf(0.7801529100).setScale(10)
         forventetBarnEndeligInntekt = BigDecimal.valueOf(40900)
         forventetBarnetErSelvforsørget = false
+        forventetAntallInntektRapporteringPeriodeBP = 1
+        forventetAntallInntektRapporteringPeriodeBM = 1
+        forventetAntallInntektRapporteringPeriodeSB = 1
         utførBeregningerOgEvaluerResultatBpAndelUnderholdskostnad()
     }
 
@@ -88,6 +106,9 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
         forventetBeregnetAndelFaktor = BigDecimal.valueOf(0.6250000000).setScale(10)
         forventetBarnEndeligInntekt = BigDecimal.ZERO
         forventetBarnetErSelvforsørget = false
+        forventetAntallInntektRapporteringPeriodeBP = 1
+        forventetAntallInntektRapporteringPeriodeBM = 1
+        forventetAntallInntektRapporteringPeriodeSB = 1
         utførBeregningerOgEvaluerResultatBpAndelUnderholdskostnad()
     }
 
@@ -100,13 +121,50 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
         forventetBeregnetAndelFaktor = BigDecimal.valueOf(0.6250000000).setScale(10)
         forventetBarnEndeligInntekt = BigDecimal.ZERO
         forventetBarnetErSelvforsørget = false
+        forventetAntallInntektRapporteringPeriodeBP = 1
+        forventetAntallInntektRapporteringPeriodeBM = 1
+        forventetAntallInntektRapporteringPeriodeSB = 0
         utførBeregningerOgEvaluerResultatBpAndelUnderholdskostnad()
+    }
+
+    @Test
+    @DisplayName("BP Andel underholdskostnad - eksempel 6 - BP har ikke inntekt")
+    fun testBpAndelUnderholdskostnad_Eksempel06() {
+        filnavn = "src/test/resources/testfiler/bpandelunderholdskostnad/bpandel_eksempel6.json"
+        forventetEndeligAndelFaktor = BigDecimal.valueOf(0.0000000000).setScale(10)
+        forventetAndelBeløp = BigDecimal.ZERO
+        forventetBeregnetAndelFaktor = BigDecimal.valueOf(0.0000000000).setScale(10)
+        forventetBarnEndeligInntekt = BigDecimal.ZERO
+        forventetBarnetErSelvforsørget = false
+        forventetAntallInntektRapporteringPeriodeBP = 0
+        forventetAntallInntektRapporteringPeriodeBM = 1
+        forventetAntallInntektRapporteringPeriodeSB = 1
+        utførBeregningerOgEvaluerResultatBpAndelUnderholdskostnad()
+    }
+
+    @Test
+    @DisplayName("BP Andel underholdskostnad - eksempel 7 - underholdskostnad mangler")
+    fun testBpAndelUnderholdskostnad_Eksempel07() {
+        filnavn = "src/test/resources/testfiler/bpandelunderholdskostnad/bpandel_eksempel7.json"
+        val request = lesFilOgByggRequest(filnavn)
+        val exception = assertThrows(IllegalArgumentException::class.java) {
+            beregnBarnebidragService.beregnBpAndelUnderholdskostnad(request)
+        }
+        assertThat(exception.message).contains("Underholdskostnad grunnlag mangler")
     }
 
     @Test
     @DisplayName("BP andel underholdskostnad - eksempel med flere perioder")
     fun testBpAndelUnderholdskostnad_Eksempel_Flere_Perioder() {
         filnavn = "src/test/resources/testfiler/bpandelunderholdskostnad/bpandel_eksempel_flere_perioder.json"
+        forventetAntallInntektRapporteringPeriodeBP = 3
+        forventetAntallInntektRapporteringPeriodeBM = 2
+        forventetAntallInntektRapporteringPeriodeSB = 3
+        forventetAntallDelberegningSumInntektPeriodeBP = 3
+        forventetAntallDelberegningSumInntektPeriodeBM = 2
+        forventetAntallDelberegningSumInntektPeriodeSB = 4
+        forventetAntallUnderholdskostnad = 2
+        forventetAntallSjablon = 7
         utførBeregningerOgEvaluerResultatBpAndelUnderholdskostnadFlerePerioder()
     }
 
@@ -131,17 +189,78 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
                 )
             }
 
+        val referanseBP = request.grunnlagListe
+            .filter { it.type == Grunnlagstype.PERSON_BIDRAGSPLIKTIG }
+            .map { it.referanse }
+            .first()
+
+        val referanseBM = request.grunnlagListe
+            .filter { it.type == Grunnlagstype.PERSON_BIDRAGSMOTTAKER }
+            .map { it.referanse }
+            .first()
+
+        val referanseSB = request.søknadsbarnReferanse
+
+        val antallInntektRapporteringPeriodeBP = bpAndelUnderholdskostnadResultat
+            .filter { it.type == Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE }
+            .filter { it.gjelderReferanse == referanseBP }
+            .size
+
+        val antallInntektRapporteringPeriodeBM = bpAndelUnderholdskostnadResultat
+            .filter { it.type == Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE }
+            .filter { it.gjelderReferanse == referanseBM }
+            .size
+
+        val antallInntektRapporteringPeriodeSB = bpAndelUnderholdskostnadResultat
+            .filter { it.type == Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE }
+            .filter { it.gjelderReferanse == referanseSB }
+            .size
+
+        val antallDelberegningSumInntektPeriodeBP = bpAndelUnderholdskostnadResultat
+            .filter { it.type == Grunnlagstype.DELBEREGNING_SUM_INNTEKT }
+            .filter { it.gjelderReferanse == referanseBP }
+            .size
+
+        val antallDelberegningSumInntektPeriodeBM = bpAndelUnderholdskostnadResultat
+            .filter { it.type == Grunnlagstype.DELBEREGNING_SUM_INNTEKT }
+            .filter { it.gjelderReferanse == referanseBM }
+            .size
+
+        val antallDelberegningSumInntektPeriodeSB = bpAndelUnderholdskostnadResultat
+            .filter { it.type == Grunnlagstype.DELBEREGNING_SUM_INNTEKT }
+            .filter { it.gjelderReferanse == referanseSB }
+            .size
+
+        val antallUnderholdskostnad = bpAndelUnderholdskostnadResultat
+            .filter { it.type == Grunnlagstype.UNDERHOLDSKOSTNAD }
+            .size
+
+        val antallSjablon = bpAndelUnderholdskostnadResultat
+            .filter { it.type == Grunnlagstype.SJABLON }
+            .size
+
         assertAll(
             { assertThat(bpAndelUnderholdskostnadResultat).isNotNull },
             { assertThat(bpAndelUnderholdskostnadResultatListe).isNotNull },
             { assertThat(bpAndelUnderholdskostnadResultatListe).hasSize(1) },
 
+            // Resultat
             { assertThat(bpAndelUnderholdskostnadResultatListe[0].periode).isEqualTo(ÅrMånedsperiode("2024-08", "2024-09")) },
             { assertThat(bpAndelUnderholdskostnadResultatListe[0].endeligAndelFaktor).isEqualTo(forventetEndeligAndelFaktor) },
             { assertThat(bpAndelUnderholdskostnadResultatListe[0].andelBeløp).isEqualTo(forventetAndelBeløp) },
             { assertThat(bpAndelUnderholdskostnadResultatListe[0].beregnetAndelFaktor).isEqualTo(forventetBeregnetAndelFaktor) },
             { assertThat(bpAndelUnderholdskostnadResultatListe[0].barnEndeligInntekt).isEqualTo(forventetBarnEndeligInntekt) },
             { assertThat(bpAndelUnderholdskostnadResultatListe[0].barnetErSelvforsørget).isEqualTo(forventetBarnetErSelvforsørget) },
+
+            // Grunnlag
+            { assertThat(antallInntektRapporteringPeriodeBP).isEqualTo(forventetAntallInntektRapporteringPeriodeBP) },
+            { assertThat(antallInntektRapporteringPeriodeBM).isEqualTo(forventetAntallInntektRapporteringPeriodeBM) },
+            { assertThat(antallInntektRapporteringPeriodeSB).isEqualTo(forventetAntallInntektRapporteringPeriodeSB) },
+            { assertThat(antallDelberegningSumInntektPeriodeBP).isEqualTo(1) },
+            { assertThat(antallDelberegningSumInntektPeriodeBM).isEqualTo(1) },
+            { assertThat(antallDelberegningSumInntektPeriodeSB).isEqualTo(1) },
+            { assertThat(antallUnderholdskostnad).isEqualTo(1) },
+            { assertThat(antallSjablon).isEqualTo(6) },
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
@@ -155,6 +274,56 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
 
         val alleReferanser = hentAlleReferanser(bpAndelUnderholdskostnadResultat)
         val alleRefererteReferanser = hentAlleRefererteReferanser(bpAndelUnderholdskostnadResultat)
+
+        val referanseBP = request.grunnlagListe
+            .filter { it.type == Grunnlagstype.PERSON_BIDRAGSPLIKTIG }
+            .map { it.referanse }
+            .first()
+
+        val referanseBM = request.grunnlagListe
+            .filter { it.type == Grunnlagstype.PERSON_BIDRAGSMOTTAKER }
+            .map { it.referanse }
+            .first()
+
+        val referanseSB = request.søknadsbarnReferanse
+
+        val antallInntektRapporteringPeriodeBP = bpAndelUnderholdskostnadResultat
+            .filter { it.type == Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE }
+            .filter { it.gjelderReferanse == referanseBP }
+            .size
+
+        val antallInntektRapporteringPeriodeBM = bpAndelUnderholdskostnadResultat
+            .filter { it.type == Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE }
+            .filter { it.gjelderReferanse == referanseBM }
+            .size
+
+        val antallInntektRapporteringPeriodeSB = bpAndelUnderholdskostnadResultat
+            .filter { it.type == Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE }
+            .filter { it.gjelderReferanse == referanseSB }
+            .size
+
+        val antallDelberegningSumInntektPeriodeBP = bpAndelUnderholdskostnadResultat
+            .filter { it.type == Grunnlagstype.DELBEREGNING_SUM_INNTEKT }
+            .filter { it.gjelderReferanse == referanseBP }
+            .size
+
+        val antallDelberegningSumInntektPeriodeBM = bpAndelUnderholdskostnadResultat
+            .filter { it.type == Grunnlagstype.DELBEREGNING_SUM_INNTEKT }
+            .filter { it.gjelderReferanse == referanseBM }
+            .size
+
+        val antallDelberegningSumInntektPeriodeSB = bpAndelUnderholdskostnadResultat
+            .filter { it.type == Grunnlagstype.DELBEREGNING_SUM_INNTEKT }
+            .filter { it.gjelderReferanse == referanseSB }
+            .size
+
+        val antallUnderholdskostnad = bpAndelUnderholdskostnadResultat
+            .filter { it.type == Grunnlagstype.UNDERHOLDSKOSTNAD }
+            .size
+
+        val antallSjablon = bpAndelUnderholdskostnadResultat
+            .filter { it.type == Grunnlagstype.SJABLON }
+            .size
 
         val bpAndelUnderholdskostnadResultatListe = bpAndelUnderholdskostnadResultat
             .filtrerOgKonverterBasertPåEgenReferanse<DelberegningBidragspliktigesAndel>(Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL)
@@ -174,6 +343,7 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
             { assertThat(bpAndelUnderholdskostnadResultatListe).isNotNull },
             { assertThat(bpAndelUnderholdskostnadResultatListe).hasSize(6) },
 
+            // Resultat
             { assertThat(bpAndelUnderholdskostnadResultatListe[0].periode).isEqualTo(ÅrMånedsperiode("2023-09", "2023-11")) },
             { assertThat(bpAndelUnderholdskostnadResultatListe[0].endeligAndelFaktor).isEqualTo(BigDecimal.ZERO) },
             { assertThat(bpAndelUnderholdskostnadResultatListe[0].andelBeløp).isEqualTo(BigDecimal.ZERO) },
@@ -215,6 +385,16 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
             { assertThat(bpAndelUnderholdskostnadResultatListe[5].beregnetAndelFaktor).isEqualTo(BigDecimal.valueOf(0.5866823115)) },
             { assertThat(bpAndelUnderholdskostnadResultatListe[5].barnEndeligInntekt).isEqualTo(BigDecimal.valueOf(40900)) },
             { assertThat(bpAndelUnderholdskostnadResultatListe[5].barnetErSelvforsørget).isFalse() },
+
+            // Grunnlag
+            { assertThat(antallInntektRapporteringPeriodeBP).isEqualTo(forventetAntallInntektRapporteringPeriodeBP) },
+            { assertThat(antallInntektRapporteringPeriodeBM).isEqualTo(forventetAntallInntektRapporteringPeriodeBM) },
+            { assertThat(antallInntektRapporteringPeriodeSB).isEqualTo(forventetAntallInntektRapporteringPeriodeSB) },
+            { assertThat(antallDelberegningSumInntektPeriodeBP).isEqualTo(forventetAntallDelberegningSumInntektPeriodeBP) },
+            { assertThat(antallDelberegningSumInntektPeriodeBM).isEqualTo(forventetAntallDelberegningSumInntektPeriodeBM) },
+            { assertThat(antallDelberegningSumInntektPeriodeSB).isEqualTo(forventetAntallDelberegningSumInntektPeriodeSB) },
+            { assertThat(antallUnderholdskostnad).isEqualTo(forventetAntallUnderholdskostnad) },
+            { assertThat(antallSjablon).isEqualTo(forventetAntallSjablon) },
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },

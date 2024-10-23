@@ -10,7 +10,7 @@ data class BpAndelUnderholdskostnadPeriodeGrunnlag(
     val underholdskostnadPeriodeGrunnlagListe: List<UnderholdskostnadPeriodeGrunnlag>,
     val inntektBPPeriodeGrunnlagListe: List<InntektPeriodeCore>,
     val inntektBMPeriodeGrunnlagListe: List<InntektPeriodeCore>,
-    val inntektSBPeriodeGrunnlagListe: List<InntektPeriodeCore>?,
+    val inntektSBPeriodeGrunnlagListe: List<InntektPeriodeCore>,
     var sjablonSjablontallPeriodeGrunnlagListe: List<SjablonSjablontallPeriodeGrunnlag>,
 )
 

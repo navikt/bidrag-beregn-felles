@@ -105,7 +105,7 @@ abstract class CoreMapper {
                         )
                     }
 
-            return if (erSærbidrag && inntektGrunnlagListe.isEmpty()) {
+            return if (inntektGrunnlagListe.isEmpty()) {
                 // Oppretter en periode med inntekt = 0 hvis grunnlagslisten er tom
                 listOf(
                     InntektPeriodeCore(
