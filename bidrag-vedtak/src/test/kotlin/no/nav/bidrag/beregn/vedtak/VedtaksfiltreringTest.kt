@@ -23,6 +23,7 @@ import no.nav.bidrag.beregn.vedtak.Årstall.Y2K24
 import no.nav.bidrag.domene.enums.vedtak.Beslutningstype
 import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.enums.vedtak.Vedtakskilde
+import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
 import java.time.Year
 import kotlin.test.Test
 
@@ -43,7 +44,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneSisteManuelleVedtak(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
 
         // så
         vedtak.shouldBeNull()
@@ -62,7 +63,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneSisteManuelleVedtak(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -75,6 +76,74 @@ class VedtaksfiltreringTest {
         }
     }
 
+    @Test
+    fun `skal hente ut vedtak om aldersjustering`() {
+        // gitt
+        val vedtakssett = oppretteVedtakssett(
+            setOf(
+                OppretteVedtakRequest(Y2K22, null, B1200, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG, vedtakstype = Vedtakstype.ALDERSJUSTERING),
+            ),
+        )
+
+        // hvis
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
+
+        // så
+        assertSoftly {
+            vedtak.shouldNotBeNull()
+            vedtak.stønadsendring.shouldNotBeNull()
+            vedtak.stønadsendring.periodeListe.first().delytelseId shouldBe "10000"
+            vedtak.vedtakstidspunkt shouldBe Y2K22.år.atDay(1).atStartOfDay()
+            vedtak.stønadsendring.periodeListe.first().beløp shouldBe B1200.verdi
+            vedtak.stønadsendring.type shouldBe Stønadstype.BIDRAG
+        }
+    }
+
+    @Test
+    fun `skal hente ut vedtak om aldersopphør`() {
+        // gitt
+        val vedtakssett = oppretteVedtakssett(
+            setOf(
+                OppretteVedtakRequest(Y2K22, null, B1200, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG, vedtakstype = Vedtakstype.ALDERSOPPHØR),
+            ),
+        )
+
+        // hvis
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
+
+        // så
+        assertSoftly {
+            vedtak.shouldNotBeNull()
+            vedtak.stønadsendring.shouldNotBeNull()
+            vedtak.stønadsendring.periodeListe.first().delytelseId shouldBe "10000"
+            vedtak.vedtakstidspunkt shouldBe Y2K22.år.atDay(1).atStartOfDay()
+            vedtak.stønadsendring.periodeListe.first().beløp shouldBe B1200.verdi
+            vedtak.stønadsendring.type shouldBe Stønadstype.BIDRAG
+        }
+    }
+
+    @Test
+    fun `skal hente ut vedtak om opphør`() {
+        // gitt
+        val vedtakssett = oppretteVedtakssett(
+            setOf(
+                OppretteVedtakRequest(Y2K22, null, B1200, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG, vedtakstype = Vedtakstype.OPPHØR),
+            ),
+        )
+
+        // hvis
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
+
+        // så
+        assertSoftly {
+            vedtak.shouldNotBeNull()
+            vedtak.stønadsendring.shouldNotBeNull()
+            vedtak.stønadsendring.periodeListe.first().delytelseId shouldBe "10000"
+            vedtak.vedtakstidspunkt shouldBe Y2K22.år.atDay(1).atStartOfDay()
+            vedtak.stønadsendring.periodeListe.first().beløp shouldBe B1200.verdi
+            vedtak.stønadsendring.type shouldBe Stønadstype.BIDRAG
+        }
+    }
 
     @Test
     fun `skal returnere null hvis siste manuelle vedtak gjelder stadfestelse`() {
@@ -89,7 +158,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneSisteManuelleVedtak(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -121,7 +190,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneSisteManuelleVedtak(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -147,7 +216,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneSisteManuelleVedtak(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -173,7 +242,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneSisteManuelleVedtak(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -198,7 +267,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneSisteManuelleVedtak(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -219,7 +288,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneSisteManuelleVedtak(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
 
         // så
         vedtak.shouldBeNull()
@@ -234,12 +303,11 @@ class VedtaksfiltreringTest {
                 OppretteVedtakRequest(Y2K16, Y2K18, B1200),
                 OppretteVedtakRequest(Y2K18, Y2K19, B1300),
                 OppretteVedtakRequest(Y2K19, Y2K20, B1200, Beslutningsårsak.RESULTAT_FRA_ANNET_VEDTAK),
-                OppretteVedtakRequest(Y2K20, Y2K22, B5000, kilde = Vedtakskilde.AUTOMATISK),
             ),
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneSisteManuelleVedtak(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -251,17 +319,17 @@ class VedtaksfiltreringTest {
     }
 
     @Test
-    fun `skal hente første manuelle vedtak i vedtaksrekke`() {
+    fun `skal hente første relevante vedtak i vedtaksrekke`() {
         // gitt
         val vedtakssett = oppretteVedtakssett(
             setOf(
                 OppretteVedtakRequest(R12, R10, B1000, beslutningsårsak = Beslutningsårsak.INNVILGETT_VEDTAK),
-                OppretteVedtakRequest(R10, null, B1200, Beslutningsårsak.INNVILGETT_VEDTAK, kilde = Vedtakskilde.AUTOMATISK),
+                OppretteVedtakRequest(R10, null, B1200, Beslutningsårsak.INDEKSREGULERING, kilde = Vedtakskilde.AUTOMATISK),
             ),
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneSisteManuelleVedtak(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
