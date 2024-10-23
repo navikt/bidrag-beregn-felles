@@ -64,7 +64,6 @@ class Vedtaksfiltrering {
     }
 
     private fun VedtakForStønad.filtrereBortIrrelevanteVedtak(): Boolean {
-        if (erAutomatiskVedtak()) return false
         return erInnkreving() && !erIkkeRelevant() && (erBidrag() || er18årsbidrag() || erOppfostringsbidrag())
     }
 }
