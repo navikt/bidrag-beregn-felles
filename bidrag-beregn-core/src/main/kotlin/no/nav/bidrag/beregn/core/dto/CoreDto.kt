@@ -1,5 +1,6 @@
 package no.nav.bidrag.beregn.core.dto
 
+import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.Collections.emptyList
@@ -45,6 +46,26 @@ data class SjablonPeriodeCore(
     val nøkkelListe: List<SjablonNøkkelCore>? = emptyList(),
     val innholdListe: List<SjablonInnholdCore>,
 )
+
+data class FaktiskUtgiftPeriodeCore(
+    override val referanse: String,
+    override val periode: PeriodeCore,
+    val referanseBarn: Grunnlagsreferanse,
+//    val fødselsdatoBarn: LocalDate,
+//    val faktiskUtgiftBeløp: BigDecimal,
+//    val kostpengerBeløp: BigDecimal,
+    val beregnetBeløp: BigDecimal,
+    override val grunnlagsreferanseListe: List<String>,
+) : Delberegning
+
+data class TilleggsstønadPeriodeCore(
+    override val referanse: String,
+    override val periode: PeriodeCore,
+    val referanseBarn: Grunnlagsreferanse,
+//    val beløpDagsats: BigDecimal,
+    val beregnetBeløp: BigDecimal,
+    override val grunnlagsreferanseListe: List<String>,
+) : Delberegning
 
 data class SjablonCore(val navn: String, val nøkkelListe: List<SjablonNøkkelCore>? = emptyList(), val innholdListe: List<SjablonInnholdCore>)
 
