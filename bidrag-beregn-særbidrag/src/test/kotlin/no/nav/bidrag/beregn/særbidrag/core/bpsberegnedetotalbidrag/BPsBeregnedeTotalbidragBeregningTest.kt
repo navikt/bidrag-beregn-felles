@@ -66,6 +66,6 @@ internal class BPsBeregnedeTotalbidragBeregningTest {
         )
         val resultat = bPsBeregnedeTotalbidrag.beregn(grunnlag)
 
-        assertThat(resultat.bPsBeregnedeTotalbidrag).isEqualTo(BigDecimal.valueOf(10775))
+        assertThat(resultat.bPsBeregnedeTotalbidrag).isEqualTo(BigDecimal.valueOf(10775.00).setScale(2))
     }
 }

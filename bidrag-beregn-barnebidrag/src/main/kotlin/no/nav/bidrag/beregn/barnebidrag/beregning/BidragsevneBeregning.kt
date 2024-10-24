@@ -51,13 +51,13 @@ internal object BidragsevneBeregning {
             .coerceAtLeast(BigDecimal.ZERO)
 
         return BidragsevneBeregningResultat(
-            bidragsevne = bidragsevne.setScale(0, RoundingMode.HALF_UP),
-            minstefradrag = minstefradrag.setScale(0, RoundingMode.HALF_UP),
-            skattAlminneligInntekt = skattAlminneligInntekt.setScale(0, RoundingMode.HALF_UP),
-            trygdeavgift = trygdeavgift.setScale(0, RoundingMode.HALF_UP),
-            trinnskatt = trinnskatt.setScale(0, RoundingMode.HALF_UP),
-            sumSkatt = sumSkatt.setScale(0, RoundingMode.HALF_UP),
-            underholdBarnEgenHusstand = underholdBarnEgenHusstand.setScale(0, RoundingMode.HALF_UP),
+            bidragsevne = bidragsevne.setScale(2, RoundingMode.HALF_UP),
+            minstefradrag = minstefradrag.setScale(2, RoundingMode.HALF_UP),
+            skattAlminneligInntekt = skattAlminneligInntekt.setScale(2, RoundingMode.HALF_UP),
+            trygdeavgift = trygdeavgift.setScale(2, RoundingMode.HALF_UP),
+            trinnskatt = trinnskatt.setScale(2, RoundingMode.HALF_UP),
+            sumSkatt = sumSkatt.setScale(2, RoundingMode.HALF_UP),
+            underholdBarnEgenHusstand = underholdBarnEgenHusstand.setScale(2, RoundingMode.HALF_UP),
             grunnlagsreferanseListe = listOf(
                 grunnlag.inntektBPBeregningGrunnlag.referanse,
                 grunnlag.barnIHusstandenBeregningGrunnlag.referanse,
