@@ -70,7 +70,7 @@ class BPsBeregnedeTotalbidragBeregning : FellesBeregning() {
         }
 
         return ResultatBeregning(
-            bPsBeregnedeTotalbidrag = bPsBeregnedeTotalbidrag,
+            bPsBeregnedeTotalbidrag = bPsBeregnedeTotalbidrag.setScale(2, RoundingMode.HALF_UP),
             beregnetBidragPerBarn = beregnetBidragPerBarnListe,
             sjablonListe = byggSjablonResultatListe(sjablonNavnVerdiMap = sjablonNavnVerdiMap, sjablonPeriodeListe = grunnlag.sjablonPeriodeListe),
 

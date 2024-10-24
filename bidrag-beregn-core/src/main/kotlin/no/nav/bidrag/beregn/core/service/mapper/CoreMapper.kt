@@ -119,7 +119,7 @@ abstract class CoreMapper {
                             datoFom = beregnGrunnlag.periode.toDatoperiode().fom,
                             datoTil = beregnGrunnlag.periode.toDatoperiode().til,
                         ),
-                        beløp = BigDecimal.ZERO,
+                        beløp = BigDecimal.valueOf(0.00).setScale(2),
                         grunnlagsreferanseListe = emptyList(),
                     ),
                 )
@@ -287,7 +287,7 @@ abstract class CoreMapper {
                     gjelderReferanse = gjelderReferanse,
                 ),
                 periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
-                beløp = filtrertGrunnlagsliste.sumOf { it.beløp },
+                beløp = filtrertGrunnlagsliste.sumOf { it.beløp }.setScale(2),
                 grunnlagsreferanseListe = filtrertGrunnlagsliste.map { it.referanse }.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it }),
             )
         }

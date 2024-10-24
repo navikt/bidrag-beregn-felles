@@ -55,7 +55,7 @@ internal class BidragsevneBeregningTest {
         )
         val resultat = bidragsevneberegning.beregn(grunnlag)
 
-        assertThat(resultat.beløp).isEqualTo(BigDecimal.ZERO)
+        assertThat(resultat.beløp).isEqualTo(BigDecimal.valueOf(0.00).setScale(2))
     }
 
     @DisplayName("Beregning med inntekt under skattefri grense gir redusert bidragsevne")

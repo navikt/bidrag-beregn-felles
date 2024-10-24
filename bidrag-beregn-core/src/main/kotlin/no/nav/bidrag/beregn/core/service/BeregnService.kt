@@ -61,7 +61,7 @@ abstract class BeregnService {
                 innhold = POJONode(
                     DelberegningSumInntekt(
                         periode = ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil),
-                        totalinntekt = it.beløp,
+                        totalinntekt = it.beløp.setScale(2),
                         kontantstøtte = summerInntekter(
                             beregnGrunnlag = beregnGrunnlag,
                             grunnlagsreferanseListe = it.grunnlagsreferanseListe,
@@ -144,9 +144,9 @@ abstract class BeregnService {
                                 justerKapitalinntekt(
                                     beløp = it.innhold.beløp,
                                     innslagKapitalinntektSjablonverdi = innslagKapitalinntektSjablonverdi,
-                                )
+                                ).setScale(2)
                             } else {
-                                it.innhold.beløp
+                                it.innhold.beløp.setScale(2)
                             },
                         )
                     }

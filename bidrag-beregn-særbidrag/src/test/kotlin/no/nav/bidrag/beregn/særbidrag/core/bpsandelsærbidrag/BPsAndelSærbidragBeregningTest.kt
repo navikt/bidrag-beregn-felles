@@ -67,7 +67,7 @@ class BPsAndelSærbidragBeregningTest {
         val resultat = bPsAndelSærbidragBeregning.beregn(grunnlag)
 
         assertAll(
-            { assertThat(resultat.endeligAndelFaktor).isEqualTo(BigDecimal.valueOf(0.833333333333)) },
+            { assertThat(resultat.endeligAndelFaktor).isEqualTo(BigDecimal.valueOf(0.8333333333).setScale(10)) },
             { assertThat(resultat.andelBeløp).isGreaterThan(BigDecimal.ZERO) },
             { assertThat(resultat.barnetErSelvforsørget).isFalse() },
         )
@@ -86,8 +86,8 @@ class BPsAndelSærbidragBeregningTest {
         val resultat = bPsAndelSærbidragBeregning.beregn(grunnlag)
 
         assertAll(
-            { assertThat(resultat.endeligAndelFaktor).isEqualTo(BigDecimal.ZERO) },
-            { assertThat(resultat.andelBeløp).isEqualTo(BigDecimal.ZERO) },
+            { assertThat(resultat.endeligAndelFaktor).isEqualTo(BigDecimal.valueOf(0.0000000000).setScale(10)) },
+            { assertThat(resultat.andelBeløp).isEqualTo(BigDecimal.valueOf(0.00).setScale(2)) },
             { assertThat(resultat.barnetErSelvforsørget).isTrue() },
         )
     }

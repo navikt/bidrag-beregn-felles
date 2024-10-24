@@ -56,10 +56,10 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
     @DisplayName("BP Andel underholdskostnad - eksempel 1 - Barnet er selvforsørget")
     fun testBpAndelUnderholdskostnad_Eksempel01() {
         filnavn = "src/test/resources/testfiler/bpandelunderholdskostnad/bpandel_eksempel1.json"
-        forventetEndeligAndelFaktor = BigDecimal.ZERO
-        forventetAndelBeløp = BigDecimal.ZERO
-        forventetBeregnetAndelFaktor = BigDecimal.ZERO
-        forventetBarnEndeligInntekt = BigDecimal.valueOf(200000)
+        forventetEndeligAndelFaktor = BigDecimal.valueOf(0.0000000000).setScale(10)
+        forventetAndelBeløp = BigDecimal.valueOf(0.00).setScale(2)
+        forventetBeregnetAndelFaktor = BigDecimal.valueOf(0.0000000000).setScale(10)
+        forventetBarnEndeligInntekt = BigDecimal.valueOf(200000.00).setScale(2)
         forventetBarnetErSelvforsørget = true
         forventetAntallInntektRapporteringPeriodeBP = 1
         forventetAntallInntektRapporteringPeriodeBM = 1
@@ -71,10 +71,10 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
     @DisplayName("BP Andel underholdskostnad - eksempel 2 - BPs andel er høyere enn fem sjettedeler")
     fun testBpAndelUnderholdskostnad_Eksempel02() {
         filnavn = "src/test/resources/testfiler/bpandelunderholdskostnad/bpandel_eksempel2.json"
-        forventetEndeligAndelFaktor = BigDecimal.valueOf(0.8333333333)
-        forventetAndelBeløp = BigDecimal.valueOf(7500)
+        forventetEndeligAndelFaktor = BigDecimal.valueOf(0.8333333333).setScale(10)
+        forventetAndelBeløp = BigDecimal.valueOf(7500.00).setScale(2)
         forventetBeregnetAndelFaktor = BigDecimal.valueOf(0.8765010080).setScale(10)
-        forventetBarnEndeligInntekt = BigDecimal.valueOf(40900)
+        forventetBarnEndeligInntekt = BigDecimal.valueOf(40900.00).setScale(2)
         forventetBarnetErSelvforsørget = false
         forventetAntallInntektRapporteringPeriodeBP = 1
         forventetAntallInntektRapporteringPeriodeBM = 1
@@ -87,9 +87,9 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
     fun testBpAndelUnderholdskostnad_Eksempel03() {
         filnavn = "src/test/resources/testfiler/bpandelunderholdskostnad/bpandel_eksempel3.json"
         forventetEndeligAndelFaktor = BigDecimal.valueOf(0.7801529100).setScale(10)
-        forventetAndelBeløp = BigDecimal.valueOf(7021)
+        forventetAndelBeløp = BigDecimal.valueOf(7021.38).setScale(2)
         forventetBeregnetAndelFaktor = BigDecimal.valueOf(0.7801529100).setScale(10)
-        forventetBarnEndeligInntekt = BigDecimal.valueOf(40900)
+        forventetBarnEndeligInntekt = BigDecimal.valueOf(40900.00).setScale(2)
         forventetBarnetErSelvforsørget = false
         forventetAntallInntektRapporteringPeriodeBP = 1
         forventetAntallInntektRapporteringPeriodeBM = 1
@@ -102,9 +102,9 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
     fun testBpAndelUnderholdskostnad_Eksempel04() {
         filnavn = "src/test/resources/testfiler/bpandelunderholdskostnad/bpandel_eksempel4.json"
         forventetEndeligAndelFaktor = BigDecimal.valueOf(0.6250000000).setScale(10)
-        forventetAndelBeløp = BigDecimal.valueOf(5625)
+        forventetAndelBeløp = BigDecimal.valueOf(5625.00).setScale(2)
         forventetBeregnetAndelFaktor = BigDecimal.valueOf(0.6250000000).setScale(10)
-        forventetBarnEndeligInntekt = BigDecimal.ZERO
+        forventetBarnEndeligInntekt = BigDecimal.valueOf(0.00).setScale(2)
         forventetBarnetErSelvforsørget = false
         forventetAntallInntektRapporteringPeriodeBP = 1
         forventetAntallInntektRapporteringPeriodeBM = 1
@@ -117,9 +117,9 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
     fun testBpAndelUnderholdskostnad_Eksempel05() {
         filnavn = "src/test/resources/testfiler/bpandelunderholdskostnad/bpandel_eksempel5.json"
         forventetEndeligAndelFaktor = BigDecimal.valueOf(0.6250000000).setScale(10)
-        forventetAndelBeløp = BigDecimal.valueOf(5625)
+        forventetAndelBeløp = BigDecimal.valueOf(5625.00).setScale(2)
         forventetBeregnetAndelFaktor = BigDecimal.valueOf(0.6250000000).setScale(10)
-        forventetBarnEndeligInntekt = BigDecimal.ZERO
+        forventetBarnEndeligInntekt = BigDecimal.valueOf(0.00).setScale(2)
         forventetBarnetErSelvforsørget = false
         forventetAntallInntektRapporteringPeriodeBP = 1
         forventetAntallInntektRapporteringPeriodeBM = 1
@@ -132,9 +132,9 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
     fun testBpAndelUnderholdskostnad_Eksempel06() {
         filnavn = "src/test/resources/testfiler/bpandelunderholdskostnad/bpandel_eksempel6.json"
         forventetEndeligAndelFaktor = BigDecimal.valueOf(0.0000000000).setScale(10)
-        forventetAndelBeløp = BigDecimal.ZERO
+        forventetAndelBeløp = BigDecimal.valueOf(0.00).setScale(2)
         forventetBeregnetAndelFaktor = BigDecimal.valueOf(0.0000000000).setScale(10)
-        forventetBarnEndeligInntekt = BigDecimal.ZERO
+        forventetBarnEndeligInntekt = BigDecimal.valueOf(0.00).setScale(2)
         forventetBarnetErSelvforsørget = false
         forventetAntallInntektRapporteringPeriodeBP = 0
         forventetAntallInntektRapporteringPeriodeBM = 1
@@ -345,45 +345,117 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
 
             // Resultat
             { assertThat(bpAndelUnderholdskostnadResultatListe[0].periode).isEqualTo(ÅrMånedsperiode("2023-09", "2023-11")) },
-            { assertThat(bpAndelUnderholdskostnadResultatListe[0].endeligAndelFaktor).isEqualTo(BigDecimal.ZERO) },
-            { assertThat(bpAndelUnderholdskostnadResultatListe[0].andelBeløp).isEqualTo(BigDecimal.ZERO) },
-            { assertThat(bpAndelUnderholdskostnadResultatListe[0].beregnetAndelFaktor).isEqualTo(BigDecimal.ZERO) },
-            { assertThat(bpAndelUnderholdskostnadResultatListe[0].barnEndeligInntekt).isEqualTo(BigDecimal.valueOf(200000)) },
+            {
+                assertThat(bpAndelUnderholdskostnadResultatListe[0].endeligAndelFaktor)
+                    .isEqualTo(BigDecimal.valueOf(0.0000000000).setScale(10))
+            },
+            {
+                assertThat(bpAndelUnderholdskostnadResultatListe[0].andelBeløp)
+                    .isEqualTo(BigDecimal.valueOf(0.00).setScale(2))
+            },
+            {
+                assertThat(bpAndelUnderholdskostnadResultatListe[0].beregnetAndelFaktor)
+                    .isEqualTo(BigDecimal.valueOf(0.0000000000).setScale(10))
+            },
+            {
+                assertThat(bpAndelUnderholdskostnadResultatListe[0].barnEndeligInntekt)
+                    .isEqualTo(BigDecimal.valueOf(200000.00).setScale(2))
+            },
             { assertThat(bpAndelUnderholdskostnadResultatListe[0].barnetErSelvforsørget).isTrue() },
 
             { assertThat(bpAndelUnderholdskostnadResultatListe[1].periode).isEqualTo(ÅrMånedsperiode("2023-11", "2024-01")) },
-            { assertThat(bpAndelUnderholdskostnadResultatListe[1].endeligAndelFaktor).isEqualTo(BigDecimal.valueOf(0.8333333333)) },
-            { assertThat(bpAndelUnderholdskostnadResultatListe[1].andelBeløp).isEqualTo(BigDecimal.valueOf(7500)) },
-            { assertThat(bpAndelUnderholdskostnadResultatListe[1].beregnetAndelFaktor).isEqualTo(BigDecimal.valueOf(0.8744316194)) },
-            { assertThat(bpAndelUnderholdskostnadResultatListe[1].barnEndeligInntekt).isEqualTo(BigDecimal.valueOf(43600)) },
+            {
+                assertThat(bpAndelUnderholdskostnadResultatListe[1].endeligAndelFaktor)
+                    .isEqualTo(BigDecimal.valueOf(0.8333333333).setScale(10))
+            },
+            {
+                assertThat(bpAndelUnderholdskostnadResultatListe[1].andelBeløp)
+                    .isEqualTo(BigDecimal.valueOf(7500.00).setScale(2))
+            },
+            {
+                assertThat(bpAndelUnderholdskostnadResultatListe[1].beregnetAndelFaktor)
+                    .isEqualTo(BigDecimal.valueOf(0.8744316194).setScale(10))
+            },
+            {
+                assertThat(bpAndelUnderholdskostnadResultatListe[1].barnEndeligInntekt)
+                    .isEqualTo(BigDecimal.valueOf(43600.00).setScale(2))
+            },
             { assertThat(bpAndelUnderholdskostnadResultatListe[1].barnetErSelvforsørget).isFalse() },
 
             { assertThat(bpAndelUnderholdskostnadResultatListe[2].periode).isEqualTo(ÅrMånedsperiode("2024-01", "2024-05")) },
-            { assertThat(bpAndelUnderholdskostnadResultatListe[2].endeligAndelFaktor).isEqualTo(BigDecimal.valueOf(0.8333333333)) },
-            { assertThat(bpAndelUnderholdskostnadResultatListe[2].andelBeløp).isEqualTo(BigDecimal.valueOf(7500)) },
-            { assertThat(bpAndelUnderholdskostnadResultatListe[2].beregnetAndelFaktor).isEqualTo(BigDecimal.valueOf(0.8333333333)) },
-            { assertThat(bpAndelUnderholdskostnadResultatListe[2].barnEndeligInntekt).isEqualTo(BigDecimal.ZERO) },
+            {
+                assertThat(bpAndelUnderholdskostnadResultatListe[2].endeligAndelFaktor)
+                    .isEqualTo(BigDecimal.valueOf(0.8333333333).setScale(10))
+            },
+            {
+                assertThat(bpAndelUnderholdskostnadResultatListe[2].andelBeløp)
+                    .isEqualTo(BigDecimal.valueOf(7500.00).setScale(2))
+            },
+            {
+                assertThat(bpAndelUnderholdskostnadResultatListe[2].beregnetAndelFaktor)
+                    .isEqualTo(BigDecimal.valueOf(0.8333333333).setScale(10))
+            },
+            {
+                assertThat(bpAndelUnderholdskostnadResultatListe[2].barnEndeligInntekt)
+                    .isEqualTo(BigDecimal.valueOf(0.00).setScale(2))
+            },
             { assertThat(bpAndelUnderholdskostnadResultatListe[2].barnetErSelvforsørget).isFalse() },
 
             { assertThat(bpAndelUnderholdskostnadResultatListe[3].periode).isEqualTo(ÅrMånedsperiode("2024-05", "2024-07")) },
-            { assertThat(bpAndelUnderholdskostnadResultatListe[3].endeligAndelFaktor).isEqualTo(BigDecimal.valueOf(0.8333333333)) },
-            { assertThat(bpAndelUnderholdskostnadResultatListe[3].andelBeløp).isEqualTo(BigDecimal.valueOf(6667)) },
-            { assertThat(bpAndelUnderholdskostnadResultatListe[3].beregnetAndelFaktor).isEqualTo(BigDecimal.valueOf(0.8333333333)) },
-            { assertThat(bpAndelUnderholdskostnadResultatListe[3].barnEndeligInntekt).isEqualTo(BigDecimal.ZERO) },
+            {
+                assertThat(bpAndelUnderholdskostnadResultatListe[3].endeligAndelFaktor)
+                    .isEqualTo(BigDecimal.valueOf(0.8333333333).setScale(10))
+            },
+            {
+                assertThat(bpAndelUnderholdskostnadResultatListe[3].andelBeløp)
+                    .isEqualTo(BigDecimal.valueOf(6666.67).setScale(2))
+            },
+            {
+                assertThat(bpAndelUnderholdskostnadResultatListe[3].beregnetAndelFaktor)
+                    .isEqualTo(BigDecimal.valueOf(0.8333333333).setScale(10))
+            },
+            {
+                assertThat(bpAndelUnderholdskostnadResultatListe[3].barnEndeligInntekt)
+                    .isEqualTo(BigDecimal.valueOf(0.00).setScale(2))
+            },
             { assertThat(bpAndelUnderholdskostnadResultatListe[3].barnetErSelvforsørget).isFalse() },
 
             { assertThat(bpAndelUnderholdskostnadResultatListe[4].periode).isEqualTo(ÅrMånedsperiode("2024-07", "2024-09")) },
-            { assertThat(bpAndelUnderholdskostnadResultatListe[4].endeligAndelFaktor).isEqualTo(BigDecimal.valueOf(0.8333333333)) },
-            { assertThat(bpAndelUnderholdskostnadResultatListe[4].andelBeløp).isEqualTo(BigDecimal.valueOf(6667)) },
-            { assertThat(bpAndelUnderholdskostnadResultatListe[4].beregnetAndelFaktor).isEqualTo(BigDecimal.valueOf(0.8333333333)) },
-            { assertThat(bpAndelUnderholdskostnadResultatListe[4].barnEndeligInntekt).isEqualTo(BigDecimal.ZERO) },
+            {
+                assertThat(bpAndelUnderholdskostnadResultatListe[4].endeligAndelFaktor)
+                    .isEqualTo(BigDecimal.valueOf(0.8333333333).setScale(10))
+            },
+            {
+                assertThat(bpAndelUnderholdskostnadResultatListe[4].andelBeløp)
+                    .isEqualTo(BigDecimal.valueOf(6666.67).setScale(2))
+            },
+            {
+                assertThat(bpAndelUnderholdskostnadResultatListe[4].beregnetAndelFaktor)
+                    .isEqualTo(BigDecimal.valueOf(0.8333333333).setScale(10))
+            },
+            {
+                assertThat(bpAndelUnderholdskostnadResultatListe[4].barnEndeligInntekt)
+                    .isEqualTo(BigDecimal.valueOf(0.00).setScale(2))
+            },
             { assertThat(bpAndelUnderholdskostnadResultatListe[4].barnetErSelvforsørget).isFalse() },
 
             { assertThat(bpAndelUnderholdskostnadResultatListe[5].periode).isEqualTo(ÅrMånedsperiode("2024-09", "2024-10")) },
-            { assertThat(bpAndelUnderholdskostnadResultatListe[5].endeligAndelFaktor).isEqualTo(BigDecimal.valueOf(0.5866823115)) },
-            { assertThat(bpAndelUnderholdskostnadResultatListe[5].andelBeløp).isEqualTo(BigDecimal.valueOf(4693)) },
-            { assertThat(bpAndelUnderholdskostnadResultatListe[5].beregnetAndelFaktor).isEqualTo(BigDecimal.valueOf(0.5866823115)) },
-            { assertThat(bpAndelUnderholdskostnadResultatListe[5].barnEndeligInntekt).isEqualTo(BigDecimal.valueOf(40900)) },
+            {
+                assertThat(bpAndelUnderholdskostnadResultatListe[5].endeligAndelFaktor)
+                    .isEqualTo(BigDecimal.valueOf(0.5866823115).setScale(10))
+            },
+            {
+                assertThat(bpAndelUnderholdskostnadResultatListe[5].andelBeløp)
+                    .isEqualTo(BigDecimal.valueOf(4693.46).setScale(2))
+            },
+            {
+                assertThat(bpAndelUnderholdskostnadResultatListe[5].beregnetAndelFaktor)
+                    .isEqualTo(BigDecimal.valueOf(0.5866823115).setScale(10))
+            },
+            {
+                assertThat(bpAndelUnderholdskostnadResultatListe[5].barnEndeligInntekt)
+                    .isEqualTo(BigDecimal.valueOf(40900.00).setScale(2))
+            },
             { assertThat(bpAndelUnderholdskostnadResultatListe[5].barnetErSelvforsørget).isFalse() },
 
             // Grunnlag

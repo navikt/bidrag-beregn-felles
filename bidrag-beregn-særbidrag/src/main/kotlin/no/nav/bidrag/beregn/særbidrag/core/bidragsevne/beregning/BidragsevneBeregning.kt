@@ -14,7 +14,6 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevn
 import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode
-import java.util.HashMap
 
 class BidragsevneBeregning : FellesBeregning() {
 
@@ -81,20 +80,20 @@ class BidragsevneBeregning : FellesBeregning() {
 
         // Finner månedlig beløp for bidragsevne
         val månedligBidragsevne = maxOf(
-            foreløpigBidragsevne.divide(bigDecimal12, mathContext).setScale(0, RoundingMode.HALF_UP),
+            foreløpigBidragsevne.divide(bigDecimal12, mathContext).setScale(2, RoundingMode.HALF_UP),
             BigDecimal.ZERO,
         )
 
         return ResultatBeregning(
-            beløp = månedligBidragsevne,
+            beløp = månedligBidragsevne.setScale(2, RoundingMode.HALF_UP),
             skatt = DelberegningBidragsevne.Skatt(
-                minstefradrag = minstefradrag.setScale(0, RoundingMode.HALF_UP),
-                skattAlminneligInntekt = skattAlminnelig.setScale(0, RoundingMode.HALF_UP),
-                trinnskatt = skattetrinnBeløp.setScale(0, RoundingMode.HALF_UP),
-                trygdeavgift = trygdeavgift.setScale(0, RoundingMode.HALF_UP),
-                sumSkatt = skattAlminnelig.add(skattetrinnBeløp).add(trygdeavgift).setScale(0, RoundingMode.HALF_UP),
+                minstefradrag = minstefradrag.setScale(2, RoundingMode.HALF_UP),
+                skattAlminneligInntekt = skattAlminnelig.setScale(2, RoundingMode.HALF_UP),
+                trinnskatt = skattetrinnBeløp.setScale(2, RoundingMode.HALF_UP),
+                trygdeavgift = trygdeavgift.setScale(2, RoundingMode.HALF_UP),
+                sumSkatt = skattAlminnelig.add(skattetrinnBeløp).add(trygdeavgift).setScale(2, RoundingMode.HALF_UP),
             ),
-            underholdBarnEgenHusstand = underholdEgneBarn.setScale(0, RoundingMode.HALF_UP),
+            underholdBarnEgenHusstand = underholdEgneBarn.setScale(2, RoundingMode.HALF_UP),
             sjablonListe = byggSjablonResultatListe(sjablonNavnVerdiMap = sjablonNavnVerdiMap, sjablonPeriodeListe = grunnlag.sjablonListe),
         )
     }
@@ -106,7 +105,7 @@ class BidragsevneBeregning : FellesBeregning() {
     ): BigDecimal = minOf(
         inntekt.multiply(minstefradragInntektSjablonProsent.divide(BigDecimal.valueOf(100), MathContext(2, RoundingMode.HALF_UP))),
         minstefradragInntektSjablonBeløp,
-    ).setScale(0, RoundingMode.HALF_UP)
+    ).setScale(2, RoundingMode.HALF_UP)
 
     fun beregnSkattetrinnBeløp(grunnlag: GrunnlagBeregning, inntekt: BigDecimal): BigDecimal {
         val sortertTrinnvisSkattesatsListe = SjablonUtil.hentTrinnvisSkattesats(
@@ -135,10 +134,10 @@ class BidragsevneBeregning : FellesBeregning() {
             val skattbarInntekt = inntekt - sortertTrinnvisSkattesatsListe[indeks - 1].inntektGrense
             val skattesats = sortertTrinnvisSkattesatsListe[indeks - 1].sats
 
-            samletSkattetrinnBeløp += (skattbarInntekt * skattesats / BigDecimal.valueOf(100)).setScale(1, RoundingMode.HALF_UP)
+            samletSkattetrinnBeløp += (skattbarInntekt * skattesats / BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP)
         }
 
-        return samletSkattetrinnBeløp.setScale(0, RoundingMode.HALF_UP)
+        return samletSkattetrinnBeløp.setScale(2, RoundingMode.HALF_UP)
     }
 
     // Henter sjablonverdier

@@ -8,7 +8,6 @@ import no.nav.bidrag.beregn.særbidrag.core.felles.FellesBeregning
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import java.math.BigDecimal
 import java.math.RoundingMode
-import java.util.HashMap
 
 class BPsAndelSærbidragBeregning : FellesBeregning() {
     fun beregn(grunnlag: GrunnlagBeregning): ResultatBeregning {
@@ -30,16 +29,16 @@ class BPsAndelSærbidragBeregning : FellesBeregning() {
 
         if (!barnetErSelvforsorget) {
             inntektSB = (inntektSB - forskuddssats.multiply(BigDecimal.valueOf(30))).coerceAtLeast(BigDecimal.ZERO)
-            beregnetAndelFaktor = inntektBP.divide(inntektBP + inntektBM + inntektSB, 4, RoundingMode.HALF_UP)
+            beregnetAndelFaktor = inntektBP.divide(inntektBP + inntektBM + inntektSB, 10, RoundingMode.HALF_UP)
             endeligAndelFaktor = beregnetAndelFaktor.coerceAtMost(BigDecimal.valueOf(0.833333333333))
-            andelBeløp = (grunnlag.utgift.beløp * endeligAndelFaktor).setScale(0, RoundingMode.HALF_UP)
+            andelBeløp = (grunnlag.utgift.beløp * endeligAndelFaktor).setScale(2, RoundingMode.HALF_UP)
         }
 
         return ResultatBeregning(
-            endeligAndelFaktor = endeligAndelFaktor,
-            andelBeløp = andelBeløp,
-            beregnetAndelFaktor = beregnetAndelFaktor,
-            barnEndeligInntekt = inntektSB,
+            endeligAndelFaktor = endeligAndelFaktor.setScale(10, RoundingMode.HALF_UP),
+            andelBeløp = andelBeløp.setScale(2, RoundingMode.HALF_UP),
+            beregnetAndelFaktor = beregnetAndelFaktor.setScale(10, RoundingMode.HALF_UP),
+            barnEndeligInntekt = inntektSB.setScale(2, RoundingMode.HALF_UP),
             barnetErSelvforsørget = barnetErSelvforsorget,
             sjablonListe = byggSjablonResultatListe(sjablonNavnVerdiMap = sjablonNavnVerdiMap, sjablonPeriodeListe = grunnlag.sjablonListe),
         )
