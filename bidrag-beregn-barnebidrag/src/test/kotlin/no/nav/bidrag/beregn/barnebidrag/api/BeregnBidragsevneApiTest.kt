@@ -35,6 +35,13 @@ internal class BeregnBidragsevneApiTest {
     private lateinit var forventetTrygdeavgift: BigDecimal
     private lateinit var forventetSumSkatt: BigDecimal
     private lateinit var forventetUnderholdBarnEgenHusstand: BigDecimal
+    private var forventetAntallInntektRapporteringPeriodeBP: Int = 1
+    private var forventetAntallDelberegningSumInntektPeriodeBP: Int = 1
+    private var forventetAntallDelberegningBarnIHusstandPeriode: Int = 1
+    private var forventetAntallDelberegningVoksneIHusstandPeriode: Int = 1
+    private var forventetAntallBostatusPeriodeBP: Int = 1
+    private var forventetAntallBostatusPeriodeSB: Int = 1
+    private var forventetAntallSjablon: Int = 12
 
     @Mock
     private lateinit var beregnBarnebidragService: BeregnBarnebidragService
@@ -298,9 +305,31 @@ internal class BeregnBidragsevneApiTest {
     }
 
     @Test
+    @DisplayName("Bidragsevne - eksempel 19 - BP's inntekt mangler")
+    fun testBidragsevne_Eksempel19() {
+        filnavn = "src/test/resources/testfiler/bidragsevne/bidragsevne_eksempel19.json"
+        forventetBidragsevne = BigDecimal.ZERO
+        forventetMinstefradrag = BigDecimal.ZERO
+        forventetSkattAlminneligInntekt = BigDecimal.ZERO
+        forventetTrinnskatt = BigDecimal.ZERO
+        forventetTrygdeavgift = BigDecimal.ZERO
+        forventetSumSkatt = BigDecimal.ZERO
+        forventetUnderholdBarnEgenHusstand = BigDecimal.ZERO
+        forventetAntallInntektRapporteringPeriodeBP = 0
+        utførBeregningerOgEvaluerResultatBidragsevne()
+    }
+
+    @Test
     @DisplayName("Bidragsevne - eksempel med flere perioder")
     fun testBidragsevne_Eksempel_Flere_Perioder() {
         filnavn = "src/test/resources/testfiler/bidragsevne/bidragsevne_eksempel_flere_perioder.json"
+        forventetAntallInntektRapporteringPeriodeBP = 2
+        forventetAntallDelberegningSumInntektPeriodeBP = 2
+        forventetAntallDelberegningBarnIHusstandPeriode = 3
+        forventetAntallDelberegningVoksneIHusstandPeriode = 2
+        forventetAntallBostatusPeriodeBP = 2
+        forventetAntallBostatusPeriodeSB = 2
+        forventetAntallSjablon = 19
         utførBeregningerOgEvaluerResultatBidragsevneFlerePerioder()
     }
 
@@ -323,11 +352,53 @@ internal class BeregnBidragsevneApiTest {
                 )
             }
 
+        val referanseBP = request.grunnlagListe
+            .filter { it.type == Grunnlagstype.PERSON_BIDRAGSPLIKTIG }
+            .map { it.referanse }
+            .first()
+
+        val referanseSB = request.søknadsbarnReferanse
+
+        val antallInntektRapporteringPeriodeBP = bidragsevneResultat
+            .filter { it.type == Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE }
+            .filter { it.gjelderReferanse == referanseBP }
+            .size
+
+        val antallDelberegningSumInntektPeriodeBP = bidragsevneResultat
+            .filter { it.type == Grunnlagstype.DELBEREGNING_SUM_INNTEKT }
+            .filter { it.gjelderReferanse == referanseBP }
+            .size
+
+        val antallDelberegningBarnIHusstandPeriode = bidragsevneResultat
+            .filter { it.type == Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND }
+            .filter { it.gjelderReferanse == referanseBP }
+            .size
+
+        val antallDelberegningVoksneIHusstandPeriode = bidragsevneResultat
+            .filter { it.type == Grunnlagstype.DELBEREGNING_VOKSNE_I_HUSSTAND }
+            .filter { it.gjelderReferanse == referanseBP }
+            .size
+
+        val antallBostatusPeriodeBP = bidragsevneResultat
+            .filter { it.type == Grunnlagstype.BOSTATUS_PERIODE }
+            .filter { it.gjelderReferanse == referanseBP }
+            .size
+
+        val antallBostatusPeriodeSB = bidragsevneResultat
+            .filter { it.type == Grunnlagstype.BOSTATUS_PERIODE }
+            .filter { it.gjelderReferanse == referanseSB }
+            .size
+
+        val antallSjablon = bidragsevneResultat
+            .filter { it.type == Grunnlagstype.SJABLON }
+            .size
+
         assertAll(
             { assertThat(bidragsevneResultat).isNotNull },
             { assertThat(bidragsevneResultatListe).isNotNull },
             { assertThat(bidragsevneResultatListe).hasSize(1) },
 
+            // Resultat
             { assertThat(bidragsevneResultatListe[0].periode).isEqualTo(ÅrMånedsperiode("2024-08", "2024-09")) },
             { assertThat(bidragsevneResultatListe[0].beløp).isEqualTo(forventetBidragsevne) },
             { assertThat(bidragsevneResultatListe[0].skatt.minstefradrag).isEqualTo(forventetMinstefradrag) },
@@ -336,6 +407,15 @@ internal class BeregnBidragsevneApiTest {
             { assertThat(bidragsevneResultatListe[0].skatt.trinnskatt).isEqualTo(forventetTrinnskatt) },
             { assertThat(bidragsevneResultatListe[0].skatt.sumSkatt).isEqualTo(forventetSumSkatt) },
             { assertThat(bidragsevneResultatListe[0].underholdBarnEgenHusstand).isEqualTo(forventetUnderholdBarnEgenHusstand) },
+
+            // Grunnlag
+            { assertThat(antallInntektRapporteringPeriodeBP).isEqualTo(forventetAntallInntektRapporteringPeriodeBP) },
+            { assertThat(antallDelberegningSumInntektPeriodeBP).isEqualTo(1) },
+            { assertThat(antallDelberegningBarnIHusstandPeriode).isEqualTo(1) },
+            { assertThat(antallDelberegningVoksneIHusstandPeriode).isEqualTo(1) },
+            { assertThat(antallBostatusPeriodeBP).isEqualTo(1) },
+            { assertThat(antallBostatusPeriodeSB).isEqualTo(1) },
+            { assertThat(antallSjablon).isEqualTo(12) },
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
@@ -361,11 +441,53 @@ internal class BeregnBidragsevneApiTest {
                 )
             }
 
+        val referanseBP = request.grunnlagListe
+            .filter { it.type == Grunnlagstype.PERSON_BIDRAGSPLIKTIG }
+            .map { it.referanse }
+            .first()
+
+        val referanseSB = request.søknadsbarnReferanse
+
+        val antallInntektRapporteringPeriodeBP = bidragsevneResultat
+            .filter { it.type == Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE }
+            .filter { it.gjelderReferanse == referanseBP }
+            .size
+
+        val antallDelberegningSumInntektPeriodeBP = bidragsevneResultat
+            .filter { it.type == Grunnlagstype.DELBEREGNING_SUM_INNTEKT }
+            .filter { it.gjelderReferanse == referanseBP }
+            .size
+
+        val antallDelberegningBarnIHusstandPeriode = bidragsevneResultat
+            .filter { it.type == Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND }
+            .filter { it.gjelderReferanse == referanseBP }
+            .size
+
+        val antallDelberegningVoksneIHusstandPeriode = bidragsevneResultat
+            .filter { it.type == Grunnlagstype.DELBEREGNING_VOKSNE_I_HUSSTAND }
+            .filter { it.gjelderReferanse == referanseBP }
+            .size
+
+        val antallBostatusPeriodeBP = bidragsevneResultat
+            .filter { it.type == Grunnlagstype.BOSTATUS_PERIODE }
+            .filter { it.gjelderReferanse == referanseBP }
+            .size
+
+        val antallBostatusPeriodeSB = bidragsevneResultat
+            .filter { it.type == Grunnlagstype.BOSTATUS_PERIODE }
+            .filter { it.gjelderReferanse == referanseSB }
+            .size
+
+        val antallSjablon = bidragsevneResultat
+            .filter { it.type == Grunnlagstype.SJABLON }
+            .size
+
         assertAll(
             { assertThat(bidragsevneResultat).isNotNull },
             { assertThat(bidragsevneResultatListe).isNotNull },
             { assertThat(bidragsevneResultatListe).hasSize(7) },
 
+            // Resultat
             { assertThat(bidragsevneResultatListe[0].periode).isEqualTo(ÅrMånedsperiode("2023-09", "2023-11")) },
             { assertThat(bidragsevneResultatListe[0].beløp).isEqualTo(BigDecimal.valueOf(19800)) },
             { assertThat(bidragsevneResultatListe[0].skatt.minstefradrag).isEqualTo(BigDecimal.valueOf(86250)) },
@@ -428,6 +550,15 @@ internal class BeregnBidragsevneApiTest {
             { assertThat(bidragsevneResultatListe[6].skatt.trinnskatt).isEqualTo(BigDecimal.valueOf(63271)) },
             { assertThat(bidragsevneResultatListe[6].skatt.sumSkatt).isEqualTo(BigDecimal.valueOf(322881)) },
             { assertThat(bidragsevneResultatListe[6].underholdBarnEgenHusstand).isEqualTo(BigDecimal.valueOf(76554)) },
+
+            // Grunnlag
+            { assertThat(antallInntektRapporteringPeriodeBP).isEqualTo(forventetAntallInntektRapporteringPeriodeBP) },
+            { assertThat(antallDelberegningSumInntektPeriodeBP).isEqualTo(forventetAntallDelberegningSumInntektPeriodeBP) },
+            { assertThat(antallDelberegningBarnIHusstandPeriode).isEqualTo(forventetAntallDelberegningBarnIHusstandPeriode) },
+            { assertThat(antallDelberegningVoksneIHusstandPeriode).isEqualTo(forventetAntallDelberegningVoksneIHusstandPeriode) },
+            { assertThat(antallBostatusPeriodeBP).isEqualTo(forventetAntallBostatusPeriodeBP) },
+            { assertThat(antallBostatusPeriodeSB).isEqualTo(forventetAntallBostatusPeriodeSB) },
+            { assertThat(antallSjablon).isEqualTo(forventetAntallSjablon) },
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },

@@ -1,28 +1,28 @@
-package no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.beregning
+package no.nav.bidrag.beregn.særbidrag.core.bpsberegnedetotalbidrag.beregning
 
 import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.bo.SjablonNøkkel
 import no.nav.bidrag.beregn.core.bo.SjablonPeriode
 import no.nav.bidrag.beregn.core.util.SjablonUtil
+import no.nav.bidrag.beregn.særbidrag.core.bpsberegnedetotalbidrag.bo.ResultatBeregning
+import no.nav.bidrag.beregn.særbidrag.core.bpsberegnedetotalbidrag.dto.LøpendeBidragGrunnlagCore
 import no.nav.bidrag.beregn.særbidrag.core.felles.FellesBeregning
-import no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.bo.ResultatBeregning
-import no.nav.bidrag.beregn.særbidrag.core.sumløpendebidrag.dto.LøpendeBidragGrunnlagCore
 import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonNøkkelNavn
-import no.nav.bidrag.transport.behandling.felles.grunnlag.BeregningSumLøpendeBidragPerBarn
+import no.nav.bidrag.transport.behandling.felles.grunnlag.BeregnetBidragPerBarn
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.LocalDate
 
-class SumLøpendeBidragBeregning : FellesBeregning() {
+class BPsBeregnedeTotalbidragBeregning : FellesBeregning() {
 
     fun beregn(grunnlag: LøpendeBidragGrunnlagCore): ResultatBeregning {
-        var sumLøpendeBidrag = BigDecimal.ZERO
+        var bPsBeregnedeTotalbidrag = BigDecimal.ZERO
 
-        val beregningPerBarnListe = mutableListOf<BeregningSumLøpendeBidragPerBarn>()
+        val beregnetBidragPerBarnListe = mutableListOf<BeregnetBidragPerBarn>()
 
-        var sjablonNavnVerdiMap = HashMap<String, BigDecimal>()
+        val sjablonNavnVerdiMap = HashMap<String, BigDecimal>()
 
         val sjablonliste =
             grunnlag.sjablonPeriodeListe.filter { it.getPeriode().overlapperMed(Periode(grunnlag.beregnDatoFra, grunnlag.beregnDatoTil)) }
@@ -46,26 +46,32 @@ class SumLøpendeBidragBeregning : FellesBeregning() {
             )
 
             val samværsfradrag = sjablonNavnVerdiMap[SjablonNavn.SAMVÆRSFRADRAG.navn + "_" + it.referanseBarn] ?: BigDecimal.ZERO
-            val resultat = it.løpendeBeløp + samværsfradrag + (beregnetBeløpAvrundet - it.faktiskBeløp)
 
-            beregningPerBarnListe.add(
-                BeregningSumLøpendeBidragPerBarn(
-                    personidentBarn = it.personidentBarn,
+            val reduksjonUnderholdskostnad = (beregnetBeløpAvrundet - it.faktiskBeløp).coerceAtLeast(BigDecimal.ZERO)
+
+            val beregnetBidrag = it.løpendeBeløp + samværsfradrag + reduksjonUnderholdskostnad
+
+            beregnetBidragPerBarnListe.add(
+                BeregnetBidragPerBarn(
+                    gjelderBarn = it.referanseBarn,
                     saksnummer = it.saksnummer,
                     løpendeBeløp = it.løpendeBeløp,
+                    valutakode = it.valutakode,
                     samværsfradrag = samværsfradrag,
+                    samværsklasse = it.samværsklasse,
                     beregnetBeløp = beregnetBeløpAvrundet,
                     faktiskBeløp = it.faktiskBeløp,
-                    resultat = resultat,
+                    reduksjonUnderholdskostnad = reduksjonUnderholdskostnad,
+                    beregnetBidrag = beregnetBidrag,
                 ),
             )
 
-            sumLøpendeBidrag += resultat
+            bPsBeregnedeTotalbidrag += beregnetBidrag
         }
 
         return ResultatBeregning(
-            sumLøpendeBidrag = sumLøpendeBidrag,
-            beregningPerBarn = beregningPerBarnListe,
+            bPsBeregnedeTotalbidrag = bPsBeregnedeTotalbidrag,
+            beregnetBidragPerBarn = beregnetBidragPerBarnListe,
             sjablonListe = byggSjablonResultatListe(sjablonNavnVerdiMap = sjablonNavnVerdiMap, sjablonPeriodeListe = grunnlag.sjablonPeriodeListe),
 
         )
@@ -86,7 +92,6 @@ class SumLøpendeBidragBeregning : FellesBeregning() {
         alderBarn: Int,
         referanseBarn: String,
     ): HashMap<String, BigDecimal> {
-//        val sjablonNavnVerdiMap = HashMap<String, BigDecimal>()
         val sjablonListe = sjablonPeriodeListe.map { it.sjablon }.toList()
 
         // Samværsfradrag

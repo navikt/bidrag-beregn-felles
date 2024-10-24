@@ -14,49 +14,33 @@ import java.math.BigDecimal
 class Vedtaksfiltrering {
 
     /**
-     * Finner siste manuelle vedtak i en samling vedtak knyttet til en bestemt stønad. Returnerer null dersom metoden
+     * Finner vedtak som skal benyttes i evnevurdering fra en samling vedtak knyttet til en bestemt stønad. Returnerer null dersom metoden
      * ikke finner noe manuelt vedtak. Dette kan ansees som en unntaktstilstand.
      *
      * @param vedtak samling vedtak for stønad som sendes inn til metoden
      * @param personidentSøknadsbarn personidenSøknadsbarn typisk fødselsnummer til søknadsbarnet stønaden og vedtakene gjelder for
      * @return siste manuelle vedtak for stønaden
      */
-    fun finneSisteManuelleVedtak(vedtak: Collection<VedtakForStønad>, personidentSøknadsbarn: Personident): VedtakForStønad? {
+    fun finneVedtakForEvnevurdering(vedtak: Collection<VedtakForStønad>, personidentSøknadsbarn: Personident): VedtakForStønad? {
         val iterator = Vedtaksiterator(vedtak.filter { it.filtrereBortIrrelevanteVedtak() }.tilVedtaksdetaljer())
 
         while (iterator.hasNext()) {
             val vedtaksdetaljer = iterator.next()
 
-            // Hopp over dersom vedtaket ikke er endring eller det er omgjort.
-            if (!vedtaksdetaljer.vedtak.erEndring() || vedtaksdetaljer.erOmgjort) {
+            // Hopp over dersom vedtaket er omgjort.
+            if (vedtaksdetaljer.erOmgjort) {
                 continue
             }
 
-            // Dersom resultatet er Ingen endring 12% skal vedtaket hoppes over.
-            if (vedtaksdetaljer.vedtak.erIngenEndringPga12Prosentregel()) {
-                // Dersom dette er resultatet av en klage skal det hoppes til det påklagde vedtaket.
-                if (vedtaksdetaljer.vedtak.erKlage()) {
-                    // Hopp til påklaget vedtak
-                    vedtaksdetaljer.vedtak.omgjørVedtaksid()?.let { iterator.hoppeTilOmgjortVedtak(it.toLong()) }
-                        ?: iterator.hoppeTilPåklagetVedtak(vedtaksdetaljer.vedtak.søknadKlageRefId!!)
-                    // Hopp over dette vedtaket, ettersom dette enten er eller skulle vært Ingen endring 12%
-                    if (iterator.hasNext()) {
-                        iterator.next()
-                    } else {
-                        secureLogger.warn { "Fant ikke tidligere vedtak for barn med personident $personidentSøknadsbarn" }
-                        return null
-                    }
-                } else if (vedtaksdetaljer.vedtak.erOmgjøring()) {
-                    // Hopp til påklaget vedtak
-                    iterator.hoppeTilOmgjortVedtak(vedtaksdetaljer.vedtak.idTilOmgjortVedtak()!!)
-                    // Hopp over dette vedtaket, ettersom dette enten er eller skulle vært Ingen endring 12%
-                    if (iterator.hasNext()) {
-                        iterator.next()
-                    } else {
-                        secureLogger.warn { "Fant ikke tidligere vedtak for barn med personident $personidentSøknadsbarn" }
-                        return null
-                    }
-                }
+            // Dersom vedtaket gjelder klage, skal det hoppes til det påklagde vedtaket.
+            if (vedtaksdetaljer.vedtak.erKlage()) {
+                // Hopp til påklaget vedtak
+                vedtaksdetaljer.vedtak.omgjørVedtaksid()?.let { iterator.hoppeTilOmgjortVedtak(it.toLong()) }
+                    ?: iterator.hoppeTilPåklagetVedtak(vedtaksdetaljer.vedtak.søknadKlageRefId!!)
+                continue
+            } else if (vedtaksdetaljer.vedtak.erOmgjøring()) {
+                // Hopp til omgjort vedtak
+                iterator.hoppeTilOmgjortVedtak(vedtaksdetaljer.vedtak.idTilOmgjortVedtak()!!)
                 continue
             }
 
@@ -79,10 +63,8 @@ class Vedtaksfiltrering {
         return null
     }
 
-    private fun VedtakForStønad.filtrereBortIrrelevanteVedtak(): Boolean {
-        if (erAutomatiskVedtak()) return false
-        return erInnkreving() && (erBidrag() || er18årsbidrag() || erOppfostringsbidrag() || erEndring())
-    }
+    private fun VedtakForStønad.filtrereBortIrrelevanteVedtak(): Boolean =
+        erInnkreving() && !erIkkeRelevant() && (erBidrag() || er18årsbidrag() || erOppfostringsbidrag())
 }
 
 data class Vedtaksdetaljer(var erOmgjort: Boolean = false, val vedtak: VedtakForStønad, val periode: VedtakPeriodeDto)

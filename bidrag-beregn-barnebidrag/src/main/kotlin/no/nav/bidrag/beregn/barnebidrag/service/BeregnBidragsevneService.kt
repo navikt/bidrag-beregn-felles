@@ -128,15 +128,15 @@ internal object BeregnBidragsevneService : BeregnService() {
             inntektBPBeregningGrunnlag = bidragsevnePeriodeGrunnlag.inntektBPPeriodeGrunnlagListe
                 .firstOrNull { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
                 ?.let { InntektBeregningGrunnlag(referanse = it.referanse, sumInntekt = it.beløp) }
-                ?: throw IllegalArgumentException("Ingen inntekt funnet for periode $bruddPeriode"),
+                ?: throw IllegalArgumentException("Delberegning sum inntekt for bidragspliktig mangler for periode $bruddPeriode"),
             barnIHusstandenBeregningGrunnlag = bidragsevnePeriodeGrunnlag.barnIHusstandenPeriodeGrunnlagListe
                 .firstOrNull { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
                 ?.let { BarnIHusstandenBeregningGrunnlag(referanse = it.referanse, antallBarn = it.antall) }
-                ?: throw IllegalArgumentException("Ingen barn i husstanden funnet for periode $bruddPeriode"),
+                ?: throw IllegalArgumentException("Grunnlag barn i husstanden mangler for periode $bruddPeriode"),
             voksneIHusstandenBeregningGrunnlag = bidragsevnePeriodeGrunnlag.voksneIHusstandenPeriodeGrunnlagListe
                 .firstOrNull { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
                 ?.let { VoksneIHusstandenBeregningGrunnlag(referanse = it.referanse, borMedAndre = it.borMedAndre) }
-                ?: throw IllegalArgumentException("Ingen voksne i husstanden funnet for periode $bruddPeriode"),
+                ?: throw IllegalArgumentException("Grunnlag voksne i husstanden mangler for periode $bruddPeriode"),
             sjablonSjablontallBeregningGrunnlagListe = bidragsevnePeriodeGrunnlag.sjablonSjablontallPeriodeGrunnlagListe
                 .filter { it.sjablonSjablontallPeriode.periode.inneholder(bruddPeriode) }
                 .map {

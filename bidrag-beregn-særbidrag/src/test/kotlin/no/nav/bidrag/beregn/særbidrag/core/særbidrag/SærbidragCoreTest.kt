@@ -6,24 +6,24 @@ import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.særbidrag.TestUtil
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.BidragsevneCoreTest
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BPsAndelSærbidrag
+import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BPsBeregnedeTotalbidragPeriode
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BeregnSærbidragResultat
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BetaltAvBp
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.Bidragsevne
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.GrunnlagBeregning
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.ResultatBeregning
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.ResultatPeriode
-import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.SumLøpendeBidragPeriode
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BPsAndelSærbidragPeriodeCore
+import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BPsBeregnedeTotalbidragPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BeregnSærbidragGrunnlagCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BetaltAvBpPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BidragsevnePeriodeCore
-import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.SumLøpendeBidragPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.periode.SærbidragPeriode
 import no.nav.bidrag.domene.enums.beregning.Avvikstype
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
-import no.nav.bidrag.domene.ident.Personident
+import no.nav.bidrag.domene.enums.beregning.Samværsklasse
 import no.nav.bidrag.domene.sak.Saksnummer
-import no.nav.bidrag.transport.behandling.felles.grunnlag.BeregningSumLøpendeBidragPerBarn
+import no.nav.bidrag.transport.behandling.felles.grunnlag.BeregnetBidragPerBarn
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -105,19 +105,22 @@ internal class SærbidragCoreTest {
             ),
         )
 
-        val sumLøpendeBidragPeriode = SumLøpendeBidragPeriodeCore(
+        val bPsBeregnedeTotalbidrag = BPsBeregnedeTotalbidragPeriodeCore(
             referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG_REFERANSE,
             periode = PeriodeCore(datoFom = LocalDate.parse("2020-01-01"), datoTil = LocalDate.parse("2020-02-01")),
-            sumLøpendeBidrag = BigDecimal.valueOf(1000),
-            beregningPerBarn = listOf(
-                BeregningSumLøpendeBidragPerBarn(
-                    personidentBarn = Personident("1"),
+            bPsBeregnedeTotalbidrag = BigDecimal.valueOf(1000),
+            beregnetBidragPerBarnListe = listOf(
+                BeregnetBidragPerBarn(
+                    gjelderBarn = "referanse1",
                     saksnummer = Saksnummer("1"),
                     løpendeBeløp = BigDecimal.valueOf(800),
+                    valutakode = "NOK",
                     samværsfradrag = BigDecimal.valueOf(100),
+                    samværsklasse = Samværsklasse.SAMVÆRSKLASSE_1,
                     beregnetBeløp = BigDecimal.valueOf(700),
                     faktiskBeløp = BigDecimal.valueOf(600),
-                    resultat = BigDecimal.valueOf(1000),
+                    reduksjonUnderholdskostnad = BigDecimal.valueOf(100),
+                    beregnetBidrag = BigDecimal.valueOf(1000),
                 ),
             ),
         )
@@ -140,7 +143,7 @@ internal class SærbidragCoreTest {
             søknadsbarnPersonId = "1",
             betaltAvBpPeriodeListe = betaltAvBpPeriodeListe,
             bidragsevnePeriodeListe = bidragsevnePeriodeListe,
-            sumLøpendeBidrag = sumLøpendeBidragPeriode,
+            bPsBeregnedeTotalbidragPeriodeCore = bPsBeregnedeTotalbidrag,
             bPsAndelSærbidragPeriodeListe = bPsAndelSærbidragPeriodeListe,
         )
     }
@@ -169,10 +172,10 @@ internal class SærbidragCoreTest {
                         ),
                         underholdBarnEgenHusstand = BigDecimal.valueOf(10000),
                     ),
-                    sumLøpendeBidrag = SumLøpendeBidragPeriode(
+                    bPsBeregnedeTotalbidrag = BPsBeregnedeTotalbidragPeriode(
                         referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG_REFERANSE,
                         periode = Periode(LocalDate.parse("2020-01-01"), LocalDate.parse("2020-02-01")),
-                        sumLøpendeBidrag = BigDecimal.valueOf(10000),
+                        bPsBeregnedeTotalbidrag = BigDecimal.valueOf(10000),
                     ),
                     bPsAndelSærbidrag = BPsAndelSærbidrag(
                         referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,

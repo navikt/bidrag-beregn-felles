@@ -4,10 +4,10 @@ import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.særbidrag.TestUtil
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.beregning.SærbidragBeregning
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BPsAndelSærbidrag
+import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BPsBeregnedeTotalbidragPeriode
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.BetaltAvBp
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.Bidragsevne
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.GrunnlagBeregning
-import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.SumLøpendeBidragPeriode
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import org.assertj.core.api.Assertions.assertThat
@@ -35,7 +35,7 @@ internal class SærbidragBeregningTest {
             sumSkatt = BigDecimal.valueOf(150000),
         )
         val underholdBarnEgenHusstand = BigDecimal.valueOf(10000)
-        val sumLøpendeBidrag = BigDecimal.valueOf(10000)
+        val bPsBeregnedeTotalbidrag = BigDecimal.valueOf(10000)
 
         val grunnlagBeregningPeriodisert = GrunnlagBeregning(
             betaltAvBp = BetaltAvBp(referanse = TestUtil.BETALT_AV_BP_REFERANSE, beløp = beløpBetaltAvBP),
@@ -53,10 +53,10 @@ internal class SærbidragBeregningTest {
                 barnEndeligInntekt = BigDecimal.ZERO,
                 barnetErSelvforsørget = false,
             ),
-            sumLøpendeBidrag = SumLøpendeBidragPeriode(
+            bPsBeregnedeTotalbidrag = BPsBeregnedeTotalbidragPeriode(
                 referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG_REFERANSE,
                 periode = Periode(LocalDate.now(), LocalDate.now()),
-                sumLøpendeBidrag = sumLøpendeBidrag,
+                bPsBeregnedeTotalbidrag = bPsBeregnedeTotalbidrag,
             ),
         )
 
@@ -83,7 +83,7 @@ internal class SærbidragBeregningTest {
             sumSkatt = BigDecimal.valueOf(150000),
         )
         val underholdBarnEgenHusstand = BigDecimal.valueOf(10000)
-        val sumLøpendeBidrag = BigDecimal.valueOf(10000)
+        val bPsBeregnedeTotalbidrag = BigDecimal.valueOf(10000)
 
         val grunnlagBeregningPeriodisert = GrunnlagBeregning(
             betaltAvBp = BetaltAvBp(referanse = TestUtil.BETALT_AV_BP_REFERANSE, beløp = beløpBetaltAvBP),
@@ -101,10 +101,10 @@ internal class SærbidragBeregningTest {
                 barnEndeligInntekt = BigDecimal.ZERO,
                 barnetErSelvforsørget = false,
             ),
-            sumLøpendeBidrag = SumLøpendeBidragPeriode(
+            bPsBeregnedeTotalbidrag = BPsBeregnedeTotalbidragPeriode(
                 referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG_REFERANSE,
                 periode = Periode(LocalDate.now(), LocalDate.now()),
-                sumLøpendeBidrag = sumLøpendeBidrag,
+                bPsBeregnedeTotalbidrag = bPsBeregnedeTotalbidrag,
             ),
         )
 
@@ -131,7 +131,7 @@ internal class SærbidragBeregningTest {
             sumSkatt = BigDecimal.valueOf(150000),
         )
         val underholdBarnEgenHusstand = BigDecimal.valueOf(10000)
-        val sumLøpendeBidrag = BigDecimal.valueOf(10000)
+        val bPsBeregnedeTotalbidrag = BigDecimal.valueOf(10000)
 
         val grunnlagBeregningPeriodisert = GrunnlagBeregning(
             betaltAvBp = BetaltAvBp(referanse = TestUtil.BETALT_AV_BP_REFERANSE, beløp = beløpBetaltAvBP),
@@ -149,10 +149,10 @@ internal class SærbidragBeregningTest {
                 barnEndeligInntekt = BigDecimal.ZERO,
                 barnetErSelvforsørget = false,
             ),
-            sumLøpendeBidrag = SumLøpendeBidragPeriode(
+            bPsBeregnedeTotalbidrag = BPsBeregnedeTotalbidragPeriode(
                 referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG_REFERANSE,
                 periode = Periode(LocalDate.now(), LocalDate.now()),
-                sumLøpendeBidrag = sumLøpendeBidrag,
+                bPsBeregnedeTotalbidrag = bPsBeregnedeTotalbidrag,
             ),
         )
 
@@ -179,7 +179,7 @@ internal class SærbidragBeregningTest {
             sumSkatt = BigDecimal.valueOf(150000),
         )
         val underholdBarnEgenHusstand = BigDecimal.valueOf(10000)
-        val sumLøpendeBidrag = BigDecimal.valueOf(10000)
+        val bPsBeregnedeTotalbidrag = BigDecimal.valueOf(10000)
 
         val grunnlagBeregningPeriodisert = GrunnlagBeregning(
             betaltAvBp = BetaltAvBp(referanse = TestUtil.BETALT_AV_BP_REFERANSE, beløp = beløpBetaltAvBP),
@@ -197,10 +197,10 @@ internal class SærbidragBeregningTest {
                 barnEndeligInntekt = BigDecimal.ZERO,
                 barnetErSelvforsørget = true,
             ),
-            sumLøpendeBidrag = SumLøpendeBidragPeriode(
+            bPsBeregnedeTotalbidrag = BPsBeregnedeTotalbidragPeriode(
                 referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG_REFERANSE,
                 periode = Periode(LocalDate.now(), LocalDate.now()),
-                sumLøpendeBidrag = sumLøpendeBidrag,
+                bPsBeregnedeTotalbidrag = bPsBeregnedeTotalbidrag,
             ),
         )
 
@@ -227,7 +227,7 @@ internal class SærbidragBeregningTest {
             sumSkatt = BigDecimal.valueOf(150000),
         )
         val underholdBarnEgenHusstand = BigDecimal.valueOf(10000)
-        val sumLøpendeBidrag = BigDecimal.valueOf(10000)
+        val bPsBeregnedeTotalbidrag = BigDecimal.valueOf(10000)
 
         val grunnlagBeregningPeriodisert = GrunnlagBeregning(
             betaltAvBp = BetaltAvBp(referanse = TestUtil.BETALT_AV_BP_REFERANSE, beløp = beløpBetaltAvBP),
@@ -245,10 +245,10 @@ internal class SærbidragBeregningTest {
                 barnEndeligInntekt = BigDecimal.ZERO,
                 barnetErSelvforsørget = true,
             ),
-            sumLøpendeBidrag = SumLøpendeBidragPeriode(
+            bPsBeregnedeTotalbidrag = BPsBeregnedeTotalbidragPeriode(
                 referanse = TestUtil.LØPENDE_BIDRAG_GRUNNLAG_REFERANSE,
                 periode = Periode(LocalDate.now(), LocalDate.now()),
-                sumLøpendeBidrag = sumLøpendeBidrag,
+                bPsBeregnedeTotalbidrag = bPsBeregnedeTotalbidrag,
             ),
         )
 

@@ -5,6 +5,9 @@ import no.nav.bidrag.beregn.barnebidrag.bo.NettoTilsynsutgiftPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonMaksFradragsbeløpPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonMaksTilsynsbeløpPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.TilleggsstønadPeriode
+import no.nav.bidrag.beregn.core.dto.FaktiskUtgiftPeriodeCore
+import no.nav.bidrag.beregn.core.dto.PeriodeCore
+import no.nav.bidrag.beregn.core.dto.TilleggsstønadPeriodeCore
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
@@ -28,20 +31,21 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
         return resultat
     }
 
-    private fun mapFaktiskUtgift(beregnGrunnlag: BeregnGrunnlag): List<FaktiskUtgiftPeriode> {
+    private fun mapFaktiskUtgift(beregnGrunnlag: BeregnGrunnlag): List<FaktiskUtgiftPeriodeCore> {
         try {
             val faktiskTilsynsutgiftListe =
                 beregnGrunnlag.grunnlagListe
                     .filtrerOgKonverterBasertPåEgenReferanse<FaktiskUtgiftPeriode>(Grunnlagstype.FAKTISK_UTGIFT)
                     .map {
-                        FaktiskUtgiftPeriode(
+                        FaktiskUtgiftPeriodeCore(
                             referanse = it.referanse,
-                            periode = it.innhold.periode,
+                            periode = PeriodeCore(
+                                datoFom = it.innhold.periode.toDatoperiode().fom,
+                                datoTil = it.innhold.periode.toDatoperiode().til,
+                            ),
                             referanseBarn = it.innhold.referanseBarn,
-                            fødselsdatoBarn = finnFødselsdatoBarn(beregnGrunnlag.grunnlagListe, it.innhold.referanseBarn),
-                            faktiskUtgiftBeløp = it.innhold.faktiskUtgiftBeløp,
-                            kostpengerBeløp = it.innhold.kostpengerBeløp,
-                            manueltRegistrert = it.innhold.manueltRegistrert,
+                            beregnetBeløp = it.innhold.faktiskUtgiftBeløp - it.innhold.kostpengerBeløp,
+                            grunnlagsreferanseListe = emptyList(),
                         )
                     }
 
@@ -53,18 +57,21 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
         }
     }
 
-    private fun mapTilleggsstønad(beregnGrunnlag: BeregnGrunnlag): List<TilleggsstønadPeriode> {
+    private fun mapTilleggsstønad(beregnGrunnlag: BeregnGrunnlag): List<TilleggsstønadPeriodeCore> {
         try {
             val tilleggsstønadListe =
                 beregnGrunnlag.grunnlagListe
                     .filtrerOgKonverterBasertPåEgenReferanse<TilleggsstønadPeriode>(Grunnlagstype.TILLEGGSSTØNAD)
                     .map {
-                        TilleggsstønadPeriode(
+                        TilleggsstønadPeriodeCore(
                             referanse = it.referanse,
-                            periode = it.innhold.periode,
-                            beløpDagsats = it.innhold.beløpDagsats,
+                            periode = PeriodeCore(
+                                datoFom = it.innhold.periode.toDatoperiode().fom,
+                                datoTil = it.innhold.periode.toDatoperiode().til,
+                            ),
                             referanseBarn = it.innhold.referanseBarn,
-                            manueltRegistrert = it.innhold.manueltRegistrert,
+                            beregnetBeløp = it.innhold.beløpDagsats,
+                            grunnlagsreferanseListe = emptyList(),
                         )
                     }
 
