@@ -3,6 +3,7 @@ package no.nav.bidrag.beregn.barnebidrag.beregning
 import no.nav.bidrag.beregn.barnebidrag.bo.BidragsevneBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BidragsevneBeregningResultat
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -51,13 +52,13 @@ internal object BidragsevneBeregning {
             .coerceAtLeast(BigDecimal.ZERO)
 
         return BidragsevneBeregningResultat(
-            bidragsevne = bidragsevne.setScale(2, RoundingMode.HALF_UP),
-            minstefradrag = minstefradrag.setScale(2, RoundingMode.HALF_UP),
-            skattAlminneligInntekt = skattAlminneligInntekt.setScale(2, RoundingMode.HALF_UP),
-            trygdeavgift = trygdeavgift.setScale(2, RoundingMode.HALF_UP),
-            trinnskatt = trinnskatt.setScale(2, RoundingMode.HALF_UP),
-            sumSkatt = sumSkatt.setScale(2, RoundingMode.HALF_UP),
-            underholdBarnEgenHusstand = underholdBarnEgenHusstand.setScale(2, RoundingMode.HALF_UP),
+            bidragsevne = bidragsevne.avrundetMedToDesimaler,
+            minstefradrag = minstefradrag.avrundetMedToDesimaler,
+            skattAlminneligInntekt = skattAlminneligInntekt.avrundetMedToDesimaler,
+            trygdeavgift = trygdeavgift.avrundetMedToDesimaler,
+            trinnskatt = trinnskatt.avrundetMedToDesimaler,
+            sumSkatt = sumSkatt.avrundetMedToDesimaler,
+            underholdBarnEgenHusstand = underholdBarnEgenHusstand.avrundetMedToDesimaler,
             grunnlagsreferanseListe = listOf(
                 grunnlag.inntektBPBeregningGrunnlag.referanse,
                 grunnlag.barnIHusstandenBeregningGrunnlag.referanse,

@@ -4,8 +4,9 @@ import no.nav.bidrag.beregn.særbidrag.core.felles.FellesBeregning
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.GrunnlagBeregning
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.bo.ResultatBeregning
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
+import no.nav.bidrag.domene.util.avrundetMedNullDesimaler
+import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import java.math.BigDecimal
-import java.math.RoundingMode
 
 class SærbidragBeregning : FellesBeregning() {
 
@@ -13,23 +14,23 @@ class SærbidragBeregning : FellesBeregning() {
         (grunnlag.bidragsevne.beløp == (BigDecimal.valueOf(0.00).setScale(2))) ||
             (grunnlag.bidragsevne.beløp < grunnlag.bPsBeregnedeTotalbidrag.bPsBeregnedeTotalbidrag) ->
             ResultatBeregning(
-                beregnetBeløp = grunnlag.bPsAndelSærbidrag.andelBeløp.setScale(2, RoundingMode.HALF_UP),
+                beregnetBeløp = grunnlag.bPsAndelSærbidrag.andelBeløp.avrundetMedToDesimaler,
                 resultatKode = Resultatkode.SÆRBIDRAG_IKKE_FULL_BIDRAGSEVNE,
                 resultatBeløp = null,
             )
 
         grunnlag.bPsAndelSærbidrag.barnetErSelvforsørget ->
             ResultatBeregning(
-                beregnetBeløp = grunnlag.bPsAndelSærbidrag.andelBeløp.setScale(2, RoundingMode.HALF_UP),
+                beregnetBeløp = grunnlag.bPsAndelSærbidrag.andelBeløp.avrundetMedToDesimaler,
                 resultatKode = Resultatkode.BARNET_ER_SELVFORSØRGET,
                 resultatBeløp = null,
             )
 
         else ->
             ResultatBeregning(
-                beregnetBeløp = grunnlag.bPsAndelSærbidrag.andelBeløp.setScale(2, RoundingMode.HALF_UP),
+                beregnetBeløp = grunnlag.bPsAndelSærbidrag.andelBeløp.avrundetMedToDesimaler,
                 resultatKode = Resultatkode.SÆRBIDRAG_INNVILGET,
-                resultatBeløp = grunnlag.bPsAndelSærbidrag.andelBeløp.setScale(0, RoundingMode.HALF_UP),
+                resultatBeløp = grunnlag.bPsAndelSærbidrag.andelBeløp.avrundetMedNullDesimaler,
             )
     }
 }

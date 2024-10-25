@@ -3,6 +3,8 @@ package no.nav.bidrag.beregn.barnebidrag.beregning
 import no.nav.bidrag.beregn.barnebidrag.bo.BpAndelUnderholdskostnadBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BpAndelUnderholdskostnadBeregningResultat
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.domene.util.avrundetMedTiDesimaler
+import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -39,10 +41,10 @@ internal object BpAndelUnderholdskostnadBeregning {
         }
 
         return BpAndelUnderholdskostnadBeregningResultat(
-            endeligAndelFaktor = endeligAndelFaktor.setScale(10, RoundingMode.HALF_UP),
-            andelBeløp = andelBeløp.setScale(2, RoundingMode.HALF_UP),
-            beregnetAndelFaktor = beregnetAndelFaktor.setScale(10, RoundingMode.HALF_UP),
-            barnEndeligInntekt = barnEndeligInntekt.setScale(2, RoundingMode.HALF_UP),
+            endeligAndelFaktor = endeligAndelFaktor.avrundetMedTiDesimaler,
+            andelBeløp = andelBeløp.avrundetMedToDesimaler,
+            beregnetAndelFaktor = beregnetAndelFaktor.avrundetMedTiDesimaler,
+            barnEndeligInntekt = barnEndeligInntekt.avrundetMedToDesimaler,
             barnetErSelvforsørget = barnetErSelvforsørget,
             grunnlagsreferanseListe = listOf(
                 grunnlag.inntektBPBeregningGrunnlag.referanse,

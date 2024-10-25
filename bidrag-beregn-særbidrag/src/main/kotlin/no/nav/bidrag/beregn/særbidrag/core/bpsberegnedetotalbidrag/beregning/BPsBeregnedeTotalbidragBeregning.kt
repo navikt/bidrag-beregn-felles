@@ -10,6 +10,7 @@ import no.nav.bidrag.beregn.særbidrag.core.felles.FellesBeregning
 import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonNøkkelNavn
+import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeregnetBidragPerBarn
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -70,7 +71,7 @@ class BPsBeregnedeTotalbidragBeregning : FellesBeregning() {
         }
 
         return ResultatBeregning(
-            bPsBeregnedeTotalbidrag = bPsBeregnedeTotalbidrag.setScale(2, RoundingMode.HALF_UP),
+            bPsBeregnedeTotalbidrag = bPsBeregnedeTotalbidrag.avrundetMedToDesimaler,
             beregnetBidragPerBarn = beregnetBidragPerBarnListe,
             sjablonListe = byggSjablonResultatListe(sjablonNavnVerdiMap = sjablonNavnVerdiMap, sjablonPeriodeListe = grunnlag.sjablonPeriodeListe),
 

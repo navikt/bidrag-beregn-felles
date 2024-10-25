@@ -56,9 +56,9 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
     @DisplayName("BP Andel underholdskostnad - eksempel 1 - Barnet er selvforsørget")
     fun testBpAndelUnderholdskostnad_Eksempel01() {
         filnavn = "src/test/resources/testfiler/bpandelunderholdskostnad/bpandel_eksempel1.json"
-        forventetEndeligAndelFaktor = BigDecimal.valueOf(0.0000000000).setScale(10)
-        forventetAndelBeløp = BigDecimal.valueOf(0.00).setScale(2)
-        forventetBeregnetAndelFaktor = BigDecimal.valueOf(0.0000000000).setScale(10)
+        forventetEndeligAndelFaktor = BigDecimal.ZERO.setScale(10)
+        forventetAndelBeløp = BigDecimal.ZERO.setScale(2)
+        forventetBeregnetAndelFaktor = BigDecimal.ZERO.setScale(10)
         forventetBarnEndeligInntekt = BigDecimal.valueOf(200000.00).setScale(2)
         forventetBarnetErSelvforsørget = true
         forventetAntallInntektRapporteringPeriodeBP = 1
@@ -104,7 +104,7 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
         forventetEndeligAndelFaktor = BigDecimal.valueOf(0.6250000000).setScale(10)
         forventetAndelBeløp = BigDecimal.valueOf(5625.00).setScale(2)
         forventetBeregnetAndelFaktor = BigDecimal.valueOf(0.6250000000).setScale(10)
-        forventetBarnEndeligInntekt = BigDecimal.valueOf(0.00).setScale(2)
+        forventetBarnEndeligInntekt = BigDecimal.ZERO.setScale(2)
         forventetBarnetErSelvforsørget = false
         forventetAntallInntektRapporteringPeriodeBP = 1
         forventetAntallInntektRapporteringPeriodeBM = 1
@@ -119,7 +119,7 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
         forventetEndeligAndelFaktor = BigDecimal.valueOf(0.6250000000).setScale(10)
         forventetAndelBeløp = BigDecimal.valueOf(5625.00).setScale(2)
         forventetBeregnetAndelFaktor = BigDecimal.valueOf(0.6250000000).setScale(10)
-        forventetBarnEndeligInntekt = BigDecimal.valueOf(0.00).setScale(2)
+        forventetBarnEndeligInntekt = BigDecimal.ZERO.setScale(2)
         forventetBarnetErSelvforsørget = false
         forventetAntallInntektRapporteringPeriodeBP = 1
         forventetAntallInntektRapporteringPeriodeBM = 1
@@ -131,10 +131,10 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
     @DisplayName("BP Andel underholdskostnad - eksempel 6 - BP har ikke inntekt")
     fun testBpAndelUnderholdskostnad_Eksempel06() {
         filnavn = "src/test/resources/testfiler/bpandelunderholdskostnad/bpandel_eksempel6.json"
-        forventetEndeligAndelFaktor = BigDecimal.valueOf(0.0000000000).setScale(10)
-        forventetAndelBeløp = BigDecimal.valueOf(0.00).setScale(2)
-        forventetBeregnetAndelFaktor = BigDecimal.valueOf(0.0000000000).setScale(10)
-        forventetBarnEndeligInntekt = BigDecimal.valueOf(0.00).setScale(2)
+        forventetEndeligAndelFaktor = BigDecimal.ZERO.setScale(10)
+        forventetAndelBeløp = BigDecimal.ZERO.setScale(2)
+        forventetBeregnetAndelFaktor = BigDecimal.ZERO.setScale(10)
+        forventetBarnEndeligInntekt = BigDecimal.ZERO.setScale(2)
         forventetBarnetErSelvforsørget = false
         forventetAntallInntektRapporteringPeriodeBP = 0
         forventetAntallInntektRapporteringPeriodeBM = 1
@@ -347,15 +347,15 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
             { assertThat(bpAndelUnderholdskostnadResultatListe[0].periode).isEqualTo(ÅrMånedsperiode("2023-09", "2023-11")) },
             {
                 assertThat(bpAndelUnderholdskostnadResultatListe[0].endeligAndelFaktor)
-                    .isEqualTo(BigDecimal.valueOf(0.0000000000).setScale(10))
+                    .isEqualTo(BigDecimal.ZERO.setScale(10))
             },
             {
                 assertThat(bpAndelUnderholdskostnadResultatListe[0].andelBeløp)
-                    .isEqualTo(BigDecimal.valueOf(0.00).setScale(2))
+                    .isEqualTo(BigDecimal.ZERO.setScale(2))
             },
             {
                 assertThat(bpAndelUnderholdskostnadResultatListe[0].beregnetAndelFaktor)
-                    .isEqualTo(BigDecimal.valueOf(0.0000000000).setScale(10))
+                    .isEqualTo(BigDecimal.ZERO.setScale(10))
             },
             {
                 assertThat(bpAndelUnderholdskostnadResultatListe[0].barnEndeligInntekt)
@@ -397,7 +397,7 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
             },
             {
                 assertThat(bpAndelUnderholdskostnadResultatListe[2].barnEndeligInntekt)
-                    .isEqualTo(BigDecimal.valueOf(0.00).setScale(2))
+                    .isEqualTo(BigDecimal.ZERO.setScale(2))
             },
             { assertThat(bpAndelUnderholdskostnadResultatListe[2].barnetErSelvforsørget).isFalse() },
 
@@ -416,7 +416,7 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
             },
             {
                 assertThat(bpAndelUnderholdskostnadResultatListe[3].barnEndeligInntekt)
-                    .isEqualTo(BigDecimal.valueOf(0.00).setScale(2))
+                    .isEqualTo(BigDecimal.ZERO.setScale(2))
             },
             { assertThat(bpAndelUnderholdskostnadResultatListe[3].barnetErSelvforsørget).isFalse() },
 
@@ -435,7 +435,7 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
             },
             {
                 assertThat(bpAndelUnderholdskostnadResultatListe[4].barnEndeligInntekt)
-                    .isEqualTo(BigDecimal.valueOf(0.00).setScale(2))
+                    .isEqualTo(BigDecimal.ZERO.setScale(2))
             },
             { assertThat(bpAndelUnderholdskostnadResultatListe[4].barnetErSelvforsørget).isFalse() },
 
