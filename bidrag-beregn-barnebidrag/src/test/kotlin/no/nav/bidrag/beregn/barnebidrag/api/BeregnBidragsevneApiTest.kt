@@ -57,13 +57,13 @@ internal class BeregnBidragsevneApiTest {
     @DisplayName("Bidragsevne - eksempel 1 - Inntekt 200000 - Bor ikke med andre voksne - 0 barn i husstand")
     fun testBidragsevne_Eksempel01() {
         filnavn = "src/test/resources/testfiler/bidragsevne/bidragsevne_eksempel1.json"
-        forventetBidragsevne = BigDecimal.valueOf(0.00).setScale(2)
+        forventetBidragsevne = BigDecimal.ZERO.setScale(2)
         forventetMinstefradrag = BigDecimal.valueOf(80000.00).setScale(2)
         forventetSkattAlminneligInntekt = BigDecimal.valueOf(6985.00).setScale(2)
-        forventetTrinnskatt = BigDecimal.valueOf(0.00).setScale(2)
+        forventetTrinnskatt = BigDecimal.ZERO.setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(15600.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(22585.00).setScale(2)
-        forventetUnderholdBarnEgenHusstand = BigDecimal.valueOf(0.00).setScale(2)
+        forventetUnderholdBarnEgenHusstand = BigDecimal.ZERO.setScale(2)
         utførBeregningerOgEvaluerResultatBidragsevne()
     }
 
@@ -71,10 +71,10 @@ internal class BeregnBidragsevneApiTest {
     @DisplayName("Bidragsevne - eksempel 2 - Inntekt 200000 - Bor ikke med andre voksne - 1 barn i husstand")
     fun testBidragsevne_Eksempel02() {
         filnavn = "src/test/resources/testfiler/bidragsevne/bidragsevne_eksempel2.json"
-        forventetBidragsevne = BigDecimal.valueOf(0.00).setScale(2)
+        forventetBidragsevne = BigDecimal.ZERO.setScale(2)
         forventetMinstefradrag = BigDecimal.valueOf(80000.00).setScale(2)
         forventetSkattAlminneligInntekt = BigDecimal.valueOf(6985.00).setScale(2)
-        forventetTrinnskatt = BigDecimal.valueOf(0.00).setScale(2)
+        forventetTrinnskatt = BigDecimal.ZERO.setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(15600.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(22585.00).setScale(2)
         forventetUnderholdBarnEgenHusstand = BigDecimal.valueOf(51036.00).setScale(2)
@@ -85,10 +85,10 @@ internal class BeregnBidragsevneApiTest {
     @DisplayName("Bidragsevne - eksempel 3 - Inntekt 200000 - Bor ikke med andre voksne - 2,5 barn i husstand")
     fun testBidragsevne_Eksempel03() {
         filnavn = "src/test/resources/testfiler/bidragsevne/bidragsevne_eksempel3.json"
-        forventetBidragsevne = BigDecimal.valueOf(0.00).setScale(2)
+        forventetBidragsevne = BigDecimal.ZERO.setScale(2)
         forventetMinstefradrag = BigDecimal.valueOf(80000.00).setScale(2)
         forventetSkattAlminneligInntekt = BigDecimal.valueOf(6985.00).setScale(2)
-        forventetTrinnskatt = BigDecimal.valueOf(0.00).setScale(2)
+        forventetTrinnskatt = BigDecimal.ZERO.setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(15600.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(22585.00).setScale(2)
         forventetUnderholdBarnEgenHusstand = BigDecimal.valueOf(127590.00).setScale(2)
@@ -99,13 +99,13 @@ internal class BeregnBidragsevneApiTest {
     @DisplayName("Bidragsevne - eksempel 4 - Inntekt 200000 - Bor med andre voksne - 0 barn i husstand")
     fun testBidragsevne_Eksempel04() {
         filnavn = "src/test/resources/testfiler/bidragsevne/bidragsevne_eksempel4.json"
-        forventetBidragsevne = BigDecimal.valueOf(0.00).setScale(2)
+        forventetBidragsevne = BigDecimal.ZERO.setScale(2)
         forventetMinstefradrag = BigDecimal.valueOf(80000.00).setScale(2)
         forventetSkattAlminneligInntekt = BigDecimal.valueOf(6985.00).setScale(2)
-        forventetTrinnskatt = BigDecimal.valueOf(0.00).setScale(2)
+        forventetTrinnskatt = BigDecimal.ZERO.setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(15600.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(22585.00).setScale(2)
-        forventetUnderholdBarnEgenHusstand = BigDecimal.valueOf(0.00).setScale(2)
+        forventetUnderholdBarnEgenHusstand = BigDecimal.ZERO.setScale(2)
         utførBeregningerOgEvaluerResultatBidragsevne()
     }
 
@@ -113,10 +113,10 @@ internal class BeregnBidragsevneApiTest {
     @DisplayName("Bidragsevne - eksempel 5 - Inntekt 200000 - Bor med andre voksne - 1 barn i husstand")
     fun testBidragsevne_Eksempel05() {
         filnavn = "src/test/resources/testfiler/bidragsevne/bidragsevne_eksempel5.json"
-        forventetBidragsevne = BigDecimal.valueOf(0.00).setScale(2)
+        forventetBidragsevne = BigDecimal.ZERO.setScale(2)
         forventetMinstefradrag = BigDecimal.valueOf(80000.00).setScale(2)
         forventetSkattAlminneligInntekt = BigDecimal.valueOf(6985.00).setScale(2)
-        forventetTrinnskatt = BigDecimal.valueOf(0.00).setScale(2)
+        forventetTrinnskatt = BigDecimal.ZERO.setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(15600.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(22585.00).setScale(2)
         forventetUnderholdBarnEgenHusstand = BigDecimal.valueOf(51036.00).setScale(2)
@@ -127,10 +127,10 @@ internal class BeregnBidragsevneApiTest {
     @DisplayName("Bidragsevne - eksempel 6 - Inntekt 200000 - Bor med andre voksne - 2,5 barn i husstand")
     fun testBidragsevne_Eksempel06() {
         filnavn = "src/test/resources/testfiler/bidragsevne/bidragsevne_eksempel6.json"
-        forventetBidragsevne = BigDecimal.valueOf(0.00).setScale(2)
+        forventetBidragsevne = BigDecimal.ZERO.setScale(2)
         forventetMinstefradrag = BigDecimal.valueOf(80000.00).setScale(2)
         forventetSkattAlminneligInntekt = BigDecimal.valueOf(6985.00).setScale(2)
-        forventetTrinnskatt = BigDecimal.valueOf(0.00).setScale(2)
+        forventetTrinnskatt = BigDecimal.ZERO.setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(15600.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(22585.00).setScale(2)
         forventetUnderholdBarnEgenHusstand = BigDecimal.valueOf(127590.00).setScale(2)
@@ -147,7 +147,7 @@ internal class BeregnBidragsevneApiTest {
         forventetTrinnskatt = BigDecimal.valueOf(20607.60).setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(54600.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(190817.60).setScale(2)
-        forventetUnderholdBarnEgenHusstand = BigDecimal.valueOf(0.00).setScale(2)
+        forventetUnderholdBarnEgenHusstand = BigDecimal.ZERO.setScale(2)
         utførBeregningerOgEvaluerResultatBidragsevne()
     }
 
@@ -189,7 +189,7 @@ internal class BeregnBidragsevneApiTest {
         forventetTrinnskatt = BigDecimal.valueOf(20607.60).setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(54600.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(190817.60).setScale(2)
-        forventetUnderholdBarnEgenHusstand = BigDecimal.valueOf(0.00).setScale(2)
+        forventetUnderholdBarnEgenHusstand = BigDecimal.ZERO.setScale(2)
         utførBeregningerOgEvaluerResultatBidragsevne()
     }
 
@@ -231,7 +231,7 @@ internal class BeregnBidragsevneApiTest {
         forventetTrinnskatt = BigDecimal.valueOf(147770.60).setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(117000.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(556380.60).setScale(2)
-        forventetUnderholdBarnEgenHusstand = BigDecimal.valueOf(0.00).setScale(2)
+        forventetUnderholdBarnEgenHusstand = BigDecimal.ZERO.setScale(2)
         utførBeregningerOgEvaluerResultatBidragsevne()
     }
 
@@ -273,7 +273,7 @@ internal class BeregnBidragsevneApiTest {
         forventetTrinnskatt = BigDecimal.valueOf(147770.60).setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(117000.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(556380.60).setScale(2)
-        forventetUnderholdBarnEgenHusstand = BigDecimal.valueOf(0.00).setScale(2)
+        forventetUnderholdBarnEgenHusstand = BigDecimal.ZERO.setScale(2)
         utførBeregningerOgEvaluerResultatBidragsevne()
     }
 
@@ -309,13 +309,13 @@ internal class BeregnBidragsevneApiTest {
     @DisplayName("Bidragsevne - eksempel 19 - BP's inntekt mangler")
     fun testBidragsevne_Eksempel19() {
         filnavn = "src/test/resources/testfiler/bidragsevne/bidragsevne_eksempel19.json"
-        forventetBidragsevne = BigDecimal.valueOf(0.00).setScale(2)
-        forventetMinstefradrag = BigDecimal.valueOf(0.00).setScale(2)
-        forventetSkattAlminneligInntekt = BigDecimal.valueOf(0.00).setScale(2)
-        forventetTrinnskatt = BigDecimal.valueOf(0.00).setScale(2)
-        forventetTrygdeavgift = BigDecimal.valueOf(0.00).setScale(2)
-        forventetSumSkatt = BigDecimal.valueOf(0.00).setScale(2)
-        forventetUnderholdBarnEgenHusstand = BigDecimal.valueOf(0.00).setScale(2)
+        forventetBidragsevne = BigDecimal.ZERO.setScale(2)
+        forventetMinstefradrag = BigDecimal.ZERO.setScale(2)
+        forventetSkattAlminneligInntekt = BigDecimal.ZERO.setScale(2)
+        forventetTrinnskatt = BigDecimal.ZERO.setScale(2)
+        forventetTrygdeavgift = BigDecimal.ZERO.setScale(2)
+        forventetSumSkatt = BigDecimal.ZERO.setScale(2)
+        forventetUnderholdBarnEgenHusstand = BigDecimal.ZERO.setScale(2)
         forventetAntallInntektRapporteringPeriodeBP = 0
         utførBeregningerOgEvaluerResultatBidragsevne()
     }
@@ -508,7 +508,7 @@ internal class BeregnBidragsevneApiTest {
             { assertThat(bidragsevneResultatListe[0].skatt.trygdeavgift).isEqualTo(BigDecimal.valueOf(55300.00).setScale(2)) },
             { assertThat(bidragsevneResultatListe[0].skatt.trinnskatt).isEqualTo(BigDecimal.valueOf(23627.35).setScale(2)) },
             { assertThat(bidragsevneResultatListe[0].skatt.sumSkatt).isEqualTo(BigDecimal.valueOf(196440.35).setScale(2)) },
-            { assertThat(bidragsevneResultatListe[0].underholdBarnEgenHusstand).isEqualTo(BigDecimal.valueOf(0.00).setScale(2)) },
+            { assertThat(bidragsevneResultatListe[0].underholdBarnEgenHusstand).isEqualTo(BigDecimal.ZERO.setScale(2)) },
 
             { assertThat(bidragsevneResultatListe[1].periode).isEqualTo(ÅrMånedsperiode("2023-11", "2024-01")) },
             { assertThat(bidragsevneResultatListe[1].beløp).isEqualTo(BigDecimal.valueOf(15623.30).setScale(2)) },

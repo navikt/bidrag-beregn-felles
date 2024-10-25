@@ -6,6 +6,8 @@ import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.bo.GrunnlagBeregn
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.bo.ResultatBeregning
 import no.nav.bidrag.beregn.særbidrag.core.felles.FellesBeregning
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.domene.util.avrundetMedTiDesimaler
+import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -31,14 +33,14 @@ class BPsAndelSærbidragBeregning : FellesBeregning() {
             inntektSB = (inntektSB - forskuddssats.multiply(BigDecimal.valueOf(30))).coerceAtLeast(BigDecimal.ZERO)
             beregnetAndelFaktor = inntektBP.divide(inntektBP + inntektBM + inntektSB, 10, RoundingMode.HALF_UP)
             endeligAndelFaktor = beregnetAndelFaktor.coerceAtMost(BigDecimal.valueOf(0.833333333333))
-            andelBeløp = (grunnlag.utgift.beløp * endeligAndelFaktor).setScale(2, RoundingMode.HALF_UP)
+            andelBeløp = (grunnlag.utgift.beløp * endeligAndelFaktor).avrundetMedToDesimaler
         }
 
         return ResultatBeregning(
-            endeligAndelFaktor = endeligAndelFaktor.setScale(10, RoundingMode.HALF_UP),
-            andelBeløp = andelBeløp.setScale(2, RoundingMode.HALF_UP),
-            beregnetAndelFaktor = beregnetAndelFaktor.setScale(10, RoundingMode.HALF_UP),
-            barnEndeligInntekt = inntektSB.setScale(2, RoundingMode.HALF_UP),
+            endeligAndelFaktor = endeligAndelFaktor.avrundetMedTiDesimaler,
+            andelBeløp = andelBeløp.avrundetMedToDesimaler,
+            beregnetAndelFaktor = beregnetAndelFaktor.avrundetMedTiDesimaler,
+            barnEndeligInntekt = inntektSB.avrundetMedToDesimaler,
             barnetErSelvforsørget = barnetErSelvforsorget,
             sjablonListe = byggSjablonResultatListe(sjablonNavnVerdiMap = sjablonNavnVerdiMap, sjablonPeriodeListe = grunnlag.sjablonListe),
         )
