@@ -34,7 +34,15 @@ data class BarnIHusstandenPeriodeCore(
 data class VoksneIHusstandenPeriodeCore(
     override val referanse: String,
     override val periode: PeriodeCore,
-    val borMedAndre: Boolean,
+    val borMedAndreVoksne: Boolean,
+    override val grunnlagsreferanseListe: List<String>,
+) : Delberegning
+
+data class BoforholdPeriodeCore(
+    override val referanse: String,
+    override val periode: PeriodeCore,
+    val antallBarn: Double,
+    val borMedAndreVoksne: Boolean,
     override val grunnlagsreferanseListe: List<String>,
 ) : Delberegning
 

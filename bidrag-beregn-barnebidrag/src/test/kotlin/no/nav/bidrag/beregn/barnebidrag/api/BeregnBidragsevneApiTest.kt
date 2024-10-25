@@ -37,6 +37,7 @@ internal class BeregnBidragsevneApiTest {
     private lateinit var forventetUnderholdBarnEgenHusstand: BigDecimal
     private var forventetAntallInntektRapporteringPeriodeBP: Int = 1
     private var forventetAntallDelberegningSumInntektPeriodeBP: Int = 1
+    private var forventetAntallDelberegningBoforholdPeriode: Int = 1
     private var forventetAntallDelberegningBarnIHusstandPeriode: Int = 1
     private var forventetAntallDelberegningVoksneIHusstandPeriode: Int = 1
     private var forventetAntallBostatusPeriodeBP: Int = 1
@@ -325,6 +326,7 @@ internal class BeregnBidragsevneApiTest {
         filnavn = "src/test/resources/testfiler/bidragsevne/bidragsevne_eksempel_flere_perioder.json"
         forventetAntallInntektRapporteringPeriodeBP = 2
         forventetAntallDelberegningSumInntektPeriodeBP = 2
+        forventetAntallDelberegningBoforholdPeriode = 4
         forventetAntallDelberegningBarnIHusstandPeriode = 3
         forventetAntallDelberegningVoksneIHusstandPeriode = 2
         forventetAntallBostatusPeriodeBP = 2
@@ -366,6 +368,11 @@ internal class BeregnBidragsevneApiTest {
 
         val antallDelberegningSumInntektPeriodeBP = bidragsevneResultat
             .filter { it.type == Grunnlagstype.DELBEREGNING_SUM_INNTEKT }
+            .filter { it.gjelderReferanse == referanseBP }
+            .size
+
+        val antallDelberegningBoforholdPeriode = bidragsevneResultat
+            .filter { it.type == Grunnlagstype.DELBEREGNING_BOFORHOLD }
             .filter { it.gjelderReferanse == referanseBP }
             .size
 
@@ -411,6 +418,7 @@ internal class BeregnBidragsevneApiTest {
             // Grunnlag
             { assertThat(antallInntektRapporteringPeriodeBP).isEqualTo(forventetAntallInntektRapporteringPeriodeBP) },
             { assertThat(antallDelberegningSumInntektPeriodeBP).isEqualTo(1) },
+            { assertThat(antallDelberegningBoforholdPeriode).isEqualTo(1) },
             { assertThat(antallDelberegningBarnIHusstandPeriode).isEqualTo(1) },
             { assertThat(antallDelberegningVoksneIHusstandPeriode).isEqualTo(1) },
             { assertThat(antallBostatusPeriodeBP).isEqualTo(1) },
@@ -455,6 +463,11 @@ internal class BeregnBidragsevneApiTest {
 
         val antallDelberegningSumInntektPeriodeBP = bidragsevneResultat
             .filter { it.type == Grunnlagstype.DELBEREGNING_SUM_INNTEKT }
+            .filter { it.gjelderReferanse == referanseBP }
+            .size
+
+        val antallDelberegningBoforholdPeriode = bidragsevneResultat
+            .filter { it.type == Grunnlagstype.DELBEREGNING_BOFORHOLD }
             .filter { it.gjelderReferanse == referanseBP }
             .size
 
@@ -554,6 +567,7 @@ internal class BeregnBidragsevneApiTest {
             // Grunnlag
             { assertThat(antallInntektRapporteringPeriodeBP).isEqualTo(forventetAntallInntektRapporteringPeriodeBP) },
             { assertThat(antallDelberegningSumInntektPeriodeBP).isEqualTo(forventetAntallDelberegningSumInntektPeriodeBP) },
+            { assertThat(antallDelberegningBoforholdPeriode).isEqualTo(forventetAntallDelberegningBoforholdPeriode) },
             { assertThat(antallDelberegningBarnIHusstandPeriode).isEqualTo(forventetAntallDelberegningBarnIHusstandPeriode) },
             { assertThat(antallDelberegningVoksneIHusstandPeriode).isEqualTo(forventetAntallDelberegningVoksneIHusstandPeriode) },
             { assertThat(antallBostatusPeriodeBP).isEqualTo(forventetAntallBostatusPeriodeBP) },

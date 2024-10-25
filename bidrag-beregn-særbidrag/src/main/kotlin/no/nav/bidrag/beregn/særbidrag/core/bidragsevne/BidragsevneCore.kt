@@ -2,10 +2,9 @@ package no.nav.bidrag.beregn.særbidrag.core.bidragsevne
 
 import no.nav.bidrag.beregn.core.bo.Avvik
 import no.nav.bidrag.beregn.core.bo.Periode
-import no.nav.bidrag.beregn.core.dto.BarnIHusstandenPeriodeCore
+import no.nav.bidrag.beregn.core.dto.BoforholdPeriodeCore
 import no.nav.bidrag.beregn.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
-import no.nav.bidrag.beregn.core.dto.VoksneIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.bo.BarnIHusstandPeriode
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.bo.BeregnBidragsevneGrunnlag
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.bo.BeregnBidragsevneResultat
@@ -38,8 +37,8 @@ internal class BidragsevneCore(private val bidragsevnePeriode: BidragsevnePeriod
         beregnDatoFra = grunnlag.beregnDatoFra,
         beregnDatoTil = grunnlag.beregnDatoTil,
         inntektPeriodeListe = mapInntektPeriodeListe(grunnlag.inntektPeriodeListe),
-        barnIHusstandPeriodeListe = mapBarnIHusstandPeriodeListe(grunnlag.barnIHusstandenPeriodeListe),
-        voksneIHusstandPeriodeListe = mapVoksneIHusstandPeriodeListe(grunnlag.voksneIHusstandenPeriodeListe),
+        barnIHusstandPeriodeListe = mapBarnIHusstandPeriodeListe(grunnlag.boforholdPeriodeListe),
+        voksneIHusstandPeriodeListe = mapVoksneIHusstandPeriodeListe(grunnlag.boforholdPeriodeListe),
         sjablonPeriodeListe = mapSjablonPeriodeListe(grunnlag.sjablonPeriodeListe),
     )
 
@@ -57,21 +56,21 @@ internal class BidragsevneCore(private val bidragsevnePeriode: BidragsevnePeriod
         )
     }
 
-    private fun mapBarnIHusstandPeriodeListe(antallBarnIHusstandenPeriodeListeCore: List<BarnIHusstandenPeriodeCore>) =
-        antallBarnIHusstandenPeriodeListeCore.map {
+    private fun mapBarnIHusstandPeriodeListe(boforholdPeriodeListeCore: List<BoforholdPeriodeCore>) =
+        boforholdPeriodeListeCore.map {
             BarnIHusstandPeriode(
                 referanse = it.referanse,
                 periode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
-                antall = it.antall,
+                antall = it.antallBarn,
             )
         }
 
-    private fun mapVoksneIHusstandPeriodeListe(bostatusVoksneIHusstandenPeriodeListeCore: List<VoksneIHusstandenPeriodeCore>) =
-        bostatusVoksneIHusstandenPeriodeListeCore.map {
+    private fun mapVoksneIHusstandPeriodeListe(boforholdPeriodeListeCore: List<BoforholdPeriodeCore>) =
+        boforholdPeriodeListeCore.map {
             VoksneIHusstandPeriode(
                 referanse = it.referanse,
                 periode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
-                borMedAndre = it.borMedAndre,
+                borMedAndre = it.borMedAndreVoksne,
             )
         }
 

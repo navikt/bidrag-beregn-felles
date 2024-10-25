@@ -7,6 +7,7 @@ import no.nav.bidrag.beregn.core.bo.SjablonInnhold
 import no.nav.bidrag.beregn.core.bo.SjablonPeriode
 import no.nav.bidrag.beregn.core.bo.SjablonPeriodeNavnVerdi
 import no.nav.bidrag.beregn.core.dto.BarnIHusstandenPeriodeCore
+import no.nav.bidrag.beregn.core.dto.BoforholdPeriodeCore
 import no.nav.bidrag.beregn.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonInnholdCore
@@ -105,7 +106,17 @@ internal class BidragsevneCoreTest {
             VoksneIHusstandenPeriodeCore(
                 referanse = TestUtil.VOKSNE_I_HUSSTANDEN_REFERANSE,
                 periode = PeriodeCore(datoFom = LocalDate.parse("2020-01-01"), datoTil = LocalDate.parse("2020-02-01")),
-                borMedAndre = false,
+                borMedAndreVoksne = false,
+                grunnlagsreferanseListe = emptyList(),
+            ),
+        )
+
+        val boforholdPeriodeListe = listOf(
+            BoforholdPeriodeCore(
+                referanse = TestUtil.BOFORHOLD_REFERANSE,
+                periode = PeriodeCore(datoFom = LocalDate.parse("2020-01-01"), datoTil = LocalDate.parse("2020-02-01")),
+                antallBarn = 1.0,
+                borMedAndreVoksne = false,
                 grunnlagsreferanseListe = emptyList(),
             ),
         )
@@ -125,6 +136,7 @@ internal class BidragsevneCoreTest {
             inntektPeriodeListe = inntektPeriodeListe,
             barnIHusstandenPeriodeListe = barnIHusstandenPeriodeListe,
             voksneIHusstandenPeriodeListe = voksneIHusstandenPeriodeListe,
+            boforholdPeriodeListe = boforholdPeriodeListe,
             sjablonPeriodeListe = sjablonPeriodeListe,
         )
     }
