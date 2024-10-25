@@ -1,6 +1,7 @@
 package no.nav.bidrag.beregn.særbidrag.service.mapper
 
 import no.nav.bidrag.beregn.core.dto.BarnIHusstandenPeriodeCore
+import no.nav.bidrag.beregn.core.dto.BoforholdPeriodeCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
 import no.nav.bidrag.beregn.core.dto.VoksneIHusstandenPeriodeCore
@@ -10,10 +11,12 @@ import no.nav.bidrag.beregn.særbidrag.core.felles.bo.SjablonListe
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BostatusPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
+import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
 import java.util.Collections.emptyList
 
 internal object BidragsevneCoreMapper : CoreMapper() {
@@ -34,8 +37,14 @@ internal object BidragsevneCoreMapper : CoreMapper() {
                 innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntektFraSjablontall(sjablonListe.sjablonSjablontallResponse),
                 erSærbidrag = true,
             )
-        val barnIHusstandenPeriodeCoreListe = mapBarnIHusstanden(beregnGrunnlag, referanseTilRolle)
-        val voksneIHusstandenPeriodeCoreListe = mapVoksneIHusstanden(beregnGrunnlag, referanseTilRolle)
+        val barnIHusstandenPeriodeCoreListe = mapBarnIHusstanden(beregnGrunnlag = beregnGrunnlag, referanseTilRolle = referanseTilRolle)
+        val voksneIHusstandenPeriodeCoreListe = mapVoksneIHusstanden(beregnGrunnlag = beregnGrunnlag, referanseTilRolle = referanseTilRolle)
+        val boforholdPeriodeGrunnlagListe = slåSammenBarnOgVoksneIHusstanden(
+            barnIHusstandenPeriodeGrunnlagListe = barnIHusstandenPeriodeCoreListe,
+            voksneIHusstandenPeriodeGrunnlagListe = voksneIHusstandenPeriodeCoreListe,
+            søknadsbarnReferanse = beregnGrunnlag.søknadsbarnReferanse,
+            gjelderReferanse = referanseTilRolle,
+        )
         val sjablonPeriodeCoreListe = ArrayList<SjablonPeriodeCore>()
 
         // Henter aktuelle sjabloner
@@ -69,6 +78,7 @@ internal object BidragsevneCoreMapper : CoreMapper() {
             inntektPeriodeListe = inntektBPPeriodeCoreListe,
             barnIHusstandenPeriodeListe = barnIHusstandenPeriodeCoreListe,
             voksneIHusstandenPeriodeListe = voksneIHusstandenPeriodeCoreListe,
+            boforholdPeriodeListe = boforholdPeriodeGrunnlagListe,
             sjablonPeriodeListe = sjablonPeriodeCoreListe,
         )
     }
@@ -135,7 +145,7 @@ internal object BidragsevneCoreMapper : CoreMapper() {
                                 datoFom = it.innhold.periode.toDatoperiode().fom,
                                 datoTil = it.innhold.periode.toDatoperiode().til,
                             ),
-                            borMedAndre = it.innhold.bostatus == Bostatuskode.REGNES_IKKE_SOM_BARN ||
+                            borMedAndreVoksne = it.innhold.bostatus == Bostatuskode.REGNES_IKKE_SOM_BARN ||
                                 it.innhold.bostatus == Bostatuskode.BOR_MED_ANDRE_VOKSNE,
                             grunnlagsreferanseListe = emptyList(),
                         )
@@ -150,6 +160,64 @@ internal object BidragsevneCoreMapper : CoreMapper() {
         } catch (e: Exception) {
             throw IllegalArgumentException(
                 "Ugyldig input ved beregning av særlige utgifter. Innhold i Grunnlagstype.BOSTATUS_PERIODE er ikke gyldig: " + e.message,
+            )
+        }
+    }
+
+    // Slår sammen barn i husstanden og voksne i husstanden til et fellesobjekt
+    private fun slåSammenBarnOgVoksneIHusstanden(
+        barnIHusstandenPeriodeGrunnlagListe: List<BarnIHusstandenPeriodeCore>,
+        voksneIHusstandenPeriodeGrunnlagListe: List<VoksneIHusstandenPeriodeCore>,
+        søknadsbarnReferanse: String,
+        gjelderReferanse: String,
+    ): List<BoforholdPeriodeCore> {
+        // Lager unik, sortert liste over alle bruddatoer og legger evt. null-forekomst bakerst
+        val bruddDatoListe = (barnIHusstandenPeriodeGrunnlagListe.flatMap { listOf(it.periode.datoFom, it.periode.datoTil) }
+            + voksneIHusstandenPeriodeGrunnlagListe.flatMap { listOf(it.periode.datoFom, it.periode.datoTil) })
+            .distinct()
+            .sortedBy { it }
+            .sortedWith(compareBy { it == null })
+
+        // Slå sammen brudddatoer til en liste med perioder (fom-/til-dato)
+        val periodeListe = bruddDatoListe
+            .zipWithNext()
+            .map { PeriodeCore(it.first!!, it.second) }
+
+        return periodeListe.map { bruddPeriode ->
+
+            // Finner matchende barnIHusstanden for aktuell periode
+            val barnIHusstanden = barnIHusstandenPeriodeGrunnlagListe
+                .firstOrNull {
+                    ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(
+                        ÅrMånedsperiode(
+                            bruddPeriode.datoFom,
+                            bruddPeriode.datoTil
+                        )
+                    )
+                }
+            // Finner matchende voksneIHusstanden for aktuell periode
+            val voksneIHusstanden = voksneIHusstandenPeriodeGrunnlagListe
+                .firstOrNull {
+                    ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(
+                        ÅrMånedsperiode(
+                            bruddPeriode.datoFom,
+                            bruddPeriode.datoTil
+                        )
+                    )
+                }
+
+            // Oppretter BoforholdPeriodeCore
+            BoforholdPeriodeCore(
+                referanse = opprettDelberegningreferanse(
+                    type = Grunnlagstype.DELBEREGNING_BOFORHOLD,
+                    periode = ÅrMånedsperiode(fom = bruddPeriode.datoFom, til = null),
+                    søknadsbarnReferanse = søknadsbarnReferanse,
+                    gjelderReferanse = gjelderReferanse,
+                ),
+                periode = bruddPeriode,
+                antallBarn = barnIHusstanden?.antall ?: 0.0,
+                borMedAndreVoksne = voksneIHusstanden?.borMedAndreVoksne ?: false,
+                grunnlagsreferanseListe = listOfNotNull(barnIHusstanden?.referanse, voksneIHusstanden?.referanse).distinct()
             )
         }
     }

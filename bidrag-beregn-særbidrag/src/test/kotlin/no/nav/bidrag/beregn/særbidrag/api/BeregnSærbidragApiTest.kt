@@ -13,6 +13,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBarnIHusst
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesBeregnedeTotalbidrag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBoforhold
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSumInntekt
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningVoksneIHustand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
@@ -495,6 +496,11 @@ internal class BeregnSærbidragApiTest {
         val delberegningVoksneIHusstandResultat =
             objectMapper.treeToValue(delberegningVoksneIHusstandListe[0].innhold, DelberegningVoksneIHustand::class.java)
 
+        val delberegningBoforholdListe = totalSærbidragResultat.grunnlagListe
+            .filter { it.type == Grunnlagstype.DELBEREGNING_BOFORHOLD }
+        val delberegningBoforholdResultat =
+            objectMapper.treeToValue(delberegningBoforholdListe[0].innhold, DelberegningBoforhold::class.java)
+
         assertAll(
             { assertThat(totalSærbidragResultat).isNotNull },
 
@@ -545,6 +551,11 @@ internal class BeregnSærbidragApiTest {
             // Delberegning Voksne i husstand
             { assertThat(delberegningVoksneIHusstandListe).hasSize(1) },
             { assertThat(delberegningVoksneIHusstandResultat.borMedAndreVoksne).isEqualTo(forventetVoksneIHusstand) },
+
+            // Delberegning Boforhold
+            { assertThat(delberegningBoforholdListe).hasSize(1) },
+            { assertThat(delberegningBoforholdResultat.antallBarn).isEqualTo(forventetAntallBarnIHusstand) },
+            { assertThat(delberegningBoforholdResultat.borMedAndreVoksne).isEqualTo(forventetVoksneIHusstand) },
 
             // Referanser
             { assertThat(referanserIGrunnlagListe).containsAll(alleReferanser) },

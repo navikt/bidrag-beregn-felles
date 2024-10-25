@@ -1,6 +1,7 @@
 package no.nav.bidrag.beregn.barnebidrag.bo
 
 import no.nav.bidrag.beregn.core.dto.BarnIHusstandenPeriodeCore
+import no.nav.bidrag.beregn.core.dto.BoforholdPeriodeCore
 import no.nav.bidrag.beregn.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.core.dto.VoksneIHusstandenPeriodeCore
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
@@ -14,6 +15,7 @@ data class BidragsevnePeriodeGrunnlag(
     val inntektBPPeriodeGrunnlagListe: List<InntektPeriodeCore>,
     val barnIHusstandenPeriodeGrunnlagListe: List<BarnIHusstandenPeriodeCore>,
     val voksneIHusstandenPeriodeGrunnlagListe: List<VoksneIHusstandenPeriodeCore>,
+    val boforholdPeriodeGrunnlagListe: List<BoforholdPeriodeCore>,
     var sjablonSjablontallPeriodeGrunnlagListe: List<SjablonSjablontallPeriodeGrunnlag>,
     var sjablonBidragsevnePeriodeGrunnlagListe: List<SjablonBidragsevnePeriodeGrunnlag>,
     var sjablonTrinnvisSkattesatsPeriodeGrunnlagListe: List<SjablonTrinnvisSkattesatsPeriodeGrunnlag>,

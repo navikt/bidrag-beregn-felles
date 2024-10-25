@@ -333,7 +333,7 @@ abstract class CoreMapper {
                     gjelderReferanse = gjelderReferanse,
                 ),
                 periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
-                borMedAndre = filtrertGrunnlagsliste.any { it.borMedAndre },
+                borMedAndreVoksne = filtrertGrunnlagsliste.any { it.borMedAndreVoksne },
                 grunnlagsreferanseListe = filtrertGrunnlagsliste.map { it.referanse }.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it }),
             )
         }
