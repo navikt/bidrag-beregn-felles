@@ -39,8 +39,8 @@
       "gjelderReferanse": null
     },
     {
-      "referanse": "Mottatt_Samværsklasse_202105_SB1",
-      "type": "SAMVÆRSKLASSE",
+      "referanse": "Mottatt_Samværsperiode_202105_SB1",
+      "type": "SAMVÆRSPERIODE",
       "innhold": {
         "periode": {
           "fom": "2021-05",
@@ -53,8 +53,8 @@
       "gjelderReferanse": null
     },
     {
-      "referanse": "Mottatt_Samværsklasse_202301_SB1",
-      "type": "SAMVÆRSKLASSE",
+      "referanse": "Mottatt_Samværsperiode_202301_SB1",
+      "type": "SAMVÆRSPERIODE",
       "innhold": {
         "periode": {
           "fom": "2023-01",

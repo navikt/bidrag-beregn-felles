@@ -1,7 +1,7 @@
 {
   "periode": {
-    "fom": "2021-05",
-    "til": "2024-10"
+    "fom": "2024-08",
+    "til": "2024-09"
   },
   "søknadsbarnReferanse": "Person_Søknadsbarn",
   "grunnlagListe": [
@@ -43,10 +43,10 @@
       "type": "SAMVÆRSPERIODE",
       "innhold": {
         "periode": {
-          "fom": "2023-01",
+          "fom": "2024-08",
           "til": null
         },
-        "samværsklasse": "SAMVÆRSKLASSE_2",
+        "samværsklasse": "SAMVÆRSKLASSE_1",
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],

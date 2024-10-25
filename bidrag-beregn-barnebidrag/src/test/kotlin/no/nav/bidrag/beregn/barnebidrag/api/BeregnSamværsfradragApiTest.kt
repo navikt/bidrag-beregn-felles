@@ -29,6 +29,8 @@ import java.text.SimpleDateFormat
 @ExtendWith(MockitoExtension::class)
 internal class BeregnSamværsfradragApiTest {
     private lateinit var filnavn: String
+    private lateinit var forventetSamværsfradrag: BigDecimal
+    private var forventetAntallSjablon: Int = 1
 
     @Mock
     private lateinit var beregnBarnebidragService: BeregnBarnebidragService
@@ -40,7 +42,7 @@ internal class BeregnSamværsfradragApiTest {
     }
 
     @Test
-    @DisplayName("Samværsfradrag - eksempel 1 - smaværsklasse mangler")
+    @DisplayName("Samværsfradrag - eksempel 1 - samværsklasse mangler for deler av perioden")
     fun testSamværsfradrag_Eksempel01() {
         filnavn = "src/test/resources/testfiler/samværsfradrag/samværsfradrag_eksempel1.json"
         val request = lesFilOgByggRequest(filnavn)
@@ -51,10 +53,39 @@ internal class BeregnSamværsfradragApiTest {
     }
 
     @Test
+    @DisplayName("Samværsfradrag - eksempel 2 - samværsklasse er delt bosted")
+    fun testSamværsfradrag_Eksempel02() {
+        filnavn = "src/test/resources/testfiler/samværsfradrag/samværsfradrag_eksempel2.json"
+        forventetSamværsfradrag = BigDecimal.ZERO.setScale(2)
+        forventetAntallSjablon = 0
+        utførBeregningerOgEvaluerResultatSamværsfradrag()
+    }
+
+    @Test
+    @DisplayName("Samværsfradrag - eksempel 3 - vanlig samværsklasse")
+    fun testSamværsfradrag_Eksempel03() {
+        filnavn = "src/test/resources/testfiler/samværsfradrag/samværsfradrag_eksempel3.json"
+        forventetSamværsfradrag = BigDecimal.valueOf(547).setScale(2)
+        forventetAntallSjablon = 1
+        utførBeregningerOgEvaluerResultatSamværsfradrag()
+    }
+
+    @Test
+    @DisplayName("Samværsfradrag - eksempel 4 - ugyldig samværsklasse")
+    fun testSamværsfradrag_Eksempel04() {
+        filnavn = "src/test/resources/testfiler/samværsfradrag/samværsfradrag_eksempel4.json"
+        val request = lesFilOgByggRequest(filnavn)
+        val exception = assertThrows(IllegalArgumentException::class.java) {
+            beregnBarnebidragService.beregnSamværsfradrag(request)
+        }
+        assertThat(exception.message).contains("Innhold i Grunnlagstype.SAMVÆRSPERIODE er ikke gyldig")
+    }
+
+    @Test
     @DisplayName("Samværsfradrag - eksempel med flere perioder")
     fun testSamværsfradrag_Eksempel_Flere_Perioder() {
         filnavn = "src/test/resources/testfiler/samværsfradrag/samværsfradrag_eksempel_flere_perioder.json"
-        utførBeregningerOgEvaluerResultatSamværsfradrag()
+        utførBeregningerOgEvaluerResultatSamværsfradragFlerePerioder()
     }
 
     private fun utførBeregningerOgEvaluerResultatSamværsfradrag() {
@@ -75,7 +106,50 @@ internal class BeregnSamværsfradragApiTest {
             }
 
         val antallSamværsklasse = samværsfradragResultat
-            .filter { it.type == Grunnlagstype.SAMVÆRSKLASSE }
+            .filter { it.type == Grunnlagstype.SAMVÆRSPERIODE }
+            .size
+
+        val antallSjablon = samværsfradragResultat
+            .filter { it.type == Grunnlagstype.SJABLON }
+            .size
+
+        assertAll(
+            { assertThat(samværsfradragResultat).isNotNull },
+            { assertThat(samværsfradragResultatListe).isNotNull },
+            { assertThat(samværsfradragResultatListe).hasSize(1) },
+
+            // Resultat
+            { assertThat(samværsfradragResultatListe[0].periode).isEqualTo(ÅrMånedsperiode("2024-08", "2024-09")) },
+            { assertThat(samværsfradragResultatListe[0].beløp).isEqualTo(forventetSamværsfradrag) },
+
+            // Grunnlag
+            { assertThat(antallSamværsklasse).isEqualTo(1) },
+            { assertThat(antallSjablon).isEqualTo(forventetAntallSjablon) },
+
+            // Referanser
+            { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
+        )
+    }
+
+    private fun utførBeregningerOgEvaluerResultatSamværsfradragFlerePerioder() {
+        val request = lesFilOgByggRequest(filnavn)
+        val samværsfradragResultat = beregnBarnebidragService.beregnSamværsfradrag(request)
+        printJson(samværsfradragResultat)
+
+        val alleReferanser = hentAlleReferanser(samværsfradragResultat)
+        val alleRefererteReferanser = hentAlleRefererteReferanser(samværsfradragResultat)
+
+        val samværsfradragResultatListe = samværsfradragResultat
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningSamværsfradrag>(Grunnlagstype.DELBEREGNING_SAMVÆRSFRADRAG)
+            .map {
+                DelberegningSamværsfradrag(
+                    periode = it.innhold.periode,
+                    beløp = it.innhold.beløp,
+                )
+            }
+
+        val antallSamværsklasse = samværsfradragResultat
+            .filter { it.type == Grunnlagstype.SAMVÆRSPERIODE }
             .size
 
         val antallSjablon = samværsfradragResultat
