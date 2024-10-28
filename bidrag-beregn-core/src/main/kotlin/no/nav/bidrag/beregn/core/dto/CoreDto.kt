@@ -50,10 +50,7 @@ data class SjablonPeriodeCore(
 data class FaktiskUtgiftPeriodeCore(
     override val referanse: String,
     override val periode: PeriodeCore,
-    val referanseBarn: Grunnlagsreferanse,
-//    val fødselsdatoBarn: LocalDate,
-//    val faktiskUtgiftBeløp: BigDecimal,
-//    val kostpengerBeløp: BigDecimal,
+    val gjelderBarn: Grunnlagsreferanse,
     val beregnetBeløp: BigDecimal,
     override val grunnlagsreferanseListe: List<String>,
 ) : Delberegning
@@ -61,8 +58,7 @@ data class FaktiskUtgiftPeriodeCore(
 data class TilleggsstønadPeriodeCore(
     override val referanse: String,
     override val periode: PeriodeCore,
-    val referanseBarn: Grunnlagsreferanse,
-//    val beløpDagsats: BigDecimal,
+    val gjelderBarn: Grunnlagsreferanse,
     val beregnetBeløp: BigDecimal,
     override val grunnlagsreferanseListe: List<String>,
 ) : Delberegning

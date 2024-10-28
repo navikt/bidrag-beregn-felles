@@ -14,18 +14,12 @@ import java.time.LocalDate
 
 data class NettoTilsynsutgiftPeriodeGrunnlag(
     val beregningsperiode: ÅrMånedsperiode,
-//    val fødselsdatoBarn: LocalDate,
     val faktiskUtgiftPeriodeCoreListe: List<FaktiskUtgiftPeriodeCore>,
     val tilleggsstønadPeriodeCoreListe: List<TilleggsstønadPeriodeCore>,
+    var sjablonSjablontallPeriodeGrunnlagListe: List<SjablonSjablontallPeriodeGrunnlag>,
     var sjablonMaksTilsynsbeløpPeriodeGrunnlagListe: List<SjablonMaksTilsynsbeløpPeriodeGrunnlag>,
     var sjablonMaksFradragsbeløpPeriodeGrunnlagListe: List<SjablonMaksFradragsbeløpPeriodeGrunnlag>,
 )
-
-data class FaktiskTilsynsutgift(val referanseBarn: String, val beløp: BigDecimal)
-
-data class Kostpenger(val referanseBarn: String, val beløp: BigDecimal)
-
-data class Tilleggstønad(val referanseBarn: String, val beløp: BigDecimal)
 
 data class SjablonMaksTilsynsbeløpPeriodeGrunnlag(val referanse: String, val sjablonMaksTilsynsbeløpPeriode: SjablonMaksTilsynPeriode)
 
@@ -35,22 +29,33 @@ data class NettoTilsynsutgiftPeriodeResultat(val periode: ÅrMånedsperiode, val
 
 data class NettoTilsynsutgiftBeregningGrunnlag(
     val faktiskUtgiftListe: List<FaktiskUtgift>,
-    val sjablonMaksTilsynsbeløpBeregningGrunnlag: List<SjablonMaksTilsynsbeløpBeregningGrunnlag>,
-    val sjablonMaksFradragsbeløpBeregningGrunnlag: List<SjablonMaksFradragsbeløpBeregningGrunnlag>,
+    val tilleggsstønadListe: List<Tilleggsstønad>,
+    val sjablonSjablontallBeregningGrunnlagListe: List<SjablonSjablontallBeregningGrunnlag>,
+    val sjablonMaksTilsynsbeløpBeregningGrunnlag: SjablonMaksTilsynsbeløpBeregningGrunnlag,
+    val sjablonMaksFradragsbeløpBeregningGrunnlag: SjablonMaksFradragsbeløpBeregningGrunnlag,
 )
 
 data class SjablonMaksTilsynsbeløpBeregningGrunnlag(val referanse: String, val antallBarnTom: Int, val maxBeløpTilsyn: BigDecimal)
 data class SjablonMaksFradragsbeløpBeregningGrunnlag(val referanse: String, val antallBarnTom: Int, val maxBeløpFradrag: BigDecimal)
 
-data class NettoTilsynsutgiftBeregningResultat(val beløp: BigDecimal, val grunnlagsreferanseListe: List<String>)
+data class NettoTilsynsutgiftBeregningResultat(
+    val nettoTilsynsutgiftBeløp: BigDecimal,
+    val samletFaktiskUtgiftBeløp: BigDecimal,
+    val samletTilleggstønadBeløp: BigDecimal,
+    val skattefradragsbeløpPerBarn: BigDecimal,
+    val bruttoTilsynsutgiftBarnListe: List<BruttoTilsynsutgiftBarn>,
+    val grunnlagsreferanseListe: List<String>,
+)
 
-data class FaktiskUtgift(val referanseBarn: String, val beregnetBeløp: BigDecimal)
+data class BruttoTilsynsutgiftBarn(val gjelderBarn: Grunnlagsreferanse, val bruttoTilsynsutgift: BigDecimal, val nettoTilsynsutgift: BigDecimal)
+
+data class FaktiskUtgift(val referanse: String, val gjelderBarn: Grunnlagsreferanse, val beregnetBeløp: BigDecimal)
+data class Tilleggsstønad(val referanse: String, val gjelderBarn: Grunnlagsreferanse, val beregnetBeløp: BigDecimal)
 
 data class FaktiskUtgiftPeriode(
-    val referanse: String,
     override val periode: ÅrMånedsperiode,
     @Schema(description = "Referanse til barnet utgiften gjelder")
-    val referanseBarn: Grunnlagsreferanse,
+    val gjelderBarn: Grunnlagsreferanse,
     val fødselsdatoBarn: LocalDate,
     val faktiskUtgiftBeløp: BigDecimal,
     val kostpengerBeløp: BigDecimal,
@@ -58,14 +63,22 @@ data class FaktiskUtgiftPeriode(
 ) : GrunnlagPeriodeInnhold
 
 data class TilleggsstønadPeriode(
-    val referanse: String,
     override val periode: ÅrMånedsperiode,
-    val beløpDagsats: BigDecimal,
     @Schema(description = "Referanse til barnet stønaden mottas for")
-    val referanseBarn: Grunnlagsreferanse,
+    val gjelderBarn: Grunnlagsreferanse,
+    val beløpDagsats: BigDecimal,
     override val manueltRegistrert: Boolean,
 ) : GrunnlagPeriodeInnhold
 
 data class DelberegningFaktiskTilsynsutgift(override val periode: ÅrMånedsperiode, val beregnetBeløp: BigDecimal) : Delberegning
 
 data class DelberegningTilleggsstønad(override val periode: ÅrMånedsperiode, val beregnetBeløp: BigDecimal) : Delberegning
+
+data class DelberegningNettoTilsynsutgift(
+    override val periode: ÅrMånedsperiode,
+    val nettoTilsynsutgiftBeløp: BigDecimal,
+    val samletFaktiskUtgiftBeløp: BigDecimal,
+    val samletTilleggstønadBeløp: BigDecimal,
+    val skattefradragsbeløpPerBarn: BigDecimal,
+    val bruttoTilsynsutgiftBarnListe: List<BruttoTilsynsutgiftBarn>,
+) : Delberegning

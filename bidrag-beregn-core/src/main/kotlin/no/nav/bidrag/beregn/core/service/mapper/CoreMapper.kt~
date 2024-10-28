@@ -372,11 +372,11 @@ abstract class CoreMapper {
             .map { periode ->
                 val filtrertGrunnlagsliste = filtrerGrunnlagsliste(grunnlagsliste = faktiskUtgiftPeriodeCoreListe, periode = periode)
 
-                val totalBeregnetBeløpBarn = filtrertGrunnlagsliste
+                val accumulatedBeregnetBeløp = filtrertGrunnlagsliste
                     .groupBy { it.gjelderBarn }
                     .mapValues { entry -> entry.value.sumOf { it.beregnetBeløp } }
 
-                totalBeregnetBeløpBarn.forEach { (gjelderBarn, beregnetBeløp) ->
+                accumulatedBeregnetBeløp.forEach { (gjelderBarn, beregnetBeløp) ->
                     resultatListe.add(
                         FaktiskUtgiftPeriodeCore(
                             referanse = opprettDelberegningreferanse(
