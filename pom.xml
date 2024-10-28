@@ -21,7 +21,7 @@
         <swagger.version>2.2.25</swagger.version>
         <ktlint.version>1.3.1</ktlint.version>
         <bidrag-felles.version>2024.10.24.132806</bidrag-felles.version>
-        <spring-boot.version>3.3.4</spring-boot.version>
+        <spring-boot.version>3.3.5</spring-boot.version>
         <kotlin-logging-jvm.version>7.0.0</kotlin-logging-jvm.version>
         <mockito-kotlin.version>5.4.0</mockito-kotlin.version>
         <mockk.version>1.13.13</mockk.version>
