@@ -211,12 +211,12 @@ internal class ForskuddCoreMapperTest {
 
             { assertThat(inntektPeriodeListe[0].periode.datoFom).isEqualTo(LocalDate.parse("2022-01-01")) },
             { assertThat(inntektPeriodeListe[0].periode.datoTil).isEqualTo(LocalDate.parse("2022-02-01")) },
-            { assertThat(inntektPeriodeListe[0].beløp).isEqualTo(BigDecimal.valueOf(100000)) },
+            { assertThat(inntektPeriodeListe[0].beløp).isEqualTo(BigDecimal.valueOf(100000.00).setScale(2)) },
             { assertThat(inntektPeriodeListe[0].grunnlagsreferanseListe).containsExactly("BeregningInntektRapportering_Ainntekt_BM_202201") },
 
             { assertThat(inntektPeriodeListe[1].periode.datoFom).isEqualTo(LocalDate.parse("2022-02-01")) },
             { assertThat(inntektPeriodeListe[1].periode.datoTil).isEqualTo(LocalDate.parse("2022-03-01")) },
-            { assertThat(inntektPeriodeListe[1].beløp).isEqualTo(BigDecimal.valueOf(300000)) },
+            { assertThat(inntektPeriodeListe[1].beløp).isEqualTo(BigDecimal.valueOf(300000.00).setScale(2)) },
             {
                 assertThat(inntektPeriodeListe[1].grunnlagsreferanseListe).containsExactly(
                     "BeregningInntektRapportering_Ainntekt_BM_202201",
@@ -226,7 +226,7 @@ internal class ForskuddCoreMapperTest {
 
             { assertThat(inntektPeriodeListe[2].periode.datoFom).isEqualTo(LocalDate.parse("2022-03-01")) },
             { assertThat(inntektPeriodeListe[2].periode.datoTil).isEqualTo(LocalDate.parse("2022-04-01")) },
-            { assertThat(inntektPeriodeListe[2].beløp).isEqualTo(BigDecimal.valueOf(500000)) },
+            { assertThat(inntektPeriodeListe[2].beløp).isEqualTo(BigDecimal.valueOf(500000.00).setScale(2)) },
             {
                 assertThat(inntektPeriodeListe[2].grunnlagsreferanseListe).containsExactly(
                     "BeregningInntektRapportering_Ainntekt_BM_202202",
@@ -236,7 +236,7 @@ internal class ForskuddCoreMapperTest {
 
             { assertThat(inntektPeriodeListe[3].periode.datoFom).isEqualTo(LocalDate.parse("2022-04-01")) },
             { assertThat(inntektPeriodeListe[3].periode.datoTil).isEqualTo(LocalDate.parse("2022-05-01")) },
-            { assertThat(inntektPeriodeListe[3].beløp).isEqualTo(BigDecimal.valueOf(900000)) },
+            { assertThat(inntektPeriodeListe[3].beløp).isEqualTo(BigDecimal.valueOf(900000.00).setScale(2)) },
             {
                 assertThat(inntektPeriodeListe[3].grunnlagsreferanseListe).containsExactly(
                     "BeregningInntektRapportering_Ainntekt_BM_202202",
@@ -247,7 +247,7 @@ internal class ForskuddCoreMapperTest {
 
             { assertThat(inntektPeriodeListe[4].periode.datoFom).isEqualTo(LocalDate.parse("2022-05-01")) },
             { assertThat(inntektPeriodeListe[4].periode.datoTil).isNull() },
-            { assertThat(inntektPeriodeListe[4].beløp).isEqualTo(BigDecimal.valueOf(700000)) },
+            { assertThat(inntektPeriodeListe[4].beløp).isEqualTo(BigDecimal.valueOf(700000.00).setScale(2)) },
             {
                 assertThat(inntektPeriodeListe[4].grunnlagsreferanseListe).containsExactly(
                     "BeregningInntektRapportering_Ainntekt_BM_202203",

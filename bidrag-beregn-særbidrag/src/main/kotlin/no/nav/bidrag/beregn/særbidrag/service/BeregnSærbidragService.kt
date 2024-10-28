@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.særbidrag.service
 
 import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.core.dto.BarnIHusstandenPeriodeCore
+import no.nav.bidrag.beregn.core.dto.BoforholdPeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonResultatGrunnlagCore
 import no.nav.bidrag.beregn.core.dto.VoksneIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.core.exception.UgyldigInputException
@@ -47,6 +48,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBarnIHusst
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesBeregnedeTotalbidrag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBoforhold
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUtgift
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningVoksneIHustand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
@@ -102,7 +104,7 @@ internal class BeregnSærbidragService(
         val forskuddssats = sjablonListe.sjablonSjablontallResponse
             .filter { it.typeSjablon == SjablonTallNavn.FORSKUDDSSATS_BELØP.id }
             .maxBy { it.datoTom ?: it.datoFom!! }
-        if (delberegningUtgift.sumGodkjent < forskuddssats?.verdi) Resultatkode.GODKJENT_BELØP_ER_LAVERE_ENN_FORSKUDDSSATS else null
+        if (delberegningUtgift.sumGodkjent < forskuddssats.verdi) Resultatkode.GODKJENT_BELØP_ER_LAVERE_ENN_FORSKUDDSSATS else null
     } else {
         null
     }
@@ -390,10 +392,12 @@ internal class BeregnSærbidragService(
         // Filtrerer ut delberegninger som er brukt som grunnlag
         val sumInntektListe = grunnlagTilCore.inntektPeriodeListe
             .filter { grunnlagReferanseListe.contains(it.referanse) }
+        val boforholdListe = grunnlagTilCore.boforholdPeriodeListe
+            .filter { grunnlagReferanseListe.contains(it.referanse) }
         val sumAntallBarnListe = grunnlagTilCore.barnIHusstandenPeriodeListe
-            .filter { grunnlagReferanseListe.contains(it.referanse) }
+            .filter { boforholdListe.flatMap { it.grunnlagsreferanseListe }.contains(it.referanse) }
         val voksneIHusstandenListe = grunnlagTilCore.voksneIHusstandenPeriodeListe
-            .filter { grunnlagReferanseListe.contains(it.referanse) }
+            .filter { boforholdListe.flatMap { it.grunnlagsreferanseListe }.contains(it.referanse) }
 
         // Mapper ut DelberegningSumInntekt. Inntektskategorier summeres opp.
         resultatGrunnlagListe.addAll(
@@ -405,7 +409,15 @@ internal class BeregnSærbidragService(
             ),
         )
 
-        // Mapper ut DelberegningBarnIHusstand
+        // Mapper ut DelberegningBoforhold
+        resultatGrunnlagListe.addAll(
+            mapDelberegningBoforhold(
+                boforholdListe = boforholdListe,
+                bidragspliktigReferanse = bidragspliktigReferanse,
+            ),
+        )
+
+        // Mapper ut DelberegningBarnIHusstand (sub-delberegning til DelberegningBoforhold)
         resultatGrunnlagListe.addAll(
             mapDelberegningBarnIHusstand(
                 sumAntallBarnListe = sumAntallBarnListe,
@@ -413,7 +425,7 @@ internal class BeregnSærbidragService(
             ),
         )
 
-        // Mapper ut DelberegningVoksneIHusstand
+        // Mapper ut DelberegningVoksneIHusstand (sub-delberegning til DelberegningBoforhold)
         resultatGrunnlagListe.addAll(
             mapDelberegningVoksneIHusstand(
                 voksneIHusstandenListe = voksneIHusstandenListe,
@@ -671,13 +683,31 @@ internal class BeregnSærbidragService(
                     innhold = POJONode(
                         DelberegningVoksneIHustand(
                             periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
-                            borMedAndreVoksne = it.borMedAndre,
+                            borMedAndreVoksne = it.borMedAndreVoksne,
                         ),
                     ),
                     grunnlagsreferanseListe = it.grunnlagsreferanseListe,
                     gjelderReferanse = bidragspliktigReferanse,
                 )
             }
+
+    // Mapper ut DelberegningBoforhold
+    private fun mapDelberegningBoforhold(boforholdListe: List<BoforholdPeriodeCore>, bidragspliktigReferanse: String) = boforholdListe
+        .map {
+            GrunnlagDto(
+                referanse = it.referanse,
+                type = bestemGrunnlagstype(it.referanse),
+                innhold = POJONode(
+                    DelberegningBoforhold(
+                        periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
+                        antallBarn = it.antallBarn,
+                        borMedAndreVoksne = it.borMedAndreVoksne,
+                    ),
+                ),
+                grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
+                gjelderReferanse = bidragspliktigReferanse,
+            )
+        }
 
     // Mapper ut DelberegningBidragsevne
     private fun mapDelberegningBidragsevne(
@@ -700,6 +730,7 @@ internal class BeregnSærbidragService(
                 grunnlagsreferanseListe = bidragsevneResultatFraCore.resultatPeriodeListe
                     .firstOrNull { resultatPeriode -> resultatPeriode.periode.datoFom == bidragsevne.periode.datoFom }
                     ?.grunnlagsreferanseListe
+                    ?.distinct()
                     ?.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it })
                     ?: emptyList(),
                 gjelderReferanse = bidragspliktigReferanse,

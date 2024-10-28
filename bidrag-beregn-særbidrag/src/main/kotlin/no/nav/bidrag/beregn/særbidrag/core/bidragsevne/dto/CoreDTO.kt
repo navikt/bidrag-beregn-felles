@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto
 
 import no.nav.bidrag.beregn.core.dto.AvvikCore
 import no.nav.bidrag.beregn.core.dto.BarnIHusstandenPeriodeCore
+import no.nav.bidrag.beregn.core.dto.BoforholdPeriodeCore
 import no.nav.bidrag.beregn.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
@@ -19,6 +20,7 @@ data class BeregnBidragsevneGrunnlagCore(
     val inntektPeriodeListe: List<InntektPeriodeCore>,
     val barnIHusstandenPeriodeListe: List<BarnIHusstandenPeriodeCore>,
     val voksneIHusstandenPeriodeListe: List<VoksneIHusstandenPeriodeCore>,
+    val boforholdPeriodeListe: List<BoforholdPeriodeCore>,
     var sjablonPeriodeListe: List<SjablonPeriodeCore>,
 )
 

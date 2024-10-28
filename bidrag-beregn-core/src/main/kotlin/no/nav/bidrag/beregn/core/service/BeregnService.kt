@@ -65,7 +65,7 @@ abstract class BeregnService {
                 innhold = POJONode(
                     DelberegningSumInntekt(
                         periode = ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil),
-                        totalinntekt = it.beløp,
+                        totalinntekt = it.beløp.setScale(2),
                         kontantstøtte = summerInntekter(
                             beregnGrunnlag = beregnGrunnlag,
                             grunnlagsreferanseListe = it.grunnlagsreferanseListe,
@@ -111,6 +111,7 @@ abstract class BeregnService {
         referanse.contains(Grunnlagstype.DELBEREGNING_SUM_INNTEKT.name) -> Grunnlagstype.DELBEREGNING_SUM_INNTEKT
         referanse.contains(Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND.name) -> Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND
         referanse.contains(Grunnlagstype.DELBEREGNING_VOKSNE_I_HUSSTAND.name) -> Grunnlagstype.DELBEREGNING_VOKSNE_I_HUSSTAND
+        referanse.contains(Grunnlagstype.DELBEREGNING_BOFORHOLD.name) -> Grunnlagstype.DELBEREGNING_BOFORHOLD
         referanse.contains(Grunnlagstype.DELBEREGNING_BIDRAGSEVNE.name) -> Grunnlagstype.DELBEREGNING_BIDRAGSEVNE
         referanse.contains(
             Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_BEREGNEDE_TOTALBIDRAG.name,
@@ -150,9 +151,9 @@ abstract class BeregnService {
                                 justerKapitalinntekt(
                                     beløp = it.innhold.beløp,
                                     innslagKapitalinntektSjablonverdi = innslagKapitalinntektSjablonverdi,
-                                )
+                                ).setScale(2)
                             } else {
-                                it.innhold.beløp
+                                it.innhold.beløp.setScale(2)
                             },
                         )
                     }

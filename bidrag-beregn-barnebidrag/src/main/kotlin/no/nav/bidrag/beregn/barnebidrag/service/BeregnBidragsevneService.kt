@@ -14,6 +14,7 @@ import no.nav.bidrag.beregn.barnebidrag.bo.VoksneIHusstandenBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.mapper.BidragsevneMapper.finnReferanseTilRolle
 import no.nav.bidrag.beregn.barnebidrag.mapper.BidragsevneMapper.mapBidragsevneGrunnlag
 import no.nav.bidrag.beregn.core.dto.BarnIHusstandenPeriodeCore
+import no.nav.bidrag.beregn.core.dto.BoforholdPeriodeCore
 import no.nav.bidrag.beregn.core.dto.VoksneIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
@@ -24,6 +25,7 @@ import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBarnIHusstand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBoforhold
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningVoksneIHustand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
@@ -105,8 +107,7 @@ internal object BeregnBidragsevneService : BeregnService() {
     ): List<ÅrMånedsperiode> {
         val periodeListe = sequenceOf(grunnlagListe.beregningsperiode)
             .plus(grunnlagListe.inntektBPPeriodeGrunnlagListe.asSequence().map { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil) })
-            .plus(grunnlagListe.barnIHusstandenPeriodeGrunnlagListe.asSequence().map { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil) })
-            .plus(grunnlagListe.voksneIHusstandenPeriodeGrunnlagListe.asSequence().map { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil) })
+            .plus(grunnlagListe.boforholdPeriodeGrunnlagListe.asSequence().map { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil) })
             .plus(grunnlagListe.sjablonSjablontallPeriodeGrunnlagListe.asSequence().map { it.sjablonSjablontallPeriode.periode })
             .plus(grunnlagListe.sjablonBidragsevnePeriodeGrunnlagListe.asSequence().map { it.sjablonBidragsevnePeriode.periode })
             .plus(grunnlagListe.sjablonTrinnvisSkattesatsPeriodeGrunnlagListe.asSequence().map { it.sjablonTrinnvisSkattesatsPeriode.periode })
@@ -119,9 +120,9 @@ internal object BeregnBidragsevneService : BeregnService() {
         bidragsevnePeriodeGrunnlag: BidragsevnePeriodeGrunnlag,
         bruddPeriode: ÅrMånedsperiode,
     ): BidragsevneBeregningGrunnlag {
-        val borMedAndre = bidragsevnePeriodeGrunnlag.voksneIHusstandenPeriodeGrunnlagListe
+        val borMedAndre = bidragsevnePeriodeGrunnlag.boforholdPeriodeGrunnlagListe
             .firstOrNull { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
-            ?.borMedAndre
+            ?.borMedAndreVoksne
         val bostatus = if (borMedAndre == true) "GS" else "EN"
 
         return BidragsevneBeregningGrunnlag(
@@ -129,13 +130,13 @@ internal object BeregnBidragsevneService : BeregnService() {
                 .firstOrNull { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
                 ?.let { InntektBeregningGrunnlag(referanse = it.referanse, sumInntekt = it.beløp) }
                 ?: throw IllegalArgumentException("Delberegning sum inntekt for bidragspliktig mangler for periode $bruddPeriode"),
-            barnIHusstandenBeregningGrunnlag = bidragsevnePeriodeGrunnlag.barnIHusstandenPeriodeGrunnlagListe
+            barnIHusstandenBeregningGrunnlag = bidragsevnePeriodeGrunnlag.boforholdPeriodeGrunnlagListe
                 .firstOrNull { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
-                ?.let { BarnIHusstandenBeregningGrunnlag(referanse = it.referanse, antallBarn = it.antall) }
+                ?.let { BarnIHusstandenBeregningGrunnlag(referanse = it.referanse, antallBarn = it.antallBarn) }
                 ?: throw IllegalArgumentException("Grunnlag barn i husstanden mangler for periode $bruddPeriode"),
-            voksneIHusstandenBeregningGrunnlag = bidragsevnePeriodeGrunnlag.voksneIHusstandenPeriodeGrunnlagListe
+            voksneIHusstandenBeregningGrunnlag = bidragsevnePeriodeGrunnlag.boforholdPeriodeGrunnlagListe
                 .firstOrNull { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
-                ?.let { VoksneIHusstandenBeregningGrunnlag(referanse = it.referanse, borMedAndre = it.borMedAndre) }
+                ?.let { VoksneIHusstandenBeregningGrunnlag(referanse = it.referanse, borMedAndre = it.borMedAndreVoksne) }
                 ?: throw IllegalArgumentException("Grunnlag voksne i husstanden mangler for periode $bruddPeriode"),
             sjablonSjablontallBeregningGrunnlagListe = bidragsevnePeriodeGrunnlag.sjablonSjablontallPeriodeGrunnlagListe
                 .filter { it.sjablonSjablontallPeriode.periode.inneholder(bruddPeriode) }
@@ -243,7 +244,7 @@ internal object BeregnBidragsevneService : BeregnService() {
                         underholdBarnEgenHusstand = it.resultat.underholdBarnEgenHusstand,
                     ),
                 ),
-                grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe.sorted(),
+                grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe.distinct().sorted(),
                 gjelderReferanse = finnReferanseTilRolle(
                     grunnlagListe = mottattGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
@@ -276,9 +277,19 @@ internal object BeregnBidragsevneService : BeregnService() {
             ),
         )
 
-        // Mapper ut DelberegningBarnIHusstand
-        val sumAntallBarnListe = bidragsevnePeriodeGrunnlag.barnIHusstandenPeriodeGrunnlagListe
+        // Mapper ut DelberegningBoforhold
+        val boforholdListe = bidragsevnePeriodeGrunnlag.boforholdPeriodeGrunnlagListe
             .filter { grunnlagReferanseListe.contains(it.referanse) }
+        resultatGrunnlagListe.addAll(
+            mapDelberegningBoforhold(
+                boforholdListe = boforholdListe,
+                bidragspliktigReferanse = referanseTilBP,
+            ),
+        )
+
+        // Mapper ut DelberegningBarnIHusstand (sub-delberegning til DelberegningBoforhold)
+        val sumAntallBarnListe = bidragsevnePeriodeGrunnlag.barnIHusstandenPeriodeGrunnlagListe
+            .filter { boforholdListe.flatMap { it.grunnlagsreferanseListe }.contains(it.referanse) }
         resultatGrunnlagListe.addAll(
             mapDelberegningBarnIHusstand(
                 sumAntallBarnListe = sumAntallBarnListe,
@@ -286,9 +297,9 @@ internal object BeregnBidragsevneService : BeregnService() {
             ),
         )
 
-        // Mapper ut DelberegningVoksneIHusstand
+        // Mapper ut DelberegningVoksneIHusstand (sub-delberegning til DelberegningBoforhold)
         val voksneIHusstandenListe = bidragsevnePeriodeGrunnlag.voksneIHusstandenPeriodeGrunnlagListe
-            .filter { grunnlagReferanseListe.contains(it.referanse) }
+            .filter { boforholdListe.flatMap { it.grunnlagsreferanseListe }.contains(it.referanse) }
         resultatGrunnlagListe.addAll(
             mapDelberegningVoksneIHusstand(
                 voksneIHusstandenListe = voksneIHusstandenListe,
@@ -296,7 +307,7 @@ internal object BeregnBidragsevneService : BeregnService() {
             ),
         )
 
-        // Lager en liste av referanser som refereres til av delberegningene og mapper ut tilhørende grunnlag
+        // Lager en liste av referanser som refereres til av delberegningene på laveste nivå og mapper ut tilhørende grunnlag
         val delberegningReferanseListe =
             sumInntektListe.flatMap { it.grunnlagsreferanseListe }
                 .union(
@@ -352,13 +363,31 @@ internal object BeregnBidragsevneService : BeregnService() {
                     innhold = POJONode(
                         DelberegningVoksneIHustand(
                             periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
-                            borMedAndreVoksne = it.borMedAndre,
+                            borMedAndreVoksne = it.borMedAndreVoksne,
                         ),
                     ),
                     grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
                     gjelderReferanse = bidragspliktigReferanse,
                 )
             }
+
+    // Mapper ut DelberegningBoforhold
+    private fun mapDelberegningBoforhold(boforholdListe: List<BoforholdPeriodeCore>, bidragspliktigReferanse: String) = boforholdListe
+        .map {
+            GrunnlagDto(
+                referanse = it.referanse,
+                type = bestemGrunnlagstype(it.referanse),
+                innhold = POJONode(
+                    DelberegningBoforhold(
+                        periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
+                        antallBarn = it.antallBarn,
+                        borMedAndreVoksne = it.borMedAndreVoksne,
+                    ),
+                ),
+                grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
+                gjelderReferanse = bidragspliktigReferanse,
+            )
+        }
 
     // Henter sjablonverdi for kapitalinntekt
     // TODO Bør synkes med som ligger i CoreMapper. Pt ligger det bare en gyldig sjablonverdi (uforandret siden 2003).

@@ -25,14 +25,14 @@ internal class SærbidragBeregningTest {
     @Test
     fun testFullEvneIngentingBetaltAvBP() {
         val beløpBetaltAvBP = BigDecimal.ZERO
-        val bPsAndelBeløp = BigDecimal.valueOf(4000)
-        val bidragsevneBeløp = BigDecimal.valueOf(11000)
+        val bPsAndelBeløp = BigDecimal.valueOf(4000.00).setScale(2)
+        val bidragsevneBeløp = BigDecimal.valueOf(11000.00).setScale(2)
         val skatt = DelberegningBidragsevne.Skatt(
-            minstefradrag = BigDecimal.valueOf(80000),
-            skattAlminneligInntekt = BigDecimal.valueOf(90000),
-            trinnskatt = BigDecimal.valueOf(10000),
-            trygdeavgift = BigDecimal.valueOf(50000),
-            sumSkatt = BigDecimal.valueOf(150000),
+            minstefradrag = BigDecimal.valueOf(80000.00).setScale(2),
+            skattAlminneligInntekt = BigDecimal.valueOf(90000.00).setScale(2),
+            trinnskatt = BigDecimal.valueOf(10000.00).setScale(2),
+            trygdeavgift = BigDecimal.valueOf(50000.00).setScale(2),
+            sumSkatt = BigDecimal.valueOf(150000.00).setScale(2),
         )
         val underholdBarnEgenHusstand = BigDecimal.valueOf(10000)
         val bPsBeregnedeTotalbidrag = BigDecimal.valueOf(10000)
@@ -47,10 +47,10 @@ internal class SærbidragBeregningTest {
             ),
             bPsAndelSærbidrag = BPsAndelSærbidrag(
                 referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,
-                endeligAndelFaktor = BigDecimal.valueOf(0.606),
+                endeligAndelFaktor = BigDecimal.valueOf(0.6060000000).setScale(10),
                 andelBeløp = bPsAndelBeløp,
-                beregnetAndelFaktor = BigDecimal.valueOf(0.606),
-                barnEndeligInntekt = BigDecimal.ZERO,
+                beregnetAndelFaktor = BigDecimal.valueOf(0.6060000000).setScale(10),
+                barnEndeligInntekt = BigDecimal.valueOf(0.00).setScale(2),
                 barnetErSelvforsørget = false,
             ),
             bPsBeregnedeTotalbidrag = BPsBeregnedeTotalbidragPeriode(
@@ -65,7 +65,7 @@ internal class SærbidragBeregningTest {
         assertAll(
             { assertThat(beregnetBeløp).isEqualTo(bPsAndelBeløp) },
             { assertThat(resultatKode).isEqualTo(Resultatkode.SÆRBIDRAG_INNVILGET) },
-            { assertThat(resultatBeløp).isEqualTo(bPsAndelBeløp) },
+            { assertThat(resultatBeløp).isEqualTo(bPsAndelBeløp.setScale(0)) },
         )
     }
 
@@ -73,14 +73,14 @@ internal class SærbidragBeregningTest {
     @Test
     fun testFullEvneNoeBetaltAvBP() {
         val beløpBetaltAvBP = BigDecimal.valueOf(2000)
-        val bPsAndelBeløp = BigDecimal.valueOf(4000)
-        val bidragsevneBeløp = BigDecimal.valueOf(11000)
+        val bPsAndelBeløp = BigDecimal.valueOf(4000.00).setScale(2)
+        val bidragsevneBeløp = BigDecimal.valueOf(11000.00).setScale(2)
         val skatt = DelberegningBidragsevne.Skatt(
-            minstefradrag = BigDecimal.valueOf(80000),
-            skattAlminneligInntekt = BigDecimal.valueOf(90000),
-            trinnskatt = BigDecimal.valueOf(10000),
-            trygdeavgift = BigDecimal.valueOf(50000),
-            sumSkatt = BigDecimal.valueOf(150000),
+            minstefradrag = BigDecimal.valueOf(80000).setScale(2),
+            skattAlminneligInntekt = BigDecimal.valueOf(90000).setScale(2),
+            trinnskatt = BigDecimal.valueOf(10000).setScale(2),
+            trygdeavgift = BigDecimal.valueOf(50000).setScale(2),
+            sumSkatt = BigDecimal.valueOf(150000).setScale(2),
         )
         val underholdBarnEgenHusstand = BigDecimal.valueOf(10000)
         val bPsBeregnedeTotalbidrag = BigDecimal.valueOf(10000)
@@ -95,10 +95,10 @@ internal class SærbidragBeregningTest {
             ),
             bPsAndelSærbidrag = BPsAndelSærbidrag(
                 referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,
-                endeligAndelFaktor = BigDecimal.valueOf(0.606),
+                endeligAndelFaktor = BigDecimal.valueOf(0.6060000000).setScale(10),
                 andelBeløp = bPsAndelBeløp,
-                beregnetAndelFaktor = BigDecimal.valueOf(0.606),
-                barnEndeligInntekt = BigDecimal.ZERO,
+                beregnetAndelFaktor = BigDecimal.valueOf(0.6060000000).setScale(10),
+                barnEndeligInntekt = BigDecimal.valueOf(0.00).setScale(2),
                 barnetErSelvforsørget = false,
             ),
             bPsBeregnedeTotalbidrag = BPsBeregnedeTotalbidragPeriode(
@@ -113,7 +113,7 @@ internal class SærbidragBeregningTest {
         assertAll(
             { assertThat(beregnetBeløp).isEqualTo(bPsAndelBeløp) },
             { assertThat(resultatKode).isEqualTo(Resultatkode.SÆRBIDRAG_INNVILGET) },
-            { assertThat(resultatBeløp).isEqualTo(bPsAndelBeløp) },
+            { assertThat(resultatBeløp).isEqualTo(bPsAndelBeløp.setScale(0)) },
         )
     }
 
@@ -121,14 +121,14 @@ internal class SærbidragBeregningTest {
     @Test
     fun testFullEvneForMyeBetaltAvBP() {
         val beløpBetaltAvBP = BigDecimal.valueOf(5000)
-        val bPsAndelBeløp = BigDecimal.valueOf(4000)
-        val bidragsevneBeløp = BigDecimal.valueOf(11000)
+        val bPsAndelBeløp = BigDecimal.valueOf(4000.00).setScale(2)
+        val bidragsevneBeløp = BigDecimal.valueOf(11000).setScale(2)
         val skatt = DelberegningBidragsevne.Skatt(
-            minstefradrag = BigDecimal.valueOf(80000),
-            skattAlminneligInntekt = BigDecimal.valueOf(90000),
-            trinnskatt = BigDecimal.valueOf(10000),
-            trygdeavgift = BigDecimal.valueOf(50000),
-            sumSkatt = BigDecimal.valueOf(150000),
+            minstefradrag = BigDecimal.valueOf(80000).setScale(2),
+            skattAlminneligInntekt = BigDecimal.valueOf(90000).setScale(2),
+            trinnskatt = BigDecimal.valueOf(10000).setScale(2),
+            trygdeavgift = BigDecimal.valueOf(50000).setScale(2),
+            sumSkatt = BigDecimal.valueOf(150000).setScale(2),
         )
         val underholdBarnEgenHusstand = BigDecimal.valueOf(10000)
         val bPsBeregnedeTotalbidrag = BigDecimal.valueOf(10000)
@@ -143,10 +143,10 @@ internal class SærbidragBeregningTest {
             ),
             bPsAndelSærbidrag = BPsAndelSærbidrag(
                 referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,
-                endeligAndelFaktor = BigDecimal.valueOf(0.606),
+                endeligAndelFaktor = BigDecimal.valueOf(0.6060000000).setScale(10),
                 andelBeløp = bPsAndelBeløp,
-                beregnetAndelFaktor = BigDecimal.valueOf(0.606),
-                barnEndeligInntekt = BigDecimal.ZERO,
+                beregnetAndelFaktor = BigDecimal.valueOf(0.6060000000).setScale(10),
+                barnEndeligInntekt = BigDecimal.valueOf(0.00).setScale(2),
                 barnetErSelvforsørget = false,
             ),
             bPsBeregnedeTotalbidrag = BPsBeregnedeTotalbidragPeriode(
@@ -161,7 +161,7 @@ internal class SærbidragBeregningTest {
         assertAll(
             { assertThat(beregnetBeløp).isEqualTo(bPsAndelBeløp) },
             { assertThat(resultatKode).isEqualTo(Resultatkode.SÆRBIDRAG_INNVILGET) },
-            { assertThat(resultatBeløp).isEqualTo(maxOf(BigDecimal.ZERO, bPsAndelBeløp)) },
+            { assertThat(resultatBeløp).isEqualTo(maxOf(BigDecimal.ZERO, bPsAndelBeløp.setScale(0))) },
         )
     }
 
@@ -169,14 +169,14 @@ internal class SærbidragBeregningTest {
     @Test
     fun testEvneErLavereEnnBPsAndel() {
         val beløpBetaltAvBP = BigDecimal.valueOf(5000)
-        val bPsAndelBeløp = BigDecimal.valueOf(4000)
-        val bidragsevneBeløp = BigDecimal.valueOf(2000)
+        val bPsAndelBeløp = BigDecimal.valueOf(4000).setScale(2)
+        val bidragsevneBeløp = BigDecimal.valueOf(2000).setScale(2)
         val skatt = DelberegningBidragsevne.Skatt(
-            minstefradrag = BigDecimal.valueOf(80000),
-            skattAlminneligInntekt = BigDecimal.valueOf(90000),
-            trinnskatt = BigDecimal.valueOf(10000),
-            trygdeavgift = BigDecimal.valueOf(50000),
-            sumSkatt = BigDecimal.valueOf(150000),
+            minstefradrag = BigDecimal.valueOf(80000).setScale(2),
+            skattAlminneligInntekt = BigDecimal.valueOf(90000).setScale(2),
+            trinnskatt = BigDecimal.valueOf(10000).setScale(2),
+            trygdeavgift = BigDecimal.valueOf(50000).setScale(2),
+            sumSkatt = BigDecimal.valueOf(150000).setScale(2),
         )
         val underholdBarnEgenHusstand = BigDecimal.valueOf(10000)
         val bPsBeregnedeTotalbidrag = BigDecimal.valueOf(10000)
@@ -191,10 +191,10 @@ internal class SærbidragBeregningTest {
             ),
             bPsAndelSærbidrag = BPsAndelSærbidrag(
                 referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,
-                endeligAndelFaktor = BigDecimal.valueOf(0.606),
+                endeligAndelFaktor = BigDecimal.valueOf(0.6060000000).setScale(10),
                 andelBeløp = bPsAndelBeløp,
-                beregnetAndelFaktor = BigDecimal.valueOf(0.606),
-                barnEndeligInntekt = BigDecimal.ZERO,
+                beregnetAndelFaktor = BigDecimal.valueOf(0.6060000000).setScale(10),
+                barnEndeligInntekt = BigDecimal.valueOf(0.00).setScale(2),
                 barnetErSelvforsørget = true,
             ),
             bPsBeregnedeTotalbidrag = BPsBeregnedeTotalbidragPeriode(
@@ -217,14 +217,14 @@ internal class SærbidragBeregningTest {
     @Test
     fun testBarnetErSelvforsørget() {
         val beløpBetaltAvBP = BigDecimal.valueOf(5000)
-        val bPsAndelBeløp = BigDecimal.valueOf(4000)
-        val bidragsevneBeløp = BigDecimal.valueOf(11000)
+        val bPsAndelBeløp = BigDecimal.valueOf(4000).setScale(2)
+        val bidragsevneBeløp = BigDecimal.valueOf(11000).setScale(2)
         val skatt = DelberegningBidragsevne.Skatt(
-            minstefradrag = BigDecimal.valueOf(80000),
-            skattAlminneligInntekt = BigDecimal.valueOf(90000),
-            trinnskatt = BigDecimal.valueOf(10000),
-            trygdeavgift = BigDecimal.valueOf(50000),
-            sumSkatt = BigDecimal.valueOf(150000),
+            minstefradrag = BigDecimal.valueOf(80000).setScale(2),
+            skattAlminneligInntekt = BigDecimal.valueOf(90000).setScale(2),
+            trinnskatt = BigDecimal.valueOf(10000).setScale(2),
+            trygdeavgift = BigDecimal.valueOf(50000).setScale(2),
+            sumSkatt = BigDecimal.valueOf(150000).setScale(2),
         )
         val underholdBarnEgenHusstand = BigDecimal.valueOf(10000)
         val bPsBeregnedeTotalbidrag = BigDecimal.valueOf(10000)
@@ -239,10 +239,10 @@ internal class SærbidragBeregningTest {
             ),
             bPsAndelSærbidrag = BPsAndelSærbidrag(
                 referanse = TestUtil.BPS_ANDEL_SÆRBIDRAG_REFERANSE,
-                endeligAndelFaktor = BigDecimal.valueOf(0.606),
+                endeligAndelFaktor = BigDecimal.valueOf(0.6060000000).setScale(10),
                 andelBeløp = bPsAndelBeløp,
-                beregnetAndelFaktor = BigDecimal.valueOf(0.606),
-                barnEndeligInntekt = BigDecimal.ZERO,
+                beregnetAndelFaktor = BigDecimal.valueOf(0.6060000000).setScale(10),
+                barnEndeligInntekt = BigDecimal.valueOf(0.00).setScale(2),
                 barnetErSelvforsørget = true,
             ),
             bPsBeregnedeTotalbidrag = BPsBeregnedeTotalbidragPeriode(

@@ -40,7 +40,7 @@ internal object SamværsfradragMapper : CoreMapper() {
     private fun mapSamværsklasse(beregnGrunnlag: BeregnGrunnlag): List<SamværsklassePeriodeGrunnlag> {
         try {
             return beregnGrunnlag.grunnlagListe
-                .filtrerOgKonverterBasertPåEgenReferanse<SamværsklassePeriode>(grunnlagType = Grunnlagstype.SAMVÆRSKLASSE)
+                .filtrerOgKonverterBasertPåEgenReferanse<SamværsklassePeriode>(grunnlagType = Grunnlagstype.SAMVÆRSPERIODE)
                 .map {
                     SamværsklassePeriodeGrunnlag(
                         referanse = it.referanse,
@@ -49,7 +49,7 @@ internal object SamværsfradragMapper : CoreMapper() {
                 }
         } catch (e: Exception) {
             throw IllegalArgumentException(
-                "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.SAMVÆRSKLASSE er ikke gyldig: " + e.message,
+                "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.SAMVÆRSPERIODE er ikke gyldig: " + e.message,
             )
         }
     }
