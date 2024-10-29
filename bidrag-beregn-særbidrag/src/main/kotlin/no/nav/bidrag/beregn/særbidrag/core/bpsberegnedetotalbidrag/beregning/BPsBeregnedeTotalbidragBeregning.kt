@@ -11,9 +11,9 @@ import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonNøkkelNavn
 import no.nav.bidrag.domene.util.avrundetMedToDesimaler
+import no.nav.bidrag.domene.util.avrundetTilNærmesteTier
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeregnetBidragPerBarn
 import java.math.BigDecimal
-import java.math.RoundingMode
 import java.time.LocalDate
 
 class BPsBeregnedeTotalbidragBeregning : FellesBeregning() {
@@ -29,14 +29,7 @@ class BPsBeregnedeTotalbidragBeregning : FellesBeregning() {
             grunnlag.sjablonPeriodeListe.filter { it.getPeriode().overlapperMed(Periode(grunnlag.beregnDatoFra, grunnlag.beregnDatoTil)) }
 
         grunnlag.løpendeBidragCoreListe.forEach {
-            val beregnetBeløpAvrundet = it.beregnetBeløp
-                .divide(
-                    BigDecimal.TEN,
-                    0,
-                    RoundingMode.HALF_UP,
-                ).multiply(
-                    BigDecimal.TEN,
-                )
+            val beregnetBeløpAvrundet = it.beregnetBeløp.avrundetTilNærmesteTier
 
             hentSjablonSamværsfradrag(
                 sjablonNavnVerdiMap = sjablonNavnVerdiMap,

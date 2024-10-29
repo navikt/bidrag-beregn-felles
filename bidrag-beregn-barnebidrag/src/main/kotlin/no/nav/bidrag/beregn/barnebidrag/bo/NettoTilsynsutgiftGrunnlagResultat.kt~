@@ -1,7 +1,11 @@
 package no.nav.bidrag.beregn.barnebidrag.bo
 
+import io.swagger.v3.oas.annotations.media.Schema
 import no.nav.bidrag.domene.enums.beregning.Samværsklasse
+import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagPeriodeInnhold
+import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonMaksFradragPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonMaksTilsynPeriode
 import java.math.BigDecimal
@@ -9,13 +13,17 @@ import java.math.BigDecimal
 data class NettoTilsynsutgiftPeriodeGrunnlag(
     val beregningsperiode: ÅrMånedsperiode,
     val faktiskTilsynsutgiftListe: List<FaktiskTilsynsutgift>,
+    val kostpengerListe: List<Kostpenger>,
+    val tilleggsstønadListe: List<Tilleggstønad>,
     var sjablonMaksTilsynsbeløpPeriodeGrunnlagListe: List<SjablonMaksTilsynsbeløpPeriodeGrunnlag>,
     var sjablonMaksFradragsbeløpPeriodeGrunnlagListe: List<SjablonMaksTilsynsbeløpPeriodeGrunnlag>,
 )
 
 data class FaktiskTilsynsutgift(val referanseBarn: String, val beløp: BigDecimal)
 
-// data class SamværsklassePeriodeGrunnlag(val referanse: String, val samværsklassePeriode: SamværsklassePeriode)
+data class Kostpenger(val referanseBarn: String, val beløp: BigDecimal)
+
+data class Tilleggstønad(val referanseBarn: String, val beløp: BigDecimal)
 
 data class SjablonMaksTilsynsbeløpPeriodeGrunnlag(val referanse: String, val sjablonMaksTilsynsbeløpPeriode: SjablonMaksTilsynPeriode)
 
@@ -46,3 +54,12 @@ data class SjablonMaksFradragsbeløpBeregningGrunnlag(
 )
 
 data class NettoTilsynsutgiftBeregningResultat(val beløpFradrag: BigDecimal, val grunnlagsreferanseListe: List<String>)
+
+data class FaktiskUtgiftPeriode(
+    override val periode: ÅrMånedsperiode,
+    val faktiskUtgiftBeløp: BigDecimal,
+    val kostpengerBeløp: BigDecimal,
+    @Schema(description = "Referanse til barnet utgiften gjelder")
+    val referanseBarn: Grunnlagsreferanse,
+    override val manueltRegistrert: Boolean,
+) : GrunnlagPeriodeInnhold

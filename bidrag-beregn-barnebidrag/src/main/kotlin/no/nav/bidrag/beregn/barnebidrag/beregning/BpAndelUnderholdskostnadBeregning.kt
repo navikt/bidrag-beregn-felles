@@ -35,6 +35,7 @@ internal object BpAndelUnderholdskostnadBeregning {
         if (!barnetErSelvforsørget) {
             // Barnets inntekt reduseres med 30 ganger sats for forhøyet forskudd
             barnEndeligInntekt = (inntektSB - sjablonverdiForskuddssatsBeløp * bigDecimal30).coerceAtLeast(BigDecimal.ZERO)
+
             beregnetAndelFaktor = inntektBP.divide(inntektBP + inntektBM + barnEndeligInntekt, 10, RoundingMode.HALF_UP)
             endeligAndelFaktor = beregnetAndelFaktor.coerceAtMost(bigDecimalFemSjettedeler)
             andelBeløp = grunnlag.underholdskostnadBeregningGrunnlag.beløp * endeligAndelFaktor
@@ -53,7 +54,7 @@ internal object BpAndelUnderholdskostnadBeregning {
                 grunnlag.underholdskostnadBeregningGrunnlag.referanse,
             )
                 .filter { it.isNotBlank() } +
-                grunnlag.sjablonSjablontallBeregningGrunnlagListe.map { it.referanse }
+                grunnlag.sjablonSjablontallBeregningGrunnlagListe.map { it.referanse },
 
         )
     }

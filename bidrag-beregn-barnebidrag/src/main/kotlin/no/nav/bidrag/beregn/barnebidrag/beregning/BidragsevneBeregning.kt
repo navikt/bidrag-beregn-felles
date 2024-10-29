@@ -29,8 +29,10 @@ internal object BidragsevneBeregning {
         val minstefradrag = (sumInntekt * (sjablonverdiMinstefradragInntektProsent.divide(bigDecimal100, 10, RoundingMode.HALF_UP)))
             .min(sjablonverdiMinstefradragInntektBeløp)
 
-        val skattAlminneligInntekt = ((sumInntekt - minstefradrag - sjablonverdiPersonfradragKlasse1Beløp) *
-            (sjablonverdiSkattesatsAlminneligInntektProsent.divide(bigDecimal100, 10, RoundingMode.HALF_UP)))
+        val skattAlminneligInntekt = (
+            (sumInntekt - minstefradrag - sjablonverdiPersonfradragKlasse1Beløp) *
+                (sjablonverdiSkattesatsAlminneligInntektProsent.divide(bigDecimal100, 10, RoundingMode.HALF_UP))
+            )
             .coerceAtLeast(BigDecimal.ZERO)
 
         val trygdeavgift = sumInntekt * (sjablonverdiTrygdeavgiftProsent.divide(bigDecimal100, 10, RoundingMode.HALF_UP))

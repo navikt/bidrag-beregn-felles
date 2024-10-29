@@ -32,11 +32,11 @@ fun VedtakForStønad.erKlage() = Vedtakstype.KLAGE == type || søknadKlageRefId 
 fun VedtakForStønad.omgjørVedtaksid() = stønadsendring.omgjørVedtakId
 
 fun VedtakForStønad.erOmgjøring() = Vedtakstype.ENDRING == type &&
-        Vedtakskilde.MANUELT == kilde &&
-        stønadsendring.omgjørVedtak() &&
-        !behandlingsreferanser.any {
-            BehandlingsrefKilde.BISYS_KLAGE_REF_SØKNAD == it.kilde
-        }
+    Vedtakskilde.MANUELT == kilde &&
+    stønadsendring.omgjørVedtak() &&
+    !behandlingsreferanser.any {
+        BehandlingsrefKilde.BISYS_KLAGE_REF_SØKNAD == it.kilde
+    }
 
 fun VedtakForStønad.idTilOmgjortVedtak() = stønadsendring.omgjørVedtakId?.toLong()
 

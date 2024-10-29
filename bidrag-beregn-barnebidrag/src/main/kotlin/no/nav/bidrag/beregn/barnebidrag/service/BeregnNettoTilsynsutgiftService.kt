@@ -1,55 +1,96 @@
 package no.nav.bidrag.beregn.barnebidrag.service
 
 import com.fasterxml.jackson.databind.node.POJONode
-import no.nav.bidrag.beregn.barnebidrag.beregning.SamværsfradragBeregning
-import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragPeriodeResultat
-import no.nav.bidrag.beregn.barnebidrag.bo.SamværsklasseBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSamværsfradragBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSamværsfradragPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.mapper.SamværsfradragMapper.finnReferanseTilRolle
-import no.nav.bidrag.beregn.barnebidrag.mapper.SamværsfradragMapper.mapSamværsfradragGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.beregning.NettoTilsynsutgiftBeregning
+import no.nav.bidrag.beregn.barnebidrag.bo.DelberegningFaktiskTilsynsutgift
+import no.nav.bidrag.beregn.barnebidrag.bo.DelberegningNettoTilsynsutgift
+import no.nav.bidrag.beregn.barnebidrag.bo.DelberegningTilleggsstønad
+import no.nav.bidrag.beregn.barnebidrag.bo.FaktiskUtgift
+import no.nav.bidrag.beregn.barnebidrag.bo.NettoTilsynsutgiftBeregningGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.NettoTilsynsutgiftPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.NettoTilsynsutgiftPeriodeResultat
+import no.nav.bidrag.beregn.barnebidrag.bo.SjablonMaksFradragsbeløpBeregningGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SjablonMaksTilsynsbeløpBeregningGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSjablontallBeregningGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSjablontallPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.Tilleggsstønad
+import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.finnFødselsdatoBarn
+import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.finnReferanseTilRolle
+import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.mapNettoTilsynsutgiftPeriodeGrunnlag
+import no.nav.bidrag.beregn.core.dto.FaktiskUtgiftPeriodeCore
+import no.nav.bidrag.beregn.core.dto.TilleggsstønadPeriodeCore
 import no.nav.bidrag.beregn.core.service.BeregnService
-import no.nav.bidrag.domene.enums.beregning.Samværsklasse
+import no.nav.bidrag.commons.service.sjablon.SjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
+import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsfradrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
+import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
+import java.time.LocalDate
 import java.time.Period
 
 internal object BeregnNettoTilsynsutgiftService : BeregnService() {
 
-    fun delberegningNettoTilsynsutgift(mottattGrunnlag: BeregnGrunnlag, sjablonGrunnlag: List<GrunnlagDto>): List<GrunnlagDto> {
-        val samværsfradragPeriodeGrunnlag = mapSamværsfradragGrunnlag(mottattGrunnlag, sjablonGrunnlag)
+    fun delberegningNettoTilsynsutgift(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
+        val referanseBm = finnReferanseTilRolle(
+            grunnlagListe = mottattGrunnlag.grunnlagListe,
+            grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
+        )
 
-        val bruddPeriodeListe = lagBruddPeriodeListeSamværsfradrag(samværsfradragPeriodeGrunnlag, mottattGrunnlag.periode)
-        val samværsfradragBeregningResultatListe = mutableListOf<SamværsfradragPeriodeResultat>()
+        // Lager sjablon grunnlagsobjekter
+        val sjablonGrunnlag =
+            lagSjablonGrunnlagsobjekter(periode = mottattGrunnlag.periode) { it.nettoBarnetilsyn }
+
+        val nettoTilsynsutgiftPeriodeGrunnlag = mapNettoTilsynsutgiftPeriodeGrunnlag(mottattGrunnlag, sjablonGrunnlag)
+
+        val bruddPeriodeListe = lagBruddPeriodeListeNettoTilsynsutgift(nettoTilsynsutgiftPeriodeGrunnlag, mottattGrunnlag.periode)
+
+        val nettoTilsynsutgiftBeregningResultatListe = mutableListOf<NettoTilsynsutgiftPeriodeResultat>()
+
         bruddPeriodeListe.forEach { bruddPeriode ->
-            val samværsfradragBeregningGrunnlag = lagSamværsfradragBeregningGrunnlag(samværsfradragPeriodeGrunnlag, bruddPeriode)
-            samværsfradragBeregningResultatListe.add(
-                SamværsfradragPeriodeResultat(
+            val antallBarnIPerioden = nettoTilsynsutgiftPeriodeGrunnlag.faktiskUtgiftPeriodeCoreListe
+                .filter { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
+                .count { finnFødselsdatoBarn(mottattGrunnlag.grunnlagListe, it.gjelderBarn) <= bruddPeriode.fom.minusYears(13).atDay(1) }
+            val nettoTilsynsutgiftBeregningGrunnlag =
+                lagNettoTilsynsutgiftBeregningGrunnlag(
+                    mottattGrunnlag.grunnlagListe,
+                    nettoTilsynsutgiftPeriodeGrunnlag,
+                    bruddPeriode,
+                    antallBarnIPerioden,
+                )
+            nettoTilsynsutgiftBeregningResultatListe.add(
+                NettoTilsynsutgiftPeriodeResultat(
                     periode = bruddPeriode,
-                    resultat = SamværsfradragBeregning.beregn(samværsfradragBeregningGrunnlag),
+                    resultat = NettoTilsynsutgiftBeregning.beregn(nettoTilsynsutgiftBeregningGrunnlag),
                 ),
             )
         }
 
         // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
-        val resultatGrunnlagListe = mapSamværsfradragResultatGrunnlag(
-            samværsfradragBeregningResultatListe = samværsfradragBeregningResultatListe,
+        val resultatGrunnlagListe = mapNettoTilsynsutgiftResultatGrunnlag(
+            nettoTilsynsutgiftBeregningResultatListe = nettoTilsynsutgiftBeregningResultatListe,
             mottattGrunnlag = mottattGrunnlag,
             sjablonGrunnlag = sjablonGrunnlag,
         )
 
-        // Mapper ut grunnlag for delberegning samværsfradrag
+        // Mapper ut "sub"-delberegninger
         resultatGrunnlagListe.addAll(
-            mapDelberegningSamværsfradrag(
-                samværsfradragPeriodeResultatListe = samværsfradragBeregningResultatListe,
+            mapDelberegninger(
+                mottattGrunnlag = mottattGrunnlag,
+                nettoTilsynsutgiftPeriodeGrunnlag = nettoTilsynsutgiftPeriodeGrunnlag,
+                nettoTilsynsutgiftPeriodeResultat = nettoTilsynsutgiftBeregningResultatListe,
+                referanseBm = referanseBm,
+            ),
+        )
+
+        // Mapper ut grunnlag for delberegning nettoTilsynsutgift
+        resultatGrunnlagListe.addAll(
+            mapDelberegningNettoTilsynsutgift(
+                nettoTilsynsutgiftPeriodeResultatListe = nettoTilsynsutgiftBeregningResultatListe,
                 mottattGrunnlag = mottattGrunnlag,
             ),
         )
@@ -57,89 +98,97 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
         return resultatGrunnlagListe.sortedBy { it.referanse }
     }
 
+    private fun lagSjablonGrunnlagsobjekter(periode: ÅrMånedsperiode, delberegning: (SjablonTallNavn) -> Boolean): List<GrunnlagDto> =
+        mapSjablonSjablontallGrunnlag(periode = periode, sjablonListe = SjablonProvider.hentSjablontall(), delberegning = delberegning) +
+            mapSjablonMaksTilsynsbeløpGrunnlag(periode = periode, sjablonListe = SjablonProvider.hentSjablonMaksTilsyn()) +
+            mapSjablonMaksFradragGrunnlag(periode = periode, sjablonListe = SjablonProvider.hentSjablonMaksFradrag())
+
     // Lager en liste over alle bruddperioder basert på grunnlag som skal brukes i beregningen
-    private fun lagBruddPeriodeListeSamværsfradrag(
-        grunnlagListe: SamværsfradragPeriodeGrunnlag,
+    private fun lagBruddPeriodeListeNettoTilsynsutgift(
+        grunnlagListe: NettoTilsynsutgiftPeriodeGrunnlag,
         beregningsperiode: ÅrMånedsperiode,
     ): List<ÅrMånedsperiode> {
         val periodeListe = sequenceOf(grunnlagListe.beregningsperiode)
-            .plus(grunnlagListe.samværsklassePeriodeGrunnlagListe.asSequence().map { it.samværsklassePeriode.periode })
-            .plus(grunnlagListe.sjablonSamværsfradragPeriodeGrunnlagListe.asSequence().map { it.sjablonSamværsfradragPeriode.periode })
-            .plus(
-                lagAlderBruddPerioder(
-                    sjablonSamværsfradragPerioder = grunnlagListe.sjablonSamværsfradragPeriodeGrunnlagListe,
-                    søknadsbarnPeriodeGrunnlag = grunnlagListe.søknadsbarnPeriodeGrunnlag,
-                ).asSequence(),
-            )
+            .plus(grunnlagListe.faktiskUtgiftPeriodeCoreListe.asSequence().map { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil) })
+            .plus(grunnlagListe.tilleggsstønadPeriodeCoreListe.asSequence().map { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil) })
+            .plus(grunnlagListe.sjablonMaksTilsynsbeløpPeriodeGrunnlagListe.asSequence().map { it.sjablonMaksTilsynsbeløpPeriode.periode })
+            .plus(grunnlagListe.sjablonMaksFradragsbeløpPeriodeGrunnlagListe.asSequence().map { it.sjablonMaksFradragsbeløpPeriode.periode })
 
         return lagBruddPeriodeListe(periodeListe, beregningsperiode)
     }
 
-    // Lager bruddperioder for alder basert på verdier i sjablon SAMVÆRSFRADRAG
-    private fun lagAlderBruddPerioder(
-        sjablonSamværsfradragPerioder: List<SjablonSamværsfradragPeriodeGrunnlag>,
-        søknadsbarnPeriodeGrunnlag: SøknadsbarnPeriodeGrunnlag,
-    ): List<ÅrMånedsperiode> = hentAlderTomListe(sjablonSamværsfradragPerioder)
-        .map {
-            val alderBruddDato = søknadsbarnPeriodeGrunnlag.fødselsdato.plusYears(it.toLong())
-            ÅrMånedsperiode(alderBruddDato, alderBruddDato)
-        }
-
-    // Lager grunnlag for samværsfradragberegning som ligger innenfor bruddPeriode
-    private fun lagSamværsfradragBeregningGrunnlag(
-        samværsfradragPeriodeGrunnlag: SamværsfradragPeriodeGrunnlag,
+    // Lager grunnlag for nettoTilsynsutgiftberegning som ligger innenfor bruddPeriode
+    private fun lagNettoTilsynsutgiftBeregningGrunnlag(
+        mottattGrunnlag: List<GrunnlagDto>,
+        nettoTilsynsutgiftPeriodeGrunnlag: NettoTilsynsutgiftPeriodeGrunnlag,
         bruddPeriode: ÅrMånedsperiode,
-    ): SamværsfradragBeregningGrunnlag {
-        // Lager liste over gyldige alderTom-verdier
-        val alderTomListe = hentAlderTomListe(samværsfradragPeriodeGrunnlag.sjablonSamværsfradragPeriodeGrunnlagListe)
+        antallBarnIPerioden: Int,
+    ): NettoTilsynsutgiftBeregningGrunnlag = NettoTilsynsutgiftBeregningGrunnlag(
+        faktiskUtgiftListe = nettoTilsynsutgiftPeriodeGrunnlag.faktiskUtgiftPeriodeCoreListe
+            .filter { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
+            .filter { finnAlderBarn(mottattGrunnlag, it.gjelderBarn, bruddPeriode.fom.atDay(1)) < 13 }.map {
+                FaktiskUtgift(
+                    referanse = it.referanse,
+                    gjelderBarn = it.gjelderBarn,
+                    beregnetBeløp = it.beregnetBeløp,
+                )
+            }.takeIf { it.isNotEmpty() } ?: throw IllegalArgumentException("Ingen faktisk utgift funnet for periode $bruddPeriode"),
 
-        // Finner barnets faktiske alder
-        val faktiskAlder = Period.between(
-            samværsfradragPeriodeGrunnlag.søknadsbarnPeriodeGrunnlag.fødselsdato,
-            bruddPeriode.fom.atDay(1),
-        ).years
+        tilleggsstønadListe = nettoTilsynsutgiftPeriodeGrunnlag.tilleggsstønadPeriodeCoreListe
+            .filter { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
+            .filter { finnAlderBarn(mottattGrunnlag, it.gjelderBarn, bruddPeriode.fom.atDay(1)) < 13 }.map {
+                Tilleggsstønad(
+                    referanse = it.referanse,
+                    gjelderBarn = it.gjelderBarn,
+                    beregnetBeløp = it.beregnetBeløp,
+                )
+            },
 
-        // Finner den nærmeste alderTom som er større enn eller lik faktisk alder (til bruk for å hente ut sjablonverdi)
-        val alderTom = alderTomListe.firstOrNull { faktiskAlder <= it } ?: alderTomListe.last()
+        sjablonSjablontallBeregningGrunnlagListe = nettoTilsynsutgiftPeriodeGrunnlag.sjablonSjablontallPeriodeGrunnlagListe
+            .filter { it.sjablonSjablontallPeriode.periode.inneholder(bruddPeriode) }
+            .map {
+                SjablonSjablontallBeregningGrunnlag(
+                    referanse = it.referanse,
+                    type = it.sjablonSjablontallPeriode.sjablon.navn,
+                    verdi = it.sjablonSjablontallPeriode.verdi.toDouble(),
+                )
+            },
 
-        return SamværsfradragBeregningGrunnlag(
-            søknadsbarn = SøknadsbarnBeregningGrunnlag(
-                referanse = samværsfradragPeriodeGrunnlag.søknadsbarnPeriodeGrunnlag.referanse,
-                alder = alderTom,
-            ),
-            samværsklasseBeregningGrunnlag = samværsfradragPeriodeGrunnlag.samværsklassePeriodeGrunnlagListe
-                .firstOrNull { it.samværsklassePeriode.periode.inneholder(bruddPeriode) }
-                ?.let { SamværsklasseBeregningGrunnlag(referanse = it.referanse, samværsklasse = it.samværsklassePeriode.samværsklasse) }
-                ?: throw IllegalArgumentException("Ingen samværsklasse funnet for periode $bruddPeriode"),
-            sjablonSamværsfradragBeregningGrunnlagListe = samværsfradragPeriodeGrunnlag.sjablonSamværsfradragPeriodeGrunnlagListe
-                .filter { it.sjablonSamværsfradragPeriode.periode.inneholder(bruddPeriode) }
-                .map {
-                    SjablonSamværsfradragBeregningGrunnlag(
-                        referanse = it.referanse,
-                        samværsklasse = Samværsklasse.fromBisysKode(it.sjablonSamværsfradragPeriode.samværsklasse)
-                            ?: throw IllegalArgumentException("Ugyldig samværsklasse: ${it.sjablonSamværsfradragPeriode.samværsklasse}"),
-                        alderTom = it.sjablonSamværsfradragPeriode.alderTom,
-                        beløpFradrag = it.sjablonSamværsfradragPeriode.beløpFradrag,
-                    )
-                },
-        )
-    }
+        sjablonMaksTilsynsbeløpBeregningGrunnlag = nettoTilsynsutgiftPeriodeGrunnlag.sjablonMaksTilsynsbeløpPeriodeGrunnlagListe
+            .asSequence()
+            .filter { it.sjablonMaksTilsynsbeløpPeriode.periode.inneholder(bruddPeriode) }
+            .sortedBy { it.sjablonMaksTilsynsbeløpPeriode.antallBarnTom }
+            .filter { it.sjablonMaksTilsynsbeløpPeriode.antallBarnTom >= antallBarnIPerioden }
+            .map {
+                SjablonMaksTilsynsbeløpBeregningGrunnlag(
+                    referanse = it.referanse,
+                    antallBarnTom = it.sjablonMaksTilsynsbeløpPeriode.antallBarnTom,
+                    maxBeløpTilsyn = it.sjablonMaksTilsynsbeløpPeriode.maksBeløpTilsyn,
+                )
+            }.first(),
 
-    // Lager liste over gyldige alderTom-verdier
-    private fun hentAlderTomListe(sjablonSamværsfradragPerioder: List<SjablonSamværsfradragPeriodeGrunnlag>): List<Int> =
-        sjablonSamværsfradragPerioder
-            .map { it.sjablonSamværsfradragPeriode.alderTom }
-            .distinct()
-            .sorted()
+        sjablonMaksFradragsbeløpBeregningGrunnlag = nettoTilsynsutgiftPeriodeGrunnlag.sjablonMaksFradragsbeløpPeriodeGrunnlagListe
+            .asSequence()
+            .filter { it.sjablonMaksFradragsbeløpPeriode.periode.inneholder(bruddPeriode) }
+            .sortedBy { it.sjablonMaksFradragsbeløpPeriode.antallBarnTom }
+            .filter { it.sjablonMaksFradragsbeløpPeriode.antallBarnTom >= antallBarnIPerioden }
+            .map {
+                SjablonMaksFradragsbeløpBeregningGrunnlag(
+                    referanse = it.referanse,
+                    antallBarnTom = it.sjablonMaksFradragsbeløpPeriode.antallBarnTom,
+                    maxBeløpFradrag = it.sjablonMaksFradragsbeløpPeriode.maksBeløpFradrag,
+                )
+            }.first(),
+    )
 
-    private fun mapSamværsfradragResultatGrunnlag(
-        samværsfradragBeregningResultatListe: List<SamværsfradragPeriodeResultat>,
+    private fun mapNettoTilsynsutgiftResultatGrunnlag(
+        nettoTilsynsutgiftBeregningResultatListe: List<NettoTilsynsutgiftPeriodeResultat>,
         mottattGrunnlag: BeregnGrunnlag,
         sjablonGrunnlag: List<GrunnlagDto>,
     ): MutableList<GrunnlagDto> {
         val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
         val grunnlagReferanseListe =
-            samværsfradragBeregningResultatListe
+            nettoTilsynsutgiftBeregningResultatListe
                 .flatMap { it.resultat.grunnlagsreferanseListe }
                 .distinct()
 
@@ -175,30 +224,153 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
             )
         }
 
-    // Mapper ut DelberegningSamværsfradrag
-    private fun mapDelberegningSamværsfradrag(
-        samværsfradragPeriodeResultatListe: List<SamværsfradragPeriodeResultat>,
+    // Mapper ut DelberegningNettoTilsynsutgift
+    private fun mapDelberegningNettoTilsynsutgift(
+        nettoTilsynsutgiftPeriodeResultatListe: List<NettoTilsynsutgiftPeriodeResultat>,
         mottattGrunnlag: BeregnGrunnlag,
-    ): List<GrunnlagDto> = samværsfradragPeriodeResultatListe
+    ): List<GrunnlagDto> = nettoTilsynsutgiftPeriodeResultatListe
         .map {
             GrunnlagDto(
                 referanse = opprettDelberegningreferanse(
-                    type = Grunnlagstype.DELBEREGNING_SAMVÆRSFRADRAG,
+                    type = Grunnlagstype.DELBEREGNING_NETTO_TILSYNSUTGIFT,
                     periode = it.periode,
                     søknadsbarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
                 ),
-                type = Grunnlagstype.DELBEREGNING_SAMVÆRSFRADRAG,
+                type = Grunnlagstype.DELBEREGNING_NETTO_TILSYNSUTGIFT,
                 innhold = POJONode(
-                    DelberegningSamværsfradrag(
+                    DelberegningNettoTilsynsutgift(
                         periode = it.periode,
-                        beløp = it.resultat.beløpFradrag,
+                        nettoTilsynsutgiftBeløp = it.resultat.nettoTilsynsutgiftBeløp,
+                        samletFaktiskUtgiftBeløp = it.resultat.samletFaktiskUtgiftBeløp,
+                        samletTilleggstønadBeløp = it.resultat.samletTilleggstønadBeløp,
+                        skattefradragsbeløpPerBarn = it.resultat.skattefradragsbeløpPerBarn,
+                        bruttoTilsynsutgiftBarnListe = it.resultat.bruttoTilsynsutgiftBarnListe,
                     ),
                 ),
                 grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe,
                 gjelderReferanse = finnReferanseTilRolle(
                     grunnlagListe = mottattGrunnlag.grunnlagListe,
-                    grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
+                    grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
                 ),
             )
         }
+
+    private fun mapDelberegninger(
+        mottattGrunnlag: BeregnGrunnlag,
+        nettoTilsynsutgiftPeriodeGrunnlag: NettoTilsynsutgiftPeriodeGrunnlag,
+        nettoTilsynsutgiftPeriodeResultat: List<NettoTilsynsutgiftPeriodeResultat>,
+        referanseBm: String,
+    ): List<GrunnlagDto> {
+        val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
+        val grunnlagReferanseListe =
+            nettoTilsynsutgiftPeriodeResultat
+                .flatMap { it.resultat.grunnlagsreferanseListe }
+                .distinct()
+
+        // Mapper ut DelberegningFaktiskUtgift
+        val faktiskUtgiftPeriodeCoreListe = nettoTilsynsutgiftPeriodeGrunnlag.faktiskUtgiftPeriodeCoreListe
+            .filter { grunnlagReferanseListe.contains(it.referanse) }
+        resultatGrunnlagListe.addAll(
+            mapDelberegningFaktiskTilsynsutgift(
+                faktiskUtgiftPeriodeCoreListe = faktiskUtgiftPeriodeCoreListe,
+                bidragsmottakerReferanse = referanseBm,
+            ),
+        )
+
+        // Mapper ut DelberegningTilleggsstønad
+        val tilleggsstønadPeriodeCoreListe = nettoTilsynsutgiftPeriodeGrunnlag.tilleggsstønadPeriodeCoreListe
+            .filter { grunnlagReferanseListe.contains(it.referanse) }
+        resultatGrunnlagListe.addAll(
+            mapDelberegningTilleggsstønad(
+                tilleggsstønadPeriodeCoreListe = tilleggsstønadPeriodeCoreListe,
+                bidragsmottakerReferanse = referanseBm,
+            ),
+        )
+
+        // Lager en liste av referanser som refereres til av delberegningene og mapper ut tilhørende grunnlag
+        val delberegningReferanseListe =
+            faktiskUtgiftPeriodeCoreListe.flatMap { it.grunnlagsreferanseListe }
+                .union(
+                    tilleggsstønadPeriodeCoreListe.flatMap { it.grunnlagsreferanseListe },
+                )
+                .distinct()
+
+        resultatGrunnlagListe.addAll(
+            mottattGrunnlag.grunnlagListe
+                .filter { it.referanse in delberegningReferanseListe }
+                .map {
+                    GrunnlagDto(
+                        referanse = it.referanse,
+                        type = it.type,
+                        innhold = it.innhold,
+                        grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
+                        gjelderReferanse = it.gjelderReferanse,
+                    )
+                },
+        )
+
+        return resultatGrunnlagListe
+    }
+
+    // Mapper ut DelberegningFaktiskUtgift
+    private fun mapDelberegningFaktiskTilsynsutgift(faktiskUtgiftPeriodeCoreListe: List<FaktiskUtgiftPeriodeCore>, bidragsmottakerReferanse: String) =
+        faktiskUtgiftPeriodeCoreListe
+            .map {
+                GrunnlagDto(
+                    referanse = it.referanse,
+                    type = bestemGrunnlagstype(it.referanse),
+                    innhold = POJONode(
+                        DelberegningFaktiskTilsynsutgift(
+                            periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
+                            beregnetBeløp = it.beregnetBeløp,
+                        ),
+                    ),
+                    grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
+                    gjelderReferanse = it.gjelderBarn,
+                )
+            }
+
+    // Mapper ut DelberegningTilleggsstønad
+    private fun mapDelberegningTilleggsstønad(tilleggsstønadPeriodeCoreListe: List<TilleggsstønadPeriodeCore>, bidragsmottakerReferanse: String) =
+        tilleggsstønadPeriodeCoreListe
+            .map {
+                GrunnlagDto(
+                    referanse = it.referanse,
+                    type = bestemGrunnlagstype(it.referanse),
+                    innhold = POJONode(
+                        DelberegningTilleggsstønad(
+                            periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
+                            beregnetBeløp = it.beregnetBeløp,
+                        ),
+                    ),
+                    grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
+                    gjelderReferanse = bidragsmottakerReferanse,
+                )
+            }
+
+    fun mapSjablonSjablontall(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonSjablontallPeriodeGrunnlag> {
+        try {
+            return sjablonGrunnlag
+                .filter { it.referanse.uppercase().contains("SJABLONTALL") }
+                .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>()
+                .map {
+                    SjablonSjablontallPeriodeGrunnlag(
+                        referanse = it.referanse,
+                        sjablonSjablontallPeriode = it.innhold,
+                    )
+                }
+        } catch (e: Exception) {
+            throw IllegalArgumentException(
+                "Feil ved uthenting av sjablon for sjablontall: " + e.message,
+            )
+        }
+    }
+
+    private fun finnAlderBarn(beregnGrunnlag: List<GrunnlagDto>, referanseBarn: Grunnlagsreferanse, dato: LocalDate): Int {
+        val fødselsdatoBarn = finnFødselsdatoBarn(beregnGrunnlag, referanseBarn)
+        return Period.between(
+            fødselsdatoBarn,
+            dato,
+        ).years
+    }
 }

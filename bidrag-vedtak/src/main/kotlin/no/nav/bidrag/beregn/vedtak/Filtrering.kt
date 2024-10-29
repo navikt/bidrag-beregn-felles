@@ -63,9 +63,8 @@ class Vedtaksfiltrering {
         return null
     }
 
-    private fun VedtakForStønad.filtrereBortIrrelevanteVedtak(): Boolean {
-        return erInnkreving() && !erIkkeRelevant() && (erBidrag() || er18årsbidrag() || erOppfostringsbidrag())
-    }
+    private fun VedtakForStønad.filtrereBortIrrelevanteVedtak(): Boolean =
+        erInnkreving() && !erIkkeRelevant() && (erBidrag() || er18årsbidrag() || erOppfostringsbidrag())
 }
 
 data class Vedtaksdetaljer(var erOmgjort: Boolean = false, val vedtak: VedtakForStønad, val periode: VedtakPeriodeDto)

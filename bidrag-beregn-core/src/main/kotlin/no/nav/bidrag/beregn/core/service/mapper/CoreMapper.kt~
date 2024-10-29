@@ -121,7 +121,7 @@ abstract class CoreMapper {
                             datoFom = beregnGrunnlag.periode.toDatoperiode().fom,
                             datoTil = beregnGrunnlag.periode.toDatoperiode().til,
                         ),
-                        beløp = BigDecimal.valueOf(0.00).setScale(2),
+                        beløp = BigDecimal.ZERO,
                         grunnlagsreferanseListe = emptyList(),
                     ),
                 )
@@ -307,7 +307,7 @@ abstract class CoreMapper {
                     gjelderReferanse = gjelderReferanse,
                 ),
                 periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
-                beløp = filtrertGrunnlagsliste.sumOf { it.beløp }.setScale(2),
+                beløp = filtrertGrunnlagsliste.sumOf { it.beløp },
                 grunnlagsreferanseListe = filtrertGrunnlagsliste.map { it.referanse }.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it }),
             )
         }
@@ -353,7 +353,7 @@ abstract class CoreMapper {
                     gjelderReferanse = gjelderReferanse,
                 ),
                 periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
-                borMedAndreVoksne = filtrertGrunnlagsliste.any { it.borMedAndreVoksne },
+                borMedAndre = filtrertGrunnlagsliste.any { it.borMedAndre },
                 grunnlagsreferanseListe = filtrertGrunnlagsliste.map { it.referanse }.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it }),
             )
         }
@@ -372,11 +372,11 @@ abstract class CoreMapper {
             .map { periode ->
                 val filtrertGrunnlagsliste = filtrerGrunnlagsliste(grunnlagsliste = faktiskUtgiftPeriodeCoreListe, periode = periode)
 
-                val totalBeregnetBeløpBarn = filtrertGrunnlagsliste
+                val accumulatedBeregnetBeløp = filtrertGrunnlagsliste
                     .groupBy { it.gjelderBarn }
                     .mapValues { entry -> entry.value.sumOf { it.beregnetBeløp } }
 
-                totalBeregnetBeløpBarn.forEach { (gjelderBarn, beregnetBeløp) ->
+                accumulatedBeregnetBeløp.forEach { (gjelderBarn, beregnetBeløp) ->
                     resultatListe.add(
                         FaktiskUtgiftPeriodeCore(
                             referanse = opprettDelberegningreferanse(

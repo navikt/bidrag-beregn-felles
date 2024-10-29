@@ -172,8 +172,10 @@ internal object BidragsevneCoreMapper : CoreMapper() {
         gjelderReferanse: String,
     ): List<BoforholdPeriodeCore> {
         // Lager unik, sortert liste over alle bruddatoer og legger evt. null-forekomst bakerst
-        val bruddDatoListe = (barnIHusstandenPeriodeGrunnlagListe.flatMap { listOf(it.periode.datoFom, it.periode.datoTil) }
-            + voksneIHusstandenPeriodeGrunnlagListe.flatMap { listOf(it.periode.datoFom, it.periode.datoTil) })
+        val bruddDatoListe = (
+            barnIHusstandenPeriodeGrunnlagListe.flatMap { listOf(it.periode.datoFom, it.periode.datoTil) } +
+                voksneIHusstandenPeriodeGrunnlagListe.flatMap { listOf(it.periode.datoFom, it.periode.datoTil) }
+            )
             .distinct()
             .sortedBy { it }
             .sortedWith(compareBy { it == null })
@@ -191,8 +193,8 @@ internal object BidragsevneCoreMapper : CoreMapper() {
                     ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(
                         ÅrMånedsperiode(
                             bruddPeriode.datoFom,
-                            bruddPeriode.datoTil
-                        )
+                            bruddPeriode.datoTil,
+                        ),
                     )
                 }
             // Finner matchende voksneIHusstanden for aktuell periode
@@ -201,8 +203,8 @@ internal object BidragsevneCoreMapper : CoreMapper() {
                     ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(
                         ÅrMånedsperiode(
                             bruddPeriode.datoFom,
-                            bruddPeriode.datoTil
-                        )
+                            bruddPeriode.datoTil,
+                        ),
                     )
                 }
 
@@ -217,7 +219,7 @@ internal object BidragsevneCoreMapper : CoreMapper() {
                 periode = bruddPeriode,
                 antallBarn = barnIHusstanden?.antall ?: 0.0,
                 borMedAndreVoksne = voksneIHusstanden?.borMedAndreVoksne ?: false,
-                grunnlagsreferanseListe = listOfNotNull(barnIHusstanden?.referanse, voksneIHusstanden?.referanse).distinct()
+                grunnlagsreferanseListe = listOfNotNull(barnIHusstanden?.referanse, voksneIHusstanden?.referanse).distinct(),
             )
         }
     }
