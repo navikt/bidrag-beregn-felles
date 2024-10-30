@@ -47,8 +47,8 @@ class Vedtaksfiltrering {
             // Håndtere resultat fra annet vedtak
             if (vedtaksdetaljer.vedtak.erResultatFraAnnetVedtak()) {
                 iterator.hoppeTilBeløp(vedtaksdetaljer.periode.beløp)
-                require(iterator.hasNext()) { "Fant ikke vedtak for evnevurdering i vedtak ${vedtaksdetaljer.vedtak.vedtaksid}" }
-                return iterator.next().vedtak
+                if (!iterator.hasNext()) return null
+                continue
             }
 
             // Hopp over indeksregulering
