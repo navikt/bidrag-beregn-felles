@@ -1,7 +1,7 @@
 {
   "periode": {
-    "fom": "2021-05",
-    "til": "2024-10"
+    "fom": "2024-01",
+    "til": "2024-09"
   },
   "søknadsbarnReferanse": "Person_Søknadsbarn",
   "grunnlagListe": [
@@ -15,6 +15,17 @@
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": null
+    },
+    {
+      "referanse" : "person_PERSON_BARN_BIDRAGSPLIKTIG_20051217_102",
+      "type" : "PERSON_SØKNADSBARN",
+      "innhold" : {
+        "ident" : "12121250511",
+        "navn" : null,
+        "fødselsdato" : "2005-12-17"
+      },
+      "grunnlagsreferanseListe" : [],
+      "gjelderReferanse" : null
     },
     {
       "referanse": "Person_Bidragsmottaker",
@@ -39,28 +50,81 @@
       "gjelderReferanse": null
     },
     {
-      "referanse": "Mottatt_Samværsklasse_202105_SB1",
-      "type": "SAMVÆRSKLASSE",
+      "referanse": "Mottatt_FaktiskUtgift_202201_Person_Søknadsbarn",
+      "type": "FAKTISK_UTGIFT",
       "innhold": {
         "periode": {
-          "fom": "2021-05",
-          "til": "2023-01"
+          "fom": "2023-01",
+          "til": "2023-12"
         },
-        "samværsklasse": "SAMVÆRSKLASSE_1",
+        "gjelderBarn": "Person_Søknadsbarn",
+        "fødselsdatoBarn": "2023-01-17",
+        "faktiskUtgiftBeløp": 4000.00,
+        "kostpengerBeløp": 900.00,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": null
     },
     {
-      "referanse": "Mottatt_Samværsklasse_202301_SB1",
-      "type": "SAMVÆRSKLASSE",
+      "referanse": "Mottatt_FaktiskUtgift_202301_Person_Søknadsbarn",
+      "type": "FAKTISK_UTGIFT",
       "innhold": {
         "periode": {
-          "fom": "2023-01",
+          "fom": "2024-01",
           "til": null
         },
-        "samværsklasse": "SAMVÆRSKLASSE_2",
+        "gjelderBarn": "Person_Søknadsbarn",
+        "fødselsdatoBarn": "2023-01-17",
+        "faktiskUtgiftBeløp": 500.00,
+        "kostpengerBeløp": 100.00,
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Mottatt_FaktiskUtgift_202301_person_PERSON_BARN_BIDRAGSPLIKTIG_20051217_102",
+      "type": "FAKTISK_UTGIFT",
+      "innhold": {
+        "periode": {
+          "fom": "2024-04",
+          "til": null
+        },
+        "gjelderBarn": "person_PERSON_BARN_BIDRAGSPLIKTIG_20051217_102",
+        "fødselsdatoBarn": "2021-02-10",
+        "faktiskUtgiftBeløp":600.00,
+        "kostpengerBeløp": 50.00,
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Mottatt_Tilleggsstønad_202301_Person_Søknadsbarn",
+      "type": "TILLEGGSSTØNAD",
+      "innhold": {
+        "periode": {
+          "fom": "2024-02",
+          "til": null
+        },
+        "gjelderBarn": "Person_Søknadsbarn",
+        "beløpDagsats": 10.00,
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Mottatt_Tilleggsstønad_202301_person_PERSON_BARN_BIDRAGSPLIKTIG_20051217_102",
+      "type": "TILLEGGSSTØNAD",
+      "innhold": {
+        "periode": {
+          "fom": "2024-05",
+          "til": null
+        },
+        "gjelderBarn": "person_PERSON_BARN_BIDRAGSPLIKTIG_20051217_102",
+        "beløpDagsats": 17.00,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],

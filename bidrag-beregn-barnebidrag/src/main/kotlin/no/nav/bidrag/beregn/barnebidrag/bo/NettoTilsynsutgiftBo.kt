@@ -9,6 +9,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagPeriodeInnhold
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonMaksFradragPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonMaksTilsynPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.TilsynsutgiftBarn
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -39,15 +40,10 @@ data class SjablonMaksTilsynsbeløpBeregningGrunnlag(val referanse: String, val 
 data class SjablonMaksFradragsbeløpBeregningGrunnlag(val referanse: String, val antallBarnTom: Int, val maxBeløpFradrag: BigDecimal)
 
 data class NettoTilsynsutgiftBeregningResultat(
-    val nettoTilsynsutgiftBeløp: BigDecimal,
-    val samletFaktiskUtgiftBeløp: BigDecimal,
-    val samletTilleggstønadBeløp: BigDecimal,
-    val skattefradragsbeløpPerBarn: BigDecimal,
-    val bruttoTilsynsutgiftBarnListe: List<BruttoTilsynsutgiftBarn>,
+    val totaltFaktiskUtgiftBeløp: BigDecimal,
+    val tilsynsutgiftBarnListe: List<TilsynsutgiftBarn>,
     val grunnlagsreferanseListe: List<String>,
 )
-
-data class BruttoTilsynsutgiftBarn(val gjelderBarn: Grunnlagsreferanse, val bruttoTilsynsutgift: BigDecimal, val nettoTilsynsutgift: BigDecimal)
 
 data class FaktiskUtgift(val referanse: String, val gjelderBarn: Grunnlagsreferanse, val beregnetBeløp: BigDecimal)
 data class Tilleggsstønad(val referanse: String, val gjelderBarn: Grunnlagsreferanse, val beregnetBeløp: BigDecimal)
@@ -73,12 +69,3 @@ data class TilleggsstønadPeriode(
 data class DelberegningFaktiskTilsynsutgift(override val periode: ÅrMånedsperiode, val beregnetBeløp: BigDecimal) : Delberegning
 
 data class DelberegningTilleggsstønad(override val periode: ÅrMånedsperiode, val beregnetBeløp: BigDecimal) : Delberegning
-
-data class DelberegningNettoTilsynsutgift(
-    override val periode: ÅrMånedsperiode,
-    val nettoTilsynsutgiftBeløp: BigDecimal,
-    val samletFaktiskUtgiftBeløp: BigDecimal,
-    val samletTilleggstønadBeløp: BigDecimal,
-    val skattefradragsbeløpPerBarn: BigDecimal,
-    val bruttoTilsynsutgiftBarnListe: List<BruttoTilsynsutgiftBarn>,
-) : Delberegning

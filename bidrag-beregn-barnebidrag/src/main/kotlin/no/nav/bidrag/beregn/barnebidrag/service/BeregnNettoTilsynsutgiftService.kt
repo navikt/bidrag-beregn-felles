@@ -3,7 +3,6 @@ package no.nav.bidrag.beregn.barnebidrag.service
 import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.barnebidrag.beregning.NettoTilsynsutgiftBeregning
 import no.nav.bidrag.beregn.barnebidrag.bo.DelberegningFaktiskTilsynsutgift
-import no.nav.bidrag.beregn.barnebidrag.bo.DelberegningNettoTilsynsutgift
 import no.nav.bidrag.beregn.barnebidrag.bo.DelberegningTilleggsstønad
 import no.nav.bidrag.beregn.barnebidrag.bo.FaktiskUtgift
 import no.nav.bidrag.beregn.barnebidrag.bo.NettoTilsynsutgiftBeregningGrunnlag
@@ -25,6 +24,7 @@ import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningNettoTilsynsutgift
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
@@ -52,22 +52,25 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
         val nettoTilsynsutgiftBeregningResultatListe = mutableListOf<NettoTilsynsutgiftPeriodeResultat>()
 
         bruddPeriodeListe.forEach { bruddPeriode ->
+            // Teller antall barn under 13 år i perioden. Hvis antall er null så gjøres det ingen beregning
             val antallBarnIPerioden = nettoTilsynsutgiftPeriodeGrunnlag.faktiskUtgiftPeriodeCoreListe
                 .filter { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
-                .count { finnFødselsdatoBarn(mottattGrunnlag.grunnlagListe, it.gjelderBarn) <= bruddPeriode.fom.minusYears(13).atDay(1) }
-            val nettoTilsynsutgiftBeregningGrunnlag =
-                lagNettoTilsynsutgiftBeregningGrunnlag(
-                    mottattGrunnlag.grunnlagListe,
-                    nettoTilsynsutgiftPeriodeGrunnlag,
-                    bruddPeriode,
-                    antallBarnIPerioden,
+                .filter { finnAlderBarn(mottattGrunnlag.grunnlagListe, it.gjelderBarn, bruddPeriode.fom.atDay(1)) < 13 }
+                .size
+            if (antallBarnIPerioden > 0) {
+                val nettoTilsynsutgiftBeregningGrunnlag =
+                    lagNettoTilsynsutgiftBeregningGrunnlag(
+                        nettoTilsynsutgiftPeriodeGrunnlag,
+                        bruddPeriode,
+                        antallBarnIPerioden,
+                    )
+                nettoTilsynsutgiftBeregningResultatListe.add(
+                    NettoTilsynsutgiftPeriodeResultat(
+                        periode = bruddPeriode,
+                        resultat = NettoTilsynsutgiftBeregning.beregn(nettoTilsynsutgiftBeregningGrunnlag),
+                    ),
                 )
-            nettoTilsynsutgiftBeregningResultatListe.add(
-                NettoTilsynsutgiftPeriodeResultat(
-                    periode = bruddPeriode,
-                    resultat = NettoTilsynsutgiftBeregning.beregn(nettoTilsynsutgiftBeregningGrunnlag),
-                ),
-            )
+            }
         }
 
         // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
@@ -119,14 +122,13 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
 
     // Lager grunnlag for nettoTilsynsutgiftberegning som ligger innenfor bruddPeriode
     private fun lagNettoTilsynsutgiftBeregningGrunnlag(
-        mottattGrunnlag: List<GrunnlagDto>,
         nettoTilsynsutgiftPeriodeGrunnlag: NettoTilsynsutgiftPeriodeGrunnlag,
         bruddPeriode: ÅrMånedsperiode,
         antallBarnIPerioden: Int,
     ): NettoTilsynsutgiftBeregningGrunnlag = NettoTilsynsutgiftBeregningGrunnlag(
         faktiskUtgiftListe = nettoTilsynsutgiftPeriodeGrunnlag.faktiskUtgiftPeriodeCoreListe
             .filter { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
-            .filter { finnAlderBarn(mottattGrunnlag, it.gjelderBarn, bruddPeriode.fom.atDay(1)) < 13 }.map {
+            .map {
                 FaktiskUtgift(
                     referanse = it.referanse,
                     gjelderBarn = it.gjelderBarn,
@@ -136,7 +138,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
 
         tilleggsstønadListe = nettoTilsynsutgiftPeriodeGrunnlag.tilleggsstønadPeriodeCoreListe
             .filter { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
-            .filter { finnAlderBarn(mottattGrunnlag, it.gjelderBarn, bruddPeriode.fom.atDay(1)) < 13 }.map {
+            .map {
                 Tilleggsstønad(
                     referanse = it.referanse,
                     gjelderBarn = it.gjelderBarn,
@@ -240,11 +242,8 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                 innhold = POJONode(
                     DelberegningNettoTilsynsutgift(
                         periode = it.periode,
-                        nettoTilsynsutgiftBeløp = it.resultat.nettoTilsynsutgiftBeløp,
-                        samletFaktiskUtgiftBeløp = it.resultat.samletFaktiskUtgiftBeløp,
-                        samletTilleggstønadBeløp = it.resultat.samletTilleggstønadBeløp,
-                        skattefradragsbeløpPerBarn = it.resultat.skattefradragsbeløpPerBarn,
-                        bruttoTilsynsutgiftBarnListe = it.resultat.bruttoTilsynsutgiftBarnListe,
+                        totaltFaktiskUtgiftBeløp = it.resultat.totaltFaktiskUtgiftBeløp,
+                        tilsynsutgiftBarnListe = it.resultat.tilsynsutgiftBarnListe,
                     ),
                 ),
                 grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe,
