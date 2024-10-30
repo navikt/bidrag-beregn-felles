@@ -119,9 +119,7 @@ class Vedtaksiterator(vedtakssamling: Collection<Vedtaksdetaljer>) : Iterator<Ve
         if (beløpA == null) return beløpB == null
         return beløpB != null && beløpA.compareTo(beløpB) == 0
     }
-    fun hoppeTilVedtak(vedtak: Vedtaksdetaljer) {
-        nesteVedtak = vedtak
-    }
+
     fun hoppeTilOmgjortVedtak(idTilOmgjortVedtak: Long) {
         while (nesteVedtak != null && nesteVedtak!!.vedtak.vedtaksid != idTilOmgjortVedtak) {
             forberedeNeste()
