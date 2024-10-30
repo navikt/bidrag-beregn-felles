@@ -31,7 +31,7 @@ internal val BigDecimal.gjennomsnittOverToUker get() = divide(totalNetterOverToU
 @Service
 class BeregnSamværsklasseApi {
     companion object {
-        fun SamværskalkulatorDetaljer.beregnSumGjennomsnittligSamværPerMåned(): BigDecimal = gjennomsnittligMånedligSamvær()
+        fun beregnSumGjennomsnittligSamværPerMåned(detaljer: SamværskalkulatorDetaljer): BigDecimal = detaljer.gjennomsnittligMånedligSamvær()
     }
 
     fun List<Samværsfradrag>.tilSamværsklasseAntallDagerListe(): List<SamværsklasseAntallDager> = filter {
