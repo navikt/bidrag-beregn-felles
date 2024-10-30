@@ -47,8 +47,8 @@ class Vedtaksfiltrering {
             // Håndtere resultat fra annet vedtak
             if (vedtaksdetaljer.vedtak.erResultatFraAnnetVedtak()) {
                 iterator.hoppeTilBeløp(vedtaksdetaljer.periode.beløp)
-                require(iterator.hasNext()) { "Fant ikke vedtak for evnevurdering i vedtak ${vedtaksdetaljer.vedtak.vedtaksid}" }
-                return iterator.next().vedtak
+                if (!iterator.hasNext()) return null
+                continue
             }
 
             // Hopp over indeksregulering
@@ -63,8 +63,7 @@ class Vedtaksfiltrering {
         return null
     }
 
-    private fun VedtakForStønad.filtrereBortIrrelevanteVedtak(): Boolean =
-        erInnkreving() && !erIkkeRelevant() && (erBidrag() || er18årsbidrag() || erOppfostringsbidrag())
+    private fun VedtakForStønad.filtrereBortIrrelevanteVedtak(): Boolean = erInnkreving() && (erBidrag() || er18årsbidrag() || erOppfostringsbidrag())
 }
 
 data class Vedtaksdetaljer(var erOmgjort: Boolean = false, val vedtak: VedtakForStønad, val periode: VedtakPeriodeDto)
@@ -120,7 +119,9 @@ class Vedtaksiterator(vedtakssamling: Collection<Vedtaksdetaljer>) : Iterator<Ve
         if (beløpA == null) return beløpB == null
         return beløpB != null && beløpA.compareTo(beløpB) == 0
     }
-
+    fun hoppeTilVedtak(vedtak: Vedtaksdetaljer) {
+        nesteVedtak = vedtak
+    }
     fun hoppeTilOmgjortVedtak(idTilOmgjortVedtak: Long) {
         while (nesteVedtak != null && nesteVedtak!!.vedtak.vedtaksid != idTilOmgjortVedtak) {
             forberedeNeste()
