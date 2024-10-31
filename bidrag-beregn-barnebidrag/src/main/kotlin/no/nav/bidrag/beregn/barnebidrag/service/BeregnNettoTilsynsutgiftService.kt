@@ -52,7 +52,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
         val nettoTilsynsutgiftBeregningResultatListe = mutableListOf<NettoTilsynsutgiftPeriodeResultat>()
 
         bruddPeriodeListe.forEach { bruddPeriode ->
-            // Teller antall barn under 13 år i perioden. Hvis antall er null så gjøres det ingen beregning
+            // Teller antall barn under 13 år i perioden og filterer bort resten. Hvis antall er null så gjøres det ingen beregning
             val antallBarnIPerioden = nettoTilsynsutgiftPeriodeGrunnlag.faktiskUtgiftPeriodeCoreListe
                 .filter { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
                 .filter { finnAlderBarn(mottattGrunnlag.grunnlagListe, it.gjelderBarn, bruddPeriode.fom.atDay(1)) < 13 }

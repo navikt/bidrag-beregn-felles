@@ -91,7 +91,7 @@
           "fom": "2024-04",
           "til": null
         },
-        "gjelderBarn": "person_PERSON_BARN_BIDRAGSMOTTAKER_20051217_102",
+        "gjelderBarn": "person_PERSON_BARN_BIDRAGSPLIKTIG_20051217_102",
         "fødselsdatoBarn": "2021-02-10",
         "faktiskUtgiftBeløp":600.00,
         "kostpengerBeløp": 50.00,

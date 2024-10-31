@@ -11,6 +11,9 @@ import java.math.MathContext
 import java.math.RoundingMode
 
 internal object NettoTilsynsutgiftBeregning {
+    // Beregner netto tilsynsutgift for alle barn under 13 år med faktiske utgifter. Hvis samlede faktiske utgifter er større enn
+    // sjablon maks tilsynsbeløp, skal beløpene justeres forholdsmessig.
+
     fun beregn(grunnlag: NettoTilsynsutgiftBeregningGrunnlag): NettoTilsynsutgiftBeregningResultat {
         val antallBarnIPerioden = grunnlag.faktiskUtgiftListe.size
 
@@ -26,9 +29,6 @@ internal object NettoTilsynsutgiftBeregning {
         // lag samletFaktiskUtgiftBeløp
         val totaltFaktiskUtgiftBeløp = grunnlag.faktiskUtgiftListe.sumOf { it.beregnetBeløp }
 
-        // lag samletTilleggstønadBeløp
-        val totaltTilleggstønadBeløp = grunnlag.tilleggsstønadListe.sumOf { it.beregnetBeløp }
-
         val skattefradragsbeløpPerBarn =
             beregnFradragsbeløpPerBarn(
                 antallBarnIPerioden = antallBarnIPerioden,
@@ -37,37 +37,33 @@ internal object NettoTilsynsutgiftBeregning {
                 sjablonMaksFradragsbeløp = sjablonMaksFradragsbeløp,
             )
 
-        var bruttoTilsynsutgift: BigDecimal
-
         val tilsynsutgiftBarnListe = mutableListOf<TilsynsutgiftBarn>()
 
         // Finner prosentandel av totalbeløp og beregner så andel av maks tilsynsbeløp
         grunnlag.faktiskUtgiftListe.forEach {
-            bruttoTilsynsutgift =
+            val bruttoTilsynsutgift =
                 if (totaltFaktiskUtgiftBeløp > sjablonMaksTilsynsbeløp) {
-                    it.beregnetBeløp.divide(totaltFaktiskUtgiftBeløp, MathContext(2, RoundingMode.HALF_UP)) * sjablonMaksTilsynsbeløp
+                    it.beregnetBeløp.divide(totaltFaktiskUtgiftBeløp, MathContext(10, RoundingMode.HALF_UP)) * sjablonMaksTilsynsbeløp
                 } else {
                     it.beregnetBeløp
                 }
 
             val tilleggsstønadBeløp = grunnlag.tilleggsstønadListe
-                .filter { tilleggsstønad -> tilleggsstønad.gjelderBarn == it.gjelderBarn }
-                .sumOf { tilleggsstønad -> tilleggsstønad.beregnetBeløp }
+                .filter { ts -> ts.gjelderBarn == it.gjelderBarn }
+                .sumOf { ts -> ts.beregnetBeløp }
 
             tilsynsutgiftBarnListe.add(
                 TilsynsutgiftBarn(
                     gjelderBarn = it.gjelderBarn,
-                    endeligBruttoTilsynsutgift = bruttoTilsynsutgift.avrundetMedToDesimaler,
+                    sumFaktiskeUtgifter = it.beregnetBeløp,
+                    endeligSumFaktiskeUtgifter = bruttoTilsynsutgift.avrundetMedToDesimaler,
                     skattefradragsbeløpPerBarn = skattefradragsbeløpPerBarn.avrundetMedToDesimaler,
                     tilleggsstønad = tilleggsstønadBeløp.avrundetMedToDesimaler,
                     nettoTilsynsutgift =
-                    (bruttoTilsynsutgift - skattefradragsbeløpPerBarn.avrundetMedToDesimaler - totaltTilleggstønadBeløp).avrundetMedToDesimaler
+                    (bruttoTilsynsutgift - skattefradragsbeløpPerBarn.avrundetMedToDesimaler - tilleggsstønadBeløp).avrundetMedToDesimaler
                         .coerceAtLeast(BigDecimal.ZERO),
                 ),
             )
-
-            // Trekker fra beregnet fradragsbeløp
-            bruttoTilsynsutgift -= skattefradragsbeløpPerBarn
         }
 
         val resultat = NettoTilsynsutgiftBeregningResultat(
@@ -94,6 +90,6 @@ internal object NettoTilsynsutgiftBeregning {
         val maksFradragsbeløp = sjablonMaksFradragsbeløp * skatteSatsOmregnet
         val fradragsbeløp = minOf((totaltFaktiskUtgiftBeløp * skatteSatsOmregnet), maksFradragsbeløp)
 
-        return fradragsbeløp.divide(antallBarnIPerioden.toBigDecimal()).avrundetMedTiDesimaler
+        return fradragsbeløp.divide(antallBarnIPerioden.toBigDecimal(), MathContext(10, RoundingMode.HALF_UP))
     }
 }
