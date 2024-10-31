@@ -1,13 +1,15 @@
 package no.nav.bidrag.beregn.barnebidrag
 
 import no.nav.bidrag.commons.service.sjablon.Samværsfradrag
-import no.nav.bidrag.commons.service.sjablon.SjablonProvider
+import no.nav.bidrag.commons.service.sjablon.SjablonService
 import no.nav.bidrag.domene.enums.beregning.Samværsklasse
 import no.nav.bidrag.domene.util.avrundetMedNullDesimaler
 import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import no.nav.bidrag.transport.behandling.beregning.samvær.SamværskalkulatorDetaljer
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsklasse
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
+import java.math.MathContext
 import java.math.RoundingMode
 import java.time.LocalDate
 
@@ -17,21 +19,17 @@ data class SamværsklasseAntallDager(
     val antallNetterTil: BigDecimal,
 )
 
-data class BeregnSamværsklasseResultat(
-    val samværsklasse: Samværsklasse,
-    val sumGjennomsnittligSamværPerMåned: BigDecimal,
-)
-
 internal val totalNetterOverToÅr = BigDecimal(730)
 internal val totalNetterOverToUker = BigDecimal(14)
 internal val totalMånederOverToÅr = BigDecimal(24)
-internal val BigDecimal.gjennomsnittOverToÅr get() = divide(totalMånederOverToÅr, 2, RoundingMode.HALF_UP)
-internal val BigDecimal.gjennomsnittOverToUker get() = divide(totalNetterOverToUker, 2, RoundingMode.HALF_UP)
+internal val BigDecimal.gjennomsnittOverToÅr get() = divide(totalMånederOverToÅr, 2, RoundingMode.HALF_EVEN)
+internal val BigDecimal.gjennomsnittOverToUker get() = divide(totalNetterOverToUker, 2, RoundingMode.HALF_EVEN)
 
 @Service
-class BeregnSamværsklasseApi {
+class BeregnSamværsklasseApi(private val sjablonService: SjablonService) {
     companion object {
-        fun beregnSumGjennomsnittligSamværPerMåned(detaljer: SamværskalkulatorDetaljer): BigDecimal = detaljer.gjennomsnittligMånedligSamvær()
+        fun beregnSumGjennomsnittligSamværPerMåned(detaljer: SamværskalkulatorDetaljer): BigDecimal =
+            detaljer.gjennomsnittligMånedligSamvær().avrundetMedToDesimaler
     }
 
     fun List<Samværsfradrag>.tilSamværsklasseAntallDagerListe(): List<SamværsklasseAntallDager> = filter {
@@ -42,8 +40,8 @@ class BeregnSamværsklasseApi {
         acc + SamværsklasseAntallDager(Samværsklasse.fromBisysKode(samværsfradrag.samvaersklasse!!)!!, antallNetterFra, antallNetterTil)
     }
 
-    fun beregnSamværsklasse(kalkulator: SamværskalkulatorDetaljer): BeregnSamværsklasseResultat {
-        val samværsklasser = SjablonProvider.hentSjablonSamværsfradrag().tilSamværsklasseAntallDagerListe()
+    fun beregnSamværsklasse(kalkulator: SamværskalkulatorDetaljer): DelberegningSamværsklasse {
+        val samværsklasser = sjablonService.hentSjablonSamværsfradrag().tilSamværsklasseAntallDagerListe()
 
         val gjennomsnittligSamvær = kalkulator.gjennomsnittligMånedligSamvær()
         val gjennomsnittligSamværAvrundet = gjennomsnittligSamvær.avrundetMedNullDesimaler
@@ -57,30 +55,30 @@ class BeregnSamværsklasseApi {
                     if (gjennomsnittligSamværAvrundet > sisteSamværsklasse.antallNetterTil) {
                         sisteSamværsklasse.samværsklasse
                     } else {
-                        Samværsklasse.INGEN_SAMVÆR
+                        Samværsklasse.SAMVÆRSKLASSE_0
                     }
                 }
 
-        return BeregnSamværsklasseResultat(samværsklasse, gjennomsnittligSamvær)
+        return DelberegningSamværsklasse(samværsklasse, gjennomsnittligSamvær.avrundetMedToDesimaler)
     }
 }
 
 private fun List<SamværskalkulatorDetaljer.SamværskalkulatorFerie>.bmTotalNetter() = sumOf {
-    it.bidragsmottakerTotalAntallNetterOverToÅr.toBigDecimal().avrundetMedToDesimaler
+    it.bidragsmottakerTotalAntallNetterOverToÅr
 }
 
 private fun List<SamværskalkulatorDetaljer.SamværskalkulatorFerie>.bpTotalNetter() = sumOf {
-    it.bidragspliktigTotalAntallNetterOverToÅr.toBigDecimal().avrundetMedToDesimaler
+    it.bidragspliktigTotalAntallNetterOverToÅr
 }
 
 private fun SamværskalkulatorDetaljer.totalGjennomsnittligSamvær() =
-    regelmessigSamværNetter.toBigDecimal().multiply(samværOverFjortendagersDagersperiode())
+    regelmessigSamværNetter.multiply(samværOverFjortendagersDagersperiode(), MathContext(10, RoundingMode.HALF_EVEN))
 
 private fun SamværskalkulatorDetaljer.gjennomsnittligMånedligSamvær() = totalSamvær().gjennomsnittOverToÅr
 
 private fun SamværskalkulatorDetaljer.totalSamvær() = ferier.bpTotalNetter() + totalGjennomsnittligSamvær()
 
-private fun SamværskalkulatorDetaljer.samværOverFjortendagersDagersperiode() = regelmessigSamværHosBm().gjennomsnittOverToUker.avrundetMedToDesimaler
+private fun SamværskalkulatorDetaljer.samværOverFjortendagersDagersperiode() = regelmessigSamværHosBm().gjennomsnittOverToUker
 
 private fun SamværskalkulatorDetaljer.regelmessigSamværHosBm(): BigDecimal {
     return totalNetterOverToÅr - ferier.bpTotalNetter() - ferier.bmTotalNetter()
