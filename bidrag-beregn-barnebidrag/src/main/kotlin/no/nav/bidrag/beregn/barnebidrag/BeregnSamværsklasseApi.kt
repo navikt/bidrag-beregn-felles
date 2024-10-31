@@ -13,11 +13,7 @@ import java.math.MathContext
 import java.math.RoundingMode
 import java.time.LocalDate
 
-data class SamværsklasseAntallDager(
-    val samværsklasse: Samværsklasse,
-    val antallNetterFra: BigDecimal,
-    val antallNetterTil: BigDecimal,
-)
+data class SamværsklasseAntallDager(val samværsklasse: Samværsklasse, val antallNetterFra: BigDecimal, val antallNetterTil: BigDecimal)
 
 internal val totalNetterOverToÅr = BigDecimal(730)
 internal val totalNetterOverToUker = BigDecimal(14)
@@ -80,6 +76,4 @@ private fun SamværskalkulatorDetaljer.totalSamvær() = ferier.bpTotalNetter() +
 
 private fun SamværskalkulatorDetaljer.samværOverFjortendagersDagersperiode() = regelmessigSamværHosBm().gjennomsnittOverToUker
 
-private fun SamværskalkulatorDetaljer.regelmessigSamværHosBm(): BigDecimal {
-    return totalNetterOverToÅr - ferier.bpTotalNetter() - ferier.bmTotalNetter()
-}
+private fun SamværskalkulatorDetaljer.regelmessigSamværHosBm(): BigDecimal = totalNetterOverToÅr - ferier.bpTotalNetter() - ferier.bmTotalNetter()

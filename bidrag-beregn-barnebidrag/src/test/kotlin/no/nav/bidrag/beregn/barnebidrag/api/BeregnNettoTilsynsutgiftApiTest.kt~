@@ -214,7 +214,7 @@ internal class BeregnNettoTilsynsutgiftApiTest {
             { assertEquals(0, resultat[1].tilsynsutgiftBarnListe[0].endeligSumFaktiskeUtgifter.compareTo(BigDecimal.valueOf(1900))) },
             { assertEquals(0, resultat[1].tilsynsutgiftBarnListe[0].skattefradragsbeløpPerBarn.compareTo(BigDecimal.valueOf(472.15))) },
             { assertEquals(0, resultat[1].tilsynsutgiftBarnListe[0].tilleggsstønad.compareTo(BigDecimal.valueOf(216.67))) },
-            { assertEquals(0, resultat[1].tilsynsutgiftBarnListe[0].nettoTilsynsutgift.compareTo(BigDecimal.valueOf(1211.18))) },
+            { assertEquals(0, resultat[1].tilsynsutgiftBarnListe[0].nettoTilsynsutgift.compareTo(BigDecimal.valueOf(1883, 93))) },
 
             { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode("2024-07", "2024-09")) },
             { assertEquals(0, resultat[2].totaltFaktiskUtgiftBeløp.compareTo(BigDecimal.valueOf(1900))) },
@@ -222,7 +222,7 @@ internal class BeregnNettoTilsynsutgiftApiTest {
             { assertEquals(0, resultat[2].tilsynsutgiftBarnListe[0].endeligSumFaktiskeUtgifter.compareTo(BigDecimal.valueOf(1900))) },
             { assertEquals(0, resultat[2].tilsynsutgiftBarnListe[0].skattefradragsbeløpPerBarn.compareTo(BigDecimal.valueOf(472.15))) },
             { assertEquals(0, resultat[2].tilsynsutgiftBarnListe[0].tilleggsstønad.compareTo(BigDecimal.valueOf(216.67))) },
-            { assertEquals(0, resultat[2].tilsynsutgiftBarnListe[0].nettoTilsynsutgift.compareTo(BigDecimal.valueOf(1211.18))) },
+            { assertEquals(0, resultat[2].tilsynsutgiftBarnListe[0].nettoTilsynsutgift.compareTo(BigDecimal.valueOf(1883, 93))) },
         )
     }
 

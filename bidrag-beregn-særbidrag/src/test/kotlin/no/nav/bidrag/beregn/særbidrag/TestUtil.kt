@@ -205,11 +205,10 @@ object TestUtil {
         )
     }
 
-    fun hentAlleReferanser(totalSærbidragResultat: BeregnetSærbidragResultat) =
-        totalSærbidragResultat.beregnetSærbidragPeriodeListe.flatMap { it.grunnlagsreferanseListe } +
-            totalSærbidragResultat.grunnlagListe.flatMap { it.grunnlagsreferanseListe } +
-            totalSærbidragResultat.grunnlagListe.flatMap { grunnlag -> grunnlag.gjelderReferanse?.let { listOf(it) } ?: emptyList() }
-                .distinct()
+    fun hentAlleReferanser(totalSærbidragResultat: BeregnetSærbidragResultat) = totalSærbidragResultat.beregnetSærbidragPeriodeListe.flatMap { it.grunnlagsreferanseListe } +
+        totalSærbidragResultat.grunnlagListe.flatMap { it.grunnlagsreferanseListe } +
+        totalSærbidragResultat.grunnlagListe.flatMap { grunnlag -> grunnlag.gjelderReferanse?.let { listOf(it) } ?: emptyList() }
+            .distinct()
 
     // Bygger opp BeregnBidragsevneResultatCore
     fun dummyBidragsevneResultatCore(): BeregnBidragsevneResultatCore {
