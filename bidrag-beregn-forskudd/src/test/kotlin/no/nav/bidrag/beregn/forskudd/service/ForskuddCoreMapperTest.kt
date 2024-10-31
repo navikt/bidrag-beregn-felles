@@ -352,14 +352,11 @@ internal class ForskuddCoreMapperTest {
         return ObjectMapper().findAndRegisterModules().readValue(json, BeregnGrunnlag::class.java)
     }
 
-    private fun innholdSøknadsbarnMedFeil(mapper: ObjectMapper) =
-        mapper.readTree("{\"ident\": \"11111111111\"," + "\"navn\": \"Søknadsbarn\"," + "\"fødselsdato\": null}")
+    private fun innholdSøknadsbarnMedFeil(mapper: ObjectMapper) = mapper.readTree("{\"ident\": \"11111111111\"," + "\"navn\": \"Søknadsbarn\"," + "\"fødselsdato\": null}")
 
-    private fun innholdSøknadsbarnOK(mapper: ObjectMapper) =
-        mapper.readTree("{\"ident\": \"11111111111\"," + "\"navn\": \"Søknadsbarn\"," + "\"fødselsdato\": \"2010-01-01\"}")
+    private fun innholdSøknadsbarnOK(mapper: ObjectMapper) = mapper.readTree("{\"ident\": \"11111111111\"," + "\"navn\": \"Søknadsbarn\"," + "\"fødselsdato\": \"2010-01-01\"}")
 
-    private fun innholdBidragsmottakerOK(mapper: ObjectMapper) =
-        mapper.readTree("{\"ident\": \"11111111111\"," + "\"navn\": \"Bidragsmottaker\"," + "\"fødselsdato\": \"1982-01-01\"}")
+    private fun innholdBidragsmottakerOK(mapper: ObjectMapper) = mapper.readTree("{\"ident\": \"11111111111\"," + "\"navn\": \"Bidragsmottaker\"," + "\"fødselsdato\": \"1982-01-01\"}")
 
     private fun innholdBostatusMedFeil(mapper: ObjectMapper) = mapper.readTree(
         "{\"periode\":{" + "\"fom\": \"2020-12\"," + "\"til\": \"2021-01\"}," + "\"bostatus\": \"MED_BESTEMOR\"," +
@@ -381,6 +378,5 @@ internal class ForskuddCoreMapperTest {
             "\"gjelderBarn\": null," + "\"beløp\": 290000," + "\"manueltRegistrert\": false," + "\"valgt\": true}",
     )
 
-    private fun innholdSivilstandMedFeil(mapper: ObjectMapper) =
-        mapper.readTree("{\"periode\":{" + "\"fom\": \"2020-12\"," + "\"til\": \"2021-01\"}," + "\"sivilstand\": \"UGIFT\"}")
+    private fun innholdSivilstandMedFeil(mapper: ObjectMapper) = mapper.readTree("{\"periode\":{" + "\"fom\": \"2020-12\"," + "\"til\": \"2021-01\"}," + "\"sivilstand\": \"UGIFT\"}")
 }

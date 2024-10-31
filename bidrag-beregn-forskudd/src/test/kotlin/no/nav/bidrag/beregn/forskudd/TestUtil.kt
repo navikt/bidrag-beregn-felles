@@ -306,8 +306,7 @@ object TestUtil {
         return BeregnForskuddResultat(periodeResultatListe)
     }
 
-    fun byggAvvikListe(): List<Avvik> =
-        listOf(Avvik(avvikTekst = "beregnDatoTil må være etter beregnDatoFra", avvikType = Avvikstype.DATO_FOM_ETTER_DATO_TIL))
+    fun byggAvvikListe(): List<Avvik> = listOf(Avvik(avvikTekst = "beregnDatoTil må være etter beregnDatoFra", avvikType = Avvikstype.DATO_FOM_ETTER_DATO_TIL))
 
     fun byggForskuddGrunnlag(): BeregnForskuddGrunnlag = byggForskuddGrunnlag(beregnDatoFra = "2017-01-01", beregnDatoTil = "2019-08-01")
 
