@@ -240,6 +240,46 @@ internal class BeregnSamværsklasseApiTest {
         }
     }
 
+    @Test
+    fun `skal beregne samværsklasse for en case med reglemessig netter og ferier`() {
+        val resultat = api.beregnSamværsklasse(
+            SamværskalkulatorDetaljer(
+                regelmessigSamværNetter = BigDecimal(12),
+                ferier = listOf(
+                    SamværskalkulatorDetaljer.SamværskalkulatorFerie(
+                        type = SamværskalkulatorFerietype.JUL_NYTTÅR,
+                        frekvens = SamværskalkulatorNetterFrekvens.ANNET_HVERT_ÅR,
+                        bidragspliktigNetter = BigDecimal(5),
+                    ),
+                    SamværskalkulatorDetaljer.SamværskalkulatorFerie(
+                        type = SamværskalkulatorFerietype.VINTERFERIE,
+                        frekvens = SamværskalkulatorNetterFrekvens.ANNET_HVERT_ÅR,
+                        bidragspliktigNetter = BigDecimal(7),
+                    ),
+                    SamværskalkulatorDetaljer.SamværskalkulatorFerie(
+                        type = SamværskalkulatorFerietype.PÅSKE,
+                        frekvens = SamværskalkulatorNetterFrekvens.ANNET_HVERT_ÅR,
+                        bidragspliktigNetter = BigDecimal(5),
+                    ),
+                    SamværskalkulatorDetaljer.SamværskalkulatorFerie(
+                        type = SamværskalkulatorFerietype.SOMMERFERIE,
+                        frekvens = SamværskalkulatorNetterFrekvens.HVERT_ÅR,
+                        bidragspliktigNetter = BigDecimal(21),
+                    ),
+                    SamværskalkulatorDetaljer.SamværskalkulatorFerie(
+                        type = SamværskalkulatorFerietype.HØSTFERIE,
+                        frekvens = SamværskalkulatorNetterFrekvens.ANNET_HVERT_ÅR,
+                        bidragspliktigNetter = BigDecimal(7),
+                    ),
+                ),
+            ),
+        )
+        assertSoftly {
+            resultat.samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_4
+            resultat.gjennomsnittligSamværPerMåned shouldBe BigDecimal("26.46")
+        }
+    }
+
     private fun opprettKalkulatoDetaljer() = SamværskalkulatorDetaljer(
         regelmessigSamværNetter = BigDecimal(2),
         ferier = listOf(
