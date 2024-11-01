@@ -35,6 +35,18 @@ internal class BeregnSamværsklasseApiTest {
     }
 
     @Test
+    fun `skal beregne samværsklasse for 4 regelmessig samvær`() {
+        val resultat = api.beregnSamværsklasse(
+            SamværskalkulatorDetaljer(
+                regelmessigSamværNetter = BigDecimal(4),
+                ferier = emptyList(),
+            ),
+        )
+        resultat.samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_2
+        resultat.gjennomsnittligSamværPerMåned shouldBe BigDecimal("8.69")
+    }
+
+    @Test
     fun `skal beregne samværsklasse for 2 regelmessig samvær`() {
         val resultat = api.beregnSamværsklasse(
             SamværskalkulatorDetaljer(

@@ -5,17 +5,15 @@ import no.nav.bidrag.commons.service.sjablon.Samværsfradrag
 import no.nav.bidrag.commons.service.sjablon.SjablonService
 import no.nav.bidrag.domene.enums.beregning.Samværsklasse
 import no.nav.bidrag.domene.enums.samværskalkulator.SamværskalkulatorNetterFrekvens
-import no.nav.bidrag.domene.util.avrundetMedNullDesimaler
 import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import no.nav.bidrag.transport.behandling.beregning.samvær.SamværskalkulatorDetaljer
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsklasse
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsklasserNetter
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode
 import java.time.LocalDate
-
-data class SamværsklasseAntallDager(val samværsklasse: Samværsklasse, val antallNetterFra: BigDecimal, val antallNetterTil: BigDecimal)
 
 internal val totalNetterOverToÅr = BigDecimal(730)
 internal val totalNetterOverToUker = BigDecimal(14)
@@ -38,19 +36,27 @@ class BeregnSamværsklasseApi(private val sjablonService: SjablonService) {
             detaljer.gjennomsnittligMånedligSamvær().avrundetMedToDesimaler
     }
 
-    fun List<Samværsfradrag>.tilSamværsklasseAntallDagerListe(): List<SamværsklasseAntallDager> = filter {
-        it.datoTom == null || it.datoTom!! > LocalDate.now()
-    }.distinctBy { it.samvaersklasse }.sortedBy { it.samvaersklasse }.fold(emptyList()) { acc, samværsfradrag ->
-        val antallNetterFra = if (acc.isEmpty()) BigDecimal.ZERO else acc.last().antallNetterTil + BigDecimal.ONE
-        val antallNetterTil = samværsfradrag.antNetterTom!!.toBigDecimal()
-        acc + SamværsklasseAntallDager(Samværsklasse.fromBisysKode(samværsfradrag.samvaersklasse!!)!!, antallNetterFra, antallNetterTil)
+    fun List<Samværsfradrag>.delberegningSamværsklasserNetter(): List<DelberegningSamværsklasserNetter> {
+        val sjabloner = filter {
+            it.datoTom == null || it.datoTom!! > LocalDate.now()
+        }.distinctBy { it.samvaersklasse }.sortedBy { it.samvaersklasse }
+
+        return sjabloner.foldIndexed(emptyList()) { index, acc, samværsfradrag ->
+            val antallNetterFra = if (acc.isEmpty()) BigDecimal.ZERO else acc.last().antallNetterTil.setScale(0, RoundingMode.FLOOR) + BigDecimal.ONE
+            val antallNetterTil = if (index == sjabloner.lastIndex) {
+                samværsfradrag.antNetterTom!!.toBigDecimal().avrundetMedToDesimaler
+            } else {
+                (samværsfradrag.antNetterTom!!.toBigDecimal() + BigDecimal(0.99)).avrundetMedToDesimaler
+            }
+            acc + DelberegningSamværsklasserNetter(Samværsklasse.fromBisysKode(samværsfradrag.samvaersklasse!!)!!, antallNetterFra, antallNetterTil)
+        }
     }
 
     fun beregnSamværsklasse(kalkulator: SamværskalkulatorDetaljer): DelberegningSamværsklasse {
-        val samværsklasser = sjablonService.hentSjablonSamværsfradrag().tilSamværsklasseAntallDagerListe()
+        val samværsklasser = sjablonService.hentSjablonSamværsfradrag().delberegningSamværsklasserNetter()
 
         val gjennomsnittligSamvær = kalkulator.gjennomsnittligMånedligSamvær()
-        val gjennomsnittligSamværAvrundet = gjennomsnittligSamvær.avrundetMedNullDesimaler
+        val gjennomsnittligSamværAvrundet = gjennomsnittligSamvær.avrundetMedToDesimaler
         val samværsklasse =
             samværsklasser
                 .find {
