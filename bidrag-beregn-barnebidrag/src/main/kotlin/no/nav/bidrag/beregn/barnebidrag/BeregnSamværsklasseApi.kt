@@ -70,11 +70,11 @@ class BeregnSamværsklasseApi(private val sjablonService: SjablonService) {
 }
 
 private fun List<SamværskalkulatorDetaljer.SamværskalkulatorFerie>.bmTotalNetter() = sumOf {
-    it.bidragsmottakerTotalAntallNetterOverToÅr2
+    it.bidragsmottakerTotalAntallNetterOverToÅr
 }
 
 private fun List<SamværskalkulatorDetaljer.SamværskalkulatorFerie>.bpTotalNetter() = sumOf {
-    it.bidragspliktigTotalAntallNetterOverToÅr2
+    it.bidragspliktigTotalAntallNetterOverToÅr
 }
 
 private val SamværskalkulatorDetaljer.SamværskalkulatorFerie.frekvensSomAntallNetter get() =
@@ -84,10 +84,10 @@ private val SamværskalkulatorDetaljer.SamværskalkulatorFerie.frekvensSomAntall
         BigDecimal.ONE
     }
 
-val SamværskalkulatorDetaljer.SamværskalkulatorFerie.bidragsmottakerTotalAntallNetterOverToÅr2 get() =
+private val SamværskalkulatorDetaljer.SamværskalkulatorFerie.bidragsmottakerTotalAntallNetterOverToÅr get() =
     bidragsmottakerNetter.multiply(frekvensSomAntallNetter, MathContext(10, RoundingMode.HALF_EVEN)).tilpassetOffentligSamværskalkulator
 
-val SamværskalkulatorDetaljer.SamværskalkulatorFerie.bidragspliktigTotalAntallNetterOverToÅr2 get() =
+private val SamværskalkulatorDetaljer.SamværskalkulatorFerie.bidragspliktigTotalAntallNetterOverToÅr get() =
     bidragspliktigNetter.multiply(frekvensSomAntallNetter, MathContext(10, RoundingMode.HALF_EVEN)).tilpassetOffentligSamværskalkulator
 
 private fun SamværskalkulatorDetaljer.totalGjennomsnittligSamvær() = regelmessigSamværNetter.multiply(
