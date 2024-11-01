@@ -1,8 +1,10 @@
-package no.nav.bidrag.beregn.barnebidrag
+@file:Suppress("unused")
 
+package no.nav.bidrag.beregn.barnebidrag
 import no.nav.bidrag.commons.service.sjablon.Samværsfradrag
 import no.nav.bidrag.commons.service.sjablon.SjablonService
 import no.nav.bidrag.domene.enums.beregning.Samværsklasse
+import no.nav.bidrag.domene.enums.samværskalkulator.SamværskalkulatorNetterFrekvens
 import no.nav.bidrag.domene.util.avrundetMedNullDesimaler
 import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import no.nav.bidrag.transport.behandling.beregning.samvær.SamværskalkulatorDetaljer
@@ -18,8 +20,16 @@ data class SamværsklasseAntallDager(val samværsklasse: Samværsklasse, val ant
 internal val totalNetterOverToÅr = BigDecimal(730)
 internal val totalNetterOverToUker = BigDecimal(14)
 internal val totalMånederOverToÅr = BigDecimal(24)
-internal val BigDecimal.gjennomsnittOverToÅr get() = divide(totalMånederOverToÅr, 2, RoundingMode.HALF_EVEN)
-internal val BigDecimal.gjennomsnittOverToUker get() = divide(totalNetterOverToUker, 2, RoundingMode.HALF_EVEN)
+
+internal val BigDecimal.gjennomsnittOverToUker get() = divide(totalNetterOverToUker, 10, RoundingMode.HALF_EVEN)
+internal val BigDecimal.gjennomsnittOverToÅr get() = divide(totalMånederOverToÅr, 10, RoundingMode.HALF_EVEN)
+
+// Tilpasset slik at det skal være lik bidragskalkulator mtp avrunding.
+// Det er for å unngå forskjellige resultater mellom offentlig samværskalkulator og ny samværskalkulator.
+// Erstatt med metodene over for å få riktig avrunding.
+internal val BigDecimal.gjennomsnittOverToÅrOffentligSamværskalkulator get() = BigDecimal(toDouble() / totalMånederOverToÅr.toDouble())
+internal val BigDecimal.gjennomsnittOverToUkerOffentligSamværskalkulator get() = BigDecimal(toDouble() / totalNetterOverToUker.toDouble())
+internal val BigDecimal.tilpassetOffentligSamværskalkulator get() = avrundetMedToDesimaler
 
 @Service
 class BeregnSamværsklasseApi(private val sjablonService: SjablonService) {
@@ -60,20 +70,37 @@ class BeregnSamværsklasseApi(private val sjablonService: SjablonService) {
 }
 
 private fun List<SamværskalkulatorDetaljer.SamværskalkulatorFerie>.bmTotalNetter() = sumOf {
-    it.bidragsmottakerTotalAntallNetterOverToÅr
+    it.bidragsmottakerTotalAntallNetterOverToÅr2
 }
 
 private fun List<SamværskalkulatorDetaljer.SamværskalkulatorFerie>.bpTotalNetter() = sumOf {
-    it.bidragspliktigTotalAntallNetterOverToÅr
+    it.bidragspliktigTotalAntallNetterOverToÅr2
 }
 
-private fun SamværskalkulatorDetaljer.totalGjennomsnittligSamvær() =
-    regelmessigSamværNetter.multiply(samværOverFjortendagersDagersperiode(), MathContext(10, RoundingMode.HALF_EVEN))
+private val SamværskalkulatorDetaljer.SamværskalkulatorFerie.frekvensSomAntallNetter get() =
+    if (frekvens == SamværskalkulatorNetterFrekvens.HVERT_ÅR) {
+        BigDecimal.TWO
+    } else {
+        BigDecimal.ONE
+    }
 
-private fun SamværskalkulatorDetaljer.gjennomsnittligMånedligSamvær() = totalSamvær().gjennomsnittOverToÅr
+val SamværskalkulatorDetaljer.SamværskalkulatorFerie.bidragsmottakerTotalAntallNetterOverToÅr2 get() =
+    bidragsmottakerNetter.multiply(frekvensSomAntallNetter, MathContext(10, RoundingMode.HALF_EVEN)).tilpassetOffentligSamværskalkulator
 
-private fun SamværskalkulatorDetaljer.totalSamvær() = ferier.bpTotalNetter() + totalGjennomsnittligSamvær()
+val SamværskalkulatorDetaljer.SamværskalkulatorFerie.bidragspliktigTotalAntallNetterOverToÅr2 get() =
+    bidragspliktigNetter.multiply(frekvensSomAntallNetter, MathContext(10, RoundingMode.HALF_EVEN)).tilpassetOffentligSamværskalkulator
 
-private fun SamværskalkulatorDetaljer.samværOverFjortendagersDagersperiode() = regelmessigSamværHosBm().gjennomsnittOverToUker
+private fun SamværskalkulatorDetaljer.totalGjennomsnittligSamvær() = regelmessigSamværNetter.multiply(
+    samværOverFjortendagersDagersperiode(),
+    MathContext(10, RoundingMode.HALF_EVEN),
+).tilpassetOffentligSamværskalkulator
+
+private fun SamværskalkulatorDetaljer.gjennomsnittligMånedligSamvær() = totalSamvær().gjennomsnittOverToÅrOffentligSamværskalkulator
+
+private fun SamværskalkulatorDetaljer.totalSamvær() =
+    ferier.bpTotalNetter().tilpassetOffentligSamværskalkulator + totalGjennomsnittligSamvær().tilpassetOffentligSamværskalkulator
+
+private fun SamværskalkulatorDetaljer.samværOverFjortendagersDagersperiode() =
+    regelmessigSamværHosBm().gjennomsnittOverToUkerOffentligSamværskalkulator.tilpassetOffentligSamværskalkulator
 
 private fun SamværskalkulatorDetaljer.regelmessigSamværHosBm(): BigDecimal = totalNetterOverToÅr - ferier.bpTotalNetter() - ferier.bmTotalNetter()
