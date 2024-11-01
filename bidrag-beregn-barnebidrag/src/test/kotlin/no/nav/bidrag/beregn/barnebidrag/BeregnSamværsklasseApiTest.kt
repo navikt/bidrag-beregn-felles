@@ -47,6 +47,34 @@ internal class BeregnSamværsklasseApiTest {
     }
 
     @Test
+    fun `skal beregne samværsklasse for 10 regelmessig samvær`() {
+        val resultat = api.beregnSamværsklasse(
+            SamværskalkulatorDetaljer(
+                regelmessigSamværNetter = BigDecimal(10),
+                ferier = emptyList(),
+            ),
+        )
+        assertSoftly {
+            resultat.samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_4
+            resultat.gjennomsnittligSamværPerMåned shouldBe BigDecimal("21.72")
+        }
+    }
+
+    @Test
+    fun `skal beregne samværsklasse for 7 regelmessig samvær`() {
+        val resultat = api.beregnSamværsklasse(
+            SamværskalkulatorDetaljer(
+                regelmessigSamværNetter = BigDecimal(7),
+                ferier = emptyList(),
+            ),
+        )
+        assertSoftly {
+            resultat.samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_4
+            resultat.gjennomsnittligSamværPerMåned shouldBe BigDecimal("15.21")
+        }
+    }
+
+    @Test
     fun `skal beregne samværsklasse for høyt antall regelmessig netter`() {
         val resultat = api.beregnSamværsklasse(opprettKalkulatoDetaljer().copy(regelmessigSamværNetter = BigDecimal(10)))
         assertSoftly {
@@ -237,6 +265,46 @@ internal class BeregnSamværsklasseApiTest {
         assertSoftly {
             resultat.samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_0
             resultat.gjennomsnittligSamværPerMåned shouldBe BigDecimal("1.17")
+        }
+    }
+
+    @Test
+    fun `skal beregne samværsklasse for en case med reglemessig netter og ferier 2`() {
+        val resultat = api.beregnSamværsklasse(
+            SamværskalkulatorDetaljer(
+                regelmessigSamværNetter = BigDecimal(4),
+                ferier = listOf(
+                    SamværskalkulatorDetaljer.SamværskalkulatorFerie(
+                        type = SamværskalkulatorFerietype.JUL_NYTTÅR,
+                        frekvens = SamværskalkulatorNetterFrekvens.ANNET_HVERT_ÅR,
+                        bidragspliktigNetter = BigDecimal(5),
+                    ),
+                    SamværskalkulatorDetaljer.SamværskalkulatorFerie(
+                        type = SamværskalkulatorFerietype.VINTERFERIE,
+                        frekvens = SamværskalkulatorNetterFrekvens.ANNET_HVERT_ÅR,
+                        bidragspliktigNetter = BigDecimal(7),
+                    ),
+                    SamværskalkulatorDetaljer.SamværskalkulatorFerie(
+                        type = SamværskalkulatorFerietype.PÅSKE,
+                        frekvens = SamværskalkulatorNetterFrekvens.ANNET_HVERT_ÅR,
+                        bidragspliktigNetter = BigDecimal(5),
+                    ),
+                    SamværskalkulatorDetaljer.SamværskalkulatorFerie(
+                        type = SamværskalkulatorFerietype.SOMMERFERIE,
+                        frekvens = SamværskalkulatorNetterFrekvens.HVERT_ÅR,
+                        bidragspliktigNetter = BigDecimal(21),
+                    ),
+                    SamværskalkulatorDetaljer.SamværskalkulatorFerie(
+                        type = SamværskalkulatorFerietype.HØSTFERIE,
+                        frekvens = SamværskalkulatorNetterFrekvens.ANNET_HVERT_ÅR,
+                        bidragspliktigNetter = BigDecimal(7),
+                    ),
+                ),
+            ),
+        )
+        assertSoftly {
+            resultat.samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_3
+            resultat.gjennomsnittligSamværPerMåned shouldBe BigDecimal("10.65")
         }
     }
 
