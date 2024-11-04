@@ -20,29 +20,28 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBase
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåFremmedReferanse
 
 internal object EndeligBidragMapper : CoreMapper() {
-    fun mapEndeligBidragGrunnlag(mottattGrunnlag: BeregnGrunnlag): EndeligBidragPeriodeGrunnlag =
-        EndeligBidragPeriodeGrunnlag(
-            beregningsperiode = mottattGrunnlag.periode,
-            bidragsevneDelberegningPeriodeGrunnlagListe = mapBidragsevne(mottattGrunnlag),
-            underholdskostnadDelberegningPeriodeGrunnlagListe = mapUnderholdskostnad(mottattGrunnlag),
-            bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe = mapBpAndelUnderholdskostnad(mottattGrunnlag),
-            samværsfradragDelberegningPeriodeGrunnlagListe = mapSamværsfradrag(mottattGrunnlag),
-            deltBostedPeriodeGrunnlagListe = mapDeltBosted(mottattGrunnlag),
-            barnetilleggBPPeriodeGrunnlagListe = mapBarnetillegg(
-                beregnGrunnlag = mottattGrunnlag,
-                referanseTilRolle = finnReferanseTilRolle(
-                    grunnlagListe = mottattGrunnlag.grunnlagListe,
-                    grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
-                )
+    fun mapEndeligBidragGrunnlag(mottattGrunnlag: BeregnGrunnlag): EndeligBidragPeriodeGrunnlag = EndeligBidragPeriodeGrunnlag(
+        beregningsperiode = mottattGrunnlag.periode,
+        bidragsevneDelberegningPeriodeGrunnlagListe = mapBidragsevne(mottattGrunnlag),
+        underholdskostnadDelberegningPeriodeGrunnlagListe = mapUnderholdskostnad(mottattGrunnlag),
+        bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe = mapBpAndelUnderholdskostnad(mottattGrunnlag),
+        samværsfradragDelberegningPeriodeGrunnlagListe = mapSamværsfradrag(mottattGrunnlag),
+        deltBostedPeriodeGrunnlagListe = mapDeltBosted(mottattGrunnlag),
+        barnetilleggBPPeriodeGrunnlagListe = mapBarnetillegg(
+            beregnGrunnlag = mottattGrunnlag,
+            referanseTilRolle = finnReferanseTilRolle(
+                grunnlagListe = mottattGrunnlag.grunnlagListe,
+                grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
             ),
-            barnetilleggBMPeriodeGrunnlagListe = mapBarnetillegg(
-                beregnGrunnlag = mottattGrunnlag,
-                referanseTilRolle = finnReferanseTilRolle(
-                    grunnlagListe = mottattGrunnlag.grunnlagListe,
-                    grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
-                )
+        ),
+        barnetilleggBMPeriodeGrunnlagListe = mapBarnetillegg(
+            beregnGrunnlag = mottattGrunnlag,
+            referanseTilRolle = finnReferanseTilRolle(
+                grunnlagListe = mottattGrunnlag.grunnlagListe,
+                grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
             ),
-        )
+        ),
+    )
 
     private fun mapBidragsevne(beregnGrunnlag: BeregnGrunnlag): List<BidragsevneDelberegningPeriodeGrunnlag> {
         try {
@@ -51,7 +50,7 @@ internal object EndeligBidragMapper : CoreMapper() {
                 .map {
                     BidragsevneDelberegningPeriodeGrunnlag(
                         referanse = it.referanse,
-                        bidragsevnePeriode = it.innhold
+                        bidragsevnePeriode = it.innhold,
                     )
                 }
         } catch (e: Exception) {
@@ -64,12 +63,12 @@ internal object EndeligBidragMapper : CoreMapper() {
     private fun mapUnderholdskostnad(beregnGrunnlag: BeregnGrunnlag): List<UnderholdskostnadDelberegningPeriodeGrunnlag> {
         try {
             return beregnGrunnlag.grunnlagListe
-//TODO Bør endres til DELBEREGNING_UNDERHOLDSKOSTNAD
+// TODO Bør endres til DELBEREGNING_UNDERHOLDSKOSTNAD
                 .filtrerOgKonverterBasertPåEgenReferanse<UnderholdskostnadPeriode>(Grunnlagstype.UNDERHOLDSKOSTNAD)
                 .map {
                     UnderholdskostnadDelberegningPeriodeGrunnlag(
                         referanse = it.referanse,
-                        underholdskostnadPeriode = it.innhold
+                        underholdskostnadPeriode = it.innhold,
                     )
                 }
         } catch (e: Exception) {
@@ -86,12 +85,13 @@ internal object EndeligBidragMapper : CoreMapper() {
                 .map {
                     BpAndelUnderholdskostnadDelberegningPeriodeGrunnlag(
                         referanse = it.referanse,
-                        bpAndelUnderholdskostnadPeriode = it.innhold
+                        bpAndelUnderholdskostnadPeriode = it.innhold,
                     )
                 }
         } catch (e: Exception) {
             throw IllegalArgumentException(
-                "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL er ikke gyldig: " + e.message,
+                "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL er ikke gyldig: " +
+                    e.message,
             )
         }
     }
@@ -103,7 +103,7 @@ internal object EndeligBidragMapper : CoreMapper() {
                 .map {
                     SamværsfradragDelberegningPeriodeGrunnlag(
                         referanse = it.referanse,
-                        samværsfradragPeriode = it.innhold
+                        samværsfradragPeriode = it.innhold,
                     )
                 }
         } catch (e: Exception) {
@@ -120,7 +120,7 @@ internal object EndeligBidragMapper : CoreMapper() {
                 .map {
                     DeltBostedPeriodeGrunnlag(
                         referanse = it.referanse,
-                        deltBostedPeriode = it.innhold
+                        deltBostedPeriode = it.innhold,
                     )
                 }
         } catch (e: Exception) {
@@ -140,7 +140,7 @@ internal object EndeligBidragMapper : CoreMapper() {
                 .map {
                     BarnetilleggPeriodeGrunnlag(
                         referanse = it.referanse,
-                        barnetilleggPeriode = it.innhold
+                        barnetilleggPeriode = it.innhold,
                     )
                 }
         } catch (e: Exception) {

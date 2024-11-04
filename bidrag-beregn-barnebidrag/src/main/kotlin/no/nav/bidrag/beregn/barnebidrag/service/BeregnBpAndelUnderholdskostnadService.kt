@@ -45,13 +45,13 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
         // Mapper ut grunnlag som skal brukes for å beregne bidragsevne
         val bpAndelUnderholdskostnadPeriodeGrunnlag = mapBpAndelUnderholdskostnadGrunnlag(
             mottattGrunnlag = mottattGrunnlag,
-            sjablonGrunnlag = sjablonGrunnlag
+            sjablonGrunnlag = sjablonGrunnlag,
         )
 
         // Lager liste over bruddperioder
         val bruddPeriodeListe = lagBruddPeriodeListeBpAndelUnderholdskostnad(
             grunnlagListe = bpAndelUnderholdskostnadPeriodeGrunnlag,
-            beregningsperiode = mottattGrunnlag.periode
+            beregningsperiode = mottattGrunnlag.periode,
         )
 
         val bpAndelUnderholdskostnadBeregningResultatListe = mutableListOf<BpAndelUnderholdskostnadPeriodeResultat>()
@@ -61,7 +61,7 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
             val bpAndelUnderholdskostnadBeregningGrunnlag =
                 lagBpAndelUnderholdskostnadBeregningGrunnlag(
                     bpAndelUnderholdskostnadPeriodeGrunnlag = bpAndelUnderholdskostnadPeriodeGrunnlag,
-                    bruddPeriode = bruddPeriode
+                    bruddPeriode = bruddPeriode,
                 )
             bpAndelUnderholdskostnadBeregningResultatListe.add(
                 BpAndelUnderholdskostnadPeriodeResultat(
@@ -128,36 +128,33 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
     private fun lagBpAndelUnderholdskostnadBeregningGrunnlag(
         bpAndelUnderholdskostnadPeriodeGrunnlag: BpAndelUnderholdskostnadPeriodeGrunnlag,
         bruddPeriode: ÅrMånedsperiode,
-    ): BpAndelUnderholdskostnadBeregningGrunnlag {
-
-        return BpAndelUnderholdskostnadBeregningGrunnlag(
-            underholdskostnadBeregningGrunnlag = bpAndelUnderholdskostnadPeriodeGrunnlag.underholdskostnadDelberegningPeriodeGrunnlagListe
-                .firstOrNull { it.underholdskostnadPeriode.periode.inneholder(bruddPeriode) }
-                ?.let { UnderholdskostnadBeregningGrunnlag(referanse = it.referanse, beløp = it.underholdskostnadPeriode.beløp) }
-                ?: throw IllegalArgumentException("Underholdskostnad grunnlag mangler for periode $bruddPeriode"),
-            inntektBPBeregningGrunnlag = bpAndelUnderholdskostnadPeriodeGrunnlag.inntektBPPeriodeGrunnlagListe
-                .firstOrNull { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
-                ?.let { InntektBeregningGrunnlag(referanse = it.referanse, sumInntekt = it.beløp) }
-                ?: throw IllegalArgumentException("Delberegning sum inntekt for bidragspliktig mangler for periode $bruddPeriode"),
-            inntektBMBeregningGrunnlag = bpAndelUnderholdskostnadPeriodeGrunnlag.inntektBMPeriodeGrunnlagListe
-                .firstOrNull { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
-                ?.let { InntektBeregningGrunnlag(referanse = it.referanse, sumInntekt = it.beløp) }
-                ?: throw IllegalArgumentException("Delberegning sum inntekt for bidragsmottaker mangler for periode $bruddPeriode"),
-            inntektSBBeregningGrunnlag = bpAndelUnderholdskostnadPeriodeGrunnlag.inntektSBPeriodeGrunnlagListe
-                .firstOrNull { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
-                ?.let { InntektBeregningGrunnlag(referanse = it.referanse, sumInntekt = it.beløp) }
-                ?: throw IllegalArgumentException("Delberegning sum inntekt for søknadsbarn mangler for periode $bruddPeriode"),
-            sjablonSjablontallBeregningGrunnlagListe = bpAndelUnderholdskostnadPeriodeGrunnlag.sjablonSjablontallPeriodeGrunnlagListe
-                .filter { it.sjablonSjablontallPeriode.periode.inneholder(bruddPeriode) }
-                .map {
-                    SjablonSjablontallBeregningGrunnlag(
-                        referanse = it.referanse,
-                        type = it.sjablonSjablontallPeriode.sjablon.navn,
-                        verdi = it.sjablonSjablontallPeriode.verdi.toDouble(),
-                    )
-                },
-        )
-    }
+    ): BpAndelUnderholdskostnadBeregningGrunnlag = BpAndelUnderholdskostnadBeregningGrunnlag(
+        underholdskostnadBeregningGrunnlag = bpAndelUnderholdskostnadPeriodeGrunnlag.underholdskostnadDelberegningPeriodeGrunnlagListe
+            .firstOrNull { it.underholdskostnadPeriode.periode.inneholder(bruddPeriode) }
+            ?.let { UnderholdskostnadBeregningGrunnlag(referanse = it.referanse, beløp = it.underholdskostnadPeriode.beløp) }
+            ?: throw IllegalArgumentException("Underholdskostnad grunnlag mangler for periode $bruddPeriode"),
+        inntektBPBeregningGrunnlag = bpAndelUnderholdskostnadPeriodeGrunnlag.inntektBPPeriodeGrunnlagListe
+            .firstOrNull { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
+            ?.let { InntektBeregningGrunnlag(referanse = it.referanse, sumInntekt = it.beløp) }
+            ?: throw IllegalArgumentException("Delberegning sum inntekt for bidragspliktig mangler for periode $bruddPeriode"),
+        inntektBMBeregningGrunnlag = bpAndelUnderholdskostnadPeriodeGrunnlag.inntektBMPeriodeGrunnlagListe
+            .firstOrNull { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
+            ?.let { InntektBeregningGrunnlag(referanse = it.referanse, sumInntekt = it.beløp) }
+            ?: throw IllegalArgumentException("Delberegning sum inntekt for bidragsmottaker mangler for periode $bruddPeriode"),
+        inntektSBBeregningGrunnlag = bpAndelUnderholdskostnadPeriodeGrunnlag.inntektSBPeriodeGrunnlagListe
+            .firstOrNull { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
+            ?.let { InntektBeregningGrunnlag(referanse = it.referanse, sumInntekt = it.beløp) }
+            ?: throw IllegalArgumentException("Delberegning sum inntekt for søknadsbarn mangler for periode $bruddPeriode"),
+        sjablonSjablontallBeregningGrunnlagListe = bpAndelUnderholdskostnadPeriodeGrunnlag.sjablonSjablontallPeriodeGrunnlagListe
+            .filter { it.sjablonSjablontallPeriode.periode.inneholder(bruddPeriode) }
+            .map {
+                SjablonSjablontallBeregningGrunnlag(
+                    referanse = it.referanse,
+                    type = it.sjablonSjablontallPeriode.sjablon.navn,
+                    verdi = it.sjablonSjablontallPeriode.verdi.toDouble(),
+                )
+            },
+    )
 
     private fun mapBpAndelUnderholdskostnadResultatGrunnlag(
         bpAndelUnderholdskostnadBeregningResultatListe: List<BpAndelUnderholdskostnadPeriodeResultat>,
@@ -206,7 +203,7 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
     private fun mapDelberegningBpAndelUnderholdskostnad(
         bpAndelUnderholdskostnadPeriodeResultatListe: List<BpAndelUnderholdskostnadPeriodeResultat>,
         mottattGrunnlag: BeregnGrunnlag,
-        referanseTilBP: String
+        referanseTilBP: String,
     ): List<GrunnlagDto> = bpAndelUnderholdskostnadPeriodeResultatListe
         .map {
             GrunnlagDto(

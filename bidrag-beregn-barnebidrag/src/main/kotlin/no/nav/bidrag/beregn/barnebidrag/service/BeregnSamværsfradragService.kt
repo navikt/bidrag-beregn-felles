@@ -35,7 +35,7 @@ internal object BeregnSamværsfradragService : BeregnService() {
         // Lager liste over bruddperioder
         val bruddPeriodeListe = lagBruddPeriodeListeSamværsfradrag(
             grunnlagListe = samværsfradragPeriodeGrunnlag,
-            beregningsperiode = mottattGrunnlag.periode
+            beregningsperiode = mottattGrunnlag.periode,
         )
 
         val samværsfradragBeregningResultatListe = mutableListOf<SamværsfradragPeriodeResultat>()
@@ -44,7 +44,7 @@ internal object BeregnSamværsfradragService : BeregnService() {
         bruddPeriodeListe.forEach { bruddPeriode ->
             val samværsfradragBeregningGrunnlag = lagSamværsfradragBeregningGrunnlag(
                 samværsfradragPeriodeGrunnlag = samværsfradragPeriodeGrunnlag,
-                bruddPeriode = bruddPeriode
+                bruddPeriode = bruddPeriode,
             )
             samværsfradragBeregningResultatListe.add(
                 SamværsfradragPeriodeResultat(

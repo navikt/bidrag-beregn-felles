@@ -47,7 +47,6 @@ internal class BeregnEndeligBidragApiTest {
     private var forventetAntallBarnetilleggBM: Int = 1
     private var forventetAntallBarnetilleggBP: Int = 1
 
-
     @Mock
     private lateinit var beregnBarnebidragService: BeregnBarnebidragService
 
@@ -282,7 +281,7 @@ internal class BeregnEndeligBidragApiTest {
             .size
 
         val antallDelberegningUnderholdskostnad = endeligBidragResultat
-            //TODO Endre til DELBEREGNING_UNDERHOLDSKOSTNAD
+            // TODO Endre til DELBEREGNING_UNDERHOLDSKOSTNAD
             .filter { it.type == Grunnlagstype.UNDERHOLDSKOSTNAD }
             .size
 
@@ -381,7 +380,7 @@ internal class BeregnEndeligBidragApiTest {
             .size
 
         val antallDelberegningUnderholdskostnad = endeligBidragResultat
-            //TODO Endre til DELBEREGNING_UNDERHOLDSKOSTNAD
+            // TODO Endre til DELBEREGNING_UNDERHOLDSKOSTNAD
             .filter { it.type == Grunnlagstype.UNDERHOLDSKOSTNAD }
             .size
 
@@ -523,17 +522,17 @@ internal class BeregnEndeligBidragApiTest {
         )
     }
 
-    //TODO Flytte til felles
+    // TODO Flytte til felles
     fun hentAlleReferanser(resultatGrunnlagListe: List<GrunnlagDto>) = resultatGrunnlagListe
         .map { it.referanse }
         .distinct()
 
-    //TODO Flytte til felles
+    // TODO Flytte til felles
     fun hentAlleRefererteReferanser(resultatGrunnlagListe: List<GrunnlagDto>) = resultatGrunnlagListe
         .flatMap { it.grunnlagsreferanseListe }
         .distinct()
 
-    //TODO Flytte til felles
+    // TODO Flytte til felles
     private fun lesFilOgByggRequest(filnavn: String): BeregnGrunnlag {
         var json = ""
 

@@ -52,7 +52,7 @@ internal object BeregnBidragsevneService : BeregnService() {
         // Lager liste over bruddperioder
         val bruddPeriodeListe = lagBruddPeriodeListeBidragsevne(
             grunnlagListe = bidragsevnePeriodeGrunnlag,
-            beregningsperiode = mottattGrunnlag.periode
+            beregningsperiode = mottattGrunnlag.periode,
         )
 
         val bidragsevneBeregningResultatListe = mutableListOf<BidragsevnePeriodeResultat>()
@@ -61,7 +61,7 @@ internal object BeregnBidragsevneService : BeregnService() {
         bruddPeriodeListe.forEach { bruddPeriode ->
             val bidragsevneBeregningGrunnlag = lagBidragsevneBeregningGrunnlag(
                 bidragsevnePeriodeGrunnlag = bidragsevnePeriodeGrunnlag,
-                bruddPeriode = bruddPeriode
+                bruddPeriode = bruddPeriode,
             )
             bidragsevneBeregningResultatListe.add(
                 BidragsevnePeriodeResultat(

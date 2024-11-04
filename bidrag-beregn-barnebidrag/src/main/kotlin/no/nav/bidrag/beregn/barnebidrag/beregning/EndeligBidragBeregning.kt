@@ -12,12 +12,11 @@ import java.math.RoundingMode
 internal object EndeligBidragBeregning {
 
     fun beregn(grunnlag: EndeligBidragBeregningGrunnlag): EndeligBidragBeregningResultat {
-
         // Hvis barnet er selvforsørget gjøres det ingen videre beregning (standardverdier benyttes for alt bortsett fra resultatkode og referanser)
         if (grunnlag.bpAndelUnderholdskostnadBeregningGrunnlag.barnetErSelvforsørget) {
             return EndeligBidragBeregningResultat(
                 resultatKode = Resultatkode.BARNET_ER_SELVFORSØRGET,
-                grunnlagsreferanseListe = listOf(grunnlag.bpAndelUnderholdskostnadBeregningGrunnlag.referanse)
+                grunnlagsreferanseListe = listOf(grunnlag.bpAndelUnderholdskostnadBeregningGrunnlag.referanse),
             )
         }
 
@@ -57,7 +56,8 @@ internal object EndeligBidragBeregning {
 
         // Sjekker om eventuelt barnetillegg for BM skal benyttes
         if (foreløpigBarnebidrag > (grunnlag.underholdskostnadBeregningGrunnlag.beløp - nettoBarnetilleggBM)) {
-            foreløpigBarnebidrag = grunnlag.underholdskostnadBeregningGrunnlag.beløp - nettoBarnetilleggBM - grunnlag.samværsfradragBeregningGrunnlag.beløp
+            foreløpigBarnebidrag =
+                grunnlag.underholdskostnadBeregningGrunnlag.beløp - nettoBarnetilleggBM - grunnlag.samværsfradragBeregningGrunnlag.beløp
             resultatkode = Resultatkode.BIDRAG_SATT_TIL_UNDERHOLDSKOSTNAD_MINUS_BARNETILLEGG_BM
             justertForNettoBarnetilleggBM = true
         }
@@ -94,7 +94,7 @@ internal object EndeligBidragBeregning {
                 grunnlag.deltBostedBeregningGrunnlag.referanse,
                 grunnlag.barnetilleggBPBeregningGrunnlag.referanse,
                 grunnlag.barnetilleggBMBeregningGrunnlag.referanse,
-            )
+            ),
         )
     }
 
@@ -118,15 +118,16 @@ internal object EndeligBidragBeregning {
     }
 
     // Resultatkode settes til delt bosted hvis barnet har delt bosted og bidrag ikke er redusert under beregningen eller satt opp til barnetillegg BP
-    private fun bestemDeltBostedResultatkode(bpAndel: BigDecimal, foreløpigResultatkode: Resultatkode): Resultatkode {
-        return when {
-            bpAndel > BigDecimal.ZERO &&
-                (foreløpigResultatkode == Resultatkode.KOSTNADSBEREGNET_BIDRAG || foreløpigResultatkode == Resultatkode.BIDRAG_SATT_TIL_BARNETILLEGG_BP) ->
-                Resultatkode.DELT_BOSTED
+    private fun bestemDeltBostedResultatkode(bpAndel: BigDecimal, foreløpigResultatkode: Resultatkode): Resultatkode = when {
+        bpAndel > BigDecimal.ZERO &&
+            (
+                foreløpigResultatkode == Resultatkode.KOSTNADSBEREGNET_BIDRAG ||
+                    foreløpigResultatkode == Resultatkode.BIDRAG_SATT_TIL_BARNETILLEGG_BP
+                ) ->
+            Resultatkode.DELT_BOSTED
 
-            bpAndel == BigDecimal.ZERO -> Resultatkode.BIDRAG_IKKE_BEREGNET_DELT_BOSTED
-            else -> foreløpigResultatkode
-        }
+        bpAndel == BigDecimal.ZERO -> Resultatkode.BIDRAG_IKKE_BEREGNET_DELT_BOSTED
+        else -> foreløpigResultatkode
     }
 
     data class BpAndelJustert(val andel: BigDecimal, val beløp: BigDecimal)

@@ -20,29 +20,26 @@ data class EndeligBidragPeriodeGrunnlag(
     val barnetilleggBMPeriodeGrunnlagListe: List<BarnetilleggPeriodeGrunnlag>,
 )
 
-//TODO Bør flyttes til bidrag-felles og kalles noe annet?
-data class BidragsevneDelberegningPeriodeGrunnlag(
-    val referanse: String,
-    val bidragsevnePeriode: BidragsevnePeriode,
-)
+// TODO Bør flyttes til bidrag-felles og kalles noe annet?
+data class BidragsevneDelberegningPeriodeGrunnlag(val referanse: String, val bidragsevnePeriode: BidragsevnePeriode)
 
-//TODO Bør flyttes til bidrag-felles
+// TODO Bør flyttes til bidrag-felles
 @Schema(description = "Bidragsevne for person")
 data class BidragsevnePeriode(
     override val periode: ÅrMånedsperiode,
     val beløp: BigDecimal,
-    //TODO Sjekk om det gir mening å ha denne her
+    // TODO Sjekk om det gir mening å ha denne her
     val tjuefemProsentInntekt: BigDecimal,
     override val manueltRegistrert: Boolean,
 ) : GrunnlagPeriodeInnhold
 
-//TODO Bør flyttes til bidrag-felles og kalles noe annet?
+// TODO Bør flyttes til bidrag-felles og kalles noe annet?
 data class BpAndelUnderholdskostnadDelberegningPeriodeGrunnlag(
     val referanse: String,
     val bpAndelUnderholdskostnadPeriode: BpAndelUnderholdskostnadPeriode,
 )
 
-//TODO Bør flyttes til bidrag-felles
+// TODO Bør flyttes til bidrag-felles
 @Schema(description = "BPs andel underholdskostnad for person")
 data class BpAndelUnderholdskostnadPeriode(
     override val periode: ÅrMånedsperiode,
@@ -52,41 +49,26 @@ data class BpAndelUnderholdskostnadPeriode(
     override val manueltRegistrert: Boolean,
 ) : GrunnlagPeriodeInnhold
 
-//TODO Bør flyttes til bidrag-felles og kalles noe annet?
-data class SamværsfradragDelberegningPeriodeGrunnlag(
-    val referanse: String,
-    val samværsfradragPeriode: SamværsfradragPeriode,
-)
+// TODO Bør flyttes til bidrag-felles og kalles noe annet?
+data class SamværsfradragDelberegningPeriodeGrunnlag(val referanse: String, val samværsfradragPeriode: SamværsfradragPeriode)
 
-//TODO Bør flyttes til bidrag-felles
+// TODO Bør flyttes til bidrag-felles
 @Schema(description = "Samværsfradrag for person")
-data class SamværsfradragPeriode(
-    override val periode: ÅrMånedsperiode,
-    val beløp: BigDecimal,
-    override val manueltRegistrert: Boolean,
-) : GrunnlagPeriodeInnhold
+data class SamværsfradragPeriode(override val periode: ÅrMånedsperiode, val beløp: BigDecimal, override val manueltRegistrert: Boolean) :
+    GrunnlagPeriodeInnhold
 
-//TODO Bør flyttes til bidrag-felles og kalles noe annet?
-data class DeltBostedPeriodeGrunnlag(
-    val referanse: String,
-    val deltBostedPeriode: DeltBostedPeriode,
-)
+// TODO Bør flyttes til bidrag-felles og kalles noe annet?
+data class DeltBostedPeriodeGrunnlag(val referanse: String, val deltBostedPeriode: DeltBostedPeriode)
 
-//TODO Bør flyttes til bidrag-felles
+// TODO Bør flyttes til bidrag-felles
 @Schema(description = "Delt bosted for person")
-data class DeltBostedPeriode(
-    override val periode: ÅrMånedsperiode,
-    val deltBosted: Boolean,
-    override val manueltRegistrert: Boolean,
-) : GrunnlagPeriodeInnhold
+data class DeltBostedPeriode(override val periode: ÅrMånedsperiode, val deltBosted: Boolean, override val manueltRegistrert: Boolean) :
+    GrunnlagPeriodeInnhold
 
-//TODO Bør flyttes til bidrag-felles og kalles noe annet?
-data class BarnetilleggPeriodeGrunnlag(
-    val referanse: String,
-    val barnetilleggPeriode: BarnetilleggPeriode,
-)
+// TODO Bør flyttes til bidrag-felles og kalles noe annet?
+data class BarnetilleggPeriodeGrunnlag(val referanse: String, val barnetilleggPeriode: BarnetilleggPeriode)
 
-//TODO Bør flyttes til bidrag-felles
+// TODO Bør flyttes til bidrag-felles
 @Schema(description = "Barnetillegg for person")
 data class BarnetilleggPeriode(
     override val periode: ÅrMånedsperiode,
@@ -95,10 +77,7 @@ data class BarnetilleggPeriode(
     override val manueltRegistrert: Boolean,
 ) : GrunnlagPeriodeInnhold
 
-data class EndeligBidragPeriodeResultat(
-    val periode: ÅrMånedsperiode,
-    val resultat: EndeligBidragBeregningResultat
-)
+data class EndeligBidragPeriodeResultat(val periode: ÅrMånedsperiode, val resultat: EndeligBidragBeregningResultat)
 
 data class EndeligBidragBeregningGrunnlag(
     val bidragsevneBeregningGrunnlag: BidragsevneDelberegningBeregningGrunnlag,
@@ -113,37 +92,24 @@ data class EndeligBidragBeregningGrunnlag(
 data class BidragsevneDelberegningBeregningGrunnlag(
     val referanse: String,
     val beløp: BigDecimal,
-    //TODO Sjekk om det gir mening å ha denne her
-    val tjuefemProsentInntekt: BigDecimal
+    // TODO Sjekk om det gir mening å ha denne her
+    val tjuefemProsentInntekt: BigDecimal,
 )
 
-data class UnderholdskostnadDelberegningBeregningGrunnlag(
-    val referanse: String,
-    val beløp: BigDecimal,
-)
+data class UnderholdskostnadDelberegningBeregningGrunnlag(val referanse: String, val beløp: BigDecimal)
 
 data class BpAndelUnderholdskostnadDelberegningBeregningGrunnlag(
     val referanse: String,
     val andelBeløp: BigDecimal,
     val andelFaktor: BigDecimal,
-    val barnetErSelvforsørget: Boolean
+    val barnetErSelvforsørget: Boolean,
 )
 
-data class SamværsfradragDelberegningBeregningGrunnlag(
-    val referanse: String,
-    val beløp: BigDecimal
-)
+data class SamværsfradragDelberegningBeregningGrunnlag(val referanse: String, val beløp: BigDecimal)
 
-data class DeltBostedBeregningGrunnlag(
-    val referanse: String,
-    val deltBosted: Boolean
-)
+data class DeltBostedBeregningGrunnlag(val referanse: String, val deltBosted: Boolean)
 
-data class BarnetilleggBeregningGrunnlag(
-    val referanse: String,
-    val beløp: BigDecimal,
-    val skattFaktor: BigDecimal
-)
+data class BarnetilleggBeregningGrunnlag(val referanse: String, val beløp: BigDecimal, val skattFaktor: BigDecimal)
 
 data class EndeligBidragBeregningResultat(
     val beregnetBeløp: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
@@ -159,7 +125,7 @@ data class EndeligBidragBeregningResultat(
     val grunnlagsreferanseListe: List<String> = emptyList(),
 )
 
-//TODO Flytte til bidrag-felles
+// TODO Flytte til bidrag-felles
 data class DelberegningEndeligBidrag(
     override val periode: ÅrMånedsperiode,
     val beregnetBeløp: BigDecimal,

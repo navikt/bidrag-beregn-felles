@@ -29,7 +29,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
         // Lager liste over bruddperioder
         val bruddPeriodeListe = lagBruddPeriodeListeEndeligBidrag(
             grunnlagListe = endeligBidragPeriodeGrunnlag,
-            beregningsperiode = mottattGrunnlag.periode
+            beregningsperiode = mottattGrunnlag.periode,
         )
 
         val endeligBidragBeregningResultatListe = mutableListOf<EndeligBidragPeriodeResultat>()
@@ -38,7 +38,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
         bruddPeriodeListe.forEach { bruddPeriode ->
             val endeligBidragBeregningGrunnlag = lagEndeligBidragBeregningGrunnlag(
                 endeligBidragPeriodeGrunnlag = endeligBidragPeriodeGrunnlag,
-                bruddPeriode = bruddPeriode
+                bruddPeriode = bruddPeriode,
             )
             endeligBidragBeregningResultatListe.add(
                 EndeligBidragPeriodeResultat(
@@ -75,7 +75,8 @@ internal object BeregnEndeligBidragService : BeregnService() {
             .plus(grunnlagListe.underholdskostnadDelberegningPeriodeGrunnlagListe.asSequence().map { it.underholdskostnadPeriode.periode })
             .plus(
                 grunnlagListe.bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe.asSequence()
-                    .map { it.bpAndelUnderholdskostnadPeriode.periode })
+                    .map { it.bpAndelUnderholdskostnadPeriode.periode },
+            )
             .plus(grunnlagListe.samværsfradragDelberegningPeriodeGrunnlagListe.asSequence().map { it.samværsfradragPeriode.periode })
             .plus(grunnlagListe.deltBostedPeriodeGrunnlagListe.asSequence().map { it.deltBostedPeriode.periode })
             .plus(grunnlagListe.barnetilleggBPPeriodeGrunnlagListe.asSequence().map { it.barnetilleggPeriode.periode })
@@ -88,69 +89,66 @@ internal object BeregnEndeligBidragService : BeregnService() {
     private fun lagEndeligBidragBeregningGrunnlag(
         endeligBidragPeriodeGrunnlag: EndeligBidragPeriodeGrunnlag,
         bruddPeriode: ÅrMånedsperiode,
-    ): EndeligBidragBeregningGrunnlag {
-
-        return EndeligBidragBeregningGrunnlag(
-            bidragsevneBeregningGrunnlag = endeligBidragPeriodeGrunnlag.bidragsevneDelberegningPeriodeGrunnlagListe
-                .firstOrNull { it.bidragsevnePeriode.periode.inneholder(bruddPeriode) }
-                ?.let {
-                    BidragsevneDelberegningBeregningGrunnlag(
-                        referanse = it.referanse,
-                        beløp = it.bidragsevnePeriode.beløp,
-                        tjuefemProsentInntekt = it.bidragsevnePeriode.tjuefemProsentInntekt
-                    )
-                }
-                ?: throw IllegalArgumentException("Bidragsevne grunnlag mangler for periode $bruddPeriode"),
-            underholdskostnadBeregningGrunnlag = endeligBidragPeriodeGrunnlag.underholdskostnadDelberegningPeriodeGrunnlagListe
-                .firstOrNull { it.underholdskostnadPeriode.periode.inneholder(bruddPeriode) }
-                ?.let {
-                    UnderholdskostnadDelberegningBeregningGrunnlag(
-                        referanse = it.referanse,
-                        beløp = it.underholdskostnadPeriode.beløp
-                    )
-                }
-                ?: throw IllegalArgumentException("Underholdskostnad grunnlag mangler for periode $bruddPeriode"),
-            bpAndelUnderholdskostnadBeregningGrunnlag = endeligBidragPeriodeGrunnlag.bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe
-                .firstOrNull { it.bpAndelUnderholdskostnadPeriode.periode.inneholder(bruddPeriode) }
-                ?.let {
-                    BpAndelUnderholdskostnadDelberegningBeregningGrunnlag(
-                        referanse = it.referanse,
-                        andelBeløp = it.bpAndelUnderholdskostnadPeriode.andelBeløp,
-                        andelFaktor = it.bpAndelUnderholdskostnadPeriode.andelFaktor,
-                        barnetErSelvforsørget = it.bpAndelUnderholdskostnadPeriode.barnetErSelvforsørget
-                    )
-                }
-                ?: throw IllegalArgumentException("BP andel underholdskostnad grunnlag mangler for periode $bruddPeriode"),
-            samværsfradragBeregningGrunnlag = endeligBidragPeriodeGrunnlag.samværsfradragDelberegningPeriodeGrunnlagListe
-                .firstOrNull { it.samværsfradragPeriode.periode.inneholder(bruddPeriode) }
-                ?.let { SamværsfradragDelberegningBeregningGrunnlag(referanse = it.referanse, beløp = it.samværsfradragPeriode.beløp) }
-                ?: throw IllegalArgumentException("Samværsfradrag grunnlag mangler for periode $bruddPeriode"),
-            deltBostedBeregningGrunnlag = endeligBidragPeriodeGrunnlag.deltBostedPeriodeGrunnlagListe
-                .firstOrNull { it.deltBostedPeriode.periode.inneholder(bruddPeriode) }
-                ?.let { DeltBostedBeregningGrunnlag(referanse = it.referanse, deltBosted = it.deltBostedPeriode.deltBosted) }
-                ?: throw IllegalArgumentException("Delt bosted grunnlag mangler for periode $bruddPeriode"),
-            barnetilleggBPBeregningGrunnlag = endeligBidragPeriodeGrunnlag.barnetilleggBPPeriodeGrunnlagListe
-                .firstOrNull { it.barnetilleggPeriode.periode.inneholder(bruddPeriode) }
-                ?.let {
-                    BarnetilleggBeregningGrunnlag(
-                        referanse = it.referanse,
-                        beløp = it.barnetilleggPeriode.beløp,
-                        skattFaktor = it.barnetilleggPeriode.skattFaktor
-                    )
-                }
-                ?: throw IllegalArgumentException("Barnetillegg BP grunnlag mangler for periode $bruddPeriode"),
-            barnetilleggBMBeregningGrunnlag = endeligBidragPeriodeGrunnlag.barnetilleggBMPeriodeGrunnlagListe
-                .firstOrNull { it.barnetilleggPeriode.periode.inneholder(bruddPeriode) }
-                ?.let {
-                    BarnetilleggBeregningGrunnlag(
-                        referanse = it.referanse,
-                        beløp = it.barnetilleggPeriode.beløp,
-                        skattFaktor = it.barnetilleggPeriode.skattFaktor
-                    )
-                }
-                ?: throw IllegalArgumentException("Barnetillegg BM grunnlag mangler for periode $bruddPeriode"),
-        )
-    }
+    ): EndeligBidragBeregningGrunnlag = EndeligBidragBeregningGrunnlag(
+        bidragsevneBeregningGrunnlag = endeligBidragPeriodeGrunnlag.bidragsevneDelberegningPeriodeGrunnlagListe
+            .firstOrNull { it.bidragsevnePeriode.periode.inneholder(bruddPeriode) }
+            ?.let {
+                BidragsevneDelberegningBeregningGrunnlag(
+                    referanse = it.referanse,
+                    beløp = it.bidragsevnePeriode.beløp,
+                    tjuefemProsentInntekt = it.bidragsevnePeriode.tjuefemProsentInntekt,
+                )
+            }
+            ?: throw IllegalArgumentException("Bidragsevne grunnlag mangler for periode $bruddPeriode"),
+        underholdskostnadBeregningGrunnlag = endeligBidragPeriodeGrunnlag.underholdskostnadDelberegningPeriodeGrunnlagListe
+            .firstOrNull { it.underholdskostnadPeriode.periode.inneholder(bruddPeriode) }
+            ?.let {
+                UnderholdskostnadDelberegningBeregningGrunnlag(
+                    referanse = it.referanse,
+                    beløp = it.underholdskostnadPeriode.beløp,
+                )
+            }
+            ?: throw IllegalArgumentException("Underholdskostnad grunnlag mangler for periode $bruddPeriode"),
+        bpAndelUnderholdskostnadBeregningGrunnlag = endeligBidragPeriodeGrunnlag.bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe
+            .firstOrNull { it.bpAndelUnderholdskostnadPeriode.periode.inneholder(bruddPeriode) }
+            ?.let {
+                BpAndelUnderholdskostnadDelberegningBeregningGrunnlag(
+                    referanse = it.referanse,
+                    andelBeløp = it.bpAndelUnderholdskostnadPeriode.andelBeløp,
+                    andelFaktor = it.bpAndelUnderholdskostnadPeriode.andelFaktor,
+                    barnetErSelvforsørget = it.bpAndelUnderholdskostnadPeriode.barnetErSelvforsørget,
+                )
+            }
+            ?: throw IllegalArgumentException("BP andel underholdskostnad grunnlag mangler for periode $bruddPeriode"),
+        samværsfradragBeregningGrunnlag = endeligBidragPeriodeGrunnlag.samværsfradragDelberegningPeriodeGrunnlagListe
+            .firstOrNull { it.samværsfradragPeriode.periode.inneholder(bruddPeriode) }
+            ?.let { SamværsfradragDelberegningBeregningGrunnlag(referanse = it.referanse, beløp = it.samværsfradragPeriode.beløp) }
+            ?: throw IllegalArgumentException("Samværsfradrag grunnlag mangler for periode $bruddPeriode"),
+        deltBostedBeregningGrunnlag = endeligBidragPeriodeGrunnlag.deltBostedPeriodeGrunnlagListe
+            .firstOrNull { it.deltBostedPeriode.periode.inneholder(bruddPeriode) }
+            ?.let { DeltBostedBeregningGrunnlag(referanse = it.referanse, deltBosted = it.deltBostedPeriode.deltBosted) }
+            ?: throw IllegalArgumentException("Delt bosted grunnlag mangler for periode $bruddPeriode"),
+        barnetilleggBPBeregningGrunnlag = endeligBidragPeriodeGrunnlag.barnetilleggBPPeriodeGrunnlagListe
+            .firstOrNull { it.barnetilleggPeriode.periode.inneholder(bruddPeriode) }
+            ?.let {
+                BarnetilleggBeregningGrunnlag(
+                    referanse = it.referanse,
+                    beløp = it.barnetilleggPeriode.beløp,
+                    skattFaktor = it.barnetilleggPeriode.skattFaktor,
+                )
+            }
+            ?: throw IllegalArgumentException("Barnetillegg BP grunnlag mangler for periode $bruddPeriode"),
+        barnetilleggBMBeregningGrunnlag = endeligBidragPeriodeGrunnlag.barnetilleggBMPeriodeGrunnlagListe
+            .firstOrNull { it.barnetilleggPeriode.periode.inneholder(bruddPeriode) }
+            ?.let {
+                BarnetilleggBeregningGrunnlag(
+                    referanse = it.referanse,
+                    beløp = it.barnetilleggPeriode.beløp,
+                    skattFaktor = it.barnetilleggPeriode.skattFaktor,
+                )
+            }
+            ?: throw IllegalArgumentException("Barnetillegg BM grunnlag mangler for periode $bruddPeriode"),
+    )
 
     private fun mapEndeligBidragResultatGrunnlag(
         endeligBidragBeregningResultatListe: List<EndeligBidragPeriodeResultat>,
@@ -194,7 +192,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
         .map {
             GrunnlagDto(
                 referanse = opprettDelberegningreferanse(
-//TODO Sjekk om dette er riktig grunnlagstype
+// TODO Sjekk om dette er riktig grunnlagstype
                     type = Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_BEREGNEDE_TOTALBIDRAG,
                     periode = ÅrMånedsperiode(fom = it.periode.fom, til = null),
                     søknadsbarnReferanse = mottattGrunnlag.søknadsbarnReferanse,

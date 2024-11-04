@@ -14,48 +14,46 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBase
 internal object BpAndelUnderholdskostnadMapper : CoreMapper() {
     fun mapBpAndelUnderholdskostnadGrunnlag(
         mottattGrunnlag: BeregnGrunnlag,
-        sjablonGrunnlag: List<GrunnlagDto>
-    ): BpAndelUnderholdskostnadPeriodeGrunnlag =
-
-        BpAndelUnderholdskostnadPeriodeGrunnlag(
-            beregningsperiode = mottattGrunnlag.periode,
-            underholdskostnadDelberegningPeriodeGrunnlagListe = mapUnderholdskostnad(beregnGrunnlag = mottattGrunnlag),
-            inntektBPPeriodeGrunnlagListe = mapInntekt(
-                beregnGrunnlag = mottattGrunnlag,
-                referanseTilRolle = finnReferanseTilRolle(
-                    grunnlagListe = mottattGrunnlag.grunnlagListe,
-                    grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
-                ),
-                innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntektFraGrunnlag(sjablonGrunnlag),
+        sjablonGrunnlag: List<GrunnlagDto>,
+    ): BpAndelUnderholdskostnadPeriodeGrunnlag = BpAndelUnderholdskostnadPeriodeGrunnlag(
+        beregningsperiode = mottattGrunnlag.periode,
+        underholdskostnadDelberegningPeriodeGrunnlagListe = mapUnderholdskostnad(beregnGrunnlag = mottattGrunnlag),
+        inntektBPPeriodeGrunnlagListe = mapInntekt(
+            beregnGrunnlag = mottattGrunnlag,
+            referanseTilRolle = finnReferanseTilRolle(
+                grunnlagListe = mottattGrunnlag.grunnlagListe,
+                grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
             ),
-            inntektBMPeriodeGrunnlagListe = mapInntekt(
-                beregnGrunnlag = mottattGrunnlag,
-                referanseTilRolle = finnReferanseTilRolle(
-                    grunnlagListe = mottattGrunnlag.grunnlagListe,
-                    grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
-                ),
-                innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntektFraGrunnlag(sjablonGrunnlag),
+            innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntektFraGrunnlag(sjablonGrunnlag),
+        ),
+        inntektBMPeriodeGrunnlagListe = mapInntekt(
+            beregnGrunnlag = mottattGrunnlag,
+            referanseTilRolle = finnReferanseTilRolle(
+                grunnlagListe = mottattGrunnlag.grunnlagListe,
+                grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
             ),
-            inntektSBPeriodeGrunnlagListe = mapInntekt(
-                beregnGrunnlag = mottattGrunnlag,
-                referanseTilRolle = finnReferanseTilRolle(
-                    grunnlagListe = mottattGrunnlag.grunnlagListe,
-                    grunnlagstype = Grunnlagstype.PERSON_SØKNADSBARN,
-                ),
-                innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntektFraGrunnlag(sjablonGrunnlag),
+            innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntektFraGrunnlag(sjablonGrunnlag),
+        ),
+        inntektSBPeriodeGrunnlagListe = mapInntekt(
+            beregnGrunnlag = mottattGrunnlag,
+            referanseTilRolle = finnReferanseTilRolle(
+                grunnlagListe = mottattGrunnlag.grunnlagListe,
+                grunnlagstype = Grunnlagstype.PERSON_SØKNADSBARN,
             ),
-            sjablonSjablontallPeriodeGrunnlagListe = mapSjablonSjablontall(sjablonGrunnlag),
-        )
+            innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntektFraGrunnlag(sjablonGrunnlag),
+        ),
+        sjablonSjablontallPeriodeGrunnlagListe = mapSjablonSjablontall(sjablonGrunnlag),
+    )
 
     private fun mapUnderholdskostnad(beregnGrunnlag: BeregnGrunnlag): List<UnderholdskostnadDelberegningPeriodeGrunnlag> {
         try {
             return beregnGrunnlag.grunnlagListe
-//TODO Endre til Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD?
+// TODO Endre til Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD?
                 .filtrerOgKonverterBasertPåEgenReferanse<UnderholdskostnadPeriode>(Grunnlagstype.UNDERHOLDSKOSTNAD)
                 .map {
                     UnderholdskostnadDelberegningPeriodeGrunnlag(
                         referanse = it.referanse,
-                        underholdskostnadPeriode = it.innhold
+                        underholdskostnadPeriode = it.innhold,
                     )
                 }
         } catch (e: Exception) {

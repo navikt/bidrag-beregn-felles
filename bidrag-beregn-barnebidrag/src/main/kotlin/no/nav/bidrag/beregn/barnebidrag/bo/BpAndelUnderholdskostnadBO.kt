@@ -14,16 +14,10 @@ data class BpAndelUnderholdskostnadPeriodeGrunnlag(
     var sjablonSjablontallPeriodeGrunnlagListe: List<SjablonSjablontallPeriodeGrunnlag>,
 )
 
-//TODO Bør flyttes og kalles noe annet?
-data class UnderholdskostnadDelberegningPeriodeGrunnlag(
-    val referanse: String,
-    val underholdskostnadPeriode: UnderholdskostnadPeriode,
-)
+// TODO Bør flyttes og kalles noe annet?
+data class UnderholdskostnadDelberegningPeriodeGrunnlag(val referanse: String, val underholdskostnadPeriode: UnderholdskostnadPeriode)
 
-data class BpAndelUnderholdskostnadPeriodeResultat(
-    val periode: ÅrMånedsperiode,
-    val resultat: BpAndelUnderholdskostnadBeregningResultat
-)
+data class BpAndelUnderholdskostnadPeriodeResultat(val periode: ÅrMånedsperiode, val resultat: BpAndelUnderholdskostnadBeregningResultat)
 
 data class BpAndelUnderholdskostnadBeregningGrunnlag(
     val underholdskostnadBeregningGrunnlag: UnderholdskostnadBeregningGrunnlag,
