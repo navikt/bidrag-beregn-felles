@@ -87,7 +87,7 @@ class BeregnSamværsklasseApi(private val sjablonService: SjablonService) {
         return listOfNotNull(grunnlagSamværsklasseNetter, grunnlagSamværsklasse, grunnlagKalkulator) + grunnlagSjablon
     }
 
-    internal fun List<Samværsfradrag>.delberegningSamværsklasserNetter(): List<DelberegningSamværsklasserNetterIntern> {
+    private fun List<Samværsfradrag>.delberegningSamværsklasserNetter(): List<DelberegningSamværsklasserNetterIntern> {
         val sjabloner = filter {
             it.datoTom == null || it.datoTom!! > LocalDate.now()
         }.distinctBy { it.samvaersklasse }.sortedBy { it.samvaersklasse }
