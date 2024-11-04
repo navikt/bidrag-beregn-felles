@@ -11,6 +11,8 @@ import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonNøkkelNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import java.math.BigDecimal
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Comparator.comparing
 import java.util.stream.Stream
 
@@ -208,4 +210,9 @@ object SjablonUtil {
         .filter { it.navn == sjablonInnholdNavn.navn }
         .map { it.verdi }
         .toList()
+
+    fun justerSjablonTomDato(datoTom: LocalDate): LocalDate? = if (datoTom == LocalDate.parse("9999-12-31")) null else datoTom.plusMonths(1)
+
+    fun lagSjablonReferanse(sjablonNavn: String, fomDato: LocalDate, postfix: String = ""): String =
+        "sjablon_${sjablonNavn}_${fomDato.format(DateTimeFormatter.ofPattern("yyyyMM"))}$postfix"
 }

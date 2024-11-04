@@ -1,14 +1,20 @@
 @file:Suppress("unused")
 
 package no.nav.bidrag.beregn.barnebidrag
+import com.fasterxml.jackson.databind.node.POJONode
+import no.nav.bidrag.beregn.core.mapping.tilGrunnlagsobjekt
+import no.nav.bidrag.beregn.core.util.SjablonUtil.justerSjablonTomDato
 import no.nav.bidrag.commons.service.sjablon.Samværsfradrag
 import no.nav.bidrag.commons.service.sjablon.SjablonService
 import no.nav.bidrag.domene.enums.beregning.Samværsklasse
+import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.samværskalkulator.SamværskalkulatorNetterFrekvens
+import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import no.nav.bidrag.transport.behandling.beregning.samvær.SamværskalkulatorDetaljer
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsklasse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsklasserNetter
+import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.math.MathContext
@@ -29,6 +35,19 @@ internal val BigDecimal.gjennomsnittOverToÅrOffentligSamværskalkulator get() =
 internal val BigDecimal.gjennomsnittOverToUkerOffentligSamværskalkulator get() = BigDecimal(toDouble() / totalNetterOverToUker.toDouble())
 internal val BigDecimal.tilpassetOffentligSamværskalkulator get() = avrundetMedToDesimaler
 
+internal data class DelberegningSamværsklasserNetterIntern(
+    val delberegning: DelberegningSamværsklasserNetter.SamværsklasseNetter,
+    val sjablon: Samværsfradrag,
+)
+
+internal data class DelberegningSamværsklasseIntern(
+    val delberegning: DelberegningSamværsklasserNetterIntern?,
+    val samværsklasse: Samværsklasse,
+    val gjennomsnittligSamvær: BigDecimal,
+    val gjennomsnittligSamværAvrundet: BigDecimal,
+    val samværsklasser: List<DelberegningSamværsklasserNetterIntern>,
+)
+
 @Service
 class BeregnSamværsklasseApi(private val sjablonService: SjablonService) {
     companion object {
@@ -36,42 +55,109 @@ class BeregnSamværsklasseApi(private val sjablonService: SjablonService) {
             detaljer.gjennomsnittligMånedligSamvær().avrundetMedToDesimaler
     }
 
-    fun List<Samværsfradrag>.delberegningSamværsklasserNetter(): List<DelberegningSamværsklasserNetter> {
+    fun beregnSamværsklasse(kalkulator: SamværskalkulatorDetaljer): List<GrunnlagDto> {
+        val resultat = beregnSamværsklasseDelberegning(kalkulator)
+        val grunnlagSjablon = resultat.samværsklasser.map {
+            it.sjablon.tilGrunnlagsobjekt(periode = ÅrMånedsperiode(it.sjablon.datoFom!!, it.sjablon.datoTom?.let { justerSjablonTomDato(it) }))
+        }
+        val grunnlagSamværsklasseNetter = resultat.delberegning?.run {
+            GrunnlagDto(
+                type = Grunnlagstype.DELBEREGNING_SAMVÆRSKLASSER_NETTER,
+                referanse = "delberegning_samværsklasser_netter",
+                innhold = POJONode(
+                    DelberegningSamværsklasserNetter(resultat.samværsklasser.map { it.delberegning }),
+                ),
+                grunnlagsreferanseListe = grunnlagSjablon.map { it.referanse },
+            )
+        }
+        val grunnlagKalkulator = GrunnlagDto(
+            type = Grunnlagstype.SAMVÆRSKALKULATOR,
+            innhold = POJONode(kalkulator),
+            referanse = "samværskalkulator_hash_${kalkulator.hashCode()}",
+        )
+        val grunnlagSamværsklasse = GrunnlagDto(
+            type = Grunnlagstype.DELBEREGNING_SAMVÆRSKLASSE,
+            referanse = "delberegning_samværsklasse_${resultat.samværsklasse}" +
+                "_gjennomsnittlig_samvær_${resultat.gjennomsnittligSamvær.avrundetMedToDesimaler}",
+            innhold = POJONode(
+                DelberegningSamværsklasse(resultat.samværsklasse, resultat.gjennomsnittligSamvær.avrundetMedToDesimaler),
+            ),
+            grunnlagsreferanseListe = listOfNotNull(grunnlagSamværsklasseNetter?.referanse, grunnlagKalkulator.referanse),
+        )
+        return listOfNotNull(grunnlagSamværsklasseNetter, grunnlagSamværsklasse, grunnlagKalkulator) + grunnlagSjablon
+    }
+
+    private fun List<Samværsfradrag>.delberegningSamværsklasserNetter(): List<DelberegningSamværsklasserNetterIntern> {
         val sjabloner = filter {
             it.datoTom == null || it.datoTom!! > LocalDate.now()
         }.distinctBy { it.samvaersklasse }.sortedBy { it.samvaersklasse }
 
         return sjabloner.foldIndexed(emptyList()) { index, acc, samværsfradrag ->
-            val antallNetterFra = if (acc.isEmpty()) BigDecimal.ZERO else acc.last().antallNetterTil.setScale(0, RoundingMode.FLOOR) + BigDecimal.ONE
+            val antallNetterFra = if (acc.isEmpty()) {
+                BigDecimal.ZERO
+            } else {
+                acc.last().delberegning.antallNetterTil.setScale(
+                    0,
+                    RoundingMode.FLOOR,
+                ) + BigDecimal.ONE
+            }
             val antallNetterTil = if (index == sjabloner.lastIndex) {
                 samværsfradrag.antNetterTom!!.toBigDecimal().avrundetMedToDesimaler
             } else {
                 (samværsfradrag.antNetterTom!!.toBigDecimal() + BigDecimal(0.99)).avrundetMedToDesimaler
             }
-            acc + DelberegningSamværsklasserNetter(Samværsklasse.fromBisysKode(samværsfradrag.samvaersklasse!!)!!, antallNetterFra, antallNetterTil)
+            acc + DelberegningSamværsklasserNetterIntern(
+                DelberegningSamværsklasserNetter.SamværsklasseNetter(
+                    Samværsklasse.fromBisysKode(samværsfradrag.samvaersklasse!!)!!,
+                    antallNetterFra,
+                    antallNetterTil,
+                ),
+                sjablon = samværsfradrag,
+            )
         }
     }
 
-    fun beregnSamværsklasse(kalkulator: SamværskalkulatorDetaljer): DelberegningSamværsklasse {
+    private fun beregnSamværsklasseDelberegning(kalkulator: SamværskalkulatorDetaljer): DelberegningSamværsklasseIntern {
         val samværsklasser = sjablonService.hentSjablonSamværsfradrag().delberegningSamværsklasserNetter()
 
         val gjennomsnittligSamvær = kalkulator.gjennomsnittligMånedligSamvær()
         val gjennomsnittligSamværAvrundet = gjennomsnittligSamvær.avrundetMedToDesimaler
-        val samværsklasse =
+        val samværsklasseDelberegning =
             samværsklasser
                 .find {
-                    gjennomsnittligSamværAvrundet >= it.antallNetterFra && gjennomsnittligSamværAvrundet <= it.antallNetterTil
-                }?.samværsklasse
+                    gjennomsnittligSamværAvrundet >= it.delberegning.antallNetterFra &&
+                        gjennomsnittligSamværAvrundet <= it.delberegning.antallNetterTil
+                }?.let {
+                    DelberegningSamværsklasseIntern(
+                        it,
+                        it.delberegning.samværsklasse,
+                        gjennomsnittligSamvær,
+                        gjennomsnittligSamværAvrundet,
+                        samværsklasser,
+                    )
+                }
                 ?: run {
                     val sisteSamværsklasse = samværsklasser.last()
-                    if (gjennomsnittligSamværAvrundet > sisteSamværsklasse.antallNetterTil) {
-                        sisteSamværsklasse.samværsklasse
+                    if (gjennomsnittligSamværAvrundet > sisteSamværsklasse.delberegning.antallNetterTil) {
+                        DelberegningSamværsklasseIntern(
+                            sisteSamværsklasse,
+                            sisteSamværsklasse.delberegning.samværsklasse,
+                            gjennomsnittligSamvær,
+                            gjennomsnittligSamværAvrundet,
+                            samværsklasser,
+                        )
                     } else {
-                        Samværsklasse.SAMVÆRSKLASSE_0
+                        DelberegningSamværsklasseIntern(
+                            null,
+                            Samværsklasse.SAMVÆRSKLASSE_0,
+                            gjennomsnittligSamvær,
+                            gjennomsnittligSamværAvrundet,
+                            samværsklasser,
+                        )
                     }
                 }
 
-        return DelberegningSamværsklasse(samværsklasse, gjennomsnittligSamvær.avrundetMedToDesimaler)
+        return samværsklasseDelberegning
     }
 }
 

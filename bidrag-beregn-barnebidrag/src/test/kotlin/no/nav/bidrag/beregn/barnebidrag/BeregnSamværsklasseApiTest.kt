@@ -1,12 +1,22 @@
 package no.nav.bidrag.beregn.barnebidrag
 
 import io.kotest.assertions.assertSoftly
+import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.collections.shouldContainAll
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.collections.shouldNotBeEmpty
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import no.nav.bidrag.commons.web.mock.stubSjablonService
 import no.nav.bidrag.domene.enums.beregning.Samværsklasse
+import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.samværskalkulator.SamværskalkulatorFerietype
 import no.nav.bidrag.domene.enums.samværskalkulator.SamværskalkulatorNetterFrekvens
 import no.nav.bidrag.transport.behandling.beregning.samvær.SamværskalkulatorDetaljer
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsklasserNetter
+import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
+import no.nav.bidrag.transport.behandling.felles.grunnlag.delberegningSamværsklasse
+import no.nav.bidrag.transport.behandling.felles.grunnlag.innholdTilObjekt
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -28,10 +38,79 @@ internal class BeregnSamværsklasseApiTest {
     }
 
     @Test
-    fun `skal beregne samværsklasse`() {
-        val resultat = api.beregnSamværsklasse(opprettKalkulatoDetaljer())
+    fun `skal bygge grunnlag for samvær`() {
+        val grunnlagsliste = api.beregnSamværsklasse(opprettKalkulatoDetaljer())
+
+        grunnlagsliste shouldHaveSize 8
+        grunnlagsliste.filter { it.type == Grunnlagstype.SJABLON_SAMVARSFRADRAG } shouldHaveSize 5
+
+        val samværskalkulatorGrunnlag = grunnlagsliste.hentSamværskalkulatorDetaljer()
+        samværskalkulatorGrunnlag.shouldNotBeNull()
+        samværskalkulatorGrunnlag.grunnlagsreferanseListe
+
+        val samværsklasserNetterGrunnlag = grunnlagsliste.hentDelberegningSamværsklasseNetter()
+        samværsklasserNetterGrunnlag.shouldNotBeNull()
+        samværsklasserNetterGrunnlag.grunnlagsreferanseListe.shouldHaveSize(5)
+        samværsklasserNetterGrunnlag.grunnlagsreferanseListe shouldContainAll grunnlagsliste.filter {
+            it.type == Grunnlagstype.SJABLON_SAMVARSFRADRAG
+        }.map { it.referanse }
+
+        val samværsklasserNetter = samværsklasserNetterGrunnlag.innholdTilObjekt<DelberegningSamværsklasserNetter>()
+        assertSoftly(samværsklasserNetter) {
+            it!!.samværsklasserNetter.shouldNotBeEmpty()
+            assertSoftly(it.samværsklasserNetter) {
+                shouldHaveSize(5)
+                it[0].samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_0
+                it[1].samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_1
+                it[2].samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_2
+                it[3].samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_3
+                it[4].samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_4
+
+                it[0].antallNetterFra shouldBe BigDecimal(0)
+                it[0].antallNetterTil shouldBe BigDecimal("1.99")
+
+                it[1].antallNetterFra shouldBe BigDecimal(2)
+                it[1].antallNetterTil shouldBe BigDecimal("3.99")
+
+                it[2].antallNetterFra shouldBe BigDecimal(4)
+                it[2].antallNetterTil shouldBe BigDecimal("8.99")
+
+                it[3].antallNetterFra shouldBe BigDecimal(9)
+                it[3].antallNetterTil shouldBe BigDecimal("13.99")
+
+                it[4].antallNetterFra shouldBe BigDecimal(14)
+                it[4].antallNetterTil shouldBe BigDecimal("15.00")
+            }
+        }
+
+        val delberegningSamværsklasseGrunnlag = grunnlagsliste.find { it.type == Grunnlagstype.DELBEREGNING_SAMVÆRSKLASSE }
+        delberegningSamværsklasseGrunnlag.shouldNotBeNull()
+        delberegningSamværsklasseGrunnlag.grunnlagsreferanseListe shouldHaveSize 2
+        delberegningSamværsklasseGrunnlag.grunnlagsreferanseListe shouldContain samværskalkulatorGrunnlag.referanse
+        delberegningSamværsklasseGrunnlag.grunnlagsreferanseListe shouldContain samværsklasserNetterGrunnlag.referanse
+
+        val resultat = grunnlagsliste.delberegningSamværsklasse
         resultat.samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_2
         resultat.gjennomsnittligSamværPerMåned shouldBe BigDecimal("6.98")
+    }
+
+    @Test
+    fun `skal beregne samværsklasse`() {
+        val resultat = api.beregnSamværsklasse(opprettKalkulatoDetaljer()).delberegningSamværsklasse
+        resultat.samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_2
+        resultat.gjennomsnittligSamværPerMåned shouldBe BigDecimal("6.98")
+    }
+
+    @Test
+    fun `skal beregne samværsklasse 0 hvis ingen samvær`() {
+        val resultat = api.beregnSamværsklasse(
+            SamværskalkulatorDetaljer(
+                regelmessigSamværNetter = BigDecimal(0),
+                ferier = emptyList(),
+            ),
+        ).delberegningSamværsklasse
+        resultat.samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_0
+        resultat.gjennomsnittligSamværPerMåned shouldBe BigDecimal("0.00")
     }
 
     @Test
@@ -41,7 +120,7 @@ internal class BeregnSamværsklasseApiTest {
                 regelmessigSamværNetter = BigDecimal(4),
                 ferier = emptyList(),
             ),
-        )
+        ).delberegningSamværsklasse
         resultat.samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_2
         resultat.gjennomsnittligSamværPerMåned shouldBe BigDecimal("8.69")
     }
@@ -53,7 +132,7 @@ internal class BeregnSamværsklasseApiTest {
                 regelmessigSamværNetter = BigDecimal(2),
                 ferier = emptyList(),
             ),
-        )
+        ).delberegningSamværsklasse
         resultat.samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_2
         resultat.gjennomsnittligSamværPerMåned shouldBe BigDecimal("4.34")
     }
@@ -65,7 +144,7 @@ internal class BeregnSamværsklasseApiTest {
                 regelmessigSamværNetter = BigDecimal(10),
                 ferier = emptyList(),
             ),
-        )
+        ).delberegningSamværsklasse
         assertSoftly {
             resultat.samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_4
             resultat.gjennomsnittligSamværPerMåned shouldBe BigDecimal("21.72")
@@ -79,7 +158,7 @@ internal class BeregnSamværsklasseApiTest {
                 regelmessigSamværNetter = BigDecimal(7),
                 ferier = emptyList(),
             ),
-        )
+        ).delberegningSamværsklasse
         assertSoftly {
             resultat.samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_4
             resultat.gjennomsnittligSamværPerMåned shouldBe BigDecimal("15.21")
@@ -88,7 +167,9 @@ internal class BeregnSamværsklasseApiTest {
 
     @Test
     fun `skal beregne samværsklasse for høyt antall regelmessig netter`() {
-        val resultat = api.beregnSamværsklasse(opprettKalkulatoDetaljer().copy(regelmessigSamværNetter = BigDecimal(10)))
+        val resultat = api.beregnSamværsklasse(
+            opprettKalkulatoDetaljer().copy(regelmessigSamværNetter = BigDecimal(10)),
+        ).delberegningSamværsklasse
         assertSoftly {
             resultat.samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_4
             resultat.gjennomsnittligSamværPerMåned shouldBe BigDecimal("20.88")
@@ -97,7 +178,9 @@ internal class BeregnSamværsklasseApiTest {
 
     @Test
     fun `skal beregne samværsklasse for lavt antall regelmessig netter`() {
-        val resultat = api.beregnSamværsklasse(opprettKalkulatoDetaljer().copy(regelmessigSamværNetter = BigDecimal(1), ferier = emptyList()))
+        val resultat = api.beregnSamværsklasse(
+            opprettKalkulatoDetaljer().copy(regelmessigSamværNetter = BigDecimal(1), ferier = emptyList()),
+        ).delberegningSamværsklasse
         assertSoftly {
             resultat.samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_1
             resultat.gjennomsnittligSamværPerMåned shouldBe BigDecimal("2.17")
@@ -106,7 +189,9 @@ internal class BeregnSamværsklasseApiTest {
 
     @Test
     fun `skal beregne samværsklasse ingen samvær`() {
-        val resultat = api.beregnSamværsklasse(opprettKalkulatoDetaljer().copy(regelmessigSamværNetter = BigDecimal(0), ferier = emptyList()))
+        val resultat = api.beregnSamværsklasse(
+            opprettKalkulatoDetaljer().copy(regelmessigSamværNetter = BigDecimal(0), ferier = emptyList()),
+        ).delberegningSamværsklasse
         assertSoftly {
             resultat.samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_0
             resultat.gjennomsnittligSamværPerMåned shouldBe BigDecimal("0.00")
@@ -128,7 +213,7 @@ internal class BeregnSamværsklasseApiTest {
                         ),
                     ),
                 ),
-            )
+            ).delberegningSamværsklasse
 
             resultat.samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_0
             resultat.gjennomsnittligSamværPerMåned shouldBe BigDecimal("1.17")
@@ -147,7 +232,7 @@ internal class BeregnSamværsklasseApiTest {
                         ),
                     ),
                 ),
-            )
+            ).delberegningSamværsklasse
 
             resultat.samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_0
             resultat.gjennomsnittligSamværPerMåned shouldBe BigDecimal("0.58")
@@ -168,7 +253,7 @@ internal class BeregnSamværsklasseApiTest {
                     ),
                 ),
             ),
-        )
+        ).delberegningSamværsklasse
         assertSoftly {
             resultat.samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_0
             resultat.gjennomsnittligSamværPerMåned shouldBe BigDecimal("1.17")
@@ -189,7 +274,7 @@ internal class BeregnSamværsklasseApiTest {
                     ),
                 ),
             ),
-        )
+        ).delberegningSamværsklasse
         assertSoftly {
             resultat.samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_0
             resultat.gjennomsnittligSamværPerMåned shouldBe BigDecimal("1.17")
@@ -210,7 +295,7 @@ internal class BeregnSamværsklasseApiTest {
                     ),
                 ),
             ),
-        )
+        ).delberegningSamværsklasse
         assertSoftly {
             resultat.samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_0
             resultat.gjennomsnittligSamværPerMåned shouldBe BigDecimal("1.17")
@@ -231,7 +316,7 @@ internal class BeregnSamværsklasseApiTest {
                     ),
                 ),
             ),
-        )
+        ).delberegningSamværsklasse
         assertSoftly {
             resultat.samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_0
             resultat.gjennomsnittligSamværPerMåned shouldBe BigDecimal("1.17")
@@ -252,7 +337,7 @@ internal class BeregnSamværsklasseApiTest {
                     ),
                 ),
             ),
-        )
+        ).delberegningSamværsklasse
         assertSoftly {
             resultat.samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_0
             resultat.gjennomsnittligSamværPerMåned shouldBe BigDecimal("1.17")
@@ -273,7 +358,7 @@ internal class BeregnSamværsklasseApiTest {
                     ),
                 ),
             ),
-        )
+        ).delberegningSamværsklasse
         assertSoftly {
             resultat.samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_0
             resultat.gjennomsnittligSamværPerMåned shouldBe BigDecimal("1.17")
@@ -313,7 +398,7 @@ internal class BeregnSamværsklasseApiTest {
                     ),
                 ),
             ),
-        )
+        ).delberegningSamværsklasse
         assertSoftly {
             resultat.samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_3
             resultat.gjennomsnittligSamværPerMåned shouldBe BigDecimal("10.65")
@@ -353,7 +438,7 @@ internal class BeregnSamværsklasseApiTest {
                     ),
                 ),
             ),
-        )
+        ).delberegningSamværsklasse
         assertSoftly {
             resultat.samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_4
             resultat.gjennomsnittligSamværPerMåned shouldBe BigDecimal("26.46")
@@ -402,3 +487,6 @@ internal class BeregnSamværsklasseApiTest {
         ),
     )
 }
+
+fun List<GrunnlagDto>.hentDelberegningSamværsklasseNetter() = find { it.type == Grunnlagstype.DELBEREGNING_SAMVÆRSKLASSER_NETTER }
+fun List<GrunnlagDto>.hentSamværskalkulatorDetaljer() = find { it.type == Grunnlagstype.SAMVÆRSKALKULATOR }
