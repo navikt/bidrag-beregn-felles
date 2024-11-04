@@ -43,17 +43,26 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
         val innslagKapitalinntektSjablon = finnInnslagKapitalinntektFraGrunnlag(sjablonGrunnlag)
 
         // Mapper ut grunnlag som skal brukes for å beregne bidragsevne
-        val bpAndelUnderholdskostnadPeriodeGrunnlag = mapBpAndelUnderholdskostnadGrunnlag(mottattGrunnlag, sjablonGrunnlag)
+        val bpAndelUnderholdskostnadPeriodeGrunnlag = mapBpAndelUnderholdskostnadGrunnlag(
+            mottattGrunnlag = mottattGrunnlag,
+            sjablonGrunnlag = sjablonGrunnlag
+        )
 
         // Lager liste over bruddperioder
-        val bruddPeriodeListe = lagBruddPeriodeListeBpAndelUnderholdskostnad(bpAndelUnderholdskostnadPeriodeGrunnlag, mottattGrunnlag.periode)
+        val bruddPeriodeListe = lagBruddPeriodeListeBpAndelUnderholdskostnad(
+            grunnlagListe = bpAndelUnderholdskostnadPeriodeGrunnlag,
+            beregningsperiode = mottattGrunnlag.periode
+        )
 
         val bpAndelUnderholdskostnadBeregningResultatListe = mutableListOf<BpAndelUnderholdskostnadPeriodeResultat>()
 
         // Løper gjennom hver bruddperiode og beregner BP's andel av underholdskostnad
         bruddPeriodeListe.forEach { bruddPeriode ->
             val bpAndelUnderholdskostnadBeregningGrunnlag =
-                lagBpAndelUnderholdskostnadBeregningGrunnlag(bpAndelUnderholdskostnadPeriodeGrunnlag, bruddPeriode)
+                lagBpAndelUnderholdskostnadBeregningGrunnlag(
+                    bpAndelUnderholdskostnadPeriodeGrunnlag = bpAndelUnderholdskostnadPeriodeGrunnlag,
+                    bruddPeriode = bruddPeriode
+                )
             bpAndelUnderholdskostnadBeregningResultatListe.add(
                 BpAndelUnderholdskostnadPeriodeResultat(
                     periode = bruddPeriode,
@@ -103,10 +112,10 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
         beregningsperiode: ÅrMånedsperiode,
     ): List<ÅrMånedsperiode> {
         // inntektSBPerioder er nullable
-        val inntektSBPerioder = grunnlagListe.inntektSBPeriodeGrunnlagListe?.asSequence()
+        val inntektSBPerioder = grunnlagListe.inntektSBPeriodeGrunnlagListe.asSequence()
             ?.map { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil) } ?: emptySequence()
         val periodeListe = sequenceOf(grunnlagListe.beregningsperiode)
-            .plus(grunnlagListe.underholdskostnadPeriodeGrunnlagListe.asSequence().map { it.underholdskostnadPeriode.periode })
+            .plus(grunnlagListe.underholdskostnadDelberegningPeriodeGrunnlagListe.asSequence().map { it.underholdskostnadPeriode.periode })
             .plus(grunnlagListe.inntektBPPeriodeGrunnlagListe.asSequence().map { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil) })
             .plus(grunnlagListe.inntektBMPeriodeGrunnlagListe.asSequence().map { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil) })
             .plus(inntektSBPerioder)
@@ -122,7 +131,7 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
     ): BpAndelUnderholdskostnadBeregningGrunnlag {
 
         return BpAndelUnderholdskostnadBeregningGrunnlag(
-            underholdskostnadBeregningGrunnlag = bpAndelUnderholdskostnadPeriodeGrunnlag.underholdskostnadPeriodeGrunnlagListe
+            underholdskostnadBeregningGrunnlag = bpAndelUnderholdskostnadPeriodeGrunnlag.underholdskostnadDelberegningPeriodeGrunnlagListe
                 .firstOrNull { it.underholdskostnadPeriode.periode.inneholder(bruddPeriode) }
                 ?.let { UnderholdskostnadBeregningGrunnlag(referanse = it.referanse, beløp = it.underholdskostnadPeriode.beløp) }
                 ?: throw IllegalArgumentException("Underholdskostnad grunnlag mangler for periode $bruddPeriode"),
@@ -263,8 +272,7 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
 
         // Mapper ut DelberegningSumInntekt SB. Inntektskategorier summeres opp.
         val sumInntektSBListe = bpAndelUnderholdskostnadPeriodeGrunnlag.inntektSBPeriodeGrunnlagListe
-            ?.filter { grunnlagReferanseListe.contains(it.referanse) }
-            ?: emptyList()
+            .filter { grunnlagReferanseListe.contains(it.referanse) }
         resultatGrunnlagListe.addAll(
             mapDelberegningSumInntekt(
                 sumInntektListe = sumInntektSBListe,

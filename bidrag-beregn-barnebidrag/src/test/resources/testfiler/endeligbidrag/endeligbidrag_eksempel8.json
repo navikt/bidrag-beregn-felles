@@ -1,0 +1,145 @@
+{
+  "periode": {
+    "fom": "2024-08",
+    "til": "2024-09"
+  },
+  "søknadsbarnReferanse": "Person_Søknadsbarn",
+  "grunnlagListe": [
+    {
+      "referanse": "Person_Søknadsbarn",
+      "type": "PERSON_SØKNADSBARN",
+      "innhold": {
+        "ident": "11111111110",
+        "navn": "Trengende Søknadsbarn",
+        "fødselsdato": "2012-09-13"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Person_Bidragsmottaker",
+      "type": "PERSON_BIDRAGSMOTTAKER",
+      "innhold": {
+        "ident": "22222222222",
+        "navn": "Søkende Bidragsmottaker",
+        "fødselsdato": "1982-05-05"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Person_Bidragspliktig",
+      "type": "PERSON_BIDRAGSPLIKTIG",
+      "innhold": {
+        "ident": "33333333333",
+        "navn": "Motvillig Bidragspliktig",
+        "fødselsdato": "1981-07-13"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Delberegning_Bidragsevne_202408",
+      "type": "DELBEREGNING_BIDRAGSEVNE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": "2024-09"
+        },
+        "beløp": 10000,
+        "tjuefemProsentInntekt": 10000,
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragspliktig"
+    },
+    {
+      "referanse": "Mottatt_Underholdskostnad_202408",
+      "type": "UNDERHOLDSKOSTNAD",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": "2024-09"
+        },
+        "beløp": 10000,
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Delberegning_BidragspliktigesAndel_202408",
+      "type": "DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": "2024-09"
+        },
+        "andelBeløp": 6000,
+        "andelFaktor": 0.600,
+        "barnetErSelvforsørget": false,
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragspliktig"
+    },
+    {
+      "referanse": "Delberegning_Samværsfradrag_202408",
+      "type": "DELBEREGNING_SAMVÆRSFRADRAG",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": "2024-09"
+        },
+        "beløp": 999,
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragspliktig"
+    },
+    {
+      "referanse": "Mottatt_DeltBosted_202408",
+      "type": "DELT_BOSTED",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": "2024-09"
+        },
+        "deltBosted": false,
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Mottatt_Barnetillegg_BP_202408",
+      "type": "INNHENTET_INNTEKT_BARNETILLEGG",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": "2024-09"
+        },
+        "beløp": 3000,
+        "skattFaktor": 0.500,
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragspliktig"
+    },
+    {
+      "referanse": "Mottatt_Barnetillegg_BM_202408",
+      "type": "INNHENTET_INNTEKT_BARNETILLEGG",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": "2024-09"
+        },
+        "beløp": 5000,
+        "skattFaktor": 0.500,
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    }
+  ]
+}

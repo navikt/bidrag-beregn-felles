@@ -47,16 +47,22 @@ internal object BeregnBidragsevneService : BeregnService() {
         val innslagKapitalinntektSjablon = finnInnslagKapitalinntektFraGrunnlag(sjablonGrunnlag)
 
         // Mapper ut grunnlag som skal brukes for å beregne bidragsevne
-        val bidragsevnePeriodeGrunnlag = mapBidragsevneGrunnlag(mottattGrunnlag, sjablonGrunnlag)
+        val bidragsevnePeriodeGrunnlag = mapBidragsevneGrunnlag(mottattGrunnlag = mottattGrunnlag, sjablonGrunnlag = sjablonGrunnlag)
 
         // Lager liste over bruddperioder
-        val bruddPeriodeListe = lagBruddPeriodeListeBidragsevne(bidragsevnePeriodeGrunnlag, mottattGrunnlag.periode)
+        val bruddPeriodeListe = lagBruddPeriodeListeBidragsevne(
+            grunnlagListe = bidragsevnePeriodeGrunnlag,
+            beregningsperiode = mottattGrunnlag.periode
+        )
 
         val bidragsevneBeregningResultatListe = mutableListOf<BidragsevnePeriodeResultat>()
 
         // Løper gjennom hver bruddperiode og beregner bidragsevne
         bruddPeriodeListe.forEach { bruddPeriode ->
-            val bidragsevneBeregningGrunnlag = lagBidragsevneBeregningGrunnlag(bidragsevnePeriodeGrunnlag, bruddPeriode)
+            val bidragsevneBeregningGrunnlag = lagBidragsevneBeregningGrunnlag(
+                bidragsevnePeriodeGrunnlag = bidragsevnePeriodeGrunnlag,
+                bruddPeriode = bruddPeriode
+            )
             bidragsevneBeregningResultatListe.add(
                 BidragsevnePeriodeResultat(
                     periode = bruddPeriode,

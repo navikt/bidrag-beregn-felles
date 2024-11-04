@@ -246,7 +246,7 @@ abstract class BeregnService {
         .map {
             GrunnlagDto(
                 referanse = lagSjablonReferanse(SjablonNavn.BIDRAGSEVNE.navn, it.datoFom!!, "_${it.bostatus}"),
-                type = Grunnlagstype.SJABLON,
+                type = Grunnlagstype.SJABLON_BIDRAGSEVNE,
                 innhold = POJONode(
                     SjablonBidragsevnePeriode(
                         periode = ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!)),
@@ -277,7 +277,7 @@ abstract class BeregnService {
             .map {
                 GrunnlagDto(
                     referanse = lagSjablonReferanse(SjablonNavn.TRINNVIS_SKATTESATS.navn, it.key.fom.atDay(1)),
-                    type = Grunnlagstype.SJABLON,
+                    type = Grunnlagstype.SJABLON_TRINNVIS_SKATTESATS,
                     innhold = POJONode(
                         SjablonTrinnvisSkattesatsPeriode(
                             periode = it.key,
@@ -295,7 +295,7 @@ abstract class BeregnService {
         .map {
             GrunnlagDto(
                 referanse = lagSjablonReferanse(SjablonNavn.SAMVÆRSFRADRAG.navn, it.datoFom!!, "_${it.samvaersklasse}_${it.alderTom}"),
-                type = Grunnlagstype.SJABLON,
+                type = Grunnlagstype.SJABLON_SAMVARSFRADRAG,
                 innhold = POJONode(
                     SjablonSamværsfradragPeriode(
                         periode = ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!)),

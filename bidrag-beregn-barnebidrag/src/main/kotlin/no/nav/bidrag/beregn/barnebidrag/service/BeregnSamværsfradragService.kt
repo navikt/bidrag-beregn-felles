@@ -33,13 +33,19 @@ internal object BeregnSamværsfradragService : BeregnService() {
         val samværsfradragPeriodeGrunnlag = mapSamværsfradragGrunnlag(mottattGrunnlag, sjablonGrunnlag)
 
         // Lager liste over bruddperioder
-        val bruddPeriodeListe = lagBruddPeriodeListeSamværsfradrag(samværsfradragPeriodeGrunnlag, mottattGrunnlag.periode)
+        val bruddPeriodeListe = lagBruddPeriodeListeSamværsfradrag(
+            grunnlagListe = samværsfradragPeriodeGrunnlag,
+            beregningsperiode = mottattGrunnlag.periode
+        )
 
         val samværsfradragBeregningResultatListe = mutableListOf<SamværsfradragPeriodeResultat>()
 
         // Løper gjennom hver bruddperiode og beregner samværsfradrag
         bruddPeriodeListe.forEach { bruddPeriode ->
-            val samværsfradragBeregningGrunnlag = lagSamværsfradragBeregningGrunnlag(samværsfradragPeriodeGrunnlag, bruddPeriode)
+            val samværsfradragBeregningGrunnlag = lagSamværsfradragBeregningGrunnlag(
+                samværsfradragPeriodeGrunnlag = samværsfradragPeriodeGrunnlag,
+                bruddPeriode = bruddPeriode
+            )
             samværsfradragBeregningResultatListe.add(
                 SamværsfradragPeriodeResultat(
                     periode = bruddPeriode,

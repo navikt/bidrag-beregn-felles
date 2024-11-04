@@ -42,7 +42,9 @@ internal class BeregnBidragsevneApiTest {
     private var forventetAntallDelberegningVoksneIHusstandPeriode: Int = 1
     private var forventetAntallBostatusPeriodeBP: Int = 1
     private var forventetAntallBostatusPeriodeSB: Int = 1
-    private var forventetAntallSjablon: Int = 12
+    private var forventetAntallSjablonSjablontall: Int = 10
+    private var forventetAntallSjablonBidragsevne: Int = 1
+    private var forventetAntallSjablonTrinnvisSkattesats: Int = 1
 
     @Mock
     private lateinit var beregnBarnebidragService: BeregnBarnebidragService
@@ -331,7 +333,9 @@ internal class BeregnBidragsevneApiTest {
         forventetAntallDelberegningVoksneIHusstandPeriode = 2
         forventetAntallBostatusPeriodeBP = 2
         forventetAntallBostatusPeriodeSB = 2
-        forventetAntallSjablon = 19
+        forventetAntallSjablonSjablontall = 14
+        forventetAntallSjablonBidragsevne = 3
+        forventetAntallSjablonTrinnvisSkattesats = 2
         utførBeregningerOgEvaluerResultatBidragsevneFlerePerioder()
     }
 
@@ -396,8 +400,16 @@ internal class BeregnBidragsevneApiTest {
             .filter { it.gjelderReferanse == referanseSB }
             .size
 
-        val antallSjablon = bidragsevneResultat
+        val antallSjablonSjablontall = bidragsevneResultat
             .filter { it.type == Grunnlagstype.SJABLON }
+            .size
+
+        val antallSjablonBidragsevne = bidragsevneResultat
+            .filter { it.type == Grunnlagstype.SJABLON_BIDRAGSEVNE }
+            .size
+
+        val antallSjablonTrinnvisSkattesats = bidragsevneResultat
+            .filter { it.type == Grunnlagstype.SJABLON_TRINNVIS_SKATTESATS }
             .size
 
         assertAll(
@@ -423,7 +435,9 @@ internal class BeregnBidragsevneApiTest {
             { assertThat(antallDelberegningVoksneIHusstandPeriode).isEqualTo(1) },
             { assertThat(antallBostatusPeriodeBP).isEqualTo(1) },
             { assertThat(antallBostatusPeriodeSB).isEqualTo(1) },
-            { assertThat(antallSjablon).isEqualTo(12) },
+            { assertThat(antallSjablonSjablontall).isEqualTo(10) },
+            { assertThat(antallSjablonBidragsevne).isEqualTo(1) },
+            { assertThat(antallSjablonTrinnvisSkattesats).isEqualTo(1) },
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
@@ -491,8 +505,16 @@ internal class BeregnBidragsevneApiTest {
             .filter { it.gjelderReferanse == referanseSB }
             .size
 
-        val antallSjablon = bidragsevneResultat
+        val antallSjablonSjablontall = bidragsevneResultat
             .filter { it.type == Grunnlagstype.SJABLON }
+            .size
+
+        val antallSjablonBidragsevne = bidragsevneResultat
+            .filter { it.type == Grunnlagstype.SJABLON_BIDRAGSEVNE }
+            .size
+
+        val antallSjablonTrinnvisSkattesats = bidragsevneResultat
+            .filter { it.type == Grunnlagstype.SJABLON_TRINNVIS_SKATTESATS }
             .size
 
         assertAll(
@@ -572,7 +594,9 @@ internal class BeregnBidragsevneApiTest {
             { assertThat(antallDelberegningVoksneIHusstandPeriode).isEqualTo(forventetAntallDelberegningVoksneIHusstandPeriode) },
             { assertThat(antallBostatusPeriodeBP).isEqualTo(forventetAntallBostatusPeriodeBP) },
             { assertThat(antallBostatusPeriodeSB).isEqualTo(forventetAntallBostatusPeriodeSB) },
-            { assertThat(antallSjablon).isEqualTo(forventetAntallSjablon) },
+            { assertThat(antallSjablonSjablontall).isEqualTo(forventetAntallSjablonSjablontall) },
+            { assertThat(antallSjablonBidragsevne).isEqualTo(forventetAntallSjablonBidragsevne) },
+            { assertThat(antallSjablonTrinnvisSkattesats).isEqualTo(forventetAntallSjablonTrinnvisSkattesats) },
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },

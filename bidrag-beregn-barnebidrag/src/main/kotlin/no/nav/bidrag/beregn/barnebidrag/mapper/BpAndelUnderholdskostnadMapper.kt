@@ -2,7 +2,7 @@ package no.nav.bidrag.beregn.barnebidrag.mapper
 
 import no.nav.bidrag.beregn.barnebidrag.bo.BpAndelUnderholdskostnadPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSjablontallPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadDelberegningPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
@@ -19,7 +19,7 @@ internal object BpAndelUnderholdskostnadMapper : CoreMapper() {
 
         BpAndelUnderholdskostnadPeriodeGrunnlag(
             beregningsperiode = mottattGrunnlag.periode,
-            underholdskostnadPeriodeGrunnlagListe = mapUnderholdskostnad(beregnGrunnlag = mottattGrunnlag),
+            underholdskostnadDelberegningPeriodeGrunnlagListe = mapUnderholdskostnad(beregnGrunnlag = mottattGrunnlag),
             inntektBPPeriodeGrunnlagListe = mapInntekt(
                 beregnGrunnlag = mottattGrunnlag,
                 referanseTilRolle = finnReferanseTilRolle(
@@ -47,12 +47,13 @@ internal object BpAndelUnderholdskostnadMapper : CoreMapper() {
             sjablonSjablontallPeriodeGrunnlagListe = mapSjablonSjablontall(sjablonGrunnlag),
         )
 
-    private fun mapUnderholdskostnad(beregnGrunnlag: BeregnGrunnlag): List<UnderholdskostnadPeriodeGrunnlag> {
+    private fun mapUnderholdskostnad(beregnGrunnlag: BeregnGrunnlag): List<UnderholdskostnadDelberegningPeriodeGrunnlag> {
         try {
             return beregnGrunnlag.grunnlagListe
+//TODO Endre til Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD?
                 .filtrerOgKonverterBasertPåEgenReferanse<UnderholdskostnadPeriode>(Grunnlagstype.UNDERHOLDSKOSTNAD)
                 .map {
-                    UnderholdskostnadPeriodeGrunnlag(
+                    UnderholdskostnadDelberegningPeriodeGrunnlag(
                         referanse = it.referanse,
                         underholdskostnadPeriode = it.innhold
                     )

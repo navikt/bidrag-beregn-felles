@@ -7,14 +7,15 @@ import java.math.BigDecimal
 
 data class BpAndelUnderholdskostnadPeriodeGrunnlag(
     val beregningsperiode: ÅrMånedsperiode,
-    val underholdskostnadPeriodeGrunnlagListe: List<UnderholdskostnadPeriodeGrunnlag>,
+    val underholdskostnadDelberegningPeriodeGrunnlagListe: List<UnderholdskostnadDelberegningPeriodeGrunnlag>,
     val inntektBPPeriodeGrunnlagListe: List<InntektPeriodeCore>,
     val inntektBMPeriodeGrunnlagListe: List<InntektPeriodeCore>,
     val inntektSBPeriodeGrunnlagListe: List<InntektPeriodeCore>,
     var sjablonSjablontallPeriodeGrunnlagListe: List<SjablonSjablontallPeriodeGrunnlag>,
 )
 
-data class UnderholdskostnadPeriodeGrunnlag(
+//TODO Bør flyttes og kalles noe annet?
+data class UnderholdskostnadDelberegningPeriodeGrunnlag(
     val referanse: String,
     val underholdskostnadPeriode: UnderholdskostnadPeriode,
 )
