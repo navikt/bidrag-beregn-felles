@@ -110,7 +110,7 @@ internal class BeregnSamværsfradragApiTest {
             .size
 
         val antallSjablon = samværsfradragResultat
-            .filter { it.type == Grunnlagstype.SJABLON }
+            .filter { it.type == Grunnlagstype.SJABLON_SAMVARSFRADRAG }
             .size
 
         assertAll(
@@ -153,7 +153,7 @@ internal class BeregnSamværsfradragApiTest {
             .size
 
         val antallSjablon = samværsfradragResultat
-            .filter { it.type == Grunnlagstype.SJABLON }
+            .filter { it.type == Grunnlagstype.SJABLON_SAMVARSFRADRAG }
             .size
 
         assertAll(
