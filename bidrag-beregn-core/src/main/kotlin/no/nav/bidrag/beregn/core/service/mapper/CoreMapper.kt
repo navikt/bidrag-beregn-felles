@@ -3,11 +3,13 @@ package no.nav.bidrag.beregn.core.service.mapper
 import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.dto.BarnIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.core.dto.Delberegning
+import no.nav.bidrag.beregn.core.dto.FaktiskUtgiftPeriodeCore
 import no.nav.bidrag.beregn.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonInnholdCore
 import no.nav.bidrag.beregn.core.dto.SjablonNøkkelCore
 import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
+import no.nav.bidrag.beregn.core.dto.TilleggsstønadPeriodeCore
 import no.nav.bidrag.beregn.core.dto.VoksneIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.core.util.InntektUtil.erKapitalinntekt
 import no.nav.bidrag.beregn.core.util.InntektUtil.justerKapitalinntekt
@@ -263,6 +265,24 @@ abstract class CoreMapper {
                 ) as List<T>
             }
 
+            FaktiskUtgiftPeriodeCore::class.java -> {
+                akkumulerOgPeriodiserFaktiskUtgift(
+                    grunnlagListe as List<FaktiskUtgiftPeriodeCore>,
+                    periodeListe,
+                    søknadsbarnreferanse,
+                    gjelderReferanse,
+                ) as List<T>
+            }
+
+            TilleggsstønadPeriodeCore::class.java -> {
+                akkumulerOgPeriodiserTilleggsstønad(
+                    grunnlagListe as List<TilleggsstønadPeriodeCore>,
+                    periodeListe,
+                    søknadsbarnreferanse,
+                    gjelderReferanse,
+                ) as List<T>
+            }
+
             else -> {
                 emptyList()
             }
@@ -337,6 +357,81 @@ abstract class CoreMapper {
                 grunnlagsreferanseListe = filtrertGrunnlagsliste.map { it.referanse }.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it }),
             )
         }
+
+    // Grupperer og teller faktiske utgifter pr bruddperiode
+    private fun akkumulerOgPeriodiserFaktiskUtgift(
+        faktiskUtgiftPeriodeCoreListe: List<FaktiskUtgiftPeriodeCore>,
+        periodeListe: List<Periode>,
+        søknadsbarnReferanse: Grunnlagsreferanse,
+        gjelderReferanse: Grunnlagsreferanse,
+    ): List<FaktiskUtgiftPeriodeCore> {
+        val resultatListe = mutableListOf<FaktiskUtgiftPeriodeCore>()
+
+        // Akkumulerer beregnetBeløp per gjelderBarn i perioden
+        periodeListe
+            .map { periode ->
+                val filtrertGrunnlagsliste = filtrerGrunnlagsliste(grunnlagsliste = faktiskUtgiftPeriodeCoreListe, periode = periode)
+
+                val totalBeregnetBeløpBarn = filtrertGrunnlagsliste
+                    .groupBy { it.gjelderBarn }
+                    .mapValues { entry -> entry.value.sumOf { it.beregnetBeløp } }
+
+                totalBeregnetBeløpBarn.forEach { (gjelderBarn, beregnetBeløp) ->
+                    resultatListe.add(
+                        FaktiskUtgiftPeriodeCore(
+                            referanse = opprettDelberegningreferanse(
+                                type = Grunnlagstype.DELBEREGNING_FAKTISK_UTGIFT,
+                                periode = ÅrMånedsperiode(fom = periode.datoFom, til = null),
+                                søknadsbarnReferanse = gjelderBarn,
+                                gjelderReferanse = gjelderReferanse,
+                            ),
+                            periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
+                            gjelderBarn = gjelderBarn,
+                            beregnetBeløp = beregnetBeløp,
+                            grunnlagsreferanseListe = filtrertGrunnlagsliste.filter { it.gjelderBarn == gjelderBarn }.map { it.referanse }
+                                .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it }),
+                        ),
+                    )
+                }
+            }
+
+        return resultatListe
+    }
+
+    // Grupperer og teller faktiske utgifter pr bruddperiode
+    private fun akkumulerOgPeriodiserTilleggsstønad(
+        tilleggsstønadPeriodeCoreListe: List<TilleggsstønadPeriodeCore>,
+        periodeListe: List<Periode>,
+        søknadsbarnReferanse: Grunnlagsreferanse,
+        gjelderReferanse: Grunnlagsreferanse,
+    ): List<TilleggsstønadPeriodeCore> {
+        val resultatListe = mutableListOf<TilleggsstønadPeriodeCore>()
+
+        periodeListe
+            .map { periode ->
+                val filtrertGrunnlagsliste = filtrerGrunnlagsliste(grunnlagsliste = tilleggsstønadPeriodeCoreListe, periode = periode)
+
+                filtrertGrunnlagsliste.forEach {
+                    resultatListe.add(
+                        TilleggsstønadPeriodeCore(
+                            referanse = opprettDelberegningreferanse(
+                                type = Grunnlagstype.DELBEREGNING_TILLEGGSSTØNAD,
+                                periode = ÅrMånedsperiode(fom = periode.datoFom, til = null),
+                                søknadsbarnReferanse = it.gjelderBarn,
+                                gjelderReferanse = gjelderReferanse,
+                            ),
+                            periode = PeriodeCore(datoFom = periode.datoFom, datoTil = periode.datoTil),
+                            gjelderBarn = it.gjelderBarn,
+                            beregnetBeløp = it.beregnetBeløp,
+                            grunnlagsreferanseListe = filtrertGrunnlagsliste.map { it.referanse }
+                                .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it }),
+                        ),
+                    )
+                }
+            }
+
+        return resultatListe
+    }
 
     // Filtrerer ut grunnlag som tilhører en gitt periode
     private fun <T : Delberegning> filtrerGrunnlagsliste(grunnlagsliste: List<T>, periode: Periode): List<T> = grunnlagsliste.filter { grunnlag ->

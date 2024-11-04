@@ -15,11 +15,11 @@ class Vedtaksfiltrering {
 
     /**
      * Finner vedtak som skal benyttes i evnevurdering fra en samling vedtak knyttet til en bestemt stønad. Returnerer null dersom metoden
-     * ikke finner noe manuelt vedtak. Dette kan ansees som en unntaktstilstand.
+     * ikke finner relevant vedtak. Dette kan ansees som en unntaktstilstand.
      *
      * @param vedtak samling vedtak for stønad som sendes inn til metoden
      * @param personidentSøknadsbarn personidenSøknadsbarn typisk fødselsnummer til søknadsbarnet stønaden og vedtakene gjelder for
-     * @return siste manuelle vedtak for stønaden
+     * @return vedtak for evnevurdering for stønaden
      */
     fun finneVedtakForEvnevurdering(vedtak: Collection<VedtakForStønad>, personidentSøknadsbarn: Personident): VedtakForStønad? {
         val iterator = Vedtaksiterator(vedtak.filter { it.filtrereBortIrrelevanteVedtak() }.tilVedtaksdetaljer())
@@ -47,8 +47,8 @@ class Vedtaksfiltrering {
             // Håndtere resultat fra annet vedtak
             if (vedtaksdetaljer.vedtak.erResultatFraAnnetVedtak()) {
                 iterator.hoppeTilBeløp(vedtaksdetaljer.periode.beløp)
-                require(iterator.hasNext()) { "Fant ikke tidligere manuelt vedtak i vedtak ${vedtaksdetaljer.vedtak.vedtaksid}" }
-                return iterator.next().vedtak
+                if (!iterator.hasNext()) return null
+                continue
             }
 
             // Hopp over indeksregulering
@@ -63,9 +63,8 @@ class Vedtaksfiltrering {
         return null
     }
 
-    private fun VedtakForStønad.filtrereBortIrrelevanteVedtak(): Boolean {
-        return erInnkreving() && !erIkkeRelevant() && (erBidrag() || er18årsbidrag() || erOppfostringsbidrag())
-    }
+    private fun VedtakForStønad.filtrereBortIrrelevanteVedtak(): Boolean =
+        erInnkreving() && !erIkkeRelevant() && (erBidrag() || er18årsbidrag() || erOppfostringsbidrag())
 }
 
 data class Vedtaksdetaljer(var erOmgjort: Boolean = false, val vedtak: VedtakForStønad, val periode: VedtakPeriodeDto)

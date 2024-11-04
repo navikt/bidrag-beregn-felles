@@ -23,7 +23,6 @@ class BidragsevneBeregning : FellesBeregning() {
     val bigDecimal12 = BigDecimal.valueOf(12)
 
     fun beregn(grunnlag: GrunnlagBeregning): ResultatBeregning {
-
         // Henter sjablonverdier
         val sjablonNavnVerdiMap = hentSjablonVerdier(
             sjablonPeriodeListe = grunnlag.sjablonListe,

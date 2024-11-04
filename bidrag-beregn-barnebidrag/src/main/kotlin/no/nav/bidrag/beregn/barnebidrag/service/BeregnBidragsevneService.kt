@@ -378,23 +378,22 @@ internal object BeregnBidragsevneService : BeregnService() {
             }
 
     // Mapper ut DelberegningBoforhold
-    private fun mapDelberegningBoforhold(boforholdListe: List<BoforholdPeriodeCore>, bidragspliktigReferanse: String) =
-        boforholdListe
-            .map {
-                GrunnlagDto(
-                    referanse = it.referanse,
-                    type = bestemGrunnlagstype(it.referanse),
-                    innhold = POJONode(
-                        DelberegningBoforhold(
-                            periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
-                            antallBarn = it.antallBarn,
-                            borMedAndreVoksne = it.borMedAndreVoksne,
-                        ),
+    private fun mapDelberegningBoforhold(boforholdListe: List<BoforholdPeriodeCore>, bidragspliktigReferanse: String) = boforholdListe
+        .map {
+            GrunnlagDto(
+                referanse = it.referanse,
+                type = bestemGrunnlagstype(it.referanse),
+                innhold = POJONode(
+                    DelberegningBoforhold(
+                        periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
+                        antallBarn = it.antallBarn,
+                        borMedAndreVoksne = it.borMedAndreVoksne,
                     ),
-                    grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
-                    gjelderReferanse = bidragspliktigReferanse,
-                )
-            }
+                ),
+                grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
+                gjelderReferanse = bidragspliktigReferanse,
+            )
+        }
 
     // Henter sjablonverdi for kapitalinntekt
     // TODO Bør synkes med som ligger i CoreMapper. Pt ligger det bare en gyldig sjablonverdi (uforandret siden 2003).

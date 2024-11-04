@@ -692,23 +692,22 @@ internal class BeregnSærbidragService(
             }
 
     // Mapper ut DelberegningBoforhold
-    private fun mapDelberegningBoforhold(boforholdListe: List<BoforholdPeriodeCore>, bidragspliktigReferanse: String) =
-        boforholdListe
-            .map {
-                GrunnlagDto(
-                    referanse = it.referanse,
-                    type = bestemGrunnlagstype(it.referanse),
-                    innhold = POJONode(
-                        DelberegningBoforhold(
-                            periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
-                            antallBarn = it.antallBarn,
-                            borMedAndreVoksne = it.borMedAndreVoksne,
-                        ),
+    private fun mapDelberegningBoforhold(boforholdListe: List<BoforholdPeriodeCore>, bidragspliktigReferanse: String) = boforholdListe
+        .map {
+            GrunnlagDto(
+                referanse = it.referanse,
+                type = bestemGrunnlagstype(it.referanse),
+                innhold = POJONode(
+                    DelberegningBoforhold(
+                        periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
+                        antallBarn = it.antallBarn,
+                        borMedAndreVoksne = it.borMedAndreVoksne,
                     ),
-                    grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
-                    gjelderReferanse = bidragspliktigReferanse,
-                )
-            }
+                ),
+                grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
+                gjelderReferanse = bidragspliktigReferanse,
+            )
+        }
 
     // Mapper ut DelberegningBidragsevne
     private fun mapDelberegningBidragsevne(

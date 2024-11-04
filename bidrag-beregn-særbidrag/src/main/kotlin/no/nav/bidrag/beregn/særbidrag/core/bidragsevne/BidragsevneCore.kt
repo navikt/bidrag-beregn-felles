@@ -56,23 +56,21 @@ internal class BidragsevneCore(private val bidragsevnePeriode: BidragsevnePeriod
         )
     }
 
-    private fun mapBarnIHusstandPeriodeListe(boforholdPeriodeListeCore: List<BoforholdPeriodeCore>) =
-        boforholdPeriodeListeCore.map {
-            BarnIHusstandPeriode(
-                referanse = it.referanse,
-                periode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
-                antall = it.antallBarn,
-            )
-        }
+    private fun mapBarnIHusstandPeriodeListe(boforholdPeriodeListeCore: List<BoforholdPeriodeCore>) = boforholdPeriodeListeCore.map {
+        BarnIHusstandPeriode(
+            referanse = it.referanse,
+            periode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
+            antall = it.antallBarn,
+        )
+    }
 
-    private fun mapVoksneIHusstandPeriodeListe(boforholdPeriodeListeCore: List<BoforholdPeriodeCore>) =
-        boforholdPeriodeListeCore.map {
-            VoksneIHusstandPeriode(
-                referanse = it.referanse,
-                periode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
-                borMedAndre = it.borMedAndreVoksne,
-            )
-        }
+    private fun mapVoksneIHusstandPeriodeListe(boforholdPeriodeListeCore: List<BoforholdPeriodeCore>) = boforholdPeriodeListeCore.map {
+        VoksneIHusstandPeriode(
+            referanse = it.referanse,
+            periode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
+            borMedAndre = it.borMedAndreVoksne,
+        )
+    }
 
     private fun mapResultatPeriode(resultatPeriodeListe: List<ResultatPeriode>) = resultatPeriodeListe.map {
         ResultatPeriodeCore(

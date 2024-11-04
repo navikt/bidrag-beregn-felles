@@ -29,6 +29,8 @@ class BeregnBarnebidragApi {
 
     fun beregnBidragsevne(beregnGrunnlag: BeregnGrunnlag) = service.beregnBidragsevne(beregnGrunnlag)
 
+    fun beregnNettoTilsynsutgift(beregnGrunnlag: BeregnGrunnlag) = service.beregnNettoTilsynsutgift(beregnGrunnlag)
+
     fun beregnBpsAndelUnderholdskostnad(beregnGrunnlag: BeregnGrunnlag) = service.beregnBpAndelUnderholdskostnad(beregnGrunnlag)
 
     fun beregnSamværsfradrag(beregnGrunnlag: BeregnGrunnlag) = service.beregnSamværsfradrag(beregnGrunnlag)

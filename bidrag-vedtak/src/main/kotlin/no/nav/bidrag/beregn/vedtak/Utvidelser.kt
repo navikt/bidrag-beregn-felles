@@ -20,7 +20,7 @@ fun VedtakForStønad.erOppfostringsbidrag() = stønadsendring.type == Stønadsty
 
 fun VedtakForStønad.erInnkreving() = stønadsendring.innkreving == Innkrevingstype.MED_INNKREVING
 
-fun VedtakForStønad.erIkkeRelevant() = ikkeRelevanteVedtakstyper.contains(type) || !stønadsendring.erEndring() || harIngenPerioder()
+fun VedtakForStønad.erIkkeRelevant() = !stønadsendring.erEndring() || harIngenPerioder()
 
 fun VedtakForStønad.harIngenPerioder() = this.stønadsendring.periodeListe.isEmpty()
 
@@ -32,11 +32,11 @@ fun VedtakForStønad.erKlage() = Vedtakstype.KLAGE == type || søknadKlageRefId 
 fun VedtakForStønad.omgjørVedtaksid() = stønadsendring.omgjørVedtakId
 
 fun VedtakForStønad.erOmgjøring() = Vedtakstype.ENDRING == type &&
-        Vedtakskilde.MANUELT == kilde &&
-        stønadsendring.omgjørVedtak() &&
-        !behandlingsreferanser.any {
-            BehandlingsrefKilde.BISYS_KLAGE_REF_SØKNAD == it.kilde
-        }
+    Vedtakskilde.MANUELT == kilde &&
+    stønadsendring.omgjørVedtak() &&
+    !behandlingsreferanser.any {
+        BehandlingsrefKilde.BISYS_KLAGE_REF_SØKNAD == it.kilde
+    }
 
 fun VedtakForStønad.idTilOmgjortVedtak() = stønadsendring.omgjørVedtakId?.toLong()
 
@@ -50,8 +50,6 @@ fun VedtakForStønad.tilVedtaksdetaljer(): Collection<Vedtaksdetaljer> = stønad
 }
 
 fun Collection<VedtakForStønad>.tilVedtaksdetaljer() = this.flatMap { it.tilVedtaksdetaljer() }
-
-val ikkeRelevanteVedtakstyper = setOf(Vedtakstype.INDEKSREGULERING)
 
 enum class Beslutningsårsak(val kode: String) {
     INGEN_ENDRING_12_PROSENT("VO"),

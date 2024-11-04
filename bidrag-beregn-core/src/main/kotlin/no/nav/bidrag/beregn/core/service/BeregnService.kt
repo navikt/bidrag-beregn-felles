@@ -10,6 +10,8 @@ import no.nav.bidrag.beregn.core.exception.UgyldigInputException
 import no.nav.bidrag.beregn.core.util.InntektUtil.erKapitalinntekt
 import no.nav.bidrag.beregn.core.util.InntektUtil.justerKapitalinntekt
 import no.nav.bidrag.commons.service.sjablon.Bidragsevne
+import no.nav.bidrag.commons.service.sjablon.MaksFradrag
+import no.nav.bidrag.commons.service.sjablon.MaksTilsyn
 import no.nav.bidrag.commons.service.sjablon.Samværsfradrag
 import no.nav.bidrag.commons.service.sjablon.Sjablontall
 import no.nav.bidrag.commons.service.sjablon.TrinnvisSkattesats
@@ -27,6 +29,8 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonBidragsevnePeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonMaksFradragPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonMaksTilsynPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSamværsfradragPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonTrinnvisSkattesats
@@ -113,6 +117,8 @@ abstract class BeregnService {
             Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_BEREGNEDE_TOTALBIDRAG.name,
         ) -> Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_BEREGNEDE_TOTALBIDRAG
         referanse.contains(Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL.name) -> Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL
+        referanse.contains(Grunnlagstype.DELBEREGNING_FAKTISK_UTGIFT.name) -> Grunnlagstype.DELBEREGNING_FAKTISK_UTGIFT
+        referanse.contains(Grunnlagstype.DELBEREGNING_TILLEGGSSTØNAD.name) -> Grunnlagstype.DELBEREGNING_TILLEGGSSTØNAD
 
         else -> throw IllegalArgumentException("Ikke i stand til å utlede grunnlagstype for referanse: $referanse")
     }
@@ -304,6 +310,40 @@ abstract class BeregnService {
                         antallDagerTom = it.antDagerTom!!,
                         antallNetterTom = it.antNetterTom!!,
                         beløpFradrag = it.belopFradrag!!,
+                    ),
+                ),
+            )
+        }
+
+    protected fun mapSjablonMaksTilsynsbeløpGrunnlag(periode: ÅrMånedsperiode, sjablonListe: List<MaksTilsyn>): List<GrunnlagDto> = sjablonListe
+        // TODO Sjekk om periode.overlapper er dekkende
+        .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
+        .map {
+            GrunnlagDto(
+                referanse = lagSjablonReferanse(SjablonNavn.MAKS_TILSYN.navn, it.datoFom!!),
+                type = Grunnlagstype.SJABLON,
+                innhold = POJONode(
+                    SjablonMaksTilsynPeriode(
+                        periode = ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!)),
+                        antallBarnTom = it.antallBarnTom!!,
+                        maksBeløpTilsyn = it.maksBeløpTilsyn!!,
+                    ),
+                ),
+            )
+        }
+
+    protected fun mapSjablonMaksFradragGrunnlag(periode: ÅrMånedsperiode, sjablonListe: List<MaksFradrag>): List<GrunnlagDto> = sjablonListe
+        // TODO Sjekk om periode.overlapper er dekkende
+        .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
+        .map {
+            GrunnlagDto(
+                referanse = lagSjablonReferanse(SjablonNavn.MAKS_FRADRAG.navn, it.datoFom!!),
+                type = Grunnlagstype.SJABLON,
+                innhold = POJONode(
+                    SjablonMaksFradragPeriode(
+                        periode = ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!)),
+                        antallBarnTom = it.antallBarnTom!!,
+                        maksBeløpFradrag = it.maksBeløpFradrag!!,
                     ),
                 ),
             )

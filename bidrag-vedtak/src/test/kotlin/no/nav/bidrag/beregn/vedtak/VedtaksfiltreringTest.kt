@@ -8,7 +8,6 @@ import no.nav.bidrag.beregn.vedtak.Beløp.B1000
 import no.nav.bidrag.beregn.vedtak.Beløp.B1070
 import no.nav.bidrag.beregn.vedtak.Beløp.B1200
 import no.nav.bidrag.beregn.vedtak.Beløp.B1300
-import no.nav.bidrag.beregn.vedtak.Beløp.B5000
 import no.nav.bidrag.beregn.vedtak.Beløp.B800
 import no.nav.bidrag.beregn.vedtak.Årstall.R10
 import no.nav.bidrag.beregn.vedtak.Årstall.R12

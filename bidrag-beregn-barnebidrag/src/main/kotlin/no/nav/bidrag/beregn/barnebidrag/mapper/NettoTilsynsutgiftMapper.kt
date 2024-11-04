@@ -1,74 +1,153 @@
 package no.nav.bidrag.beregn.barnebidrag.mapper
 
-import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SamværsklassePeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSamværsfradragPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.FaktiskUtgiftPeriode
+import no.nav.bidrag.beregn.barnebidrag.bo.NettoTilsynsutgiftPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SjablonMaksFradragsbeløpPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SjablonMaksTilsynsbeløpPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.TilleggsstønadPeriode
+import no.nav.bidrag.beregn.barnebidrag.service.BeregnNettoTilsynsutgiftService
+import no.nav.bidrag.beregn.core.dto.FaktiskUtgiftPeriodeCore
+import no.nav.bidrag.beregn.core.dto.PeriodeCore
+import no.nav.bidrag.beregn.core.dto.TilleggsstønadPeriodeCore
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
-import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
-import no.nav.bidrag.transport.behandling.felles.grunnlag.SamværsklassePeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSamværsfradragPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonMaksFradragPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonMaksTilsynPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
+import java.math.BigDecimal
+import java.math.RoundingMode
+import java.time.LocalDate
 
 internal object NettoTilsynsutgiftMapper : CoreMapper() {
-    fun mapSamværsfradragGrunnlag(mottattGrunnlag: BeregnGrunnlag, sjablonGrunnlag: List<GrunnlagDto>): SamværsfradragPeriodeGrunnlag =
-        SamværsfradragPeriodeGrunnlag(
-            beregningsperiode = mottattGrunnlag.periode,
-            søknadsbarnPeriodeGrunnlag = mapSøknadsbarn(mottattGrunnlag),
-            samværsklassePeriodeGrunnlagListe = mapSamværsklasse(mottattGrunnlag),
-            sjablonSamværsfradragPeriodeGrunnlagListe = mapSjablonSamværsfradrag(sjablonGrunnlag),
+    fun mapNettoTilsynsutgiftPeriodeGrunnlag(mottattGrunnlag: BeregnGrunnlag, sjablonGrunnlag: List<GrunnlagDto>): NettoTilsynsutgiftPeriodeGrunnlag {
+        val referanseTilBM = finnReferanseTilRolle(
+            grunnlagListe = mottattGrunnlag.grunnlagListe,
+            grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
         )
 
-    private fun mapSøknadsbarn(beregnGrunnlag: BeregnGrunnlag): SøknadsbarnPeriodeGrunnlag {
+        val resultat = NettoTilsynsutgiftPeriodeGrunnlag(
+            beregningsperiode = mottattGrunnlag.periode,
+            faktiskUtgiftPeriodeCoreListe = mapFaktiskUtgift(mottattGrunnlag, referanseTilBM),
+            tilleggsstønadPeriodeCoreListe = mapTilleggsstønad(mottattGrunnlag, referanseTilBM),
+            sjablonSjablontallPeriodeGrunnlagListe = BeregnNettoTilsynsutgiftService.mapSjablonSjablontall(sjablonGrunnlag),
+            sjablonMaksTilsynsbeløpPeriodeGrunnlagListe = mapSjablonMaksTilsynsbeløp(sjablonGrunnlag),
+            sjablonMaksFradragsbeløpPeriodeGrunnlagListe = mapSjablonMaksFradrag(sjablonGrunnlag),
+
+        )
+        return resultat
+    }
+
+    private fun mapFaktiskUtgift(beregnGrunnlag: BeregnGrunnlag, referanseTilRolle: Grunnlagsreferanse): List<FaktiskUtgiftPeriodeCore> {
         try {
-            val søknadsbarnGrunnlag =
+            val faktiskTilsynsutgiftListe =
                 beregnGrunnlag.grunnlagListe
-                    .filtrerOgKonverterBasertPåEgenReferanse<Person>(referanse = beregnGrunnlag.søknadsbarnReferanse)
+                    .filtrerOgKonverterBasertPåEgenReferanse<FaktiskUtgiftPeriode>(Grunnlagstype.FAKTISK_UTGIFT)
+                    .map {
+                        FaktiskUtgiftPeriodeCore(
+                            referanse = it.referanse,
+                            periode = PeriodeCore(
+                                datoFom = it.innhold.periode.toDatoperiode().fom,
+                                datoTil = it.innhold.periode.toDatoperiode().til,
+                            ),
+                            gjelderBarn = it.innhold.gjelderBarn,
+                            beregnetBeløp = beregnBeløpFaktiskUtgift(it.innhold.faktiskUtgiftBeløp, it.innhold.kostpengerBeløp),
+                            grunnlagsreferanseListe = emptyList(),
+                        )
+                    }
 
-            return SøknadsbarnPeriodeGrunnlag(referanse = søknadsbarnGrunnlag[0].referanse, fødselsdato = søknadsbarnGrunnlag[0].innhold.fødselsdato)
+            return akkumulerOgPeriodiser(
+                grunnlagListe = faktiskTilsynsutgiftListe,
+                søknadsbarnreferanse = beregnGrunnlag.søknadsbarnReferanse,
+                gjelderReferanse = referanseTilRolle,
+                clazz = FaktiskUtgiftPeriodeCore::class.java,
+            )
         } catch (e: Exception) {
             throw IllegalArgumentException(
-                "Ugyldig input ved beregning av barnebidrag. Feil i grunnlag som inneholder søknadsbarn: " + e.message,
+                "Ugyldig input ved beregning av netto tilsynsutgifter. Innhold i Grunnlagstype.FAKTISK_UTGIFT er ikke gyldig: " + e.message,
             )
         }
     }
 
-    private fun mapSamværsklasse(beregnGrunnlag: BeregnGrunnlag): List<SamværsklassePeriodeGrunnlag> {
+    private fun mapTilleggsstønad(beregnGrunnlag: BeregnGrunnlag, referanseTilRolle: Grunnlagsreferanse): List<TilleggsstønadPeriodeCore> {
         try {
-            return beregnGrunnlag.grunnlagListe
-                .filtrerOgKonverterBasertPåEgenReferanse<SamværsklassePeriode>(grunnlagType = Grunnlagstype.SAMVÆRSKLASSE)
-                .map {
-                    SamværsklassePeriodeGrunnlag(
-                        referanse = it.referanse,
-                        samværsklassePeriode = it.innhold,
-                    )
-                }
+            val tilleggsstønadListe =
+                beregnGrunnlag.grunnlagListe
+                    .filtrerOgKonverterBasertPåEgenReferanse<TilleggsstønadPeriode>(Grunnlagstype.TILLEGGSSTØNAD)
+                    .map {
+                        TilleggsstønadPeriodeCore(
+                            referanse = it.referanse,
+                            periode = PeriodeCore(
+                                datoFom = it.innhold.periode.toDatoperiode().fom,
+                                datoTil = it.innhold.periode.toDatoperiode().til,
+                            ),
+                            gjelderBarn = it.innhold.gjelderBarn,
+                            beregnetBeløp = beregnBeløpTilleggsstønad(it.innhold.beløpDagsats),
+                            grunnlagsreferanseListe = emptyList(),
+                        )
+                    }
+
+            return akkumulerOgPeriodiser(
+                grunnlagListe = tilleggsstønadListe,
+                søknadsbarnreferanse = beregnGrunnlag.søknadsbarnReferanse,
+                gjelderReferanse = referanseTilRolle,
+                clazz = TilleggsstønadPeriodeCore::class.java,
+            )
         } catch (e: Exception) {
             throw IllegalArgumentException(
-                "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.SAMVÆRSKLASSE er ikke gyldig: " + e.message,
+                "Ugyldig input ved beregning av netto tilsynsutgifter. Innhold i Grunnlagstype.TILLEGGSSTØNAD er ikke gyldig: " + e.message,
             )
         }
     }
 
-    private fun mapSjablonSamværsfradrag(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonSamværsfradragPeriodeGrunnlag> {
+    private fun mapSjablonMaksTilsynsbeløp(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonMaksTilsynsbeløpPeriodeGrunnlag> {
         try {
             return sjablonGrunnlag
-                .filter { it.referanse.contains(SjablonNavn.SAMVÆRSFRADRAG.navn) }
-                .filtrerOgKonverterBasertPåEgenReferanse<SjablonSamværsfradragPeriode>()
+                .filter { it.referanse.contains(SjablonNavn.MAKS_TILSYN.navn) }
+                .filtrerOgKonverterBasertPåEgenReferanse<SjablonMaksTilsynPeriode>()
                 .map {
-                    SjablonSamværsfradragPeriodeGrunnlag(
+                    SjablonMaksTilsynsbeløpPeriodeGrunnlag(
                         referanse = it.referanse,
-                        sjablonSamværsfradragPeriode = it.innhold,
+                        sjablonMaksTilsynsbeløpPeriode = it.innhold,
                     )
                 }
         } catch (e: Exception) {
             throw IllegalArgumentException(
-                "Feil ved uthenting av sjablon for samværsfradrag: " + e.message,
+                "Feil ved uthenting av sjablon for maks tilsyn: " + e.message,
             )
         }
     }
+
+    private fun mapSjablonMaksFradrag(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonMaksFradragsbeløpPeriodeGrunnlag> {
+        try {
+            return sjablonGrunnlag
+                .filter { it.referanse.contains(SjablonNavn.MAKS_FRADRAG.navn) }
+                .filtrerOgKonverterBasertPåEgenReferanse<SjablonMaksFradragPeriode>()
+                .map {
+                    SjablonMaksFradragsbeløpPeriodeGrunnlag(
+                        referanse = it.referanse,
+                        sjablonMaksFradragsbeløpPeriode = it.innhold,
+                    )
+                }
+        } catch (e: Exception) {
+            throw IllegalArgumentException(
+                "Feil ved uthenting av sjablon for maks fradrag: " + e.message,
+            )
+        }
+    }
+
+    private fun beregnBeløpFaktiskUtgift(faktiskUtgiftBeløp: BigDecimal, kostpengerBeløp: BigDecimal): BigDecimal =
+        faktiskUtgiftBeløp - kostpengerBeløp
+
+    private fun beregnBeløpTilleggsstønad(beløpDagsats: BigDecimal): BigDecimal =
+        beløpDagsats.multiply(BigDecimal.valueOf(260)).divide(BigDecimal.valueOf(12), 10, RoundingMode.HALF_UP)
+
+//    private fun beregnBeløpTilleggsstønad(beløpDagsats: BigDecimal): BigDecimal =
+//        beløpDagsats.multiply(BigDecimal.valueOf(260)).divide(BigDecimal.valueOf(12)).avrundetMedToDesimaler
+
+    fun finnFødselsdatoBarn(beregnGrunnlag: List<GrunnlagDto>, referanse: String): LocalDate =
+        finnPersonFraReferanse(beregnGrunnlag, referanse).fødselsdato
 }
