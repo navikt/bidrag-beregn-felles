@@ -976,6 +976,7 @@ internal class BeregnSærbidragService(
         // Danner nytt grunnlag
         val grunnlagDtoListe = sjablonListe.filter { it.navn.startsWith(SjablonNavn.SAMVÆRSFRADRAG.navn) }
             .map {
+                it
                 GrunnlagDto(
                     referanse = it.referanse,
                     type = Grunnlagstype.SJABLON_SAMVARSFRADRAG,

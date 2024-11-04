@@ -7,8 +7,11 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import no.nav.bidrag.beregn.core.dto.AvvikCore
 import no.nav.bidrag.beregn.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.core.exception.UgyldigInputException
+import no.nav.bidrag.beregn.core.mapping.tilGrunnlagsobjekt
 import no.nav.bidrag.beregn.core.util.InntektUtil.erKapitalinntekt
 import no.nav.bidrag.beregn.core.util.InntektUtil.justerKapitalinntekt
+import no.nav.bidrag.beregn.core.util.SjablonUtil.justerSjablonTomDato
+import no.nav.bidrag.beregn.core.util.SjablonUtil.lagSjablonReferanse
 import no.nav.bidrag.commons.service.sjablon.Bidragsevne
 import no.nav.bidrag.commons.service.sjablon.MaksFradrag
 import no.nav.bidrag.commons.service.sjablon.MaksTilsyn
@@ -31,7 +34,6 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPe
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonBidragsevnePeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonMaksFradragPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonMaksTilsynPeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSamværsfradragPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonTrinnvisSkattesats
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonTrinnvisSkattesatsPeriode
@@ -39,8 +41,6 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBase
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettSjablonreferanse
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 abstract class BeregnService {
     fun håndterAvvik(avvikListe: List<AvvikCore>, kontekst: String) {
@@ -299,20 +299,7 @@ abstract class BeregnService {
         // TODO Sjekk om periode.overlapper er dekkende
         .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
         .map {
-            GrunnlagDto(
-                referanse = lagSjablonReferanse(SjablonNavn.SAMVÆRSFRADRAG.navn, it.datoFom!!, "_${it.samvaersklasse}_${it.alderTom}"),
-                type = Grunnlagstype.SJABLON_SAMVARSFRADRAG,
-                innhold = POJONode(
-                    SjablonSamværsfradragPeriode(
-                        periode = ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!)),
-                        samværsklasse = it.samvaersklasse!!,
-                        alderTom = it.alderTom!!,
-                        antallDagerTom = it.antDagerTom!!,
-                        antallNetterTom = it.antNetterTom!!,
-                        beløpFradrag = it.belopFradrag!!,
-                    ),
-                ),
-            )
+            it.tilGrunnlagsobjekt(ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!)))
         }
 
     protected fun mapSjablonMaksTilsynsbeløpGrunnlag(periode: ÅrMånedsperiode, sjablonListe: List<MaksTilsyn>): List<GrunnlagDto> = sjablonListe
@@ -348,11 +335,6 @@ abstract class BeregnService {
                 ),
             )
         }
-
-    private fun justerSjablonTomDato(datoTom: LocalDate): LocalDate? = if (datoTom == LocalDate.parse("9999-12-31")) null else datoTom.plusMonths(1)
-
-    private fun lagSjablonReferanse(sjablonNavn: String, fomDato: LocalDate, postfix: String = ""): String =
-        "sjablon_${sjablonNavn}_${fomDato.format(DateTimeFormatter.ofPattern("yyyyMM"))}$postfix"
 
     // Lager liste over bruddperioder
     fun lagBruddPeriodeListe(periodeListe: Sequence<ÅrMånedsperiode>, beregningsperiode: ÅrMånedsperiode): List<ÅrMånedsperiode> = periodeListe
