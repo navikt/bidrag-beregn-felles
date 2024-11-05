@@ -5,6 +5,7 @@ import no.nav.bidrag.beregn.core.bo.SjablonInnhold
 import no.nav.bidrag.beregn.core.bo.SjablonNøkkel
 import no.nav.bidrag.beregn.core.bo.SjablonSingelNøkkel
 import no.nav.bidrag.beregn.core.bo.SjablonSingelNøkkelSingelInnhold
+import no.nav.bidrag.beregn.core.bo.SjablonVerdiGrunnlag
 import no.nav.bidrag.beregn.core.bo.TrinnvisSkattesats
 import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
@@ -24,7 +25,7 @@ object SjablonUtil {
         sjablonNavn: SjablonNavn,
         sjablonNøkkelListe: List<SjablonNøkkel>,
         sjablonInnholdNavn: SjablonInnholdNavn,
-    ): BigDecimal {
+    ): SjablonVerdiGrunnlag {
         val filtrertSjablonListe =
             filtrerSjablonNøkkelListePåSjablonNøkkel(
                 sjablonListe = filtrerPåSjablonNavn(sjablonListe = sjablonListe, sjablonNavn = sjablonNavn.navn),
@@ -47,7 +48,6 @@ object SjablonUtil {
         )
     }
 
-    // Henter verdier fra sjablon Samværsfradrag (N:N, eksakt match + intervall)
     @JvmStatic
     fun hentSjablonverdi(
         sjablonListe: List<Sjablon>,
@@ -56,7 +56,7 @@ object SjablonUtil {
         sjablonNøkkelNavn: SjablonNøkkelNavn,
         sjablonNøkkelVerdi: Int,
         sjablonInnholdNavn: SjablonInnholdNavn,
-    ): BigDecimal {
+    ): SjablonVerdiGrunnlag {
         val filtrertSjablonListe =
             filtrerSjablonNøkkelListePåSjablonNøkkel(
                 sjablonListe = filtrerPåSjablonNavn(sjablonListe = sjablonListe, sjablonNavn = sjablonNavn.navn),
@@ -73,17 +73,21 @@ object SjablonUtil {
                 sjablonNøkkelVerdi = sjablonNøkkelVerdi,
             )
 
-        return hentSjablonInnholdVerdiEksakt(sjablonInnholdListe = sjablonInnholdListe, sjablonInnholdNavn = sjablonInnholdNavn)
+        return hentSjablonInnholdVerdiEksakt(
+            sjablonInnholdListe = sjablonInnholdListe,
+            sjablonInnholdNavn = sjablonInnholdNavn,
+        )
     }
 
     // Henter verdier fra sjablon Sjablontall (1:1, eksakt match)
     @JvmStatic
-    fun hentSjablonverdi(sjablonListe: List<Sjablon>, sjablonTallNavn: SjablonTallNavn): BigDecimal {
+    fun hentSjablonverdi(sjablonListe: List<Sjablon>, sjablonTallNavn: SjablonTallNavn): SjablonVerdiGrunnlag {
         val filtrertSjablonListe = filtrerPåSjablonNavn(sjablonListe = sjablonListe, sjablonNavn = sjablonTallNavn.navn)
         val sjablonInnholdListe = mapSjablonListeTilSjablonInnholdListe(filtrertSjablonListe)
         return hentSjablonInnholdVerdiEksakt(
             sjablonInnholdListe = sjablonInnholdListe,
             sjablonInnholdNavn = SjablonInnholdNavn.SJABLON_VERDI,
+
         )
     }
 
@@ -171,6 +175,7 @@ object SjablonUtil {
                     .map(SjablonNøkkel::verdi)
                     .firstOrNull() ?: " ",
                 innholdListe = it.innholdListe,
+                grunnlag = it.grunnlag,
             )
         }
         .sortedBy { Integer.valueOf(it.verdi) }
@@ -180,8 +185,8 @@ object SjablonUtil {
     // Brukes av sjabloner som skal hente eksakt verdi (Barnetilsyn, Bidragsevne, Sjablontall, Samværsfradrag).
     private fun hentSjablonInnholdVerdiEksakt(sjablonInnholdListe: List<SjablonInnhold>, sjablonInnholdNavn: SjablonInnholdNavn) = sjablonInnholdListe
         .filter { it.navn == sjablonInnholdNavn.navn }
-        .map { it.verdi }
-        .firstOrNull() ?: BigDecimal.ZERO
+        .map { SjablonVerdiGrunnlag(it.verdi, it.grunnlag) }
+        .firstOrNull() ?: SjablonVerdiGrunnlag(BigDecimal.ZERO, null)
 
     // Filtrerer sortertSjablonSingelNøkkelSingelInnholdListe på nøkkel-verdi >= sjablonNøkkel og returnerer en singel verdi (0d hvis det mot formodning
     // ikke finnes noen verdi).

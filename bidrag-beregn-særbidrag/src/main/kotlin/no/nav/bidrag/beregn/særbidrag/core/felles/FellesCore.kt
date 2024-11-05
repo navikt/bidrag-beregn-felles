@@ -24,6 +24,7 @@ open class FellesCore {
                 periode = PeriodeCore(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
                 navn = it.navn,
                 verdi = it.verdi,
+                grunnlag = it.grunnlag,
             )
         }
 
@@ -36,7 +37,7 @@ open class FellesCore {
                 sjablonNøkkelListe.add(SjablonNøkkel(navn = nøkkel.navn, verdi = nøkkel.verdi))
             }
             it.innholdListe.forEach { innhold ->
-                sjablonInnholdListe.add(SjablonInnhold(navn = innhold.navn, verdi = innhold.verdi))
+                sjablonInnholdListe.add(SjablonInnhold(navn = innhold.navn, verdi = innhold.verdi, grunnlag = innhold.grunnlag))
             }
             sjablonPeriodeListe.add(
                 SjablonPeriode(

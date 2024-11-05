@@ -1,6 +1,7 @@
 package no.nav.bidrag.beregn.forskudd.core
 
 import no.nav.bidrag.beregn.core.bo.SjablonPeriode
+import no.nav.bidrag.beregn.core.bo.SjablonVerdiGrunnlag
 import no.nav.bidrag.beregn.core.util.SjablonUtil
 import no.nav.bidrag.beregn.forskudd.TestUtil.byggSjablonPeriodeListe
 import no.nav.bidrag.beregn.forskudd.TestUtil.byggSjablonPeriodeNavnVerdiListe
@@ -118,12 +119,12 @@ internal class ForskuddBeregningTest {
                     referanse = INNTEKT_REFERANSE_1,
                     type = "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
                     beløp =
-                    finnSjablonVerdi(sjablonPeriodeListe = sjablonPeriodeListe, sjablonTallNavn = SjablonTallNavn.FORSKUDDSSATS_BELØP)
+                    finnSjablonVerdi(sjablonPeriodeListe = sjablonPeriodeListe, sjablonTallNavn = SjablonTallNavn.FORSKUDDSSATS_BELØP).verdi
                         .multiply(
                             finnSjablonVerdi(
                                 sjablonPeriodeListe = sjablonPeriodeListe,
                                 sjablonTallNavn = SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR,
-                            ),
+                            ).verdi,
                         ).add(BigDecimal.ONE),
                 ),
             )
@@ -164,7 +165,7 @@ internal class ForskuddBeregningTest {
                     finnSjablonVerdi(
                         sjablonPeriodeListe = sjablonPeriodeListe,
                         sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELØP,
-                    ),
+                    ).verdi,
                 ),
             )
         val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.BOR_ALENE_MED_BARN)
@@ -204,7 +205,7 @@ internal class ForskuddBeregningTest {
                     finnSjablonVerdi(
                         sjablonPeriodeListe = sjablonPeriodeListe,
                         sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELØP,
-                    ),
+                    ).verdi,
                 ),
             )
         val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.BOR_ALENE_MED_BARN)
@@ -244,7 +245,7 @@ internal class ForskuddBeregningTest {
                     finnSjablonVerdi(
                         sjablonPeriodeListe = sjablonPeriodeListe,
                         sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELØP,
-                    ),
+                    ).verdi,
                 ),
             )
         val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.BOR_ALENE_MED_BARN)
@@ -285,7 +286,7 @@ internal class ForskuddBeregningTest {
                     finnSjablonVerdi(
                         sjablonPeriodeListe = sjablonPeriodeListe,
                         sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELØP,
-                    ).add(BigDecimal.ONE),
+                    ).verdi.add(BigDecimal.ONE),
                 ),
             )
         val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.BOR_ALENE_MED_BARN)
@@ -326,11 +327,11 @@ internal class ForskuddBeregningTest {
                     finnSjablonVerdi(
                         sjablonPeriodeListe = sjablonPeriodeListe,
                         sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELØP,
-                    ).add(
+                    ).verdi.add(
                         finnSjablonVerdi(
                             sjablonPeriodeListe = sjablonPeriodeListe,
                             sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP,
-                        ),
+                        ).verdi,
                     ),
                 ),
             )
@@ -376,11 +377,11 @@ internal class ForskuddBeregningTest {
                     finnSjablonVerdi(
                         sjablonPeriodeListe = sjablonPeriodeListe,
                         sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELØP,
-                    ).add(
+                    ).verdi.add(
                         finnSjablonVerdi(
                             sjablonPeriodeListe = sjablonPeriodeListe,
                             sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP,
-                        ),
+                        ).verdi,
                     ).add(BigDecimal.ONE),
                 ),
             )
@@ -426,7 +427,7 @@ internal class ForskuddBeregningTest {
                     finnSjablonVerdi(
                         sjablonPeriodeListe = sjablonPeriodeListe,
                         sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP,
-                    ),
+                    ).verdi,
                 ),
             )
         val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.GIFT_SAMBOER)
@@ -467,7 +468,7 @@ internal class ForskuddBeregningTest {
                     finnSjablonVerdi(
                         sjablonPeriodeListe = sjablonPeriodeListe,
                         sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP,
-                    ).add(BigDecimal.ONE),
+                    ).verdi.add(BigDecimal.ONE),
                 ),
             )
         val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.GIFT_SAMBOER)
@@ -508,11 +509,11 @@ internal class ForskuddBeregningTest {
                     finnSjablonVerdi(
                         sjablonPeriodeListe = sjablonPeriodeListe,
                         sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP,
-                    ).add(
+                    ).verdi.add(
                         finnSjablonVerdi(
                             sjablonPeriodeListe = sjablonPeriodeListe,
                             sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP,
-                        ),
+                        ).verdi,
                     ),
                 ),
             )
@@ -558,11 +559,11 @@ internal class ForskuddBeregningTest {
                     finnSjablonVerdi(
                         sjablonPeriodeListe = sjablonPeriodeListe,
                         sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP,
-                    ).add(
+                    ).verdi.add(
                         finnSjablonVerdi(
                             sjablonPeriodeListe = sjablonPeriodeListe,
                             sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP,
-                        ).add(BigDecimal.ONE),
+                        ).verdi.add(BigDecimal.ONE),
                     ),
                 ),
             )
@@ -608,7 +609,7 @@ internal class ForskuddBeregningTest {
                     finnSjablonVerdi(
                         sjablonPeriodeListe = sjablonPeriodeListe,
                         sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELØP,
-                    ),
+                    ).verdi,
                 ),
                 Inntekt(
                     referanse = INNTEKT_REFERANSE_2,
@@ -617,7 +618,7 @@ internal class ForskuddBeregningTest {
                     finnSjablonVerdi(
                         sjablonPeriodeListe = sjablonPeriodeListe,
                         sjablonTallNavn = SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP,
-                    ).add(BigDecimal.ONE),
+                    ).verdi.add(BigDecimal.ONE),
                 ),
             )
         val sivilstand = Sivilstand(referanse = SIVILSTAND_REFERANSE, kode = Sivilstandskode.GIFT_SAMBOER)
@@ -698,7 +699,7 @@ internal class ForskuddBeregningTest {
             )
     }
 
-    private fun finnSjablonVerdi(sjablonPeriodeListe: List<SjablonPeriode>, sjablonTallNavn: SjablonTallNavn): BigDecimal {
+    private fun finnSjablonVerdi(sjablonPeriodeListe: List<SjablonPeriode>, sjablonTallNavn: SjablonTallNavn): SjablonVerdiGrunnlag {
         val sjablonListe =
             sjablonPeriodeListe
                 .map { it.sjablon }
@@ -768,8 +769,8 @@ internal class ForskuddBeregningTest {
                 finnSjablonVerdi(
                     sjablonPeriodeListe,
                     SjablonTallNavn.FORSKUDDSSATS_BELØP,
-                ).multiply(
-                    finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR),
+                ).verdi.multiply(
+                    finnSjablonVerdi(sjablonPeriodeListe, SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR).verdi,
                 ),
         )
         println()
@@ -793,7 +794,7 @@ internal class ForskuddBeregningTest {
                 finnSjablonVerdi(
                     sjablonPeriodeListe,
                     SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELØP,
-                ).multiply(BigDecimal(grunnlag!!.barnIHusstandenListe.count() - 1)),
+                ).verdi.multiply(BigDecimal(grunnlag!!.barnIHusstandenListe.count() - 1)),
         )
         println()
         println("RESULTAT:")

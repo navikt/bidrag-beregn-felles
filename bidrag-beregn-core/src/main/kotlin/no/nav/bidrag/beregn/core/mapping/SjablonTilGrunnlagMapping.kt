@@ -8,9 +8,15 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSamværsfradragPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettSjablonreferanse
 
-fun Samværsfradrag.tilGrunnlagsobjekt(periode: ÅrMånedsperiode, postfix: String? = null): GrunnlagDto {
+fun Samværsfradrag.tilGrunnlagsobjekt(
+    periode: ÅrMånedsperiode,
+    referanse: String? = null,
+    gjelderReferanse: String? = null,
+    postfix: String? = null,
+): GrunnlagDto {
     return GrunnlagDto(
-        referanse = opprettSjablonreferanse(
+        gjelderReferanse = gjelderReferanse,
+        referanse = referanse ?: opprettSjablonreferanse(
             Grunnlagstype.SJABLON_SAMVARSFRADRAG.name,
             periode,
             "${samvaersklasse}_${alderTom}${postfix?.let { "_$it" } ?: ""}",
@@ -19,10 +25,10 @@ fun Samværsfradrag.tilGrunnlagsobjekt(periode: ÅrMånedsperiode, postfix: Stri
         innhold = POJONode(
             SjablonSamværsfradragPeriode(
                 periode = periode,
-                samværsklasse = samvaersklasse!!,
-                alderTom = alderTom!!,
-                antallDagerTom = antDagerTom!!,
-                antallNetterTom = antNetterTom!!,
+                samværsklasse = samvaersklasse ?: "",
+                alderTom = alderTom ?: 0,
+                antallDagerTom = antDagerTom ?: 0,
+                antallNetterTom = antNetterTom ?: 0,
                 beløpFradrag = belopFradrag!!,
             ),
         ),

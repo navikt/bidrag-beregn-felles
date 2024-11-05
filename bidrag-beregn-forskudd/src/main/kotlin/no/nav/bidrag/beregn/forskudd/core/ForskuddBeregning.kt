@@ -250,13 +250,13 @@ class ForskuddBeregning {
             )
 
         return Sjablonverdier(
-            forskuddssats75ProsentBeløp = forskuddssats75ProsentBeløp,
-            forskuddssats100ProsentBeløp = forskuddssats100ProsentBeløp,
-            maksInntektForskuddMottakerMultiplikator = maksInntektForskuddMottakerMultiplikator,
-            inntektsgrense100ProsentForskuddBeløp = inntektsgrense100ProsentForskuddBeløp,
-            inntektsgrenseEnslig75ProsentForskuddBeløp = inntektsgrenseEnslig75ProsentForskuddBeløp,
-            inntektsgrenseGiftSamboer75ProsentForskuddBeløp = inntektsgrenseGiftSamboer75ProsentForskuddBeløp,
-            inntektsintervallForskuddBeløp = inntektsintervallForskuddBeløp,
+            forskuddssats75ProsentBeløp = forskuddssats75ProsentBeløp.verdi,
+            forskuddssats100ProsentBeløp = forskuddssats100ProsentBeløp.verdi,
+            maksInntektForskuddMottakerMultiplikator = maksInntektForskuddMottakerMultiplikator.verdi,
+            inntektsgrense100ProsentForskuddBeløp = inntektsgrense100ProsentForskuddBeløp.verdi,
+            inntektsgrenseEnslig75ProsentForskuddBeløp = inntektsgrenseEnslig75ProsentForskuddBeløp.verdi,
+            inntektsgrenseGiftSamboer75ProsentForskuddBeløp = inntektsgrenseGiftSamboer75ProsentForskuddBeløp.verdi,
+            inntektsintervallForskuddBeløp = inntektsintervallForskuddBeløp.verdi,
         )
     }
 }

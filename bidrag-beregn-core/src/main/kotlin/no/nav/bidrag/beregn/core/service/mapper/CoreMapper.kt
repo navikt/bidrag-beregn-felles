@@ -155,7 +155,7 @@ abstract class CoreMapper {
                 periode = PeriodeCore(datoFom = it.datoFom!!, datoTil = justerTilDato(it.datoTom)),
                 navn = sjablontallMap.getOrDefault(it.typeSjablon, SjablonTallNavn.DUMMY).navn,
                 nøkkelListe = emptyList(),
-                innholdListe = listOf(SjablonInnholdCore(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = it.verdi!!)),
+                innholdListe = listOf(SjablonInnholdCore(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = it.verdi!!, grunnlag = it)),
             )
         }
 
@@ -171,8 +171,8 @@ abstract class CoreMapper {
                 navn = SjablonNavn.BIDRAGSEVNE.navn,
                 nøkkelListe = listOf(SjablonNøkkelCore(navn = SjablonNøkkelNavn.BOSTATUS.navn, verdi = it.bostatus!!)),
                 innholdListe = listOf(
-                    SjablonInnholdCore(navn = SjablonInnholdNavn.BOUTGIFT_BELØP.navn, verdi = it.belopBoutgift!!),
-                    SjablonInnholdCore(navn = SjablonInnholdNavn.UNDERHOLD_BELØP.navn, verdi = it.belopUnderhold!!),
+                    SjablonInnholdCore(navn = SjablonInnholdNavn.BOUTGIFT_BELØP.navn, verdi = it.belopBoutgift!!, grunnlag = it),
+                    SjablonInnholdCore(navn = SjablonInnholdNavn.UNDERHOLD_BELØP.navn, verdi = it.belopUnderhold!!, grunnlag = it),
                 ),
             )
         }
@@ -191,8 +191,8 @@ abstract class CoreMapper {
                 navn = SjablonNavn.TRINNVIS_SKATTESATS.navn,
                 nøkkelListe = emptyList(),
                 innholdListe = listOf(
-                    SjablonInnholdCore(navn = SjablonInnholdNavn.INNTEKTSGRENSE_BELØP.navn, verdi = it.inntektgrense!!),
-                    SjablonInnholdCore(navn = SjablonInnholdNavn.SKATTESATS_PROSENT.navn, verdi = it.sats!!),
+                    SjablonInnholdCore(navn = SjablonInnholdNavn.INNTEKTSGRENSE_BELØP.navn, verdi = it.inntektgrense!!, grunnlag = it),
+                    SjablonInnholdCore(navn = SjablonInnholdNavn.SKATTESATS_PROSENT.navn, verdi = it.sats!!, grunnlag = it),
                 ),
             )
         }
@@ -212,8 +212,9 @@ abstract class CoreMapper {
                     SjablonNøkkelCore(navn = SjablonNøkkelNavn.ALDER_TOM.navn, verdi = it.alderTom!!.toString()),
                 ),
                 innholdListe = listOf(
-                    SjablonInnholdCore(navn = SjablonInnholdNavn.FRADRAG_BELØP.navn, verdi = it.belopFradrag!!),
+                    SjablonInnholdCore(navn = SjablonInnholdNavn.FRADRAG_BELØP.navn, verdi = it.belopFradrag!!, grunnlag = it),
                 ),
+                grunnlag = it,
             )
         }
 

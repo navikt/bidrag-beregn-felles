@@ -120,7 +120,9 @@ internal class BPsAndelSærbidragCoreTest {
                 periode = PeriodeCore(datoFom = LocalDate.parse("2020-01-01"), datoTil = LocalDate.parse("2020-02-01")),
                 navn = SjablonTallNavn.FORSKUDDSSATS_BELØP.navn,
                 nøkkelListe = emptyList(),
-                innholdListe = listOf(SjablonInnholdCore(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = BigDecimal.valueOf(1600))),
+                innholdListe = listOf(
+                    SjablonInnholdCore(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = BigDecimal.valueOf(1600), grunnlag = null),
+                ),
             ),
         )
 

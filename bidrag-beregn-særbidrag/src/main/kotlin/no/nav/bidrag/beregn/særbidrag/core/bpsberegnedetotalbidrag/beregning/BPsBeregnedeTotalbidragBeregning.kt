@@ -3,6 +3,7 @@ package no.nav.bidrag.beregn.særbidrag.core.bpsberegnedetotalbidrag.beregning
 import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.bo.SjablonNøkkel
 import no.nav.bidrag.beregn.core.bo.SjablonPeriode
+import no.nav.bidrag.beregn.core.bo.SjablonVerdiGrunnlag
 import no.nav.bidrag.beregn.core.util.SjablonUtil
 import no.nav.bidrag.beregn.særbidrag.core.bpsberegnedetotalbidrag.bo.ResultatBeregning
 import no.nav.bidrag.beregn.særbidrag.core.bpsberegnedetotalbidrag.dto.LøpendeBidragGrunnlagCore
@@ -23,7 +24,7 @@ class BPsBeregnedeTotalbidragBeregning : FellesBeregning() {
 
         val beregnetBidragPerBarnListe = mutableListOf<BeregnetBidragPerBarn>()
 
-        val sjablonNavnVerdiMap = HashMap<String, BigDecimal>()
+        val sjablonNavnVerdiMap = HashMap<String, SjablonVerdiGrunnlag>()
 
         val sjablonliste =
             grunnlag.sjablonPeriodeListe.filter { it.getPeriode().overlapperMed(Periode(grunnlag.beregnDatoFra, grunnlag.beregnDatoTil)) }
@@ -39,11 +40,14 @@ class BPsBeregnedeTotalbidragBeregning : FellesBeregning() {
                 referanseBarn = it.referanseBarn,
             )
 
-            val samværsfradrag = sjablonNavnVerdiMap[SjablonNavn.SAMVÆRSFRADRAG.navn + "_" + it.referanseBarn] ?: BigDecimal.ZERO
+            val samværsfradrag = sjablonNavnVerdiMap[SjablonNavn.SAMVÆRSFRADRAG.navn + "_" + it.referanseBarn] ?: SjablonVerdiGrunnlag(
+                BigDecimal.ZERO,
+                null,
+            )
 
             val reduksjonUnderholdskostnad = (beregnetBeløpAvrundet - it.faktiskBeløp).coerceAtLeast(BigDecimal.ZERO)
 
-            val beregnetBidrag = it.løpendeBeløp + samværsfradrag + reduksjonUnderholdskostnad
+            val beregnetBidrag = it.løpendeBeløp + samværsfradrag.verdi + reduksjonUnderholdskostnad
 
             beregnetBidragPerBarnListe.add(
                 BeregnetBidragPerBarn(
@@ -51,7 +55,7 @@ class BPsBeregnedeTotalbidragBeregning : FellesBeregning() {
                     saksnummer = it.saksnummer,
                     løpendeBeløp = it.løpendeBeløp,
                     valutakode = it.valutakode,
-                    samværsfradrag = samværsfradrag,
+                    samværsfradrag = samværsfradrag.verdi,
                     samværsklasse = it.samværsklasse,
                     beregnetBeløp = beregnetBeløpAvrundet,
                     faktiskBeløp = it.faktiskBeløp,
@@ -80,12 +84,12 @@ class BPsBeregnedeTotalbidragBeregning : FellesBeregning() {
 
     // Henter sjablonverdier
     private fun hentSjablonSamværsfradrag(
-        sjablonNavnVerdiMap: HashMap<String, BigDecimal>,
+        sjablonNavnVerdiMap: HashMap<String, SjablonVerdiGrunnlag>,
         sjablonPeriodeListe: List<SjablonPeriode>,
         samværsklasse: String,
         alderBarn: Int,
         referanseBarn: String,
-    ): HashMap<String, BigDecimal> {
+    ): HashMap<String, SjablonVerdiGrunnlag> {
         val sjablonListe = sjablonPeriodeListe.map { it.sjablon }.toList()
 
         // Samværsfradrag
