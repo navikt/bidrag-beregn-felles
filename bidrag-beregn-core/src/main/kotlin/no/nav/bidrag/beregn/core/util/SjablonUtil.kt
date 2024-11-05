@@ -48,37 +48,8 @@ object SjablonUtil {
         )
     }
 
-    // Henter verdier fra sjablon Samværsfradrag (N:N, eksakt match + intervall)
     @JvmStatic
     fun hentSjablonverdi(
-        sjablonListe: List<Sjablon>,
-        sjablonNavn: SjablonNavn,
-        sjablonNøkkelListe: List<SjablonNøkkel>,
-        sjablonNøkkelNavn: SjablonNøkkelNavn,
-        sjablonNøkkelVerdi: Int,
-        sjablonInnholdNavn: SjablonInnholdNavn,
-    ): BigDecimal {
-        val filtrertSjablonListe =
-            filtrerSjablonNøkkelListePåSjablonNøkkel(
-                sjablonListe = filtrerPåSjablonNavn(sjablonListe = sjablonListe, sjablonNavn = sjablonNavn.navn),
-                sjablonNøkkelListe = sjablonNøkkelListe,
-            )
-        val sortertSjablonSingelNøkkelListe =
-            mapTilSingelListeNøkkelSortert(
-                filtrertSjablonListe = filtrertSjablonListe,
-                sjablonNøkkelNavn = sjablonNøkkelNavn,
-            )
-        val sjablonInnholdListe =
-            finnSjablonInnholdVerdiListeIntervall(
-                sortertSjablonSingelNøkkelListe = sortertSjablonSingelNøkkelListe,
-                sjablonNøkkelVerdi = sjablonNøkkelVerdi,
-            )
-
-        return hentSjablonInnholdVerdiEksakt(sjablonInnholdListe = sjablonInnholdListe, sjablonInnholdNavn = sjablonInnholdNavn).verdi
-    }
-
-    @JvmStatic
-    fun hentSjablonverdiV2(
         sjablonListe: List<Sjablon>,
         sjablonNavn: SjablonNavn,
         sjablonNøkkelListe: List<SjablonNøkkel>,

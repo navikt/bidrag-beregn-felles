@@ -94,7 +94,7 @@ class BPsBeregnedeTotalbidragBeregning : FellesBeregning() {
 
         // Samværsfradrag
         sjablonNavnVerdiMap[SjablonNavn.SAMVÆRSFRADRAG.navn + "_" + referanseBarn] =
-            SjablonUtil.hentSjablonverdiV2(
+            SjablonUtil.hentSjablonverdi(
                 sjablonListe = sjablonListe,
                 sjablonNavn = SjablonNavn.SAMVÆRSFRADRAG,
                 sjablonNøkkelListe = listOf(
