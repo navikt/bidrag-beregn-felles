@@ -3,23 +3,24 @@ package no.nav.bidrag.beregn.særbidrag.core.felles
 import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.bo.SjablonPeriode
 import no.nav.bidrag.beregn.core.bo.SjablonPeriodeNavnVerdi
-import java.math.BigDecimal
+import no.nav.bidrag.beregn.core.bo.SjablonVerdiGrunnlag
 import java.time.LocalDate
 
 open class FellesBeregning {
 
     // Mapper ut sjablonverdier til ResultatBeregning (dette for å sikre at kun sjabloner som faktisk er brukt legges ut i grunnlaget for beregning)
     protected fun byggSjablonResultatListe(
-        sjablonNavnVerdiMap: Map<String, BigDecimal>,
+        sjablonNavnVerdiMap: Map<String, SjablonVerdiGrunnlag>,
         sjablonPeriodeListe: List<SjablonPeriode>,
     ): List<SjablonPeriodeNavnVerdi> {
         val sjablonPeriodeNavnVerdiListe = mutableListOf<SjablonPeriodeNavnVerdi>()
-        sjablonNavnVerdiMap.forEach { (sjablonNavn: String, sjablonVerdi: BigDecimal) ->
+        sjablonNavnVerdiMap.forEach { (sjablonNavn: String, sjablonVerdi: SjablonVerdiGrunnlag) ->
             sjablonPeriodeNavnVerdiListe.add(
                 SjablonPeriodeNavnVerdi(
                     periode = hentPeriode(sjablonPeriodeListe = sjablonPeriodeListe, sjablonNavn = sjablonNavn),
                     navn = sjablonNavn,
-                    verdi = sjablonVerdi,
+                    verdi = sjablonVerdi.verdi,
+                    grunnlag = sjablonVerdi.grunnlag,
                 ),
             )
         }

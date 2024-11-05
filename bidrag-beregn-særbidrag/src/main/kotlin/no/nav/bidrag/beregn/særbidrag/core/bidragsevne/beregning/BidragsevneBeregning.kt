@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.særbidrag.core.bidragsevne.beregning
 
 import no.nav.bidrag.beregn.core.bo.SjablonNøkkel
 import no.nav.bidrag.beregn.core.bo.SjablonPeriode
+import no.nav.bidrag.beregn.core.bo.SjablonVerdiGrunnlag
 import no.nav.bidrag.beregn.core.util.SjablonUtil
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.bo.GrunnlagBeregning
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.bo.ResultatBeregning
@@ -35,12 +36,12 @@ class BidragsevneBeregning : FellesBeregning() {
         // Beregner minstefradrag
         val minstefradrag = beregnMinstefradrag(
             inntekt = inntekt,
-            minstefradragInntektSjablonBeløp = sjablonNavnVerdiMap[SjablonTallNavn.MINSTEFRADRAG_INNTEKT_BELØP.navn] ?: BigDecimal.ZERO,
-            minstefradragInntektSjablonProsent = sjablonNavnVerdiMap[SjablonTallNavn.MINSTEFRADRAG_INNTEKT_PROSENT.navn] ?: BigDecimal.ZERO,
+            minstefradragInntektSjablonBeløp = sjablonNavnVerdiMap[SjablonTallNavn.MINSTEFRADRAG_INNTEKT_BELØP.navn]?.verdi ?: BigDecimal.ZERO,
+            minstefradragInntektSjablonProsent = sjablonNavnVerdiMap[SjablonTallNavn.MINSTEFRADRAG_INNTEKT_PROSENT.navn]?.verdi ?: BigDecimal.ZERO,
         )
 
         // Finner personfradrag ut fra angitt skatteklasse (alltid skatteklasse 1)
-        val personfradrag = sjablonNavnVerdiMap[SjablonTallNavn.PERSONFRADRAG_KLASSE1_BELØP.navn]
+        val personfradrag = sjablonNavnVerdiMap[SjablonTallNavn.PERSONFRADRAG_KLASSE1_BELØP.navn]?.verdi
 
         val inntektMinusFradrag = inntekt
             .subtract(minstefradrag)
@@ -48,25 +49,25 @@ class BidragsevneBeregning : FellesBeregning() {
 
         val skattAlminnelig = inntektMinusFradrag
             .multiply(
-                (sjablonNavnVerdiMap[SjablonTallNavn.SKATTESATS_ALMINNELIG_INNTEKT_PROSENT.navn] ?: BigDecimal.ZERO)
+                (sjablonNavnVerdiMap[SjablonTallNavn.SKATTESATS_ALMINNELIG_INNTEKT_PROSENT.navn]?.verdi ?: BigDecimal.ZERO)
                     .divide(bigDecimal100, mathContext),
             )
 
         val trygdeavgift = inntekt
             .multiply(
-                (sjablonNavnVerdiMap[SjablonTallNavn.TRYGDEAVGIFT_PROSENT.navn] ?: BigDecimal.ZERO)
+                (sjablonNavnVerdiMap[SjablonTallNavn.TRYGDEAVGIFT_PROSENT.navn]?.verdi ?: BigDecimal.ZERO)
                     .divide(bigDecimal100, mathContext),
             )
 
         val skattetrinnBeløp = beregnSkattetrinnBeløp(grunnlag = grunnlag, inntekt = inntekt)
 
-        val boutgifter = (sjablonNavnVerdiMap[SjablonInnholdNavn.BOUTGIFT_BELØP.navn] ?: BigDecimal.ZERO)
+        val boutgifter = (sjablonNavnVerdiMap[SjablonInnholdNavn.BOUTGIFT_BELØP.navn]?.verdi ?: BigDecimal.ZERO)
             .multiply(bigDecimal12)
 
-        val underholdBeløp = (sjablonNavnVerdiMap[SjablonInnholdNavn.UNDERHOLD_BELØP.navn] ?: BigDecimal.ZERO)
+        val underholdBeløp = (sjablonNavnVerdiMap[SjablonInnholdNavn.UNDERHOLD_BELØP.navn]?.verdi ?: BigDecimal.ZERO)
             .multiply(bigDecimal12)
 
-        val underholdEgneBarn = (sjablonNavnVerdiMap[SjablonTallNavn.UNDERHOLD_EGNE_BARN_I_HUSSTAND_BELØP.navn] ?: BigDecimal.ZERO)
+        val underholdEgneBarn = (sjablonNavnVerdiMap[SjablonTallNavn.UNDERHOLD_EGNE_BARN_I_HUSSTAND_BELØP.navn]?.verdi ?: BigDecimal.ZERO)
             .multiply(BigDecimal.valueOf(grunnlag.antallBarnIHusstand.antallBarn))
             .multiply(bigDecimal12)
 
@@ -142,8 +143,8 @@ class BidragsevneBeregning : FellesBeregning() {
     }
 
     // Henter sjablonverdier
-    private fun hentSjablonVerdier(sjablonPeriodeListe: List<SjablonPeriode>, borMedAndre: Boolean): Map<String, BigDecimal> {
-        val sjablonNavnVerdiMap = HashMap<String, BigDecimal>()
+    private fun hentSjablonVerdier(sjablonPeriodeListe: List<SjablonPeriode>, borMedAndre: Boolean): Map<String, SjablonVerdiGrunnlag> {
+        val sjablonNavnVerdiMap = HashMap<String, SjablonVerdiGrunnlag>()
         val sjablonListe = sjablonPeriodeListe.map { it.sjablon }.toList()
 
         // Sjablontall
@@ -180,8 +181,8 @@ class BidragsevneBeregning : FellesBeregning() {
             SjablonUtil.hentTrinnvisSkattesats(sjablonListe = sjablonListe, sjablonNavn = SjablonNavn.TRINNVIS_SKATTESATS)
         var indeks = 1
         trinnvisSkattesatsListe.forEach {
-            sjablonNavnVerdiMap[SjablonNavn.TRINNVIS_SKATTESATS.navn + "InntektGrense" + indeks] = it.inntektGrense
-            sjablonNavnVerdiMap[SjablonNavn.TRINNVIS_SKATTESATS.navn + "Sats" + indeks] = it.sats
+            sjablonNavnVerdiMap[SjablonNavn.TRINNVIS_SKATTESATS.navn + "InntektGrense" + indeks]?.verdi = it.inntektGrense
+            sjablonNavnVerdiMap[SjablonNavn.TRINNVIS_SKATTESATS.navn + "Sats" + indeks]?.verdi = it.sats
             indeks++
         }
 

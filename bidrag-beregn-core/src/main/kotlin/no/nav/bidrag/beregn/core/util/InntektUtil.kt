@@ -3,6 +3,7 @@ package no.nav.bidrag.beregn.core.util
 import no.nav.bidrag.beregn.core.bo.Avvik
 import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.bo.SjablonPeriode
+import no.nav.bidrag.beregn.core.bo.SjablonVerdiGrunnlag
 import no.nav.bidrag.beregn.core.inntekt.InntektPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.inntekt.InntektPeriodeGrunnlagUtenInntektType
 import no.nav.bidrag.beregn.core.inntekt.PeriodisertInntekt
@@ -286,25 +287,25 @@ object InntektUtil {
                                 periode = it.getPeriode(),
                                 justertsjablonListe = justertSjablonListe,
                                 sjablonTallNavn = SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELØP,
-                            ),
+                            ).verdi,
                             sjablon0030ØvreInntektsgrenseBeløp =
                             finnSjablonverdi(
                                 periode = it.getPeriode(),
                                 justertsjablonListe = justertSjablonListe,
                                 sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_IKKE_I_SKATTEPOSISJON_BELØP,
-                            ),
+                            ).verdi,
                             sjablon0031NedreInntektsgrenseBeløp =
                             finnSjablonverdi(
                                 periode = it.getPeriode(),
                                 justertsjablonListe = justertSjablonListe,
                                 sjablonTallNavn = SjablonTallNavn.NEDRE_INNTEKTSGRENSE_FULL_SKATTEPOSISJON_BELØP,
-                            ),
+                            ).verdi,
                             sjablon0039FordelSærfradragBeløp =
                             finnSjablonverdi(
                                 periode = it.getPeriode(),
                                 justertsjablonListe = justertSjablonListe,
                                 sjablonTallNavn = SjablonTallNavn.FORDEL_SÆRFRADRAG_BELØP,
-                            ),
+                            ).verdi,
                             deltFordel =
                             finnDeltFordel(
                                 periode = it.getPeriode(),
@@ -349,7 +350,7 @@ object InntektUtil {
     private fun finnSjablonverdi(periode: Periode, justertsjablonListe: List<SjablonPeriode>, sjablonTallNavn: SjablonTallNavn) = justertsjablonListe
         .filter { it.getPeriode().overlapperMed(periode) && it.sjablon.navn == sjablonTallNavn.navn }
         .map { SjablonUtil.hentSjablonverdi(listOf(it.sjablon), sjablonTallNavn) }
-        .firstOrNull() ?: BigDecimal.ZERO
+        .firstOrNull() ?: SjablonVerdiGrunnlag(BigDecimal.ZERO, null)
 
     // Finner verdien til flagget 'Delt fordel' i en gitt periode
     private fun finnDeltFordel(periode: Periode, justertInntektPeriodeGrunnlagListe: List<InntektPeriodeGrunnlagUtenInntektType>) =

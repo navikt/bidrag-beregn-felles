@@ -6,6 +6,7 @@ import no.nav.bidrag.beregn.core.dto.BoforholdPeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonResultatGrunnlagCore
 import no.nav.bidrag.beregn.core.dto.VoksneIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.core.exception.UgyldigInputException
+import no.nav.bidrag.beregn.core.mapping.tilGrunnlagsobjekt
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.BidragsevneCore
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto.BeregnBidragsevneGrunnlagCore
@@ -29,6 +30,7 @@ import no.nav.bidrag.beregn.særbidrag.service.mapper.BPAndelSærbidragCoreMappe
 import no.nav.bidrag.beregn.særbidrag.service.mapper.BPsBeregnedeTotalbidragCoreMapper
 import no.nav.bidrag.beregn.særbidrag.service.mapper.BidragsevneCoreMapper
 import no.nav.bidrag.beregn.særbidrag.service.mapper.SærbidragCoreMapper
+import no.nav.bidrag.commons.service.sjablon.Samværsfradrag
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
 import no.nav.bidrag.commons.service.sjablon.Sjablontall
 import no.nav.bidrag.commons.util.secureLogger
@@ -54,7 +56,6 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningVoksneIHus
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.LøpendeBidragGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonBidragsevnePeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSamværsfradragPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonTrinnvisSkattesats
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonTrinnvisSkattesatsPeriode
@@ -976,20 +977,10 @@ internal class BeregnSærbidragService(
         // Danner nytt grunnlag
         val grunnlagDtoListe = sjablonListe.filter { it.navn.startsWith(SjablonNavn.SAMVÆRSFRADRAG.navn) }
             .map {
-                it
-                GrunnlagDto(
+                val grunnlag = it.grunnlag as Samværsfradrag? ?: Samværsfradrag(belopFradrag = it.verdi)
+                grunnlag.tilGrunnlagsobjekt(
+                    periode = ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil),
                     referanse = it.referanse,
-                    type = Grunnlagstype.SJABLON_SAMVARSFRADRAG,
-                    innhold = POJONode(
-                        SjablonSamværsfradragPeriode(
-                            periode = ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil),
-                            samværsklasse = "",
-                            alderTom = 0,
-                            antallDagerTom = 0,
-                            antallNetterTom = 0,
-                            beløpFradrag = it.verdi,
-                        ),
-                    ),
                     gjelderReferanse = it.navn.substringAfter("Samværsfradrag_"),
                 )
             }

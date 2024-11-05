@@ -1,5 +1,6 @@
 package no.nav.bidrag.beregn.core.dto
 
+import no.nav.bidrag.commons.service.sjablon.SjablonDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -53,6 +54,7 @@ data class SjablonPeriodeCore(
     val navn: String,
     val nøkkelListe: List<SjablonNøkkelCore>? = emptyList(),
     val innholdListe: List<SjablonInnholdCore>,
+    val grunnlag: SjablonDto? = null,
 )
 
 data class FaktiskUtgiftPeriodeCore(
@@ -75,8 +77,14 @@ data class SjablonCore(val navn: String, val nøkkelListe: List<SjablonNøkkelCo
 
 data class SjablonNøkkelCore(val navn: String, val verdi: String)
 
-data class SjablonInnholdCore(val navn: String, val verdi: BigDecimal)
+data class SjablonInnholdCore(val navn: String, val verdi: BigDecimal, val grunnlag: SjablonDto?)
 
 data class SjablonNavnVerdiCore(val navn: String, val verdi: BigDecimal)
 
-data class SjablonResultatGrunnlagCore(val referanse: String, val periode: PeriodeCore, val navn: String, val verdi: BigDecimal)
+data class SjablonResultatGrunnlagCore(
+    val referanse: String,
+    val periode: PeriodeCore,
+    val navn: String,
+    val verdi: BigDecimal,
+    val grunnlag: SjablonDto? = null,
+)
