@@ -13,7 +13,7 @@ import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import no.nav.bidrag.transport.behandling.beregning.samvær.SamværskalkulatorDetaljer
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsklasse
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsklasserNetter
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsklasseNetter
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
@@ -36,7 +36,7 @@ internal val BigDecimal.gjennomsnittOverToUkerOffentligSamværskalkulator get() 
 internal val BigDecimal.tilpassetOffentligSamværskalkulator get() = avrundetMedToDesimaler
 
 internal data class DelberegningSamværsklasserNetterIntern(
-    val delberegning: DelberegningSamværsklasserNetter.SamværsklasseNetter,
+    val delberegning: DelberegningSamværsklasseNetter.SamværsklasseNetter,
     val sjablon: Samværsfradrag,
 )
 
@@ -62,10 +62,10 @@ class BeregnSamværsklasseApi(private val sjablonService: SjablonService) {
         }
         val grunnlagSamværsklasseNetter = resultat.delberegning?.run {
             GrunnlagDto(
-                type = Grunnlagstype.DELBEREGNING_SAMVÆRSKLASSER_NETTER,
-                referanse = "delberegning_samværsklasser_netter",
+                type = Grunnlagstype.DELBEREGNING_SAMVÆRSKLASSE_NETTER,
+                referanse = "delberegning_samværsklasse_netter",
                 innhold = POJONode(
-                    DelberegningSamværsklasserNetter(resultat.samværsklasser.map { it.delberegning }),
+                    DelberegningSamværsklasseNetter(resultat.samværsklasser.map { it.delberegning }),
                 ),
                 grunnlagsreferanseListe = grunnlagSjablon.map { it.referanse },
             )
@@ -75,12 +75,13 @@ class BeregnSamværsklasseApi(private val sjablonService: SjablonService) {
             innhold = POJONode(kalkulator),
             referanse = "samværskalkulator_hash_${kalkulator.hashCode()}",
         )
+        val gjennomsnittligSamvær = resultat.gjennomsnittligSamvær.avrundetMedToDesimaler
         val grunnlagSamværsklasse = GrunnlagDto(
             type = Grunnlagstype.DELBEREGNING_SAMVÆRSKLASSE,
             referanse = "delberegning_samværsklasse_${resultat.samværsklasse}" +
-                "_gjennomsnittlig_samvær_${resultat.gjennomsnittligSamvær.avrundetMedToDesimaler}",
+                "_gjennomsnittlig_samvær_${gjennomsnittligSamvær.multiply(BigDecimal(100)).toInt()}",
             innhold = POJONode(
-                DelberegningSamværsklasse(resultat.samværsklasse, resultat.gjennomsnittligSamvær.avrundetMedToDesimaler),
+                DelberegningSamværsklasse(resultat.samværsklasse, gjennomsnittligSamvær),
             ),
             grunnlagsreferanseListe = listOfNotNull(grunnlagSamværsklasseNetter?.referanse, grunnlagKalkulator.referanse),
         )
@@ -107,7 +108,7 @@ class BeregnSamværsklasseApi(private val sjablonService: SjablonService) {
                 (samværsfradrag.antNetterTom!!.toBigDecimal() + BigDecimal(0.99)).avrundetMedToDesimaler
             }
             acc + DelberegningSamværsklasserNetterIntern(
-                DelberegningSamværsklasserNetter.SamværsklasseNetter(
+                DelberegningSamværsklasseNetter.SamværsklasseNetter(
                     Samværsklasse.fromBisysKode(samværsfradrag.samvaersklasse!!)!!,
                     antallNetterFra,
                     antallNetterTil,

@@ -13,7 +13,7 @@ import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.samværskalkulator.SamværskalkulatorFerietype
 import no.nav.bidrag.domene.enums.samværskalkulator.SamværskalkulatorNetterFrekvens
 import no.nav.bidrag.transport.behandling.beregning.samvær.SamværskalkulatorDetaljer
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsklasserNetter
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsklasseNetter
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.delberegningSamværsklasse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.innholdTilObjekt
@@ -55,7 +55,7 @@ internal class BeregnSamværsklasseApiTest {
             it.type == Grunnlagstype.SJABLON_SAMVARSFRADRAG
         }.map { it.referanse }
 
-        val samværsklasserNetter = samværsklasserNetterGrunnlag.innholdTilObjekt<DelberegningSamværsklasserNetter>()
+        val samværsklasserNetter = samværsklasserNetterGrunnlag.innholdTilObjekt<DelberegningSamværsklasseNetter>()
         assertSoftly(samværsklasserNetter) {
             it!!.samværsklasserNetter.shouldNotBeEmpty()
             assertSoftly(it.samværsklasserNetter) {
@@ -488,5 +488,5 @@ internal class BeregnSamværsklasseApiTest {
     )
 }
 
-fun List<GrunnlagDto>.hentDelberegningSamværsklasseNetter() = find { it.type == Grunnlagstype.DELBEREGNING_SAMVÆRSKLASSER_NETTER }
+fun List<GrunnlagDto>.hentDelberegningSamværsklasseNetter() = find { it.type == Grunnlagstype.DELBEREGNING_SAMVÆRSKLASSE_NETTER }
 fun List<GrunnlagDto>.hentSamværskalkulatorDetaljer() = find { it.type == Grunnlagstype.SAMVÆRSKALKULATOR }
