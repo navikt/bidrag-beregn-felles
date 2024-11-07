@@ -11,23 +11,24 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBoforhold
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningVoksneIHusstand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 
-fun List<BarnIHusstandenPeriodeCore>.mapDelberegningBarnIHusstand(bidragspliktigReferanse: String) = map {
-    GrunnlagDto(
-        referanse = it.referanse,
-        type = bestemGrunnlagstype(it.referanse),
-        innhold = POJONode(
-            DelberegningBarnIHusstand(
-                periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
-                antallBarn = it.antall,
-            ),
-        ),
-        grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
-        gjelderReferanse = bidragspliktigReferanse,
-    )
+fun List<BarnIHusstandenPeriodeCore>.mapTilGrunnlag(bidragspliktigReferanse: String) = map {
+    it.tilGrunnlag(bidragspliktigReferanse)
 }
+fun BarnIHusstandenPeriodeCore.tilGrunnlag(bidragspliktigReferanse: String) = GrunnlagDto(
+    referanse = referanse,
+    type = bestemGrunnlagstype(referanse),
+    innhold = POJONode(
+        DelberegningBarnIHusstand(
+            periode = ÅrMånedsperiode(fom = periode.datoFom, til = periode.datoTil),
+            antallBarn = antall,
+        ),
+    ),
+    grunnlagsreferanseListe = grunnlagsreferanseListe.sorted(),
+    gjelderReferanse = bidragspliktigReferanse,
+)
 
 // Mapper ut DelberegningVoksneIHusstand
-fun List<VoksneIHusstandenPeriodeCore>.mapDelberegningVoksneIHusstand(bidragspliktigReferanse: String) = map {
+fun List<VoksneIHusstandenPeriodeCore>.mapTilGrunnlag(bidragspliktigReferanse: String) = map {
     GrunnlagDto(
         referanse = it.referanse,
         type = bestemGrunnlagstype(it.referanse),
@@ -42,7 +43,7 @@ fun List<VoksneIHusstandenPeriodeCore>.mapDelberegningVoksneIHusstand(bidragspli
     )
 }
 
-fun List<BoforholdPeriodeCore>.mapDelberegningBoforhold(bidragspliktigReferanse: String) = map {
+fun List<BoforholdPeriodeCore>.mapTilGrunnlag(bidragspliktigReferanse: String) = map {
     GrunnlagDto(
         referanse = it.referanse,
         type = bestemGrunnlagstype(it.referanse),

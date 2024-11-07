@@ -6,6 +6,7 @@ import no.nav.bidrag.beregn.core.dto.BoforholdPeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonResultatGrunnlagCore
 import no.nav.bidrag.beregn.core.dto.VoksneIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.core.exception.UgyldigInputException
+import no.nav.bidrag.beregn.core.mapping.mapTilGrunnlag
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.BidragsevneCore
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto.BeregnBidragsevneGrunnlagCore
@@ -411,26 +412,17 @@ internal class BeregnSærbidragService(
 
         // Mapper ut DelberegningBoforhold
         resultatGrunnlagListe.addAll(
-            mapDelberegningBoforhold(
-                boforholdListe = boforholdListe,
-                bidragspliktigReferanse = bidragspliktigReferanse,
-            ),
+            boforholdListe.mapTilGrunnlag(bidragspliktigReferanse),
         )
 
         // Mapper ut DelberegningBarnIHusstand (sub-delberegning til DelberegningBoforhold)
         resultatGrunnlagListe.addAll(
-            mapDelberegningBarnIHusstand(
-                sumAntallBarnListe = sumAntallBarnListe,
-                bidragspliktigReferanse = bidragspliktigReferanse,
-            ),
+            sumAntallBarnListe.mapTilGrunnlag(bidragspliktigReferanse),
         )
 
         // Mapper ut DelberegningVoksneIHusstand (sub-delberegning til DelberegningBoforhold)
         resultatGrunnlagListe.addAll(
-            mapDelberegningVoksneIHusstand(
-                voksneIHusstandenListe = voksneIHusstandenListe,
-                bidragspliktigReferanse = bidragspliktigReferanse,
-            ),
+            voksneIHusstandenListe.mapTilGrunnlag(bidragspliktigReferanse),
         )
 
         // Lager en liste av referanser som refereres til av delberegningene
