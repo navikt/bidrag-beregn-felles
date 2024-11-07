@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
-internal class BeregnBoforholdServiceV1Test {
+internal class BoforholdServiceV1Test {
     private lateinit var boforholdServiceV1: BoforholdServiceV1
 
     @Test

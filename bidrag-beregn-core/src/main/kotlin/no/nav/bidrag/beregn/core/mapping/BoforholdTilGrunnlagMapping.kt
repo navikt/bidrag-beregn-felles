@@ -63,6 +63,20 @@ fun BoforholdPeriodeCore.tilGrunnlag() = DelberegningBoforhold(
     borMedAndreVoksne = borMedAndreVoksne,
 )
 
-fun bestemGrunnlagstype(referanse: String) = Grunnlagstype.entries.find {
-    referanse.contains(it.name)
-} ?: throw IllegalArgumentException("Ikke i stand til å utlede grunnlagstype for referanse: $referanse")
+fun bestemGrunnlagstype(referanse: String) = when {
+    referanse.contains(Grunnlagstype.DELBEREGNING_SUM_INNTEKT.name) -> Grunnlagstype.DELBEREGNING_SUM_INNTEKT
+    referanse.contains(Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND.name) -> Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND
+    referanse.contains(Grunnlagstype.DELBEREGNING_VOKSNE_I_HUSSTAND.name) -> Grunnlagstype.DELBEREGNING_VOKSNE_I_HUSSTAND
+    referanse.contains(Grunnlagstype.DELBEREGNING_BOFORHOLD.name) -> Grunnlagstype.DELBEREGNING_BOFORHOLD
+    referanse.contains(Grunnlagstype.DELBEREGNING_BIDRAGSEVNE.name) -> Grunnlagstype.DELBEREGNING_BIDRAGSEVNE
+    referanse.contains(
+        Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_BEREGNEDE_TOTALBIDRAG.name,
+    ) -> Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_BEREGNEDE_TOTALBIDRAG
+
+    referanse.contains(Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD.name) -> Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD
+    referanse.contains(Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL.name) -> Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL
+    referanse.contains(Grunnlagstype.DELBEREGNING_FAKTISK_UTGIFT.name) -> Grunnlagstype.DELBEREGNING_FAKTISK_UTGIFT
+    referanse.contains(Grunnlagstype.DELBEREGNING_TILLEGGSSTØNAD.name) -> Grunnlagstype.DELBEREGNING_TILLEGGSSTØNAD
+
+    else -> throw IllegalArgumentException("Ikke i stand til å utlede grunnlagstype for referanse: $referanse")
+}
