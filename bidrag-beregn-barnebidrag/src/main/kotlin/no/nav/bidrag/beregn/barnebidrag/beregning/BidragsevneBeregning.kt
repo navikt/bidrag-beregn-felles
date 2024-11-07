@@ -3,6 +3,8 @@ package no.nav.bidrag.beregn.barnebidrag.beregning
 import no.nav.bidrag.beregn.barnebidrag.bo.BidragsevneBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BidragsevneBeregningResultat
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.domene.util.avrundetMedNullDesimaler
+import no.nav.bidrag.domene.util.avrundetMedTiDesimaler
 import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -11,6 +13,7 @@ internal object BidragsevneBeregning {
 
     val bigDecimal100 = BigDecimal.valueOf(100)
     val bigDecimal12 = BigDecimal.valueOf(12)
+    val bigDecimal025 = BigDecimal.valueOf(0.25).setScale(2)
     var sjablonverdiTrygdeavgiftProsent = BigDecimal.ZERO
     var sjablonverdiUnderholdEgneBarnIHusstandBeløp = BigDecimal.ZERO
     var sjablonverdiMinstefradragInntektBeløp = BigDecimal.ZERO
@@ -41,12 +44,17 @@ internal object BidragsevneBeregning {
 
         val sumSkatt = skattAlminneligInntekt + trygdeavgift + trinnskatt
 
+        val sumSkattFaktor =
+            if (sumInntekt.avrundetMedNullDesimaler == BigDecimal.ZERO) BigDecimal.ZERO else sumSkatt.divide(sumInntekt, 10, RoundingMode.HALF_UP)
+
         val boutgift = sjablonverdiBoutgiftBeløp * bigDecimal12
 
         val egetUnderhold = sjablonverdiEgetUnderholdBeløp * bigDecimal12
 
         val underholdBarnEgenHusstand = sjablonverdiUnderholdEgneBarnIHusstandBeløp * bigDecimal12 *
             grunnlag.barnIHusstandenBeregningGrunnlag.antallBarn.toBigDecimal()
+
+        val sumInntekt25Prosent = sumInntekt * bigDecimal025
 
         // Kalkulerer månedlig bidragsevne
         val bidragsevne = (sumInntekt - sumSkatt - boutgift - egetUnderhold - underholdBarnEgenHusstand)
@@ -60,7 +68,9 @@ internal object BidragsevneBeregning {
             trygdeavgift = trygdeavgift.avrundetMedToDesimaler,
             trinnskatt = trinnskatt.avrundetMedToDesimaler,
             sumSkatt = sumSkatt.avrundetMedToDesimaler,
+            sumSkattFaktor = sumSkattFaktor.avrundetMedTiDesimaler,
             underholdBarnEgenHusstand = underholdBarnEgenHusstand.avrundetMedToDesimaler,
+            sumInntekt25Prosent = sumInntekt25Prosent.avrundetMedToDesimaler,
             grunnlagsreferanseListe = listOf(
                 grunnlag.inntektBPBeregningGrunnlag.referanse,
                 grunnlag.barnIHusstandenBeregningGrunnlag.referanse,

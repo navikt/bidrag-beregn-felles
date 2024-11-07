@@ -26,7 +26,7 @@ import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBarnIHusstand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBoforhold
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningVoksneIHustand
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningVoksneIHusstand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
@@ -47,16 +47,22 @@ internal object BeregnBidragsevneService : BeregnService() {
         val innslagKapitalinntektSjablon = finnInnslagKapitalinntektFraGrunnlag(sjablonGrunnlag)
 
         // Mapper ut grunnlag som skal brukes for å beregne bidragsevne
-        val bidragsevnePeriodeGrunnlag = mapBidragsevneGrunnlag(mottattGrunnlag, sjablonGrunnlag)
+        val bidragsevnePeriodeGrunnlag = mapBidragsevneGrunnlag(mottattGrunnlag = mottattGrunnlag, sjablonGrunnlag = sjablonGrunnlag)
 
         // Lager liste over bruddperioder
-        val bruddPeriodeListe = lagBruddPeriodeListeBidragsevne(bidragsevnePeriodeGrunnlag, mottattGrunnlag.periode)
+        val bruddPeriodeListe = lagBruddPeriodeListeBidragsevne(
+            grunnlagListe = bidragsevnePeriodeGrunnlag,
+            beregningsperiode = mottattGrunnlag.periode,
+        )
 
         val bidragsevneBeregningResultatListe = mutableListOf<BidragsevnePeriodeResultat>()
 
         // Løper gjennom hver bruddperiode og beregner bidragsevne
         bruddPeriodeListe.forEach { bruddPeriode ->
-            val bidragsevneBeregningGrunnlag = lagBidragsevneBeregningGrunnlag(bidragsevnePeriodeGrunnlag, bruddPeriode)
+            val bidragsevneBeregningGrunnlag = lagBidragsevneBeregningGrunnlag(
+                bidragsevnePeriodeGrunnlag = bidragsevnePeriodeGrunnlag,
+                bruddPeriode = bruddPeriode,
+            )
             bidragsevneBeregningResultatListe.add(
                 BidragsevnePeriodeResultat(
                     periode = bruddPeriode,
@@ -240,8 +246,10 @@ internal object BeregnBidragsevneService : BeregnService() {
                             trinnskatt = it.resultat.trinnskatt,
                             trygdeavgift = it.resultat.trygdeavgift,
                             sumSkatt = it.resultat.sumSkatt,
+                            sumSkattFaktor = it.resultat.sumSkattFaktor,
                         ),
                         underholdBarnEgenHusstand = it.resultat.underholdBarnEgenHusstand,
+                        sumInntekt25Prosent = it.resultat.sumInntekt25Prosent,
                     ),
                 ),
                 grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe.distinct().sorted(),
@@ -361,7 +369,7 @@ internal object BeregnBidragsevneService : BeregnService() {
                     referanse = it.referanse,
                     type = bestemGrunnlagstype(it.referanse),
                     innhold = POJONode(
-                        DelberegningVoksneIHustand(
+                        DelberegningVoksneIHusstand(
                             periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
                             borMedAndreVoksne = it.borMedAndreVoksne,
                         ),
@@ -389,13 +397,14 @@ internal object BeregnBidragsevneService : BeregnService() {
             )
         }
 
+
     // Henter sjablonverdi for kapitalinntekt
     // TODO Bør synkes med som ligger i CoreMapper. Pt ligger det bare en gyldig sjablonverdi (uforandret siden 2003).
     // TODO Logikken her må utvides hvis det legges inn nye sjablonverdier
     private fun finnInnslagKapitalinntektFraGrunnlag(sjablonListe: List<GrunnlagDto>): Sjablontall? = sjablonListe
-        .filter { it.referanse.uppercase().contains("SJABLONTALL") }
+        .filter { it.referanse.contains(SjablonTallNavn.INNSLAG_KAPITALINNTEKT_BELØP.navn) }
         .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>()
-        .firstOrNull { it.innhold.sjablon == SjablonTallNavn.INNSLAG_KAPITALINNTEKT_BELØP }
+        .firstOrNull()
         ?.let { innslagKapitalinntektSjablon ->
             Sjablontall(
                 typeSjablon = innslagKapitalinntektSjablon.innhold.sjablon.navn,

@@ -50,7 +50,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspli
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesBeregnedeTotalbidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBoforhold
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUtgift
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningVoksneIHustand
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningVoksneIHusstand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.LøpendeBidragGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonBidragsevnePeriode
@@ -681,7 +681,7 @@ internal class BeregnSærbidragService(
                     referanse = it.referanse,
                     type = bestemGrunnlagstype(it.referanse),
                     innhold = POJONode(
-                        DelberegningVoksneIHustand(
+                        DelberegningVoksneIHusstand(
                             periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
                             borMedAndreVoksne = it.borMedAndreVoksne,
                         ),
@@ -870,7 +870,7 @@ internal class BeregnSærbidragService(
         .map {
             GrunnlagDto(
                 referanse = it.referanse,
-                type = Grunnlagstype.SJABLON,
+                type = Grunnlagstype.SJABLON_SJABLONTALL,
                 innhold = POJONode(
                     SjablonSjablontallPeriode(
                         periode = ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil),
@@ -976,7 +976,6 @@ internal class BeregnSærbidragService(
         // Danner nytt grunnlag
         val grunnlagDtoListe = sjablonListe.filter { it.navn.startsWith(SjablonNavn.SAMVÆRSFRADRAG.navn) }
             .map {
-                it
                 GrunnlagDto(
                     referanse = it.referanse,
                     type = Grunnlagstype.SJABLON_SAMVARSFRADRAG,

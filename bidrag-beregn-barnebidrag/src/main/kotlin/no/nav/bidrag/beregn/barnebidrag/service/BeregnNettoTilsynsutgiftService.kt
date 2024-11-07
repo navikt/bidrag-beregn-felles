@@ -272,7 +272,6 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
         resultatGrunnlagListe.addAll(
             mapDelberegningFaktiskTilsynsutgift(
                 faktiskUtgiftPeriodeCoreListe = faktiskUtgiftPeriodeCoreListe,
-                bidragsmottakerReferanse = referanseBm,
             ),
         )
 
@@ -312,7 +311,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
     }
 
     // Mapper ut DelberegningFaktiskUtgift
-    private fun mapDelberegningFaktiskTilsynsutgift(faktiskUtgiftPeriodeCoreListe: List<FaktiskUtgiftPeriodeCore>, bidragsmottakerReferanse: String) =
+    private fun mapDelberegningFaktiskTilsynsutgift(faktiskUtgiftPeriodeCoreListe: List<FaktiskUtgiftPeriodeCore>) =
         faktiskUtgiftPeriodeCoreListe
             .map {
                 GrunnlagDto(
@@ -350,7 +349,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
     fun mapSjablonSjablontall(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonSjablontallPeriodeGrunnlag> {
         try {
             return sjablonGrunnlag
-                .filter { it.referanse.uppercase().contains("SJABLONTALL") }
+                .filter { it.type == Grunnlagstype.SJABLON_SJABLONTALL }
                 .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>()
                 .map {
                     SjablonSjablontallPeriodeGrunnlag(

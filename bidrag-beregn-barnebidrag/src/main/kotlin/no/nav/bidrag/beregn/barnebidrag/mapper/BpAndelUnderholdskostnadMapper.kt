@@ -2,13 +2,13 @@ package no.nav.bidrag.beregn.barnebidrag.mapper
 
 import no.nav.bidrag.beregn.barnebidrag.bo.BpAndelUnderholdskostnadPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSjablontallPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadDelberegningPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.UnderholdskostnadPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 
 internal object BpAndelUnderholdskostnadMapper : CoreMapper() {
@@ -17,7 +17,7 @@ internal object BpAndelUnderholdskostnadMapper : CoreMapper() {
         sjablonGrunnlag: List<GrunnlagDto>,
     ): BpAndelUnderholdskostnadPeriodeGrunnlag = BpAndelUnderholdskostnadPeriodeGrunnlag(
         beregningsperiode = mottattGrunnlag.periode,
-        underholdskostnadPeriodeGrunnlagListe = mapUnderholdskostnad(beregnGrunnlag = mottattGrunnlag),
+        underholdskostnadDelberegningPeriodeGrunnlagListe = mapUnderholdskostnad(beregnGrunnlag = mottattGrunnlag),
         inntektBPPeriodeGrunnlagListe = mapInntekt(
             beregnGrunnlag = mottattGrunnlag,
             referanseTilRolle = finnReferanseTilRolle(
@@ -45,19 +45,19 @@ internal object BpAndelUnderholdskostnadMapper : CoreMapper() {
         sjablonSjablontallPeriodeGrunnlagListe = mapSjablonSjablontall(sjablonGrunnlag),
     )
 
-    private fun mapUnderholdskostnad(beregnGrunnlag: BeregnGrunnlag): List<UnderholdskostnadPeriodeGrunnlag> {
+    private fun mapUnderholdskostnad(beregnGrunnlag: BeregnGrunnlag): List<UnderholdskostnadDelberegningPeriodeGrunnlag> {
         try {
             return beregnGrunnlag.grunnlagListe
-                .filtrerOgKonverterBasertPåEgenReferanse<UnderholdskostnadPeriode>(Grunnlagstype.UNDERHOLDSKOSTNAD)
+                .filtrerOgKonverterBasertPåEgenReferanse<DelberegningUnderholdskostnad>(Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD)
                 .map {
-                    UnderholdskostnadPeriodeGrunnlag(
+                    UnderholdskostnadDelberegningPeriodeGrunnlag(
                         referanse = it.referanse,
                         underholdskostnadPeriode = it.innhold,
                     )
                 }
         } catch (e: Exception) {
             throw IllegalArgumentException(
-                "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.UNDERHOLDSKOSTNAD er ikke gyldig: " + e.message,
+                "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD er ikke gyldig: " + e.message,
             )
         }
     }
@@ -66,7 +66,7 @@ internal object BpAndelUnderholdskostnadMapper : CoreMapper() {
     private fun mapSjablonSjablontall(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonSjablontallPeriodeGrunnlag> {
         try {
             return sjablonGrunnlag
-                .filter { it.referanse.uppercase().contains("SJABLONTALL") }
+                .filter { it.type == Grunnlagstype.SJABLON_SJABLONTALL }
                 .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>()
                 .map {
                     SjablonSjablontallPeriodeGrunnlag(

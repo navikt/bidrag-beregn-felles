@@ -20,6 +20,7 @@ import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode
 import java.time.LocalDate
+import java.util.Collections.emptyList
 
 internal val totalNetterOverToÅr = BigDecimal(730)
 internal val totalNetterOverToUker = BigDecimal(14)

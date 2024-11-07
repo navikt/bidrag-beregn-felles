@@ -175,8 +175,8 @@
       "gjelderReferanse": "Person_Søknadsbarn"
     },
     {
-      "referanse": "Mottatt_Underholdskostnad_202309",
-      "type": "UNDERHOLDSKOSTNAD",
+      "referanse": "Delberegning_Underholdskostnad_202309",
+      "type": "DELBEREGNING_UNDERHOLDSKOSTNAD",
       "innhold": {
         "periode": {
           "fom": "2023-09",
@@ -189,8 +189,8 @@
       "gjelderReferanse": null
     },
     {
-      "referanse": "Mottatt_Underholdskostnad_202405",
-      "type": "UNDERHOLDSKOSTNAD",
+      "referanse": "Delberegning_Underholdskostnad_202405",
+      "type": "DELBEREGNING_UNDERHOLDSKOSTNAD",
       "innhold": {
         "periode": {
           "fom": "2024-05",

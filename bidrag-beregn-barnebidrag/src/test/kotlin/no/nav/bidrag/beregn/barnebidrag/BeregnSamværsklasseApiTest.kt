@@ -57,7 +57,7 @@ internal class BeregnSamværsklasseApiTest {
 
         val samværsklasserNetter = samværsklasserNetterGrunnlag.innholdTilObjekt<DelberegningSamværsklasseNetter>()
         assertSoftly(samværsklasserNetter) {
-            it!!.samværsklasserNetter.shouldNotBeEmpty()
+            it.samværsklasserNetter.shouldNotBeEmpty()
             assertSoftly(it.samværsklasserNetter) {
                 shouldHaveSize(5)
                 it[0].samværsklasse shouldBe Samværsklasse.SAMVÆRSKLASSE_0

@@ -30,7 +30,7 @@ import java.text.SimpleDateFormat
 internal class BeregnSamværsfradragApiTest {
     private lateinit var filnavn: String
     private lateinit var forventetSamværsfradrag: BigDecimal
-    private var forventetAntallSjablon: Int = 1
+    private var forventetAntallSjablonSamværsfradrag: Int = 1
 
     @Mock
     private lateinit var beregnBarnebidragService: BeregnBarnebidragService
@@ -57,7 +57,7 @@ internal class BeregnSamværsfradragApiTest {
     fun testSamværsfradrag_Eksempel02() {
         filnavn = "src/test/resources/testfiler/samværsfradrag/samværsfradrag_eksempel2.json"
         forventetSamværsfradrag = BigDecimal.ZERO.setScale(2)
-        forventetAntallSjablon = 0
+        forventetAntallSjablonSamværsfradrag = 0
         utførBeregningerOgEvaluerResultatSamværsfradrag()
     }
 
@@ -66,7 +66,7 @@ internal class BeregnSamværsfradragApiTest {
     fun testSamværsfradrag_Eksempel03() {
         filnavn = "src/test/resources/testfiler/samværsfradrag/samværsfradrag_eksempel3.json"
         forventetSamværsfradrag = BigDecimal.valueOf(547).setScale(2)
-        forventetAntallSjablon = 1
+        forventetAntallSjablonSamværsfradrag = 1
         utførBeregningerOgEvaluerResultatSamværsfradrag()
     }
 
@@ -109,7 +109,7 @@ internal class BeregnSamværsfradragApiTest {
             .filter { it.type == Grunnlagstype.SAMVÆRSPERIODE }
             .size
 
-        val antallSjablon = samværsfradragResultat
+        val antallSjablonSamværsfradrag = samværsfradragResultat
             .filter { it.type == Grunnlagstype.SJABLON_SAMVARSFRADRAG }
             .size
 
@@ -124,7 +124,7 @@ internal class BeregnSamværsfradragApiTest {
 
             // Grunnlag
             { assertThat(antallSamværsklasse).isEqualTo(1) },
-            { assertThat(antallSjablon).isEqualTo(forventetAntallSjablon) },
+            { assertThat(antallSjablonSamværsfradrag).isEqualTo(forventetAntallSjablonSamværsfradrag) },
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
@@ -152,7 +152,7 @@ internal class BeregnSamværsfradragApiTest {
             .filter { it.type == Grunnlagstype.SAMVÆRSPERIODE }
             .size
 
-        val antallSjablon = samværsfradragResultat
+        val antallSjablonSamværsfradrag = samværsfradragResultat
             .filter { it.type == Grunnlagstype.SJABLON_SAMVARSFRADRAG }
             .size
 
@@ -177,7 +177,7 @@ internal class BeregnSamværsfradragApiTest {
 
             // Grunnlag
             { assertThat(antallSamværsklasse).isEqualTo(2) },
-            { assertThat(antallSjablon).isEqualTo(6) },
+            { assertThat(antallSjablonSamværsfradrag).isEqualTo(6) },
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },

@@ -232,7 +232,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
                 .map {
                     GrunnlagDto(
                         referanse = it.referanse,
-                        type = Grunnlagstype.SJABLON,
+                        type = Grunnlagstype.SJABLON_SJABLONTALL,
                         innhold = POJONode(
                             SjablonSjablontallPeriode(
                                 periode = ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil),

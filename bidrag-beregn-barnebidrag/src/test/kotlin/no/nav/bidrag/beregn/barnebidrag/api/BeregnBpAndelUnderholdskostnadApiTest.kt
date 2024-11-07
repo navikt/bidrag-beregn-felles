@@ -232,11 +232,11 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
             .size
 
         val antallUnderholdskostnad = bpAndelUnderholdskostnadResultat
-            .filter { it.type == Grunnlagstype.UNDERHOLDSKOSTNAD }
+            .filter { it.type == Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD }
             .size
 
         val antallSjablon = bpAndelUnderholdskostnadResultat
-            .filter { it.type == Grunnlagstype.SJABLON }
+            .filter { it.type == Grunnlagstype.SJABLON_SJABLONTALL }
             .size
 
         assertAll(
@@ -318,11 +318,11 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
             .size
 
         val antallUnderholdskostnad = bpAndelUnderholdskostnadResultat
-            .filter { it.type == Grunnlagstype.UNDERHOLDSKOSTNAD }
+            .filter { it.type == Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD }
             .size
 
         val antallSjablon = bpAndelUnderholdskostnadResultat
-            .filter { it.type == Grunnlagstype.SJABLON }
+            .filter { it.type == Grunnlagstype.SJABLON_SJABLONTALL }
             .size
 
         val bpAndelUnderholdskostnadResultatListe = bpAndelUnderholdskostnadResultat

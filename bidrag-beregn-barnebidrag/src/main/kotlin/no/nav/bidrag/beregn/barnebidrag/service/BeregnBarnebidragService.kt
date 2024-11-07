@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.barnebidrag.service
 
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBidragsevneService.delberegningBidragsevne
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBpAndelUnderholdskostnadService.delberegningBpAndelUnderholdskostnad
+import no.nav.bidrag.beregn.barnebidrag.service.BeregnEndeligBidragService.delberegningEndeligBidrag
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnNettoTilsynsutgiftService.delberegningNettoTilsynsutgift
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnSamværsfradragService.delberegningSamværsfradrag
 import no.nav.bidrag.beregn.core.service.BeregnService
@@ -80,5 +81,23 @@ class BeregnBarnebidragService : BeregnService() {
         val delberegningSamværsfradragResultat = delberegningSamværsfradrag(mottattGrunnlag)
 
         return delberegningSamværsfradragResultat
+    }
+
+    // Beregning av endelig bidrag (sluttberegning)
+    fun beregnEndeligBidrag(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
+        secureLogger.debug { "Beregning av endelig bidrag (sluttberegning) - følgende request mottatt: ${tilJson(mottattGrunnlag)}" }
+
+        // Kontroll av inputdata
+        try {
+            // TODO Bør være mulig å ha null i beregnDatoTil?
+            mottattGrunnlag.valider()
+        } catch (e: IllegalArgumentException) {
+            throw IllegalArgumentException("Ugyldig input ved beregning av endelig bidrag (sluttberegning): " + e.message)
+        }
+
+        // Kaller delberegninger
+        val delberegningEndeligBidragResultat = delberegningEndeligBidrag(mottattGrunnlag)
+
+        return delberegningEndeligBidragResultat
     }
 }
