@@ -11,6 +11,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBoforhold
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningVoksneIHusstand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 
+@JvmName("barnIHusstandenTilGrunnlag")
 fun List<BarnIHusstandenPeriodeCore>.mapTilGrunnlag(bidragspliktigReferanse: String) = map {
     it.tilGrunnlag(bidragspliktigReferanse)
 }
@@ -27,7 +28,7 @@ fun BarnIHusstandenPeriodeCore.tilGrunnlag(bidragspliktigReferanse: String) = Gr
     gjelderReferanse = bidragspliktigReferanse,
 )
 
-// Mapper ut DelberegningVoksneIHusstand
+@JvmName("voksneIHusstandenTilGrunnlag")
 fun List<VoksneIHusstandenPeriodeCore>.mapTilGrunnlag(bidragspliktigReferanse: String) = map {
     GrunnlagDto(
         referanse = it.referanse,
@@ -43,6 +44,7 @@ fun List<VoksneIHusstandenPeriodeCore>.mapTilGrunnlag(bidragspliktigReferanse: S
     )
 }
 
+@JvmName("boforholdTilGrunnlag")
 fun List<BoforholdPeriodeCore>.mapTilGrunnlag(bidragspliktigReferanse: String) = map {
     GrunnlagDto(
         referanse = it.referanse,
