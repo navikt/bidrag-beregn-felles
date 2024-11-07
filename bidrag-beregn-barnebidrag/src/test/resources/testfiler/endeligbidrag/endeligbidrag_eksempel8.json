@@ -47,15 +47,24 @@
           "til": "2024-09"
         },
         "beløp": 10000,
-        "tjuefemProsentInntekt": 10000,
+        "skatt": {
+          "minstefradrag": 0,
+          "skattAlminneligInntekt": 0,
+          "trinnskatt": 0,
+          "trygdeavgift": 0,
+          "sumSkatt": 0,
+          "sumSkattFaktor": 0
+        },
+        "underholdBarnEgenHusstand": 0,
+        "sumInntekt25Prosent": 10000,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
-      "referanse": "Mottatt_Underholdskostnad_202408",
-      "type": "UNDERHOLDSKOSTNAD",
+      "referanse": "Delberegning_Underholdskostnad_202408",
+      "type": "DELBEREGNING_UNDERHOLDSKOSTNAD",
       "innhold": {
         "periode": {
           "fom": "2024-08",
@@ -75,10 +84,11 @@
           "fom": "2024-08",
           "til": "2024-09"
         },
+        "endeligAndelFaktor": 0.600,
         "andelBeløp": 6000,
-        "andelFaktor": 0.600,
-        "barnetErSelvforsørget": false,
-        "manueltRegistrert": false
+        "beregnetAndelFaktor": 0.600,
+        "barnEndeligInntekt": 0,
+        "barnetErSelvforsørget": false
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Bidragspliktig"

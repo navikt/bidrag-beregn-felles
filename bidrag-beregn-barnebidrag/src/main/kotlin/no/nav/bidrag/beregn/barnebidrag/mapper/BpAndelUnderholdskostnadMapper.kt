@@ -6,9 +6,9 @@ import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadDelberegningPeriodeG
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.UnderholdskostnadPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 
 internal object BpAndelUnderholdskostnadMapper : CoreMapper() {
@@ -48,8 +48,7 @@ internal object BpAndelUnderholdskostnadMapper : CoreMapper() {
     private fun mapUnderholdskostnad(beregnGrunnlag: BeregnGrunnlag): List<UnderholdskostnadDelberegningPeriodeGrunnlag> {
         try {
             return beregnGrunnlag.grunnlagListe
-// TODO Endre til Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD?
-                .filtrerOgKonverterBasertPåEgenReferanse<UnderholdskostnadPeriode>(Grunnlagstype.UNDERHOLDSKOSTNAD)
+                .filtrerOgKonverterBasertPåEgenReferanse<DelberegningUnderholdskostnad>(Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD)
                 .map {
                     UnderholdskostnadDelberegningPeriodeGrunnlag(
                         referanse = it.referanse,
@@ -58,7 +57,7 @@ internal object BpAndelUnderholdskostnadMapper : CoreMapper() {
                 }
         } catch (e: Exception) {
             throw IllegalArgumentException(
-                "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.UNDERHOLDSKOSTNAD er ikke gyldig: " + e.message,
+                "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD er ikke gyldig: " + e.message,
             )
         }
     }
@@ -67,7 +66,7 @@ internal object BpAndelUnderholdskostnadMapper : CoreMapper() {
     private fun mapSjablonSjablontall(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonSjablontallPeriodeGrunnlag> {
         try {
             return sjablonGrunnlag
-                .filter { it.referanse.uppercase().contains("SJABLONTALL") }
+                .filter { it.type == Grunnlagstype.SJABLON_SJABLONTALL }
                 .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>()
                 .map {
                     SjablonSjablontallPeriodeGrunnlag(

@@ -28,8 +28,8 @@ internal object EndeligBidragBeregning {
         val nettoBarnetilleggBM = beregnNettoBarnetillegg(grunnlag.barnetilleggBMBeregningGrunnlag)
 
         // Finner maksverdi av bidragsevne og 25% av inntekt
-        val maksBidragsbeløp = minOf(grunnlag.bidragsevneBeregningGrunnlag.beløp, grunnlag.bidragsevneBeregningGrunnlag.tjuefemProsentInntekt)
-        val bidragRedusertAvBidragsevne = grunnlag.bidragsevneBeregningGrunnlag.beløp <= grunnlag.bidragsevneBeregningGrunnlag.tjuefemProsentInntekt
+        val maksBidragsbeløp = minOf(grunnlag.bidragsevneBeregningGrunnlag.beløp, grunnlag.bidragsevneBeregningGrunnlag.sumInntekt25Prosent)
+        val bidragRedusertAvBidragsevne = grunnlag.bidragsevneBeregningGrunnlag.beløp <= grunnlag.bidragsevneBeregningGrunnlag.sumInntekt25Prosent
 
         // Beregner kostnadsberegnet bidrag og bruker det som utgangspunkt for videre beregning
         var resultatkode = Resultatkode.KOSTNADSBEREGNET_BIDRAG

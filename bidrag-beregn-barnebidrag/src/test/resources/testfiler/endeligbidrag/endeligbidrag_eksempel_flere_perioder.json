@@ -47,7 +47,16 @@
           "til": "2023-06"
         },
         "beløp": 10000,
-        "tjuefemProsentInntekt": 10000,
+        "skatt": {
+          "minstefradrag": 0,
+          "skattAlminneligInntekt": 0,
+          "trinnskatt": 0,
+          "trygdeavgift": 0,
+          "sumSkatt": 0,
+          "sumSkattFaktor": 0
+        },
+        "underholdBarnEgenHusstand": 0,
+        "sumInntekt25Prosent": 10000,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
@@ -62,7 +71,16 @@
           "til": "2023-10"
         },
         "beløp": 3500,
-        "tjuefemProsentInntekt": 10000,
+        "skatt": {
+          "minstefradrag": 0,
+          "skattAlminneligInntekt": 0,
+          "trinnskatt": 0,
+          "trygdeavgift": 0,
+          "sumSkatt": 0,
+          "sumSkattFaktor": 0
+        },
+        "underholdBarnEgenHusstand": 0,
+        "sumInntekt25Prosent": 10000,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
@@ -77,7 +95,16 @@
           "til": "2024-05"
         },
         "beløp": 10000,
-        "tjuefemProsentInntekt": 3500,
+        "skatt": {
+          "minstefradrag": 0,
+          "skattAlminneligInntekt": 0,
+          "trinnskatt": 0,
+          "trygdeavgift": 0,
+          "sumSkatt": 0,
+          "sumSkattFaktor": 0
+        },
+        "underholdBarnEgenHusstand": 0,
+        "sumInntekt25Prosent": 3500,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
@@ -92,15 +119,24 @@
           "til": null
         },
         "beløp": 10000,
-        "tjuefemProsentInntekt": 10000,
+        "skatt": {
+          "minstefradrag": 0,
+          "skattAlminneligInntekt": 0,
+          "trinnskatt": 0,
+          "trygdeavgift": 0,
+          "sumSkatt": 0,
+          "sumSkattFaktor": 0
+        },
+        "underholdBarnEgenHusstand": 0,
+        "sumInntekt25Prosent": 10000,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
-      "referanse": "Mottatt_Underholdskostnad_202301",
-      "type": "UNDERHOLDSKOSTNAD",
+      "referanse": "Delberegning_Underholdskostnad_202301",
+      "type": "DELBEREGNING_UNDERHOLDSKOSTNAD",
       "innhold": {
         "periode": {
           "fom": "2023-01",
@@ -113,8 +149,8 @@
       "gjelderReferanse": null
     },
     {
-      "referanse": "Mottatt_Underholdskostnad_202304",
-      "type": "UNDERHOLDSKOSTNAD",
+      "referanse": "Delberegning_Underholdskostnad_202304",
+      "type": "DELBEREGNING_UNDERHOLDSKOSTNAD",
       "innhold": {
         "periode": {
           "fom": "2023-04",
@@ -127,8 +163,8 @@
       "gjelderReferanse": null
     },
     {
-      "referanse": "Mottatt_Underholdskostnad_202408",
-      "type": "UNDERHOLDSKOSTNAD",
+      "referanse": "Delberegning_Underholdskostnad_202408",
+      "type": "DELBEREGNING_UNDERHOLDSKOSTNAD",
       "innhold": {
         "periode": {
           "fom": "2024-08",
@@ -148,10 +184,11 @@
           "fom": "2023-01",
           "til": "2023-04"
         },
+        "endeligAndelFaktor": 0,
         "andelBeløp": 0,
-        "andelFaktor": 0,
-        "barnetErSelvforsørget": true,
-        "manueltRegistrert": false
+        "beregnetAndelFaktor": 0,
+        "barnEndeligInntekt": 0,
+        "barnetErSelvforsørget": true
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Bidragspliktig"
@@ -164,10 +201,11 @@
           "fom": "2023-04",
           "til": "2023-10"
         },
+        "endeligAndelFaktor": 0.600,
         "andelBeløp": 12000,
-        "andelFaktor": 0.600,
-        "barnetErSelvforsørget": false,
-        "manueltRegistrert": false
+        "beregnetAndelFaktor": 0.600,
+        "barnEndeligInntekt": 0,
+        "barnetErSelvforsørget": false
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Bidragspliktig"
@@ -180,10 +218,11 @@
           "fom": "2023-10",
           "til": "2024-02"
         },
+        "endeligAndelFaktor": 0.400,
         "andelBeløp": 8000,
-        "andelFaktor": 0.400,
-        "barnetErSelvforsørget": false,
-        "manueltRegistrert": false
+        "beregnetAndelFaktor": 0.400,
+        "barnEndeligInntekt": 0,
+        "barnetErSelvforsørget": false
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Bidragspliktig"
@@ -196,10 +235,11 @@
           "fom": "2024-02",
           "til": "2024-08"
         },
+        "endeligAndelFaktor": 0.600,
         "andelBeløp": 12000,
-        "andelFaktor": 0.600,
-        "barnetErSelvforsørget": false,
-        "manueltRegistrert": false
+        "beregnetAndelFaktor": 0.600,
+        "barnEndeligInntekt": 0,
+        "barnetErSelvforsørget": false
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Bidragspliktig"
@@ -212,10 +252,11 @@
           "fom": "2024-08",
           "til": null
         },
+        "endeligAndelFaktor": 0.600,
         "andelBeløp": 6000,
-        "andelFaktor": 0.600,
-        "barnetErSelvforsørget": false,
-        "manueltRegistrert": false
+        "beregnetAndelFaktor": 0.600,
+        "barnEndeligInntekt": 0,
+        "barnetErSelvforsørget": false
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Bidragspliktig"

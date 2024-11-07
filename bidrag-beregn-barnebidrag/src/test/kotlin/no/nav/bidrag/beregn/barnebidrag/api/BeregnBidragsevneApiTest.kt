@@ -34,7 +34,9 @@ internal class BeregnBidragsevneApiTest {
     private lateinit var forventetTrinnskatt: BigDecimal
     private lateinit var forventetTrygdeavgift: BigDecimal
     private lateinit var forventetSumSkatt: BigDecimal
+    private lateinit var forventetSumSkattFaktor: BigDecimal
     private lateinit var forventetUnderholdBarnEgenHusstand: BigDecimal
+    private lateinit var forventetSumInntekt25Prosent: BigDecimal
     private var forventetAntallInntektRapporteringPeriodeBP: Int = 1
     private var forventetAntallDelberegningSumInntektPeriodeBP: Int = 1
     private var forventetAntallDelberegningBoforholdPeriode: Int = 1
@@ -65,7 +67,9 @@ internal class BeregnBidragsevneApiTest {
         forventetTrinnskatt = BigDecimal.ZERO.setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(15600.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(22585.00).setScale(2)
+        forventetSumSkattFaktor = BigDecimal.valueOf(0.112925).setScale(10)
         forventetUnderholdBarnEgenHusstand = BigDecimal.ZERO.setScale(2)
+        forventetSumInntekt25Prosent = BigDecimal.valueOf(50000).setScale(2)
         utførBeregningerOgEvaluerResultatBidragsevne()
     }
 
@@ -79,7 +83,9 @@ internal class BeregnBidragsevneApiTest {
         forventetTrinnskatt = BigDecimal.ZERO.setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(15600.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(22585.00).setScale(2)
+        forventetSumSkattFaktor = BigDecimal.valueOf(0.112925).setScale(10)
         forventetUnderholdBarnEgenHusstand = BigDecimal.valueOf(51036.00).setScale(2)
+        forventetSumInntekt25Prosent = BigDecimal.valueOf(50000).setScale(2)
         utførBeregningerOgEvaluerResultatBidragsevne()
     }
 
@@ -93,7 +99,9 @@ internal class BeregnBidragsevneApiTest {
         forventetTrinnskatt = BigDecimal.ZERO.setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(15600.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(22585.00).setScale(2)
+        forventetSumSkattFaktor = BigDecimal.valueOf(0.112925).setScale(10)
         forventetUnderholdBarnEgenHusstand = BigDecimal.valueOf(127590.00).setScale(2)
+        forventetSumInntekt25Prosent = BigDecimal.valueOf(50000).setScale(2)
         utførBeregningerOgEvaluerResultatBidragsevne()
     }
 
@@ -107,7 +115,9 @@ internal class BeregnBidragsevneApiTest {
         forventetTrinnskatt = BigDecimal.ZERO.setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(15600.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(22585.00).setScale(2)
+        forventetSumSkattFaktor = BigDecimal.valueOf(0.112925).setScale(10)
         forventetUnderholdBarnEgenHusstand = BigDecimal.ZERO.setScale(2)
+        forventetSumInntekt25Prosent = BigDecimal.valueOf(50000).setScale(2)
         utførBeregningerOgEvaluerResultatBidragsevne()
     }
 
@@ -121,7 +131,9 @@ internal class BeregnBidragsevneApiTest {
         forventetTrinnskatt = BigDecimal.ZERO.setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(15600.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(22585.00).setScale(2)
+        forventetSumSkattFaktor = BigDecimal.valueOf(0.112925).setScale(10)
         forventetUnderholdBarnEgenHusstand = BigDecimal.valueOf(51036.00).setScale(2)
+        forventetSumInntekt25Prosent = BigDecimal.valueOf(50000).setScale(2)
         utførBeregningerOgEvaluerResultatBidragsevne()
     }
 
@@ -135,7 +147,9 @@ internal class BeregnBidragsevneApiTest {
         forventetTrinnskatt = BigDecimal.ZERO.setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(15600.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(22585.00).setScale(2)
+        forventetSumSkattFaktor = BigDecimal.valueOf(0.112925).setScale(10)
         forventetUnderholdBarnEgenHusstand = BigDecimal.valueOf(127590.00).setScale(2)
+        forventetSumInntekt25Prosent = BigDecimal.valueOf(50000).setScale(2)
         utførBeregningerOgEvaluerResultatBidragsevne()
     }
 
@@ -149,7 +163,9 @@ internal class BeregnBidragsevneApiTest {
         forventetTrinnskatt = BigDecimal.valueOf(20607.60).setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(54600.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(190817.60).setScale(2)
+        forventetSumSkattFaktor = BigDecimal.valueOf(0.2725965714).setScale(10)
         forventetUnderholdBarnEgenHusstand = BigDecimal.ZERO.setScale(2)
+        forventetSumInntekt25Prosent = BigDecimal.valueOf(175000).setScale(2)
         utførBeregningerOgEvaluerResultatBidragsevne()
     }
 
@@ -163,7 +179,9 @@ internal class BeregnBidragsevneApiTest {
         forventetTrinnskatt = BigDecimal.valueOf(20607.60).setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(54600.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(190817.60).setScale(2)
+        forventetSumSkattFaktor = BigDecimal.valueOf(0.2725965714).setScale(10)
         forventetUnderholdBarnEgenHusstand = BigDecimal.valueOf(51036.00).setScale(2)
+        forventetSumInntekt25Prosent = BigDecimal.valueOf(175000).setScale(2)
         utførBeregningerOgEvaluerResultatBidragsevne()
     }
 
@@ -177,7 +195,9 @@ internal class BeregnBidragsevneApiTest {
         forventetTrinnskatt = BigDecimal.valueOf(20607.60).setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(54600.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(190817.60).setScale(2)
+        forventetSumSkattFaktor = BigDecimal.valueOf(0.2725965714).setScale(10)
         forventetUnderholdBarnEgenHusstand = BigDecimal.valueOf(127590.00).setScale(2)
+        forventetSumInntekt25Prosent = BigDecimal.valueOf(175000).setScale(2)
         utførBeregningerOgEvaluerResultatBidragsevne()
     }
 
@@ -191,7 +211,9 @@ internal class BeregnBidragsevneApiTest {
         forventetTrinnskatt = BigDecimal.valueOf(20607.60).setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(54600.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(190817.60).setScale(2)
+        forventetSumSkattFaktor = BigDecimal.valueOf(0.2725965714).setScale(10)
         forventetUnderholdBarnEgenHusstand = BigDecimal.ZERO.setScale(2)
+        forventetSumInntekt25Prosent = BigDecimal.valueOf(175000).setScale(2)
         utførBeregningerOgEvaluerResultatBidragsevne()
     }
 
@@ -205,7 +227,9 @@ internal class BeregnBidragsevneApiTest {
         forventetTrinnskatt = BigDecimal.valueOf(20607.60).setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(54600.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(190817.60).setScale(2)
+        forventetSumSkattFaktor = BigDecimal.valueOf(0.2725965714).setScale(10)
         forventetUnderholdBarnEgenHusstand = BigDecimal.valueOf(51036.00).setScale(2)
+        forventetSumInntekt25Prosent = BigDecimal.valueOf(175000).setScale(2)
         utførBeregningerOgEvaluerResultatBidragsevne()
     }
 
@@ -219,7 +243,9 @@ internal class BeregnBidragsevneApiTest {
         forventetTrinnskatt = BigDecimal.valueOf(20607.60).setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(54600.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(190817.60).setScale(2)
+        forventetSumSkattFaktor = BigDecimal.valueOf(0.2725965714).setScale(10)
         forventetUnderholdBarnEgenHusstand = BigDecimal.valueOf(127590.00).setScale(2)
+        forventetSumInntekt25Prosent = BigDecimal.valueOf(175000).setScale(2)
         utførBeregningerOgEvaluerResultatBidragsevne()
     }
 
@@ -233,7 +259,9 @@ internal class BeregnBidragsevneApiTest {
         forventetTrinnskatt = BigDecimal.valueOf(147770.60).setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(117000.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(556380.60).setScale(2)
+        forventetSumSkattFaktor = BigDecimal.valueOf(0.3709204).setScale(10)
         forventetUnderholdBarnEgenHusstand = BigDecimal.ZERO.setScale(2)
+        forventetSumInntekt25Prosent = BigDecimal.valueOf(375000).setScale(2)
         utførBeregningerOgEvaluerResultatBidragsevne()
     }
 
@@ -247,7 +275,9 @@ internal class BeregnBidragsevneApiTest {
         forventetTrinnskatt = BigDecimal.valueOf(147770.60).setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(117000.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(556380.60).setScale(2)
+        forventetSumSkattFaktor = BigDecimal.valueOf(0.3709204).setScale(10)
         forventetUnderholdBarnEgenHusstand = BigDecimal.valueOf(51036.00).setScale(2)
+        forventetSumInntekt25Prosent = BigDecimal.valueOf(375000).setScale(2)
         utførBeregningerOgEvaluerResultatBidragsevne()
     }
 
@@ -261,7 +291,9 @@ internal class BeregnBidragsevneApiTest {
         forventetTrinnskatt = BigDecimal.valueOf(147770.60).setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(117000.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(556380.60).setScale(2)
+        forventetSumSkattFaktor = BigDecimal.valueOf(0.3709204).setScale(10)
         forventetUnderholdBarnEgenHusstand = BigDecimal.valueOf(127590.00).setScale(2)
+        forventetSumInntekt25Prosent = BigDecimal.valueOf(375000).setScale(2)
         utførBeregningerOgEvaluerResultatBidragsevne()
     }
 
@@ -275,7 +307,9 @@ internal class BeregnBidragsevneApiTest {
         forventetTrinnskatt = BigDecimal.valueOf(147770.60).setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(117000.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(556380.60).setScale(2)
+        forventetSumSkattFaktor = BigDecimal.valueOf(0.3709204).setScale(10)
         forventetUnderholdBarnEgenHusstand = BigDecimal.ZERO.setScale(2)
+        forventetSumInntekt25Prosent = BigDecimal.valueOf(375000).setScale(2)
         utførBeregningerOgEvaluerResultatBidragsevne()
     }
 
@@ -289,7 +323,9 @@ internal class BeregnBidragsevneApiTest {
         forventetTrinnskatt = BigDecimal.valueOf(147770.60).setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(117000.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(556380.60).setScale(2)
+        forventetSumSkattFaktor = BigDecimal.valueOf(0.3709204).setScale(10)
         forventetUnderholdBarnEgenHusstand = BigDecimal.valueOf(51036.00).setScale(2)
+        forventetSumInntekt25Prosent = BigDecimal.valueOf(375000).setScale(2)
         utførBeregningerOgEvaluerResultatBidragsevne()
     }
 
@@ -303,7 +339,9 @@ internal class BeregnBidragsevneApiTest {
         forventetTrinnskatt = BigDecimal.valueOf(147770.60).setScale(2)
         forventetTrygdeavgift = BigDecimal.valueOf(117000.00).setScale(2)
         forventetSumSkatt = BigDecimal.valueOf(556380.60).setScale(2)
+        forventetSumSkattFaktor = BigDecimal.valueOf(0.3709204).setScale(10)
         forventetUnderholdBarnEgenHusstand = BigDecimal.valueOf(127590.00).setScale(2)
+        forventetSumInntekt25Prosent = BigDecimal.valueOf(375000).setScale(2)
         utførBeregningerOgEvaluerResultatBidragsevne()
     }
 
@@ -317,7 +355,9 @@ internal class BeregnBidragsevneApiTest {
         forventetTrinnskatt = BigDecimal.ZERO.setScale(2)
         forventetTrygdeavgift = BigDecimal.ZERO.setScale(2)
         forventetSumSkatt = BigDecimal.ZERO.setScale(2)
+        forventetSumSkattFaktor = BigDecimal.ZERO.setScale(10)
         forventetUnderholdBarnEgenHusstand = BigDecimal.ZERO.setScale(2)
+        forventetSumInntekt25Prosent = BigDecimal.ZERO.setScale(2)
         forventetAntallInntektRapporteringPeriodeBP = 0
         utførBeregningerOgEvaluerResultatBidragsevne()
     }
@@ -355,6 +395,7 @@ internal class BeregnBidragsevneApiTest {
                     beløp = it.innhold.beløp,
                     skatt = it.innhold.skatt,
                     underholdBarnEgenHusstand = it.innhold.underholdBarnEgenHusstand,
+                    sumInntekt25Prosent = it.innhold.sumInntekt25Prosent,
                 )
             }
 
@@ -401,7 +442,7 @@ internal class BeregnBidragsevneApiTest {
             .size
 
         val antallSjablonSjablontall = bidragsevneResultat
-            .filter { it.type == Grunnlagstype.SJABLON }
+            .filter { it.type == Grunnlagstype.SJABLON_SJABLONTALL }
             .size
 
         val antallSjablonBidragsevne = bidragsevneResultat
@@ -425,7 +466,9 @@ internal class BeregnBidragsevneApiTest {
             { assertThat(bidragsevneResultatListe[0].skatt.trygdeavgift).isEqualTo(forventetTrygdeavgift) },
             { assertThat(bidragsevneResultatListe[0].skatt.trinnskatt).isEqualTo(forventetTrinnskatt) },
             { assertThat(bidragsevneResultatListe[0].skatt.sumSkatt).isEqualTo(forventetSumSkatt) },
+            { assertThat(bidragsevneResultatListe[0].skatt.sumSkattFaktor).isEqualTo(forventetSumSkattFaktor) },
             { assertThat(bidragsevneResultatListe[0].underholdBarnEgenHusstand).isEqualTo(forventetUnderholdBarnEgenHusstand) },
+            { assertThat(bidragsevneResultatListe[0].sumInntekt25Prosent).isEqualTo(forventetSumInntekt25Prosent) },
 
             // Grunnlag
             { assertThat(antallInntektRapporteringPeriodeBP).isEqualTo(forventetAntallInntektRapporteringPeriodeBP) },
@@ -460,6 +503,7 @@ internal class BeregnBidragsevneApiTest {
                     beløp = it.innhold.beløp,
                     skatt = it.innhold.skatt,
                     underholdBarnEgenHusstand = it.innhold.underholdBarnEgenHusstand,
+                    sumInntekt25Prosent = it.innhold.sumInntekt25Prosent,
                 )
             }
 
@@ -506,7 +550,7 @@ internal class BeregnBidragsevneApiTest {
             .size
 
         val antallSjablonSjablontall = bidragsevneResultat
-            .filter { it.type == Grunnlagstype.SJABLON }
+            .filter { it.type == Grunnlagstype.SJABLON_SJABLONTALL }
             .size
 
         val antallSjablonBidragsevne = bidragsevneResultat
@@ -530,7 +574,9 @@ internal class BeregnBidragsevneApiTest {
             { assertThat(bidragsevneResultatListe[0].skatt.trygdeavgift).isEqualTo(BigDecimal.valueOf(55300.00).setScale(2)) },
             { assertThat(bidragsevneResultatListe[0].skatt.trinnskatt).isEqualTo(BigDecimal.valueOf(23627.35).setScale(2)) },
             { assertThat(bidragsevneResultatListe[0].skatt.sumSkatt).isEqualTo(BigDecimal.valueOf(196440.35).setScale(2)) },
+            { assertThat(bidragsevneResultatListe[0].skatt.sumSkattFaktor).isEqualTo(BigDecimal.valueOf(0.2806290714).setScale(10)) },
             { assertThat(bidragsevneResultatListe[0].underholdBarnEgenHusstand).isEqualTo(BigDecimal.ZERO.setScale(2)) },
+            { assertThat(bidragsevneResultatListe[0].sumInntekt25Prosent).isEqualTo(BigDecimal.valueOf(175000).setScale(2)) },
 
             { assertThat(bidragsevneResultatListe[1].periode).isEqualTo(ÅrMånedsperiode("2023-11", "2024-01")) },
             { assertThat(bidragsevneResultatListe[1].beløp).isEqualTo(BigDecimal.valueOf(15623.30).setScale(2)) },
@@ -539,7 +585,9 @@ internal class BeregnBidragsevneApiTest {
             { assertThat(bidragsevneResultatListe[1].skatt.trygdeavgift).isEqualTo(BigDecimal.valueOf(55300.00).setScale(2)) },
             { assertThat(bidragsevneResultatListe[1].skatt.trinnskatt).isEqualTo(BigDecimal.valueOf(23627.35).setScale(2)) },
             { assertThat(bidragsevneResultatListe[1].skatt.sumSkatt).isEqualTo(BigDecimal.valueOf(196440.35).setScale(2)) },
+            { assertThat(bidragsevneResultatListe[1].skatt.sumSkattFaktor).isEqualTo(BigDecimal.valueOf(0.2806290714).setScale(10)) },
             { assertThat(bidragsevneResultatListe[1].underholdBarnEgenHusstand).isEqualTo(BigDecimal.valueOf(50124.00).setScale(2)) },
+            { assertThat(bidragsevneResultatListe[1].sumInntekt25Prosent).isEqualTo(BigDecimal.valueOf(175000).setScale(2)) },
 
             { assertThat(bidragsevneResultatListe[2].periode).isEqualTo(ÅrMånedsperiode("2024-01", "2024-03")) },
             { assertThat(bidragsevneResultatListe[2].beløp).isEqualTo(BigDecimal.valueOf(15933.28).setScale(2)) },
@@ -548,7 +596,9 @@ internal class BeregnBidragsevneApiTest {
             { assertThat(bidragsevneResultatListe[2].skatt.trygdeavgift).isEqualTo(BigDecimal.valueOf(54600.00).setScale(2)) },
             { assertThat(bidragsevneResultatListe[2].skatt.trinnskatt).isEqualTo(BigDecimal.valueOf(20607.60).setScale(2)) },
             { assertThat(bidragsevneResultatListe[2].skatt.sumSkatt).isEqualTo(BigDecimal.valueOf(192720.60).setScale(2)) },
+            { assertThat(bidragsevneResultatListe[2].skatt.sumSkattFaktor).isEqualTo(BigDecimal.valueOf(0.2753151429).setScale(10)) },
             { assertThat(bidragsevneResultatListe[2].underholdBarnEgenHusstand).isEqualTo(BigDecimal.valueOf(50124.00).setScale(2)) },
+            { assertThat(bidragsevneResultatListe[2].sumInntekt25Prosent).isEqualTo(BigDecimal.valueOf(175000).setScale(2)) },
 
             { assertThat(bidragsevneResultatListe[3].periode).isEqualTo(ÅrMånedsperiode("2024-03", "2024-05")) },
             { assertThat(bidragsevneResultatListe[3].beløp).isEqualTo(BigDecimal.valueOf(21916.28).setScale(2)) },
@@ -557,7 +607,9 @@ internal class BeregnBidragsevneApiTest {
             { assertThat(bidragsevneResultatListe[3].skatt.trygdeavgift).isEqualTo(BigDecimal.valueOf(54600.00).setScale(2)) },
             { assertThat(bidragsevneResultatListe[3].skatt.trinnskatt).isEqualTo(BigDecimal.valueOf(20607.60).setScale(2)) },
             { assertThat(bidragsevneResultatListe[3].skatt.sumSkatt).isEqualTo(BigDecimal.valueOf(192720.60).setScale(2)) },
+            { assertThat(bidragsevneResultatListe[3].skatt.sumSkattFaktor).isEqualTo(BigDecimal.valueOf(0.2753151429).setScale(10)) },
             { assertThat(bidragsevneResultatListe[3].underholdBarnEgenHusstand).isEqualTo(BigDecimal.valueOf(50124.00).setScale(2)) },
+            { assertThat(bidragsevneResultatListe[3].sumInntekt25Prosent).isEqualTo(BigDecimal.valueOf(175000).setScale(2)) },
 
             { assertThat(bidragsevneResultatListe[4].periode).isEqualTo(ÅrMånedsperiode("2024-05", "2024-07")) },
             { assertThat(bidragsevneResultatListe[4].beløp).isEqualTo(BigDecimal.valueOf(19827.78).setScale(2)) },
@@ -566,7 +618,9 @@ internal class BeregnBidragsevneApiTest {
             { assertThat(bidragsevneResultatListe[4].skatt.trygdeavgift).isEqualTo(BigDecimal.valueOf(54600.00).setScale(2)) },
             { assertThat(bidragsevneResultatListe[4].skatt.trinnskatt).isEqualTo(BigDecimal.valueOf(20607.60).setScale(2)) },
             { assertThat(bidragsevneResultatListe[4].skatt.sumSkatt).isEqualTo(BigDecimal.valueOf(192720.60).setScale(2)) },
+            { assertThat(bidragsevneResultatListe[4].skatt.sumSkattFaktor).isEqualTo(BigDecimal.valueOf(0.2753151429).setScale(10)) },
             { assertThat(bidragsevneResultatListe[4].underholdBarnEgenHusstand).isEqualTo(BigDecimal.valueOf(75186.00).setScale(2)) },
+            { assertThat(bidragsevneResultatListe[4].sumInntekt25Prosent).isEqualTo(BigDecimal.valueOf(175000).setScale(2)) },
 
             { assertThat(bidragsevneResultatListe[5].periode).isEqualTo(ÅrMånedsperiode("2024-07", "2024-09")) },
             { assertThat(bidragsevneResultatListe[5].beløp).isEqualTo(BigDecimal.valueOf(18809.37).setScale(2)) },
@@ -575,7 +629,9 @@ internal class BeregnBidragsevneApiTest {
             { assertThat(bidragsevneResultatListe[5].skatt.trygdeavgift).isEqualTo(BigDecimal.valueOf(54600.00).setScale(2)) },
             { assertThat(bidragsevneResultatListe[5].skatt.trinnskatt).isEqualTo(BigDecimal.valueOf(20607.60).setScale(2)) },
             { assertThat(bidragsevneResultatListe[5].skatt.sumSkatt).isEqualTo(BigDecimal.valueOf(190817.60).setScale(2)) },
+            { assertThat(bidragsevneResultatListe[5].skatt.sumSkattFaktor).isEqualTo(BigDecimal.valueOf(0.2725965714).setScale(10)) },
             { assertThat(bidragsevneResultatListe[5].underholdBarnEgenHusstand).isEqualTo(BigDecimal.valueOf(76554.00).setScale(2)) },
+            { assertThat(bidragsevneResultatListe[5].sumInntekt25Prosent).isEqualTo(BigDecimal.valueOf(175000).setScale(2)) },
 
             { assertThat(bidragsevneResultatListe[6].periode).isEqualTo(ÅrMånedsperiode("2024-09", "2024-10")) },
             { assertThat(bidragsevneResultatListe[6].beløp).isEqualTo(BigDecimal.valueOf(32804.12).setScale(2)) },
@@ -584,7 +640,9 @@ internal class BeregnBidragsevneApiTest {
             { assertThat(bidragsevneResultatListe[6].skatt.trygdeavgift).isEqualTo(BigDecimal.valueOf(78000.00).setScale(2)) },
             { assertThat(bidragsevneResultatListe[6].skatt.trinnskatt).isEqualTo(BigDecimal.valueOf(63270.60).setScale(2)) },
             { assertThat(bidragsevneResultatListe[6].skatt.sumSkatt).isEqualTo(BigDecimal.valueOf(322880.60).setScale(2)) },
+            { assertThat(bidragsevneResultatListe[6].skatt.sumSkattFaktor).isEqualTo(BigDecimal.valueOf(0.3228806).setScale(10)) },
             { assertThat(bidragsevneResultatListe[6].underholdBarnEgenHusstand).isEqualTo(BigDecimal.valueOf(76554.00).setScale(2)) },
+            { assertThat(bidragsevneResultatListe[6].sumInntekt25Prosent).isEqualTo(BigDecimal.valueOf(250000).setScale(2)) },
 
             // Grunnlag
             { assertThat(antallInntektRapporteringPeriodeBP).isEqualTo(forventetAntallInntektRapporteringPeriodeBP) },

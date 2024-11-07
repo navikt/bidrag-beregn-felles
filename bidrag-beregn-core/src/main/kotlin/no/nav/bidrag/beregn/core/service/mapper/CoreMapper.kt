@@ -46,9 +46,9 @@ abstract class CoreMapper {
         sjablontallListe.firstOrNull { it.typeSjablon == SjablonTallNavn.INNSLAG_KAPITALINNTEKT_BELØP.id }?.verdi ?: BigDecimal.ZERO
 
     fun finnInnslagKapitalinntektFraGrunnlag(sjablonListe: List<GrunnlagDto>): BigDecimal = sjablonListe
-        .filter { it.referanse.uppercase().contains("SJABLONTALL") }
+        .filter { it.referanse.contains(SjablonTallNavn.INNSLAG_KAPITALINNTEKT_BELØP.navn) }
         .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>()
-        .firstOrNull { it.innhold.sjablon == SjablonTallNavn.INNSLAG_KAPITALINNTEKT_BELØP }?.innhold?.verdi ?: BigDecimal.ZERO
+        .firstOrNull()?.innhold?.verdi ?: BigDecimal.ZERO
 
     fun finnReferanseTilRolle(grunnlagListe: List<GrunnlagDto>, grunnlagstype: Grunnlagstype) = grunnlagListe
         .firstOrNull { it.type == grunnlagstype }?.referanse ?: throw NoSuchElementException("Grunnlagstype $grunnlagstype mangler i input")
@@ -269,7 +269,6 @@ abstract class CoreMapper {
                 akkumulerOgPeriodiserFaktiskUtgift(
                     grunnlagListe as List<FaktiskUtgiftPeriodeCore>,
                     periodeListe,
-                    søknadsbarnreferanse,
                     gjelderReferanse,
                 ) as List<T>
             }
@@ -362,7 +361,6 @@ abstract class CoreMapper {
     private fun akkumulerOgPeriodiserFaktiskUtgift(
         faktiskUtgiftPeriodeCoreListe: List<FaktiskUtgiftPeriodeCore>,
         periodeListe: List<Periode>,
-        søknadsbarnReferanse: Grunnlagsreferanse,
         gjelderReferanse: Grunnlagsreferanse,
     ): List<FaktiskUtgiftPeriodeCore> {
         val resultatListe = mutableListOf<FaktiskUtgiftPeriodeCore>()

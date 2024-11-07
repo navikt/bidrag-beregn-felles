@@ -5,7 +5,6 @@ import no.nav.bidrag.beregn.barnebidrag.beregning.EndeligBidragBeregning
 import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilleggBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BidragsevneDelberegningBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BpAndelUnderholdskostnadDelberegningBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.DelberegningEndeligBidrag
 import no.nav.bidrag.beregn.barnebidrag.bo.DeltBostedBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragPeriodeGrunnlag
@@ -17,6 +16,7 @@ import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndeligBidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
 
@@ -96,7 +96,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
                 BidragsevneDelberegningBeregningGrunnlag(
                     referanse = it.referanse,
                     beløp = it.bidragsevnePeriode.beløp,
-                    tjuefemProsentInntekt = it.bidragsevnePeriode.tjuefemProsentInntekt,
+                    sumInntekt25Prosent = it.bidragsevnePeriode.sumInntekt25Prosent,
                 )
             }
             ?: throw IllegalArgumentException("Bidragsevne grunnlag mangler for periode $bruddPeriode"),
@@ -115,7 +115,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
                 BpAndelUnderholdskostnadDelberegningBeregningGrunnlag(
                     referanse = it.referanse,
                     andelBeløp = it.bpAndelUnderholdskostnadPeriode.andelBeløp,
-                    andelFaktor = it.bpAndelUnderholdskostnadPeriode.andelFaktor,
+                    andelFaktor = it.bpAndelUnderholdskostnadPeriode.endeligAndelFaktor,
                     barnetErSelvforsørget = it.bpAndelUnderholdskostnadPeriode.barnetErSelvforsørget,
                 )
             }
@@ -192,12 +192,11 @@ internal object BeregnEndeligBidragService : BeregnService() {
         .map {
             GrunnlagDto(
                 referanse = opprettDelberegningreferanse(
-// TODO Sjekk om dette er riktig grunnlagstype
-                    type = Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_BEREGNEDE_TOTALBIDRAG,
+                    type = Grunnlagstype.DELBEREGNING_ENDELIG_BIDRAG,
                     periode = ÅrMånedsperiode(fom = it.periode.fom, til = null),
                     søknadsbarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
                 ),
-                type = Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_BEREGNEDE_TOTALBIDRAG,
+                type = Grunnlagstype.DELBEREGNING_ENDELIG_BIDRAG,
                 innhold = POJONode(
                     DelberegningEndeligBidrag(
                         periode = it.periode,

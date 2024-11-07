@@ -3,19 +3,19 @@ package no.nav.bidrag.beregn.barnebidrag.mapper
 import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilleggPeriode
 import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilleggPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BidragsevneDelberegningPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.BidragsevnePeriode
 import no.nav.bidrag.beregn.barnebidrag.bo.BpAndelUnderholdskostnadDelberegningPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.BpAndelUnderholdskostnadPeriode
-import no.nav.bidrag.beregn.barnebidrag.bo.DeltBostedPeriode
 import no.nav.bidrag.beregn.barnebidrag.bo.DeltBostedPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragDelberegningPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragPeriode
 import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadDelberegningPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.UnderholdskostnadPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsfradrag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DeltBostedPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåFremmedReferanse
 
@@ -46,7 +46,7 @@ internal object EndeligBidragMapper : CoreMapper() {
     private fun mapBidragsevne(beregnGrunnlag: BeregnGrunnlag): List<BidragsevneDelberegningPeriodeGrunnlag> {
         try {
             return beregnGrunnlag.grunnlagListe
-                .filtrerOgKonverterBasertPåEgenReferanse<BidragsevnePeriode>(Grunnlagstype.DELBEREGNING_BIDRAGSEVNE)
+                .filtrerOgKonverterBasertPåEgenReferanse<DelberegningBidragsevne>(Grunnlagstype.DELBEREGNING_BIDRAGSEVNE)
                 .map {
                     BidragsevneDelberegningPeriodeGrunnlag(
                         referanse = it.referanse,
@@ -63,8 +63,7 @@ internal object EndeligBidragMapper : CoreMapper() {
     private fun mapUnderholdskostnad(beregnGrunnlag: BeregnGrunnlag): List<UnderholdskostnadDelberegningPeriodeGrunnlag> {
         try {
             return beregnGrunnlag.grunnlagListe
-// TODO Bør endres til DELBEREGNING_UNDERHOLDSKOSTNAD
-                .filtrerOgKonverterBasertPåEgenReferanse<UnderholdskostnadPeriode>(Grunnlagstype.UNDERHOLDSKOSTNAD)
+                .filtrerOgKonverterBasertPåEgenReferanse<DelberegningUnderholdskostnad>(Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD)
                 .map {
                     UnderholdskostnadDelberegningPeriodeGrunnlag(
                         referanse = it.referanse,
@@ -73,7 +72,7 @@ internal object EndeligBidragMapper : CoreMapper() {
                 }
         } catch (e: Exception) {
             throw IllegalArgumentException(
-                "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.UNDERHOLDSKOSTNAD er ikke gyldig: " + e.message,
+                "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD er ikke gyldig: " + e.message,
             )
         }
     }
@@ -81,7 +80,7 @@ internal object EndeligBidragMapper : CoreMapper() {
     private fun mapBpAndelUnderholdskostnad(beregnGrunnlag: BeregnGrunnlag): List<BpAndelUnderholdskostnadDelberegningPeriodeGrunnlag> {
         try {
             return beregnGrunnlag.grunnlagListe
-                .filtrerOgKonverterBasertPåEgenReferanse<BpAndelUnderholdskostnadPeriode>(Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL)
+                .filtrerOgKonverterBasertPåEgenReferanse<DelberegningBidragspliktigesAndel>(Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL)
                 .map {
                     BpAndelUnderholdskostnadDelberegningPeriodeGrunnlag(
                         referanse = it.referanse,
@@ -99,7 +98,7 @@ internal object EndeligBidragMapper : CoreMapper() {
     private fun mapSamværsfradrag(beregnGrunnlag: BeregnGrunnlag): List<SamværsfradragDelberegningPeriodeGrunnlag> {
         try {
             return beregnGrunnlag.grunnlagListe
-                .filtrerOgKonverterBasertPåEgenReferanse<SamværsfradragPeriode>(Grunnlagstype.DELBEREGNING_SAMVÆRSFRADRAG)
+                .filtrerOgKonverterBasertPåEgenReferanse<DelberegningSamværsfradrag>(Grunnlagstype.DELBEREGNING_SAMVÆRSFRADRAG)
                 .map {
                     SamværsfradragDelberegningPeriodeGrunnlag(
                         referanse = it.referanse,

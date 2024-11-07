@@ -11,7 +11,6 @@ import no.nav.bidrag.beregn.core.dto.VoksneIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.person.Bostatuskode
-import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BostatusPeriode
@@ -207,7 +206,7 @@ internal object BidragsevneMapper : CoreMapper() {
     private fun mapSjablonSjablontall(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonSjablontallPeriodeGrunnlag> {
         try {
             return sjablonGrunnlag
-                .filter { it.referanse.uppercase().contains("SJABLONTALL") }
+                .filter { it.type == Grunnlagstype.SJABLON_SJABLONTALL }
                 .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>()
                 .map {
                     SjablonSjablontallPeriodeGrunnlag(
@@ -225,7 +224,7 @@ internal object BidragsevneMapper : CoreMapper() {
     private fun mapSjablonBidragsevne(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonBidragsevnePeriodeGrunnlag> {
         try {
             return sjablonGrunnlag
-                .filter { it.referanse.contains(SjablonNavn.BIDRAGSEVNE.navn) }
+                .filter { it.type == Grunnlagstype.SJABLON_BIDRAGSEVNE }
                 .filtrerOgKonverterBasertPåEgenReferanse<SjablonBidragsevnePeriode>()
                 .map {
                     SjablonBidragsevnePeriodeGrunnlag(
@@ -243,7 +242,7 @@ internal object BidragsevneMapper : CoreMapper() {
     private fun mapSjablonTrinnvisSkattesats(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonTrinnvisSkattesatsPeriodeGrunnlag> {
         try {
             return sjablonGrunnlag
-                .filter { it.referanse.contains(SjablonNavn.TRINNVIS_SKATTESATS.navn) }
+                .filter { it.type == Grunnlagstype.SJABLON_TRINNVIS_SKATTESATS }
                 .filtrerOgKonverterBasertPåEgenReferanse<SjablonTrinnvisSkattesatsPeriode>()
                 .map {
                     SjablonTrinnvisSkattesatsPeriodeGrunnlag(

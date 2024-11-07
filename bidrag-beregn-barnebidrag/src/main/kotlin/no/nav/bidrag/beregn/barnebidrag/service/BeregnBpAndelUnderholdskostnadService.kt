@@ -113,7 +113,7 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
     ): List<ÅrMånedsperiode> {
         // inntektSBPerioder er nullable
         val inntektSBPerioder = grunnlagListe.inntektSBPeriodeGrunnlagListe.asSequence()
-            ?.map { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil) } ?: emptySequence()
+            .map { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil) }
         val periodeListe = sequenceOf(grunnlagListe.beregningsperiode)
             .plus(grunnlagListe.underholdskostnadDelberegningPeriodeGrunnlagListe.asSequence().map { it.underholdskostnadPeriode.periode })
             .plus(grunnlagListe.inntektBPPeriodeGrunnlagListe.asSequence().map { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil) })
@@ -311,9 +311,9 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
     // TODO Bør synkes med som ligger i CoreMapper. Pt ligger det bare en gyldig sjablonverdi (uforandret siden 2003).
     // TODO Logikken her må utvides hvis det legges inn nye sjablonverdier
     private fun finnInnslagKapitalinntektFraGrunnlag(sjablonListe: List<GrunnlagDto>): Sjablontall? = sjablonListe
-        .filter { it.referanse.uppercase().contains("SJABLONTALL") }
+        .filter { it.referanse.contains(SjablonTallNavn.INNSLAG_KAPITALINNTEKT_BELØP.navn) }
         .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>()
-        .firstOrNull { it.innhold.sjablon == SjablonTallNavn.INNSLAG_KAPITALINNTEKT_BELØP }
+        .firstOrNull()
         ?.let { innslagKapitalinntektSjablon ->
             Sjablontall(
                 typeSjablon = innslagKapitalinntektSjablon.innhold.sjablon.navn,

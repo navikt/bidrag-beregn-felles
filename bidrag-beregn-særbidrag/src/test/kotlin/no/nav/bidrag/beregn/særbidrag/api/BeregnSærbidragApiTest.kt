@@ -15,7 +15,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspli
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesBeregnedeTotalbidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBoforhold
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSumInntekt
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningVoksneIHustand
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningVoksneIHusstand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningSærbidrag
 import org.assertj.core.api.Assertions.assertThat
@@ -494,7 +494,7 @@ internal class BeregnSærbidragApiTest {
         val delberegningVoksneIHusstandListe = totalSærbidragResultat.grunnlagListe
             .filter { it.type == Grunnlagstype.DELBEREGNING_VOKSNE_I_HUSSTAND }
         val delberegningVoksneIHusstandResultat =
-            objectMapper.treeToValue(delberegningVoksneIHusstandListe[0].innhold, DelberegningVoksneIHustand::class.java)
+            objectMapper.treeToValue(delberegningVoksneIHusstandListe[0].innhold, DelberegningVoksneIHusstand::class.java)
 
         val delberegningBoforholdListe = totalSærbidragResultat.grunnlagListe
             .filter { it.type == Grunnlagstype.DELBEREGNING_BOFORHOLD }

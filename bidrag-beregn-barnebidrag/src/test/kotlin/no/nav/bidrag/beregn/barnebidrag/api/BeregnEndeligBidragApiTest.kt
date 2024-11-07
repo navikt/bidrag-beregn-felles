@@ -3,13 +3,13 @@ package no.nav.bidrag.beregn.barnebidrag.api
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import no.nav.bidrag.beregn.barnebidrag.bo.DelberegningEndeligBidrag
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnebidragService
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndeligBidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import org.assertj.core.api.Assertions.assertThat
@@ -249,7 +249,7 @@ internal class BeregnEndeligBidragApiTest {
         val alleRefererteReferanser = hentAlleRefererteReferanser(endeligBidragResultat)
 
         val endeligBidragResultatListe = endeligBidragResultat
-            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndeligBidrag>(Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_BEREGNEDE_TOTALBIDRAG)
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndeligBidrag>(Grunnlagstype.DELBEREGNING_ENDELIG_BIDRAG)
             .map {
                 DelberegningEndeligBidrag(
                     periode = it.innhold.periode,
@@ -281,8 +281,7 @@ internal class BeregnEndeligBidragApiTest {
             .size
 
         val antallDelberegningUnderholdskostnad = endeligBidragResultat
-            // TODO Endre til DELBEREGNING_UNDERHOLDSKOSTNAD
-            .filter { it.type == Grunnlagstype.UNDERHOLDSKOSTNAD }
+            .filter { it.type == Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD }
             .size
 
         val antallDelberegningBPAndelUnderholdskostnad = endeligBidragResultat
@@ -348,7 +347,7 @@ internal class BeregnEndeligBidragApiTest {
         val alleRefererteReferanser = hentAlleRefererteReferanser(endeligBidragResultat)
 
         val endeligBidragResultatListe = endeligBidragResultat
-            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndeligBidrag>(Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_BEREGNEDE_TOTALBIDRAG)
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndeligBidrag>(Grunnlagstype.DELBEREGNING_ENDELIG_BIDRAG)
             .map {
                 DelberegningEndeligBidrag(
                     periode = it.innhold.periode,
@@ -380,8 +379,7 @@ internal class BeregnEndeligBidragApiTest {
             .size
 
         val antallDelberegningUnderholdskostnad = endeligBidragResultat
-            // TODO Endre til DELBEREGNING_UNDERHOLDSKOSTNAD
-            .filter { it.type == Grunnlagstype.UNDERHOLDSKOSTNAD }
+            .filter { it.type == Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD }
             .size
 
         val antallDelberegningBPAndelUnderholdskostnad = endeligBidragResultat
