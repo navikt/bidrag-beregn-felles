@@ -12,10 +12,10 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningVoksneIHus
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 
 @JvmName("barnIHusstandenTilGrunnlag")
-fun List<BarnIHusstandenPeriodeCore>.mapTilGrunnlag(bidragspliktigReferanse: String) = map {
+fun List<BarnIHusstandenPeriodeCore>.mapTilGrunnlag(bidragspliktigReferanse: String? = null) = map {
     it.tilGrunnlag(bidragspliktigReferanse)
 }
-fun BarnIHusstandenPeriodeCore.tilGrunnlag(bidragspliktigReferanse: String) = GrunnlagDto(
+fun BarnIHusstandenPeriodeCore.tilGrunnlag(bidragspliktigReferanse: String? = null) = GrunnlagDto(
     referanse = referanse,
     type = bestemGrunnlagstype(referanse),
     innhold = POJONode(

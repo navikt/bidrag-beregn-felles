@@ -7,6 +7,7 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import no.nav.bidrag.beregn.core.dto.AvvikCore
 import no.nav.bidrag.beregn.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.core.exception.UgyldigInputException
+import no.nav.bidrag.beregn.core.mapping.bestemGrunnlagstype
 import no.nav.bidrag.beregn.core.mapping.sjablontallTilGrunnlagsobjekt
 import no.nav.bidrag.beregn.core.mapping.tilGrunnlagsobjekt
 import no.nav.bidrag.beregn.core.mapping.trinnvisSkattesatsTilGrunnlagsobjekt
@@ -101,25 +102,6 @@ abstract class BeregnService {
             )
         }
 
-    // Bestemmer grunnlagstype basert på referanse
-    fun bestemGrunnlagstype(referanse: String) = when {
-        referanse.contains(Grunnlagstype.DELBEREGNING_SUM_INNTEKT.name) -> Grunnlagstype.DELBEREGNING_SUM_INNTEKT
-        referanse.contains(Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND.name) -> Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND
-        referanse.contains(Grunnlagstype.DELBEREGNING_VOKSNE_I_HUSSTAND.name) -> Grunnlagstype.DELBEREGNING_VOKSNE_I_HUSSTAND
-        referanse.contains(Grunnlagstype.DELBEREGNING_BOFORHOLD.name) -> Grunnlagstype.DELBEREGNING_BOFORHOLD
-        referanse.contains(Grunnlagstype.DELBEREGNING_BIDRAGSEVNE.name) -> Grunnlagstype.DELBEREGNING_BIDRAGSEVNE
-        referanse.contains(
-            Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_BEREGNEDE_TOTALBIDRAG.name,
-        ) -> Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_BEREGNEDE_TOTALBIDRAG
-
-        referanse.contains(Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD.name) -> Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD
-        referanse.contains(Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL.name) -> Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL
-        referanse.contains(Grunnlagstype.DELBEREGNING_FAKTISK_UTGIFT.name) -> Grunnlagstype.DELBEREGNING_FAKTISK_UTGIFT
-        referanse.contains(Grunnlagstype.DELBEREGNING_TILLEGGSSTØNAD.name) -> Grunnlagstype.DELBEREGNING_TILLEGGSSTØNAD
-
-        else -> throw IllegalArgumentException("Ikke i stand til å utlede grunnlagstype for referanse: $referanse")
-    }
-
     // Summerer inntekter som matcher med en liste over referanser og som inkluderer eller ekskluderer en liste over inntektsrapporteringstyper
     // (basert på om inputparameter ekskluderInntekter er satt til true eller false). Hvis den filtrerte inntektslisten er tom, returneres null.
     private fun summerInntekter(
@@ -179,20 +161,18 @@ abstract class BeregnService {
     }
 
     // Mapper ut grunnlag for sjablon 0005 hvis forskuddssats er brukt i beregningen
-    fun mapSjablontallForskuddssats(forskuddssatsSjablon: Sjablontall): GrunnlagDto =
-        sjablontallTilGrunnlagsobjekt(
-            periode = ÅrMånedsperiode(forskuddssatsSjablon.datoFom!!, forskuddssatsSjablon.datoTom),
-            sjablontallNavn = SjablonTallNavn.fromId(forskuddssatsSjablon.typeSjablon!!),
-            verdi = forskuddssatsSjablon.verdi!!,
-        )
+    fun mapSjablontallForskuddssats(forskuddssatsSjablon: Sjablontall): GrunnlagDto = sjablontallTilGrunnlagsobjekt(
+        periode = ÅrMånedsperiode(forskuddssatsSjablon.datoFom!!, forskuddssatsSjablon.datoTom),
+        sjablontallNavn = SjablonTallNavn.fromId(forskuddssatsSjablon.typeSjablon!!),
+        verdi = forskuddssatsSjablon.verdi!!,
+    )
 
     // Mapper ut grunnlag for sjablon 0006 hvis kapitalinntekt er brukt i beregningen
-    fun mapSjablontallKapitalinntektGrunnlag(innslagKapitalinntektSjablon: Sjablontall): GrunnlagDto =
-        sjablontallTilGrunnlagsobjekt(
-            periode = ÅrMånedsperiode(innslagKapitalinntektSjablon.datoFom!!, innslagKapitalinntektSjablon.datoTom),
-            sjablontallNavn = SjablonTallNavn.fromId(innslagKapitalinntektSjablon.typeSjablon!!),
-            verdi = innslagKapitalinntektSjablon.verdi!!,
-        )
+    fun mapSjablontallKapitalinntektGrunnlag(innslagKapitalinntektSjablon: Sjablontall): GrunnlagDto = sjablontallTilGrunnlagsobjekt(
+        periode = ÅrMånedsperiode(innslagKapitalinntektSjablon.datoFom!!, innslagKapitalinntektSjablon.datoTom),
+        sjablontallNavn = SjablonTallNavn.fromId(innslagKapitalinntektSjablon.typeSjablon!!),
+        verdi = innslagKapitalinntektSjablon.verdi!!,
+    )
 
     // Lager grunnlagsobjekter for sjabloner av type Sjablontall som er av riktig delberegningstype og som er innenfor perioden
     protected fun mapSjablonSjablontallGrunnlag(
@@ -215,7 +195,7 @@ abstract class BeregnService {
                 sjablontallTilGrunnlagsobjekt(
                     periode = ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!)),
                     sjablontallNavn = sjablontallMap[it.typeSjablon]!!,
-                    verdi = it.verdi!!
+                    verdi = it.verdi!!,
                 )
             }
     }
