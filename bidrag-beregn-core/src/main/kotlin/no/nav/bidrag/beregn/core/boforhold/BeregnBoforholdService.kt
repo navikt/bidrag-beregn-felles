@@ -1,61 +1,59 @@
-package no.nav.bidrag.beregn.barnebidrag.mapper
+package no.nav.bidrag.beregn.core.boforhold
 
-import no.nav.bidrag.beregn.barnebidrag.bo.BidragsevnePeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SjablonBidragsevnePeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSjablontallPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SjablonTrinnvisSkattesatsPeriodeGrunnlag
-import no.nav.bidrag.beregn.core.BeregnApi
 import no.nav.bidrag.beregn.core.dto.BarnIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.core.dto.BoforholdPeriodeCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.VoksneIHusstandenPeriodeCore
+import no.nav.bidrag.beregn.core.mapping.tilGrunnlag
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BostatusPeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBoforhold
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
-import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonBidragsevnePeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonTrinnvisSkattesatsPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
 import java.util.Collections
 
-internal object BidragsevneMapper : CoreMapper() {
-    private val beregnApi: BeregnApi = BeregnApi()
-    fun mapBidragsevneGrunnlag(mottattGrunnlag: BeregnGrunnlag, sjablonGrunnlag: List<GrunnlagDto>): BidragsevnePeriodeGrunnlag {
-        val referanseTilBP = finnReferanseTilRolle(
-            grunnlagListe = mottattGrunnlag.grunnlagListe,
+data class BeregnBoforholdPeriodeCoreRespons(
+    val boforholdPeriodeCoreListe: List<BoforholdPeriodeCore>,
+    val barnIHusstandenPeriodeCoreListe: List<BarnIHusstandenPeriodeCore>,
+    val voksneIHusstandenPeriodeCoreListe: List<VoksneIHusstandenPeriodeCore>,
+    val gjelderReferanse: String,
+)
+
+internal class BeregnBoforholdService : CoreMapper() {
+    fun beregnBoforholdPeriodeCore(beregnGrunnlag: BeregnGrunnlag, referanseTilRolle: Grunnlagsreferanse? = null): BeregnBoforholdPeriodeCoreRespons {
+        val gjelderReferanse = referanseTilRolle ?: finnReferanseTilRolle(
+            grunnlagListe = beregnGrunnlag.grunnlagListe,
             grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
         )
 
-        val (boforholdPeriodeGrunnlagListe, barnIHusstandenPeriodeGrunnlagListe, voksneIHusstandenPeriodeGrunnlagListe) =
-            beregnApi.beregnBoforholdCore(mottattGrunnlag, referanseTilBP)
+        val barnIHusstandenPeriodeCoreListe = mapBarnIHusstanden(beregnGrunnlag = beregnGrunnlag, gjelderReferanse = gjelderReferanse)
+        val voksneIHusstandenPeriodeCoreListe = mapVoksneIHusstanden(beregnGrunnlag = beregnGrunnlag, gjelderReferanse = gjelderReferanse)
+        val boforholdPeriodeGrunnlagListe = slåSammenBarnOgVoksneIHusstanden(
+            barnIHusstandenPeriodeGrunnlagListe = barnIHusstandenPeriodeCoreListe,
+            voksneIHusstandenPeriodeGrunnlagListe = voksneIHusstandenPeriodeCoreListe,
+            søknadsbarnReferanse = beregnGrunnlag.søknadsbarnReferanse,
+            gjelderReferanse = gjelderReferanse,
+        )
 
-        return BidragsevnePeriodeGrunnlag(
-            beregningsperiode = mottattGrunnlag.periode,
-            inntektBPPeriodeGrunnlagListe = mapInntekt(
-                beregnGrunnlag = mottattGrunnlag,
-                referanseTilRolle = finnReferanseTilRolle(
-                    grunnlagListe = mottattGrunnlag.grunnlagListe,
-                    grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
-                ),
-                innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntektFraGrunnlag(sjablonGrunnlag),
-            ),
-            barnIHusstandenPeriodeGrunnlagListe = barnIHusstandenPeriodeGrunnlagListe,
-            voksneIHusstandenPeriodeGrunnlagListe = voksneIHusstandenPeriodeGrunnlagListe,
-            boforholdPeriodeGrunnlagListe = boforholdPeriodeGrunnlagListe,
-            sjablonSjablontallPeriodeGrunnlagListe = mapSjablonSjablontall(sjablonGrunnlag),
-            sjablonBidragsevnePeriodeGrunnlagListe = mapSjablonBidragsevne(sjablonGrunnlag),
-            sjablonTrinnvisSkattesatsPeriodeGrunnlagListe = mapSjablonTrinnvisSkattesats(sjablonGrunnlag),
+        return BeregnBoforholdPeriodeCoreRespons(
+            boforholdPeriodeCoreListe = boforholdPeriodeGrunnlagListe,
+            barnIHusstandenPeriodeCoreListe = barnIHusstandenPeriodeCoreListe,
+            voksneIHusstandenPeriodeCoreListe = voksneIHusstandenPeriodeCoreListe,
+            gjelderReferanse = gjelderReferanse,
         )
     }
+    fun beregnDelberegningBoforholdListe(beregnGrunnlag: BeregnGrunnlag, gjelderReferanse: Grunnlagsreferanse? = null): List<DelberegningBoforhold> {
+        val respons = beregnBoforholdPeriodeCore(beregnGrunnlag, gjelderReferanse)
 
-    // TODO: Flytte til CoreMapper? (ligger pt også i BidragsevneCoreMapper under særbidrag)
-    private fun mapBarnIHusstanden(beregnGrunnlag: BeregnGrunnlag, referanseTilRolle: Grunnlagsreferanse): List<BarnIHusstandenPeriodeCore> {
+        return respons.boforholdPeriodeCoreListe.map { it.tilGrunnlag() }
+    }
+
+    private fun mapBarnIHusstanden(beregnGrunnlag: BeregnGrunnlag, gjelderReferanse: Grunnlagsreferanse): List<BarnIHusstandenPeriodeCore> {
         try {
             val barnIHusstandenGrunnlagListe =
                 beregnGrunnlag.grunnlagListe
@@ -89,18 +87,17 @@ internal object BidragsevneMapper : CoreMapper() {
             return akkumulerOgPeriodiser(
                 grunnlagListe = barnIHusstandenGrunnlagListe,
                 søknadsbarnreferanse = beregnGrunnlag.søknadsbarnReferanse,
-                gjelderReferanse = referanseTilRolle,
+                gjelderReferanse = gjelderReferanse,
                 clazz = BarnIHusstandenPeriodeCore::class.java,
             )
         } catch (e: Exception) {
             throw IllegalArgumentException(
-                "Ugyldig input ved beregning av bidragsevne. Innhold i Grunnlagstype.BOSTATUS_PERIODE er ikke gyldig: " + e.message,
+                "Ugyldig input ved beregning av særlige utgifter. Innhold i Grunnlagstype.BOSTATUS_PERIODE er ikke gyldig: " + e.message,
             )
         }
     }
 
-    // TODO: Flytte til CoreMapper? (ligger pt også i BidragsevneCoreMapper under særbidrag)
-    private fun mapVoksneIHusstanden(beregnGrunnlag: BeregnGrunnlag, referanseTilRolle: Grunnlagsreferanse): List<VoksneIHusstandenPeriodeCore> {
+    private fun mapVoksneIHusstanden(beregnGrunnlag: BeregnGrunnlag, gjelderReferanse: Grunnlagsreferanse): List<VoksneIHusstandenPeriodeCore> {
         try {
             val voksneIHusstandenGrunnlagListe =
                 beregnGrunnlag.grunnlagListe
@@ -127,17 +124,16 @@ internal object BidragsevneMapper : CoreMapper() {
             return akkumulerOgPeriodiser(
                 voksneIHusstandenGrunnlagListe,
                 beregnGrunnlag.søknadsbarnReferanse,
-                referanseTilRolle,
+                gjelderReferanse,
                 VoksneIHusstandenPeriodeCore::class.java,
             )
         } catch (e: Exception) {
             throw IllegalArgumentException(
-                "Ugyldig input ved beregning av bidragsevne. Innhold i Grunnlagstype.BOSTATUS_PERIODE er ikke gyldig: " + e.message,
+                "Ugyldig input ved beregning. Innhold i Grunnlagstype.BOSTATUS_PERIODE er ikke gyldig: " + e.message,
             )
         }
     }
 
-    // TODO: Flytte til CoreMapper? (ligger pt også i BidragsevneCoreMapper under særbidrag)
     // Slår sammen barn i husstanden og voksne i husstanden til et fellesobjekt
     private fun slåSammenBarnOgVoksneIHusstanden(
         barnIHusstandenPeriodeGrunnlagListe: List<BarnIHusstandenPeriodeCore>,
@@ -194,61 +190,6 @@ internal object BidragsevneMapper : CoreMapper() {
                 antallBarn = barnIHusstanden?.antall ?: 0.0,
                 borMedAndreVoksne = voksneIHusstanden?.borMedAndreVoksne ?: false,
                 grunnlagsreferanseListe = listOfNotNull(barnIHusstanden?.referanse, voksneIHusstanden?.referanse).distinct(),
-            )
-        }
-    }
-
-    // TODO Flytte til CoreMapper
-    private fun mapSjablonSjablontall(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonSjablontallPeriodeGrunnlag> {
-        try {
-            return sjablonGrunnlag
-                .filter { it.type == Grunnlagstype.SJABLON_SJABLONTALL }
-                .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>()
-                .map {
-                    SjablonSjablontallPeriodeGrunnlag(
-                        referanse = it.referanse,
-                        sjablonSjablontallPeriode = it.innhold,
-                    )
-                }
-        } catch (e: Exception) {
-            throw IllegalArgumentException(
-                "Feil ved uthenting av sjablon for sjablontall: " + e.message,
-            )
-        }
-    }
-
-    private fun mapSjablonBidragsevne(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonBidragsevnePeriodeGrunnlag> {
-        try {
-            return sjablonGrunnlag
-                .filter { it.type == Grunnlagstype.SJABLON_BIDRAGSEVNE }
-                .filtrerOgKonverterBasertPåEgenReferanse<SjablonBidragsevnePeriode>()
-                .map {
-                    SjablonBidragsevnePeriodeGrunnlag(
-                        referanse = it.referanse,
-                        sjablonBidragsevnePeriode = it.innhold,
-                    )
-                }
-        } catch (e: Exception) {
-            throw IllegalArgumentException(
-                "Feil ved uthenting av sjablon for bidragsevne: " + e.message,
-            )
-        }
-    }
-
-    private fun mapSjablonTrinnvisSkattesats(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonTrinnvisSkattesatsPeriodeGrunnlag> {
-        try {
-            return sjablonGrunnlag
-                .filter { it.type == Grunnlagstype.SJABLON_TRINNVIS_SKATTESATS }
-                .filtrerOgKonverterBasertPåEgenReferanse<SjablonTrinnvisSkattesatsPeriode>()
-                .map {
-                    SjablonTrinnvisSkattesatsPeriodeGrunnlag(
-                        referanse = it.referanse,
-                        sjablonTrinnvisSkattesatsPeriode = it.innhold,
-                    )
-                }
-        } catch (e: Exception) {
-            throw IllegalArgumentException(
-                "Feil ved uthenting av sjablon for trinnvis skattesats: " + e.message,
             )
         }
     }
