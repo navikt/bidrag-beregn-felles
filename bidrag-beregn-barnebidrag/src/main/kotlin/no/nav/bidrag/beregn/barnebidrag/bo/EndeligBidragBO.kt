@@ -1,15 +1,14 @@
 package no.nav.bidrag.beregn.barnebidrag.bo
 
-import io.swagger.v3.oas.annotations.media.Schema
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.avrundetMedNullDesimaler
 import no.nav.bidrag.domene.util.avrundetMedToDesimaler
+import no.nav.bidrag.transport.behandling.felles.grunnlag.BarnetilleggPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsfradrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DeltBostedPeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagPeriodeInnhold
 import java.math.BigDecimal
 
 data class EndeligBidragPeriodeGrunnlag(
@@ -35,15 +34,6 @@ data class SamværsfradragDelberegningPeriodeGrunnlag(val referanse: String, val
 data class DeltBostedPeriodeGrunnlag(val referanse: String, val deltBostedPeriode: DeltBostedPeriode)
 
 data class BarnetilleggPeriodeGrunnlag(val referanse: String, val barnetilleggPeriode: BarnetilleggPeriode)
-
-// TODO Bør flyttes til bidrag-felles (vente til evt. delberegning er avklart)
-@Schema(description = "Barnetillegg for person")
-data class BarnetilleggPeriode(
-    override val periode: ÅrMånedsperiode,
-    val beløp: BigDecimal,
-    val skattFaktor: BigDecimal,
-    override val manueltRegistrert: Boolean,
-) : GrunnlagPeriodeInnhold
 
 data class EndeligBidragPeriodeResultat(val periode: ÅrMånedsperiode, val resultat: EndeligBidragBeregningResultat)
 

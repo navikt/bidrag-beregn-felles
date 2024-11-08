@@ -54,7 +54,7 @@ internal object BidragsevneBeregning {
         val underholdBarnEgenHusstand = sjablonverdiUnderholdEgneBarnIHusstandBeløp * bigDecimal12 *
             grunnlag.barnIHusstandenBeregningGrunnlag.antallBarn.toBigDecimal()
 
-        val sumInntekt25Prosent = sumInntekt * bigDecimal025
+        val sumInntekt25Prosent = (sumInntekt * bigDecimal025).divide(bigDecimal12, 10, RoundingMode.HALF_UP)
 
         // Kalkulerer månedlig bidragsevne
         val bidragsevne = (sumInntekt - sumSkatt - boutgift - egetUnderhold - underholdBarnEgenHusstand)

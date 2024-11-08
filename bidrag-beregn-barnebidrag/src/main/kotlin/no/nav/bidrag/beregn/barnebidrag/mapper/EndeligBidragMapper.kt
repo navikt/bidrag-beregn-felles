@@ -1,6 +1,5 @@
 package no.nav.bidrag.beregn.barnebidrag.mapper
 
-import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilleggPeriode
 import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilleggPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BidragsevneDelberegningPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BpAndelUnderholdskostnadDelberegningPeriodeGrunnlag
@@ -11,6 +10,7 @@ import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadDelberegningPeriodeG
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.BarnetilleggPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsfradrag
@@ -133,7 +133,7 @@ internal object EndeligBidragMapper : CoreMapper() {
         try {
             return beregnGrunnlag.grunnlagListe
                 .filtrerOgKonverterBasertPåFremmedReferanse<BarnetilleggPeriode>(
-                    grunnlagType = Grunnlagstype.INNHENTET_INNTEKT_BARNETILLEGG,
+                    grunnlagType = Grunnlagstype.BARNETILLEGG_PERIODE,
                     referanse = referanseTilRolle,
                 )
                 .map {
@@ -144,7 +144,7 @@ internal object EndeligBidragMapper : CoreMapper() {
                 }
         } catch (e: Exception) {
             throw IllegalArgumentException(
-                "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.INNHENTET_INNTEKT_BARNETILLEGG er ikke gyldig: " + e.message,
+                "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.BARNETILLEGG_PERIODE er ikke gyldig: " + e.message,
             )
         }
     }

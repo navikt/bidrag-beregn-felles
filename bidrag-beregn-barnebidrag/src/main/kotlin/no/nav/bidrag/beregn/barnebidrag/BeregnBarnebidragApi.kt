@@ -2,7 +2,9 @@ package no.nav.bidrag.beregn.barnebidrag
 
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnebidragService
 import no.nav.bidrag.commons.service.sjablon.EnableSjablonProvider
+import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import org.springframework.stereotype.Service
 
 /**
@@ -27,13 +29,15 @@ import org.springframework.stereotype.Service
 class BeregnBarnebidragApi {
     private val service = BeregnBarnebidragService()
 
-    fun beregnBidragsevne(beregnGrunnlag: BeregnGrunnlag) = service.beregnBidragsevne(beregnGrunnlag)
+    fun beregn(beregnGrunnlag: BeregnGrunnlag): BeregnetBarnebidragResultat = service.beregnBarnebidrag(beregnGrunnlag)
 
-    fun beregnNettoTilsynsutgift(beregnGrunnlag: BeregnGrunnlag) = service.beregnNettoTilsynsutgift(beregnGrunnlag)
+    fun beregnBidragsevne(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnBidragsevne(beregnGrunnlag)
 
-    fun beregnBpsAndelUnderholdskostnad(beregnGrunnlag: BeregnGrunnlag) = service.beregnBpAndelUnderholdskostnad(beregnGrunnlag)
+    fun beregnNettoTilsynsutgift(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnNettoTilsynsutgift(beregnGrunnlag)
 
-    fun beregnSamværsfradrag(beregnGrunnlag: BeregnGrunnlag) = service.beregnSamværsfradrag(beregnGrunnlag)
+    fun beregnBpAndelUnderholdskostnad(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnBpAndelUnderholdskostnad(beregnGrunnlag)
 
-    fun beregnEndeligBidrag(beregnGrunnlag: BeregnGrunnlag) = service.beregnEndeligBidrag(beregnGrunnlag)
+    fun beregnSamværsfradrag(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnSamværsfradrag(beregnGrunnlag)
+
+    fun beregnEndeligBidrag(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnEndeligBidrag(beregnGrunnlag)
 }

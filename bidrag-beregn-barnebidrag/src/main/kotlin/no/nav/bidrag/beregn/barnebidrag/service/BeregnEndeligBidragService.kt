@@ -16,9 +16,9 @@ import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndeligBidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
-import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettSluttberegningreferanse
 
 internal object BeregnEndeligBidragService : BeregnService() {
 
@@ -54,7 +54,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
             mottattGrunnlag = mottattGrunnlag,
         )
 
-        // Mapper ut grunnlag for delberegning endelig bidrag
+        // Mapper ut grunnlag for delberegning endelig bidrag (sluttberegning)
         resultatGrunnlagListe.addAll(
             mapDelberegningEndeligBidrag(
                 endeligBidragPeriodeResultatListe = endeligBidragBeregningResultatListe,
@@ -191,14 +191,13 @@ internal object BeregnEndeligBidragService : BeregnService() {
     ): List<GrunnlagDto> = endeligBidragPeriodeResultatListe
         .map {
             GrunnlagDto(
-                referanse = opprettDelberegningreferanse(
-                    type = Grunnlagstype.DELBEREGNING_ENDELIG_BIDRAG,
-                    periode = ÅrMånedsperiode(fom = it.periode.fom, til = null),
-                    søknadsbarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
+                referanse = opprettSluttberegningreferanse(
+                    barnreferanse = mottattGrunnlag.søknadsbarnReferanse,
+                    periode = ÅrMånedsperiode(fom = it.periode.fom, it.periode.til),
                 ),
-                type = Grunnlagstype.DELBEREGNING_ENDELIG_BIDRAG,
+                type = Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG,
                 innhold = POJONode(
-                    DelberegningEndeligBidrag(
+                    SluttberegningBarnebidrag(
                         periode = it.periode,
                         beregnetBeløp = it.resultat.beregnetBeløp,
                         resultatKode = it.resultat.resultatKode,
