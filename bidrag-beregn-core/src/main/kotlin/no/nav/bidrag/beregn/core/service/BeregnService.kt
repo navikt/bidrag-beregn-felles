@@ -9,7 +9,9 @@ import no.nav.bidrag.beregn.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.core.exception.UgyldigInputException
 import no.nav.bidrag.beregn.core.util.InntektUtil.erKapitalinntekt
 import no.nav.bidrag.beregn.core.util.InntektUtil.justerKapitalinntekt
+import no.nav.bidrag.commons.service.sjablon.Barnetilsyn
 import no.nav.bidrag.commons.service.sjablon.Bidragsevne
+import no.nav.bidrag.commons.service.sjablon.Forbruksutgifter
 import no.nav.bidrag.commons.service.sjablon.MaksFradrag
 import no.nav.bidrag.commons.service.sjablon.MaksTilsyn
 import no.nav.bidrag.commons.service.sjablon.Samværsfradrag
@@ -28,7 +30,9 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSumInntekt
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonBarnetilsynPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonBidragsevnePeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonForbruksutgifterPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonMaksFradragPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonMaksTilsynPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSamværsfradragPeriode
@@ -116,9 +120,11 @@ abstract class BeregnService {
         referanse.contains(
             Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_BEREGNEDE_TOTALBIDRAG.name,
         ) -> Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_BEREGNEDE_TOTALBIDRAG
+
         referanse.contains(Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL.name) -> Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL
         referanse.contains(Grunnlagstype.DELBEREGNING_FAKTISK_UTGIFT.name) -> Grunnlagstype.DELBEREGNING_FAKTISK_UTGIFT
         referanse.contains(Grunnlagstype.DELBEREGNING_TILLEGGSSTØNAD.name) -> Grunnlagstype.DELBEREGNING_TILLEGGSSTØNAD
+        referanse.contains(Grunnlagstype.DELBEREGNING_NETTO_TILSYNSUTGIFT.name) -> Grunnlagstype.DELBEREGNING_NETTO_TILSYNSUTGIFT
 
         else -> throw IllegalArgumentException("Ikke i stand til å utlede grunnlagstype for referanse: $referanse")
     }
@@ -187,7 +193,7 @@ abstract class BeregnService {
             navn = SjablonTallNavn.fromId(forskuddssatsSjablon.typeSjablon!!).navn,
             periode = ÅrMånedsperiode(fom = forskuddssatsSjablon.datoFom!!, til = forskuddssatsSjablon.datoTom),
         ),
-        type = Grunnlagstype.SJABLON,
+        type = Grunnlagstype.SJABLON_SJABLONTALL,
         innhold = POJONode(
             SjablonSjablontallPeriode(
                 periode = ÅrMånedsperiode(forskuddssatsSjablon.datoFom!!, forskuddssatsSjablon.datoTom),
@@ -203,7 +209,7 @@ abstract class BeregnService {
             navn = SjablonTallNavn.fromId(innslagKapitalinntektSjablon.typeSjablon!!).navn,
             periode = ÅrMånedsperiode(fom = innslagKapitalinntektSjablon.datoFom!!, til = innslagKapitalinntektSjablon.datoTom),
         ),
-        type = Grunnlagstype.SJABLON,
+        type = Grunnlagstype.SJABLON_SJABLONTALL,
         innhold = POJONode(
             SjablonSjablontallPeriode(
                 periode = ÅrMånedsperiode(innslagKapitalinntektSjablon.datoFom!!, innslagKapitalinntektSjablon.datoTom),
@@ -233,7 +239,7 @@ abstract class BeregnService {
             .map {
                 GrunnlagDto(
                     referanse = lagSjablonReferanse("Sjablontall_${sjablontallMap[it.typeSjablon]!!.navn}", it.datoFom!!),
-                    type = Grunnlagstype.SJABLON,
+                    type = Grunnlagstype.SJABLON_SJABLONTALL,
                     innhold = POJONode(
                         SjablonSjablontallPeriode(
                             periode = ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!)),
@@ -252,7 +258,7 @@ abstract class BeregnService {
         .map {
             GrunnlagDto(
                 referanse = lagSjablonReferanse(SjablonNavn.BIDRAGSEVNE.navn, it.datoFom!!, "_${it.bostatus}"),
-                type = Grunnlagstype.SJABLON,
+                type = Grunnlagstype.SJABLON_BIDRAGSEVNE,
                 innhold = POJONode(
                     SjablonBidragsevnePeriode(
                         periode = ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!)),
@@ -283,7 +289,7 @@ abstract class BeregnService {
             .map {
                 GrunnlagDto(
                     referanse = lagSjablonReferanse(SjablonNavn.TRINNVIS_SKATTESATS.navn, it.key.fom.atDay(1)),
-                    type = Grunnlagstype.SJABLON,
+                    type = Grunnlagstype.SJABLON_TRINNVIS_SKATTESATS,
                     innhold = POJONode(
                         SjablonTrinnvisSkattesatsPeriode(
                             periode = it.key,
@@ -301,7 +307,7 @@ abstract class BeregnService {
         .map {
             GrunnlagDto(
                 referanse = lagSjablonReferanse(SjablonNavn.SAMVÆRSFRADRAG.navn, it.datoFom!!, "_${it.samvaersklasse}_${it.alderTom}"),
-                type = Grunnlagstype.SJABLON,
+                type = Grunnlagstype.SJABLON_SAMVARSFRADRAG,
                 innhold = POJONode(
                     SjablonSamværsfradragPeriode(
                         periode = ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!)),
@@ -321,7 +327,7 @@ abstract class BeregnService {
         .map {
             GrunnlagDto(
                 referanse = lagSjablonReferanse(SjablonNavn.MAKS_TILSYN.navn, it.datoFom!!),
-                type = Grunnlagstype.SJABLON,
+                type = Grunnlagstype.SJABLON_MAKS_TILSYN,
                 innhold = POJONode(
                     SjablonMaksTilsynPeriode(
                         periode = ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!)),
@@ -338,12 +344,47 @@ abstract class BeregnService {
         .map {
             GrunnlagDto(
                 referanse = lagSjablonReferanse(SjablonNavn.MAKS_FRADRAG.navn, it.datoFom!!),
-                type = Grunnlagstype.SJABLON,
+                type = Grunnlagstype.SJABLON_MAKS_FRADRAG,
                 innhold = POJONode(
                     SjablonMaksFradragPeriode(
                         periode = ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!)),
                         antallBarnTom = it.antallBarnTom!!,
                         maksBeløpFradrag = it.maksBeløpFradrag!!,
+                    ),
+                ),
+            )
+        }
+
+    protected fun mapSjablonBarnetilsynGrunnlag(periode: ÅrMånedsperiode, sjablonListe: List<Barnetilsyn>): List<GrunnlagDto> = sjablonListe
+        // TODO Sjekk om periode.overlapper er dekkende
+        .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
+        .map {
+            GrunnlagDto(
+                referanse = lagSjablonReferanse(SjablonNavn.BARNETILSYN.navn, it.datoFom!!),
+                type = Grunnlagstype.SJABLON_BARNETILSYN,
+                innhold = POJONode(
+                    SjablonBarnetilsynPeriode(
+                        periode = ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!)),
+                        typeTilsyn = it.typeStønad!!,
+                        typeStønad = it.typeStønad!!,
+                        beløpBarnetilsyn = it.beløpBarneTilsyn!!,
+                    ),
+                ),
+            )
+        }
+
+    protected fun mapSjablonForbruksutgifterGrunnlag(periode: ÅrMånedsperiode, sjablonListe: List<Forbruksutgifter>): List<GrunnlagDto> = sjablonListe
+        // TODO Sjekk om periode.overlapper er dekkende
+        .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
+        .map {
+            GrunnlagDto(
+                referanse = lagSjablonReferanse(SjablonNavn.FORBRUKSUTGIFTER.navn, it.datoFom!!),
+                type = Grunnlagstype.SJABLON_FORBRUKSUTGIFTER,
+                innhold = POJONode(
+                    SjablonForbruksutgifterPeriode(
+                        periode = ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!)),
+                        alderTom = it.alderTom!!,
+                        beløpForbruk = it.beløpForbruk!!,
                     ),
                 ),
             )

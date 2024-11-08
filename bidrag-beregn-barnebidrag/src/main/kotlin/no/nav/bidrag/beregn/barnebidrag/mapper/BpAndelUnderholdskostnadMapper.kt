@@ -2,7 +2,7 @@ package no.nav.bidrag.beregn.barnebidrag.mapper
 
 import no.nav.bidrag.beregn.barnebidrag.bo.BpAndelUnderholdskostnadPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSjablontallPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.UPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
@@ -45,12 +45,12 @@ internal object BpAndelUnderholdskostnadMapper : CoreMapper() {
         sjablonSjablontallPeriodeGrunnlagListe = mapSjablonSjablontall(sjablonGrunnlag),
     )
 
-    private fun mapUnderholdskostnad(beregnGrunnlag: BeregnGrunnlag): List<UnderholdskostnadPeriodeGrunnlag> {
+    private fun mapUnderholdskostnad(beregnGrunnlag: BeregnGrunnlag): List<UPeriodeGrunnlag> {
         try {
             return beregnGrunnlag.grunnlagListe
                 .filtrerOgKonverterBasertPåEgenReferanse<UnderholdskostnadPeriode>(Grunnlagstype.UNDERHOLDSKOSTNAD)
                 .map {
-                    UnderholdskostnadPeriodeGrunnlag(
+                    UPeriodeGrunnlag(
                         referanse = it.referanse,
                         underholdskostnadPeriode = it.innhold,
                     )
