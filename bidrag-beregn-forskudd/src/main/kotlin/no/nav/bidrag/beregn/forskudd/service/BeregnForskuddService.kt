@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.forskudd.service
 
 import com.fasterxml.jackson.databind.node.POJONode
 import io.github.oshai.kotlinlogging.KotlinLogging
+import no.nav.bidrag.beregn.core.mapping.mapTilGrunnlag
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.beregn.forskudd.core.ForskuddCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore
@@ -18,7 +19,6 @@ import no.nav.bidrag.transport.behandling.beregning.felles.valider
 import no.nav.bidrag.transport.behandling.beregning.forskudd.BeregnetForskuddResultat
 import no.nav.bidrag.transport.behandling.beregning.forskudd.ResultatBeregning
 import no.nav.bidrag.transport.behandling.beregning.forskudd.ResultatPeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBarnIHusstand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningForskudd
@@ -186,20 +186,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
 
         // Mapper ut DelberegningBarnIHusstand
         resultatGrunnlagListe.addAll(
-            sumAntallBarnListe
-                .map {
-                    GrunnlagDto(
-                        referanse = it.referanse,
-                        type = bestemGrunnlagstype(it.referanse),
-                        innhold = POJONode(
-                            DelberegningBarnIHusstand(
-                                periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
-                                antallBarn = it.antall,
-                            ),
-                        ),
-                        grunnlagsreferanseListe = it.grunnlagsreferanseListe,
-                    )
-                },
+            sumAntallBarnListe.mapTilGrunnlag(),
         )
 
         // Lager en liste av referanser som refereres til av delberegningene

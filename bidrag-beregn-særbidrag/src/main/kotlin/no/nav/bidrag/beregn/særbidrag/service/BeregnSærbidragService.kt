@@ -1,11 +1,10 @@
 package no.nav.bidrag.beregn.særbidrag.service
 
 import com.fasterxml.jackson.databind.node.POJONode
-import no.nav.bidrag.beregn.core.dto.BarnIHusstandenPeriodeCore
-import no.nav.bidrag.beregn.core.dto.BoforholdPeriodeCore
 import no.nav.bidrag.beregn.core.dto.SjablonResultatGrunnlagCore
-import no.nav.bidrag.beregn.core.dto.VoksneIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.core.exception.UgyldigInputException
+import no.nav.bidrag.beregn.core.mapping.bestemGrunnlagstype
+import no.nav.bidrag.beregn.core.mapping.mapTilGrunnlag
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.BidragsevneCore
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto.BeregnBidragsevneGrunnlagCore
@@ -44,13 +43,10 @@ import no.nav.bidrag.transport.behandling.beregning.felles.valider
 import no.nav.bidrag.transport.behandling.beregning.særbidrag.BeregnetSærbidragResultat
 import no.nav.bidrag.transport.behandling.beregning.særbidrag.ResultatBeregning
 import no.nav.bidrag.transport.behandling.beregning.særbidrag.ResultatPeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBarnIHusstand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesBeregnedeTotalbidrag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBoforhold
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUtgift
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningVoksneIHusstand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.LøpendeBidragGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonBidragsevnePeriode
@@ -65,6 +61,7 @@ import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.time.format.DateTimeFormatter
 import java.util.Collections.emptyList
+import java.util.HashMap
 
 @Service
 internal class BeregnSærbidragService(
@@ -411,26 +408,17 @@ internal class BeregnSærbidragService(
 
         // Mapper ut DelberegningBoforhold
         resultatGrunnlagListe.addAll(
-            mapDelberegningBoforhold(
-                boforholdListe = boforholdListe,
-                bidragspliktigReferanse = bidragspliktigReferanse,
-            ),
+            boforholdListe.mapTilGrunnlag(bidragspliktigReferanse),
         )
 
         // Mapper ut DelberegningBarnIHusstand (sub-delberegning til DelberegningBoforhold)
         resultatGrunnlagListe.addAll(
-            mapDelberegningBarnIHusstand(
-                sumAntallBarnListe = sumAntallBarnListe,
-                bidragspliktigReferanse = bidragspliktigReferanse,
-            ),
+            sumAntallBarnListe.mapTilGrunnlag(bidragspliktigReferanse),
         )
 
         // Mapper ut DelberegningVoksneIHusstand (sub-delberegning til DelberegningBoforhold)
         resultatGrunnlagListe.addAll(
-            mapDelberegningVoksneIHusstand(
-                voksneIHusstandenListe = voksneIHusstandenListe,
-                bidragspliktigReferanse = bidragspliktigReferanse,
-            ),
+            voksneIHusstandenListe.mapTilGrunnlag(bidragspliktigReferanse),
         )
 
         // Lager en liste av referanser som refereres til av delberegningene
@@ -654,60 +642,6 @@ internal class BeregnSærbidragService(
         }
 
     // ===============================================================================================================================================
-
-    // Mapper ut DelberegningBarnIHusstand
-    private fun mapDelberegningBarnIHusstand(sumAntallBarnListe: List<BarnIHusstandenPeriodeCore>, bidragspliktigReferanse: String) =
-        sumAntallBarnListe
-            .map {
-                GrunnlagDto(
-                    referanse = it.referanse,
-                    type = bestemGrunnlagstype(it.referanse),
-                    innhold = POJONode(
-                        DelberegningBarnIHusstand(
-                            periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
-                            antallBarn = it.antall,
-                        ),
-                    ),
-                    grunnlagsreferanseListe = it.grunnlagsreferanseListe,
-                    gjelderReferanse = bidragspliktigReferanse,
-                )
-            }
-
-    // Mapper ut DelberegningVoksneIHusstand
-    private fun mapDelberegningVoksneIHusstand(voksneIHusstandenListe: List<VoksneIHusstandenPeriodeCore>, bidragspliktigReferanse: String) =
-        voksneIHusstandenListe
-            .map {
-                GrunnlagDto(
-                    referanse = it.referanse,
-                    type = bestemGrunnlagstype(it.referanse),
-                    innhold = POJONode(
-                        DelberegningVoksneIHusstand(
-                            periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
-                            borMedAndreVoksne = it.borMedAndreVoksne,
-                        ),
-                    ),
-                    grunnlagsreferanseListe = it.grunnlagsreferanseListe,
-                    gjelderReferanse = bidragspliktigReferanse,
-                )
-            }
-
-    // Mapper ut DelberegningBoforhold
-    private fun mapDelberegningBoforhold(boforholdListe: List<BoforholdPeriodeCore>, bidragspliktigReferanse: String) = boforholdListe
-        .map {
-            GrunnlagDto(
-                referanse = it.referanse,
-                type = bestemGrunnlagstype(it.referanse),
-                innhold = POJONode(
-                    DelberegningBoforhold(
-                        periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
-                        antallBarn = it.antallBarn,
-                        borMedAndreVoksne = it.borMedAndreVoksne,
-                    ),
-                ),
-                grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
-                gjelderReferanse = bidragspliktigReferanse,
-            )
-        }
 
     // Mapper ut DelberegningBidragsevne
     private fun mapDelberegningBidragsevne(
