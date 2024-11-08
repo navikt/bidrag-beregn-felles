@@ -37,8 +37,6 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBase
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettSjablonreferanse
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
-import java.util.HashMap
-import javax.sound.midi.Sequence
 
 abstract class BeregnService {
     fun håndterAvvik(avvikListe: List<AvvikCore>, kontekst: String) {
