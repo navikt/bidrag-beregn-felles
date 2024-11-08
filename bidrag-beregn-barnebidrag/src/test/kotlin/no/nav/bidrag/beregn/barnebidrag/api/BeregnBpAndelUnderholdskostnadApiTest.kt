@@ -235,7 +235,7 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
             .filter { it.type == Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD }
             .size
 
-        val antallSjablon = bpAndelUnderholdskostnadResultat
+        val antallSjablonSjablonTall = bpAndelUnderholdskostnadResultat
             .filter { it.type == Grunnlagstype.SJABLON_SJABLONTALL }
             .size
 
@@ -260,7 +260,7 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
             { assertThat(antallDelberegningSumInntektPeriodeBM).isEqualTo(1) },
             { assertThat(antallDelberegningSumInntektPeriodeSB).isEqualTo(1) },
             { assertThat(antallUnderholdskostnad).isEqualTo(1) },
-            { assertThat(antallSjablon).isEqualTo(6) },
+            { assertThat(antallSjablonSjablonTall).isEqualTo(6) },
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
@@ -321,7 +321,7 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
             .filter { it.type == Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD }
             .size
 
-        val antallSjablon = bpAndelUnderholdskostnadResultat
+        val antallSjablonSjablontall = bpAndelUnderholdskostnadResultat
             .filter { it.type == Grunnlagstype.SJABLON_SJABLONTALL }
             .size
 
@@ -466,7 +466,7 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
             { assertThat(antallDelberegningSumInntektPeriodeBM).isEqualTo(forventetAntallDelberegningSumInntektPeriodeBM) },
             { assertThat(antallDelberegningSumInntektPeriodeSB).isEqualTo(forventetAntallDelberegningSumInntektPeriodeSB) },
             { assertThat(antallUnderholdskostnad).isEqualTo(forventetAntallUnderholdskostnad) },
-            { assertThat(antallSjablon).isEqualTo(forventetAntallSjablon) },
+            { assertThat(antallSjablonSjablontall).isEqualTo(forventetAntallSjablon) },
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },

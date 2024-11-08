@@ -389,7 +389,7 @@
     },
     {
       "referanse": "Mottatt_Barnetillegg_BP_202301",
-      "type": "INNHENTET_INNTEKT_BARNETILLEGG",
+      "type": "BARNETILLEGG_PERIODE",
       "innhold": {
         "periode": {
           "fom": "2023-01",
@@ -404,7 +404,7 @@
     },
     {
       "referanse": "Mottatt_Barnetillegg_BP_202306",
-      "type": "INNHENTET_INNTEKT_BARNETILLEGG",
+      "type": "BARNETILLEGG_PERIODE",
       "innhold": {
         "periode": {
           "fom": "2023-06",
@@ -419,7 +419,7 @@
     },
     {
       "referanse": "Mottatt_Barnetillegg_BP_202401",
-      "type": "INNHENTET_INNTEKT_BARNETILLEGG",
+      "type": "BARNETILLEGG_PERIODE",
       "innhold": {
         "periode": {
           "fom": "2024-01",
@@ -434,7 +434,7 @@
     },
     {
       "referanse": "Mottatt_Barnetillegg_BP_202405",
-      "type": "INNHENTET_INNTEKT_BARNETILLEGG",
+      "type": "BARNETILLEGG_PERIODE",
       "innhold": {
         "periode": {
           "fom": "2024-05",
@@ -449,7 +449,7 @@
     },
     {
       "referanse": "Mottatt_Barnetillegg_BM_202301",
-      "type": "INNHENTET_INNTEKT_BARNETILLEGG",
+      "type": "BARNETILLEGG_PERIODE",
       "innhold": {
         "periode": {
           "fom": "2023-01",
@@ -464,7 +464,7 @@
     },
     {
       "referanse": "Mottatt_Barnetillegg_BM_202304",
-      "type": "INNHENTET_INNTEKT_BARNETILLEGG",
+      "type": "BARNETILLEGG_PERIODE",
       "innhold": {
         "periode": {
           "fom": "2023-04",
@@ -479,7 +479,7 @@
     },
     {
       "referanse": "Mottatt_Barnetillegg_BM_202401",
-      "type": "INNHENTET_INNTEKT_BARNETILLEGG",
+      "type": "BARNETILLEGG_PERIODE",
       "innhold": {
         "periode": {
           "fom": "2024-01",
@@ -494,7 +494,7 @@
     },
     {
       "referanse": "Mottatt_Barnetillegg_BM_202408",
-      "type": "INNHENTET_INNTEKT_BARNETILLEGG",
+      "type": "BARNETILLEGG_PERIODE",
       "innhold": {
         "periode": {
           "fom": "2024-08",

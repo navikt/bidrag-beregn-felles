@@ -9,8 +9,8 @@ import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndeligBidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
@@ -249,9 +249,9 @@ internal class BeregnEndeligBidragApiTest {
         val alleRefererteReferanser = hentAlleRefererteReferanser(endeligBidragResultat)
 
         val endeligBidragResultatListe = endeligBidragResultat
-            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndeligBidrag>(Grunnlagstype.DELBEREGNING_ENDELIG_BIDRAG)
+            .filtrerOgKonverterBasertPåEgenReferanse<SluttberegningBarnebidrag>(Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG)
             .map {
-                DelberegningEndeligBidrag(
+                SluttberegningBarnebidrag(
                     periode = it.innhold.periode,
                     beregnetBeløp = it.innhold.beregnetBeløp,
                     resultatKode = it.innhold.resultatKode,
@@ -297,12 +297,12 @@ internal class BeregnEndeligBidragApiTest {
             .size
 
         val antallBarnetilleggBM = endeligBidragResultat
-            .filter { it.type == Grunnlagstype.INNHENTET_INNTEKT_BARNETILLEGG }
+            .filter { it.type == Grunnlagstype.BARNETILLEGG_PERIODE }
             .filter { it.gjelderReferanse == referanseBM }
             .size
 
         val antallBarnetilleggBP = endeligBidragResultat
-            .filter { it.type == Grunnlagstype.INNHENTET_INNTEKT_BARNETILLEGG }
+            .filter { it.type == Grunnlagstype.BARNETILLEGG_PERIODE }
             .filter { it.gjelderReferanse == referanseBP }
             .size
 
@@ -347,9 +347,9 @@ internal class BeregnEndeligBidragApiTest {
         val alleRefererteReferanser = hentAlleRefererteReferanser(endeligBidragResultat)
 
         val endeligBidragResultatListe = endeligBidragResultat
-            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndeligBidrag>(Grunnlagstype.DELBEREGNING_ENDELIG_BIDRAG)
+            .filtrerOgKonverterBasertPåEgenReferanse<SluttberegningBarnebidrag>(Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG)
             .map {
-                DelberegningEndeligBidrag(
+                SluttberegningBarnebidrag(
                     periode = it.innhold.periode,
                     beregnetBeløp = it.innhold.beregnetBeløp,
                     resultatKode = it.innhold.resultatKode,
@@ -395,12 +395,12 @@ internal class BeregnEndeligBidragApiTest {
             .size
 
         val antallBarnetilleggBM = endeligBidragResultat
-            .filter { it.type == Grunnlagstype.INNHENTET_INNTEKT_BARNETILLEGG }
+            .filter { it.type == Grunnlagstype.BARNETILLEGG_PERIODE }
             .filter { it.gjelderReferanse == referanseBM }
             .size
 
         val antallBarnetilleggBP = endeligBidragResultat
-            .filter { it.type == Grunnlagstype.INNHENTET_INNTEKT_BARNETILLEGG }
+            .filter { it.type == Grunnlagstype.BARNETILLEGG_PERIODE }
             .filter { it.gjelderReferanse == referanseBP }
             .size
 

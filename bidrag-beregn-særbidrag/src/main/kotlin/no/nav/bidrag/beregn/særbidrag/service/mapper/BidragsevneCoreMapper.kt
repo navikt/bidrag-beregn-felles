@@ -8,6 +8,7 @@ import no.nav.bidrag.beregn.særbidrag.core.felles.bo.SjablonListe
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import java.util.ArrayList
 
 internal object BidragsevneCoreMapper : CoreMapper() {
     private val beregnApi: BeregnApi = BeregnApi()

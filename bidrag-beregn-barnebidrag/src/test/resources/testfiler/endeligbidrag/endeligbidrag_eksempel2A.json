@@ -123,7 +123,7 @@
     },
     {
       "referanse": "Mottatt_Barnetillegg_BP_202408",
-      "type": "INNHENTET_INNTEKT_BARNETILLEGG",
+      "type": "BARNETILLEGG_PERIODE",
       "innhold": {
         "periode": {
           "fom": "2024-08",
@@ -138,7 +138,7 @@
     },
     {
       "referanse": "Mottatt_Barnetillegg_BM_202408",
-      "type": "INNHENTET_INNTEKT_BARNETILLEGG",
+      "type": "BARNETILLEGG_PERIODE",
       "innhold": {
         "periode": {
           "fom": "2024-08",

@@ -26,6 +26,11 @@ import java.time.Period
 internal object BeregnSamværsfradragService : BeregnService() {
 
     fun delberegningSamværsfradrag(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
+        val referanseTilBP = finnReferanseTilRolle(
+            grunnlagListe = mottattGrunnlag.grunnlagListe,
+            grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
+        )
+
         // Lager sjablon grunnlagsobjekter
         val sjablonGrunnlag = lagSjablonGrunnlagsobjekter(mottattGrunnlag.periode)
 
@@ -66,6 +71,7 @@ internal object BeregnSamværsfradragService : BeregnService() {
             mapDelberegningSamværsfradrag(
                 samværsfradragPeriodeResultatListe = samværsfradragBeregningResultatListe,
                 mottattGrunnlag = mottattGrunnlag,
+                referanseTilBP = referanseTilBP
             ),
         )
 
@@ -198,6 +204,7 @@ internal object BeregnSamværsfradragService : BeregnService() {
     private fun mapDelberegningSamværsfradrag(
         samværsfradragPeriodeResultatListe: List<SamværsfradragPeriodeResultat>,
         mottattGrunnlag: BeregnGrunnlag,
+        referanseTilBP: String,
     ): List<GrunnlagDto> = samværsfradragPeriodeResultatListe
         .map {
             GrunnlagDto(
@@ -205,6 +212,7 @@ internal object BeregnSamværsfradragService : BeregnService() {
                     type = Grunnlagstype.DELBEREGNING_SAMVÆRSFRADRAG,
                     periode = ÅrMånedsperiode(fom = it.periode.fom, til = null),
                     søknadsbarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
+                    gjelderReferanse = referanseTilBP,
                 ),
                 type = Grunnlagstype.DELBEREGNING_SAMVÆRSFRADRAG,
                 innhold = POJONode(
@@ -214,10 +222,7 @@ internal object BeregnSamværsfradragService : BeregnService() {
                     ),
                 ),
                 grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe,
-                gjelderReferanse = finnReferanseTilRolle(
-                    grunnlagListe = mottattGrunnlag.grunnlagListe,
-                    grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
-                ),
+                gjelderReferanse = referanseTilBP,
             )
         }
 }
