@@ -47,11 +47,7 @@ data class EndeligBidragBeregningGrunnlag(
     val barnetilleggBMBeregningGrunnlag: BarnetilleggBeregningGrunnlag,
 )
 
-data class BidragsevneDelberegningBeregningGrunnlag(
-    val referanse: String,
-    val beløp: BigDecimal,
-    val sumInntekt25Prosent: BigDecimal,
-)
+data class BidragsevneDelberegningBeregningGrunnlag(val referanse: String, val beløp: BigDecimal, val sumInntekt25Prosent: BigDecimal)
 
 data class UnderholdskostnadDelberegningBeregningGrunnlag(val referanse: String, val beløp: BigDecimal)
 
