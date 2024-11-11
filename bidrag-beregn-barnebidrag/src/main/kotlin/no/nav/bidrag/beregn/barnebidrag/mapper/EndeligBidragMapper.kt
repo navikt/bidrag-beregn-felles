@@ -3,45 +3,57 @@ package no.nav.bidrag.beregn.barnebidrag.mapper
 import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilleggPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BidragsevneDelberegningPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BpAndelUnderholdskostnadDelberegningPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.DeltBostedPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragDelberegningPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SamværsklassePeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadDelberegningPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
+import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BarnetilleggPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsfradrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DeltBostedPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SamværsklassePeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåFremmedReferanse
+import java.math.BigDecimal
 
 internal object EndeligBidragMapper : CoreMapper() {
-    fun mapEndeligBidragGrunnlag(mottattGrunnlag: BeregnGrunnlag): EndeligBidragPeriodeGrunnlag = EndeligBidragPeriodeGrunnlag(
-        beregningsperiode = mottattGrunnlag.periode,
-        bidragsevneDelberegningPeriodeGrunnlagListe = mapBidragsevne(mottattGrunnlag),
-        underholdskostnadDelberegningPeriodeGrunnlagListe = mapUnderholdskostnad(mottattGrunnlag),
-        bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe = mapBpAndelUnderholdskostnad(mottattGrunnlag),
-        samværsfradragDelberegningPeriodeGrunnlagListe = mapSamværsfradrag(mottattGrunnlag),
-        deltBostedPeriodeGrunnlagListe = mapDeltBosted(mottattGrunnlag),
-        barnetilleggBPPeriodeGrunnlagListe = mapBarnetillegg(
-            beregnGrunnlag = mottattGrunnlag,
-            referanseTilRolle = finnReferanseTilRolle(
-                grunnlagListe = mottattGrunnlag.grunnlagListe,
-                grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
+    fun mapEndeligBidragGrunnlag(mottattGrunnlag: BeregnGrunnlag): EndeligBidragPeriodeGrunnlag {
+
+        val bidragsevneDelberegningPeriodeGrunnlagListe = mapBidragsevne(mottattGrunnlag)
+
+        return EndeligBidragPeriodeGrunnlag(
+            beregningsperiode = mottattGrunnlag.periode,
+            bidragsevneDelberegningPeriodeGrunnlagListe = bidragsevneDelberegningPeriodeGrunnlagListe,
+            underholdskostnadDelberegningPeriodeGrunnlagListe = mapUnderholdskostnad(mottattGrunnlag),
+            bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe = mapBpAndelUnderholdskostnad(mottattGrunnlag),
+            samværsfradragDelberegningPeriodeGrunnlagListe = mapSamværsfradrag(mottattGrunnlag),
+            samværsklassePeriodeGrunnlagListe = mapSamværsklasse(mottattGrunnlag),
+            barnetilleggBPPeriodeGrunnlagListe = mapBarnetillegg(
+                beregnGrunnlag = mottattGrunnlag,
+                referanseTilRolle = finnReferanseTilRolle(
+                    grunnlagListe = mottattGrunnlag.grunnlagListe,
+                    grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
+                ),
+                //TODO Blir det riktig å hente fra siste periode?
+                skattFaktor = bidragsevneDelberegningPeriodeGrunnlagListe.last().bidragsevnePeriode.skatt.sumSkattFaktor,
             ),
-        ),
-        barnetilleggBMPeriodeGrunnlagListe = mapBarnetillegg(
-            beregnGrunnlag = mottattGrunnlag,
-            referanseTilRolle = finnReferanseTilRolle(
-                grunnlagListe = mottattGrunnlag.grunnlagListe,
-                grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
+            barnetilleggBMPeriodeGrunnlagListe = mapBarnetillegg(
+                beregnGrunnlag = mottattGrunnlag,
+                referanseTilRolle = finnReferanseTilRolle(
+                    grunnlagListe = mottattGrunnlag.grunnlagListe,
+                    grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
+                ),
+                //TODO Må være skatt som tilhører BM
+                skattFaktor = bidragsevneDelberegningPeriodeGrunnlagListe.last().bidragsevnePeriode.skatt.sumSkattFaktor,
             ),
-        ),
-    )
+        )
+    }
 
     private fun mapBidragsevne(beregnGrunnlag: BeregnGrunnlag): List<BidragsevneDelberegningPeriodeGrunnlag> {
         try {
@@ -112,39 +124,49 @@ internal object EndeligBidragMapper : CoreMapper() {
         }
     }
 
-    private fun mapDeltBosted(beregnGrunnlag: BeregnGrunnlag): List<DeltBostedPeriodeGrunnlag> {
+    private fun mapSamværsklasse(beregnGrunnlag: BeregnGrunnlag): List<SamværsklassePeriodeGrunnlag> {
         try {
             return beregnGrunnlag.grunnlagListe
-                .filtrerOgKonverterBasertPåEgenReferanse<DeltBostedPeriode>(Grunnlagstype.DELT_BOSTED)
+                .filtrerOgKonverterBasertPåEgenReferanse<SamværsklassePeriode>(Grunnlagstype.SAMVÆRSPERIODE)
                 .map {
-                    DeltBostedPeriodeGrunnlag(
+                    SamværsklassePeriodeGrunnlag(
                         referanse = it.referanse,
-                        deltBostedPeriode = it.innhold,
+                        samværsklassePeriode = it.innhold,
                     )
                 }
         } catch (e: Exception) {
             throw IllegalArgumentException(
-                "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.DELT_BOSTED er ikke gyldig: " + e.message,
+                "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.SAMVÆRSPERIODE er ikke gyldig: " + e.message,
             )
         }
     }
 
-    private fun mapBarnetillegg(beregnGrunnlag: BeregnGrunnlag, referanseTilRolle: String): List<BarnetilleggPeriodeGrunnlag> {
+    private fun mapBarnetillegg(
+        beregnGrunnlag: BeregnGrunnlag,
+        referanseTilRolle: String,
+        skattFaktor: BigDecimal
+    ): List<BarnetilleggPeriodeGrunnlag> {
         try {
             return beregnGrunnlag.grunnlagListe
-                .filtrerOgKonverterBasertPåFremmedReferanse<BarnetilleggPeriode>(
-                    grunnlagType = Grunnlagstype.BARNETILLEGG_PERIODE,
+                .filtrerOgKonverterBasertPåFremmedReferanse<InntektsrapporteringPeriode>(
+                    grunnlagType = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
                     referanse = referanseTilRolle,
                 )
+                .filter { it.innhold.inntektsrapportering == Inntektsrapportering.BARNETILLEGG }
                 .map {
                     BarnetilleggPeriodeGrunnlag(
                         referanse = it.referanse,
-                        barnetilleggPeriode = it.innhold,
+                        barnetilleggPeriode = BarnetilleggPeriode(
+                            periode = it.innhold.periode,
+                            beløp = it.innhold.beløp,
+                            skattFaktor = skattFaktor,
+                            manueltRegistrert = it.innhold.manueltRegistrert,
+                        )
                     )
                 }
         } catch (e: Exception) {
             throw IllegalArgumentException(
-                "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.BARNETILLEGG_PERIODE er ikke gyldig: " + e.message,
+                "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE er ikke gyldig: " + e.message,
             )
         }
     }
