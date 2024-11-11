@@ -8,7 +8,6 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.BarnetilleggPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsfradrag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DeltBostedPeriode
 import java.math.BigDecimal
 
 data class EndeligBidragPeriodeGrunnlag(
@@ -17,7 +16,7 @@ data class EndeligBidragPeriodeGrunnlag(
     val underholdskostnadDelberegningPeriodeGrunnlagListe: List<UnderholdskostnadDelberegningPeriodeGrunnlag>,
     val bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe: List<BpAndelUnderholdskostnadDelberegningPeriodeGrunnlag>,
     val samværsfradragDelberegningPeriodeGrunnlagListe: List<SamværsfradragDelberegningPeriodeGrunnlag>,
-    val deltBostedPeriodeGrunnlagListe: List<DeltBostedPeriodeGrunnlag>,
+    val samværsklassePeriodeGrunnlagListe: List<SamværsklassePeriodeGrunnlag>,
     val barnetilleggBPPeriodeGrunnlagListe: List<BarnetilleggPeriodeGrunnlag>,
     val barnetilleggBMPeriodeGrunnlagListe: List<BarnetilleggPeriodeGrunnlag>,
 )
@@ -31,8 +30,6 @@ data class BpAndelUnderholdskostnadDelberegningPeriodeGrunnlag(
 
 data class SamværsfradragDelberegningPeriodeGrunnlag(val referanse: String, val samværsfradragPeriode: DelberegningSamværsfradrag)
 
-data class DeltBostedPeriodeGrunnlag(val referanse: String, val deltBostedPeriode: DeltBostedPeriode)
-
 data class BarnetilleggPeriodeGrunnlag(val referanse: String, val barnetilleggPeriode: BarnetilleggPeriode)
 
 data class EndeligBidragPeriodeResultat(val periode: ÅrMånedsperiode, val resultat: EndeligBidragBeregningResultat)
@@ -43,8 +40,8 @@ data class EndeligBidragBeregningGrunnlag(
     val bpAndelUnderholdskostnadBeregningGrunnlag: BpAndelUnderholdskostnadDelberegningBeregningGrunnlag,
     val samværsfradragBeregningGrunnlag: SamværsfradragDelberegningBeregningGrunnlag,
     val deltBostedBeregningGrunnlag: DeltBostedBeregningGrunnlag,
-    val barnetilleggBPBeregningGrunnlag: BarnetilleggBeregningGrunnlag,
-    val barnetilleggBMBeregningGrunnlag: BarnetilleggBeregningGrunnlag,
+    val barnetilleggBPBeregningGrunnlag: BarnetilleggBeregningGrunnlag?,
+    val barnetilleggBMBeregningGrunnlag: BarnetilleggBeregningGrunnlag?,
 )
 
 data class BidragsevneDelberegningBeregningGrunnlag(val referanse: String, val beløp: BigDecimal, val sumInntekt25Prosent: BigDecimal)

@@ -53,7 +53,7 @@
           "trinnskatt": 0,
           "trygdeavgift": 0,
           "sumSkatt": 0,
-          "sumSkattFaktor": 0
+          "sumSkattFaktor": 0.5
         },
         "underholdBarnEgenHusstand": 0,
         "sumInntekt25Prosent": 10000,
@@ -113,45 +113,83 @@
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
-      "referanse": "Mottatt_DeltBosted_202408",
-      "type": "DELT_BOSTED",
+      "referanse": "Mottatt_Samværsperiode_202408",
+      "type": "SAMVÆRSPERIODE",
       "innhold": {
         "periode": {
           "fom": "2024-08",
           "til": "2024-09"
         },
-        "deltBosted": false,
+        "samværsklasse": "SAMVÆRSKLASSE_1",
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": null
     },
     {
-      "referanse": "Mottatt_Barnetillegg_BP_202408",
-      "type": "BARNETILLEGG_PERIODE",
+      "referanse": "Mottatt_InntektRapportering_Ainntekt_Bidragspliktig_202408",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
       "innhold": {
         "periode": {
           "fom": "2024-08",
           "til": "2024-09"
         },
-        "beløp": 6000,
-        "skattFaktor": 0.500,
-        "manueltRegistrert": false
+        "inntektsrapportering": "AINNTEKT",
+        "gjelderBarn": null,
+        "beløp": 200000,
+        "manueltRegistrert": false,
+        "valgt": true
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
-      "referanse": "Mottatt_Barnetillegg_BM_202408",
-      "type": "BARNETILLEGG_PERIODE",
+      "referanse": "Mottatt_InntektRapportering_Barnetillegg_Bidragspliktig_202408",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
       "innhold": {
         "periode": {
           "fom": "2024-08",
           "til": "2024-09"
         },
-        "beløp": 10000,
-        "skattFaktor": 0.100,
-        "manueltRegistrert": false
+        "inntektsrapportering": "BARNETILLEGG",
+        "gjelderBarn": null,
+        "beløp": 6000,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragspliktig"
+    },
+    {
+      "referanse": "Mottatt_InntektRapportering_Ainntekt_Bidragsmottaker_202408",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": "2024-09"
+        },
+        "inntektsrapportering": "AINNTEKT",
+        "gjelderBarn": null,
+        "beløp": 500000,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "Mottatt_InntektRapportering_Barnetillegg_Bidragsmottaker_202408",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": "2024-09"
+        },
+        "inntektsrapportering": "BARNETILLEGG",
+        "gjelderBarn": null,
+        "beløp": 18000,
+        "manueltRegistrert": false,
+        "valgt": true
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Bidragsmottaker"

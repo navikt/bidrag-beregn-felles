@@ -27,7 +27,7 @@ import java.math.BigDecimal
 class BeregnBarnebidragService : BeregnService() {
 
     // Komplett beregning av barnebidrag
-    fun beregnBarnebidrag(mottattGrunnlag: BeregnGrunnlag): BeregnetBarnebidragResultat {
+    fun beregnBarnebidrag(mottattGrunnlag: BeregnGrunnlag, underholdskostnad: BigDecimal): BeregnetBarnebidragResultat {
         secureLogger.debug { "Beregning av barnebidrag - følgende request mottatt: ${tilJson(mottattGrunnlag)}" }
 
         // Kontroll av inputdata
@@ -40,7 +40,7 @@ class BeregnBarnebidragService : BeregnService() {
 
         // Kaller delberegninger
         val delberegningBidragsevneResultat = delberegningBidragsevne(mottattGrunnlag)
-        val delberegningUnderholdskostnadResultat = simulerDelberegningUnderholdskostnad(mottattGrunnlag)
+        val delberegningUnderholdskostnadResultat = simulerDelberegningUnderholdskostnad(mottattGrunnlag, underholdskostnad)
         var utvidetGrunnlag = mottattGrunnlag.copy(
             grunnlagListe = (mottattGrunnlag.grunnlagListe + delberegningUnderholdskostnadResultat).distinctBy(GrunnlagDto::referanse),
         )
@@ -55,11 +55,8 @@ class BeregnBarnebidragService : BeregnService() {
         )
         val delberegningEndeligBidragResultat = delberegningEndeligBidrag(utvidetGrunnlag)
 
-        val resultatGrunnlagListe = (
-            delberegningBidragsevneResultat + delberegningUnderholdskostnadResultat +
-                delberegningBpAndelUnderholdskostnadResultat +
-                delberegningSamværsfradragResultat + delberegningEndeligBidragResultat
-            )
+        val resultatGrunnlagListe = (delberegningBidragsevneResultat + delberegningUnderholdskostnadResultat + delberegningBpAndelUnderholdskostnadResultat +
+            delberegningSamværsfradragResultat + delberegningEndeligBidragResultat)
             .distinctBy { it.referanse }
             .sortedBy { it.referanse }
 
@@ -69,11 +66,11 @@ class BeregnBarnebidragService : BeregnService() {
         )
     }
 
-    private fun simulerDelberegningUnderholdskostnad(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
+    private fun simulerDelberegningUnderholdskostnad(mottattGrunnlag: BeregnGrunnlag, underholdskostnad: BigDecimal): List<GrunnlagDto> {
         val underholdskostnadListe = mutableListOf<GrunnlagDto>()
 
         // Simulerer underholdskostnad
-        val underholdskostnad = GrunnlagDto(
+        val underholdskostnadGrunnlag = GrunnlagDto(
             referanse = opprettDelberegningreferanse(
                 type = Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD,
                 periode = ÅrMånedsperiode(fom = mottattGrunnlag.periode.fom, til = null),
@@ -92,7 +89,7 @@ class BeregnBarnebidragService : BeregnService() {
                     barnetilsynMedStønad = BigDecimal.valueOf(200).avrundetMedToDesimaler,
                     nettoTilsynsutgift = BigDecimal.valueOf(100).avrundetMedToDesimaler,
                     barnetrygd = BigDecimal.valueOf(100).avrundetMedToDesimaler,
-                    underholdskostnad = BigDecimal.valueOf(9000).avrundetMedToDesimaler,
+                    underholdskostnad = underholdskostnad.avrundetMedToDesimaler,
                 ),
             ),
             grunnlagsreferanseListe = emptyList(),
@@ -102,7 +99,7 @@ class BeregnBarnebidragService : BeregnService() {
             ),
         )
 
-        underholdskostnadListe.add(underholdskostnad)
+        underholdskostnadListe.add(underholdskostnadGrunnlag)
 
         return underholdskostnadListe
     }

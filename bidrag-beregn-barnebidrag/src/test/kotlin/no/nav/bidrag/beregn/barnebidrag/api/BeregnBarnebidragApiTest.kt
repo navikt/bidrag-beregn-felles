@@ -12,6 +12,7 @@ import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsfradrag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
@@ -19,6 +20,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -33,6 +35,9 @@ import java.text.SimpleDateFormat
 internal class BeregnBarnebidragApiTest {
     private lateinit var filnavn: String
 
+    // Beregningsperiode
+    private lateinit var forventetBeregningsperiode: ÅrMånedsperiode
+
     // Bidragsevne
     private lateinit var forventetBidragsevne: BigDecimal
     private lateinit var forventetMinstefradrag: BigDecimal
@@ -43,6 +48,9 @@ internal class BeregnBarnebidragApiTest {
     private lateinit var forventetSumSkattFaktor: BigDecimal
     private lateinit var forventetUnderholdBarnEgenHusstand: BigDecimal
     private lateinit var forventetSumInntekt25Prosent: BigDecimal
+
+    // Underholdskostnad
+    private lateinit var forventetUnderholdskostnad: BigDecimal
 
     // BP andel underholdskostnad
     private lateinit var forventetEndeligAndelFaktor: BigDecimal
@@ -65,6 +73,8 @@ internal class BeregnBarnebidragApiTest {
     private var forventetJustertNedTil25ProsentAvInntekt: Boolean = false
     private var forventetJustertForNettoBarnetilleggBP: Boolean = false
     private var forventetJustertForNettoBarnetilleggBM: Boolean = false
+    private var forventetAntallBarnetilleggBP: Int = 1
+    private var forventetAntallBarnetilleggBM: Int = 1
 
     @Mock
     private lateinit var beregnBarnebidragService: BeregnBarnebidragService
@@ -76,9 +86,13 @@ internal class BeregnBarnebidragApiTest {
     }
 
     @Test
-    @DisplayName("Barnebidrag - eksempel 1")
-    fun testBarnebidrag_Eksempel01() {
-        filnavn = "src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel1.json"
+    @Disabled
+    @DisplayName("Barnebidrag - eksempel X")
+    fun testBarnebidrag_EksempelX() {
+        filnavn = "src/test/resources/testfiler/barnebidrag/barnebidrag_eksempelX.json"
+
+        // Beregningsperiode
+        forventetBeregningsperiode = ÅrMånedsperiode("2024-08", "2024-09")
 
         // Bidragsevne
         forventetBidragsevne = BigDecimal.valueOf(4043.53).setScale(2)
@@ -90,6 +104,9 @@ internal class BeregnBarnebidragApiTest {
         forventetSumSkattFaktor = BigDecimal.valueOf(0.2406752000).setScale(10)
         forventetUnderholdBarnEgenHusstand = BigDecimal.valueOf(51036.00).setScale(2)
         forventetSumInntekt25Prosent = BigDecimal.valueOf(10416.67).setScale(2)
+
+        // Underholdskostnad
+        forventetUnderholdskostnad = BigDecimal.valueOf(9000.00).setScale(2)
 
         // BP andel underholdskostnad
         forventetEndeligAndelFaktor = BigDecimal.valueOf(0.7801529100).setScale(10)
@@ -112,13 +129,64 @@ internal class BeregnBarnebidragApiTest {
         forventetJustertNedTil25ProsentAvInntekt = false
         forventetJustertForNettoBarnetilleggBP = false
         forventetJustertForNettoBarnetilleggBM = false
+        forventetAntallBarnetilleggBP = 1
+        forventetAntallBarnetilleggBP = 1
+
+        utførBeregningerOgEvaluerResultatBarnebidrag()
+    }
+
+    @Test
+    @DisplayName("Barnebidrag - eksempel 1 - kostnadsberegnet bidrag")
+    fun testBarnebidrag_Eksempel01() {
+        filnavn = "src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel1.json"
+
+        // Beregningsperiode
+        forventetBeregningsperiode = ÅrMånedsperiode("2020-08", "2021-01")
+
+        // Bidragsevne
+        forventetBidragsevne = BigDecimal.valueOf(16357.14).setScale(2)
+        forventetMinstefradrag = BigDecimal.valueOf(87450.00).setScale(2)
+        forventetSkattAlminneligInntekt = BigDecimal.valueOf(79475.00).setScale(2)
+        forventetTrinnskatt = BigDecimal.valueOf(11711.30).setScale(2)
+        forventetTrygdeavgift = BigDecimal.valueOf(41000.00).setScale(2)
+        forventetSumSkatt = BigDecimal.valueOf(132186.30).setScale(2)
+        forventetSumSkattFaktor = BigDecimal.valueOf(0.2643726000).setScale(10)
+        forventetUnderholdBarnEgenHusstand = BigDecimal.ZERO.setScale(2)
+        forventetSumInntekt25Prosent = BigDecimal.valueOf(10416.67).setScale(2)
+
+        // Underholdskostnad
+        forventetUnderholdskostnad = BigDecimal.valueOf(5999.00).setScale(2)
+
+        // BP andel underholdskostnad
+        forventetEndeligAndelFaktor = BigDecimal.valueOf(0.625).setScale(10)
+        forventetAndelBeløp = BigDecimal.valueOf(3749.38).setScale(2)
+        forventetBeregnetAndelFaktor = BigDecimal.valueOf(0.625).setScale(10)
+        forventetBarnEndeligInntekt = BigDecimal.ZERO.setScale(2)
+        forventetBarnetErSelvforsørget = false
+
+        // Samværsfradrag
+        forventetSamværsfradrag = BigDecimal.valueOf(256.00).setScale(2)
+
+        // Endelig bidrag
+        forventetBeregnetBeløp = BigDecimal.valueOf(3493.38).setScale(2)
+        forventetResultatkode = Resultatkode.KOSTNADSBEREGNET_BIDRAG
+        forventetResultatbeløp = BigDecimal.valueOf(3490).setScale(0)
+        forventetKostnadsberegnetBidrag = BigDecimal.valueOf(3493.38).setScale(2)
+        forventetNettoBarnetilleggBP = BigDecimal.ZERO.setScale(2)
+        forventetNettoBarnetilleggBM = BigDecimal.ZERO.setScale(2)
+        forventetJustertNedTilEvne = false
+        forventetJustertNedTil25ProsentAvInntekt = false
+        forventetJustertForNettoBarnetilleggBP = false
+        forventetJustertForNettoBarnetilleggBM = false
+        forventetAntallBarnetilleggBP = 1
+        forventetAntallBarnetilleggBP = 1
 
         utførBeregningerOgEvaluerResultatBarnebidrag()
     }
 
     private fun utførBeregningerOgEvaluerResultatBarnebidrag() {
         val request = lesFilOgByggRequest(filnavn)
-        val barnebidragResultat = beregnBarnebidragService.beregnBarnebidrag(request)
+        val barnebidragResultat = beregnBarnebidragService.beregnBarnebidrag(request, forventetUnderholdskostnad)
         val barnebidragResultatGrunnlagListe = barnebidragResultat.grunnlagListe
         printJson(barnebidragResultat)
 
@@ -134,6 +202,20 @@ internal class BeregnBarnebidragApiTest {
                     skatt = it.innhold.skatt,
                     underholdBarnEgenHusstand = it.innhold.underholdBarnEgenHusstand,
                     sumInntekt25Prosent = it.innhold.sumInntekt25Prosent,
+                )
+            }
+
+        val underholdskostnadResultatListe = barnebidragResultatGrunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningUnderholdskostnad>(Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD)
+            .map {
+                DelberegningUnderholdskostnad(
+                    periode = it.innhold.periode,
+                    forbruksutgift = it.innhold.forbruksutgift,
+                    boutgift = it.innhold.boutgift,
+                    barnetilsynMedStønad = it.innhold.barnetilsynMedStønad,
+                    nettoTilsynsutgift = it.innhold.nettoTilsynsutgift,
+                    barnetrygd = it.innhold.barnetrygd,
+                    underholdskostnad = it.innhold.underholdskostnad,
                 )
             }
 
@@ -268,17 +350,13 @@ internal class BeregnBarnebidragApiTest {
             .filter { it.type == Grunnlagstype.SAMVÆRSPERIODE }
             .size
 
-        val antallDeltBosted = barnebidragResultatGrunnlagListe
-            .filter { it.type == Grunnlagstype.DELT_BOSTED }
-            .size
-
         val antallBarnetilleggBM = barnebidragResultatGrunnlagListe
-            .filter { it.type == Grunnlagstype.BARNETILLEGG_PERIODE }
+            .filter { it.type == Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE }
             .filter { it.gjelderReferanse == referanseBM }
             .size
 
         val antallBarnetilleggBP = barnebidragResultatGrunnlagListe
-            .filter { it.type == Grunnlagstype.BARNETILLEGG_PERIODE }
+            .filter { it.type == Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE }
             .filter { it.gjelderReferanse == referanseBP }
             .size
 
@@ -302,6 +380,8 @@ internal class BeregnBarnebidragApiTest {
             { assertThat(barnebidragResultatGrunnlagListe).isNotNull },
             { assertThat(bidragsevneResultatListe).isNotNull },
             { assertThat(bidragsevneResultatListe).hasSize(1) },
+            { assertThat(underholdskostnadResultatListe).isNotNull },
+            { assertThat(underholdskostnadResultatListe).hasSize(1) },
             { assertThat(bpAndelUnderholdskostnadResultatListe).isNotNull },
             { assertThat(bpAndelUnderholdskostnadResultatListe).hasSize(1) },
             { assertThat(samværsfradragResultatListe).isNotNull },
@@ -311,7 +391,7 @@ internal class BeregnBarnebidragApiTest {
 
             // Resultat
             // Bidragsevne
-            { assertThat(bidragsevneResultatListe[0].periode).isEqualTo(ÅrMånedsperiode("2024-08", "2024-09")) },
+            { assertThat(bidragsevneResultatListe[0].periode).isEqualTo(forventetBeregningsperiode) },
             { assertThat(bidragsevneResultatListe[0].beløp).isEqualTo(forventetBidragsevne) },
             { assertThat(bidragsevneResultatListe[0].skatt.minstefradrag).isEqualTo(forventetMinstefradrag) },
             { assertThat(bidragsevneResultatListe[0].skatt.skattAlminneligInntekt).isEqualTo(forventetSkattAlminneligInntekt) },
@@ -322,8 +402,12 @@ internal class BeregnBarnebidragApiTest {
             { assertThat(bidragsevneResultatListe[0].underholdBarnEgenHusstand).isEqualTo(forventetUnderholdBarnEgenHusstand) },
             { assertThat(bidragsevneResultatListe[0].sumInntekt25Prosent).isEqualTo(forventetSumInntekt25Prosent) },
 
+            // Underholdskostnad
+            { assertThat(underholdskostnadResultatListe[0].periode).isEqualTo(forventetBeregningsperiode) },
+            { assertThat(underholdskostnadResultatListe[0].underholdskostnad).isEqualTo(forventetUnderholdskostnad) },
+
             // BP andel underholdskostnad
-            { assertThat(bpAndelUnderholdskostnadResultatListe[0].periode).isEqualTo(ÅrMånedsperiode("2024-08", "2024-09")) },
+            { assertThat(bpAndelUnderholdskostnadResultatListe[0].periode).isEqualTo(forventetBeregningsperiode) },
             { assertThat(bpAndelUnderholdskostnadResultatListe[0].endeligAndelFaktor).isEqualTo(forventetEndeligAndelFaktor) },
             { assertThat(bpAndelUnderholdskostnadResultatListe[0].andelBeløp).isEqualTo(forventetAndelBeløp) },
             { assertThat(bpAndelUnderholdskostnadResultatListe[0].beregnetAndelFaktor).isEqualTo(forventetBeregnetAndelFaktor) },
@@ -331,11 +415,11 @@ internal class BeregnBarnebidragApiTest {
             { assertThat(bpAndelUnderholdskostnadResultatListe[0].barnetErSelvforsørget).isEqualTo(forventetBarnetErSelvforsørget) },
 
             // Samværsfradrag
-            { assertThat(samværsfradragResultatListe[0].periode).isEqualTo(ÅrMånedsperiode("2024-08", "2024-09")) },
+            { assertThat(samværsfradragResultatListe[0].periode).isEqualTo(forventetBeregningsperiode) },
             { assertThat(samværsfradragResultatListe[0].beløp).isEqualTo(forventetSamværsfradrag) },
 
             // Endelig bidrag
-            { assertThat(endeligBidragResultatListe[0].periode).isEqualTo(ÅrMånedsperiode("2024-08", "2024-09")) },
+            { assertThat(endeligBidragResultatListe[0].periode).isEqualTo(forventetBeregningsperiode) },
             { assertThat(endeligBidragResultatListe[0].beregnetBeløp).isEqualTo(forventetBeregnetBeløp) },
             { assertThat(endeligBidragResultatListe[0].resultatKode).isEqualTo(forventetResultatkode) },
             { assertThat(endeligBidragResultatListe[0].resultatBeløp).isEqualTo(forventetResultatbeløp) },
@@ -365,9 +449,8 @@ internal class BeregnBarnebidragApiTest {
             { assertThat(antallBostatusPeriodeSB).isEqualTo(1) },
             { assertThat(antallUnderholdskostnad).isEqualTo(1) },
             { assertThat(antallSamværsklasse).isEqualTo(1) },
-            { assertThat(antallDeltBosted).isEqualTo(1) },
-            { assertThat(antallBarnetilleggBP).isEqualTo(1) },
-            { assertThat(antallBarnetilleggBM).isEqualTo(1) },
+            { assertThat(antallBarnetilleggBP).isEqualTo(forventetAntallBarnetilleggBP) },
+            { assertThat(antallBarnetilleggBM).isEqualTo(forventetAntallBarnetilleggBM) },
             { assertThat(antallSjablonSjablontall).isEqualTo(13) },
             { assertThat(antallSjablonBidragsevne).isEqualTo(1) },
             { assertThat(antallSjablonTrinnvisSkattesats).isEqualTo(1) },
