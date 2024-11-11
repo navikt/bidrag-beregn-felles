@@ -14,7 +14,9 @@ import no.nav.bidrag.beregn.core.mapping.trinnvisSkattesatsTilGrunnlagsobjekt
 import no.nav.bidrag.beregn.core.util.InntektUtil.erKapitalinntekt
 import no.nav.bidrag.beregn.core.util.InntektUtil.justerKapitalinntekt
 import no.nav.bidrag.beregn.core.util.SjablonUtil.justerSjablonTomDato
+import no.nav.bidrag.commons.service.sjablon.Barnetilsyn
 import no.nav.bidrag.commons.service.sjablon.Bidragsevne
+import no.nav.bidrag.commons.service.sjablon.Forbruksutgifter
 import no.nav.bidrag.commons.service.sjablon.MaksFradrag
 import no.nav.bidrag.commons.service.sjablon.MaksTilsyn
 import no.nav.bidrag.commons.service.sjablon.Samværsfradrag
@@ -237,6 +239,16 @@ abstract class BeregnService {
         .map { it.tilGrunnlagsobjekt(ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!))) }
 
     protected fun mapSjablonMaksFradragGrunnlag(periode: ÅrMånedsperiode, sjablonListe: List<MaksFradrag>): List<GrunnlagDto> = sjablonListe
+        // TODO Sjekk om periode.overlapper er dekkende
+        .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
+        .map { it.tilGrunnlagsobjekt(ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!))) }
+
+    protected fun mapSjablonBarnetilsynGrunnlag(periode: ÅrMånedsperiode, sjablonListe: List<Barnetilsyn>): List<GrunnlagDto> = sjablonListe
+        // TODO Sjekk om periode.overlapper er dekkende
+        .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
+        .map { it.tilGrunnlagsobjekt(ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!))) }
+
+    protected fun mapSjablonForbruksutgifterGrunnlag(periode: ÅrMånedsperiode, sjablonListe: List<Forbruksutgifter>): List<GrunnlagDto> = sjablonListe
         // TODO Sjekk om periode.overlapper er dekkende
         .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
         .map { it.tilGrunnlagsobjekt(ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!))) }

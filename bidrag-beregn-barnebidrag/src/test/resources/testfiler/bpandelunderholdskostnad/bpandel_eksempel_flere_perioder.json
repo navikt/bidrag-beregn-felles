@@ -182,7 +182,12 @@
           "fom": "2023-09",
           "til": "2024-05"
         },
-        "beløp": 9000,
+        "forbruksutgift": 2000,
+        "boutgift": 2000,
+        "barnetilsynMedStønad": 2000,
+        "nettoTilsynsutgift": 2000,
+        "barnetrygd": 2000,
+        "underholdskostnad": 9000,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
@@ -196,7 +201,12 @@
           "fom": "2024-05",
           "til": null
         },
-        "beløp": 8000,
+        "forbruksutgift": 2000,
+        "boutgift": 2000,
+        "barnetilsynMedStønad": 2000,
+        "nettoTilsynsutgift": 2000,
+        "barnetrygd": 2000,
+        "underholdskostnad": 8000,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],

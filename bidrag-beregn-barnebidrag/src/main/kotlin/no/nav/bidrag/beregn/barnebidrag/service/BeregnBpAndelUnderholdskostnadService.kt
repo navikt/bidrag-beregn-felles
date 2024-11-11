@@ -7,7 +7,7 @@ import no.nav.bidrag.beregn.barnebidrag.bo.BpAndelUnderholdskostnadPeriodeGrunnl
 import no.nav.bidrag.beregn.barnebidrag.bo.BpAndelUnderholdskostnadPeriodeResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.InntektBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSjablontallBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadBeregningGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.UBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.mapper.BidragsevneMapper.finnReferanseTilRolle
 import no.nav.bidrag.beregn.barnebidrag.mapper.BpAndelUnderholdskostnadMapper.mapBpAndelUnderholdskostnadGrunnlag
 import no.nav.bidrag.beregn.core.service.BeregnService
@@ -131,7 +131,7 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
     ): BpAndelUnderholdskostnadBeregningGrunnlag = BpAndelUnderholdskostnadBeregningGrunnlag(
         underholdskostnadBeregningGrunnlag = bpAndelUnderholdskostnadPeriodeGrunnlag.underholdskostnadDelberegningPeriodeGrunnlagListe
             .firstOrNull { it.underholdskostnadPeriode.periode.inneholder(bruddPeriode) }
-            ?.let { UnderholdskostnadBeregningGrunnlag(referanse = it.referanse, beløp = it.underholdskostnadPeriode.beløp) }
+            ?.let { UBeregningGrunnlag(referanse = it.referanse, beløp = it.underholdskostnadPeriode.underholdskostnad) }
             ?: throw IllegalArgumentException("Underholdskostnad grunnlag mangler for periode $bruddPeriode"),
         inntektBPBeregningGrunnlag = bpAndelUnderholdskostnadPeriodeGrunnlag.inntektBPPeriodeGrunnlagListe
             .firstOrNull { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }

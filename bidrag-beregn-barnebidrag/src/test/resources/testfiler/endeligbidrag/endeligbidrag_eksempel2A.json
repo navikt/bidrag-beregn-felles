@@ -70,7 +70,12 @@
           "fom": "2024-08",
           "til": "2024-09"
         },
-        "beløp": 20000,
+        "forbruksutgift": 2000,
+        "boutgift": 2000,
+        "barnetilsynMedStønad": 2000,
+        "nettoTilsynsutgift": 2000,
+        "barnetrygd": 2000,
+        "underholdskostnad": 20000,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
