@@ -10,7 +10,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonTrinnvisSkattes
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonTrinnvisSkattesatsPeriode
 import java.math.BigDecimal
 
-//TODO Bør endres til å bruke delberegning-objektene? Men problemet er at delberegningene produseres av denne servicen også
+// TODO Bør endres til å bruke delberegning-objektene? Men problemet er at delberegningene produseres av denne servicen også
 data class BidragsevnePeriodeGrunnlag(
     val beregningsperiode: ÅrMånedsperiode,
     val inntektBPPeriodeGrunnlagListe: List<InntektPeriodeCore>,

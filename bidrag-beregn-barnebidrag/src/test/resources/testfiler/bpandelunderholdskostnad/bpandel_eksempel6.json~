@@ -39,23 +39,6 @@
       "gjelderReferanse": null
     },
     {
-      "referanse": "Mottatt_InntektRapportering_Ainntekt_Bidragspliktig_202408",
-      "type": "INNTEKT_RAPPORTERING_PERIODE",
-      "innhold": {
-        "periode": {
-          "fom": "2024-08",
-          "til": "2024-09"
-        },
-        "inntektsrapportering": "AINNTEKT",
-        "gjelderBarn": null,
-        "beløp": 1000000,
-        "manueltRegistrert": false,
-        "valgt": true
-      },
-      "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Bidragspliktig"
-    },
-    {
       "referanse": "Mottatt_InntektRapportering_Ainntekt_Bidragsmottaker_202408",
       "type": "INNTEKT_RAPPORTERING_PERIODE",
       "innhold": {
@@ -65,7 +48,7 @@
         },
         "inntektsrapportering": "AINNTEKT",
         "gjelderBarn": null,
-        "beløp": 100000,
+        "beløp": 300000,
         "manueltRegistrert": false,
         "valgt": true
       },
@@ -82,7 +65,7 @@
         },
         "inntektsrapportering": "AINNTEKT",
         "gjelderBarn": null,
-        "beløp": 100000,
+        "beløp": 10000,
         "manueltRegistrert": false,
         "valgt": true
       },
@@ -97,12 +80,7 @@
           "fom": "2024-08",
           "til": "2024-09"
         },
-        "forbruksutgift": 2000,
-        "boutgift": 2000,
-        "barnetilsynMedStønad": 2000,
-        "nettoTilsynsutgift": 2000,
-        "barnetrygd": 2000,
-        "underholdskostnad": 9000,
+        "beløp": 9000,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],

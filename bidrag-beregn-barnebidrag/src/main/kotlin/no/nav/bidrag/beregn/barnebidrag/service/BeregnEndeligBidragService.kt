@@ -105,7 +105,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
             ?.let {
                 UnderholdskostnadDelberegningBeregningGrunnlag(
                     referanse = it.referanse,
-                    beløp = it.underholdskostnadPeriode.beløp,
+                    beløp = it.underholdskostnadPeriode.underholdskostnad,
                 )
             }
             ?: throw IllegalArgumentException("Underholdskostnad grunnlag mangler for periode $bruddPeriode"),

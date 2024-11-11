@@ -71,7 +71,7 @@ internal object BeregnSamværsfradragService : BeregnService() {
             mapDelberegningSamværsfradrag(
                 samværsfradragPeriodeResultatListe = samværsfradragBeregningResultatListe,
                 mottattGrunnlag = mottattGrunnlag,
-                referanseTilBP = referanseTilBP
+                referanseTilBP = referanseTilBP,
             ),
         )
 

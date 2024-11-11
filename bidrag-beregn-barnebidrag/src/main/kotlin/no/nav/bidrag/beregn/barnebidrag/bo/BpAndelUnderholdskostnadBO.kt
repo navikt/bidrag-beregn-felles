@@ -5,7 +5,7 @@ import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
 import java.math.BigDecimal
 
-//TODO Bør endres til å bruke delberegning-objektene for inntekt? Men problemet er at delberegningene produseres av denne servicen også
+// TODO Bør endres til å bruke delberegning-objektene for inntekt? Men problemet er at delberegningene produseres av denne servicen også
 data class BpAndelUnderholdskostnadPeriodeGrunnlag(
     val beregningsperiode: ÅrMånedsperiode,
     val underholdskostnadDelberegningPeriodeGrunnlagListe: List<UnderholdskostnadDelberegningPeriodeGrunnlag>,
@@ -20,14 +20,14 @@ data class UnderholdskostnadDelberegningPeriodeGrunnlag(val referanse: String, v
 data class BpAndelUnderholdskostnadPeriodeResultat(val periode: ÅrMånedsperiode, val resultat: BpAndelUnderholdskostnadBeregningResultat)
 
 data class BpAndelUnderholdskostnadBeregningGrunnlag(
-    val underholdskostnadBeregningGrunnlag: UnderholdskostnadBeregningGrunnlag,
+    val underholdskostnadBeregningGrunnlag: UBeregningGrunnlag,
     val inntektBPBeregningGrunnlag: InntektBeregningGrunnlag,
     val inntektBMBeregningGrunnlag: InntektBeregningGrunnlag,
     val inntektSBBeregningGrunnlag: InntektBeregningGrunnlag,
     val sjablonSjablontallBeregningGrunnlagListe: List<SjablonSjablontallBeregningGrunnlag>,
 )
 
-data class UnderholdskostnadBeregningGrunnlag(val referanse: String, val beløp: BigDecimal)
+data class UBeregningGrunnlag(val referanse: String, val beløp: BigDecimal)
 
 data class BpAndelUnderholdskostnadBeregningResultat(
     val endeligAndelFaktor: BigDecimal,
