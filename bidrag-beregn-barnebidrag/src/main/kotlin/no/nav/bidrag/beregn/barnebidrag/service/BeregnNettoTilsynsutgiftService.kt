@@ -18,6 +18,7 @@ import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.finnRefe
 import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.mapNettoTilsynsutgiftPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.dto.FaktiskUtgiftPeriodeCore
 import no.nav.bidrag.beregn.core.dto.TilleggsstønadPeriodeCore
+import no.nav.bidrag.beregn.core.mapping.bestemGrunnlagstype
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -272,7 +273,6 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
         resultatGrunnlagListe.addAll(
             mapDelberegningFaktiskTilsynsutgift(
                 faktiskUtgiftPeriodeCoreListe = faktiskUtgiftPeriodeCoreListe,
-                bidragsmottakerReferanse = referanseBm,
             ),
         )
 
@@ -312,22 +312,21 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
     }
 
     // Mapper ut DelberegningFaktiskUtgift
-    private fun mapDelberegningFaktiskTilsynsutgift(faktiskUtgiftPeriodeCoreListe: List<FaktiskUtgiftPeriodeCore>, bidragsmottakerReferanse: String) =
-        faktiskUtgiftPeriodeCoreListe
-            .map {
-                GrunnlagDto(
-                    referanse = it.referanse,
-                    type = bestemGrunnlagstype(it.referanse),
-                    innhold = POJONode(
-                        DelberegningFaktiskTilsynsutgift(
-                            periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
-                            beregnetBeløp = it.beregnetBeløp,
-                        ),
+    private fun mapDelberegningFaktiskTilsynsutgift(faktiskUtgiftPeriodeCoreListe: List<FaktiskUtgiftPeriodeCore>) = faktiskUtgiftPeriodeCoreListe
+        .map {
+            GrunnlagDto(
+                referanse = it.referanse,
+                type = bestemGrunnlagstype(it.referanse),
+                innhold = POJONode(
+                    DelberegningFaktiskTilsynsutgift(
+                        periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
+                        beregnetBeløp = it.beregnetBeløp,
                     ),
-                    grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
-                    gjelderReferanse = it.gjelderBarn,
-                )
-            }
+                ),
+                grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
+                gjelderReferanse = it.gjelderBarn,
+            )
+        }
 
     // Mapper ut DelberegningTilleggsstønad
     private fun mapDelberegningTilleggsstønad(tilleggsstønadPeriodeCoreListe: List<TilleggsstønadPeriodeCore>, bidragsmottakerReferanse: String) =
@@ -350,7 +349,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
     fun mapSjablonSjablontall(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonSjablontallPeriodeGrunnlag> {
         try {
             return sjablonGrunnlag
-                .filter { it.referanse.uppercase().contains("SJABLONTALL") }
+                .filter { it.type == Grunnlagstype.SJABLON_SJABLONTALL }
                 .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>()
                 .map {
                     SjablonSjablontallPeriodeGrunnlag(

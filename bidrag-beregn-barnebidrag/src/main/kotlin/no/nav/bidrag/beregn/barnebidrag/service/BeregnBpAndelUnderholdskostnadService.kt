@@ -43,17 +43,26 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
         val innslagKapitalinntektSjablon = finnInnslagKapitalinntektFraGrunnlag(sjablonGrunnlag)
 
         // Mapper ut grunnlag som skal brukes for å beregne bidragsevne
-        val bpAndelUnderholdskostnadPeriodeGrunnlag = mapBpAndelUnderholdskostnadGrunnlag(mottattGrunnlag, sjablonGrunnlag)
+        val bpAndelUnderholdskostnadPeriodeGrunnlag = mapBpAndelUnderholdskostnadGrunnlag(
+            mottattGrunnlag = mottattGrunnlag,
+            sjablonGrunnlag = sjablonGrunnlag,
+        )
 
         // Lager liste over bruddperioder
-        val bruddPeriodeListe = lagBruddPeriodeListeBpAndelUnderholdskostnad(bpAndelUnderholdskostnadPeriodeGrunnlag, mottattGrunnlag.periode)
+        val bruddPeriodeListe = lagBruddPeriodeListeBpAndelUnderholdskostnad(
+            grunnlagListe = bpAndelUnderholdskostnadPeriodeGrunnlag,
+            beregningsperiode = mottattGrunnlag.periode,
+        )
 
         val bpAndelUnderholdskostnadBeregningResultatListe = mutableListOf<BpAndelUnderholdskostnadPeriodeResultat>()
 
         // Løper gjennom hver bruddperiode og beregner BP's andel av underholdskostnad
         bruddPeriodeListe.forEach { bruddPeriode ->
             val bpAndelUnderholdskostnadBeregningGrunnlag =
-                lagBpAndelUnderholdskostnadBeregningGrunnlag(bpAndelUnderholdskostnadPeriodeGrunnlag, bruddPeriode)
+                lagBpAndelUnderholdskostnadBeregningGrunnlag(
+                    bpAndelUnderholdskostnadPeriodeGrunnlag = bpAndelUnderholdskostnadPeriodeGrunnlag,
+                    bruddPeriode = bruddPeriode,
+                )
             bpAndelUnderholdskostnadBeregningResultatListe.add(
                 BpAndelUnderholdskostnadPeriodeResultat(
                     periode = bruddPeriode,
@@ -103,10 +112,10 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
         beregningsperiode: ÅrMånedsperiode,
     ): List<ÅrMånedsperiode> {
         // inntektSBPerioder er nullable
-        val inntektSBPerioder = grunnlagListe.inntektSBPeriodeGrunnlagListe?.asSequence()
-            ?.map { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil) } ?: emptySequence()
+        val inntektSBPerioder = grunnlagListe.inntektSBPeriodeGrunnlagListe.asSequence()
+            .map { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil) }
         val periodeListe = sequenceOf(grunnlagListe.beregningsperiode)
-            .plus(grunnlagListe.underholdskostnadPeriodeGrunnlagListe.asSequence().map { it.underholdskostnadPeriode.periode })
+            .plus(grunnlagListe.underholdskostnadDelberegningPeriodeGrunnlagListe.asSequence().map { it.underholdskostnadPeriode.periode })
             .plus(grunnlagListe.inntektBPPeriodeGrunnlagListe.asSequence().map { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil) })
             .plus(grunnlagListe.inntektBMPeriodeGrunnlagListe.asSequence().map { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil) })
             .plus(inntektSBPerioder)
@@ -120,9 +129,9 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
         bpAndelUnderholdskostnadPeriodeGrunnlag: BpAndelUnderholdskostnadPeriodeGrunnlag,
         bruddPeriode: ÅrMånedsperiode,
     ): BpAndelUnderholdskostnadBeregningGrunnlag = BpAndelUnderholdskostnadBeregningGrunnlag(
-        underholdskostnadBeregningGrunnlag = bpAndelUnderholdskostnadPeriodeGrunnlag.underholdskostnadPeriodeGrunnlagListe
+        underholdskostnadBeregningGrunnlag = bpAndelUnderholdskostnadPeriodeGrunnlag.underholdskostnadDelberegningPeriodeGrunnlagListe
             .firstOrNull { it.underholdskostnadPeriode.periode.inneholder(bruddPeriode) }
-            ?.let { UBeregningGrunnlag(referanse = it.referanse, beløp = it.underholdskostnadPeriode.beløp) }
+            ?.let { UBeregningGrunnlag(referanse = it.referanse, beløp = it.underholdskostnadPeriode.underholdskostnad) }
             ?: throw IllegalArgumentException("Underholdskostnad grunnlag mangler for periode $bruddPeriode"),
         inntektBPBeregningGrunnlag = bpAndelUnderholdskostnadPeriodeGrunnlag.inntektBPPeriodeGrunnlagListe
             .firstOrNull { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
@@ -260,8 +269,7 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
 
         // Mapper ut DelberegningSumInntekt SB. Inntektskategorier summeres opp.
         val sumInntektSBListe = bpAndelUnderholdskostnadPeriodeGrunnlag.inntektSBPeriodeGrunnlagListe
-            ?.filter { grunnlagReferanseListe.contains(it.referanse) }
-            ?: emptyList()
+            .filter { grunnlagReferanseListe.contains(it.referanse) }
         resultatGrunnlagListe.addAll(
             mapDelberegningSumInntekt(
                 sumInntektListe = sumInntektSBListe,
@@ -303,9 +311,9 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
     // TODO Bør synkes med som ligger i CoreMapper. Pt ligger det bare en gyldig sjablonverdi (uforandret siden 2003).
     // TODO Logikken her må utvides hvis det legges inn nye sjablonverdier
     private fun finnInnslagKapitalinntektFraGrunnlag(sjablonListe: List<GrunnlagDto>): Sjablontall? = sjablonListe
-        .filter { it.referanse.uppercase().contains("SJABLONTALL") }
+        .filter { it.referanse.contains(SjablonTallNavn.INNSLAG_KAPITALINNTEKT_BELØP.navn) }
         .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>()
-        .firstOrNull { it.innhold.sjablon == SjablonTallNavn.INNSLAG_KAPITALINNTEKT_BELØP }
+        .firstOrNull()
         ?.let { innslagKapitalinntektSjablon ->
             Sjablontall(
                 typeSjablon = innslagKapitalinntektSjablon.innhold.sjablon.navn,

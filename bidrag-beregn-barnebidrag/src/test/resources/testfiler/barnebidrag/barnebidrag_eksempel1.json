@@ -48,7 +48,7 @@
         },
         "inntektsrapportering": "AINNTEKT",
         "gjelderBarn": null,
-        "beløp": 1000000,
+        "beløp": 500000,
         "manueltRegistrert": false,
         "valgt": true
       },
@@ -90,23 +90,92 @@
       "gjelderReferanse": "Person_Søknadsbarn"
     },
     {
-      "referanse": "Delberegning_Underholdskostnad_202408",
-      "type": "DELBEREGNING_UNDERHOLDSKOSTNAD",
+      "referanse": "Bostatus_Søknadsbarn_202408",
+      "type": "BOSTATUS_PERIODE",
       "innhold": {
         "periode": {
           "fom": "2024-08",
           "til": "2024-09"
         },
-        "forbruksutgift": 2000,
-        "boutgift": 2000,
-        "barnetilsynMedStønad": 2000,
-        "nettoTilsynsutgift": 2000,
-        "barnetrygd": 2000,
-        "underholdskostnad": 9000,
+        "bostatus": "MED_FORELDER",
+        "manueltRegistrert": false,
+        "relatertTilPart": "Person_Bidragspliktig"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Søknadsbarn"
+    },
+    {
+      "referanse": "Bostatus_Bidragspliktig_202408",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": "2024-09"
+        },
+        "bostatus": "BOR_IKKE_MED_ANDRE_VOKSNE",
+        "manueltRegistrert": false,
+        "relatertTilPart": "Person_Bidragspliktig"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragspliktig"
+    },
+    {
+      "referanse": "Mottatt_Samværsperiode_202301_SB1",
+      "type": "SAMVÆRSPERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": null
+        },
+        "samværsklasse": "SAMVÆRSKLASSE_1",
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": null
+    },
+    {
+      "referanse": "Mottatt_DeltBosted_202408",
+      "type": "DELT_BOSTED",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": "2024-09"
+        },
+        "deltBosted": false,
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Mottatt_Barnetillegg_BP_202408",
+      "type": "BARNETILLEGG_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": "2024-09"
+        },
+        "beløp": 3000,
+        "skattFaktor": 0.500,
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragspliktig"
+    },
+    {
+      "referanse": "Mottatt_Barnetillegg_BM_202408",
+      "type": "BARNETILLEGG_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": "2024-09"
+        },
+        "beløp": 5000,
+        "skattFaktor": 0.500,
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
     }
   ]
 }

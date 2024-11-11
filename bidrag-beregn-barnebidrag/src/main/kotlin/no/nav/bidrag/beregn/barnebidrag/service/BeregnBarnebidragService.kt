@@ -1,17 +1,111 @@
 package no.nav.bidrag.beregn.barnebidrag.service
 
+import com.fasterxml.jackson.databind.node.POJONode
+import no.nav.bidrag.beregn.barnebidrag.mapper.BidragsevneMapper.finnReferanseTilRolle
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBidragsevneService.delberegningBidragsevne
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBpAndelUnderholdskostnadService.delberegningBpAndelUnderholdskostnad
+import no.nav.bidrag.beregn.barnebidrag.service.BeregnEndeligBidragService.delberegningEndeligBidrag
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnNettoTilsynsutgiftService.delberegningNettoTilsynsutgift
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnSamværsfradragService.delberegningSamværsfradrag
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnUnderholdskostnadService.delberegningUnderholdskostnad
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.util.secureLogger
+import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
+import no.nav.bidrag.domene.tid.ÅrMånedsperiode
+import no.nav.bidrag.domene.util.avrundetMedToDesimaler
+import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
+import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatBeregning
+import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatPeriode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.felles.valider
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
+import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
+import java.math.BigDecimal
 
 class BeregnBarnebidragService : BeregnService() {
+
+    // Komplett beregning av barnebidrag
+    fun beregnBarnebidrag(mottattGrunnlag: BeregnGrunnlag): BeregnetBarnebidragResultat {
+        secureLogger.debug { "Beregning av barnebidrag - følgende request mottatt: ${tilJson(mottattGrunnlag)}" }
+
+        // Kontroll av inputdata
+        try {
+            // TODO Bør være mulig å ha null i beregnDatoTil?
+            mottattGrunnlag.valider()
+        } catch (e: IllegalArgumentException) {
+            throw IllegalArgumentException("Ugyldig input ved beregning av barnebidrag: " + e.message)
+        }
+
+        // Kaller delberegninger
+        val delberegningBidragsevneResultat = delberegningBidragsevne(mottattGrunnlag)
+        val delberegningUnderholdskostnadResultat = simulerDelberegningUnderholdskostnad(mottattGrunnlag)
+        var utvidetGrunnlag = mottattGrunnlag.copy(
+            grunnlagListe = (mottattGrunnlag.grunnlagListe + delberegningUnderholdskostnadResultat).distinctBy(GrunnlagDto::referanse),
+        )
+        val delberegningBpAndelUnderholdskostnadResultat = delberegningBpAndelUnderholdskostnad(utvidetGrunnlag)
+        val delberegningSamværsfradragResultat = delberegningSamværsfradrag(mottattGrunnlag)
+        utvidetGrunnlag = mottattGrunnlag.copy(
+            grunnlagListe = (
+                mottattGrunnlag.grunnlagListe + delberegningBidragsevneResultat + delberegningUnderholdskostnadResultat +
+                    delberegningBpAndelUnderholdskostnadResultat + delberegningSamværsfradragResultat
+                )
+                .distinctBy(GrunnlagDto::referanse),
+        )
+        val delberegningEndeligBidragResultat = delberegningEndeligBidrag(utvidetGrunnlag)
+
+        val resultatGrunnlagListe = (
+            delberegningBidragsevneResultat + delberegningUnderholdskostnadResultat +
+                delberegningBpAndelUnderholdskostnadResultat +
+                delberegningSamværsfradragResultat + delberegningEndeligBidragResultat
+            )
+            .distinctBy { it.referanse }
+            .sortedBy { it.referanse }
+
+        return BeregnetBarnebidragResultat(
+            beregnetBarnebidragPeriodeListe = lagResultatPerioder(delberegningEndeligBidragResultat),
+            grunnlagListe = resultatGrunnlagListe,
+        )
+    }
+
+    private fun simulerDelberegningUnderholdskostnad(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
+        val underholdskostnadListe = mutableListOf<GrunnlagDto>()
+
+        // Simulerer underholdskostnad
+        val underholdskostnad = GrunnlagDto(
+            referanse = opprettDelberegningreferanse(
+                type = Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD,
+                periode = ÅrMånedsperiode(fom = mottattGrunnlag.periode.fom, til = null),
+                søknadsbarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
+                gjelderReferanse = finnReferanseTilRolle(
+                    grunnlagListe = mottattGrunnlag.grunnlagListe,
+                    grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
+                ),
+            ),
+            type = Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD,
+            innhold = POJONode(
+                DelberegningUnderholdskostnad(
+                    periode = mottattGrunnlag.periode,
+                    forbruksutgift = BigDecimal.valueOf(100).avrundetMedToDesimaler,
+                    boutgift = BigDecimal.valueOf(500).avrundetMedToDesimaler,
+                    barnetilsynMedStønad = BigDecimal.valueOf(200).avrundetMedToDesimaler,
+                    nettoTilsynsutgift = BigDecimal.valueOf(100).avrundetMedToDesimaler,
+                    barnetrygd = BigDecimal.valueOf(100).avrundetMedToDesimaler,
+                    underholdskostnad = BigDecimal.valueOf(9000).avrundetMedToDesimaler,
+                ),
+            ),
+            grunnlagsreferanseListe = emptyList(),
+            gjelderReferanse = finnReferanseTilRolle(
+                grunnlagListe = mottattGrunnlag.grunnlagListe,
+                grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
+            ),
+        )
+
+        underholdskostnadListe.add(underholdskostnad)
+
+        return underholdskostnadListe
+    }
 
     // Beregning av bidragsevne
     fun beregnBidragsevne(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
@@ -83,21 +177,34 @@ class BeregnBarnebidragService : BeregnService() {
         return delberegningSamværsfradragResultat
     }
 
-    // Beregning av samværsfradrag
-    fun beregnUnderholdskostnad(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
-        secureLogger.debug { "Beregning av underholdskostnad - følgende request mottatt: ${tilJson(mottattGrunnlag)}" }
+    // Beregning av endelig bidrag (sluttberegning)
+    fun beregnEndeligBidrag(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
+        secureLogger.debug { "Beregning av endelig bidrag (sluttberegning) - følgende request mottatt: ${tilJson(mottattGrunnlag)}" }
 
         // Kontroll av inputdata
         try {
             // TODO Bør være mulig å ha null i beregnDatoTil?
             mottattGrunnlag.valider()
         } catch (e: IllegalArgumentException) {
-            throw IllegalArgumentException("Ugyldig input ved beregning av underholdskostnad: " + e.message)
+            throw IllegalArgumentException("Ugyldig input ved beregning av endelig bidrag (sluttberegning): " + e.message)
         }
 
         // Kaller delberegninger
-        val delberegningUnderholdskostnadResultat = delberegningUnderholdskostnad(mottattGrunnlag)
+        val delberegningEndeligBidragResultat = delberegningEndeligBidrag(mottattGrunnlag)
 
-        return delberegningUnderholdskostnadResultat
+        return delberegningEndeligBidragResultat
     }
+
+    private fun lagResultatPerioder(delberegningEndeligBidragResultat: List<GrunnlagDto>): List<ResultatPeriode> = delberegningEndeligBidragResultat
+        .filtrerOgKonverterBasertPåEgenReferanse<SluttberegningBarnebidrag>(Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG)
+        .map {
+            ResultatPeriode(
+                periode = it.innhold.periode,
+                resultat = ResultatBeregning(
+                    beløp = it.innhold.resultatBeløp,
+                    kode = it.innhold.resultatKode,
+                ),
+                grunnlagsreferanseListe = listOf(it.referanse),
+            )
+        }
 }

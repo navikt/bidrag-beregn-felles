@@ -175,28 +175,38 @@
       "gjelderReferanse": "Person_Søknadsbarn"
     },
     {
-      "referanse": "Mottatt_Underholdskostnad_202309",
-      "type": "UNDERHOLDSKOSTNAD",
+      "referanse": "Delberegning_Underholdskostnad_202309",
+      "type": "DELBEREGNING_UNDERHOLDSKOSTNAD",
       "innhold": {
         "periode": {
           "fom": "2023-09",
           "til": "2024-05"
         },
-        "beløp": 9000,
+        "forbruksutgift": 2000,
+        "boutgift": 2000,
+        "barnetilsynMedStønad": 2000,
+        "nettoTilsynsutgift": 2000,
+        "barnetrygd": 2000,
+        "underholdskostnad": 9000,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": null
     },
     {
-      "referanse": "Mottatt_Underholdskostnad_202405",
-      "type": "UNDERHOLDSKOSTNAD",
+      "referanse": "Delberegning_Underholdskostnad_202405",
+      "type": "DELBEREGNING_UNDERHOLDSKOSTNAD",
       "innhold": {
         "periode": {
           "fom": "2024-05",
           "til": null
         },
-        "beløp": 8000,
+        "forbruksutgift": 2000,
+        "boutgift": 2000,
+        "barnetilsynMedStønad": 2000,
+        "nettoTilsynsutgift": 2000,
+        "barnetrygd": 2000,
+        "underholdskostnad": 8000,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],

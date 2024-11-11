@@ -11,7 +11,6 @@ import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.TilleggsstønadPeriodeCore
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
-import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
@@ -106,7 +105,7 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
     private fun mapSjablonMaksTilsynsbeløp(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonMaksTilsynsbeløpPeriodeGrunnlag> {
         try {
             return sjablonGrunnlag
-                .filter { it.referanse.contains(SjablonNavn.MAKS_TILSYN.navn) }
+                .filter { it.type == Grunnlagstype.SJABLON_MAKS_TILSYN }
                 .filtrerOgKonverterBasertPåEgenReferanse<SjablonMaksTilsynPeriode>()
                 .map {
                     SjablonMaksTilsynsbeløpPeriodeGrunnlag(
@@ -124,7 +123,7 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
     private fun mapSjablonMaksFradrag(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonMaksFradragsbeløpPeriodeGrunnlag> {
         try {
             return sjablonGrunnlag
-                .filter { it.referanse.contains(SjablonNavn.MAKS_FRADRAG.navn) }
+                .filter { it.type == Grunnlagstype.SJABLON_MAKS_FRADRAG }
                 .filtrerOgKonverterBasertPåEgenReferanse<SjablonMaksFradragPeriode>()
                 .map {
                     SjablonMaksFradragsbeløpPeriodeGrunnlag(
@@ -144,9 +143,6 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
 
     private fun beregnBeløpTilleggsstønad(beløpDagsats: BigDecimal): BigDecimal =
         beløpDagsats.multiply(BigDecimal.valueOf(260)).divide(BigDecimal.valueOf(12), 10, RoundingMode.HALF_UP)
-
-//    private fun beregnBeløpTilleggsstønad(beløpDagsats: BigDecimal): BigDecimal =
-//        beløpDagsats.multiply(BigDecimal.valueOf(260)).divide(BigDecimal.valueOf(12)).avrundetMedToDesimaler
 
     fun finnFødselsdatoBarn(beregnGrunnlag: List<GrunnlagDto>, referanse: String): LocalDate =
         finnPersonFraReferanse(beregnGrunnlag, referanse).fødselsdato

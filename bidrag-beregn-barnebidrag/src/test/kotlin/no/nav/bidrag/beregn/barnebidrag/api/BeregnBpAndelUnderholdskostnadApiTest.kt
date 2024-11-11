@@ -232,11 +232,11 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
             .size
 
         val antallUnderholdskostnad = bpAndelUnderholdskostnadResultat
-            .filter { it.type == Grunnlagstype.UNDERHOLDSKOSTNAD }
+            .filter { it.type == Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD }
             .size
 
-        val antallSjablon = bpAndelUnderholdskostnadResultat
-            .filter { it.type == Grunnlagstype.SJABLON }
+        val antallSjablonSjablonTall = bpAndelUnderholdskostnadResultat
+            .filter { it.type == Grunnlagstype.SJABLON_SJABLONTALL }
             .size
 
         assertAll(
@@ -260,7 +260,7 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
             { assertThat(antallDelberegningSumInntektPeriodeBM).isEqualTo(1) },
             { assertThat(antallDelberegningSumInntektPeriodeSB).isEqualTo(1) },
             { assertThat(antallUnderholdskostnad).isEqualTo(1) },
-            { assertThat(antallSjablon).isEqualTo(6) },
+            { assertThat(antallSjablonSjablonTall).isEqualTo(6) },
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
@@ -318,11 +318,11 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
             .size
 
         val antallUnderholdskostnad = bpAndelUnderholdskostnadResultat
-            .filter { it.type == Grunnlagstype.UNDERHOLDSKOSTNAD }
+            .filter { it.type == Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD }
             .size
 
-        val antallSjablon = bpAndelUnderholdskostnadResultat
-            .filter { it.type == Grunnlagstype.SJABLON }
+        val antallSjablonSjablontall = bpAndelUnderholdskostnadResultat
+            .filter { it.type == Grunnlagstype.SJABLON_SJABLONTALL }
             .size
 
         val bpAndelUnderholdskostnadResultatListe = bpAndelUnderholdskostnadResultat
@@ -466,7 +466,7 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
             { assertThat(antallDelberegningSumInntektPeriodeBM).isEqualTo(forventetAntallDelberegningSumInntektPeriodeBM) },
             { assertThat(antallDelberegningSumInntektPeriodeSB).isEqualTo(forventetAntallDelberegningSumInntektPeriodeSB) },
             { assertThat(antallUnderholdskostnad).isEqualTo(forventetAntallUnderholdskostnad) },
-            { assertThat(antallSjablon).isEqualTo(forventetAntallSjablon) },
+            { assertThat(antallSjablonSjablontall).isEqualTo(forventetAntallSjablon) },
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },

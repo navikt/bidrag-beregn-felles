@@ -1,6 +1,6 @@
 {
   "periode": {
-    "fom": "2024-01",
+    "fom": "2024-08",
     "til": "2024-09"
   },
   "søknadsbarnReferanse": "Person_Søknadsbarn",
@@ -15,17 +15,6 @@
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": null
-    },
-    {
-      "referanse" : "person_PERSON_BARN_BIDRAGSPLIKTIG_20051217_102",
-      "type" : "PERSON_SØKNADSBARN",
-      "innhold" : {
-        "ident" : "12121250511",
-        "navn" : null,
-        "fødselsdato" : "2005-12-17"
-      },
-      "grunnlagsreferanseListe" : [],
-      "gjelderReferanse" : null
     },
     {
       "referanse": "Person_Bidragsmottaker",
@@ -50,32 +39,48 @@
       "gjelderReferanse": null
     },
     {
-      "referanse": "Mottatt_FaktiskUtgift_202301_SB1",
-      "type": "FAKTISK_UTGIFT",
+      "referanse": "Mottatt_InntektRapportering_Ainntekt_Bidragsmottaker_202408",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
       "innhold": {
         "periode": {
-          "fom": "2024-01",
-          "til": null
+          "fom": "2024-08",
+          "til": "2024-09"
         },
-        "gjelderBarn": "Person_Søknadsbarn",
-        "fødselsdatoBarn": "2023-01-17",
-        "faktiskUtgiftBeløp": 500.00,
-        "kostpengerBeløp": 100.00,
-        "manueltRegistrert": false
+        "inntektsrapportering": "AINNTEKT",
+        "gjelderBarn": null,
+        "beløp": 300000,
+        "manueltRegistrert": false,
+        "valgt": true
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": null
+      "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {
-      "referanse": "Mottatt_Tilleggsstønad_202301_SB1",
-      "type": "TILLEGGSSTØNAD",
+      "referanse": "Mottatt_InntektRapportering_Ainntekt_Søknadsbarn_202408",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
       "innhold": {
         "periode": {
-          "fom": "2024-02",
-          "til": null
+          "fom": "2024-08",
+          "til": "2024-09"
         },
-        "gjelderBarn": "Person_Søknadsbarn",
-        "beløpDagsats": 10.00,
+        "inntektsrapportering": "AINNTEKT",
+        "gjelderBarn": null,
+        "beløp": 10000,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Søknadsbarn"
+    },
+    {
+      "referanse": "Delberegning_Underholdskostnad_202408",
+      "type": "DELBEREGNING_UNDERHOLDSKOSTNAD",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": "2024-09"
+        },
+        "beløp": 9000,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],

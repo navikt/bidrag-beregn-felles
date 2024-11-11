@@ -6,7 +6,6 @@ import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSamværsfradragPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
-import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
@@ -57,7 +56,7 @@ internal object SamværsfradragMapper : CoreMapper() {
     private fun mapSjablonSamværsfradrag(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonSamværsfradragPeriodeGrunnlag> {
         try {
             return sjablonGrunnlag
-                .filter { it.referanse.contains(SjablonNavn.SAMVÆRSFRADRAG.navn) }
+                .filter { it.type == Grunnlagstype.SJABLON_SAMVARSFRADRAG }
                 .filtrerOgKonverterBasertPåEgenReferanse<SjablonSamværsfradragPeriode>()
                 .map {
                     SjablonSamværsfradragPeriodeGrunnlag(

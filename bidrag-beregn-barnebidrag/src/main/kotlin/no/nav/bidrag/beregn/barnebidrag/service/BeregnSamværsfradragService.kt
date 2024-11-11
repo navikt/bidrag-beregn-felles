@@ -26,6 +26,11 @@ import java.time.Period
 internal object BeregnSamværsfradragService : BeregnService() {
 
     fun delberegningSamværsfradrag(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
+        val referanseTilBP = finnReferanseTilRolle(
+            grunnlagListe = mottattGrunnlag.grunnlagListe,
+            grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
+        )
+
         // Lager sjablon grunnlagsobjekter
         val sjablonGrunnlag = lagSjablonGrunnlagsobjekter(mottattGrunnlag.periode)
 
@@ -33,13 +38,19 @@ internal object BeregnSamværsfradragService : BeregnService() {
         val samværsfradragPeriodeGrunnlag = mapSamværsfradragGrunnlag(mottattGrunnlag, sjablonGrunnlag)
 
         // Lager liste over bruddperioder
-        val bruddPeriodeListe = lagBruddPeriodeListeSamværsfradrag(samværsfradragPeriodeGrunnlag, mottattGrunnlag.periode)
+        val bruddPeriodeListe = lagBruddPeriodeListeSamværsfradrag(
+            grunnlagListe = samværsfradragPeriodeGrunnlag,
+            beregningsperiode = mottattGrunnlag.periode,
+        )
 
         val samværsfradragBeregningResultatListe = mutableListOf<SamværsfradragPeriodeResultat>()
 
         // Løper gjennom hver bruddperiode og beregner samværsfradrag
         bruddPeriodeListe.forEach { bruddPeriode ->
-            val samværsfradragBeregningGrunnlag = lagSamværsfradragBeregningGrunnlag(samværsfradragPeriodeGrunnlag, bruddPeriode)
+            val samværsfradragBeregningGrunnlag = lagSamværsfradragBeregningGrunnlag(
+                samværsfradragPeriodeGrunnlag = samværsfradragPeriodeGrunnlag,
+                bruddPeriode = bruddPeriode,
+            )
             samværsfradragBeregningResultatListe.add(
                 SamværsfradragPeriodeResultat(
                     periode = bruddPeriode,
@@ -60,6 +71,7 @@ internal object BeregnSamværsfradragService : BeregnService() {
             mapDelberegningSamværsfradrag(
                 samværsfradragPeriodeResultatListe = samværsfradragBeregningResultatListe,
                 mottattGrunnlag = mottattGrunnlag,
+                referanseTilBP = referanseTilBP
             ),
         )
 
@@ -192,6 +204,7 @@ internal object BeregnSamværsfradragService : BeregnService() {
     private fun mapDelberegningSamværsfradrag(
         samværsfradragPeriodeResultatListe: List<SamværsfradragPeriodeResultat>,
         mottattGrunnlag: BeregnGrunnlag,
+        referanseTilBP: String,
     ): List<GrunnlagDto> = samværsfradragPeriodeResultatListe
         .map {
             GrunnlagDto(
@@ -199,6 +212,7 @@ internal object BeregnSamværsfradragService : BeregnService() {
                     type = Grunnlagstype.DELBEREGNING_SAMVÆRSFRADRAG,
                     periode = ÅrMånedsperiode(fom = it.periode.fom, til = null),
                     søknadsbarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
+                    gjelderReferanse = referanseTilBP,
                 ),
                 type = Grunnlagstype.DELBEREGNING_SAMVÆRSFRADRAG,
                 innhold = POJONode(
@@ -208,10 +222,7 @@ internal object BeregnSamværsfradragService : BeregnService() {
                     ),
                 ),
                 grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe,
-                gjelderReferanse = finnReferanseTilRolle(
-                    grunnlagListe = mottattGrunnlag.grunnlagListe,
-                    grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
-                ),
+                gjelderReferanse = referanseTilBP,
             )
         }
 }
