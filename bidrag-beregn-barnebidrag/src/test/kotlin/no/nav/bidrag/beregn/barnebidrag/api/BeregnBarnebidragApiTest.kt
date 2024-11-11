@@ -210,7 +210,12 @@ internal class BeregnBarnebidragApiTest {
             .map {
                 DelberegningUnderholdskostnad(
                     periode = it.innhold.periode,
-                    beløp = it.innhold.beløp,
+                    forbruksutgift = it.innhold.forbruksutgift,
+                    boutgift = it.innhold.boutgift,
+                    barnetilsynMedStønad = it.innhold.barnetilsynMedStønad,
+                    nettoTilsynsutgift = it.innhold.nettoTilsynsutgift,
+                    barnetrygd = it.innhold.barnetrygd,
+                    underholdskostnad = it.innhold.underholdskostnad,
                 )
             }
 
@@ -399,7 +404,7 @@ internal class BeregnBarnebidragApiTest {
 
             // Underholdskostnad
             { assertThat(underholdskostnadResultatListe[0].periode).isEqualTo(forventetBeregningsperiode) },
-            { assertThat(underholdskostnadResultatListe[0].beløp).isEqualTo(forventetUnderholdskostnad) },
+            { assertThat(underholdskostnadResultatListe[0].underholdskostnad).isEqualTo(forventetUnderholdskostnad) },
 
             // BP andel underholdskostnad
             { assertThat(bpAndelUnderholdskostnadResultatListe[0].periode).isEqualTo(forventetBeregningsperiode) },
