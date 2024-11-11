@@ -57,7 +57,7 @@ internal object UnderholdskostnadMapper : CoreMapper() {
     private fun mapBarnetilsynMedStønad(beregnGrunnlag: BeregnGrunnlag): List<BarnetilsynMedStønadPeriodeGrunnlag> {
         try {
             return beregnGrunnlag.grunnlagListe
-                .filtrerOgKonverterBasertPåEgenReferanse<BarnetilsynMedStønadPeriode>(Grunnlagstype.BARNETILSYN_MED_STØNAD)
+                .filtrerOgKonverterBasertPåEgenReferanse<BarnetilsynMedStønadPeriode>(Grunnlagstype.BARNETILSYN_MED_STØNAD_PERIODE)
                 .map {
                     BarnetilsynMedStønadPeriodeGrunnlag(
                         referanse = it.referanse,
