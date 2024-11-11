@@ -23,9 +23,9 @@ internal object SamværsfradragBeregning {
         }
 
         val sjablon = grunnlag.sjablonSamværsfradragBeregningGrunnlagListe
-            .firstOrNull {
-                it.samværsklasse == samværsklasse && it.alderTom == alder
-            } ?: throw IllegalArgumentException("Ingen gyldig sjablon funnet for samværsklasse $samværsklasse og alder $alder.")
+            .filter { it.alderTom >= alder && it.samværsklasse == samværsklasse }
+            .sortedWith(compareBy({ it.samværsklasse }, { it.alderTom }))
+            .firstOrNull() ?: throw IllegalArgumentException("Ingen gyldig sjablon funnet for alder $alder.")
 
         return SamværsfradragBeregningResultat(
             beløpFradrag = sjablon.beløpFradrag.avrundetMedToDesimaler,
