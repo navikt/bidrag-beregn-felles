@@ -35,6 +35,8 @@ class BeregnBarnebidragApi {
 
     fun beregnNettoTilsynsutgift(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnNettoTilsynsutgift(beregnGrunnlag)
 
+//    fun beregnUnderholdskostnad(beregnGrunnlag: BeregnGrunnlag) = service.beregnUnderholdskostnad(beregnGrunnlag)
+
     fun beregnBpAndelUnderholdskostnad(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnBpAndelUnderholdskostnad(beregnGrunnlag)
 
     fun beregnSamværsfradrag(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnSamværsfradrag(beregnGrunnlag)

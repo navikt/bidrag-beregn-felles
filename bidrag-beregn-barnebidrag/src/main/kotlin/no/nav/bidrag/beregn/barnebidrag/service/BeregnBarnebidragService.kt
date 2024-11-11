@@ -42,19 +42,24 @@ class BeregnBarnebidragService : BeregnService() {
         val delberegningBidragsevneResultat = delberegningBidragsevne(mottattGrunnlag)
         val delberegningUnderholdskostnadResultat = simulerDelberegningUnderholdskostnad(mottattGrunnlag)
         var utvidetGrunnlag = mottattGrunnlag.copy(
-            grunnlagListe = (mottattGrunnlag.grunnlagListe + delberegningUnderholdskostnadResultat).distinctBy(GrunnlagDto::referanse)
+            grunnlagListe = (mottattGrunnlag.grunnlagListe + delberegningUnderholdskostnadResultat).distinctBy(GrunnlagDto::referanse),
         )
         val delberegningBpAndelUnderholdskostnadResultat = delberegningBpAndelUnderholdskostnad(utvidetGrunnlag)
         val delberegningSamværsfradragResultat = delberegningSamværsfradrag(mottattGrunnlag)
         utvidetGrunnlag = mottattGrunnlag.copy(
-            grunnlagListe = (mottattGrunnlag.grunnlagListe + delberegningBidragsevneResultat + delberegningUnderholdskostnadResultat +
-                delberegningBpAndelUnderholdskostnadResultat + delberegningSamværsfradragResultat)
-                .distinctBy(GrunnlagDto::referanse)
+            grunnlagListe = (
+                mottattGrunnlag.grunnlagListe + delberegningBidragsevneResultat + delberegningUnderholdskostnadResultat +
+                    delberegningBpAndelUnderholdskostnadResultat + delberegningSamværsfradragResultat
+                )
+                .distinctBy(GrunnlagDto::referanse),
         )
         val delberegningEndeligBidragResultat = delberegningEndeligBidrag(utvidetGrunnlag)
 
-        val resultatGrunnlagListe = (delberegningBidragsevneResultat + delberegningUnderholdskostnadResultat + delberegningBpAndelUnderholdskostnadResultat +
-            delberegningSamværsfradragResultat + delberegningEndeligBidragResultat)
+        val resultatGrunnlagListe = (
+            delberegningBidragsevneResultat + delberegningUnderholdskostnadResultat +
+                delberegningBpAndelUnderholdskostnadResultat +
+                delberegningSamværsfradragResultat + delberegningEndeligBidragResultat
+            )
             .distinctBy { it.referanse }
             .sortedBy { it.referanse }
 
@@ -82,14 +87,19 @@ class BeregnBarnebidragService : BeregnService() {
             innhold = POJONode(
                 DelberegningUnderholdskostnad(
                     periode = mottattGrunnlag.periode,
-                    beløp = BigDecimal.valueOf(9000).avrundetMedToDesimaler,
+                    forbruksutgift = BigDecimal.valueOf(100).avrundetMedToDesimaler,
+                    boutgift = BigDecimal.valueOf(500).avrundetMedToDesimaler,
+                    barnetilsynMedStønad = BigDecimal.valueOf(200).avrundetMedToDesimaler,
+                    nettoTilsynsutgift = BigDecimal.valueOf(100).avrundetMedToDesimaler,
+                    barnetrygd = BigDecimal.valueOf(100).avrundetMedToDesimaler,
+                    underholdskostnad = BigDecimal.valueOf(9000).avrundetMedToDesimaler,
                 ),
             ),
             grunnlagsreferanseListe = emptyList(),
             gjelderReferanse = finnReferanseTilRolle(
                 grunnlagListe = mottattGrunnlag.grunnlagListe,
                 grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
-            )
+            ),
         )
 
         underholdskostnadListe.add(underholdskostnad)
@@ -185,18 +195,16 @@ class BeregnBarnebidragService : BeregnService() {
         return delberegningEndeligBidragResultat
     }
 
-    private fun lagResultatPerioder(delberegningEndeligBidragResultat: List<GrunnlagDto>): List<ResultatPeriode> {
-        return delberegningEndeligBidragResultat
-            .filtrerOgKonverterBasertPåEgenReferanse<SluttberegningBarnebidrag>(Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG)
-            .map {
-                ResultatPeriode(
-                    periode = it.innhold.periode,
-                    resultat = ResultatBeregning(
-                        beløp = it.innhold.resultatBeløp,
-                        kode = it.innhold.resultatKode,
-                    ),
-                    grunnlagsreferanseListe = listOf(it.referanse),
-                )
-            }
-    }
+    private fun lagResultatPerioder(delberegningEndeligBidragResultat: List<GrunnlagDto>): List<ResultatPeriode> = delberegningEndeligBidragResultat
+        .filtrerOgKonverterBasertPåEgenReferanse<SluttberegningBarnebidrag>(Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG)
+        .map {
+            ResultatPeriode(
+                periode = it.innhold.periode,
+                resultat = ResultatBeregning(
+                    beløp = it.innhold.resultatBeløp,
+                    kode = it.innhold.resultatKode,
+                ),
+                grunnlagsreferanseListe = listOf(it.referanse),
+            )
+        }
 }

@@ -71,6 +71,14 @@ data class TilleggsstønadPeriodeCore(
     override val grunnlagsreferanseListe: List<String>,
 ) : Delberegning
 
+data class BarnetilsynMedStønadPeriodeCore(
+    override val referanse: String,
+    override val periode: PeriodeCore,
+    val gjelderBarn: Grunnlagsreferanse,
+    val beløp: Int,
+    override val grunnlagsreferanseListe: List<String>,
+) : Delberegning
+
 data class SjablonCore(val navn: String, val nøkkelListe: List<SjablonNøkkelCore>? = emptyList(), val innholdListe: List<SjablonInnholdCore>)
 
 data class SjablonNøkkelCore(val navn: String, val verdi: String)

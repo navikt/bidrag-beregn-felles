@@ -77,6 +77,7 @@ fun bestemGrunnlagstype(referanse: String) = when {
     referanse.contains(Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL.name) -> Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL
     referanse.contains(Grunnlagstype.DELBEREGNING_FAKTISK_UTGIFT.name) -> Grunnlagstype.DELBEREGNING_FAKTISK_UTGIFT
     referanse.contains(Grunnlagstype.DELBEREGNING_TILLEGGSSTØNAD.name) -> Grunnlagstype.DELBEREGNING_TILLEGGSSTØNAD
+    referanse.contains(Grunnlagstype.DELBEREGNING_NETTO_TILSYNSUTGIFT.name) -> Grunnlagstype.DELBEREGNING_NETTO_TILSYNSUTGIFT
 
     else -> throw IllegalArgumentException("Ikke i stand til å utlede grunnlagstype for referanse: $referanse")
 }
