@@ -412,7 +412,7 @@
         },
         "inntektsrapportering": "BARNETILLEGG",
         "gjelderBarn": null,
-        "beløp": 6000,
+        "beløp": 72000,
         "manueltRegistrert": false,
         "valgt": true
       },
@@ -429,7 +429,7 @@
         },
         "inntektsrapportering": "BARNETILLEGG",
         "gjelderBarn": null,
-        "beløp": 2000,
+        "beløp": 24000,
         "manueltRegistrert": false,
         "valgt": true
       },
@@ -446,7 +446,7 @@
         },
         "inntektsrapportering": "BARNETILLEGG",
         "gjelderBarn": null,
-        "beløp": 3000,
+        "beløp": 36000,
         "manueltRegistrert": false,
         "valgt": true
       },
@@ -463,7 +463,7 @@
         },
         "inntektsrapportering": "BARNETILLEGG",
         "gjelderBarn": null,
-        "beløp": 18000,
+        "beløp": 216000,
         "manueltRegistrert": false,
         "valgt": true
       },
@@ -480,7 +480,7 @@
         },
         "inntektsrapportering": "BARNETILLEGG",
         "gjelderBarn": null,
-        "beløp": 5000,
+        "beløp": 60000,
         "manueltRegistrert": false,
         "valgt": true
       },
@@ -497,7 +497,7 @@
         },
         "inntektsrapportering": "BARNETILLEGG",
         "gjelderBarn": null,
-        "beløp": 21600,
+        "beløp": 259200,
         "manueltRegistrert": false,
         "valgt": true
       },

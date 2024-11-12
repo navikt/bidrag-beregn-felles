@@ -11,6 +11,8 @@ import java.math.RoundingMode
 
 internal object EndeligBidragBeregning {
 
+    val bigDecimal12 = BigDecimal.valueOf(12)
+
     fun beregn(grunnlag: EndeligBidragBeregningGrunnlag): EndeligBidragBeregningResultat {
         // Hvis barnet er selvforsørget gjøres det ingen videre beregning (standardverdier benyttes for alt bortsett fra resultatkode og referanser)
         if (grunnlag.bpAndelUnderholdskostnadBeregningGrunnlag.barnetErSelvforsørget) {
@@ -104,7 +106,7 @@ internal object EndeligBidragBeregning {
             return BigDecimal.ZERO
         }
 
-        return barnetillegg.beløp - (barnetillegg.beløp * barnetillegg.skattFaktor)
+        return (barnetillegg.beløp - (barnetillegg.beløp * barnetillegg.skattFaktor)).divide(bigDecimal12, 10, RoundingMode.HALF_UP)
     }
 
     // Justerer BP's andel hvis det er delt bosted
