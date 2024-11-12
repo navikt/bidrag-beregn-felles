@@ -100,7 +100,7 @@ fun Barnetilsyn.tilGrunnlagsobjekt(periode: ÅrMånedsperiode): GrunnlagDto = Gr
             periode = periode,
             typeStønad = typeStønad!!,
             typeTilsyn = typeTilsyn!!,
-            beløpBarnetilsyn = beløpBarnetilsyn!!,
+            beløpBarnetilsyn = beløpBarneTilsyn!!,
         ),
     ),
 )

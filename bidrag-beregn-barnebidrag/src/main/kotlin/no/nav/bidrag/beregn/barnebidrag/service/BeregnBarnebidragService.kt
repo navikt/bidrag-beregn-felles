@@ -7,6 +7,7 @@ import no.nav.bidrag.beregn.barnebidrag.service.BeregnBpAndelUnderholdskostnadSe
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnEndeligBidragService.delberegningEndeligBidrag
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnNettoTilsynsutgiftService.delberegningNettoTilsynsutgift
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnSamværsfradragService.delberegningSamværsfradrag
+import no.nav.bidrag.beregn.barnebidrag.service.BeregnUnderholdskostnadService.delberegningUnderholdskostnad
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -40,7 +41,8 @@ class BeregnBarnebidragService : BeregnService() {
 
         // Kaller delberegninger
         val delberegningBidragsevneResultat = delberegningBidragsevne(mottattGrunnlag)
-        val delberegningUnderholdskostnadResultat = simulerDelberegningUnderholdskostnad(mottattGrunnlag)
+//        val delberegningUnderholdskostnadResultat = simulerDelberegningUnderholdskostnad(mottattGrunnlag)
+        val delberegningUnderholdskostnadResultat = delberegningUnderholdskostnad(mottattGrunnlag)
         var utvidetGrunnlag = mottattGrunnlag.copy(
             grunnlagListe = (mottattGrunnlag.grunnlagListe + delberegningUnderholdskostnadResultat).distinctBy(GrunnlagDto::referanse),
         )
@@ -139,6 +141,24 @@ class BeregnBarnebidragService : BeregnService() {
         // Kaller delberegninger
         val delberegningNettoTilsynsutgiftResultat = delberegningNettoTilsynsutgift(mottattGrunnlag)
         return delberegningNettoTilsynsutgiftResultat
+    }
+
+    // Beregning av bidragsevne
+    fun beregnUnderholdskostnad(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
+        secureLogger.debug { "Beregning av underholdskostnad - følgende request mottatt: ${tilJson(mottattGrunnlag)}" }
+
+        // Kontroll av inputdata
+        try {
+            // TODO Bør være mulig å ha null i beregnDatoTil?
+            mottattGrunnlag.valider()
+        } catch (e: IllegalArgumentException) {
+            throw IllegalArgumentException("Ugyldig input ved beregning av underholdskostnad: " + e.message)
+        }
+
+        // Kaller delberegninger
+        val delberegningUnderholdskostnadResultat = delberegningUnderholdskostnad(mottattGrunnlag)
+
+        return delberegningUnderholdskostnadResultat
     }
 
     // Beregning av BP's andel av underholdskostnad

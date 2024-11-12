@@ -8,7 +8,7 @@ import java.math.BigDecimal
 internal object UnderholdskostnadBeregning {
     var sjablonverdiBoutgifterBidragsbarn = BigDecimal.ZERO
     var sjablonverdiBarnetrygd = BigDecimal.ZERO
-    var sjablonverdiBarnetilsynBeløp = BigDecimal.ZERO
+    var sjablonverdiBarnetilsynBeløp: BigDecimal? = BigDecimal.ZERO
     var sjablonverdiForbruksutgifterBeløp = BigDecimal.ZERO
 
     fun beregn(grunnlag: UnderholdskostnadBeregningGrunnlag): UnderholdskostnadBeregningResultat {
@@ -17,7 +17,7 @@ internal object UnderholdskostnadBeregning {
 
         val beregnetUnderholdskostnad = (
             sjablonverdiForbruksutgifterBeløp.add(sjablonverdiBoutgifterBidragsbarn).add(sjablonverdiBarnetilsynBeløp).add(
-                grunnlag.nettoTilsynsutgiftBeregningGrunnlag?.nettoTilsynsutgift!!,
+                grunnlag.nettoTilsynsutgiftBeregningGrunnlag?.nettoTilsynsutgift,
             ).subtract(sjablonverdiBarnetrygd)
             )
 
@@ -25,13 +25,13 @@ internal object UnderholdskostnadBeregning {
             forbruksutgift = sjablonverdiForbruksutgifterBeløp,
             boutgift = sjablonverdiBoutgifterBidragsbarn,
             barnetilsynMedStønad = sjablonverdiBarnetilsynBeløp,
-            nettoTilsynsutgift = grunnlag.nettoTilsynsutgiftBeregningGrunnlag.nettoTilsynsutgift,
+            nettoTilsynsutgift = grunnlag.nettoTilsynsutgiftBeregningGrunnlag?.nettoTilsynsutgift,
             barnetrygd = sjablonverdiBarnetrygd,
             underholdskostnad = beregnetUnderholdskostnad,
             grunnlagsreferanseListe = listOfNotNull(
                 grunnlag.barnetilsynMedStønad?.referanse,
                 grunnlag.nettoTilsynsutgiftBeregningGrunnlag?.referanse,
-                grunnlag.sjablonBarnetilsynBeregningGrunnlag.referanse,
+                grunnlag.sjablonBarnetilsynBeregningGrunnlag?.referanse,
                 grunnlag.sjablonForbruksutgifterBeregningGrunnlag.referanse,
             ).plus(
                 grunnlag.sjablonSjablontallBeregningGrunnlagListe.map { it.referanse },
@@ -58,7 +58,7 @@ internal object UnderholdskostnadBeregning {
             )
             .toBigDecimal()
 
-        sjablonverdiBarnetilsynBeløp = grunnlag.sjablonBarnetilsynBeregningGrunnlag.beløpBarnetilsyn
+        sjablonverdiBarnetilsynBeløp = grunnlag.sjablonBarnetilsynBeregningGrunnlag?.beløpBarnetilsyn
         sjablonverdiForbruksutgifterBeløp = grunnlag.sjablonForbruksutgifterBeregningGrunnlag.beløpForbrukTotalt
     }
 }

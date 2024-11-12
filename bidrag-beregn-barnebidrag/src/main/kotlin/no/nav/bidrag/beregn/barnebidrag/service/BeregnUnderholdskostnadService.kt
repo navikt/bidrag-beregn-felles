@@ -123,31 +123,35 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
                 )
             }
 
-        val typeTilsyn = when (barnetilsynMedStønad!!.tilsynstype.toString() + barnetilsynMedStønad.skolealder.toString()) {
-            "HELTID" + "UNDER" -> "HU"
-            "HELTID" + "OVER" -> "HO"
-            "DELTID" + "UNDER" -> "DU"
-            "DELTID" + "OVER" -> "DO"
-            else -> "Ukjent"
-        }
-
-        // Lager liste over gyldige alderTom-verdier
-        val alderTomListe = hentAlderTomListe(underholdskostnadPeriodeGrunnlag.sjablonForbruksutgifterPeriodeGrunnlagListe)
-
         // Finner barnets beregnede alder. Alder regnes som om barnet er født 1. juli i fødselsåret.
         val beregnetAlder = Period.between(
             underholdskostnadPeriodeGrunnlag.søknadsbarnPeriodeGrunnlag.fødselsdato.withMonth(7).withDayOfMonth(1),
             bruddPeriode.fom.atDay(1),
         ).years
 
+        // Lager liste over gyldige alderTom-verdier
+        val alderTomListe = hentAlderTomListe(underholdskostnadPeriodeGrunnlag.sjablonForbruksutgifterPeriodeGrunnlagListe)
+
         // Finner den nærmeste alderTom som er større enn eller lik faktisk alder (til bruk for å hente ut sjablonverdi)
         val alderTom = alderTomListe.firstOrNull { beregnetAlder <= it } ?: alderTomListe.last()
+
+        val typeTilsyn: String? = if (barnetilsynMedStønad != null) {
+            when (barnetilsynMedStønad.tilsynstype.toString() + barnetilsynMedStønad.skolealder.toString()) {
+                "HELTID" + "UNDER" -> "HU"
+                "HELTID" + "OVER" -> "HO"
+                "DELTID" + "UNDER" -> "DU"
+                "DELTID" + "OVER" -> "DO"
+                else -> "Ukjent"
+            }
+        } else {
+            null
+        }
 
         val resultat =
             UnderholdskostnadBeregningGrunnlag(
                 søknadsbarn = SøknadsbarnBeregningGrunnlag(
                     referanse = underholdskostnadPeriodeGrunnlag.søknadsbarnPeriodeGrunnlag.referanse,
-                    alder = alderTom,
+                    alder = beregnetAlder,
                 ),
                 barnetilsynMedStønad = underholdskostnadPeriodeGrunnlag.barnetilsynMedStønadPeriodeGrunnlagListe
                     .firstOrNull {
@@ -186,26 +190,26 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
                             verdi = it.sjablonSjablontallPeriode.verdi.toDouble(),
                         )
                     },
-                sjablonBarnetilsynBeregningGrunnlag = underholdskostnadPeriodeGrunnlag.sjablonBarnetilsynPeriodeGrunnlagListe
-                    .filter { it.sjablonBarnetilsynPeriode.periode.inneholder(bruddPeriode) }
-                    .filter { it.sjablonBarnetilsynPeriode.typeStønad == "64" }
-                    .filter { it.sjablonBarnetilsynPeriode.typeTilsyn == typeTilsyn }
-                    .map {
-                        SjablonBarnetilsynBeregningGrunnlag(
-                            referanse = it.referanse,
-                            typeStønad = it.sjablonBarnetilsynPeriode.typeStønad,
-                            typeTilsyn = it.sjablonBarnetilsynPeriode.typeTilsyn,
-                            beløpBarnetilsyn = it.sjablonBarnetilsynPeriode.beløpBarnetilsyn,
-                        )
-                    }.first(),
+                sjablonBarnetilsynBeregningGrunnlag = if (typeTilsyn != null) {
+                    underholdskostnadPeriodeGrunnlag.sjablonBarnetilsynPeriodeGrunnlagListe
+                        .asSequence()
+                        .filter { it.sjablonBarnetilsynPeriode.periode.inneholder(bruddPeriode) }
+                        .filter { it.sjablonBarnetilsynPeriode.typeStønad == "64" }
+                        .filter { it.sjablonBarnetilsynPeriode.typeTilsyn == typeTilsyn }
+                        .map {
+                            SjablonBarnetilsynBeregningGrunnlag(
+                                referanse = it.referanse,
+                                typeStønad = it.sjablonBarnetilsynPeriode.typeStønad,
+                                typeTilsyn = it.sjablonBarnetilsynPeriode.typeTilsyn,
+                                beløpBarnetilsyn = it.sjablonBarnetilsynPeriode.beløpBarnetilsyn,
+                            )
+                        }.first()
+                } else {
+                    null
+                },
                 sjablonForbruksutgifterBeregningGrunnlag = underholdskostnadPeriodeGrunnlag.sjablonForbruksutgifterPeriodeGrunnlagListe
                     .filter { it.sjablonForbruksutgifterPeriode.periode.inneholder(bruddPeriode) }
-                    .filter {
-                        it.sjablonForbruksutgifterPeriode.alderTom ==
-                            underholdskostnadPeriodeGrunnlag.søknadsbarnPeriodeGrunnlag.fødselsdato.plusYears(
-                                1,
-                            ).toString().substring(0, 4).toInt()
-                    }
+                    .filter { it.sjablonForbruksutgifterPeriode.alderTom == alderTom }
                     .map {
                         SjablonForbruksutgifterBeregningGrunnlag(
                             referanse = it.referanse,
