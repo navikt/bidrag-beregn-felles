@@ -43,7 +43,7 @@ internal class BeregnUnderholdskostnadApiTest {
     @DisplayName("Underholdskostnad - eksempel 1  ")
     fun test_underholdskostnad_kun_sjabloner_flere_perioder() {
         filnavn = "src/test/resources/testfiler/underholdskostnad/underholdskostnad_kun_sjabloner_flere_perioder.json"
-        val resultat = utførBeregningerOgEvaluerResultatNettoTilsynsutgift()
+        val resultat = utførBeregningerOgEvaluerResultatUnderholdskostnad()
 
         // Boutgifter 01.24 -> 07.24: 3198
         // Boutgifter 07.24 -> 09.24: 3596
@@ -53,8 +53,6 @@ internal class BeregnUnderholdskostnadApiTest {
         // Barnetrygd 07.24 -> 09.24: 1510
 
         assertAll(
-            { assertThat(resultat).hasSize(5) },
-
             // Resultat
             { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode("2024-01", "2024-07")) },
             { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode("2024-07", "2024-09")) },
@@ -62,22 +60,136 @@ internal class BeregnUnderholdskostnadApiTest {
 
             { assertEquals(0, resultat[0].forbruksutgift.compareTo(BigDecimal.valueOf(6335))) },
             { assertEquals(0, resultat[0].boutgift.compareTo(BigDecimal.valueOf(3198))) },
-            { assertEquals(0, resultat[0].barnetilsynMedStønad.compareTo(BigDecimal.ZERO)) },
-            { assertEquals(0, resultat[0].nettoTilsynsutgift.compareTo(BigDecimal.ZERO)) },
+            { assertThat(resultat[0].barnetilsynMedStønad).isNull() },
+            { assertThat(resultat[0].nettoTilsynsutgift).isNull() },
             { assertEquals(0, resultat[0].barnetrygd.compareTo(BigDecimal.valueOf(1310))) },
             { assertEquals(0, resultat[0].underholdskostnad.compareTo(BigDecimal.valueOf(8223))) },
 
             { assertEquals(0, resultat[1].forbruksutgift.compareTo(BigDecimal.valueOf(6385))) },
             { assertEquals(0, resultat[1].boutgift.compareTo(BigDecimal.valueOf(3596))) },
-            { assertEquals(0, resultat[1].barnetilsynMedStønad.compareTo(BigDecimal.ZERO)) },
-            { assertEquals(0, resultat[1].nettoTilsynsutgift.compareTo(BigDecimal.ZERO)) },
+            { assertThat(resultat[0].barnetilsynMedStønad).isNull() },
+            { assertThat(resultat[0].nettoTilsynsutgift).isNull() },
             { assertEquals(0, resultat[1].barnetrygd.compareTo(BigDecimal.valueOf(1510))) },
-            { assertEquals(0, resultat[1].underholdskostnad.compareTo(BigDecimal.valueOf(8223))) },
-
+            { assertEquals(0, resultat[1].underholdskostnad.compareTo(BigDecimal.valueOf(8471))) },
         )
     }
 
-    private fun utførBeregningerOgEvaluerResultatNettoTilsynsutgift(): List<DelberegningUnderholdskostnad> {
+    @Test
+    @DisplayName("Underholdskostnad - eksempel 2  ")
+    fun test_underholdskostnad_med_barnetilsyn_flere_perioder() {
+        filnavn = "src/test/resources/testfiler/underholdskostnad/underholdskostnad_med_barnetilsyn_flere_perioder.json"
+        val resultat = utførBeregningerOgEvaluerResultatUnderholdskostnad()
+
+        // Boutgifter 01.24 -> 07.24: 3198
+        // Boutgifter 07.24 -> 09.24: 3596
+        // Forbruksutgifter 01.24 -> 07.24: 6335
+        // Forbruksutgifter 07.24 -> 09.24: 6385
+        // Barnetrygd 01.24 -> 07.24: 1310
+        // Barnetrygd 07.24 -> 09.24: 1510
+        // Barnetilsyn 02.24 -> 07.24: HELTID/UNDER: 630
+        // Barnetilsyn 07.24 -> 08.24: HELTID/UNDER: 621
+
+        assertAll(
+            // Resultat
+            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode("2024-01", "2024-02")) },
+            { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode("2024-02", "2024-07")) },
+            { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode("2024-07", "2024-08")) },
+            { assertThat(resultat[3].periode).isEqualTo(ÅrMånedsperiode("2024-08", "2024-09")) },
+            { assertThat(resultat).hasSize(4) },
+
+            { assertEquals(0, resultat[0].forbruksutgift.compareTo(BigDecimal.valueOf(6335))) },
+            { assertEquals(0, resultat[0].boutgift.compareTo(BigDecimal.valueOf(3198))) },
+            { assertThat(resultat[0].barnetilsynMedStønad).isNull() },
+            { assertThat(resultat[0].nettoTilsynsutgift).isNull() },
+            { assertEquals(0, resultat[0].barnetrygd.compareTo(BigDecimal.valueOf(1310))) },
+            { assertEquals(0, resultat[0].underholdskostnad.compareTo(BigDecimal.valueOf(8223))) },
+
+            { assertEquals(0, resultat[1].forbruksutgift.compareTo(BigDecimal.valueOf(6335))) },
+            { assertEquals(0, resultat[1].boutgift.compareTo(BigDecimal.valueOf(3198))) },
+            { assertThat(resultat[1].barnetilsynMedStønad?.compareTo(BigDecimal.valueOf(630))) },
+            { assertThat(resultat[1].nettoTilsynsutgift).isNull() },
+            { assertEquals(0, resultat[1].barnetrygd.compareTo(BigDecimal.valueOf(1310))) },
+            { assertEquals(0, resultat[1].underholdskostnad.compareTo(BigDecimal.valueOf(8853))) },
+
+            { assertEquals(0, resultat[2].forbruksutgift.compareTo(BigDecimal.valueOf(6385))) },
+            { assertEquals(0, resultat[2].boutgift.compareTo(BigDecimal.valueOf(3596))) },
+            { assertThat(resultat[2].barnetilsynMedStønad?.compareTo(BigDecimal.valueOf(621))) },
+            { assertThat(resultat[2].nettoTilsynsutgift).isNull() },
+            { assertEquals(0, resultat[2].barnetrygd.compareTo(BigDecimal.valueOf(1510))) },
+            { assertEquals(0, resultat[2].underholdskostnad.compareTo(BigDecimal.valueOf(9092))) },
+
+            { assertEquals(0, resultat[3].forbruksutgift.compareTo(BigDecimal.valueOf(6385))) },
+            { assertEquals(0, resultat[3].boutgift.compareTo(BigDecimal.valueOf(3596))) },
+            { assertThat(resultat[3].barnetilsynMedStønad).isNull() },
+            { assertThat(resultat[3].nettoTilsynsutgift).isNull() },
+            { assertEquals(0, resultat[3].barnetrygd.compareTo(BigDecimal.valueOf(1510))) },
+            { assertEquals(0, resultat[3].underholdskostnad.compareTo(BigDecimal.valueOf(8471))) },
+        )
+    }
+
+    @Test
+    @DisplayName("Underholdskostnad - eksempel 3  ")
+    fun test_underholdskostnad_med_barnetilsyn_og_netto_tilsynsutgift_flere_perioder() {
+        filnavn = "src/test/resources/testfiler/underholdskostnad/underholdskostnad_med_barnetilsyn_og_netto_tilsynsutgift_flere_perioder.json"
+        val resultat = utførBeregningerOgEvaluerResultatUnderholdskostnad()
+
+        // Boutgifter 01.24 -> 07.24: 3198
+        // Boutgifter 07.24 -> 09.24: 3596
+        // Forbruksutgifter 01.24 -> 07.24: 6335
+        // Forbruksutgifter 07.24 -> 09.24: 6385
+        // Barnetrygd 01.24 -> 07.24: 1310
+        // Barnetrygd 07.24 -> 09.24: 1510
+        // Barnetilsyn 02.24 -> 07.24: HELTID/UNDER: 630
+        // Barnetilsyn 07.24 -> 08.24: HELTID/OVER: 686
+        // Netto tilsynsutgift 04.24 -> 08.24: 550
+
+        assertAll(
+            // Resultat
+            { assertThat(resultat).hasSize(5) },
+
+            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode("2024-01", "2024-02")) },
+            { assertEquals(0, resultat[0].forbruksutgift.compareTo(BigDecimal.valueOf(6335))) },
+            { assertEquals(0, resultat[0].boutgift.compareTo(BigDecimal.valueOf(3198))) },
+            { assertThat(resultat[0].barnetilsynMedStønad).isNull() },
+            { assertThat(resultat[0].nettoTilsynsutgift).isNull() },
+            { assertEquals(0, resultat[0].barnetrygd.compareTo(BigDecimal.valueOf(1310))) },
+            { assertEquals(0, resultat[0].underholdskostnad.compareTo(BigDecimal.valueOf(8223))) },
+
+            { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode("2024-02", "2024-04")) },
+            { assertEquals(0, resultat[1].forbruksutgift.compareTo(BigDecimal.valueOf(6335))) },
+            { assertEquals(0, resultat[1].boutgift.compareTo(BigDecimal.valueOf(3198))) },
+            { assertThat(resultat[1].barnetilsynMedStønad?.compareTo(BigDecimal.valueOf(630))) },
+            { assertThat(resultat[1].nettoTilsynsutgift).isNull() },
+            { assertEquals(0, resultat[1].barnetrygd.compareTo(BigDecimal.valueOf(1310))) },
+            { assertEquals(0, resultat[1].underholdskostnad.compareTo(BigDecimal.valueOf(8853))) },
+
+            { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode("2024-04", "2024-07")) },
+            { assertEquals(0, resultat[2].forbruksutgift.compareTo(BigDecimal.valueOf(6385))) },
+            { assertEquals(0, resultat[2].boutgift.compareTo(BigDecimal.valueOf(3198))) },
+            { assertThat(resultat[2].barnetilsynMedStønad?.compareTo(BigDecimal.valueOf(630))) },
+            { assertThat(resultat[2].nettoTilsynsutgift?.compareTo(BigDecimal.valueOf(550))) },
+            { assertEquals(0, resultat[2].barnetrygd.compareTo(BigDecimal.valueOf(1310))) },
+            { assertEquals(0, resultat[2].underholdskostnad.compareTo(BigDecimal.valueOf(9403))) },
+
+            { assertThat(resultat[3].periode).isEqualTo(ÅrMånedsperiode("2024-07", "2024-08")) },
+            { assertEquals(0, resultat[3].forbruksutgift.compareTo(BigDecimal.valueOf(6385))) },
+            { assertEquals(0, resultat[3].boutgift.compareTo(BigDecimal.valueOf(3596))) },
+            { assertThat(resultat[3].barnetilsynMedStønad?.compareTo(BigDecimal.valueOf(686))) },
+            { assertThat(resultat[3].nettoTilsynsutgift?.compareTo(BigDecimal.valueOf(550))) },
+            { assertEquals(0, resultat[3].barnetrygd.compareTo(BigDecimal.valueOf(1510))) },
+            { assertEquals(0, resultat[3].underholdskostnad.compareTo(BigDecimal.valueOf(9707))) },
+
+            { assertThat(resultat[4].periode).isEqualTo(ÅrMånedsperiode("2024-08", "2024-09")) },
+            { assertEquals(0, resultat[4].forbruksutgift.compareTo(BigDecimal.valueOf(6385))) },
+            { assertEquals(0, resultat[4].boutgift.compareTo(BigDecimal.valueOf(3596))) },
+            { assertThat(resultat[4].barnetilsynMedStønad).isNull() },
+            { assertThat(resultat[4].nettoTilsynsutgift).isNull() },
+            { assertEquals(0, resultat[4].barnetrygd.compareTo(BigDecimal.valueOf(1510))) },
+            { assertEquals(0, resultat[4].underholdskostnad.compareTo(BigDecimal.valueOf(8471))) },
+        )
+    }
+
+    private fun utførBeregningerOgEvaluerResultatUnderholdskostnad(): List<DelberegningUnderholdskostnad> {
         val request = lesFilOgByggRequest(filnavn)
         val underholdskostnadResultat = beregnBarnebidragService.beregnUnderholdskostnad(request)
         printJson(underholdskostnadResultat)

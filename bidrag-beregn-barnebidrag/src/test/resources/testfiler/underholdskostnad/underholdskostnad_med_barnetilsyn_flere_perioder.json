@@ -37,6 +37,22 @@
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": null
+    },
+    {
+      "referanse": "Mottatt_Barnetilsyn_202402_Person_Søknadsbarn",
+      "type": "BARNETILSYN_MED_STØNAD_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-02",
+          "til": "2024-08"
+        },
+        "gjelderBarn": "Person_Søknadsbarn",
+        "tilsynstype": "HELTID",
+        "skolealder": "UNDER",
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
     }
   ]
 }

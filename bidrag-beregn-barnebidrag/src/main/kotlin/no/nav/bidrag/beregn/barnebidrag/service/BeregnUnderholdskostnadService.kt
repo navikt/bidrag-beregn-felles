@@ -62,15 +62,15 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
             sjablonGrunnlag = sjablonGrunnlag,
         )
 
-        // Mapper ut "sub"-delberegninger
-        resultatGrunnlagListe.addAll(
-            mapDelberegninger(
-                mottattGrunnlag = mottattGrunnlag,
-                underholdskostnadPeriodeGrunnlag = underholdskostnadPeriodeGrunnlag,
-                underholdskostnadBeregningResultatListe = underholdskostnadBeregningResultatListe,
-                referanseTilSøknadsbarn = referanseTilSøknadsbarn,
-            ),
-        )
+//        // Mapper ut "sub"-delberegninger
+//        resultatGrunnlagListe.addAll(
+//            mapDelberegninger(
+//                mottattGrunnlag = mottattGrunnlag,
+//                underholdskostnadPeriodeGrunnlag = underholdskostnadPeriodeGrunnlag,
+//                underholdskostnadBeregningResultatListe = underholdskostnadBeregningResultatListe,
+//                referanseTilSøknadsbarn = referanseTilSøknadsbarn,
+//            ),
+//        )
 
         // Mapper ut grunnlag for delberegning underholdskostnad
         resultatGrunnlagListe.addAll(
@@ -162,8 +162,8 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
                     ?.let {
                         BarnetilsynMedStønad(
                             referanse = it.referanse,
-                            tilsynstype = it.barnetilsynMedStønadPeriode.tilsynstype!!,
-                            skolealder = it.barnetilsynMedStønadPeriode.skolealder!!,
+                            tilsynstype = it.barnetilsynMedStønadPeriode.tilsynstype,
+                            skolealder = it.barnetilsynMedStønadPeriode.skolealder,
                         )
                     },
 

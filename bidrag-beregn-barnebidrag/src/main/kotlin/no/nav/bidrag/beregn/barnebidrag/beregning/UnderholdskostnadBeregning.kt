@@ -16,8 +16,8 @@ internal object UnderholdskostnadBeregning {
         hentSjablonverdier(grunnlag)
 
         val beregnetUnderholdskostnad = (
-            sjablonverdiForbruksutgifterBeløp.add(sjablonverdiBoutgifterBidragsbarn).add(sjablonverdiBarnetilsynBeløp).add(
-                grunnlag.nettoTilsynsutgiftBeregningGrunnlag?.nettoTilsynsutgift,
+            sjablonverdiForbruksutgifterBeløp.add(sjablonverdiBoutgifterBidragsbarn).add(sjablonverdiBarnetilsynBeløp ?: BigDecimal.ZERO).add(
+                grunnlag.nettoTilsynsutgiftBeregningGrunnlag?.nettoTilsynsutgift ?: BigDecimal.ZERO,
             ).subtract(sjablonverdiBarnetrygd)
             )
 
