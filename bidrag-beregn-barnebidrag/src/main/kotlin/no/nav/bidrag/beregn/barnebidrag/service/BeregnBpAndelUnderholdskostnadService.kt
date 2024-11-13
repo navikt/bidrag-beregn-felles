@@ -71,6 +71,15 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
             )
         }
 
+        // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato)
+        if (bpAndelUnderholdskostnadBeregningResultatListe.isNotEmpty()) {
+            val sisteElement = bpAndelUnderholdskostnadBeregningResultatListe.last()
+            if (sisteElement.periode.til != null) {
+                val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
+                bpAndelUnderholdskostnadBeregningResultatListe[bpAndelUnderholdskostnadBeregningResultatListe.size - 1] = oppdatertSisteElement
+            }
+        }
+
         // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
         val resultatGrunnlagListe = mapBpAndelUnderholdskostnadResultatGrunnlag(
             bpAndelUnderholdskostnadBeregningResultatListe = bpAndelUnderholdskostnadBeregningResultatListe,

@@ -25,6 +25,7 @@ import java.math.BigDecimal
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.text.SimpleDateFormat
+import java.time.YearMonth
 
 @ExtendWith(MockitoExtension::class)
 internal class BeregnEndeligBidragApiTest {
@@ -332,7 +333,7 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe).hasSize(1) },
 
             // Resultat
-            { assertThat(endeligBidragResultatListe[0].periode).isEqualTo(ÅrMånedsperiode("2024-08", "2024-09")) },
+            { assertThat(endeligBidragResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null)) },
             { assertThat(endeligBidragResultatListe[0].beregnetBeløp).isEqualTo(forventetBeregnetBeløp) },
             { assertThat(endeligBidragResultatListe[0].resultatKode).isEqualTo(forventetResultatkode) },
             { assertThat(endeligBidragResultatListe[0].resultatBeløp).isEqualTo(forventetResultatbeløp) },
@@ -514,7 +515,7 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[6].justertForNettoBarnetilleggBP).isFalse },
             { assertThat(endeligBidragResultatListe[6].justertForNettoBarnetilleggBM).isFalse },
 
-            { assertThat(endeligBidragResultatListe[7].periode).isEqualTo(ÅrMånedsperiode("2024-08", "2024-09")) },
+            { assertThat(endeligBidragResultatListe[7].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null)) },
             { assertThat(endeligBidragResultatListe[7].beregnetBeløp).isEqualTo(BigDecimal.valueOf(1000).setScale(2)) },
             { assertThat(endeligBidragResultatListe[7].resultatKode).isEqualTo(Resultatkode.DELT_BOSTED) },
             { assertThat(endeligBidragResultatListe[7].resultatBeløp).isEqualTo(BigDecimal.valueOf(1000).setScale(0)) },

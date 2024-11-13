@@ -55,6 +55,15 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
             )
         }
 
+        // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato)
+        if (underholdskostnadBeregningResultatListe.isNotEmpty()) {
+            val sisteElement = underholdskostnadBeregningResultatListe.last()
+            if (sisteElement.periode.til != null) {
+                val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
+                underholdskostnadBeregningResultatListe[underholdskostnadBeregningResultatListe.size - 1] = oppdatertSisteElement
+            }
+        }
+
         // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
         val resultatGrunnlagListe = mapUnderholdskostnadResultatGrunnlag(
             underholdskostnadBeregningResultatListe = underholdskostnadBeregningResultatListe,
@@ -66,9 +75,7 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
         resultatGrunnlagListe.addAll(
             mapDelberegninger(
                 mottattGrunnlag = mottattGrunnlag,
-                underholdskostnadPeriodeGrunnlag = underholdskostnadPeriodeGrunnlag,
                 underholdskostnadBeregningResultatListe = underholdskostnadBeregningResultatListe,
-                referanseTilSøknadsbarn = referanseTilSøknadsbarn,
             ),
         )
 
@@ -269,15 +276,9 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
 
     private fun mapDelberegninger(
         mottattGrunnlag: BeregnGrunnlag,
-        underholdskostnadPeriodeGrunnlag: UnderholdskostnadPeriodeGrunnlag,
         underholdskostnadBeregningResultatListe: List<UnderholdskostnadPeriodeResultat>,
-        referanseTilSøknadsbarn: String,
     ): List<GrunnlagDto> {
         val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
-        val grunnlagReferanseListe =
-            underholdskostnadBeregningResultatListe
-                .flatMap { it.resultat.grunnlagsreferanseListe }
-                .distinct()
 
         resultatGrunnlagListe.addAll(
             mapDelberegningUnderholdskostnad(

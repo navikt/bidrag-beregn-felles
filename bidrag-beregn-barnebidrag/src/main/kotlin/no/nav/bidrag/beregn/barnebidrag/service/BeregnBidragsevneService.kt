@@ -66,6 +66,15 @@ internal object BeregnBidragsevneService : BeregnService() {
             )
         }
 
+        // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato)
+        if (bidragsevneBeregningResultatListe.isNotEmpty()) {
+            val sisteElement = bidragsevneBeregningResultatListe.last()
+            if (sisteElement.periode.til != null) {
+                val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
+                bidragsevneBeregningResultatListe[bidragsevneBeregningResultatListe.size - 1] = oppdatertSisteElement
+            }
+        }
+
         // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
         val resultatGrunnlagListe = mapBidragsevneResultatGrunnlag(
             bidragsevneBeregningResultatListe = bidragsevneBeregningResultatListe,
@@ -283,6 +292,15 @@ internal object BeregnBidragsevneService : BeregnService() {
         // Mapper ut DelberegningBoforhold
         val boforholdListe = bidragsevnePeriodeGrunnlag.boforholdPeriodeGrunnlagListe
             .filter { grunnlagReferanseListe.contains(it.referanse) }
+            .toMutableList()
+        if (boforholdListe.isNotEmpty()) {
+            val sisteElement = boforholdListe.last()
+            // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato)
+            if (sisteElement.periode.datoTil != null) {
+                val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(datoTil = null))
+                boforholdListe[boforholdListe.size - 1] = oppdatertSisteElement
+            }
+        }
         resultatGrunnlagListe.addAll(
             boforholdListe.mapTilGrunnlag(referanseTilBP),
         )
@@ -290,6 +308,15 @@ internal object BeregnBidragsevneService : BeregnService() {
         // Mapper ut DelberegningBarnIHusstand (sub-delberegning til DelberegningBoforhold)
         val sumAntallBarnListe = bidragsevnePeriodeGrunnlag.barnIHusstandenPeriodeGrunnlagListe
             .filter { boforholdListe.flatMap { it.grunnlagsreferanseListe }.contains(it.referanse) }
+            .toMutableList()
+        if (sumAntallBarnListe.isNotEmpty()) {
+            val sisteElement = sumAntallBarnListe.last()
+            // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato)
+            if (sisteElement.periode.datoTil != null) {
+                val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(datoTil = null))
+                sumAntallBarnListe[sumAntallBarnListe.size - 1] = oppdatertSisteElement
+            }
+        }
         resultatGrunnlagListe.addAll(
             sumAntallBarnListe.mapTilGrunnlag(referanseTilBP),
         )
@@ -297,6 +324,15 @@ internal object BeregnBidragsevneService : BeregnService() {
         // Mapper ut DelberegningVoksneIHusstand (sub-delberegning til DelberegningBoforhold)
         val voksneIHusstandenListe = bidragsevnePeriodeGrunnlag.voksneIHusstandenPeriodeGrunnlagListe
             .filter { boforholdListe.flatMap { it.grunnlagsreferanseListe }.contains(it.referanse) }
+            .toMutableList()
+        if (voksneIHusstandenListe.isNotEmpty()) {
+            val sisteElement = voksneIHusstandenListe.last()
+            // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato)
+            if (sisteElement.periode.datoTil != null) {
+                val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(datoTil = null))
+                voksneIHusstandenListe[voksneIHusstandenListe.size - 1] = oppdatertSisteElement
+            }
+        }
         resultatGrunnlagListe.addAll(
             voksneIHusstandenListe.mapTilGrunnlag(referanseTilBP),
         )

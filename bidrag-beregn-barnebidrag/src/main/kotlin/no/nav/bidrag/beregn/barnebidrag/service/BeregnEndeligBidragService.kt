@@ -49,6 +49,15 @@ internal object BeregnEndeligBidragService : BeregnService() {
             )
         }
 
+        // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato)
+        if (endeligBidragBeregningResultatListe.isNotEmpty()) {
+            val sisteElement = endeligBidragBeregningResultatListe.last()
+            if (sisteElement.periode.til != null) {
+                val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
+                endeligBidragBeregningResultatListe[endeligBidragBeregningResultatListe.size - 1] = oppdatertSisteElement
+            }
+        }
+
         // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
         val resultatGrunnlagListe = mapEndeligBidragResultatGrunnlag(
             endeligBidragBeregningResultatListe = endeligBidragBeregningResultatListe,

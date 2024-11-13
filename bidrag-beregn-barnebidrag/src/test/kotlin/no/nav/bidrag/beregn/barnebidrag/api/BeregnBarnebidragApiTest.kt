@@ -30,6 +30,7 @@ import java.math.BigDecimal
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.text.SimpleDateFormat
+import java.time.YearMonth
 
 @ExtendWith(MockitoExtension::class)
 internal class BeregnBarnebidragApiTest {
@@ -92,7 +93,7 @@ internal class BeregnBarnebidragApiTest {
         filnavn = "src/test/resources/testfiler/barnebidrag/barnebidrag_eksempelX.json"
 
         // Beregningsperiode
-        forventetBeregningsperiode = ÅrMånedsperiode("2024-08", "2024-09")
+        forventetBeregningsperiode = ÅrMånedsperiode(YearMonth.parse("2024-08"), null)
 
         // Bidragsevne
         forventetBidragsevne = BigDecimal.valueOf(4043.53).setScale(2)
@@ -141,7 +142,7 @@ internal class BeregnBarnebidragApiTest {
         filnavn = "src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel1.json"
 
         // Beregningsperiode
-        forventetBeregningsperiode = ÅrMånedsperiode("2020-08", "2021-01")
+        forventetBeregningsperiode = ÅrMånedsperiode(YearMonth.parse("2020-08"), null)
 
         // Bidragsevne
         forventetBidragsevne = BigDecimal.valueOf(16357.14).setScale(2)
