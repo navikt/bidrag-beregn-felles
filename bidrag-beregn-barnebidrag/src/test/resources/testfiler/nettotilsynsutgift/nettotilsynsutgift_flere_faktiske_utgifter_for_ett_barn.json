@@ -40,7 +40,7 @@
     },
     {
       "referanse": "Mottatt_FaktiskUtgift_202301_SB1",
-      "type": "FAKTISK_UTGIFT",
+      "type": "FAKTISK_UTGIFT_PERIODE",
       "innhold": {
         "periode": {
           "fom": "2024-01",
@@ -57,7 +57,7 @@
     },
     {
       "referanse": "Mottatt_FaktiskUtgift_202301_SB1",
-      "type": "FAKTISK_UTGIFT",
+      "type": "FAKTISK_UTGIFT_PERIODE",
       "innhold": {
         "periode": {
           "fom": "2024-02",
@@ -74,7 +74,7 @@
     },
     {
       "referanse": "Mottatt_Tilleggsstønad_202301_SB1",
-      "type": "TILLEGGSSTØNAD",
+      "type": "TILLEGGSSTØNAD_PERIODE",
       "innhold": {
         "periode": {
           "fom": "2024-02",

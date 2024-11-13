@@ -51,7 +51,7 @@
     },
     {
       "referanse": "Mottatt_FaktiskUtgift_202201_Person_Søknadsbarn",
-      "type": "FAKTISK_UTGIFT",
+      "type": "FAKTISK_UTGIFT_PERIODE",
       "innhold": {
         "periode": {
           "fom": "2023-01",
@@ -68,7 +68,7 @@
     },
     {
       "referanse": "Mottatt_FaktiskUtgift_202301_Person_Søknadsbarn",
-      "type": "FAKTISK_UTGIFT",
+      "type": "FAKTISK_UTGIFT_PERIODE",
       "innhold": {
         "periode": {
           "fom": "2024-01",
@@ -85,7 +85,7 @@
     },
     {
       "referanse": "Mottatt_FaktiskUtgift_202301_person_PERSON_BARN_BIDRAGSPLIKTIG_20051217_102",
-      "type": "FAKTISK_UTGIFT",
+      "type": "FAKTISK_UTGIFT_PERIODE",
       "innhold": {
         "periode": {
           "fom": "2024-04",
@@ -102,7 +102,7 @@
     },
     {
       "referanse": "Mottatt_Tilleggsstønad_202301_Person_Søknadsbarn",
-      "type": "TILLEGGSSTØNAD",
+      "type": "TILLEGGSSTØNAD_PERIODE",
       "innhold": {
         "periode": {
           "fom": "2024-02",
@@ -117,7 +117,7 @@
     },
     {
       "referanse": "Mottatt_Tilleggsstønad_202301_person_PERSON_BARN_BIDRAGSMOTTAKER_20051217_102",
-      "type": "TILLEGGSSTØNAD",
+      "type": "TILLEGGSSTØNAD_PERIODE",
       "innhold": {
         "periode": {
           "fom": "2024-05",
