@@ -6,6 +6,7 @@ import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebid
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 
 /**
  * BeregnBarnebidragApi eksponerer api for å beregne barnebidrag.
@@ -29,7 +30,8 @@ import org.springframework.stereotype.Service
 class BeregnBarnebidragApi {
     private val service = BeregnBarnebidragService()
 
-    fun beregn(beregnGrunnlag: BeregnGrunnlag): BeregnetBarnebidragResultat = service.beregnBarnebidrag(beregnGrunnlag)
+    fun beregn(beregnGrunnlag: BeregnGrunnlag, underholdskostnad: BigDecimal = BigDecimal.valueOf(9000)): BeregnetBarnebidragResultat =
+        service.beregnBarnebidrag(beregnGrunnlag, underholdskostnad)
 
     fun beregnBidragsevne(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnBidragsevne(beregnGrunnlag)
 

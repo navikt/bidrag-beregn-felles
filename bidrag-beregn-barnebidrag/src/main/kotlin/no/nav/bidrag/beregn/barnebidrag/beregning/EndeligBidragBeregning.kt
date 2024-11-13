@@ -11,6 +11,8 @@ import java.math.RoundingMode
 
 internal object EndeligBidragBeregning {
 
+    val bigDecimal12 = BigDecimal.valueOf(12)
+
     fun beregn(grunnlag: EndeligBidragBeregningGrunnlag): EndeligBidragBeregningResultat {
         // Hvis barnet er selvforsørget gjøres det ingen videre beregning (standardverdier benyttes for alt bortsett fra resultatkode og referanser)
         if (grunnlag.bpAndelUnderholdskostnadBeregningGrunnlag.barnetErSelvforsørget) {
@@ -86,21 +88,26 @@ internal object EndeligBidragBeregning {
             justertNedTil25ProsentAvInntekt = justertNedTil25ProsentAvInntekt,
             justertForNettoBarnetilleggBP = justertForNettoBarnetilleggBP,
             justertForNettoBarnetilleggBM = justertForNettoBarnetilleggBM,
-            grunnlagsreferanseListe = listOf(
+            grunnlagsreferanseListe = listOfNotNull(
                 grunnlag.bidragsevneBeregningGrunnlag.referanse,
                 grunnlag.underholdskostnadBeregningGrunnlag.referanse,
                 grunnlag.bpAndelUnderholdskostnadBeregningGrunnlag.referanse,
                 grunnlag.samværsfradragBeregningGrunnlag.referanse,
                 grunnlag.deltBostedBeregningGrunnlag.referanse,
-                grunnlag.barnetilleggBPBeregningGrunnlag.referanse,
-                grunnlag.barnetilleggBMBeregningGrunnlag.referanse,
+                grunnlag.barnetilleggBPBeregningGrunnlag?.referanse,
+                grunnlag.barnetilleggBMBeregningGrunnlag?.referanse,
             ),
         )
     }
 
     // Beregner netto barnetillegg ut fra brutto barnetillegg og skattesats
-    private fun beregnNettoBarnetillegg(barnetillegg: BarnetilleggBeregningGrunnlag): BigDecimal =
-        barnetillegg.beløp - (barnetillegg.beløp * barnetillegg.skattFaktor)
+    private fun beregnNettoBarnetillegg(barnetillegg: BarnetilleggBeregningGrunnlag?): BigDecimal {
+        if (barnetillegg == null) {
+            return BigDecimal.ZERO
+        }
+
+        return (barnetillegg.beløp - (barnetillegg.beløp * barnetillegg.skattFaktor)).divide(bigDecimal12, 10, RoundingMode.HALF_UP)
+    }
 
     // Justerer BP's andel hvis det er delt bosted
     private fun justerBpAndel(grunnlag: EndeligBidragBeregningGrunnlag): BpAndelJustert {

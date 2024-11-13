@@ -1,7 +1,7 @@
 {
   "periode": {
-    "fom": "2024-08",
-    "til": "2024-09"
+    "fom": "2020-08",
+    "til": "2021-01"
   },
   "søknadsbarnReferanse": "Person_Søknadsbarn",
   "grunnlagListe": [
@@ -11,7 +11,7 @@
       "innhold": {
         "ident": "11111111110",
         "navn": "Trengende Søknadsbarn",
-        "fødselsdato": "2012-09-13"
+        "fødselsdato": "2015-02-01"
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": null
@@ -43,8 +43,8 @@
       "type": "INNTEKT_RAPPORTERING_PERIODE",
       "innhold": {
         "periode": {
-          "fom": "2024-08",
-          "til": "2024-09"
+          "fom": "2020-08",
+          "til": "2021-01"
         },
         "inntektsrapportering": "AINNTEKT",
         "gjelderBarn": null,
@@ -60,12 +60,12 @@
       "type": "INNTEKT_RAPPORTERING_PERIODE",
       "innhold": {
         "periode": {
-          "fom": "2024-08",
-          "til": "2024-09"
+          "fom": "2020-08",
+          "til": "2021-01"
         },
         "inntektsrapportering": "AINNTEKT",
         "gjelderBarn": null,
-        "beløp": 100000,
+        "beløp": 300000,
         "manueltRegistrert": false,
         "valgt": true
       },
@@ -77,12 +77,12 @@
       "type": "INNTEKT_RAPPORTERING_PERIODE",
       "innhold": {
         "periode": {
-          "fom": "2024-08",
-          "til": "2024-09"
+          "fom": "2020-08",
+          "til": "2021-01"
         },
         "inntektsrapportering": "AINNTEKT",
         "gjelderBarn": null,
-        "beløp": 100000,
+        "beløp": 0,
         "manueltRegistrert": false,
         "valgt": true
       },
@@ -94,10 +94,10 @@
       "type": "BOSTATUS_PERIODE",
       "innhold": {
         "periode": {
-          "fom": "2024-08",
-          "til": "2024-09"
+          "fom": "2020-08",
+          "til": "2021-01"
         },
-        "bostatus": "MED_FORELDER",
+        "bostatus": "IKKE_MED_FORELDER",
         "manueltRegistrert": false,
         "relatertTilPart": "Person_Bidragspliktig"
       },
@@ -109,10 +109,10 @@
       "type": "BOSTATUS_PERIODE",
       "innhold": {
         "periode": {
-          "fom": "2024-08",
-          "til": "2024-09"
+          "fom": "2020-08",
+          "til": "2021-01"
         },
-        "bostatus": "BOR_IKKE_MED_ANDRE_VOKSNE",
+        "bostatus": "BOR_MED_ANDRE_VOKSNE",
         "manueltRegistrert": false,
         "relatertTilPart": "Person_Bidragspliktig"
       },
@@ -124,58 +124,14 @@
       "type": "SAMVÆRSPERIODE",
       "innhold": {
         "periode": {
-          "fom": "2024-08",
-          "til": null
+          "fom": "2020-08",
+          "til": "2021-01"
         },
         "samværsklasse": "SAMVÆRSKLASSE_1",
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": null
-    },
-    {
-      "referanse": "Mottatt_DeltBosted_202408",
-      "type": "DELT_BOSTED",
-      "innhold": {
-        "periode": {
-          "fom": "2024-08",
-          "til": "2024-09"
-        },
-        "deltBosted": false,
-        "manueltRegistrert": false
-      },
-      "grunnlagsreferanseListe": [],
-      "gjelderReferanse": null
-    },
-    {
-      "referanse": "Mottatt_Barnetillegg_BP_202408",
-      "type": "BARNETILLEGG_PERIODE",
-      "innhold": {
-        "periode": {
-          "fom": "2024-08",
-          "til": "2024-09"
-        },
-        "beløp": 3000,
-        "skattFaktor": 0.500,
-        "manueltRegistrert": false
-      },
-      "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Bidragspliktig"
-    },
-    {
-      "referanse": "Mottatt_Barnetillegg_BM_202408",
-      "type": "BARNETILLEGG_PERIODE",
-      "innhold": {
-        "periode": {
-          "fom": "2024-08",
-          "til": "2024-09"
-        },
-        "beløp": 5000,
-        "skattFaktor": 0.500,
-        "manueltRegistrert": false
-      },
-      "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Bidragsmottaker"
     }
   ]
 }

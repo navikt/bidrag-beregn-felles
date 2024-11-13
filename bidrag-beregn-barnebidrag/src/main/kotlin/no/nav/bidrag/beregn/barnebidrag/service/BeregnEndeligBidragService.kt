@@ -13,6 +13,7 @@ import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragDelberegningBeregningG
 import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadDelberegningBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.mapper.EndeligBidragMapper.mapEndeligBidragGrunnlag
 import no.nav.bidrag.beregn.core.service.BeregnService
+import no.nav.bidrag.domene.enums.beregning.Samværsklasse
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
@@ -78,7 +79,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
                     .map { it.bpAndelUnderholdskostnadPeriode.periode },
             )
             .plus(grunnlagListe.samværsfradragDelberegningPeriodeGrunnlagListe.asSequence().map { it.samværsfradragPeriode.periode })
-            .plus(grunnlagListe.deltBostedPeriodeGrunnlagListe.asSequence().map { it.deltBostedPeriode.periode })
+            .plus(grunnlagListe.samværsklassePeriodeGrunnlagListe.asSequence().map { it.samværsklassePeriode.periode })
             .plus(grunnlagListe.barnetilleggBPPeriodeGrunnlagListe.asSequence().map { it.barnetilleggPeriode.periode })
             .plus(grunnlagListe.barnetilleggBMPeriodeGrunnlagListe.asSequence().map { it.barnetilleggPeriode.periode })
 
@@ -124,9 +125,14 @@ internal object BeregnEndeligBidragService : BeregnService() {
             .firstOrNull { it.samværsfradragPeriode.periode.inneholder(bruddPeriode) }
             ?.let { SamværsfradragDelberegningBeregningGrunnlag(referanse = it.referanse, beløp = it.samværsfradragPeriode.beløp) }
             ?: throw IllegalArgumentException("Samværsfradrag grunnlag mangler for periode $bruddPeriode"),
-        deltBostedBeregningGrunnlag = endeligBidragPeriodeGrunnlag.deltBostedPeriodeGrunnlagListe
-            .firstOrNull { it.deltBostedPeriode.periode.inneholder(bruddPeriode) }
-            ?.let { DeltBostedBeregningGrunnlag(referanse = it.referanse, deltBosted = it.deltBostedPeriode.deltBosted) }
+        deltBostedBeregningGrunnlag = endeligBidragPeriodeGrunnlag.samværsklassePeriodeGrunnlagListe
+            .firstOrNull { it.samværsklassePeriode.periode.inneholder(bruddPeriode) }
+            ?.let {
+                DeltBostedBeregningGrunnlag(
+                    referanse = it.referanse,
+                    deltBosted = it.samværsklassePeriode.samværsklasse == Samværsklasse.DELT_BOSTED,
+                )
+            }
             ?: throw IllegalArgumentException("Delt bosted grunnlag mangler for periode $bruddPeriode"),
         barnetilleggBPBeregningGrunnlag = endeligBidragPeriodeGrunnlag.barnetilleggBPPeriodeGrunnlagListe
             .firstOrNull { it.barnetilleggPeriode.periode.inneholder(bruddPeriode) }
@@ -136,8 +142,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
                     beløp = it.barnetilleggPeriode.beløp,
                     skattFaktor = it.barnetilleggPeriode.skattFaktor,
                 )
-            }
-            ?: throw IllegalArgumentException("Barnetillegg BP grunnlag mangler for periode $bruddPeriode"),
+            },
         barnetilleggBMBeregningGrunnlag = endeligBidragPeriodeGrunnlag.barnetilleggBMPeriodeGrunnlagListe
             .firstOrNull { it.barnetilleggPeriode.periode.inneholder(bruddPeriode) }
             ?.let {
@@ -146,8 +151,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
                     beløp = it.barnetilleggPeriode.beløp,
                     skattFaktor = it.barnetilleggPeriode.skattFaktor,
                 )
-            }
-            ?: throw IllegalArgumentException("Barnetillegg BM grunnlag mangler for periode $bruddPeriode"),
+            },
     )
 
     private fun mapEndeligBidragResultatGrunnlag(

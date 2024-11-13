@@ -39,7 +39,7 @@
       "gjelderReferanse": null
     },
     {
-      "referanse": "Mottatt_Samværsperiode_202105_SB1",
+      "referanse": "Mottatt_Samværsperiode_202105",
       "type": "SAMVÆRSPERIODE",
       "innhold": {
         "periode": {
@@ -53,7 +53,7 @@
       "gjelderReferanse": null
     },
     {
-      "referanse": "Mottatt_Samværsperiode_202301_SB1",
+      "referanse": "Mottatt_Samværsperiode_202301",
       "type": "SAMVÆRSPERIODE",
       "innhold": {
         "periode": {

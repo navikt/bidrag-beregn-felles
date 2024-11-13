@@ -3,6 +3,7 @@ package no.nav.bidrag.beregn.barnebidrag.beregning
 import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadBeregningResultat
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import java.math.BigDecimal
 
 internal object UnderholdskostnadBeregning {
@@ -27,7 +28,7 @@ internal object UnderholdskostnadBeregning {
             barnetilsynMedStønad = sjablonverdiBarnetilsynBeløp,
             nettoTilsynsutgift = grunnlag.nettoTilsynsutgiftBeregningGrunnlag?.nettoTilsynsutgift,
             barnetrygd = sjablonverdiBarnetrygd,
-            underholdskostnad = beregnetUnderholdskostnad,
+            underholdskostnad = beregnetUnderholdskostnad.avrundetMedToDesimaler,
             grunnlagsreferanseListe = listOfNotNull(
                 grunnlag.barnetilsynMedStønad?.referanse,
                 grunnlag.nettoTilsynsutgiftBeregningGrunnlag?.referanse,

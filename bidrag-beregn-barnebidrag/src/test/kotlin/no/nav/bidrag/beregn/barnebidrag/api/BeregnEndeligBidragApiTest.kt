@@ -43,7 +43,7 @@ internal class BeregnEndeligBidragApiTest {
     private var forventetAntallDelberegningUnderholdskostnad: Int = 1
     private var forventetAntallDelberegningBPAndelUnderholdskostnad: Int = 1
     private var forventetAntallDelberegningSamværsfradrag: Int = 1
-    private var forventetAntallDeltBosted: Int = 1
+    private var forventetAntallSamværsklasse: Int = 1
     private var forventetAntallBarnetilleggBM: Int = 1
     private var forventetAntallBarnetilleggBP: Int = 1
 
@@ -70,6 +70,8 @@ internal class BeregnEndeligBidragApiTest {
         forventetJustertNedTil25ProsentAvInntekt = false
         forventetJustertForNettoBarnetilleggBP = false
         forventetJustertForNettoBarnetilleggBM = false
+        forventetAntallBarnetilleggBP = 0
+        forventetAntallBarnetilleggBM = 0
         utførBeregningerOgEvaluerResultatEndeligBidrag(0)
     }
 
@@ -87,6 +89,8 @@ internal class BeregnEndeligBidragApiTest {
         forventetJustertNedTil25ProsentAvInntekt = false
         forventetJustertForNettoBarnetilleggBP = false
         forventetJustertForNettoBarnetilleggBM = false
+        forventetAntallBarnetilleggBP = 0
+        forventetAntallBarnetilleggBM = 0
         utførBeregningerOgEvaluerResultatEndeligBidrag()
     }
 
@@ -104,6 +108,8 @@ internal class BeregnEndeligBidragApiTest {
         forventetJustertNedTil25ProsentAvInntekt = false
         forventetJustertForNettoBarnetilleggBP = true
         forventetJustertForNettoBarnetilleggBM = false
+        forventetAntallBarnetilleggBP = 1
+        forventetAntallBarnetilleggBM = 0
         utførBeregningerOgEvaluerResultatEndeligBidrag()
     }
 
@@ -121,6 +127,8 @@ internal class BeregnEndeligBidragApiTest {
         forventetJustertNedTil25ProsentAvInntekt = false
         forventetJustertForNettoBarnetilleggBP = true
         forventetJustertForNettoBarnetilleggBM = false
+        forventetAntallBarnetilleggBP = 1
+        forventetAntallBarnetilleggBM = 0
         utførBeregningerOgEvaluerResultatEndeligBidrag()
     }
 
@@ -138,6 +146,8 @@ internal class BeregnEndeligBidragApiTest {
         forventetJustertNedTil25ProsentAvInntekt = false
         forventetJustertForNettoBarnetilleggBP = true
         forventetJustertForNettoBarnetilleggBM = true
+        forventetAntallBarnetilleggBP = 1
+        forventetAntallBarnetilleggBM = 1
         utførBeregningerOgEvaluerResultatEndeligBidrag()
     }
 
@@ -155,6 +165,8 @@ internal class BeregnEndeligBidragApiTest {
         forventetJustertNedTil25ProsentAvInntekt = true
         forventetJustertForNettoBarnetilleggBP = false
         forventetJustertForNettoBarnetilleggBM = true
+        forventetAntallBarnetilleggBP = 1
+        forventetAntallBarnetilleggBM = 1
         utførBeregningerOgEvaluerResultatEndeligBidrag()
     }
 
@@ -172,6 +184,8 @@ internal class BeregnEndeligBidragApiTest {
         forventetJustertNedTil25ProsentAvInntekt = true
         forventetJustertForNettoBarnetilleggBP = false
         forventetJustertForNettoBarnetilleggBM = true
+        forventetAntallBarnetilleggBP = 0
+        forventetAntallBarnetilleggBM = 1
         utførBeregningerOgEvaluerResultatEndeligBidrag()
     }
 
@@ -189,6 +203,8 @@ internal class BeregnEndeligBidragApiTest {
         forventetJustertNedTil25ProsentAvInntekt = true
         forventetJustertForNettoBarnetilleggBP = false
         forventetJustertForNettoBarnetilleggBM = false
+        forventetAntallBarnetilleggBP = 1
+        forventetAntallBarnetilleggBM = 1
         utførBeregningerOgEvaluerResultatEndeligBidrag()
     }
 
@@ -206,6 +222,8 @@ internal class BeregnEndeligBidragApiTest {
         forventetJustertNedTil25ProsentAvInntekt = false
         forventetJustertForNettoBarnetilleggBP = false
         forventetJustertForNettoBarnetilleggBM = false
+        forventetAntallBarnetilleggBP = 1
+        forventetAntallBarnetilleggBM = 1
         utførBeregningerOgEvaluerResultatEndeligBidrag()
     }
 
@@ -223,6 +241,8 @@ internal class BeregnEndeligBidragApiTest {
         forventetJustertNedTil25ProsentAvInntekt = false
         forventetJustertForNettoBarnetilleggBP = false
         forventetJustertForNettoBarnetilleggBM = false
+        forventetAntallBarnetilleggBP = 1
+        forventetAntallBarnetilleggBM = 1
         utførBeregningerOgEvaluerResultatEndeligBidrag()
     }
 
@@ -234,8 +254,8 @@ internal class BeregnEndeligBidragApiTest {
         forventetAntallDelberegningUnderholdskostnad = 2
         forventetAntallDelberegningBPAndelUnderholdskostnad = 5
         forventetAntallDelberegningSamværsfradrag = 5
-        forventetAntallDeltBosted = 4
-        forventetAntallBarnetilleggBP = 4
+        forventetAntallSamværsklasse = 4
+        forventetAntallBarnetilleggBP = 3
         forventetAntallBarnetilleggBM = 3
         utførBeregningerOgEvaluerResultatEndeligBidragFlerePerioder()
     }
@@ -292,17 +312,17 @@ internal class BeregnEndeligBidragApiTest {
             .filter { it.type == Grunnlagstype.DELBEREGNING_SAMVÆRSFRADRAG }
             .size
 
-        val antallDeltBosted = endeligBidragResultat
-            .filter { it.type == Grunnlagstype.DELT_BOSTED }
+        val antallSamværsklasse = endeligBidragResultat
+            .filter { it.type == Grunnlagstype.SAMVÆRSPERIODE }
             .size
 
         val antallBarnetilleggBM = endeligBidragResultat
-            .filter { it.type == Grunnlagstype.BARNETILLEGG_PERIODE }
+            .filter { it.type == Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE }
             .filter { it.gjelderReferanse == referanseBM }
             .size
 
         val antallBarnetilleggBP = endeligBidragResultat
-            .filter { it.type == Grunnlagstype.BARNETILLEGG_PERIODE }
+            .filter { it.type == Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE }
             .filter { it.gjelderReferanse == referanseBP }
             .size
 
@@ -329,9 +349,9 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(antallDelberegningUnderholdskostnad).isEqualTo(antallGrunnlag) },
             { assertThat(antallDelberegningBPAndelUnderholdskostnad).isEqualTo(1) },
             { assertThat(antallDelberegningSamværsfradrag).isEqualTo(antallGrunnlag) },
-            { assertThat(antallDeltBosted).isEqualTo(antallGrunnlag) },
-            { assertThat(antallBarnetilleggBP).isEqualTo(antallGrunnlag) },
-            { assertThat(antallBarnetilleggBM).isEqualTo(antallGrunnlag) },
+            { assertThat(antallSamværsklasse).isEqualTo(antallGrunnlag) },
+            { assertThat(antallBarnetilleggBP).isEqualTo(forventetAntallBarnetilleggBP) },
+            { assertThat(antallBarnetilleggBM).isEqualTo(forventetAntallBarnetilleggBM) },
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
@@ -390,17 +410,17 @@ internal class BeregnEndeligBidragApiTest {
             .filter { it.type == Grunnlagstype.DELBEREGNING_SAMVÆRSFRADRAG }
             .size
 
-        val antallDeltBosted = endeligBidragResultat
-            .filter { it.type == Grunnlagstype.DELT_BOSTED }
+        val antallSamværsklasse = endeligBidragResultat
+            .filter { it.type == Grunnlagstype.SAMVÆRSPERIODE }
             .size
 
         val antallBarnetilleggBM = endeligBidragResultat
-            .filter { it.type == Grunnlagstype.BARNETILLEGG_PERIODE }
+            .filter { it.type == Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE }
             .filter { it.gjelderReferanse == referanseBM }
             .size
 
         val antallBarnetilleggBP = endeligBidragResultat
-            .filter { it.type == Grunnlagstype.BARNETILLEGG_PERIODE }
+            .filter { it.type == Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE }
             .filter { it.gjelderReferanse == referanseBP }
             .size
 
@@ -511,7 +531,7 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(antallDelberegningUnderholdskostnad).isEqualTo(forventetAntallDelberegningUnderholdskostnad) },
             { assertThat(antallDelberegningBPAndelUnderholdskostnad).isEqualTo(forventetAntallDelberegningBPAndelUnderholdskostnad) },
             { assertThat(antallDelberegningSamværsfradrag).isEqualTo(forventetAntallDelberegningSamværsfradrag) },
-            { assertThat(antallDeltBosted).isEqualTo(forventetAntallDeltBosted) },
+            { assertThat(antallSamværsklasse).isEqualTo(forventetAntallSamværsklasse) },
             { assertThat(antallBarnetilleggBP).isEqualTo(forventetAntallBarnetilleggBP) },
             { assertThat(antallBarnetilleggBM).isEqualTo(forventetAntallBarnetilleggBM) },
 

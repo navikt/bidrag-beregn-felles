@@ -21,7 +21,6 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonBarnetilsynPeri
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonForbruksutgifterPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
-import java.util.*
 
 internal object UnderholdskostnadMapper : CoreMapper() {
     fun mapUnderholdskostnadGrunnlag(mottattGrunnlag: BeregnGrunnlag, sjablonGrunnlag: List<GrunnlagDto>): UnderholdskostnadPeriodeGrunnlag {
