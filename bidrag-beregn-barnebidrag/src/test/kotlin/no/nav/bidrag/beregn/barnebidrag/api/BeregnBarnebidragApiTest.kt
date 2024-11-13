@@ -250,6 +250,7 @@ internal class BeregnBarnebidragApiTest {
                     beregnetBeløp = it.innhold.beregnetBeløp,
                     resultatKode = it.innhold.resultatKode,
                     resultatBeløp = it.innhold.resultatBeløp,
+                    ingenEndringUnderGrense = false,
                     kostnadsberegnetBidrag = it.innhold.kostnadsberegnetBidrag,
                     nettoBarnetilleggBP = it.innhold.nettoBarnetilleggBP,
                     nettoBarnetilleggBM = it.innhold.nettoBarnetilleggBM,

@@ -55,8 +55,10 @@ class BeregnBarnebidragService : BeregnService() {
         )
         val delberegningEndeligBidragResultat = delberegningEndeligBidrag(utvidetGrunnlag)
 
-        val resultatGrunnlagListe = (delberegningBidragsevneResultat + delberegningUnderholdskostnadResultat + delberegningBpAndelUnderholdskostnadResultat +
-            delberegningSamværsfradragResultat + delberegningEndeligBidragResultat)
+        val resultatGrunnlagListe = (
+            delberegningBidragsevneResultat + delberegningUnderholdskostnadResultat + delberegningBpAndelUnderholdskostnadResultat +
+                delberegningSamværsfradragResultat + delberegningEndeligBidragResultat
+            )
             .distinctBy { it.referanse }
             .sortedBy { it.referanse }
 
