@@ -139,7 +139,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
             ?.let {
                 DeltBostedBeregningGrunnlag(
                     referanse = it.referanse,
-                    deltBosted = it.samværsklassePeriode.samværsklasse == Samværsklasse.DELT_BOSTED
+                    deltBosted = it.samværsklassePeriode.samværsklasse == Samværsklasse.DELT_BOSTED,
                 )
             }
             ?: throw IllegalArgumentException("Delt bosted grunnlag mangler for periode $bruddPeriode"),
@@ -160,7 +160,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
                     beløp = it.barnetilleggPeriode.beløp,
                     skattFaktor = it.barnetilleggPeriode.skattFaktor,
                 )
-            }
+            },
     )
 
     private fun mapEndeligBidragResultatGrunnlag(
@@ -219,6 +219,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
                         nettoBarnetilleggBP = it.resultat.nettoBarnetilleggBP,
                         nettoBarnetilleggBM = it.resultat.nettoBarnetilleggBM,
                         justertNedTilEvne = it.resultat.justertNedTilEvne,
+                        ingenEndringUnderGrense = false,
                         justertNedTil25ProsentAvInntekt = it.resultat.justertNedTil25ProsentAvInntekt,
                         justertForNettoBarnetilleggBP = it.resultat.justertForNettoBarnetilleggBP,
                         justertForNettoBarnetilleggBM = it.resultat.justertForNettoBarnetilleggBM,
