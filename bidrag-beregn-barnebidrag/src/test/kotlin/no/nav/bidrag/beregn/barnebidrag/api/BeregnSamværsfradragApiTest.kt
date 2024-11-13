@@ -25,6 +25,7 @@ import java.math.BigDecimal
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.text.SimpleDateFormat
+import java.time.YearMonth
 
 @ExtendWith(MockitoExtension::class)
 internal class BeregnSamværsfradragApiTest {
@@ -119,7 +120,7 @@ internal class BeregnSamværsfradragApiTest {
             { assertThat(samværsfradragResultatListe).hasSize(1) },
 
             // Resultat
-            { assertThat(samværsfradragResultatListe[0].periode).isEqualTo(ÅrMånedsperiode("2024-08", "2024-09")) },
+            { assertThat(samværsfradragResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null)) },
             { assertThat(samværsfradragResultatListe[0].beløp).isEqualTo(forventetSamværsfradrag) },
 
             // Grunnlag
@@ -172,7 +173,7 @@ internal class BeregnSamværsfradragApiTest {
             { assertThat(samværsfradragResultatListe[3].beløp).isEqualTo(BigDecimal.valueOf(1209.00).setScale(2)) },
             { assertThat(samværsfradragResultatListe[4].periode).isEqualTo(ÅrMånedsperiode("2023-07", "2024-07")) },
             { assertThat(samværsfradragResultatListe[4].beløp).isEqualTo(BigDecimal.valueOf(1760.00).setScale(2)) },
-            { assertThat(samværsfradragResultatListe[5].periode).isEqualTo(ÅrMånedsperiode("2024-07", "2024-10")) },
+            { assertThat(samværsfradragResultatListe[5].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
             { assertThat(samværsfradragResultatListe[5].beløp).isEqualTo(BigDecimal.valueOf(1813.00).setScale(2)) },
 
             // Grunnlag

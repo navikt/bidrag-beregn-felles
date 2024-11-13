@@ -25,6 +25,7 @@ import java.math.BigDecimal
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.text.SimpleDateFormat
+import java.time.YearMonth
 
 @ExtendWith(MockitoExtension::class)
 internal class BeregnBpAndelUnderholdskostnadApiTest {
@@ -245,7 +246,7 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
             { assertThat(bpAndelUnderholdskostnadResultatListe).hasSize(1) },
 
             // Resultat
-            { assertThat(bpAndelUnderholdskostnadResultatListe[0].periode).isEqualTo(ÅrMånedsperiode("2024-08", "2024-09")) },
+            { assertThat(bpAndelUnderholdskostnadResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null)) },
             { assertThat(bpAndelUnderholdskostnadResultatListe[0].endeligAndelFaktor).isEqualTo(forventetEndeligAndelFaktor) },
             { assertThat(bpAndelUnderholdskostnadResultatListe[0].andelBeløp).isEqualTo(forventetAndelBeløp) },
             { assertThat(bpAndelUnderholdskostnadResultatListe[0].beregnetAndelFaktor).isEqualTo(forventetBeregnetAndelFaktor) },
@@ -439,7 +440,7 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
             },
             { assertThat(bpAndelUnderholdskostnadResultatListe[4].barnetErSelvforsørget).isFalse() },
 
-            { assertThat(bpAndelUnderholdskostnadResultatListe[5].periode).isEqualTo(ÅrMånedsperiode("2024-09", "2024-10")) },
+            { assertThat(bpAndelUnderholdskostnadResultatListe[5].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-09"), null)) },
             {
                 assertThat(bpAndelUnderholdskostnadResultatListe[5].endeligAndelFaktor)
                     .isEqualTo(BigDecimal.valueOf(0.5866823115).setScale(10))

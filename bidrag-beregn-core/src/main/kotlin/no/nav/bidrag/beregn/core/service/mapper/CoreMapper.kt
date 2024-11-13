@@ -107,9 +107,11 @@ abstract class CoreMapper {
                         )
                     }
 
-            return if (inntektGrunnlagListe.isEmpty()) {
+            val akkumulertInntektListe: MutableList<InntektPeriodeCore>
+
+            if (inntektGrunnlagListe.isEmpty()) {
                 // Oppretter en periode med inntekt = 0 hvis grunnlagslisten er tom
-                listOf(
+                akkumulertInntektListe = mutableListOf(
                     InntektPeriodeCore(
                         referanse = opprettDelberegningreferanse(
                             type = Grunnlagstype.DELBEREGNING_SUM_INNTEKT,
@@ -126,13 +128,25 @@ abstract class CoreMapper {
                     ),
                 )
             } else {
-                akkumulerOgPeriodiser(
+                akkumulertInntektListe = akkumulerOgPeriodiser(
                     grunnlagListe = inntektGrunnlagListe,
                     søknadsbarnreferanse = beregnGrunnlag.søknadsbarnReferanse,
                     gjelderReferanse = referanseTilRolle,
                     clazz = InntektPeriodeCore::class.java,
-                )
+                ).toMutableList()
             }
+
+            // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato) (ikke for særbidrag)
+            if ((!erSærbidrag) && (akkumulertInntektListe.isNotEmpty())) {
+                val sisteElement = akkumulertInntektListe.last()
+                if (sisteElement.periode.datoTil != null) {
+                    val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(datoTil = null))
+                    akkumulertInntektListe[akkumulertInntektListe.size - 1] = oppdatertSisteElement
+                }
+            }
+
+            return akkumulertInntektListe
+
         } catch (e: Exception) {
             throw IllegalArgumentException(
                 "Ugyldig input ved beregning. Innhold i Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE er ikke gyldig: " +
@@ -277,7 +291,6 @@ abstract class CoreMapper {
                 akkumulerOgPeriodiserTilleggsstønad(
                     grunnlagListe as List<TilleggsstønadPeriodeCore>,
                     periodeListe,
-                    søknadsbarnreferanse,
                     gjelderReferanse,
                 ) as List<T>
             }
@@ -400,7 +413,6 @@ abstract class CoreMapper {
     private fun akkumulerOgPeriodiserTilleggsstønad(
         tilleggsstønadPeriodeCoreListe: List<TilleggsstønadPeriodeCore>,
         periodeListe: List<Periode>,
-        søknadsbarnReferanse: Grunnlagsreferanse,
         gjelderReferanse: Grunnlagsreferanse,
     ): List<TilleggsstønadPeriodeCore> {
         val resultatListe = mutableListOf<TilleggsstønadPeriodeCore>()

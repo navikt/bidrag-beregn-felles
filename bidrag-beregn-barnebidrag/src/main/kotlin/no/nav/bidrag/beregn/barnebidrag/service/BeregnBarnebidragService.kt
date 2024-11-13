@@ -83,7 +83,7 @@ class BeregnBarnebidragService : BeregnService() {
             type = Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD,
             innhold = POJONode(
                 DelberegningUnderholdskostnad(
-                    periode = mottattGrunnlag.periode,
+                    periode = ÅrMånedsperiode(fom = mottattGrunnlag.periode.fom, til = null),
                     forbruksutgift = BigDecimal.valueOf(100).avrundetMedToDesimaler,
                     boutgift = BigDecimal.valueOf(500).avrundetMedToDesimaler,
                     barnetilsynMedStønad = BigDecimal.valueOf(200).avrundetMedToDesimaler,
