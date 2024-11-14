@@ -112,6 +112,9 @@ class BeregnBarnebidragService : BeregnService() {
             throw IllegalArgumentException("Ugyldig input ved beregning av underholdskostnad: " + e.message)
         }
 
+        // Kaller delberegninger
+        val delberegningNettoTilsynsutgiftResultat = delberegningNettoTilsynsutgift(mottattGrunnlag)
+
         val delberegningUnderholdskostnadResultat = delberegningUnderholdskostnad(mottattGrunnlag)
 
         return delberegningUnderholdskostnadResultat

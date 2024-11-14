@@ -72,7 +72,7 @@
     },
     {
       "referanse": "Mottatt_Netto_Tilsynsutgift_202401_Person_Bidragsmottaker",
-      "type": "DELBEREGNING_NETTO_TILSYNSUTGIFT",
+      "type": "NETTO_TILSYNSUTGIFT",
       "innhold": {
         "periode": {
           "fom": "2024-01",
@@ -95,7 +95,7 @@
     },
     {
       "referanse": "Mottatt_Netto_Tilsynsutgift_202402_Person_Bidragsmottaker",
-      "type": "DELBEREGNING_NETTO_TILSYNSUTGIFT",
+      "type": "NETTO_TILSYNSUTGIFT",
       "innhold": {
         "periode": {
           "fom": "2024-02",

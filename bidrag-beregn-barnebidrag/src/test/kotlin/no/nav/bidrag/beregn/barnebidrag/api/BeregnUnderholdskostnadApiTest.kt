@@ -141,51 +141,44 @@ internal class BeregnUnderholdskostnadApiTest {
         // Barnetrygd 07.24 -> 09.24: 1510
         // Barnetilsyn 02.24 -> 07.24: HELTID/UNDER: 630
         // Barnetilsyn 07.24 -> 08.24: HELTID/OVER: 686
-        // Netto tilsynsutgift 04.24 -> 08.24: 550
+        // Netto tilsynsutgift 01.24 -> 02.24: 300.60
+        // Netto tilsynsutgift 02.24 -> 09.24: 1211.18
 
         assertAll(
             // Resultat
-            { assertThat(resultat).hasSize(5) },
+            { assertThat(resultat).hasSize(4) },
 
             { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode("2024-01", "2024-02")) },
             { assertEquals(0, resultat[0].forbruksutgift.compareTo(BigDecimal.valueOf(6335))) },
             { assertEquals(0, resultat[0].boutgift.compareTo(BigDecimal.valueOf(3198))) },
             { assertThat(resultat[0].barnetilsynMedStønad).isNull() },
-            { assertThat(resultat[0].nettoTilsynsutgift).isNull() },
+            { assertEquals(0, resultat[0].nettoTilsynsutgift?.compareTo(BigDecimal.valueOf(300.60))) },
             { assertEquals(0, resultat[0].barnetrygd.compareTo(BigDecimal.valueOf(1310))) },
-            { assertEquals(0, resultat[0].underholdskostnad.compareTo(BigDecimal.valueOf(8223))) },
+            { assertEquals(0, resultat[0].underholdskostnad.compareTo(BigDecimal.valueOf(8523.60))) },
 
-            { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode("2024-02", "2024-04")) },
+            { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode("2024-02", "2024-07")) },
             { assertEquals(0, resultat[1].forbruksutgift.compareTo(BigDecimal.valueOf(6335))) },
             { assertEquals(0, resultat[1].boutgift.compareTo(BigDecimal.valueOf(3198))) },
             { assertThat(resultat[1].barnetilsynMedStønad?.compareTo(BigDecimal.valueOf(630))) },
-            { assertThat(resultat[1].nettoTilsynsutgift).isNull() },
+            { assertEquals(0, resultat[1].nettoTilsynsutgift?.compareTo(BigDecimal.valueOf(1211.18))) },
             { assertEquals(0, resultat[1].barnetrygd.compareTo(BigDecimal.valueOf(1310))) },
-            { assertEquals(0, resultat[1].underholdskostnad.compareTo(BigDecimal.valueOf(8853))) },
+            { assertEquals(0, resultat[1].underholdskostnad.compareTo(BigDecimal.valueOf(10064.18))) },
 
-            { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode("2024-04", "2024-07")) },
-            { assertEquals(0, resultat[2].forbruksutgift.compareTo(BigDecimal.valueOf(6335))) },
-            { assertEquals(0, resultat[2].boutgift.compareTo(BigDecimal.valueOf(3198))) },
-            { assertThat(resultat[2].barnetilsynMedStønad?.compareTo(BigDecimal.valueOf(630))) },
-            { assertThat(resultat[2].nettoTilsynsutgift?.compareTo(BigDecimal.valueOf(550))) },
-            { assertEquals(0, resultat[2].barnetrygd.compareTo(BigDecimal.valueOf(1310))) },
-            { assertEquals(0, resultat[2].underholdskostnad.compareTo(BigDecimal.valueOf(9403))) },
+            { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode("2024-07", "2024-08")) },
+            { assertEquals(0, resultat[2].forbruksutgift.compareTo(BigDecimal.valueOf(6385))) },
+            { assertEquals(0, resultat[2].boutgift.compareTo(BigDecimal.valueOf(3596))) },
+            { assertThat(resultat[2].barnetilsynMedStønad?.compareTo(BigDecimal.valueOf(686))) },
+            { assertEquals(0, resultat[2].nettoTilsynsutgift?.compareTo(BigDecimal.valueOf(1211.18))) },
+            { assertEquals(0, resultat[2].barnetrygd.compareTo(BigDecimal.valueOf(1510))) },
+            { assertEquals(0, resultat[2].underholdskostnad.compareTo(BigDecimal.valueOf(10368.18))) },
 
-            { assertThat(resultat[3].periode).isEqualTo(ÅrMånedsperiode("2024-07", "2024-08")) },
+            { assertThat(resultat[3].periode).isEqualTo(ÅrMånedsperiode("2024-08", "2024-09")) },
             { assertEquals(0, resultat[3].forbruksutgift.compareTo(BigDecimal.valueOf(6385))) },
             { assertEquals(0, resultat[3].boutgift.compareTo(BigDecimal.valueOf(3596))) },
-            { assertThat(resultat[3].barnetilsynMedStønad?.compareTo(BigDecimal.valueOf(686))) },
-            { assertThat(resultat[3].nettoTilsynsutgift?.compareTo(BigDecimal.valueOf(550))) },
+            { assertThat(resultat[3].barnetilsynMedStønad).isNull() },
+            { assertEquals(0, resultat[3].nettoTilsynsutgift?.compareTo(BigDecimal.valueOf(1211.18))) },
             { assertEquals(0, resultat[3].barnetrygd.compareTo(BigDecimal.valueOf(1510))) },
-            { assertEquals(0, resultat[3].underholdskostnad.compareTo(BigDecimal.valueOf(9707))) },
-
-            { assertThat(resultat[4].periode).isEqualTo(ÅrMånedsperiode("2024-08", "2024-09")) },
-            { assertEquals(0, resultat[4].forbruksutgift.compareTo(BigDecimal.valueOf(6385))) },
-            { assertEquals(0, resultat[4].boutgift.compareTo(BigDecimal.valueOf(3596))) },
-            { assertThat(resultat[4].barnetilsynMedStønad).isNull() },
-            { assertThat(resultat[4].nettoTilsynsutgift).isNull() },
-            { assertEquals(0, resultat[4].barnetrygd.compareTo(BigDecimal.valueOf(1510))) },
-            { assertEquals(0, resultat[4].underholdskostnad.compareTo(BigDecimal.valueOf(8471))) },
+            { assertEquals(0, resultat[3].underholdskostnad.compareTo(BigDecimal.valueOf(9682.18))) },
         )
     }
 

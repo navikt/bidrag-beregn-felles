@@ -186,7 +186,7 @@ internal class BeregnBarnebidragApiTest {
 
     private fun utførBeregningerOgEvaluerResultatBarnebidrag() {
         val request = lesFilOgByggRequest(filnavn)
-        val barnebidragResultat = beregnBarnebidragService.beregnBarnebidrag(request, forventetUnderholdskostnad)
+        val barnebidragResultat = beregnBarnebidragService.beregnBarnebidrag(request)
         val barnebidragResultatGrunnlagListe = barnebidragResultat.grunnlagListe
         printJson(barnebidragResultat)
 

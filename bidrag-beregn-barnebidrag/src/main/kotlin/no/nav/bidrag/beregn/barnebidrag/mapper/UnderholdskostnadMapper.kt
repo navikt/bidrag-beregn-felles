@@ -23,20 +23,16 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeri
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 
 internal object UnderholdskostnadMapper : CoreMapper() {
-    fun mapUnderholdskostnadGrunnlag(mottattGrunnlag: BeregnGrunnlag, sjablonGrunnlag: List<GrunnlagDto>): UnderholdskostnadPeriodeGrunnlag {
-        val barnetilsynMedStønadPeriodeGrunnlagListe = mapBarnetilsynMedStønad(mottattGrunnlag)
-        val nettoTilsynsutgiftPeriodeGrunnlagListe = mapNettoTilsynsutgift(mottattGrunnlag, mottattGrunnlag.søknadsbarnReferanse)
-
-        return UnderholdskostnadPeriodeGrunnlag(
+    fun mapUnderholdskostnadGrunnlag(mottattGrunnlag: BeregnGrunnlag, sjablonGrunnlag: List<GrunnlagDto>): UnderholdskostnadPeriodeGrunnlag =
+        UnderholdskostnadPeriodeGrunnlag(
             beregningsperiode = mottattGrunnlag.periode,
             søknadsbarnPeriodeGrunnlag = mapSøknadsbarn(mottattGrunnlag),
-            barnetilsynMedStønadPeriodeGrunnlagListe = barnetilsynMedStønadPeriodeGrunnlagListe,
-            nettoTilsynsutgiftPeriodeGrunnlagListe = nettoTilsynsutgiftPeriodeGrunnlagListe,
+            barnetilsynMedStønadPeriodeGrunnlagListe = mapBarnetilsynMedStønad(mottattGrunnlag),
+            nettoTilsynsutgiftPeriodeGrunnlagListe = mapNettoTilsynsutgift(mottattGrunnlag, mottattGrunnlag.søknadsbarnReferanse),
             sjablonSjablontallPeriodeGrunnlagListe = mapSjablonSjablontall(sjablonGrunnlag),
             sjablonBarnetilsynPeriodeGrunnlagListe = mapSjablonBarnetilsyn(sjablonGrunnlag),
             sjablonForbruksutgifterPeriodeGrunnlagListe = mapSjablonForbruksutgifter(sjablonGrunnlag),
         )
-    }
 
     private fun mapSøknadsbarn(beregnGrunnlag: BeregnGrunnlag): SøknadsbarnPeriodeGrunnlag {
         try {
@@ -72,7 +68,7 @@ internal object UnderholdskostnadMapper : CoreMapper() {
     private fun mapNettoTilsynsutgift(beregnGrunnlag: BeregnGrunnlag, gjelderBarn: Grunnlagsreferanse): List<NettoTilsynsutgiftPeriodeGrunnlagDto> {
         try {
             return beregnGrunnlag.grunnlagListe
-                .filtrerOgKonverterBasertPåEgenReferanse<DelberegningNettoTilsynsutgift>(Grunnlagstype.NETTO_TILSYNSUTGIFT)
+                .filtrerOgKonverterBasertPåEgenReferanse<DelberegningNettoTilsynsutgift>(Grunnlagstype.DELBEREGNING_NETTO_TILSYNSUTGIFT)
                 .filter { it.innhold.tilsynsutgiftBarnListe.any { tilsynsutgiftBarn -> tilsynsutgiftBarn.gjelderBarn == gjelderBarn } }
                 .map {
                     NettoTilsynsutgiftPeriodeGrunnlagDto(

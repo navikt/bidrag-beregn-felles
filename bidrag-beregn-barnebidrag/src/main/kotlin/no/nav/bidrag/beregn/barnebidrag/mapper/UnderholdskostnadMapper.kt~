@@ -10,7 +10,6 @@ import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
-import no.nav.bidrag.domene.enums.sjablon.SjablonNavn
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BarnetilsynMedStønadPeriode
@@ -22,23 +21,18 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonBarnetilsynPeri
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonForbruksutgifterPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
-import java.util.*
 
 internal object UnderholdskostnadMapper : CoreMapper() {
-    fun mapUnderholdskostnadGrunnlag(mottattGrunnlag: BeregnGrunnlag, sjablonGrunnlag: List<GrunnlagDto>): UnderholdskostnadPeriodeGrunnlag {
-        val barnetilsynMedStønadPeriodeGrunnlagListe = mapBarnetilsynMedStønad(mottattGrunnlag)
-        val nettoTilsynsutgiftPeriodeGrunnlagListe = mapNettoTilsynsutgift(mottattGrunnlag, mottattGrunnlag.søknadsbarnReferanse)
-
-        return UnderholdskostnadPeriodeGrunnlag(
+    fun mapUnderholdskostnadGrunnlag(mottattGrunnlag: BeregnGrunnlag, sjablonGrunnlag: List<GrunnlagDto>): UnderholdskostnadPeriodeGrunnlag =
+        UnderholdskostnadPeriodeGrunnlag(
             beregningsperiode = mottattGrunnlag.periode,
             søknadsbarnPeriodeGrunnlag = mapSøknadsbarn(mottattGrunnlag),
-            barnetilsynMedStønadPeriodeGrunnlagListe = barnetilsynMedStønadPeriodeGrunnlagListe,
-            nettoTilsynsutgiftPeriodeGrunnlagListe = nettoTilsynsutgiftPeriodeGrunnlagListe,
+            barnetilsynMedStønadPeriodeGrunnlagListe = mapBarnetilsynMedStønad(mottattGrunnlag),
+            nettoTilsynsutgiftPeriodeGrunnlagListe = mapNettoTilsynsutgift(mottattGrunnlag, mottattGrunnlag.søknadsbarnReferanse),
             sjablonSjablontallPeriodeGrunnlagListe = mapSjablonSjablontall(sjablonGrunnlag),
             sjablonBarnetilsynPeriodeGrunnlagListe = mapSjablonBarnetilsyn(sjablonGrunnlag),
             sjablonForbruksutgifterPeriodeGrunnlagListe = mapSjablonForbruksutgifter(sjablonGrunnlag),
         )
-    }
 
     private fun mapSøknadsbarn(beregnGrunnlag: BeregnGrunnlag): SøknadsbarnPeriodeGrunnlag {
         try {

@@ -23,11 +23,11 @@ internal object UnderholdskostnadBeregning {
             )
 
         val underholdskostnadBeregningResultat = UnderholdskostnadBeregningResultat(
-            forbruksutgift = sjablonverdiForbruksutgifterBeløp,
-            boutgift = sjablonverdiBoutgifterBidragsbarn,
-            barnetilsynMedStønad = sjablonverdiBarnetilsynBeløp,
-            nettoTilsynsutgift = grunnlag.nettoTilsynsutgiftBeregningGrunnlag?.nettoTilsynsutgift,
-            barnetrygd = sjablonverdiBarnetrygd,
+            forbruksutgift = sjablonverdiForbruksutgifterBeløp.avrundetMedToDesimaler,
+            boutgift = sjablonverdiBoutgifterBidragsbarn.avrundetMedToDesimaler,
+            barnetilsynMedStønad = sjablonverdiBarnetilsynBeløp?.avrundetMedToDesimaler,
+            nettoTilsynsutgift = grunnlag.nettoTilsynsutgiftBeregningGrunnlag?.nettoTilsynsutgift?.avrundetMedToDesimaler,
+            barnetrygd = sjablonverdiBarnetrygd.avrundetMedToDesimaler,
             underholdskostnad = beregnetUnderholdskostnad.avrundetMedToDesimaler,
             grunnlagsreferanseListe = listOfNotNull(
                 grunnlag.barnetilsynMedStønad?.referanse,

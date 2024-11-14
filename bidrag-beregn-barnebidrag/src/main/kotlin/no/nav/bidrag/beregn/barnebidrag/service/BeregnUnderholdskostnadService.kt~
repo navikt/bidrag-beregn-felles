@@ -34,7 +34,7 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
         val sjablonGrunnlag = lagSjablonGrunnlagsobjekter(periode = mottattGrunnlag.periode) { it.underholdskostnad }
 
         // Mapper ut grunnlag som skal brukes for å beregne underholdskostnad
-        val underholdskostnadPeriodeGrunnlag = mapUnderholdskostnadGrunnlag(mottattGrunnlag, sjablonGrunnlag)
+        val underholdskostnadPeriodeGrunnlag = mapUnderholdskostnadGrunnlag(mottattGrunnlag, delberegningNettoTilsynsutgiftResultat, sjablonGrunnlag)
 
         // Lager liste over bruddperioder
         val bruddPeriodeListe = lagBruddPeriodeListeUnderholdskostnad(underholdskostnadPeriodeGrunnlag, mottattGrunnlag.periode)
