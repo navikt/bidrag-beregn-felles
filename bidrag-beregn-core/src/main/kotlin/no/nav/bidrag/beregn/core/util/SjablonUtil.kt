@@ -211,7 +211,8 @@ object SjablonUtil {
         .map { it.verdi }
         .toList()
 
-    fun justerSjablonTomDato(datoTom: LocalDate): LocalDate? = if (datoTom == LocalDate.parse("9999-12-31")) null else datoTom.plusMonths(1)
+    fun justerSjablonTomDato(datoTom: LocalDate?): LocalDate? =
+        if (datoTom == LocalDate.parse("9999-12-31") || datoTom == null) null else datoTom.plusMonths(1)
 
     fun lagSjablonReferanse(sjablonNavn: String, fomDato: LocalDate, postfix: String = ""): String =
         "sjablon_${sjablonNavn}_${fomDato.format(DateTimeFormatter.ofPattern("yyyyMM"))}$postfix"

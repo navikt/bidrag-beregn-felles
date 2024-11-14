@@ -231,27 +231,27 @@ abstract class BeregnService {
     protected fun mapSjablonSamværsfradragGrunnlag(periode: ÅrMånedsperiode, sjablonListe: List<Samværsfradrag>): List<GrunnlagDto> = sjablonListe
         // TODO Sjekk om periode.overlapper er dekkende
         .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
-        .map { it.tilGrunnlagsobjekt(ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!))) }
+        .map { it.tilGrunnlagsobjekt(ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom))) }
 
     protected fun mapSjablonMaksTilsynsbeløpGrunnlag(periode: ÅrMånedsperiode, sjablonListe: List<MaksTilsyn>): List<GrunnlagDto> = sjablonListe
         // TODO Sjekk om periode.overlapper er dekkende
         .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
-        .map { it.tilGrunnlagsobjekt(ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!))) }
+        .map { it.tilGrunnlagsobjekt(ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom))) }
 
     protected fun mapSjablonMaksFradragGrunnlag(periode: ÅrMånedsperiode, sjablonListe: List<MaksFradrag>): List<GrunnlagDto> = sjablonListe
         // TODO Sjekk om periode.overlapper er dekkende
         .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
-        .map { it.tilGrunnlagsobjekt(ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!))) }
+        .map { it.tilGrunnlagsobjekt(ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom))) }
 
     protected fun mapSjablonBarnetilsynGrunnlag(periode: ÅrMånedsperiode, sjablonListe: List<Barnetilsyn>): List<GrunnlagDto> = sjablonListe
         // TODO Sjekk om periode.overlapper er dekkende
         .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
-        .map { it.tilGrunnlagsobjekt(ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!))) }
+        .map { it.tilGrunnlagsobjekt(ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom))) }
 
     protected fun mapSjablonForbruksutgifterGrunnlag(periode: ÅrMånedsperiode, sjablonListe: List<Forbruksutgifter>): List<GrunnlagDto> = sjablonListe
         // TODO Sjekk om periode.overlapper er dekkende
         .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
-        .map { it.tilGrunnlagsobjekt(ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!))) }
+        .map { it.tilGrunnlagsobjekt(ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom))) }
 
     // Lager liste over bruddperioder
     fun lagBruddPeriodeListe(periodeListe: Sequence<ÅrMånedsperiode>, beregningsperiode: ÅrMånedsperiode): List<ÅrMånedsperiode> {
