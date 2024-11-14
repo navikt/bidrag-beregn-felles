@@ -39,7 +39,7 @@
       "gjelderReferanse": null
     },
     {
-      "referanse": "Mottatt_FaktiskUtgift_202401_SB1",
+      "referanse": "Mottatt_FaktiskUtgift_202301_SB1",
       "type": "FAKTISK_UTGIFT_PERIODE",
       "innhold": {
         "periode": {
@@ -56,7 +56,7 @@
       "gjelderReferanse": null
     },
     {
-      "referanse": "Mottatt_FaktiskUtgift_202402_SB1",
+      "referanse": "Mottatt_FaktiskUtgift_202301_SB1",
       "type": "FAKTISK_UTGIFT_PERIODE",
       "innhold": {
         "periode": {
@@ -73,7 +73,7 @@
       "gjelderReferanse": null
     },
     {
-      "referanse": "Mottatt_Tilleggsstønad_202402_SB1",
+      "referanse": "Mottatt_Tilleggsstønad_202301_SB1",
       "type": "TILLEGGSSTØNAD_PERIODE",
       "innhold": {
         "periode": {
