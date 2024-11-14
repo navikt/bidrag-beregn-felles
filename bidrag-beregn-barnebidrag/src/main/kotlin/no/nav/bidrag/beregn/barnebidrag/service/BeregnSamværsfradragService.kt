@@ -59,6 +59,15 @@ internal object BeregnSamværsfradragService : BeregnService() {
             )
         }
 
+        // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato)
+        if (samværsfradragBeregningResultatListe.isNotEmpty()) {
+            val sisteElement = samværsfradragBeregningResultatListe.last()
+            if (sisteElement.periode.til != null) {
+                val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
+                samværsfradragBeregningResultatListe[samværsfradragBeregningResultatListe.size - 1] = oppdatertSisteElement
+            }
+        }
+
         // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
         val resultatGrunnlagListe = mapSamværsfradragResultatGrunnlag(
             samværsfradragBeregningResultatListe = samværsfradragBeregningResultatListe,

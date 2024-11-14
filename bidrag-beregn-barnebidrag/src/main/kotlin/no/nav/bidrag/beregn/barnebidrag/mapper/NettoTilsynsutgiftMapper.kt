@@ -44,7 +44,7 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
         try {
             val faktiskTilsynsutgiftListe =
                 beregnGrunnlag.grunnlagListe
-                    .filtrerOgKonverterBasertPåEgenReferanse<FaktiskUtgiftPeriode>(Grunnlagstype.FAKTISK_UTGIFT)
+                    .filtrerOgKonverterBasertPåEgenReferanse<FaktiskUtgiftPeriode>(Grunnlagstype.FAKTISK_UTGIFT_PERIODE)
                     .map {
                         FaktiskUtgiftPeriodeCore(
                             referanse = it.referanse,
@@ -75,7 +75,7 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
         try {
             val tilleggsstønadListe =
                 beregnGrunnlag.grunnlagListe
-                    .filtrerOgKonverterBasertPåEgenReferanse<TilleggsstønadPeriode>(Grunnlagstype.TILLEGGSSTØNAD)
+                    .filtrerOgKonverterBasertPåEgenReferanse<TilleggsstønadPeriode>(Grunnlagstype.TILLEGGSSTØNAD_PERIODE)
                     .map {
                         TilleggsstønadPeriodeCore(
                             referanse = it.referanse,

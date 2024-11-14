@@ -25,6 +25,7 @@ import java.math.BigDecimal
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.text.SimpleDateFormat
+import java.time.YearMonth
 
 @ExtendWith(MockitoExtension::class)
 internal class BeregnNettoTilsynsutgiftApiTest {
@@ -65,7 +66,7 @@ internal class BeregnNettoTilsynsutgiftApiTest {
             { assertEquals(0, resultat[1].tilsynsutgiftBarnListe[0].tilleggsstønad.compareTo(BigDecimal.valueOf(216.67))) },
             { assertEquals(0, resultat[1].tilsynsutgiftBarnListe[0].nettoTilsynsutgift.compareTo(BigDecimal.valueOf(83.93))) },
 
-            { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode("2024-07", "2024-09")) },
+            { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
             { assertEquals(0, resultat[2].totaltFaktiskUtgiftBeløp.compareTo(BigDecimal.valueOf(400))) },
             { assertEquals(0, resultat[2].tilsynsutgiftBarnListe[0].sumFaktiskeUtgifter.compareTo(BigDecimal.valueOf(400))) },
             { assertEquals(0, resultat[2].tilsynsutgiftBarnListe[0].endeligSumFaktiskeUtgifter.compareTo(BigDecimal.valueOf(400))) },
@@ -137,7 +138,7 @@ internal class BeregnNettoTilsynsutgiftApiTest {
             { assertEquals(0, resultat[3].tilsynsutgiftBarnListe[1].tilleggsstønad.compareTo(BigDecimal.valueOf(368.33))) },
             { assertEquals(0, resultat[3].tilsynsutgiftBarnListe[1].nettoTilsynsutgift.compareTo(BigDecimal.valueOf(63.63))) },
 
-            { assertThat(resultat[4].periode).isEqualTo(ÅrMånedsperiode("2024-07", "2024-09")) },
+            { assertThat(resultat[4].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
             { assertThat(resultat[4].tilsynsutgiftBarnListe).hasSize(2) },
             { assertEquals(0, resultat[4].totaltFaktiskUtgiftBeløp.compareTo(BigDecimal.valueOf(950))) },
 
@@ -166,7 +167,7 @@ internal class BeregnNettoTilsynsutgiftApiTest {
 
             // Resultat
 
-            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode("2024-07", "2024-09")) },
+            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
             { assertThat(resultat[0].tilsynsutgiftBarnListe).hasSize(3) },
             { assertEquals(0, resultat[0].totaltFaktiskUtgiftBeløp.compareTo(BigDecimal.valueOf(12000))) },
 
@@ -216,7 +217,7 @@ internal class BeregnNettoTilsynsutgiftApiTest {
             { assertEquals(0, resultat[1].tilsynsutgiftBarnListe[0].tilleggsstønad.compareTo(BigDecimal.valueOf(216.67))) },
             { assertEquals(0, resultat[1].tilsynsutgiftBarnListe[0].nettoTilsynsutgift.compareTo(BigDecimal.valueOf(1211.18))) },
 
-            { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode("2024-07", "2024-09")) },
+            { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
             { assertEquals(0, resultat[2].totaltFaktiskUtgiftBeløp.compareTo(BigDecimal.valueOf(1900))) },
             { assertEquals(0, resultat[2].tilsynsutgiftBarnListe[0].sumFaktiskeUtgifter.compareTo(BigDecimal.valueOf(1900))) },
             { assertEquals(0, resultat[2].tilsynsutgiftBarnListe[0].endeligSumFaktiskeUtgifter.compareTo(BigDecimal.valueOf(1900))) },

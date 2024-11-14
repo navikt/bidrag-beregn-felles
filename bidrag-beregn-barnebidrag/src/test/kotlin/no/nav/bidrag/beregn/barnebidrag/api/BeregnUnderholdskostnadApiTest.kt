@@ -25,6 +25,7 @@ import java.math.BigDecimal
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.text.SimpleDateFormat
+import java.time.YearMonth
 
 @ExtendWith(MockitoExtension::class)
 internal class BeregnUnderholdskostnadApiTest {
@@ -55,7 +56,7 @@ internal class BeregnUnderholdskostnadApiTest {
         assertAll(
             // Resultat
             { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode("2024-01", "2024-07")) },
-            { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode("2024-07", "2024-09")) },
+            { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
             { assertThat(resultat).hasSize(2) },
 
             { assertEquals(0, resultat[0].forbruksutgift.compareTo(BigDecimal.valueOf(6335))) },
@@ -94,7 +95,7 @@ internal class BeregnUnderholdskostnadApiTest {
             { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode("2024-01", "2024-02")) },
             { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode("2024-02", "2024-07")) },
             { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode("2024-07", "2024-08")) },
-            { assertThat(resultat[3].periode).isEqualTo(ÅrMånedsperiode("2024-08", "2024-09")) },
+            { assertThat(resultat[3].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null)) },
             { assertThat(resultat).hasSize(4) },
 
             { assertEquals(0, resultat[0].forbruksutgift.compareTo(BigDecimal.valueOf(6335))) },
@@ -172,7 +173,7 @@ internal class BeregnUnderholdskostnadApiTest {
             { assertEquals(0, resultat[2].barnetrygd.compareTo(BigDecimal.valueOf(1510))) },
             { assertEquals(0, resultat[2].underholdskostnad.compareTo(BigDecimal.valueOf(10368.18))) },
 
-            { assertThat(resultat[3].periode).isEqualTo(ÅrMånedsperiode("2024-08", "2024-09")) },
+            { assertThat(resultat[3].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null)) },
             { assertEquals(0, resultat[3].forbruksutgift.compareTo(BigDecimal.valueOf(6385))) },
             { assertEquals(0, resultat[3].boutgift.compareTo(BigDecimal.valueOf(3596))) },
             { assertThat(resultat[3].barnetilsynMedStønad).isNull() },

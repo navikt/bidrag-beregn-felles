@@ -74,6 +74,15 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
             }
         }
 
+        // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato)
+        if (nettoTilsynsutgiftBeregningResultatListe.isNotEmpty()) {
+            val sisteElement = nettoTilsynsutgiftBeregningResultatListe.last()
+            if (sisteElement.periode.til != null) {
+                val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
+                nettoTilsynsutgiftBeregningResultatListe[nettoTilsynsutgiftBeregningResultatListe.size - 1] = oppdatertSisteElement
+            }
+        }
+
         // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
         val resultatGrunnlagListe = mapNettoTilsynsutgiftResultatGrunnlag(
             nettoTilsynsutgiftBeregningResultatListe = nettoTilsynsutgiftBeregningResultatListe,

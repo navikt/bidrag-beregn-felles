@@ -24,6 +24,7 @@ import java.math.BigDecimal
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.text.SimpleDateFormat
+import java.time.YearMonth
 
 @ExtendWith(MockitoExtension::class)
 internal class BeregnBidragsevneApiTest {
@@ -459,7 +460,7 @@ internal class BeregnBidragsevneApiTest {
             { assertThat(bidragsevneResultatListe).hasSize(1) },
 
             // Resultat
-            { assertThat(bidragsevneResultatListe[0].periode).isEqualTo(ÅrMånedsperiode("2024-08", "2024-09")) },
+            { assertThat(bidragsevneResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null)) },
             { assertThat(bidragsevneResultatListe[0].beløp).isEqualTo(forventetBidragsevne) },
             { assertThat(bidragsevneResultatListe[0].skatt.minstefradrag).isEqualTo(forventetMinstefradrag) },
             { assertThat(bidragsevneResultatListe[0].skatt.skattAlminneligInntekt).isEqualTo(forventetSkattAlminneligInntekt) },
@@ -633,7 +634,7 @@ internal class BeregnBidragsevneApiTest {
             { assertThat(bidragsevneResultatListe[5].underholdBarnEgenHusstand).isEqualTo(BigDecimal.valueOf(76554.00).setScale(2)) },
             { assertThat(bidragsevneResultatListe[5].sumInntekt25Prosent).isEqualTo(BigDecimal.valueOf(14583.33).setScale(2)) },
 
-            { assertThat(bidragsevneResultatListe[6].periode).isEqualTo(ÅrMånedsperiode("2024-09", "2024-10")) },
+            { assertThat(bidragsevneResultatListe[6].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-09"), null)) },
             { assertThat(bidragsevneResultatListe[6].beløp).isEqualTo(BigDecimal.valueOf(32804.12).setScale(2)) },
             { assertThat(bidragsevneResultatListe[6].skatt.minstefradrag).isEqualTo(BigDecimal.valueOf(86250.00).setScale(2)) },
             { assertThat(bidragsevneResultatListe[6].skatt.skattAlminneligInntekt).isEqualTo(BigDecimal.valueOf(181610.00).setScale(2)) },

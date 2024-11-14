@@ -52,22 +52,21 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
             )
         }
 
+        // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato)
+        if (underholdskostnadBeregningResultatListe.isNotEmpty()) {
+            val sisteElement = underholdskostnadBeregningResultatListe.last()
+            if (sisteElement.periode.til != null) {
+                val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
+                underholdskostnadBeregningResultatListe[underholdskostnadBeregningResultatListe.size - 1] = oppdatertSisteElement
+            }
+        }
+
         // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
         val resultatGrunnlagListe = mapUnderholdskostnadResultatGrunnlag(
             underholdskostnadBeregningResultatListe = underholdskostnadBeregningResultatListe,
             mottattGrunnlag = mottattGrunnlag,
             sjablonGrunnlag = sjablonGrunnlag,
         )
-
-//        // Mapper ut "sub"-delberegninger
-//        resultatGrunnlagListe.addAll(
-//            mapDelberegninger(
-//                mottattGrunnlag = mottattGrunnlag,
-//                underholdskostnadPeriodeGrunnlag = underholdskostnadPeriodeGrunnlag,
-//                delberegningNettoTilsynsutgiftResultat = mapNettoTilsynsutgift(delberegningNettoTilsynsutgiftResultat),
-// //                referanseTilSøknadsbarn = referanseTilSøknadsbarn,
-//            ),
-//        )
 
         // Mapper ut grunnlag for delberegning underholdskostnad
         resultatGrunnlagListe.addAll(
