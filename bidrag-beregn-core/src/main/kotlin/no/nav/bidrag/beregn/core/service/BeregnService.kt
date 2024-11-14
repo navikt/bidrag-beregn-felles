@@ -255,7 +255,6 @@ abstract class BeregnService {
 
     // Lager liste over bruddperioder
     fun lagBruddPeriodeListe(periodeListe: Sequence<ÅrMånedsperiode>, beregningsperiode: ÅrMånedsperiode): List<ÅrMånedsperiode> {
-
         val bruddPeriodeListe = periodeListe
             .flatMap { sequenceOf(it.fom, it.til) } // Flater ut perioder til en sekvens av ÅrMåned-elementer
             .distinct() // Fjerner evt. duplikater

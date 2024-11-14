@@ -36,7 +36,7 @@ data class UnderholdskostnadBeregningGrunnlag(
     val barnetilsynMedStønad: BarnetilsynMedStønad?,
     val nettoTilsynsutgiftBeregningGrunnlag: NettoTilsynsutgift?,
     val sjablonSjablontallBeregningGrunnlagListe: List<SjablonSjablontallBeregningGrunnlag>,
-    val sjablonBarnetilsynBeregningGrunnlag: SjablonBarnetilsynBeregningGrunnlag,
+    val sjablonBarnetilsynBeregningGrunnlag: SjablonBarnetilsynBeregningGrunnlag?,
     val sjablonForbruksutgifterBeregningGrunnlag: SjablonForbruksutgifterBeregningGrunnlag,
 )
 
@@ -52,8 +52,8 @@ data class SjablonForbruksutgifterBeregningGrunnlag(val referanse: String, val a
 data class UnderholdskostnadBeregningResultat(
     val forbruksutgift: BigDecimal,
     val boutgift: BigDecimal,
-    val barnetilsynMedStønad: BigDecimal,
-    val nettoTilsynsutgift: BigDecimal,
+    val barnetilsynMedStønad: BigDecimal?,
+    val nettoTilsynsutgift: BigDecimal?,
     val barnetrygd: BigDecimal,
     val underholdskostnad: BigDecimal,
     val grunnlagsreferanseListe: List<String>,

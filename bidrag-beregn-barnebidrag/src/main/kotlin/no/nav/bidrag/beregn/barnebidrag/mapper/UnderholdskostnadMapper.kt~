@@ -68,7 +68,7 @@ internal object UnderholdskostnadMapper : CoreMapper() {
     private fun mapNettoTilsynsutgift(beregnGrunnlag: BeregnGrunnlag, gjelderBarn: Grunnlagsreferanse): List<NettoTilsynsutgiftPeriodeGrunnlagDto> {
         try {
             return beregnGrunnlag.grunnlagListe
-                .filtrerOgKonverterBasertPåEgenReferanse<DelberegningNettoTilsynsutgift>(Grunnlagstype.DELBEREGNING_NETTO_TILSYNSUTGIFT)
+                .filtrerOgKonverterBasertPåEgenReferanse<DelberegningNettoTilsynsutgift>(Grunnlagstype.NETTO_TILSYNSUTGIFT)
                 .filter { it.innhold.tilsynsutgiftBarnListe.any { tilsynsutgiftBarn -> tilsynsutgiftBarn.gjelderBarn == gjelderBarn } }
                 .map {
                     NettoTilsynsutgiftPeriodeGrunnlagDto(

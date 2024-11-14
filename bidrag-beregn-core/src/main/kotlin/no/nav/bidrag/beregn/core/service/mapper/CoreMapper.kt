@@ -146,7 +146,6 @@ abstract class CoreMapper {
             }
 
             return akkumulertInntektListe
-
         } catch (e: Exception) {
             throw IllegalArgumentException(
                 "Ugyldig input ved beregning. Innhold i Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE er ikke gyldig: " +

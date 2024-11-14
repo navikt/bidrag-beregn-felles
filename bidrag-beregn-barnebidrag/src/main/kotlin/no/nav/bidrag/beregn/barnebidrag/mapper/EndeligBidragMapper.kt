@@ -24,7 +24,6 @@ import java.math.BigDecimal
 
 internal object EndeligBidragMapper : CoreMapper() {
     fun mapEndeligBidragGrunnlag(mottattGrunnlag: BeregnGrunnlag): EndeligBidragPeriodeGrunnlag {
-
         val bidragsevneDelberegningPeriodeGrunnlagListe = mapBidragsevne(mottattGrunnlag)
 
         return EndeligBidragPeriodeGrunnlag(
@@ -40,7 +39,7 @@ internal object EndeligBidragMapper : CoreMapper() {
                     grunnlagListe = mottattGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
                 ),
-                //TODO Blir det riktig å hente fra siste periode?
+                // TODO Blir det riktig å hente fra siste periode?
                 skattFaktor = bidragsevneDelberegningPeriodeGrunnlagListe.last().bidragsevnePeriode.skatt.sumSkattFaktor,
             ),
             barnetilleggBMPeriodeGrunnlagListe = mapBarnetillegg(
@@ -49,7 +48,7 @@ internal object EndeligBidragMapper : CoreMapper() {
                     grunnlagListe = mottattGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
                 ),
-                //TODO Må være skatt som tilhører BM
+                // TODO Må være skatt som tilhører BM
                 skattFaktor = bidragsevneDelberegningPeriodeGrunnlagListe.last().bidragsevnePeriode.skatt.sumSkattFaktor,
             ),
         )
@@ -144,7 +143,7 @@ internal object EndeligBidragMapper : CoreMapper() {
     private fun mapBarnetillegg(
         beregnGrunnlag: BeregnGrunnlag,
         referanseTilRolle: String,
-        skattFaktor: BigDecimal
+        skattFaktor: BigDecimal,
     ): List<BarnetilleggPeriodeGrunnlag> {
         try {
             return beregnGrunnlag.grunnlagListe
@@ -161,7 +160,7 @@ internal object EndeligBidragMapper : CoreMapper() {
                             beløp = it.innhold.beløp,
                             skattFaktor = skattFaktor,
                             manueltRegistrert = it.innhold.manueltRegistrert,
-                        )
+                        ),
                     )
                 }
         } catch (e: Exception) {

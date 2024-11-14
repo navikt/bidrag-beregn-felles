@@ -187,7 +187,7 @@ internal class BeregnBarnebidragApiTest {
 
     private fun utførBeregningerOgEvaluerResultatBarnebidrag() {
         val request = lesFilOgByggRequest(filnavn)
-        val barnebidragResultat = beregnBarnebidragService.beregnBarnebidrag(request, forventetUnderholdskostnad)
+        val barnebidragResultat = beregnBarnebidragService.beregnBarnebidrag(request)
         val barnebidragResultatGrunnlagListe = barnebidragResultat.grunnlagListe
         printJson(barnebidragResultat)
 
@@ -453,7 +453,7 @@ internal class BeregnBarnebidragApiTest {
             { assertThat(antallSamværsklasse).isEqualTo(1) },
             { assertThat(antallBarnetilleggBP).isEqualTo(forventetAntallBarnetilleggBP) },
             { assertThat(antallBarnetilleggBM).isEqualTo(forventetAntallBarnetilleggBM) },
-            { assertThat(antallSjablonSjablontall).isEqualTo(13) },
+            { assertThat(antallSjablonSjablontall).isEqualTo(15) },
             { assertThat(antallSjablonBidragsevne).isEqualTo(1) },
             { assertThat(antallSjablonTrinnvisSkattesats).isEqualTo(1) },
             { assertThat(antallSjablonSamværsfradrag).isEqualTo(1) },

@@ -51,6 +51,7 @@ class BeregnBarnebidragService : BeregnService() {
         )
         val delberegningEndeligBidragResultat = delberegningEndeligBidrag(utvidetGrunnlag)
 
+<<<<<<< HEAD
         val resultatGrunnlagListe =
             (
                 delberegningBidragsevneResultat + delberegningNettoTilsynsutgiftResultat + delberegningUnderholdskostnadResultat +
@@ -59,6 +60,14 @@ class BeregnBarnebidragService : BeregnService() {
                 )
                 .distinctBy { it.referanse }
                 .sortedBy { it.referanse }
+=======
+        val resultatGrunnlagListe = (
+            delberegningBidragsevneResultat + delberegningUnderholdskostnadResultat + delberegningBpAndelUnderholdskostnadResultat +
+                delberegningSamværsfradragResultat + delberegningEndeligBidragResultat
+            )
+            .distinctBy { it.referanse }
+            .sortedBy { it.referanse }
+>>>>>>> main
 
         return BeregnetBarnebidragResultat(
             beregnetBarnebidragPeriodeListe = lagResultatPerioder(delberegningEndeligBidragResultat),
@@ -66,6 +75,47 @@ class BeregnBarnebidragService : BeregnService() {
         )
     }
 
+<<<<<<< HEAD
+=======
+    private fun simulerDelberegningUnderholdskostnad(mottattGrunnlag: BeregnGrunnlag, underholdskostnad: BigDecimal): List<GrunnlagDto> {
+        val underholdskostnadListe = mutableListOf<GrunnlagDto>()
+
+        // Simulerer underholdskostnad
+        val underholdskostnadGrunnlag = GrunnlagDto(
+            referanse = opprettDelberegningreferanse(
+                type = Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD,
+                periode = ÅrMånedsperiode(fom = mottattGrunnlag.periode.fom, til = null),
+                søknadsbarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
+                gjelderReferanse = finnReferanseTilRolle(
+                    grunnlagListe = mottattGrunnlag.grunnlagListe,
+                    grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
+                ),
+            ),
+            type = Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD,
+            innhold = POJONode(
+                DelberegningUnderholdskostnad(
+                    periode = ÅrMånedsperiode(fom = mottattGrunnlag.periode.fom, til = null),
+                    forbruksutgift = BigDecimal.valueOf(100).avrundetMedToDesimaler,
+                    boutgift = BigDecimal.valueOf(500).avrundetMedToDesimaler,
+                    barnetilsynMedStønad = BigDecimal.valueOf(200).avrundetMedToDesimaler,
+                    nettoTilsynsutgift = BigDecimal.valueOf(100).avrundetMedToDesimaler,
+                    barnetrygd = BigDecimal.valueOf(100).avrundetMedToDesimaler,
+                    underholdskostnad = underholdskostnad.avrundetMedToDesimaler,
+                ),
+            ),
+            grunnlagsreferanseListe = emptyList(),
+            gjelderReferanse = finnReferanseTilRolle(
+                grunnlagListe = mottattGrunnlag.grunnlagListe,
+                grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
+            ),
+        )
+
+        underholdskostnadListe.add(underholdskostnadGrunnlag)
+
+        return underholdskostnadListe
+    }
+
+>>>>>>> main
     // Beregning av bidragsevne
     fun beregnBidragsevne(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
         secureLogger.debug { "Beregning av bidragsevne - følgende request mottatt: ${tilJson(mottattGrunnlag)}" }
