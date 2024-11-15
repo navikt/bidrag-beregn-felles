@@ -227,6 +227,42 @@ internal class BeregnNettoTilsynsutgiftApiTest {
         )
     }
 
+    @Test
+    @DisplayName("Netto tilsynsutgift - eksempel 2 test utregning kun faktiske utgifter ")
+    fun testNettoTilsynsutgift_Eksempel02() {
+        filnavn = "src/test/resources/testfiler/nettotilsynsutgift/nettotilsynsutgift_eksempel2_kun_faktiske_utgifter.json"
+        val resultat = utførBeregningerOgEvaluerResultatNettoTilsynsutgift()
+
+        assertAll(
+            { assertThat(resultat).hasSize(1) },
+
+            // Resultat
+            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
+            { assertEquals(0, resultat[0].totaltFaktiskUtgiftBeløp.compareTo(BigDecimal.valueOf(3254.17))) },
+            { assertEquals(0, resultat[0].tilsynsutgiftBarnListe[0].sumFaktiskeUtgifter.compareTo(BigDecimal.valueOf(3254.17))) },
+            { assertEquals(0, resultat[0].tilsynsutgiftBarnListe[0].endeligSumFaktiskeUtgifter.compareTo(BigDecimal.valueOf(3254.17))) },
+            { assertEquals(0, resultat[0].tilsynsutgiftBarnListe[0].tilleggsstønad.compareTo(BigDecimal.ZERO)) },
+        )
+    }
+
+    @Test
+    @DisplayName("Netto tilsynsutgift - eksempel 3 test utregning kun tilleggsstønad ")
+    fun testNettoTilsynsutgift_Eksempel03() {
+        filnavn = "src/test/resources/testfiler/nettotilsynsutgift/nettotilsynsutgift_eksempel3_utregning_tilleggsstønad.json"
+        val resultat = utførBeregningerOgEvaluerResultatNettoTilsynsutgift()
+
+        assertAll(
+            { assertThat(resultat).hasSize(1) },
+
+            // Resultat
+            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
+            { assertEquals(0, resultat[0].totaltFaktiskUtgiftBeløp.compareTo(BigDecimal.ZERO)) },
+            { assertEquals(0, resultat[0].tilsynsutgiftBarnListe[0].sumFaktiskeUtgifter.compareTo(BigDecimal.ZERO)) },
+            { assertEquals(0, resultat[0].tilsynsutgiftBarnListe[0].endeligSumFaktiskeUtgifter.compareTo(BigDecimal.ZERO)) },
+            { assertEquals(0, resultat[0].tilsynsutgiftBarnListe[0].tilleggsstønad.compareTo(BigDecimal.valueOf(585))) },
+        )
+    }
+
     private fun utførBeregningerOgEvaluerResultatNettoTilsynsutgift(): List<DelberegningNettoTilsynsutgift> {
         val request = lesFilOgByggRequest(filnavn)
         val nettoTilsynsutgiftResultat = beregnBarnebidragService.beregnNettoTilsynsutgift(request)
