@@ -117,6 +117,31 @@ class BeregnBarnebidragService : BeregnService() {
         return delberegningUnderholdskostnadResultat
     }
 
+    // Beregning av først netto tilsynsutgift så underholdskostnad
+    fun beregnNettoTilsynsutgiftOgUnderholdskostnad(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
+        secureLogger.debug { "Beregning av netto tilsynsutgift og så underholdskostnad - følgende request mottatt: ${tilJson(mottattGrunnlag)}" }
+
+        // Kontroll av inputdata
+        try {
+            // TODO Bør være mulig å ha null i beregnDatoTil?
+            mottattGrunnlag.valider()
+        } catch (e: IllegalArgumentException) {
+            throw IllegalArgumentException("Ugyldig input ved beregning av underholdskostnad: " + e.message)
+        }
+
+        val delberegningNettoTilsynsutgiftResultat = delberegningNettoTilsynsutgift(mottattGrunnlag)
+
+        val delberegningUnderholdskostnadResultat = delberegningUnderholdskostnad(
+            BeregnGrunnlag(
+                periode = mottattGrunnlag.periode,
+                søknadsbarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
+                grunnlagListe = (mottattGrunnlag.grunnlagListe + delberegningNettoTilsynsutgiftResultat).distinctBy { it.referanse },
+            ),
+        )
+
+        return (delberegningNettoTilsynsutgiftResultat + delberegningUnderholdskostnadResultat).distinctBy { it.referanse }
+    }
+
     // Beregning av BP's andel av underholdskostnad
     fun beregnBpAndelUnderholdskostnad(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
         secureLogger.debug { "Beregning av BP's andel av underholdskostnad - følgende request mottatt: ${tilJson(mottattGrunnlag)}" }
