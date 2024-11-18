@@ -35,7 +35,10 @@ class BeregnBarnebidragService : BeregnService() {
         // Kaller delberegninger
         val delberegningBidragsevneResultat = delberegningBidragsevne(mottattGrunnlag)
         val delberegningNettoTilsynsutgiftResultat = delberegningNettoTilsynsutgift(mottattGrunnlag)
-        val delberegningUnderholdskostnadResultat = delberegningUnderholdskostnad(mottattGrunnlag)
+        var utvidetGrunnlagUnderholdskostnad = mottattGrunnlag.copy(
+            grunnlagListe = (mottattGrunnlag.grunnlagListe + delberegningNettoTilsynsutgiftResultat).distinctBy(GrunnlagDto::referanse),
+        )
+        val delberegningUnderholdskostnadResultat = delberegningUnderholdskostnad(utvidetGrunnlagUnderholdskostnad)
         var utvidetGrunnlag = mottattGrunnlag.copy(
             grunnlagListe = (mottattGrunnlag.grunnlagListe + delberegningUnderholdskostnadResultat).distinctBy(GrunnlagDto::referanse),
         )
@@ -139,7 +142,7 @@ class BeregnBarnebidragService : BeregnService() {
             ),
         )
 
-        return delberegningNettoTilsynsutgiftResultat + delberegningUnderholdskostnadResultat
+        return (delberegningNettoTilsynsutgiftResultat + delberegningUnderholdskostnadResultat).distinctBy { it.referanse }
     }
 
     // Beregning av BP's andel av underholdskostnad
