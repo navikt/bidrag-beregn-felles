@@ -20,7 +20,7 @@ internal object UnderholdskostnadBeregning {
             sjablonverdiForbruksutgifterBeløp.add(sjablonverdiBoutgifterBidragsbarn).add(sjablonverdiBarnetilsynBeløp ?: BigDecimal.ZERO).add(
                 grunnlag.nettoTilsynsutgiftBeregningGrunnlag?.nettoTilsynsutgift ?: BigDecimal.ZERO,
             ).subtract(sjablonverdiBarnetrygd)
-            ).coerceAtLeast(BigDecimal.ZERO)
+            )
 
         val underholdskostnadBeregningResultat = UnderholdskostnadBeregningResultat(
             forbruksutgift = sjablonverdiForbruksutgifterBeløp.avrundetMedToDesimaler,
