@@ -59,7 +59,8 @@ internal object NettoTilsynsutgiftBeregning {
                     endeligSumFaktiskeUtgifter = bruttoTilsynsutgift.avrundetMedToDesimaler,
                     skattefradragsbeløpPerBarn = skattefradragsbeløpPerBarn.avrundetMedToDesimaler,
                     tilleggsstønad = tilleggsstønadBeløp.avrundetMedToDesimaler,
-                    nettoTilsynsutgift = (bruttoTilsynsutgift - skattefradragsbeløpPerBarn - tilleggsstønadBeløp).avrundetMedToDesimaler,
+                    nettoTilsynsutgift = (bruttoTilsynsutgift - skattefradragsbeløpPerBarn - tilleggsstønadBeløp).avrundetMedToDesimaler
+                        .coerceAtLeast(BigDecimal.ZERO),
                 ),
             )
         }
