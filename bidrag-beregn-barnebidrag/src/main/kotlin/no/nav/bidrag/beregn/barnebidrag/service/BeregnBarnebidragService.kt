@@ -35,8 +35,11 @@ class BeregnBarnebidragService : BeregnService() {
         // Kaller delberegninger
         val delberegningBidragsevneResultat = delberegningBidragsevne(mottattGrunnlag)
         val delberegningNettoTilsynsutgiftResultat = delberegningNettoTilsynsutgift(mottattGrunnlag)
-        val delberegningUnderholdskostnadResultat = delberegningUnderholdskostnad(mottattGrunnlag)
         var utvidetGrunnlag = mottattGrunnlag.copy(
+            grunnlagListe = (mottattGrunnlag.grunnlagListe + delberegningNettoTilsynsutgiftResultat).distinctBy(GrunnlagDto::referanse),
+        )
+        val delberegningUnderholdskostnadResultat = delberegningUnderholdskostnad(utvidetGrunnlag)
+        utvidetGrunnlag = mottattGrunnlag.copy(
             grunnlagListe = (mottattGrunnlag.grunnlagListe + delberegningUnderholdskostnadResultat).distinctBy(GrunnlagDto::referanse),
         )
         val delberegningBpAndelUnderholdskostnadResultat = delberegningBpAndelUnderholdskostnad(utvidetGrunnlag)
