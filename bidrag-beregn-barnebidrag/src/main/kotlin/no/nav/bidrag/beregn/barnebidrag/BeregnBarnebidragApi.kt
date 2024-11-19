@@ -1,13 +1,12 @@
 package no.nav.bidrag.beregn.barnebidrag
 
-import no.nav.bidrag.beregn.barnebidrag.bo.BeregnMånedsbeløpRequest
-import no.nav.bidrag.beregn.barnebidrag.bo.BeregnMånedsbeløpResponse
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnebidragService
 import no.nav.bidrag.commons.service.sjablon.EnableSjablonProvider
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 
 /**
  * BeregnBarnebidragApi eksponerer api for å beregne barnebidrag.
@@ -31,8 +30,10 @@ import org.springframework.stereotype.Service
 class BeregnBarnebidragApi {
     private val service = BeregnBarnebidragService()
 
-    fun beregnMånedsbeløpFaktiskeUtgifterTilleggsstønad(beregnMånedsbeløpRequest: BeregnMånedsbeløpRequest): BeregnMånedsbeløpResponse =
-        service.beregnMånedsbeløp(beregnMånedsbeløpRequest)
+    fun beregnMånedsbeløpFaktiskeUtgifter(faktiskUtgift: BigDecimal?, kostpenger: BigDecimal?): BigDecimal? =
+        service.beregnMånedsbeløpFaktiskUtgift(faktiskUtgift, kostpenger)
+
+    fun beregnMånedsbeløpTilleggsstønad(tilleggsstønad: BigDecimal?): BigDecimal? = service.beregnMånedsbeløpTilleggsstønad(tilleggsstønad)
 
     fun beregn(beregnGrunnlag: BeregnGrunnlag): BeregnetBarnebidragResultat = service.beregnBarnebidrag(beregnGrunnlag)
 

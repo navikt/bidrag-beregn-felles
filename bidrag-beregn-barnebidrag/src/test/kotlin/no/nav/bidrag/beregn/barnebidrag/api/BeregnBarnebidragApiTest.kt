@@ -3,7 +3,6 @@ package no.nav.bidrag.beregn.barnebidrag.api
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import no.nav.bidrag.beregn.barnebidrag.bo.BeregnMånedsbeløpRequest
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnebidragService
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
@@ -467,49 +466,45 @@ internal class BeregnBarnebidragApiTest {
     @Test
     @DisplayName("Beregn månedsbeløp faktisk utgift og tilleggsstønad")
     fun testBeregnMånedsbeløpFaktiskUtgiftTilleggsstønad() {
-        val request = BeregnMånedsbeløpRequest(
-            faktiskUtgift = BigDecimal.valueOf(1000),
-            kostpengerBeløp = BigDecimal.valueOf(400),
-            tilleggsstønad = BigDecimal.valueOf(17),
-        )
+        val faktiskUtgift = BigDecimal.valueOf(1000)
+        val kostpenger = BigDecimal.valueOf(400)
+        val tilleggsstønad = BigDecimal.valueOf(17)
 
-        val response = beregnBarnebidragService.beregnMånedsbeløp(request)
+        val responseFaktiskUtgift = beregnBarnebidragService.beregnMånedsbeløpFaktiskUtgift(faktiskUtgift, kostpenger)
+        val responseTilleggsstønad = beregnBarnebidragService.beregnMånedsbeløpTilleggsstønad(tilleggsstønad)
 
-        assertThat(response.beregnetMånedsbeløpFaktiskUtgift).isEqualByComparingTo(BigDecimal.valueOf(550))
-        assertThat(response.beregnetMånedsbeløpTilleggsstønad).isEqualByComparingTo(BigDecimal.valueOf(368.33))
+        assertThat(responseFaktiskUtgift).isEqualByComparingTo(BigDecimal.valueOf(550))
+        assertThat(responseTilleggsstønad).isEqualByComparingTo(BigDecimal.valueOf(368.33))
 
-        val request2 = BeregnMånedsbeløpRequest(
-            faktiskUtgift = BigDecimal.valueOf(500),
-            kostpengerBeløp = null,
-            tilleggsstønad = null,
-        )
+        val faktiskUtgift2 = BigDecimal.valueOf(500)
+        val kostpenger2 = null
+        val tilleggsstønad2 = null
 
-        val response2 = beregnBarnebidragService.beregnMånedsbeløp(request2)
+        val responseFaktiskUtgift2 = beregnBarnebidragService.beregnMånedsbeløpFaktiskUtgift(faktiskUtgift2, kostpenger2)
+        val responseTilleggsstønad2 = beregnBarnebidragService.beregnMånedsbeløpTilleggsstønad(tilleggsstønad2)
 
-        assertThat(response2.beregnetMånedsbeløpFaktiskUtgift).isEqualByComparingTo(BigDecimal.valueOf(458.33))
-        assertThat(response2.beregnetMånedsbeløpTilleggsstønad).isNull()
+        assertThat(responseFaktiskUtgift2).isEqualByComparingTo(BigDecimal.valueOf(458.33))
+        assertThat(responseTilleggsstønad2).isNull()
 
-        val request3 = BeregnMånedsbeløpRequest(
-            faktiskUtgift = null,
-            kostpengerBeløp = null,
-            tilleggsstønad = null,
-        )
+        val faktiskUtgift3 = null
+        val kostpenger3 = null
+        val tilleggsstønad3 = null
 
-        val response3 = beregnBarnebidragService.beregnMånedsbeløp(request3)
+        val responseFaktiskUtgift3 = beregnBarnebidragService.beregnMånedsbeløpFaktiskUtgift(faktiskUtgift3, kostpenger3)
+        val responseTilleggsstønad3 = beregnBarnebidragService.beregnMånedsbeløpTilleggsstønad(tilleggsstønad3)
 
-        assertThat(response3.beregnetMånedsbeløpFaktiskUtgift).isNull()
-        assertThat(response3.beregnetMånedsbeløpTilleggsstønad).isNull()
+        assertThat(responseFaktiskUtgift3).isNull()
+        assertThat(responseTilleggsstønad3).isNull()
 
-        val request4 = BeregnMånedsbeløpRequest(
-            faktiskUtgift = null,
-            kostpengerBeløp = BigDecimal.TEN,
-            tilleggsstønad = null,
-        )
+        val faktiskUtgift4 = null
+        val kostpenger4 = BigDecimal.TEN
+        val tilleggsstønad4 = null
 
-        val response4 = beregnBarnebidragService.beregnMånedsbeløp(request4)
+        val responseFaktiskUtgift4 = beregnBarnebidragService.beregnMånedsbeløpFaktiskUtgift(faktiskUtgift4, kostpenger4)
+        val responseTilleggsstønad4 = beregnBarnebidragService.beregnMånedsbeløpTilleggsstønad(tilleggsstønad4)
 
-        assertThat(response4.beregnetMånedsbeløpFaktiskUtgift).isNull()
-        assertThat(response4.beregnetMånedsbeløpTilleggsstønad).isNull()
+        assertThat(responseFaktiskUtgift4).isNull()
+        assertThat(responseTilleggsstønad4).isNull()
     }
 
     fun hentAlleReferanser(resultatGrunnlagListe: List<GrunnlagDto>) = resultatGrunnlagListe

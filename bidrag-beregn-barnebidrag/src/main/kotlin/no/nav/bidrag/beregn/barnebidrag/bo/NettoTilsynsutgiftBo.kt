@@ -69,7 +69,3 @@ data class TilleggsstønadPeriode(
 data class DelberegningFaktiskTilsynsutgift(override val periode: ÅrMånedsperiode, val beregnetBeløp: BigDecimal) : Delberegning
 
 data class DelberegningTilleggsstønad(override val periode: ÅrMånedsperiode, val beregnetBeløp: BigDecimal) : Delberegning
-
-data class BeregnMånedsbeløpRequest(val faktiskUtgift: BigDecimal?, val kostpengerBeløp: BigDecimal?, val tilleggsstønad: BigDecimal?)
-
-data class BeregnMånedsbeløpResponse(val beregnetMånedsbeløpFaktiskUtgift: BigDecimal?, val beregnetMånedsbeløpTilleggsstønad: BigDecimal?)

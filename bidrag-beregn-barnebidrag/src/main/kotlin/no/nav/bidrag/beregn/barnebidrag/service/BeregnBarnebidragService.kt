@@ -1,7 +1,5 @@
 package no.nav.bidrag.beregn.barnebidrag.service
 
-import no.nav.bidrag.beregn.barnebidrag.bo.BeregnMånedsbeløpRequest
-import no.nav.bidrag.beregn.barnebidrag.bo.BeregnMånedsbeløpResponse
 import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.beregnBeløpFaktiskUtgift
 import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.beregnBeløpTilleggsstønad
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBidragsevneService.delberegningBidragsevne
@@ -22,6 +20,7 @@ import no.nav.bidrag.transport.behandling.beregning.felles.valider
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
+import java.math.BigDecimal
 
 class BeregnBarnebidragService : BeregnService() {
 
@@ -217,18 +216,14 @@ class BeregnBarnebidragService : BeregnService() {
             )
         }
 
-    fun beregnMånedsbeløp(request: BeregnMånedsbeløpRequest): BeregnMånedsbeløpResponse {
-        val beregnetMånedsbeløpFaktiskUtgift = request.faktiskUtgift?.let {
-            beregnBeløpFaktiskUtgift(it, request.kostpengerBeløp)
+    fun beregnMånedsbeløpFaktiskUtgift(faktiskUtgift: BigDecimal?, kostpenger: BigDecimal?): BigDecimal? {
+        val beregnetMånedsbeløpFaktiskUtgift = faktiskUtgift?.let {
+            beregnBeløpFaktiskUtgift(it, kostpenger)
         }
+        return beregnetMånedsbeløpFaktiskUtgift?.avrundetMedToDesimaler
+    }
 
-        val beregnetMånedsbeløpTilleggsstønad = request.tilleggsstønad?.let {
-            beregnBeløpTilleggsstønad(it)
-        }
-
-        return BeregnMånedsbeløpResponse(
-            beregnetMånedsbeløpFaktiskUtgift = beregnetMånedsbeløpFaktiskUtgift?.avrundetMedToDesimaler,
-            beregnetMånedsbeløpTilleggsstønad = beregnetMånedsbeløpTilleggsstønad?.avrundetMedToDesimaler,
-        )
+    fun beregnMånedsbeløpTilleggsstønad(tilleggsstønad: BigDecimal?): BigDecimal? = tilleggsstønad?.let {
+        beregnBeløpTilleggsstønad(it).avrundetMedToDesimaler
     }
 }
