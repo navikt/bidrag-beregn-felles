@@ -1,5 +1,9 @@
 package no.nav.bidrag.beregn.barnebidrag.service
 
+import no.nav.bidrag.beregn.barnebidrag.bo.BeregnMånedsbeløpRequest
+import no.nav.bidrag.beregn.barnebidrag.bo.BeregnMånedsbeløpResponse
+import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.beregnBeløpFaktiskUtgift
+import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.beregnBeløpTilleggsstønad
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBidragsevneService.delberegningBidragsevne
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBpAndelUnderholdskostnadService.delberegningBpAndelUnderholdskostnad
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnEndeligBidragService.delberegningEndeligBidrag
@@ -9,6 +13,7 @@ import no.nav.bidrag.beregn.barnebidrag.service.BeregnUnderholdskostnadService.d
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
+import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatBeregning
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatPeriode
@@ -211,4 +216,19 @@ class BeregnBarnebidragService : BeregnService() {
                 grunnlagsreferanseListe = listOf(it.referanse),
             )
         }
+
+    fun beregnMånedsbeløp(request: BeregnMånedsbeløpRequest): BeregnMånedsbeløpResponse {
+        val beregnetMånedsbeløpFaktiskUtgift = request.faktiskUtgift?.let {
+            beregnBeløpFaktiskUtgift(it, request.kostpengerBeløp)
+        }
+
+        val beregnetMånedsbeløpTilleggsstønad = request.tilleggsstønad?.let {
+            beregnBeløpTilleggsstønad(it)
+        }
+
+        return BeregnMånedsbeløpResponse(
+            beregnetMånedsbeløpFaktiskUtgift = beregnetMånedsbeløpFaktiskUtgift?.avrundetMedToDesimaler,
+            beregnetMånedsbeløpTilleggsstønad = beregnetMånedsbeløpTilleggsstønad?.avrundetMedToDesimaler,
+        )
+    }
 }

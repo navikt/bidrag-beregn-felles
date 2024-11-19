@@ -1,5 +1,7 @@
 package no.nav.bidrag.beregn.barnebidrag
 
+import no.nav.bidrag.beregn.barnebidrag.bo.BeregnMånedsbeløpRequest
+import no.nav.bidrag.beregn.barnebidrag.bo.BeregnMånedsbeløpResponse
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnebidragService
 import no.nav.bidrag.commons.service.sjablon.EnableSjablonProvider
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
@@ -29,10 +31,12 @@ import org.springframework.stereotype.Service
 class BeregnBarnebidragApi {
     private val service = BeregnBarnebidragService()
 
+    fun beregnMånedsbeløpFaktiskeUtgifterTilleggsstønad(beregnMånedsbeløpRequest: BeregnMånedsbeløpRequest): BeregnMånedsbeløpResponse =
+        service.beregnMånedsbeløp(beregnMånedsbeløpRequest)
+
     fun beregn(beregnGrunnlag: BeregnGrunnlag): BeregnetBarnebidragResultat = service.beregnBarnebidrag(beregnGrunnlag)
 
     fun beregnBidragsevne(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnBidragsevne(beregnGrunnlag)
-
     fun beregnNettoTilsynsutgift(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnNettoTilsynsutgift(beregnGrunnlag)
 
     fun beregnUnderholdskostnad(beregnGrunnlag: BeregnGrunnlag) = service.beregnUnderholdskostnad(beregnGrunnlag)
