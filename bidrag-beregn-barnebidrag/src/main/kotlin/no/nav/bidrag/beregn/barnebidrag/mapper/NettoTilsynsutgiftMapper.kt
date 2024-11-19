@@ -138,11 +138,11 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
         }
     }
 
-    private fun beregnBeløpFaktiskUtgift(faktiskUtgiftBeløp: BigDecimal, kostpengerBeløp: BigDecimal): BigDecimal =
-        faktiskUtgiftBeløp.minus(kostpengerBeløp).multiply(BigDecimal.valueOf(11))
+    fun beregnBeløpFaktiskUtgift(faktiskUtgiftBeløp: BigDecimal, kostpengerBeløp: BigDecimal?): BigDecimal =
+        faktiskUtgiftBeløp.minus(kostpengerBeløp ?: BigDecimal.ZERO).multiply(BigDecimal.valueOf(11))
             .divide(BigDecimal.valueOf(12), 10, RoundingMode.HALF_UP)
 
-    private fun beregnBeløpTilleggsstønad(beløpDagsats: BigDecimal): BigDecimal =
+    fun beregnBeløpTilleggsstønad(beløpDagsats: BigDecimal): BigDecimal =
         beløpDagsats.multiply(BigDecimal.valueOf(260)).divide(BigDecimal.valueOf(12), 10, RoundingMode.HALF_UP)
 
     fun finnFødselsdatoBarn(beregnGrunnlag: List<GrunnlagDto>, referanse: String): LocalDate =
