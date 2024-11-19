@@ -202,28 +202,64 @@ internal class BeregnNettoTilsynsutgiftApiTest {
 
             // Resultat
             { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode("2024-01", "2024-02")) },
-            { assertEquals(0, resultat[0].totaltFaktiskUtgiftBeløp.compareTo(BigDecimal.valueOf(436.36))) },
-            { assertEquals(0, resultat[0].tilsynsutgiftBarnListe[0].sumFaktiskeUtgifter.compareTo(BigDecimal.valueOf(436.36))) },
-            { assertEquals(0, resultat[0].tilsynsutgiftBarnListe[0].endeligSumFaktiskeUtgifter.compareTo(BigDecimal.valueOf(436.36))) },
-            { assertEquals(0, resultat[0].tilsynsutgiftBarnListe[0].skattefradragsbeløpPerBarn.compareTo(BigDecimal.valueOf(108.44))) },
+            { assertEquals(0, resultat[0].totaltFaktiskUtgiftBeløp.compareTo(BigDecimal.valueOf(366.67))) },
+            { assertEquals(0, resultat[0].tilsynsutgiftBarnListe[0].sumFaktiskeUtgifter.compareTo(BigDecimal.valueOf(366.67))) },
+            { assertEquals(0, resultat[0].tilsynsutgiftBarnListe[0].endeligSumFaktiskeUtgifter.compareTo(BigDecimal.valueOf(366.67))) },
+            { assertEquals(0, resultat[0].tilsynsutgiftBarnListe[0].skattefradragsbeløpPerBarn.compareTo(BigDecimal.valueOf(91.12))) },
             { assertEquals(0, resultat[0].tilsynsutgiftBarnListe[0].tilleggsstønad.compareTo(BigDecimal.ZERO)) },
-            { assertEquals(0, resultat[0].tilsynsutgiftBarnListe[0].nettoTilsynsutgift.compareTo(BigDecimal.valueOf(300.6))) },
+            { assertEquals(0, resultat[0].tilsynsutgiftBarnListe[0].nettoTilsynsutgift.compareTo(BigDecimal.valueOf(275.55))) },
 
             { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode("2024-02", "2024-07")) },
-            { assertEquals(0, resultat[1].totaltFaktiskUtgiftBeløp.compareTo(BigDecimal.valueOf(2072.73))) },
-            { assertEquals(0, resultat[1].tilsynsutgiftBarnListe[0].sumFaktiskeUtgifter.compareTo(BigDecimal.valueOf(2072.73))) },
-            { assertEquals(0, resultat[1].tilsynsutgiftBarnListe[0].endeligSumFaktiskeUtgifter.compareTo(BigDecimal.valueOf(2072.73))) },
-            { assertEquals(0, resultat[1].tilsynsutgiftBarnListe[0].skattefradragsbeløpPerBarn.compareTo(BigDecimal.valueOf(515.07))) },
+            { assertEquals(0, resultat[1].totaltFaktiskUtgiftBeløp.compareTo(BigDecimal.valueOf(1741.67))) },
+            { assertEquals(0, resultat[1].tilsynsutgiftBarnListe[0].sumFaktiskeUtgifter.compareTo(BigDecimal.valueOf(1741.67))) },
+            { assertEquals(0, resultat[1].tilsynsutgiftBarnListe[0].endeligSumFaktiskeUtgifter.compareTo(BigDecimal.valueOf(1741.67))) },
+            { assertEquals(0, resultat[1].tilsynsutgiftBarnListe[0].skattefradragsbeløpPerBarn.compareTo(BigDecimal.valueOf(432.80))) },
             { assertEquals(0, resultat[1].tilsynsutgiftBarnListe[0].tilleggsstønad.compareTo(BigDecimal.valueOf(216.67))) },
-            { assertEquals(0, resultat[1].tilsynsutgiftBarnListe[0].nettoTilsynsutgift.compareTo(BigDecimal.valueOf(1229.24))) },
+            { assertEquals(0, resultat[1].tilsynsutgiftBarnListe[0].nettoTilsynsutgift.compareTo(BigDecimal.valueOf(1092.20))) },
 
             { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
-            { assertEquals(0, resultat[2].totaltFaktiskUtgiftBeløp.compareTo(BigDecimal.valueOf(2072.73))) },
-            { assertEquals(0, resultat[2].tilsynsutgiftBarnListe[0].sumFaktiskeUtgifter.compareTo(BigDecimal.valueOf(2072.73))) },
-            { assertEquals(0, resultat[2].tilsynsutgiftBarnListe[0].endeligSumFaktiskeUtgifter.compareTo(BigDecimal.valueOf(2072.73))) },
-            { assertEquals(0, resultat[2].tilsynsutgiftBarnListe[0].skattefradragsbeløpPerBarn.compareTo(BigDecimal.valueOf(515.07))) },
+            { assertEquals(0, resultat[2].totaltFaktiskUtgiftBeløp.compareTo(BigDecimal.valueOf(1741.67))) },
+            { assertEquals(0, resultat[2].tilsynsutgiftBarnListe[0].sumFaktiskeUtgifter.compareTo(BigDecimal.valueOf(1741.67))) },
+            { assertEquals(0, resultat[2].tilsynsutgiftBarnListe[0].endeligSumFaktiskeUtgifter.compareTo(BigDecimal.valueOf(1741.67))) },
+            { assertEquals(0, resultat[2].tilsynsutgiftBarnListe[0].skattefradragsbeløpPerBarn.compareTo(BigDecimal.valueOf(432.80))) },
             { assertEquals(0, resultat[2].tilsynsutgiftBarnListe[0].tilleggsstønad.compareTo(BigDecimal.valueOf(216.67))) },
-            { assertEquals(0, resultat[2].tilsynsutgiftBarnListe[0].nettoTilsynsutgift.compareTo(BigDecimal.valueOf(1229.24))) },
+            { assertEquals(0, resultat[2].tilsynsutgiftBarnListe[0].nettoTilsynsutgift.compareTo(BigDecimal.valueOf(1092.20))) },
+        )
+    }
+
+    @Test
+    @DisplayName("Netto tilsynsutgift - eksempel 2 test utregning kun faktiske utgifter ")
+    fun testNettoTilsynsutgift_Eksempel02() {
+        filnavn = "src/test/resources/testfiler/nettotilsynsutgift/nettotilsynsutgift_eksempel2_kun_faktiske_utgifter.json"
+        val resultat = utførBeregningerOgEvaluerResultatNettoTilsynsutgift()
+
+        assertAll(
+            { assertThat(resultat).hasSize(1) },
+
+            // Resultat
+            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
+            { assertEquals(0, resultat[0].totaltFaktiskUtgiftBeløp.compareTo(BigDecimal.valueOf(3254.17))) },
+            { assertEquals(0, resultat[0].tilsynsutgiftBarnListe[0].sumFaktiskeUtgifter.compareTo(BigDecimal.valueOf(3254.17))) },
+            { assertEquals(0, resultat[0].tilsynsutgiftBarnListe[0].endeligSumFaktiskeUtgifter.compareTo(BigDecimal.valueOf(3254.17))) },
+            { assertEquals(0, resultat[0].tilsynsutgiftBarnListe[0].tilleggsstønad.compareTo(BigDecimal.ZERO)) },
+        )
+    }
+
+    @Test
+    @DisplayName("Netto tilsynsutgift - eksempel 3 test utregning kun tilleggsstønad ")
+    fun testNettoTilsynsutgift_Eksempel03() {
+        filnavn = "src/test/resources/testfiler/nettotilsynsutgift/nettotilsynsutgift_eksempel3_utregning_tilleggsstønad.json"
+        val resultat = utførBeregningerOgEvaluerResultatNettoTilsynsutgift()
+
+        assertAll(
+            { assertThat(resultat).hasSize(1) },
+
+            // Resultat
+            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
+            { assertEquals(0, resultat[0].totaltFaktiskUtgiftBeløp.compareTo(BigDecimal.ZERO)) },
+            { assertEquals(0, resultat[0].tilsynsutgiftBarnListe[0].sumFaktiskeUtgifter.compareTo(BigDecimal.ZERO)) },
+            { assertEquals(0, resultat[0].tilsynsutgiftBarnListe[0].endeligSumFaktiskeUtgifter.compareTo(BigDecimal.ZERO)) },
+            { assertEquals(0, resultat[0].tilsynsutgiftBarnListe[0].tilleggsstønad.compareTo(BigDecimal.valueOf(585))) },
         )
     }
 
