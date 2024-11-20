@@ -216,14 +216,8 @@ class BeregnBarnebidragService : BeregnService() {
             )
         }
 
-    fun beregnMånedsbeløpFaktiskUtgift(faktiskUtgift: BigDecimal?, kostpenger: BigDecimal?): BigDecimal? {
-        val beregnetMånedsbeløpFaktiskUtgift = faktiskUtgift?.let {
-            beregnBeløpFaktiskUtgift(it, kostpenger)
-        }
-        return beregnetMånedsbeløpFaktiskUtgift?.avrundetMedToDesimaler
-    }
+    fun beregnMånedsbeløpFaktiskUtgift(faktiskUtgift: BigDecimal, kostpenger: BigDecimal = BigDecimal.ZERO): BigDecimal =
+        beregnBeløpFaktiskUtgift(faktiskUtgift, kostpenger).avrundetMedToDesimaler
 
-    fun beregnMånedsbeløpTilleggsstønad(tilleggsstønad: BigDecimal?): BigDecimal? = tilleggsstønad?.let {
-        beregnBeløpTilleggsstønad(it).avrundetMedToDesimaler
-    }
+    fun beregnMånedsbeløpTilleggsstønad(tilleggsstønad: BigDecimal): BigDecimal = beregnBeløpTilleggsstønad(tilleggsstønad).avrundetMedToDesimaler
 }

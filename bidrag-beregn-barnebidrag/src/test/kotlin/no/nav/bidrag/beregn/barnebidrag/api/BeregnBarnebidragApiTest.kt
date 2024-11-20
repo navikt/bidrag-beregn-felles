@@ -468,43 +468,18 @@ internal class BeregnBarnebidragApiTest {
     fun testBeregnMånedsbeløpFaktiskUtgiftTilleggsstønad() {
         val faktiskUtgift = BigDecimal.valueOf(1000)
         val kostpenger = BigDecimal.valueOf(400)
-        val tilleggsstønad = BigDecimal.valueOf(17)
-
         val responseFaktiskUtgift = beregnBarnebidragService.beregnMånedsbeløpFaktiskUtgift(faktiskUtgift, kostpenger)
+
+        val tilleggsstønad = BigDecimal.valueOf(17)
         val responseTilleggsstønad = beregnBarnebidragService.beregnMånedsbeløpTilleggsstønad(tilleggsstønad)
 
         assertThat(responseFaktiskUtgift).isEqualByComparingTo(BigDecimal.valueOf(550))
         assertThat(responseTilleggsstønad).isEqualByComparingTo(BigDecimal.valueOf(368.33))
 
+        // Test uten angitt kostpenger, default er BigDecimal.ZERO
         val faktiskUtgift2 = BigDecimal.valueOf(500)
-        val kostpenger2 = null
-        val tilleggsstønad2 = null
-
-        val responseFaktiskUtgift2 = beregnBarnebidragService.beregnMånedsbeløpFaktiskUtgift(faktiskUtgift2, kostpenger2)
-        val responseTilleggsstønad2 = beregnBarnebidragService.beregnMånedsbeløpTilleggsstønad(tilleggsstønad2)
-
+        val responseFaktiskUtgift2 = beregnBarnebidragService.beregnMånedsbeløpFaktiskUtgift(faktiskUtgift2)
         assertThat(responseFaktiskUtgift2).isEqualByComparingTo(BigDecimal.valueOf(458.33))
-        assertThat(responseTilleggsstønad2).isNull()
-
-        val faktiskUtgift3 = null
-        val kostpenger3 = null
-        val tilleggsstønad3 = null
-
-        val responseFaktiskUtgift3 = beregnBarnebidragService.beregnMånedsbeløpFaktiskUtgift(faktiskUtgift3, kostpenger3)
-        val responseTilleggsstønad3 = beregnBarnebidragService.beregnMånedsbeløpTilleggsstønad(tilleggsstønad3)
-
-        assertThat(responseFaktiskUtgift3).isNull()
-        assertThat(responseTilleggsstønad3).isNull()
-
-        val faktiskUtgift4 = null
-        val kostpenger4 = BigDecimal.TEN
-        val tilleggsstønad4 = null
-
-        val responseFaktiskUtgift4 = beregnBarnebidragService.beregnMånedsbeløpFaktiskUtgift(faktiskUtgift4, kostpenger4)
-        val responseTilleggsstønad4 = beregnBarnebidragService.beregnMånedsbeløpTilleggsstønad(tilleggsstønad4)
-
-        assertThat(responseFaktiskUtgift4).isNull()
-        assertThat(responseTilleggsstønad4).isNull()
     }
 
     fun hentAlleReferanser(resultatGrunnlagListe: List<GrunnlagDto>) = resultatGrunnlagListe
