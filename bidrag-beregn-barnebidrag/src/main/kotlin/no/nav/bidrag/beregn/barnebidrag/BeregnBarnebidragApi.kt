@@ -30,10 +30,10 @@ import java.math.BigDecimal
 class BeregnBarnebidragApi {
     private val service = BeregnBarnebidragService()
 
-    fun beregnMånedsbeløpFaktiskeUtgifter(faktiskUtgift: BigDecimal?, kostpenger: BigDecimal?): BigDecimal? =
+    fun beregnMånedsbeløpFaktiskeUtgifter(faktiskUtgift: BigDecimal, kostpenger: BigDecimal): BigDecimal? =
         service.beregnMånedsbeløpFaktiskUtgift(faktiskUtgift, kostpenger)
 
-    fun beregnMånedsbeløpTilleggsstønad(tilleggsstønad: BigDecimal?): BigDecimal? = service.beregnMånedsbeløpTilleggsstønad(tilleggsstønad)
+    fun beregnMånedsbeløpTilleggsstønad(tilleggsstønad: BigDecimal): BigDecimal = service.beregnMånedsbeløpTilleggsstønad(tilleggsstønad)
 
     fun beregn(beregnGrunnlag: BeregnGrunnlag): BeregnetBarnebidragResultat = service.beregnBarnebidrag(beregnGrunnlag)
 
