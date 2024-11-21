@@ -3,7 +3,7 @@ package no.nav.bidrag.beregn.barnebidrag.beregning
 import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilleggBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragBeregningResultat
-import no.nav.bidrag.domene.enums.beregning.Resultatkode
+import no.nav.bidrag.domene.util.avrundetMedTiDesimaler
 import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import no.nav.bidrag.domene.util.avrundetTilNærmesteTier
 import java.math.BigDecimal
@@ -14,80 +14,120 @@ internal object EndeligBidragBeregning {
     val bigDecimal12 = BigDecimal.valueOf(12)
 
     fun beregn(grunnlag: EndeligBidragBeregningGrunnlag): EndeligBidragBeregningResultat {
-        // Hvis barnet er selvforsørget gjøres det ingen videre beregning (standardverdier benyttes for alt bortsett fra resultatkode og referanser)
+        // Hvis barnet er selvforsørget gjøres det ingen videre beregning
         if (grunnlag.bpAndelUnderholdskostnadBeregningGrunnlag.barnetErSelvforsørget) {
             return EndeligBidragBeregningResultat(
-                resultatKode = Resultatkode.BARNET_ER_SELVFORSØRGET,
+                barnetErSelvforsørget = true,
                 grunnlagsreferanseListe = listOf(grunnlag.bpAndelUnderholdskostnadBeregningGrunnlag.referanse),
             )
         }
 
-        // Justerer BP's andel hvis det er delt bosted
-        val bpAndelJustert = justerBpAndel(grunnlag)
+        val bidragsevne = grunnlag.bidragsevneBeregningGrunnlag.beløp
+        val sumInntekt25Prosent = grunnlag.bidragsevneBeregningGrunnlag.sumInntekt25Prosent
+        val samværsfradrag = grunnlag.samværsfradragBeregningGrunnlag.beløp
+        val underholdskostnad = grunnlag.underholdskostnadBeregningGrunnlag.beløp
+        val bpAndelBeløp = grunnlag.bpAndelUnderholdskostnadBeregningGrunnlag.andelBeløp
+
+        val bruttoBidragJustertForEvneOg25Prosent: BigDecimal
+        val bidragJustertNedTilEvne: Boolean
+        val bidragJustertNedTil25ProsentAvInntekt: Boolean
+
+        // Hvis det er delt bosted gjøres det ingen videre beregning og evt. barnetillegg hensyntas ikke
+        if (grunnlag.deltBostedBeregningGrunnlag.deltBosted) {
+
+            // Justerer BP's andel hvis det er delt bosted
+            val bpAndelJustert = justerBpAndel(grunnlag)
+
+            // Setter kostnadsberegnet bidrag lik laveste verdi av BP's andel av U, bidragsevne og 25% av inntekt
+            bruttoBidragJustertForEvneOg25Prosent = minOf(bpAndelJustert.beløp, bidragsevne, sumInntekt25Prosent)
+            bidragJustertNedTilEvne = (bidragsevne < bpAndelJustert.beløp) && (bidragsevne <= sumInntekt25Prosent)
+            bidragJustertNedTil25ProsentAvInntekt = (sumInntekt25Prosent < bpAndelJustert.beløp) && (sumInntekt25Prosent <= bidragsevne)
+
+            return EndeligBidragBeregningResultat(
+                beregnetBeløp = bruttoBidragJustertForEvneOg25Prosent.avrundetMedToDesimaler,
+                resultatBeløp = bruttoBidragJustertForEvneOg25Prosent.avrundetTilNærmesteTier,
+                bruttoBidragJustertForEvneOg25Prosent = bruttoBidragJustertForEvneOg25Prosent.avrundetMedToDesimaler,
+                nettoBidragEtterSamværsfradrag = bruttoBidragJustertForEvneOg25Prosent.avrundetMedToDesimaler,
+                bpAndelAvUVedDeltBostedFaktor = bpAndelJustert.andel.avrundetMedTiDesimaler,
+                bpAndelAvUVedDeltBostedBeløp = bpAndelJustert.beløp.avrundetMedToDesimaler,
+                bidragJustertForDeltBosted = true,
+                bidragJustertNedTilEvne = bidragJustertNedTilEvne,
+                bidragJustertNedTil25ProsentAvInntekt = bidragJustertNedTil25ProsentAvInntekt,
+                grunnlagsreferanseListe = listOf(
+                    grunnlag.bidragsevneBeregningGrunnlag.referanse,
+                    grunnlag.underholdskostnadBeregningGrunnlag.referanse,
+                    grunnlag.bpAndelUnderholdskostnadBeregningGrunnlag.referanse,
+                    grunnlag.samværsfradragBeregningGrunnlag.referanse,
+                    grunnlag.deltBostedBeregningGrunnlag.referanse,
+                ),
+            )
+        }
 
         // Beregner netto barnetillegg for BP og BM
         val nettoBarnetilleggBP = beregnNettoBarnetillegg(grunnlag.barnetilleggBPBeregningGrunnlag)
         val nettoBarnetilleggBM = beregnNettoBarnetillegg(grunnlag.barnetilleggBMBeregningGrunnlag)
-
-        // Finner maksverdi av bidragsevne og 25% av inntekt
-        val maksBidragsbeløp = minOf(grunnlag.bidragsevneBeregningGrunnlag.beløp, grunnlag.bidragsevneBeregningGrunnlag.sumInntekt25Prosent)
-        val bidragRedusertAvBidragsevne = grunnlag.bidragsevneBeregningGrunnlag.beløp <= grunnlag.bidragsevneBeregningGrunnlag.sumInntekt25Prosent
-
-        // Beregner kostnadsberegnet bidrag og bruker det som utgangspunkt for videre beregning
-        var resultatkode = Resultatkode.KOSTNADSBEREGNET_BIDRAG
-        val kostnadsberegnetBidrag = (bpAndelJustert.beløp - grunnlag.samværsfradragBeregningGrunnlag.beløp).coerceAtLeast(BigDecimal.ZERO)
-        var foreløpigBarnebidrag = kostnadsberegnetBidrag
-
-        // Initierer indikatorer
-        var justertNedTilEvne = false
-        var justertNedTil25ProsentAvInntekt = false
-        var justertForNettoBarnetilleggBP = false
-        var justertForNettoBarnetilleggBM = false
-
-        // Sjekker om BP's andel av U er større enn bidragsevne eller 25% av inntekt
-        if (maksBidragsbeløp < bpAndelJustert.beløp) {
-            foreløpigBarnebidrag = maksBidragsbeløp - grunnlag.samværsfradragBeregningGrunnlag.beløp
-            if (bidragRedusertAvBidragsevne) {
-                resultatkode = Resultatkode.BIDRAG_REDUSERT_AV_EVNE
-                justertNedTilEvne = true
-            } else {
-                resultatkode = Resultatkode.BIDRAG_REDUSERT_TIL_25_PROSENT_AV_INNTEKT
-                justertNedTil25ProsentAvInntekt = true
-            }
-        }
+        val uMinusNettoBarnetilleggBM = underholdskostnad - nettoBarnetilleggBM
+        var foreløpigBeregnetBeløp = maxOf((bpAndelBeløp - samværsfradrag), BigDecimal.ZERO)
+        val bruttoBidragEtterBarnetilleggBM: BigDecimal
+        val nettoBidragEtterBarnetilleggBM: BigDecimal
+        val bruttoBidragEtterBarnetilleggBP: BigDecimal
+        var bidragJustertForNettoBarnetilleggBM = false
+        var bidragJustertForNettoBarnetilleggBP = false
 
         // Sjekker om eventuelt barnetillegg for BM skal benyttes
-        if (foreløpigBarnebidrag > (grunnlag.underholdskostnadBeregningGrunnlag.beløp - nettoBarnetilleggBM)) {
-            foreløpigBarnebidrag =
-                grunnlag.underholdskostnadBeregningGrunnlag.beløp - nettoBarnetilleggBM - grunnlag.samværsfradragBeregningGrunnlag.beløp
-            resultatkode = Resultatkode.BIDRAG_SATT_TIL_UNDERHOLDSKOSTNAD_MINUS_BARNETILLEGG_BM
-            justertForNettoBarnetilleggBM = true
+        // Samværsfradrag trekkes fra i sammenligningen, men ikke beregningen
+        if (nettoBarnetilleggBM > BigDecimal.ZERO) {
+            if (foreløpigBeregnetBeløp > uMinusNettoBarnetilleggBM) {
+                foreløpigBeregnetBeløp = uMinusNettoBarnetilleggBM
+                bruttoBidragEtterBarnetilleggBM = uMinusNettoBarnetilleggBM + samværsfradrag
+                nettoBidragEtterBarnetilleggBM = maxOf(uMinusNettoBarnetilleggBM, BigDecimal.ZERO)
+                bidragJustertForNettoBarnetilleggBM = true
+            } else {
+                bruttoBidragEtterBarnetilleggBM = foreløpigBeregnetBeløp + samværsfradrag
+                nettoBidragEtterBarnetilleggBM = foreløpigBeregnetBeløp
+            }
+        } else {
+            bruttoBidragEtterBarnetilleggBM = foreløpigBeregnetBeløp + samværsfradrag
+            nettoBidragEtterBarnetilleggBM = foreløpigBeregnetBeløp
         }
 
-        // Sjekker om eventuelt barnetillegg for BP skal benyttes
-        if ((nettoBarnetilleggBP > BigDecimal.ZERO) && (foreløpigBarnebidrag < nettoBarnetilleggBP)) {
-            foreløpigBarnebidrag = nettoBarnetilleggBP - grunnlag.samværsfradragBeregningGrunnlag.beløp
-            resultatkode = Resultatkode.BIDRAG_SATT_TIL_BARNETILLEGG_BP
-            justertForNettoBarnetilleggBP = true
+        // Setter kostnadsberegnet bidrag lik laveste verdi av BP's andel av U, bidragsevne og 25% av inntekt
+        bruttoBidragJustertForEvneOg25Prosent = minOf((foreløpigBeregnetBeløp + samværsfradrag), bidragsevne, sumInntekt25Prosent)
+        bidragJustertNedTilEvne = (bidragsevne < (foreløpigBeregnetBeløp + samværsfradrag)) && (bidragsevne <= sumInntekt25Prosent)
+        bidragJustertNedTil25ProsentAvInntekt =
+            (sumInntekt25Prosent < (foreløpigBeregnetBeløp + samværsfradrag)) && (sumInntekt25Prosent <= bidragsevne)
+        foreløpigBeregnetBeløp = bruttoBidragJustertForEvneOg25Prosent
+
+        // Sjekker om eventuelt barnetillegg for BP skal benyttes (hvis regel for BP's barnetillegg slår til overstyrer den BM's barnetillegg)
+        // Samværsfradrag trekkes fra i beregningen, men ikke i sammenligningen
+        if (nettoBarnetilleggBP > BigDecimal.ZERO) {
+            if (nettoBarnetilleggBP > foreløpigBeregnetBeløp) {
+                foreløpigBeregnetBeløp = nettoBarnetilleggBP
+                bruttoBidragEtterBarnetilleggBP = nettoBarnetilleggBP
+                bidragJustertForNettoBarnetilleggBP = true
+            } else {
+                bruttoBidragEtterBarnetilleggBP = foreløpigBeregnetBeløp
+            }
+        } else {
+            bruttoBidragEtterBarnetilleggBP = foreløpigBeregnetBeløp
         }
 
-        // Bestemmer resultatkode hvis det er delt bosted
-        if (grunnlag.deltBostedBeregningGrunnlag.deltBosted) {
-            resultatkode = bestemDeltBostedResultatkode(bpAndel = bpAndelJustert.andel, foreløpigResultatkode = resultatkode)
-            foreløpigBarnebidrag = kostnadsberegnetBidrag
-        }
+        // Hvis ingen av barnetilleggene eksisterer eller skal benyttes, settes beregnet beløp lik "kostnadsberegnet" bidrag - samværsfradrag
+        val nettoBidragEtterSamværsfradrag = maxOf((foreløpigBeregnetBeløp - samværsfradrag), BigDecimal.ZERO)
 
         return EndeligBidragBeregningResultat(
-            beregnetBeløp = foreløpigBarnebidrag.coerceAtLeast(BigDecimal.ZERO).avrundetMedToDesimaler,
-            resultatKode = resultatkode,
-            resultatBeløp = foreløpigBarnebidrag.coerceAtLeast(BigDecimal.ZERO).avrundetTilNærmesteTier,
-            kostnadsberegnetBidrag = kostnadsberegnetBidrag.avrundetMedToDesimaler,
-            nettoBarnetilleggBP = nettoBarnetilleggBP.avrundetMedToDesimaler,
-            nettoBarnetilleggBM = nettoBarnetilleggBM.avrundetMedToDesimaler,
-            justertNedTilEvne = justertNedTilEvne,
-            justertNedTil25ProsentAvInntekt = justertNedTil25ProsentAvInntekt,
-            justertForNettoBarnetilleggBP = justertForNettoBarnetilleggBP,
-            justertForNettoBarnetilleggBM = justertForNettoBarnetilleggBM,
+            beregnetBeløp = nettoBidragEtterSamværsfradrag.avrundetMedToDesimaler,
+            resultatBeløp = nettoBidragEtterSamværsfradrag.avrundetTilNærmesteTier,
+            uMinusNettoBarnetilleggBM = uMinusNettoBarnetilleggBM.avrundetMedToDesimaler,
+            bruttoBidragEtterBarnetilleggBM = bruttoBidragEtterBarnetilleggBM.avrundetMedToDesimaler,
+            nettoBidragEtterBarnetilleggBM = nettoBidragEtterBarnetilleggBM.avrundetMedToDesimaler,
+            bruttoBidragJustertForEvneOg25Prosent = bruttoBidragJustertForEvneOg25Prosent.avrundetMedToDesimaler,
+            bruttoBidragEtterBarnetilleggBP = bruttoBidragEtterBarnetilleggBP.avrundetMedToDesimaler,
+            nettoBidragEtterSamværsfradrag = nettoBidragEtterSamværsfradrag.avrundetMedToDesimaler,
+            bidragJustertForNettoBarnetilleggBP = bidragJustertForNettoBarnetilleggBP,
+            bidragJustertForNettoBarnetilleggBM = bidragJustertForNettoBarnetilleggBM,
+            bidragJustertNedTilEvne = bidragJustertNedTilEvne,
+            bidragJustertNedTil25ProsentAvInntekt = bidragJustertNedTil25ProsentAvInntekt,
             grunnlagsreferanseListe = listOfNotNull(
                 grunnlag.bidragsevneBeregningGrunnlag.referanse,
                 grunnlag.underholdskostnadBeregningGrunnlag.referanse,
@@ -101,6 +141,7 @@ internal object EndeligBidragBeregning {
     }
 
     // Beregner netto barnetillegg ut fra brutto barnetillegg og skattesats
+    //TODO Flytte til egen delberegning
     private fun beregnNettoBarnetillegg(barnetillegg: BarnetilleggBeregningGrunnlag?): BigDecimal {
         if (barnetillegg == null) {
             return BigDecimal.ZERO
@@ -116,25 +157,10 @@ internal object EndeligBidragBeregning {
 
         if (grunnlag.deltBostedBeregningGrunnlag.deltBosted) {
             andel = (andel - BigDecimal.valueOf(0.5)).coerceAtLeast(BigDecimal.ZERO)
-            beløp = grunnlag.bpAndelUnderholdskostnadBeregningGrunnlag.andelBeløp
-                .divide(grunnlag.bpAndelUnderholdskostnadBeregningGrunnlag.andelFaktor, 10, RoundingMode.HALF_UP)
-                .multiply(andel)
+            beløp = grunnlag.underholdskostnadBeregningGrunnlag.beløp.multiply(andel)
         }
 
         return BpAndelJustert(andel = andel, beløp = beløp)
-    }
-
-    // Resultatkode settes til delt bosted hvis barnet har delt bosted og bidrag ikke er redusert under beregningen eller satt opp til barnetillegg BP
-    private fun bestemDeltBostedResultatkode(bpAndel: BigDecimal, foreløpigResultatkode: Resultatkode): Resultatkode = when {
-        bpAndel > BigDecimal.ZERO &&
-            (
-                foreløpigResultatkode == Resultatkode.KOSTNADSBEREGNET_BIDRAG ||
-                    foreløpigResultatkode == Resultatkode.BIDRAG_SATT_TIL_BARNETILLEGG_BP
-                ) ->
-            Resultatkode.DELT_BOSTED
-
-        bpAndel == BigDecimal.ZERO -> Resultatkode.BIDRAG_IKKE_BEREGNET_DELT_BOSTED
-        else -> foreløpigResultatkode
     }
 
     data class BpAndelJustert(val andel: BigDecimal, val beløp: BigDecimal)

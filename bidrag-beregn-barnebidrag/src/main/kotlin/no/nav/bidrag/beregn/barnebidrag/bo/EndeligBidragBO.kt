@@ -1,8 +1,8 @@
 package no.nav.bidrag.beregn.barnebidrag.bo
 
-import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.avrundetMedNullDesimaler
+import no.nav.bidrag.domene.util.avrundetMedTiDesimaler
 import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BarnetilleggPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
@@ -63,14 +63,21 @@ data class BarnetilleggBeregningGrunnlag(val referanse: String, val beløp: BigD
 
 data class EndeligBidragBeregningResultat(
     val beregnetBeløp: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
-    val resultatKode: Resultatkode,
     val resultatBeløp: BigDecimal = BigDecimal.ZERO.avrundetMedNullDesimaler,
-    val kostnadsberegnetBidrag: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
-    val nettoBarnetilleggBP: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
-    val nettoBarnetilleggBM: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
-    val justertNedTilEvne: Boolean = false,
-    val justertNedTil25ProsentAvInntekt: Boolean = false,
-    val justertForNettoBarnetilleggBP: Boolean = false,
-    val justertForNettoBarnetilleggBM: Boolean = false,
+    val uMinusNettoBarnetilleggBM: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
+    val bruttoBidragEtterBarnetilleggBM: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
+    val nettoBidragEtterBarnetilleggBM: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
+    val bruttoBidragJustertForEvneOg25Prosent: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
+    val bruttoBidragEtterBarnetilleggBP: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
+    val nettoBidragEtterSamværsfradrag: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
+    val bpAndelAvUVedDeltBostedFaktor: BigDecimal = BigDecimal.ZERO.avrundetMedTiDesimaler,
+    val bpAndelAvUVedDeltBostedBeløp: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
+    val ingenEndringUnderGrense: Boolean = false,
+    val barnetErSelvforsørget: Boolean = false,
+    val bidragJustertForDeltBosted: Boolean = false,
+    val bidragJustertForNettoBarnetilleggBP: Boolean = false,
+    val bidragJustertForNettoBarnetilleggBM: Boolean = false,
+    val bidragJustertNedTilEvne: Boolean = false,
+    val bidragJustertNedTil25ProsentAvInntekt: Boolean = false,
     val grunnlagsreferanseListe: List<String> = emptyList(),
 )

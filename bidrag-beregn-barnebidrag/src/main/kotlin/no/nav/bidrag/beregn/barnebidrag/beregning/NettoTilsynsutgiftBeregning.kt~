@@ -59,9 +59,7 @@ internal object NettoTilsynsutgiftBeregning {
                     endeligSumFaktiskeUtgifter = bruttoTilsynsutgift.avrundetMedToDesimaler,
                     skattefradragsbeløpPerBarn = skattefradragsbeløpPerBarn.avrundetMedToDesimaler,
                     tilleggsstønad = tilleggsstønadBeløp.avrundetMedToDesimaler,
-                    nettoTilsynsutgift = (bruttoTilsynsutgift - skattefradragsbeløpPerBarn - tilleggsstønadBeløp).avrundetMedToDesimaler.coerceAtLeast(
-                        BigDecimal.ZERO,
-                    ),
+                    nettoTilsynsutgift = (bruttoTilsynsutgift - skattefradragsbeløpPerBarn - tilleggsstønadBeløp).avrundetMedToDesimaler,
                 ),
             )
         }
@@ -92,4 +90,14 @@ internal object NettoTilsynsutgiftBeregning {
 
         return fradragsbeløp.divide(antallBarnIPerioden.toBigDecimal(), MathContext(10, RoundingMode.HALF_UP))
     }
+
+//    private fun beregnNettoTilsynsutgiftBeløp(
+//        bruttoTilsynsutgift: BigDecimal,
+//        skattefradragsbeløpPerBarn: BigDecimal,
+//        tilleggsstønadBeløp: BigDecimal,
+//    ): BigDecimal {
+//        val nettoTilsynsutgift = (bruttoTilsynsutgift - skattefradragsbeløpPerBarn - tilleggsstønadBeløp).multiply(BigDecimal(11))
+//            .divide(BigDecimal(12), 10, RoundingMode.HALF_UP)
+//        return nettoTilsynsutgift.avrundetMedToDesimaler.coerceAtLeast(BigDecimal.ZERO)
+//    }
 }
