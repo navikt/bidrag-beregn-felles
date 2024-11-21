@@ -6,6 +6,7 @@ import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebid
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 
 /**
  * BeregnBarnebidragApi eksponerer api for å beregne barnebidrag.
@@ -29,15 +30,20 @@ import org.springframework.stereotype.Service
 class BeregnBarnebidragApi {
     private val service = BeregnBarnebidragService()
 
+    fun beregnMånedsbeløpFaktiskeUtgifter(faktiskUtgift: BigDecimal, kostpenger: BigDecimal): BigDecimal? =
+        service.beregnMånedsbeløpFaktiskUtgift(faktiskUtgift, kostpenger)
+
+    fun beregnMånedsbeløpTilleggsstønad(tilleggsstønad: BigDecimal): BigDecimal = service.beregnMånedsbeløpTilleggsstønad(tilleggsstønad)
+
     fun beregn(beregnGrunnlag: BeregnGrunnlag): BeregnetBarnebidragResultat = service.beregnBarnebidrag(beregnGrunnlag)
 
     fun beregnBidragsevne(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnBidragsevne(beregnGrunnlag)
-
     fun beregnNettoTilsynsutgift(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnNettoTilsynsutgift(beregnGrunnlag)
 
     fun beregnUnderholdskostnad(beregnGrunnlag: BeregnGrunnlag) = service.beregnUnderholdskostnad(beregnGrunnlag)
 
-    fun beregnNettoTilsynsutgiftOgUnderholdskostnad(beregnGrunnlag: BeregnGrunnlag) = service.beregnUnderholdskostnad(beregnGrunnlag)
+    fun beregnNettoTilsynsutgiftOgUnderholdskostnad(beregnGrunnlag: BeregnGrunnlag) =
+        service.beregnNettoTilsynsutgiftOgUnderholdskostnad(beregnGrunnlag)
 
     fun beregnBpAndelUnderholdskostnad(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnBpAndelUnderholdskostnad(beregnGrunnlag)
 

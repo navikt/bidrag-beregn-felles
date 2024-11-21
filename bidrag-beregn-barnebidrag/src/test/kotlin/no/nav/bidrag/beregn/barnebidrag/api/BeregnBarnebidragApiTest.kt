@@ -489,6 +489,25 @@ internal class BeregnBarnebidragApiTest {
         )
     }
 
+    @Test
+    @DisplayName("Beregn månedsbeløp faktisk utgift og tilleggsstønad")
+    fun testBeregnMånedsbeløpFaktiskUtgiftTilleggsstønad() {
+        val faktiskUtgift = BigDecimal.valueOf(1000)
+        val kostpenger = BigDecimal.valueOf(400)
+        val responseFaktiskUtgift = beregnBarnebidragService.beregnMånedsbeløpFaktiskUtgift(faktiskUtgift, kostpenger)
+
+        val tilleggsstønad = BigDecimal.valueOf(17)
+        val responseTilleggsstønad = beregnBarnebidragService.beregnMånedsbeløpTilleggsstønad(tilleggsstønad)
+
+        assertThat(responseFaktiskUtgift).isEqualByComparingTo(BigDecimal.valueOf(550))
+        assertThat(responseTilleggsstønad).isEqualByComparingTo(BigDecimal.valueOf(368.33))
+
+        // Test uten angitt kostpenger, default er BigDecimal.ZERO
+        val faktiskUtgift2 = BigDecimal.valueOf(500)
+        val responseFaktiskUtgift2 = beregnBarnebidragService.beregnMånedsbeløpFaktiskUtgift(faktiskUtgift2)
+        assertThat(responseFaktiskUtgift2).isEqualByComparingTo(BigDecimal.valueOf(458.33))
+    }
+
     fun hentAlleReferanser(resultatGrunnlagListe: List<GrunnlagDto>) = resultatGrunnlagListe
         .map { it.referanse }
         .distinct()

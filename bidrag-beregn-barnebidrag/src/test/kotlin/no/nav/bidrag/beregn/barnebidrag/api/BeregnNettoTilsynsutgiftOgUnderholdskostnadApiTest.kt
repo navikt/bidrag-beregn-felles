@@ -3,6 +3,7 @@ package no.nav.bidrag.beregn.barnebidrag.api
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import io.kotest.matchers.comparables.shouldBeGreaterThanOrEqualTo
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnebidragService
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -169,6 +170,20 @@ internal class BeregnNettoTilsynsutgiftOgUnderholdskostnadApiTest {
             { assertEquals(0, resultat[0].nettoTilsynsutgift?.compareTo(BigDecimal.valueOf(58.83))) },
             { assertEquals(0, resultat[0].barnetrygd.compareTo(BigDecimal.valueOf(1510))) },
             { assertEquals(0, resultat[0].underholdskostnad.compareTo(BigDecimal.valueOf(7482.83))) },
+        )
+    }
+
+    @Test
+    @DisplayName("Underholdskostnad - eksempel 3  ")
+    fun test_netto_tilsynsugift_og_underholdskostnad_med_full_request() {
+        filnavn = "src/test/resources/testfiler/nettobarnetilsynogunderholdskostnad/nettotilsynsutgift_og_underholdskostnad_full_request.json"
+        val resultat = utførBeregningerOgEvaluerResultatNettoTilsynsutgiftOgUnderholdskostnad()
+
+        assertAll(
+            // Resultat
+
+            { resultat[0].nettoTilsynsutgift?.shouldBeGreaterThanOrEqualTo(BigDecimal.ZERO) },
+            { resultat[0].underholdskostnad shouldBeGreaterThanOrEqualTo BigDecimal.ZERO },
         )
     }
 

@@ -1,10 +1,8 @@
 package no.nav.bidrag.beregn.barnebidrag.mapper
 
-import no.nav.bidrag.beregn.barnebidrag.bo.FaktiskUtgiftPeriode
 import no.nav.bidrag.beregn.barnebidrag.bo.NettoTilsynsutgiftPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonMaksFradragsbeløpPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonMaksTilsynsbeløpPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.TilleggsstønadPeriode
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnNettoTilsynsutgiftService
 import no.nav.bidrag.beregn.core.dto.FaktiskUtgiftPeriodeCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
@@ -12,14 +10,17 @@ import no.nav.bidrag.beregn.core.dto.TilleggsstønadPeriodeCore
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.FaktiskUtgiftPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonMaksFradragPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonMaksTilsynPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.TilleggsstønadPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.LocalDate
+import java.util.Collections.emptyList
 
 internal object NettoTilsynsutgiftMapper : CoreMapper() {
     fun mapNettoTilsynsutgiftPeriodeGrunnlag(mottattGrunnlag: BeregnGrunnlag, sjablonGrunnlag: List<GrunnlagDto>): NettoTilsynsutgiftPeriodeGrunnlag {
@@ -138,11 +139,11 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
         }
     }
 
-    private fun beregnBeløpFaktiskUtgift(faktiskUtgiftBeløp: BigDecimal, kostpengerBeløp: BigDecimal): BigDecimal =
-        faktiskUtgiftBeløp.minus(kostpengerBeløp).multiply(BigDecimal.valueOf(11))
+    fun beregnBeløpFaktiskUtgift(faktiskUtgiftBeløp: BigDecimal, kostpengerBeløp: BigDecimal?): BigDecimal =
+        faktiskUtgiftBeløp.minus(kostpengerBeløp ?: BigDecimal.ZERO).multiply(BigDecimal.valueOf(11))
             .divide(BigDecimal.valueOf(12), 10, RoundingMode.HALF_UP)
 
-    private fun beregnBeløpTilleggsstønad(beløpDagsats: BigDecimal): BigDecimal =
+    fun beregnBeløpTilleggsstønad(beløpDagsats: BigDecimal): BigDecimal =
         beløpDagsats.multiply(BigDecimal.valueOf(260)).divide(BigDecimal.valueOf(12), 10, RoundingMode.HALF_UP)
 
     fun finnFødselsdatoBarn(beregnGrunnlag: List<GrunnlagDto>, referanse: String): LocalDate =
