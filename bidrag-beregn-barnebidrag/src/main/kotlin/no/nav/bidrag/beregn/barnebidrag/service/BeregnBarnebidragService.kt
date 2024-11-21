@@ -203,7 +203,6 @@ class BeregnBarnebidragService : BeregnService() {
                 periode = it.innhold.periode,
                 resultat = ResultatBeregning(
                     beløp = it.innhold.resultatBeløp,
-                    kode = it.innhold.resultatKode,
                 ),
                 grunnlagsreferanseListe = listOf(it.referanse),
             )
