@@ -68,13 +68,13 @@
           "fom": "2023-01",
           "til": "2023-12"
         },
-        "gjelderBarn": "Person_Søknadsbarn",
         "fødselsdatoBarn": "2012-09-13",
         "faktiskUtgiftBeløp": 4000.00,
         "kostpengerBeløp": 900.00,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": null
     },
     {
@@ -85,13 +85,13 @@
           "fom": "2024-01",
           "til": null
         },
-        "gjelderBarn": "Person_Søknadsbarn",
         "fødselsdatoBarn": "2012-09-13",
         "faktiskUtgiftBeløp": 2000.00,
         "kostpengerBeløp": 0.00,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": null
     },
     {
@@ -102,13 +102,13 @@
           "fom": "2024-04",
           "til": null
         },
-        "gjelderBarn": "person_PERSON_BARN_BIDRAGSMOTTAKER_20151217_102",
         "fødselsdatoBarn": "2015-12-17",
         "faktiskUtgiftBeløp":4000.00,
         "kostpengerBeløp": 0.00,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "person_PERSON_BARN_BIDRAGSMOTTAKER_20151217_102",
       "gjelderReferanse": null
     },
     {
@@ -119,12 +119,12 @@
           "fom": "2024-07",
           "til": null
         },
-        "gjelderBarn": "person_PERSON_BARN_BIDRAGSMOTTAKER_20170719_103",
         "fødselsdatoBarn": "2017-07-19",
         "faktiskUtgiftBeløp":6050.00,
         "kostpengerBeløp": 50.00,
         "manueltRegistrert": false
       },
+      "gjelderBarnReferanse": "person_PERSON_BARN_BIDRAGSMOTTAKER_20170719_103",
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": null
     },
@@ -136,11 +136,11 @@
           "fom": "2024-02",
           "til": null
         },
-        "gjelderBarn": "Person_Søknadsbarn",
         "beløpDagsats": 10.00,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": null
     },
     {
@@ -151,11 +151,11 @@
           "fom": "2024-05",
           "til": null
         },
-        "gjelderBarn": "person_PERSON_BARN_BIDRAGSMOTTAKER_20151217_102",
         "beløpDagsats": 17.00,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "person_PERSON_BARN_BIDRAGSMOTTAKER_20151217_102",
       "gjelderReferanse": null
     }
   ]
