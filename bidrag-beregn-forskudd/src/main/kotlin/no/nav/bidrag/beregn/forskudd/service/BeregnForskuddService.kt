@@ -164,6 +164,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
                         innhold = it.innhold,
                         grunnlagsreferanseListe = it.grunnlagsreferanseListe,
                         gjelderReferanse = it.gjelderReferanse,
+                        gjelderBarnReferanse = it.gjelderBarnReferanse,
                     )
                 },
         )
@@ -209,6 +210,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
                         innhold = it.innhold,
                         grunnlagsreferanseListe = it.grunnlagsreferanseListe,
                         gjelderReferanse = it.gjelderReferanse,
+                        gjelderBarnReferanse = it.gjelderBarnReferanse,
                     )
                 },
         )

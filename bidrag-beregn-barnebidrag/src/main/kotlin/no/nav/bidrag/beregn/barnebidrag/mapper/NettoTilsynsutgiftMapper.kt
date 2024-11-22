@@ -53,7 +53,7 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
                                 datoFom = it.innhold.periode.toDatoperiode().fom,
                                 datoTil = it.innhold.periode.toDatoperiode().til,
                             ),
-                            gjelderBarn = it.innhold.gjelderBarn,
+                            gjelderBarn = it.gjelderBarnReferanse!!,
                             beregnetBeløp = beregnBeløpFaktiskUtgift(it.innhold.faktiskUtgiftBeløp, it.innhold.kostpengerBeløp),
                             grunnlagsreferanseListe = emptyList(),
                         )
@@ -84,7 +84,7 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
                                 datoFom = it.innhold.periode.toDatoperiode().fom,
                                 datoTil = it.innhold.periode.toDatoperiode().til,
                             ),
-                            gjelderBarn = it.innhold.gjelderBarn,
+                            gjelderBarn = it.gjelderBarnReferanse!!,
                             beregnetBeløp = beregnBeløpTilleggsstønad(it.innhold.beløpDagsats),
                             grunnlagsreferanseListe = emptyList(),
                         )

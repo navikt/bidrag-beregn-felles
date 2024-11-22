@@ -638,6 +638,7 @@ internal class BeregnSærbidragService(
                 innhold = it.innhold,
                 grunnlagsreferanseListe = it.grunnlagsreferanseListe,
                 gjelderReferanse = it.gjelderReferanse,
+                gjelderBarnReferanse = it.gjelderBarnReferanse,
             )
         }
 
@@ -795,6 +796,7 @@ internal class BeregnSærbidragService(
                 innhold = it.innhold,
                 grunnlagsreferanseListe = it.grunnlagsreferanseListe,
                 gjelderReferanse = it.gjelderReferanse,
+                gjelderBarnReferanse = it.gjelderBarnReferanse,
             )
         }
 
