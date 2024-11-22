@@ -205,6 +205,7 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
                 innhold = it.innhold,
                 grunnlagsreferanseListe = it.grunnlagsreferanseListe,
                 gjelderReferanse = it.gjelderReferanse,
+                gjelderBarnReferanse = it.gjelderBarnReferanse,
             )
         }
 
@@ -309,6 +310,7 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
                         innhold = it.innhold,
                         grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
                         gjelderReferanse = it.gjelderReferanse,
+                        gjelderBarnReferanse = it.gjelderBarnReferanse,
                     )
                 },
         )

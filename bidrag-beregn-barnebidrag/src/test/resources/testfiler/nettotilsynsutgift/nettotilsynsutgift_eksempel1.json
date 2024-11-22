@@ -57,13 +57,13 @@
           "fom": "2024-01",
           "til": null
         },
-        "gjelderBarn": "Person_Søknadsbarn",
         "fødselsdatoBarn": "2023-01-17",
         "faktiskUtgiftBeløp": 500.00,
         "kostpengerBeløp": 100.00,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": null
     },
     {
@@ -74,10 +74,10 @@
           "fom": "2024-02",
           "til": null
         },
-        "gjelderBarn": "Person_Søknadsbarn",
         "beløpDagsats": 10.00,
         "manueltRegistrert": false
       },
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": null
     }

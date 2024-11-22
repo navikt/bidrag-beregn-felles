@@ -143,7 +143,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
                 )
             }
             ?: throw IllegalArgumentException("Delt bosted grunnlag mangler for periode $bruddPeriode"),
-        //TODO: Summering må skje i delberegning netto barnetillegg
+        // TODO: Summering må skje i delberegning netto barnetillegg
         barnetilleggBPBeregningGrunnlag = endeligBidragPeriodeGrunnlag.barnetilleggBPPeriodeGrunnlagListe
             .filter { it.barnetilleggPeriode.periode.inneholder(bruddPeriode) }
             .let { barnetilleggListe ->
@@ -151,13 +151,13 @@ internal object BeregnEndeligBidragService : BeregnService() {
                     BarnetilleggBeregningGrunnlag(
                         referanse = barnetilleggListe.map { it.referanse },
                         beløp = barnetilleggListe.sumOf { it.barnetilleggPeriode.beløp },
-                        skattFaktor = barnetilleggListe.first().barnetilleggPeriode.skattFaktor
+                        skattFaktor = barnetilleggListe.first().barnetilleggPeriode.skattFaktor,
                     )
                 } else {
                     null
                 }
             },
-        //TODO: Summering må skje i delberegning netto barnetillegg
+        // TODO: Summering må skje i delberegning netto barnetillegg
         barnetilleggBMBeregningGrunnlag = endeligBidragPeriodeGrunnlag.barnetilleggBMPeriodeGrunnlagListe
             .filter { it.barnetilleggPeriode.periode.inneholder(bruddPeriode) }
             .let { barnetilleggListe ->
@@ -165,7 +165,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
                     BarnetilleggBeregningGrunnlag(
                         referanse = barnetilleggListe.map { it.referanse },
                         beløp = barnetilleggListe.sumOf { it.barnetilleggPeriode.beløp },
-                        skattFaktor = barnetilleggListe.first().barnetilleggPeriode.skattFaktor
+                        skattFaktor = barnetilleggListe.first().barnetilleggPeriode.skattFaktor,
                     )
                 } else {
                     null
@@ -204,6 +204,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
                 innhold = it.innhold,
                 grunnlagsreferanseListe = it.grunnlagsreferanseListe,
                 gjelderReferanse = it.gjelderReferanse,
+                gjelderBarnReferanse = it.gjelderBarnReferanse,
             )
         }
 

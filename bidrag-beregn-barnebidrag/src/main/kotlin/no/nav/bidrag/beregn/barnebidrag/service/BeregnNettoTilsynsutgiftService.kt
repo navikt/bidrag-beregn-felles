@@ -233,6 +233,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                 innhold = it.innhold,
                 grunnlagsreferanseListe = it.grunnlagsreferanseListe,
                 gjelderReferanse = it.gjelderReferanse,
+                gjelderBarnReferanse = it.gjelderBarnReferanse,
             )
         }
 
@@ -257,6 +258,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                     ),
                 ),
                 grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe,
+                gjelderBarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
                 gjelderReferanse = finnReferanseTilRolle(
                     grunnlagListe = mottattGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
@@ -282,6 +284,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
         resultatGrunnlagListe.addAll(
             mapDelberegningFaktiskTilsynsutgift(
                 faktiskUtgiftPeriodeCoreListe = faktiskUtgiftPeriodeCoreListe,
+                bidragsmottakerReferanse = referanseBm,
             ),
         )
 
@@ -313,6 +316,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                         innhold = it.innhold,
                         grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
                         gjelderReferanse = it.gjelderReferanse,
+                        gjelderBarnReferanse = it.gjelderBarnReferanse,
                     )
                 },
         )
@@ -321,21 +325,23 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
     }
 
     // Mapper ut DelberegningFaktiskUtgift
-    private fun mapDelberegningFaktiskTilsynsutgift(faktiskUtgiftPeriodeCoreListe: List<FaktiskUtgiftPeriodeCore>) = faktiskUtgiftPeriodeCoreListe
-        .map {
-            GrunnlagDto(
-                referanse = it.referanse,
-                type = bestemGrunnlagstype(it.referanse),
-                innhold = POJONode(
-                    DelberegningFaktiskTilsynsutgift(
-                        periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
-                        beregnetBeløp = it.beregnetBeløp,
+    private fun mapDelberegningFaktiskTilsynsutgift(faktiskUtgiftPeriodeCoreListe: List<FaktiskUtgiftPeriodeCore>, bidragsmottakerReferanse: String) =
+        faktiskUtgiftPeriodeCoreListe
+            .map {
+                GrunnlagDto(
+                    referanse = it.referanse,
+                    type = bestemGrunnlagstype(it.referanse),
+                    innhold = POJONode(
+                        DelberegningFaktiskTilsynsutgift(
+                            periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
+                            beregnetBeløp = it.beregnetBeløp,
+                        ),
                     ),
-                ),
-                grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
-                gjelderReferanse = it.gjelderBarn,
-            )
-        }
+                    grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
+                    gjelderReferanse = bidragsmottakerReferanse,
+                    gjelderBarnReferanse = it.gjelderBarn,
+                )
+            }
 
     // Mapper ut DelberegningTilleggsstønad
     private fun mapDelberegningTilleggsstønad(tilleggsstønadPeriodeCoreListe: List<TilleggsstønadPeriodeCore>, bidragsmottakerReferanse: String) =
@@ -352,6 +358,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                     ),
                     grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
                     gjelderReferanse = bidragsmottakerReferanse,
+                    gjelderBarnReferanse = it.gjelderBarn,
                 )
             }
 
