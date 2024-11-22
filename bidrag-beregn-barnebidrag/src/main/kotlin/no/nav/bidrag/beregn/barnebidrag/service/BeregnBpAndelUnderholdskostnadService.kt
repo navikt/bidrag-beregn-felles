@@ -325,7 +325,7 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
         .firstOrNull()
         ?.let { innslagKapitalinntektSjablon ->
             Sjablontall(
-                typeSjablon = innslagKapitalinntektSjablon.innhold.sjablon.navn,
+                typeSjablon = innslagKapitalinntektSjablon.innhold.sjablon.id,
                 datoFom = innslagKapitalinntektSjablon.innhold.periode.fom.atDay(1),
                 datoTom = innslagKapitalinntektSjablon.innhold.periode.til?.atEndOfMonth()?.minusMonths(1),
                 verdi = innslagKapitalinntektSjablon.innhold.verdi,
