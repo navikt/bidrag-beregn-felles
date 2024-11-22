@@ -134,9 +134,9 @@ internal object EndeligBidragBeregning {
                 grunnlag.bpAndelUnderholdskostnadBeregningGrunnlag.referanse,
                 grunnlag.samværsfradragBeregningGrunnlag.referanse,
                 grunnlag.deltBostedBeregningGrunnlag.referanse,
-                grunnlag.barnetilleggBPBeregningGrunnlag?.referanse,
-                grunnlag.barnetilleggBMBeregningGrunnlag?.referanse,
-            ),
+            ) +
+                (grunnlag.barnetilleggBPBeregningGrunnlag?.referanse ?: emptyList()) +
+                (grunnlag.barnetilleggBMBeregningGrunnlag?.referanse ?: emptyList())
         )
     }
 

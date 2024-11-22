@@ -143,23 +143,33 @@ internal object BeregnEndeligBidragService : BeregnService() {
                 )
             }
             ?: throw IllegalArgumentException("Delt bosted grunnlag mangler for periode $bruddPeriode"),
+        //TODO: Summering må skje i delberegning netto barnetillegg
         barnetilleggBPBeregningGrunnlag = endeligBidragPeriodeGrunnlag.barnetilleggBPPeriodeGrunnlagListe
-            .firstOrNull { it.barnetilleggPeriode.periode.inneholder(bruddPeriode) }
-            ?.let {
-                BarnetilleggBeregningGrunnlag(
-                    referanse = it.referanse,
-                    beløp = it.barnetilleggPeriode.beløp,
-                    skattFaktor = it.barnetilleggPeriode.skattFaktor,
-                )
+            .filter { it.barnetilleggPeriode.periode.inneholder(bruddPeriode) }
+            .let { barnetilleggListe ->
+                if (barnetilleggListe.isNotEmpty()) {
+                    BarnetilleggBeregningGrunnlag(
+                        referanse = barnetilleggListe.map { it.referanse },
+                        beløp = barnetilleggListe.sumOf { it.barnetilleggPeriode.beløp },
+                        skattFaktor = barnetilleggListe.first().barnetilleggPeriode.skattFaktor
+                    )
+                } else {
+                    null
+                }
             },
+        //TODO: Summering må skje i delberegning netto barnetillegg
         barnetilleggBMBeregningGrunnlag = endeligBidragPeriodeGrunnlag.barnetilleggBMPeriodeGrunnlagListe
-            .firstOrNull { it.barnetilleggPeriode.periode.inneholder(bruddPeriode) }
-            ?.let {
-                BarnetilleggBeregningGrunnlag(
-                    referanse = it.referanse,
-                    beløp = it.barnetilleggPeriode.beløp,
-                    skattFaktor = it.barnetilleggPeriode.skattFaktor,
-                )
+            .filter { it.barnetilleggPeriode.periode.inneholder(bruddPeriode) }
+            .let { barnetilleggListe ->
+                if (barnetilleggListe.isNotEmpty()) {
+                    BarnetilleggBeregningGrunnlag(
+                        referanse = barnetilleggListe.map { it.referanse },
+                        beløp = barnetilleggListe.sumOf { it.barnetilleggPeriode.beløp },
+                        skattFaktor = barnetilleggListe.first().barnetilleggPeriode.skattFaktor
+                    )
+                } else {
+                    null
+                }
             },
     )
 

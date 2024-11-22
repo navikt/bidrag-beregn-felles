@@ -59,7 +59,8 @@ data class SamværsfradragDelberegningBeregningGrunnlag(val referanse: String, v
 
 data class DeltBostedBeregningGrunnlag(val referanse: String, val deltBosted: Boolean)
 
-data class BarnetilleggBeregningGrunnlag(val referanse: String, val beløp: BigDecimal, val skattFaktor: BigDecimal)
+//TODO Ikke nødvendig med liste av referanser når delberegning netto barnetillegg er klar
+data class BarnetilleggBeregningGrunnlag(val referanse: List<String>, val beløp: BigDecimal, val skattFaktor: BigDecimal)
 
 data class EndeligBidragBeregningResultat(
     val beregnetBeløp: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
