@@ -63,33 +63,8 @@ internal class BeregnEndeligBidragApiTest {
     }
 
     @Test
-    @DisplayName("Endelig bidrag - eksempel X")
-    fun testEndeligBidrag_EksempelX() {
-        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempelX.json"
-        forventetBeregnetBeløp = BigDecimal.valueOf(500).setScale(2)
-        forventetResultatbeløp = BigDecimal.valueOf(500).setScale(0)
-        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(1500).setScale(2)
-        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(4500).setScale(2)
-        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(1500).setScale(2)
-        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(2500).setScale(2)
-        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(3500).setScale(2)
-        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(500).setScale(2)
-        forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
-        forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
-        forventetBarnetErSelvforsørget = false
-        forventetBidragJustertForDeltBosted = false
-        forventetBidragJustertForNettoBarnetilleggBP = true
-        forventetBidragJustertForNettoBarnetilleggBM = true
-        forventetBidragJustertNedTilEvne = true
-        forventetBidragJustertNedTil25ProsentAvInntekt = true
-        forventetAntallBarnetilleggBP = 1
-        forventetAntallBarnetilleggBM = 1
-        utførBeregningerOgEvaluerResultatEndeligBidrag()
-    }
-
-    @Test
     @DisplayName("Endelig bidrag - eksempel 1 - Barnet er selvforsørget")
-    fun testEndeligBidrag_Eksempel01() {
+    fun testEndeligBidrag_Eksempel1() {
         filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel1.json"
         forventetBeregnetBeløp = BigDecimal.ZERO.setScale(2)
         forventetResultatbeløp = BigDecimal.ZERO.setScale(0)
@@ -113,24 +88,24 @@ internal class BeregnEndeligBidragApiTest {
     }
 
     @Test
-    @DisplayName("Endelig bidrag - eksempel 2A - Delt bosted ved kostnadsberegnet bidrag")
-    fun testEndeligBidrag_Eksempel02A() {
-        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel2A.json"
-        forventetBeregnetBeløp = BigDecimal.valueOf(2000).setScale(2)
-        forventetResultatbeløp = BigDecimal.valueOf(2000).setScale(0)
+    @DisplayName("Endelig bidrag - eksempel 2 - Bidrag redusert til evne ved delt bosted")
+    fun testEndeligBidrag_Eksempel2() {
+        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel2.json"
+        forventetBeregnetBeløp = BigDecimal.valueOf(999).setScale(2)
+        forventetResultatbeløp = BigDecimal.valueOf(1000).setScale(0)
         forventetUMinusNettoBarnetilleggBM = BigDecimal.ZERO.setScale(2)
         forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.ZERO.setScale(2)
         forventetNettoBidragEtterBarnetilleggBM = BigDecimal.ZERO.setScale(2)
-        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(2000).setScale(2)
+        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(999).setScale(2)
         forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.ZERO.setScale(2)
-        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(2000).setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(999).setScale(2)
         forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.valueOf(0.1).setScale(10)
         forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.valueOf(2000).setScale(2)
         forventetBarnetErSelvforsørget = false
         forventetBidragJustertForDeltBosted = true
         forventetBidragJustertForNettoBarnetilleggBP = false
         forventetBidragJustertForNettoBarnetilleggBM = false
-        forventetBidragJustertNedTilEvne = false
+        forventetBidragJustertNedTilEvne = true
         forventetBidragJustertNedTil25ProsentAvInntekt = false
         forventetAntallBarnetilleggBP = 0
         forventetAntallBarnetilleggBM = 0
@@ -138,34 +113,59 @@ internal class BeregnEndeligBidragApiTest {
     }
 
     @Test
-    @DisplayName("Endelig bidrag - eksempel 2B - Delt bosted ved barnetillegg BP")
-    fun testEndeligBidrag_Eksempel02B() {
-        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel2B.json"
-        forventetBeregnetBeløp = BigDecimal.valueOf(2000).setScale(2)
-        forventetResultatbeløp = BigDecimal.valueOf(2000).setScale(0)
-        forventetUMinusNettoBarnetilleggBM = BigDecimal.ZERO.setScale(2)
-        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.ZERO.setScale(2)
-        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.ZERO.setScale(2)
-        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(2000).setScale(2)
-        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.ZERO.setScale(2)
-        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(2000).setScale(2)
-        forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.valueOf(0.1).setScale(10)
-        forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.valueOf(2000).setScale(2)
-        forventetBarnetErSelvforsørget = false
-        forventetBidragJustertForDeltBosted = true
-        forventetBidragJustertForNettoBarnetilleggBP = false
-        forventetBidragJustertForNettoBarnetilleggBM = false
-        forventetBidragJustertNedTilEvne = false
-        forventetBidragJustertNedTil25ProsentAvInntekt = false
-        forventetAntallBarnetilleggBP = 0
-        forventetAntallBarnetilleggBM = 0
-        utførBeregningerOgEvaluerResultatEndeligBidrag()
-    }
-
-    @Test
-    @DisplayName("Endelig bidrag - eksempel 3 - Bidrag ikke beregnet delt bosted")
-    fun testEndeligBidrag_Eksempel03() {
+    @DisplayName("Endelig bidrag - eksempel 3 - Bidrag redusert til 25 prosent av inntekt ved delt bosted")
+    fun testEndeligBidrag_Eksempel3() {
         filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel3.json"
+        forventetBeregnetBeløp = BigDecimal.valueOf(999).setScale(2)
+        forventetResultatbeløp = BigDecimal.valueOf(1000).setScale(0)
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.ZERO.setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.ZERO.setScale(2)
+        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.ZERO.setScale(2)
+        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(999).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.ZERO.setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(999).setScale(2)
+        forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.valueOf(0.1).setScale(10)
+        forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.valueOf(2000).setScale(2)
+        forventetBarnetErSelvforsørget = false
+        forventetBidragJustertForDeltBosted = true
+        forventetBidragJustertForNettoBarnetilleggBP = false
+        forventetBidragJustertForNettoBarnetilleggBM = false
+        forventetBidragJustertNedTilEvne = false
+        forventetBidragJustertNedTil25ProsentAvInntekt = true
+        forventetAntallBarnetilleggBP = 0
+        forventetAntallBarnetilleggBM = 0
+        utførBeregningerOgEvaluerResultatEndeligBidrag()
+    }
+
+    @Test
+    @DisplayName("Endelig bidrag - eksempel 4A - Bidrag justert for delt bosted")
+    fun testEndeligBidrag_Eksempel4A() {
+        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel4A.json"
+        forventetBeregnetBeløp = BigDecimal.valueOf(2000).setScale(2)
+        forventetResultatbeløp = BigDecimal.valueOf(2000).setScale(0)
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.ZERO.setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.ZERO.setScale(2)
+        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.ZERO.setScale(2)
+        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(2000).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.ZERO.setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(2000).setScale(2)
+        forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.valueOf(0.1).setScale(10)
+        forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.valueOf(2000).setScale(2)
+        forventetBarnetErSelvforsørget = false
+        forventetBidragJustertForDeltBosted = true
+        forventetBidragJustertForNettoBarnetilleggBP = false
+        forventetBidragJustertForNettoBarnetilleggBM = false
+        forventetBidragJustertNedTilEvne = false
+        forventetBidragJustertNedTil25ProsentAvInntekt = false
+        forventetAntallBarnetilleggBP = 0
+        forventetAntallBarnetilleggBM = 0
+        utførBeregningerOgEvaluerResultatEndeligBidrag()
+    }
+
+    @Test
+    @DisplayName("Endelig bidrag - eksempel 4B - Bidrag justert for delt bosted")
+    fun testEndeligBidrag_Eksempel4B() {
+        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel4B.json"
         forventetBeregnetBeløp = BigDecimal.ZERO.setScale(2)
         forventetResultatbeløp = BigDecimal.ZERO.setScale(0)
         forventetUMinusNettoBarnetilleggBM = BigDecimal.ZERO.setScale(2)
@@ -188,34 +188,84 @@ internal class BeregnEndeligBidragApiTest {
     }
 
     @Test
-    @DisplayName("Endelig bidrag - eksempel 4 - Bidrag satt til barnetillegg BP")
-    fun testEndeligBidrag_Eksempel04() {
-        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel4.json"
-        forventetBeregnetBeløp = BigDecimal.valueOf(2001).setScale(2)
-        forventetResultatbeløp = BigDecimal.valueOf(2000).setScale(0)
-        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(1000).setScale(2)
-        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(1999).setScale(2)
-        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(1000).setScale(2)
-        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(1999).setScale(2)
-        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(3000).setScale(2)
-        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(2001).setScale(2)
+    @DisplayName("Endelig bidrag - eksempel 5 - Bidrag satt til barnetillegg BP")
+    fun testEndeligBidrag_Eksempel5() {
+        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel5.json"
+        forventetBeregnetBeløp = BigDecimal.valueOf(500).setScale(2)
+        forventetResultatbeløp = BigDecimal.valueOf(500).setScale(0)
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(1500).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(4500).setScale(2)
+        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(1500).setScale(2)
+        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(2500).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(3500).setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(500).setScale(2)
         forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
         forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
         forventetBarnetErSelvforsørget = false
         forventetBidragJustertForDeltBosted = false
         forventetBidragJustertForNettoBarnetilleggBP = true
         forventetBidragJustertForNettoBarnetilleggBM = true
-        forventetBidragJustertNedTilEvne = false
-        forventetBidragJustertNedTil25ProsentAvInntekt = false
+        forventetBidragJustertNedTilEvne = true
+        forventetBidragJustertNedTil25ProsentAvInntekt = true
         forventetAntallBarnetilleggBP = 1
         forventetAntallBarnetilleggBM = 1
         utførBeregningerOgEvaluerResultatEndeligBidrag()
     }
 
     @Test
-    @DisplayName("Endelig bidrag - eksempel 5A - Bidrag satt til underholdskostnad minus barnetillegg BM")
-    fun testEndeligBidrag_Eksempel05A() {
-        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel5A.json"
+    @DisplayName("Endelig bidrag - eksempel 6 - Bidrag redusert til evne")
+    fun testEndeligBidrag_Eksempel6() {
+        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel6.json"
+        forventetBeregnetBeløp = BigDecimal.valueOf(2501).setScale(2)
+        forventetResultatbeløp = BigDecimal.valueOf(2500).setScale(0)
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(7500).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(8499).setScale(2)
+        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(7500).setScale(2)
+        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(3500).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(3500).setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(2501).setScale(2)
+        forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
+        forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
+        forventetBarnetErSelvforsørget = false
+        forventetBidragJustertForDeltBosted = false
+        forventetBidragJustertForNettoBarnetilleggBP = false
+        forventetBidragJustertForNettoBarnetilleggBM = true
+        forventetBidragJustertNedTilEvne = true
+        forventetBidragJustertNedTil25ProsentAvInntekt = true
+        forventetAntallBarnetilleggBP = 1
+        forventetAntallBarnetilleggBM = 1
+        utførBeregningerOgEvaluerResultatEndeligBidrag()
+    }
+
+    @Test
+    @DisplayName("Endelig bidrag - eksempel 7 - Bidrag redusert til 25 prosent av inntekt")
+    fun testEndeligBidrag_Eksempel7() {
+        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel7.json"
+        forventetBeregnetBeløp = BigDecimal.valueOf(2501).setScale(2)
+        forventetResultatbeløp = BigDecimal.valueOf(2500).setScale(0)
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(7500).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(8499).setScale(2)
+        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(7500).setScale(2)
+        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(3500).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(3500).setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(2501).setScale(2)
+        forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
+        forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
+        forventetBarnetErSelvforsørget = false
+        forventetBidragJustertForDeltBosted = false
+        forventetBidragJustertForNettoBarnetilleggBP = false
+        forventetBidragJustertForNettoBarnetilleggBM = true
+        forventetBidragJustertNedTilEvne = false
+        forventetBidragJustertNedTil25ProsentAvInntekt = true
+        forventetAntallBarnetilleggBP = 1
+        forventetAntallBarnetilleggBM = 1
+        utførBeregningerOgEvaluerResultatEndeligBidrag()
+    }
+
+    @Test
+    @DisplayName("Endelig bidrag - eksempel 8A - Bidrag satt til underholdskostnad minus barnetillegg BM")
+    fun testEndeligBidrag_Eksempel8A() {
+        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel8A.json"
         forventetBeregnetBeløp = BigDecimal.valueOf(1900).setScale(2)
         forventetResultatbeløp = BigDecimal.valueOf(1900).setScale(0)
         forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(1900).setScale(2)
@@ -238,17 +288,17 @@ internal class BeregnEndeligBidragApiTest {
     }
 
     @Test
-    @DisplayName("Endelig bidrag - eksempel 5B - Bidrag satt til underholdskostnad minus barnetillegg BM. Netto barnetillegg BM > U")
-    fun testEndeligBidrag_Eksempel05B() {
-        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel5B.json"
-        forventetBeregnetBeløp = BigDecimal.ZERO.setScale(2)
-        forventetResultatbeløp = BigDecimal.ZERO.setScale(0)
-        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(-800).setScale(2)
-        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(99).setScale(2)
-        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.ZERO.setScale(2)
-        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(99).setScale(2)
-        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(99).setScale(2)
-        forventetNettoBidragEtterSamværsfradrag = BigDecimal.ZERO.setScale(2)
+    @DisplayName("Endelig bidrag - eksempel 8B - Bidrag satt til underholdskostnad minus barnetillegg BM - flere typer barnetillegg")
+    fun testEndeligBidrag_Eksempel8B() {
+        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel8B.json"
+        forventetBeregnetBeløp = BigDecimal.valueOf(1900).setScale(2)
+        forventetResultatbeløp = BigDecimal.valueOf(1900).setScale(0)
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(1900).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(2799).setScale(2)
+        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(1900).setScale(2)
+        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(2799).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(2799).setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(1900).setScale(2)
         forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
         forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
         forventetBarnetErSelvforsørget = false
@@ -257,65 +307,15 @@ internal class BeregnEndeligBidragApiTest {
         forventetBidragJustertForNettoBarnetilleggBM = true
         forventetBidragJustertNedTilEvne = false
         forventetBidragJustertNedTil25ProsentAvInntekt = false
-        forventetAntallBarnetilleggBP = 0
-        forventetAntallBarnetilleggBM = 1
-        utførBeregningerOgEvaluerResultatEndeligBidrag()
-    }
-
-    @Test
-    @DisplayName("Endelig bidrag - eksempel 6 - Bidrag redusert til 25 prosent av inntekt")
-    fun testEndeligBidrag_Eksempel06() {
-        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel6.json"
-        forventetBeregnetBeløp = BigDecimal.valueOf(2501).setScale(2)
-        forventetResultatbeløp = BigDecimal.valueOf(2500).setScale(0)
-        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(7500).setScale(2)
-        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(6000).setScale(2)
-        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(5001).setScale(2)
-        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(3500).setScale(2)
-        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(3500).setScale(2)
-        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(2501).setScale(2)
-        forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
-        forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
-        forventetBarnetErSelvforsørget = false
-        forventetBidragJustertForDeltBosted = false
-        forventetBidragJustertForNettoBarnetilleggBP = false
-        forventetBidragJustertForNettoBarnetilleggBM = false
-        forventetBidragJustertNedTilEvne = false
-        forventetBidragJustertNedTil25ProsentAvInntekt = true
         forventetAntallBarnetilleggBP = 1
-        forventetAntallBarnetilleggBM = 1
+        forventetAntallBarnetilleggBM = 2
         utførBeregningerOgEvaluerResultatEndeligBidrag()
     }
 
     @Test
-    @DisplayName("Endelig bidrag - eksempel 7 - Bidrag redusert av evne")
-    fun testEndeligBidrag_Eksempel07() {
-        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel7.json"
-        forventetBeregnetBeløp = BigDecimal.valueOf(2501).setScale(2)
-        forventetResultatbeløp = BigDecimal.valueOf(2500).setScale(0)
-        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(7500).setScale(2)
-        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(6000).setScale(2)
-        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(5001).setScale(2)
-        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(3500).setScale(2)
-        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(3500).setScale(2)
-        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(2501).setScale(2)
-        forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
-        forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
-        forventetBarnetErSelvforsørget = false
-        forventetBidragJustertForDeltBosted = false
-        forventetBidragJustertForNettoBarnetilleggBP = false
-        forventetBidragJustertForNettoBarnetilleggBM = false
-        forventetBidragJustertNedTilEvne = true
-        forventetBidragJustertNedTil25ProsentAvInntekt = false
-        forventetAntallBarnetilleggBP = 1
-        forventetAntallBarnetilleggBM = 1
-        utførBeregningerOgEvaluerResultatEndeligBidrag()
-    }
-
-    @Test
-    @DisplayName("Endelig bidrag - eksempel 8 - Kostnadsberegnet bidrag")
-    fun testEndeligBidrag_Eksempel8() {
-        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel8.json"
+    @DisplayName("Endelig bidrag - eksempel 9 - Kostnadsberegnet bidrag")
+    fun testEndeligBidrag_Eksempel9() {
+        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel9.json"
         forventetBeregnetBeløp = BigDecimal.valueOf(5001).setScale(2)
         forventetResultatbeløp = BigDecimal.valueOf(5000).setScale(0)
         forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(7500).setScale(2)

@@ -46,7 +46,7 @@
           "fom": "2024-08",
           "til": "2024-09"
         },
-        "beløp": 10000,
+        "beløp": 3500,
         "skatt": {
           "minstefradrag": 0,
           "skattAlminneligInntekt": 0,
@@ -89,9 +89,9 @@
           "fom": "2024-08",
           "til": "2024-09"
         },
-        "endeligAndelFaktor": 0.600,
-        "andelBeløp": 6000,
-        "beregnetAndelFaktor": 0.600,
+        "endeligAndelFaktor": 0.900,
+        "andelBeløp": 9000,
+        "beregnetAndelFaktor": 0.900,
         "barnEndeligInntekt": 0,
         "barnetErSelvforsørget": false
       },
