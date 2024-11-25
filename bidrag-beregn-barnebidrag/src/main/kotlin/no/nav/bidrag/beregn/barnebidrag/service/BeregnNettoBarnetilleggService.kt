@@ -1,8 +1,11 @@
 package no.nav.bidrag.beregn.barnebidrag.service
 
 import com.fasterxml.jackson.databind.node.POJONode
-import no.nav.bidrag.beregn.barnebidrag.beregning.UnderholdskostnadBeregning
+import no.nav.bidrag.beregn.barnebidrag.beregning.NettoBarnetilleggBeregning
 import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilsynMedStønad
+import no.nav.bidrag.beregn.barnebidrag.bo.NettoBarnetilleggBeregningGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.NettoBarnetilleggPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.NettoBarnetilleggPeriodeResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.NettoTilsynsutgift
 import no.nav.bidrag.beregn.barnebidrag.bo.NettoTilsynsutgiftPeriodeResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonBarnetilsynBeregningGrunnlag
@@ -10,68 +13,62 @@ import no.nav.bidrag.beregn.barnebidrag.bo.SjablonForbruksutgifterBeregningGrunn
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonForbruksutgifterPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSjablontallBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadPeriodeResultat
-import no.nav.bidrag.beregn.barnebidrag.mapper.UnderholdskostnadMapper.finnReferanseTilRolle
-import no.nav.bidrag.beregn.barnebidrag.mapper.UnderholdskostnadMapper.mapUnderholdskostnadGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.mapper.NettoBarnetilleggMapper.finnReferanseTilRolle
+import no.nav.bidrag.beregn.barnebidrag.mapper.NettoBarnetilleggMapper.mapNettoBarnetilleggGrunnlag
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningNettoBarnetillegg
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningNettoTilsynsutgift
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
 import java.time.Period
 
-internal object BeregnUnderholdskostnadService : BeregnService() {
+internal object BeregnNettoBarnetilleggService : BeregnService() {
 
-    fun delberegningUnderholdskostnad(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
-        // Lager sjablon grunnlagsobjekter
-        val sjablonGrunnlag = lagSjablonGrunnlagsobjekter(periode = mottattGrunnlag.periode) { it.underholdskostnad }
-
-        // Mapper ut grunnlag som skal brukes for å beregne underholdskostnad
-        val underholdskostnadPeriodeGrunnlag = mapUnderholdskostnadGrunnlag(mottattGrunnlag, sjablonGrunnlag)
+    fun delberegningNettoBarnetillegg(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
+        // Mapper ut grunnlag som skal brukes for å beregne nettoBarnetillegg
+        val nettoBarnetilleggPeriodeGrunnlag = mapNettoBarnetilleggGrunnlag(mottattGrunnlag, sjablonGrunnlag)
 
         // Lager liste over bruddperioder
-        val bruddPeriodeListe = lagBruddPeriodeListeUnderholdskostnad(underholdskostnadPeriodeGrunnlag, mottattGrunnlag.periode)
+        val bruddPeriodeListe = lagBruddPeriodeListeNettoBarnetillegg(nettoBarnetilleggPeriodeGrunnlag, mottattGrunnlag.periode)
 
-        val underholdskostnadBeregningResultatListe = mutableListOf<UnderholdskostnadPeriodeResultat>()
+        val nettoBarnetilleggBeregningResultatListe = mutableListOf<NettoBarnetilleggPeriodeResultat>()
 
-        // Løper gjennom hver bruddperiode og beregner underholdskostnad
+        // Løper gjennom hver bruddperiode og beregner nettoBarnetillegg
         bruddPeriodeListe.forEach { bruddPeriode ->
-            val underholdskostnadBeregningGrunnlag = lagUnderholdskostnadBeregningGrunnlag(underholdskostnadPeriodeGrunnlag, bruddPeriode)
-            underholdskostnadBeregningResultatListe.add(
-                UnderholdskostnadPeriodeResultat(
+            val nettoBarnetilleggBeregningGrunnlag = lagNettoBarnetilleggBeregningGrunnlag(nettoBarnetilleggPeriodeGrunnlag, bruddPeriode)
+            nettoBarnetilleggBeregningResultatListe.add(
+                NettoBarnetilleggPeriodeResultat(
                     periode = bruddPeriode,
-                    resultat = UnderholdskostnadBeregning.beregn(underholdskostnadBeregningGrunnlag),
+                    resultat = NettoBarnetilleggBeregning.beregn(nettoBarnetilleggBeregningGrunnlag),
                 ),
             )
         }
 
         // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato)
-        if (underholdskostnadBeregningResultatListe.isNotEmpty()) {
-            val sisteElement = underholdskostnadBeregningResultatListe.last()
+        if (nettoBarnetilleggBeregningResultatListe.isNotEmpty()) {
+            val sisteElement = nettoBarnetilleggBeregningResultatListe.last()
             if (sisteElement.periode.til != null) {
                 val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
-                underholdskostnadBeregningResultatListe[underholdskostnadBeregningResultatListe.size - 1] = oppdatertSisteElement
+                nettoBarnetilleggBeregningResultatListe[nettoBarnetilleggBeregningResultatListe.size - 1] = oppdatertSisteElement
             }
         }
 
         // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
-        val resultatGrunnlagListe = mapUnderholdskostnadResultatGrunnlag(
-            underholdskostnadBeregningResultatListe = underholdskostnadBeregningResultatListe,
+        val resultatGrunnlagListe = mapNettoBarnetilleggResultatGrunnlag(
+            nettoBarnetilleggBeregningResultatListe = nettoBarnetilleggBeregningResultatListe,
             mottattGrunnlag = mottattGrunnlag,
             sjablonGrunnlag = sjablonGrunnlag,
         )
 
-        // Mapper ut grunnlag for delberegning underholdskostnad
+        // Mapper ut grunnlag for delberegning nettoBarnetillegg
         resultatGrunnlagListe.addAll(
-            mapDelberegningUnderholdskostnad(
-                underholdskostnadPeriodeResultatListe = underholdskostnadBeregningResultatListe,
+            mapDelberegningNettoBarnetillegg(
+                nettoBarnetilleggPeriodeResultatListe = nettoBarnetilleggBeregningResultatListe,
                 mottattGrunnlag = mottattGrunnlag,
             ),
         )
@@ -86,8 +83,8 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
             mapSjablonForbruksutgifterGrunnlag(periode = periode, sjablonListe = SjablonProvider.hentSjablonForbruksutgifter())
 
     // Lager en liste over alle bruddperioder basert på grunnlag som skal brukes i beregningen
-    private fun lagBruddPeriodeListeUnderholdskostnad(
-        grunnlagListe: UnderholdskostnadPeriodeGrunnlag,
+    private fun lagBruddPeriodeListeNettoBarnetillegg(
+        grunnlagListe: NettoBarnetilleggPeriodeGrunnlag,
         beregningsperiode: ÅrMånedsperiode,
     ): List<ÅrMånedsperiode> {
         val periodeListe = sequenceOf(grunnlagListe.beregningsperiode)
@@ -100,12 +97,12 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
         return lagBruddPeriodeListe(periodeListe, beregningsperiode)
     }
 
-    // Lager grunnlag for underholdskostnadberegning som ligger innenfor bruddPeriode
-    private fun lagUnderholdskostnadBeregningGrunnlag(
-        underholdskostnadPeriodeGrunnlag: UnderholdskostnadPeriodeGrunnlag,
+    // Lager grunnlag for nettoBarnetilleggberegning som ligger innenfor bruddPeriode
+    private fun lagNettoBarnetilleggBeregningGrunnlag(
+        nettoBarnetilleggPeriodeGrunnlag: NettoBarnetilleggPeriodeGrunnlag,
         bruddPeriode: ÅrMånedsperiode,
-    ): UnderholdskostnadBeregningGrunnlag {
-        val barnetilsynMedStønad = underholdskostnadPeriodeGrunnlag.barnetilsynMedStønadPeriodeGrunnlagListe
+    ): NettoBarnetilleggBeregningGrunnlag {
+        val barnetilsynMedStønad = nettoBarnetilleggPeriodeGrunnlag.barnetilsynMedStønadPeriodeGrunnlagListe
             .firstOrNull {
                 ÅrMånedsperiode(it.barnetilsynMedStønadPeriode.periode.fom, it.barnetilsynMedStønadPeriode.periode.til).inneholder(
                     bruddPeriode,
@@ -121,12 +118,12 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
 
         // Finner barnets beregnede alder. Alder regnes som om barnet er født 1. juli i fødselsåret.
         val beregnetAlder = Period.between(
-            underholdskostnadPeriodeGrunnlag.søknadsbarnPeriodeGrunnlag.fødselsdato.withMonth(7).withDayOfMonth(1),
+            nettoBarnetilleggPeriodeGrunnlag.søknadsbarnPeriodeGrunnlag.fødselsdato.withMonth(7).withDayOfMonth(1),
             bruddPeriode.fom.atDay(1),
         ).years
 
         // Lager liste over gyldige alderTom-verdier
-        val alderTomListe = hentAlderTomListe(underholdskostnadPeriodeGrunnlag.sjablonForbruksutgifterPeriodeGrunnlagListe)
+        val alderTomListe = hentAlderTomListe(nettoBarnetilleggPeriodeGrunnlag.sjablonForbruksutgifterPeriodeGrunnlagListe)
 
         // Finner den nærmeste alderTom som er større enn eller lik faktisk alder (til bruk for å hente ut sjablonverdi)
         val alderTom = alderTomListe.firstOrNull { beregnetAlder <= it } ?: alderTomListe.last()
@@ -144,12 +141,12 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
         }
 
         val resultat =
-            UnderholdskostnadBeregningGrunnlag(
+            NettoBarnetilleggBeregningGrunnlag(
                 søknadsbarn = SøknadsbarnBeregningGrunnlag(
-                    referanse = underholdskostnadPeriodeGrunnlag.søknadsbarnPeriodeGrunnlag.referanse,
+                    referanse = nettoBarnetilleggPeriodeGrunnlag.søknadsbarnPeriodeGrunnlag.referanse,
                     alder = beregnetAlder,
                 ),
-                barnetilsynMedStønad = underholdskostnadPeriodeGrunnlag.barnetilsynMedStønadPeriodeGrunnlagListe
+                skattFaktor = nettoBarnetilleggPeriodeGrunnlag.barnetilsynMedStønadPeriodeGrunnlagListe
                     .firstOrNull {
                         ÅrMånedsperiode(it.barnetilsynMedStønadPeriode.periode.fom, it.barnetilsynMedStønadPeriode.periode.til).inneholder(
                             bruddPeriode,
@@ -163,7 +160,7 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
                         )
                     },
 
-                nettoTilsynsutgiftBeregningGrunnlag = underholdskostnadPeriodeGrunnlag.nettoTilsynsutgiftPeriodeGrunnlagListe
+                nettoTilsynsutgiftBeregningGrunnlag = nettoBarnetilleggPeriodeGrunnlag.nettoTilsynsutgiftPeriodeGrunnlagListe
                     .firstOrNull {
                         ÅrMånedsperiode(
                             it.nettoTilsynsutgiftPeriodeGrunnlag.periode.fom,
@@ -177,7 +174,7 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
                         )
                     },
 
-                sjablonSjablontallBeregningGrunnlagListe = underholdskostnadPeriodeGrunnlag.sjablonSjablontallPeriodeGrunnlagListe
+                sjablonSjablontallBeregningGrunnlagListe = nettoBarnetilleggPeriodeGrunnlag.sjablonSjablontallPeriodeGrunnlagListe
                     .filter { it.sjablonSjablontallPeriode.periode.inneholder(bruddPeriode) }
                     .map {
                         SjablonSjablontallBeregningGrunnlag(
@@ -187,7 +184,7 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
                         )
                     },
                 sjablonBarnetilsynBeregningGrunnlag = if (typeTilsyn != null) {
-                    underholdskostnadPeriodeGrunnlag.sjablonBarnetilsynPeriodeGrunnlagListe
+                    nettoBarnetilleggPeriodeGrunnlag.sjablonBarnetilsynPeriodeGrunnlagListe
                         .asSequence()
                         .filter { it.sjablonBarnetilsynPeriode.periode.inneholder(bruddPeriode) }
                         .filter { it.sjablonBarnetilsynPeriode.typeStønad == "64" }
@@ -203,7 +200,7 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
                 } else {
                     null
                 },
-                sjablonForbruksutgifterBeregningGrunnlag = underholdskostnadPeriodeGrunnlag.sjablonForbruksutgifterPeriodeGrunnlagListe
+                sjablonForbruksutgifterBeregningGrunnlag = nettoBarnetilleggPeriodeGrunnlag.sjablonForbruksutgifterPeriodeGrunnlagListe
                     .filter { it.sjablonForbruksutgifterPeriode.periode.inneholder(bruddPeriode) }
                     .filter { it.sjablonForbruksutgifterPeriode.alderTom == alderTom }
                     .map {
@@ -217,14 +214,14 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
         return resultat
     }
 
-    private fun mapUnderholdskostnadResultatGrunnlag(
-        underholdskostnadBeregningResultatListe: List<UnderholdskostnadPeriodeResultat>,
+    private fun mapNettoBarnetilleggResultatGrunnlag(
+        nettoBarnetilleggBeregningResultatListe: List<NettoBarnetilleggPeriodeResultat>,
         mottattGrunnlag: BeregnGrunnlag,
         sjablonGrunnlag: List<GrunnlagDto>,
     ): MutableList<GrunnlagDto> {
         val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
         val grunnlagReferanseListe =
-            underholdskostnadBeregningResultatListe
+            nettoBarnetilleggBeregningResultatListe
                 .flatMap { it.resultat.grunnlagsreferanseListe }
                 .distinct()
 
@@ -269,7 +266,7 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
 
     private fun mapDelberegninger(
         mottattGrunnlag: BeregnGrunnlag,
-        underholdskostnadPeriodeGrunnlag: UnderholdskostnadPeriodeGrunnlag,
+        nettoBarnetilleggPeriodeGrunnlag: NettoBarnetilleggPeriodeGrunnlag,
         delberegningNettoTilsynsutgiftResultat: List<NettoTilsynsutgiftPeriodeResultat>,
 //        referanseTilSøknadsbarn: String,
     ): List<GrunnlagDto> {
@@ -336,11 +333,11 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
             )
         }
 
-    // Mapper ut DelberegningUnderholdskostnad
-    private fun mapDelberegningUnderholdskostnad(
-        underholdskostnadPeriodeResultatListe: List<UnderholdskostnadPeriodeResultat>,
+    // Mapper ut DelberegningNettoBarnetillegg
+    private fun mapDelberegningNettoBarnetillegg(
+        nettoBarnetilleggPeriodeResultatListe: List<NettoBarnetilleggPeriodeResultat>,
         mottattGrunnlag: BeregnGrunnlag,
-    ): List<GrunnlagDto> = underholdskostnadPeriodeResultatListe
+    ): List<GrunnlagDto> = nettoBarnetilleggPeriodeResultatListe
         .map {
             GrunnlagDto(
                 referanse = opprettDelberegningreferanse(
@@ -354,14 +351,14 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
                 ),
                 type = Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD,
                 innhold = POJONode(
-                    DelberegningUnderholdskostnad(
+                    DelberegningNettoBarnetillegg(
                         periode = it.periode,
                         forbruksutgift = it.resultat.forbruksutgift,
                         boutgift = it.resultat.boutgift,
                         barnetilsynMedStønad = it.resultat.barnetilsynMedStønad,
                         nettoTilsynsutgift = it.resultat.nettoTilsynsutgift,
                         barnetrygd = it.resultat.barnetrygd,
-                        underholdskostnad = it.resultat.underholdskostnad,
+                        nettoBarnetillegg = it.resultat.nettoBarnetillegg,
                     ),
                 ),
                 grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe.distinct().sorted(),
