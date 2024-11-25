@@ -220,6 +220,7 @@ internal object BeregnBidragsevneService : BeregnService() {
                 innhold = it.innhold,
                 grunnlagsreferanseListe = it.grunnlagsreferanseListe,
                 gjelderReferanse = it.gjelderReferanse,
+                gjelderBarnReferanse = it.gjelderBarnReferanse,
             )
         }
 
@@ -358,6 +359,7 @@ internal object BeregnBidragsevneService : BeregnService() {
                         innhold = it.innhold,
                         grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
                         gjelderReferanse = it.gjelderReferanse,
+                        gjelderBarnReferanse = it.gjelderBarnReferanse,
                     )
                 },
         )
@@ -374,7 +376,7 @@ internal object BeregnBidragsevneService : BeregnService() {
         .firstOrNull()
         ?.let { innslagKapitalinntektSjablon ->
             Sjablontall(
-                typeSjablon = innslagKapitalinntektSjablon.innhold.sjablon.navn,
+                typeSjablon = innslagKapitalinntektSjablon.innhold.sjablon.id,
                 datoFom = innslagKapitalinntektSjablon.innhold.periode.fom.atDay(1),
                 datoTom = innslagKapitalinntektSjablon.innhold.periode.til?.atEndOfMonth()?.minusMonths(1),
                 verdi = innslagKapitalinntektSjablon.innhold.verdi,

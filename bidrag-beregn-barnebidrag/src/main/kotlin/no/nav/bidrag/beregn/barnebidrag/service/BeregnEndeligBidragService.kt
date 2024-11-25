@@ -143,23 +143,33 @@ internal object BeregnEndeligBidragService : BeregnService() {
                 )
             }
             ?: throw IllegalArgumentException("Delt bosted grunnlag mangler for periode $bruddPeriode"),
+        // TODO: Summering må skje i delberegning netto barnetillegg
         barnetilleggBPBeregningGrunnlag = endeligBidragPeriodeGrunnlag.barnetilleggBPPeriodeGrunnlagListe
-            .firstOrNull { it.barnetilleggPeriode.periode.inneholder(bruddPeriode) }
-            ?.let {
-                BarnetilleggBeregningGrunnlag(
-                    referanse = it.referanse,
-                    beløp = it.barnetilleggPeriode.beløp,
-                    skattFaktor = it.barnetilleggPeriode.skattFaktor,
-                )
+            .filter { it.barnetilleggPeriode.periode.inneholder(bruddPeriode) }
+            .let { barnetilleggListe ->
+                if (barnetilleggListe.isNotEmpty()) {
+                    BarnetilleggBeregningGrunnlag(
+                        referanse = barnetilleggListe.map { it.referanse },
+                        beløp = barnetilleggListe.sumOf { it.barnetilleggPeriode.beløp },
+                        skattFaktor = barnetilleggListe.first().barnetilleggPeriode.skattFaktor,
+                    )
+                } else {
+                    null
+                }
             },
+        // TODO: Summering må skje i delberegning netto barnetillegg
         barnetilleggBMBeregningGrunnlag = endeligBidragPeriodeGrunnlag.barnetilleggBMPeriodeGrunnlagListe
-            .firstOrNull { it.barnetilleggPeriode.periode.inneholder(bruddPeriode) }
-            ?.let {
-                BarnetilleggBeregningGrunnlag(
-                    referanse = it.referanse,
-                    beløp = it.barnetilleggPeriode.beløp,
-                    skattFaktor = it.barnetilleggPeriode.skattFaktor,
-                )
+            .filter { it.barnetilleggPeriode.periode.inneholder(bruddPeriode) }
+            .let { barnetilleggListe ->
+                if (barnetilleggListe.isNotEmpty()) {
+                    BarnetilleggBeregningGrunnlag(
+                        referanse = barnetilleggListe.map { it.referanse },
+                        beløp = barnetilleggListe.sumOf { it.barnetilleggPeriode.beløp },
+                        skattFaktor = barnetilleggListe.first().barnetilleggPeriode.skattFaktor,
+                    )
+                } else {
+                    null
+                }
             },
     )
 
@@ -194,6 +204,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
                 innhold = it.innhold,
                 grunnlagsreferanseListe = it.grunnlagsreferanseListe,
                 gjelderReferanse = it.gjelderReferanse,
+                gjelderBarnReferanse = it.gjelderBarnReferanse,
             )
         }
 
@@ -213,19 +224,25 @@ internal object BeregnEndeligBidragService : BeregnService() {
                     SluttberegningBarnebidrag(
                         periode = it.periode,
                         beregnetBeløp = it.resultat.beregnetBeløp,
-                        resultatKode = it.resultat.resultatKode,
                         resultatBeløp = it.resultat.resultatBeløp,
-                        kostnadsberegnetBidrag = it.resultat.kostnadsberegnetBidrag,
-                        nettoBarnetilleggBP = it.resultat.nettoBarnetilleggBP,
-                        nettoBarnetilleggBM = it.resultat.nettoBarnetilleggBM,
-                        justertNedTilEvne = it.resultat.justertNedTilEvne,
-                        ingenEndringUnderGrense = false,
-                        justertNedTil25ProsentAvInntekt = it.resultat.justertNedTil25ProsentAvInntekt,
-                        justertForNettoBarnetilleggBP = it.resultat.justertForNettoBarnetilleggBP,
-                        justertForNettoBarnetilleggBM = it.resultat.justertForNettoBarnetilleggBM,
+                        uMinusNettoBarnetilleggBM = it.resultat.uMinusNettoBarnetilleggBM,
+                        bruttoBidragEtterBarnetilleggBM = it.resultat.bruttoBidragEtterBarnetilleggBM,
+                        nettoBidragEtterBarnetilleggBM = it.resultat.nettoBidragEtterBarnetilleggBM,
+                        bruttoBidragJustertForEvneOg25Prosent = it.resultat.bruttoBidragJustertForEvneOg25Prosent,
+                        bruttoBidragEtterBarnetilleggBP = it.resultat.bruttoBidragEtterBarnetilleggBP,
+                        nettoBidragEtterSamværsfradrag = it.resultat.nettoBidragEtterSamværsfradrag,
+                        bpAndelAvUVedDeltBostedFaktor = it.resultat.bpAndelAvUVedDeltBostedFaktor,
+                        bpAndelAvUVedDeltBostedBeløp = it.resultat.bpAndelAvUVedDeltBostedBeløp,
+                        ingenEndringUnderGrense = it.resultat.ingenEndringUnderGrense,
+                        barnetErSelvforsørget = it.resultat.barnetErSelvforsørget,
+                        bidragJustertForDeltBosted = it.resultat.bidragJustertForDeltBosted,
+                        bidragJustertForNettoBarnetilleggBP = it.resultat.bidragJustertForNettoBarnetilleggBP,
+                        bidragJustertForNettoBarnetilleggBM = it.resultat.bidragJustertForNettoBarnetilleggBM,
+                        bidragJustertNedTilEvne = it.resultat.bidragJustertNedTilEvne,
+                        bidragJustertNedTil25ProsentAvInntekt = it.resultat.bidragJustertNedTil25ProsentAvInntekt,
                     ),
                 ),
-                grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe.sorted(),
+                grunnlagsreferanseListe = (it.resultat.grunnlagsreferanseListe + mottattGrunnlag.søknadsbarnReferanse).sorted(),
             )
         }
 }

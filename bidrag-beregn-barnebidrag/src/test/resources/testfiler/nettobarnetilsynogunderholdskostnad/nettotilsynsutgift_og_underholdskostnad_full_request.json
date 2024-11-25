@@ -259,12 +259,12 @@
         "fom" : "2024-02",
         "til" : "2024-03"
       },
-      "gjelderBarn" : "person_PERSON_SØKNADSBARN_20130615_285",
       "tilsynstype" : "HELTID",
       "skolealder" : "OVER",
       "manueltRegistrert" : true
     },
     "grunnlagsreferanseListe" : [ ],
+    "gjelderBarnReferanse" : "person_PERSON_SØKNADSBARN_20130615_285",
     "gjelderReferanse" : null
   }, {
     "referanse" : "TILLEGGSSTØNAD_PERIODE_person_PERSON_SØKNADSBARN_20130615_285__20240201",
@@ -274,11 +274,11 @@
         "fom" : "2024-02",
         "til" : null
       },
-      "gjelderBarn" : "person_PERSON_SØKNADSBARN_20130615_285",
       "beløpDagsats" : 1200,
       "manueltRegistrert" : true
     },
     "grunnlagsreferanseListe" : [ ],
+    "gjelderBarnReferanse" : "person_PERSON_SØKNADSBARN_20130615_285",
     "gjelderReferanse" : null
   }, {
     "referanse" : "FAKTISK_UTGIFT_PERIODE_person_PERSON_SØKNADSBARN_20130615_285__20240201",
@@ -288,13 +288,13 @@
         "fom" : "2024-02",
         "til" : null
       },
-      "gjelderBarn" : "person_PERSON_SØKNADSBARN_20130615_285",
       "fødselsdatoBarn" : "2013-06-15",
       "faktiskUtgiftBeløp" : 10,
       "kostpengerBeløp" : 0,
       "manueltRegistrert" : true
     },
     "grunnlagsreferanseListe" : [ ],
+    "gjelderBarnReferanse" : "person_PERSON_SØKNADSBARN_20130615_285",
     "gjelderReferanse" : null
   }, {
     "referanse" : "delberegning_samværsklasse_netter",

@@ -20,6 +20,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBase
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.LocalDate
+import java.util.Collections.emptyList
 
 internal object NettoTilsynsutgiftMapper : CoreMapper() {
     fun mapNettoTilsynsutgiftPeriodeGrunnlag(mottattGrunnlag: BeregnGrunnlag, sjablonGrunnlag: List<GrunnlagDto>): NettoTilsynsutgiftPeriodeGrunnlag {
@@ -52,7 +53,7 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
                                 datoFom = it.innhold.periode.toDatoperiode().fom,
                                 datoTil = it.innhold.periode.toDatoperiode().til,
                             ),
-                            gjelderBarn = it.innhold.gjelderBarn,
+                            gjelderBarn = it.gjelderBarnReferanse!!,
                             beregnetBeløp = beregnBeløpFaktiskUtgift(it.innhold.faktiskUtgiftBeløp, it.innhold.kostpengerBeløp),
                             grunnlagsreferanseListe = emptyList(),
                         )
@@ -83,7 +84,7 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
                                 datoFom = it.innhold.periode.toDatoperiode().fom,
                                 datoTil = it.innhold.periode.toDatoperiode().til,
                             ),
-                            gjelderBarn = it.innhold.gjelderBarn,
+                            gjelderBarn = it.gjelderBarnReferanse!!,
                             beregnetBeløp = beregnBeløpTilleggsstønad(it.innhold.beløpDagsats),
                             grunnlagsreferanseListe = emptyList(),
                         )
@@ -140,10 +141,10 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
 
     fun beregnBeløpFaktiskUtgift(faktiskUtgiftBeløp: BigDecimal, kostpengerBeløp: BigDecimal?): BigDecimal =
         faktiskUtgiftBeløp.minus(kostpengerBeløp ?: BigDecimal.ZERO).multiply(BigDecimal.valueOf(11))
-            .divide(BigDecimal.valueOf(12), 10, RoundingMode.HALF_UP)
+            .divide(BigDecimal.valueOf(12), 10, RoundingMode.HALF_UP).coerceAtLeast(BigDecimal.ZERO)
 
     fun beregnBeløpTilleggsstønad(beløpDagsats: BigDecimal): BigDecimal =
-        beløpDagsats.multiply(BigDecimal.valueOf(260)).divide(BigDecimal.valueOf(12), 10, RoundingMode.HALF_UP)
+        beløpDagsats.multiply(BigDecimal.valueOf(260)).divide(BigDecimal.valueOf(12), 10, RoundingMode.HALF_UP).coerceAtLeast(BigDecimal.ZERO)
 
     fun finnFødselsdatoBarn(beregnGrunnlag: List<GrunnlagDto>, referanse: String): LocalDate =
         finnPersonFraReferanse(beregnGrunnlag, referanse).fødselsdato

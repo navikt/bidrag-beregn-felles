@@ -53,10 +53,9 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
         val nettoTilsynsutgiftBeregningResultatListe = mutableListOf<NettoTilsynsutgiftPeriodeResultat>()
 
         bruddPeriodeListe.forEach { bruddPeriode ->
-            // Teller antall barn under 13 år i perioden og filterer bort resten. Hvis antall er null så gjøres det ingen beregning
+            // Teller antall barn i perioden. Hvis antall er null så gjøres det ingen beregning
             val antallBarnIPerioden = nettoTilsynsutgiftPeriodeGrunnlag.faktiskUtgiftPeriodeCoreListe
                 .filter { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
-                .filter { finnAlderBarn(mottattGrunnlag.grunnlagListe, it.gjelderBarn, bruddPeriode.fom.atDay(1)) < 13 }
                 .size
             if (antallBarnIPerioden > 0) {
                 val nettoTilsynsutgiftBeregningGrunnlag =
@@ -233,6 +232,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                 innhold = it.innhold,
                 grunnlagsreferanseListe = it.grunnlagsreferanseListe,
                 gjelderReferanse = it.gjelderReferanse,
+                gjelderBarnReferanse = it.gjelderBarnReferanse,
             )
         }
 
@@ -257,6 +257,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                     ),
                 ),
                 grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe,
+                gjelderBarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
                 gjelderReferanse = finnReferanseTilRolle(
                     grunnlagListe = mottattGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
@@ -282,6 +283,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
         resultatGrunnlagListe.addAll(
             mapDelberegningFaktiskTilsynsutgift(
                 faktiskUtgiftPeriodeCoreListe = faktiskUtgiftPeriodeCoreListe,
+                bidragsmottakerReferanse = referanseBm,
             ),
         )
 
@@ -313,6 +315,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                         innhold = it.innhold,
                         grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
                         gjelderReferanse = it.gjelderReferanse,
+                        gjelderBarnReferanse = it.gjelderBarnReferanse,
                     )
                 },
         )
@@ -321,21 +324,23 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
     }
 
     // Mapper ut DelberegningFaktiskUtgift
-    private fun mapDelberegningFaktiskTilsynsutgift(faktiskUtgiftPeriodeCoreListe: List<FaktiskUtgiftPeriodeCore>) = faktiskUtgiftPeriodeCoreListe
-        .map {
-            GrunnlagDto(
-                referanse = it.referanse,
-                type = bestemGrunnlagstype(it.referanse),
-                innhold = POJONode(
-                    DelberegningFaktiskTilsynsutgift(
-                        periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
-                        beregnetBeløp = it.beregnetBeløp,
+    private fun mapDelberegningFaktiskTilsynsutgift(faktiskUtgiftPeriodeCoreListe: List<FaktiskUtgiftPeriodeCore>, bidragsmottakerReferanse: String) =
+        faktiskUtgiftPeriodeCoreListe
+            .map {
+                GrunnlagDto(
+                    referanse = it.referanse,
+                    type = bestemGrunnlagstype(it.referanse),
+                    innhold = POJONode(
+                        DelberegningFaktiskTilsynsutgift(
+                            periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
+                            beregnetBeløp = it.beregnetBeløp,
+                        ),
                     ),
-                ),
-                grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
-                gjelderReferanse = it.gjelderBarn,
-            )
-        }
+                    grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
+                    gjelderReferanse = bidragsmottakerReferanse,
+                    gjelderBarnReferanse = it.gjelderBarn,
+                )
+            }
 
     // Mapper ut DelberegningTilleggsstønad
     private fun mapDelberegningTilleggsstønad(tilleggsstønadPeriodeCoreListe: List<TilleggsstønadPeriodeCore>, bidragsmottakerReferanse: String) =
@@ -352,6 +357,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                     ),
                     grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
                     gjelderReferanse = bidragsmottakerReferanse,
+                    gjelderBarnReferanse = it.gjelderBarn,
                 )
             }
 

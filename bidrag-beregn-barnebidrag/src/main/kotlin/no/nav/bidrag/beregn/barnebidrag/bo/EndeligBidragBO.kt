@@ -1,8 +1,8 @@
 package no.nav.bidrag.beregn.barnebidrag.bo
 
-import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.avrundetMedNullDesimaler
+import no.nav.bidrag.domene.util.avrundetMedTiDesimaler
 import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
@@ -56,18 +56,26 @@ data class SamværsfradragDelberegningBeregningGrunnlag(val referanse: String, v
 
 data class DeltBostedBeregningGrunnlag(val referanse: String, val deltBosted: Boolean)
 
-data class BarnetilleggBeregningGrunnlag(val referanse: String, val beløp: BigDecimal, val skattFaktor: BigDecimal)
+// TODO Ikke nødvendig med liste av referanser når delberegning netto barnetillegg er klar
+data class BarnetilleggBeregningGrunnlag(val referanse: List<String>, val beløp: BigDecimal, val skattFaktor: BigDecimal)
 
 data class EndeligBidragBeregningResultat(
     val beregnetBeløp: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
-    val resultatKode: Resultatkode,
     val resultatBeløp: BigDecimal = BigDecimal.ZERO.avrundetMedNullDesimaler,
-    val kostnadsberegnetBidrag: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
-    val nettoBarnetilleggBP: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
-    val nettoBarnetilleggBM: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
-    val justertNedTilEvne: Boolean = false,
-    val justertNedTil25ProsentAvInntekt: Boolean = false,
-    val justertForNettoBarnetilleggBP: Boolean = false,
-    val justertForNettoBarnetilleggBM: Boolean = false,
+    val uMinusNettoBarnetilleggBM: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
+    val bruttoBidragEtterBarnetilleggBM: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
+    val nettoBidragEtterBarnetilleggBM: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
+    val bruttoBidragJustertForEvneOg25Prosent: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
+    val bruttoBidragEtterBarnetilleggBP: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
+    val nettoBidragEtterSamværsfradrag: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
+    val bpAndelAvUVedDeltBostedFaktor: BigDecimal = BigDecimal.ZERO.avrundetMedTiDesimaler,
+    val bpAndelAvUVedDeltBostedBeløp: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
+    val ingenEndringUnderGrense: Boolean = false,
+    val barnetErSelvforsørget: Boolean = false,
+    val bidragJustertForDeltBosted: Boolean = false,
+    val bidragJustertForNettoBarnetilleggBP: Boolean = false,
+    val bidragJustertForNettoBarnetilleggBM: Boolean = false,
+    val bidragJustertNedTilEvne: Boolean = false,
+    val bidragJustertNedTil25ProsentAvInntekt: Boolean = false,
     val grunnlagsreferanseListe: List<String> = emptyList(),
 )

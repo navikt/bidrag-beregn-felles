@@ -11,7 +11,7 @@ import java.math.MathContext
 import java.math.RoundingMode
 
 internal object NettoTilsynsutgiftBeregning {
-    // Beregner netto tilsynsutgift for alle barn under 13 år med faktiske utgifter. Hvis samlede faktiske utgifter er større enn
+    // Beregner netto tilsynsutgift for alle barn  med faktiske utgifter. Hvis samlede faktiske utgifter er større enn
     // sjablon maks tilsynsbeløp, skal beløpene justeres forholdsmessig.
 
     fun beregn(grunnlag: NettoTilsynsutgiftBeregningGrunnlag): NettoTilsynsutgiftBeregningResultat {
