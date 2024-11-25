@@ -15,6 +15,7 @@ import no.nav.bidrag.transport.behandling.beregning.samvær.SamværskalkulatorDe
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsklasse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsklasseNetter
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
+import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.math.MathContext
@@ -56,7 +57,13 @@ class BeregnSamværsklasseApi(private val sjablonService: SjablonService) {
             detaljer.gjennomsnittligMånedligSamvær().avrundetMedToDesimaler
     }
 
-    fun beregnSamværsklasse(kalkulator: SamværskalkulatorDetaljer): List<GrunnlagDto> {
+    fun beregnSamværsklasse(
+        kalkulator: SamværskalkulatorDetaljer,
+        // Ikke viktig å sette verdier her hvis det bare brukes for beregning.
+        // Er påkrevd for å lage grunnlag for vedtak
+        bidragspliktigreferanse: Grunnlagsreferanse = "",
+        søknadsbarnReferanse: Grunnlagsreferanse = "",
+    ): List<GrunnlagDto> {
         val resultat = beregnSamværsklasseDelberegning(kalkulator)
         val grunnlagSjablon = resultat.samværsklasser.map {
             it.sjablon.tilGrunnlagsobjekt(periode = ÅrMånedsperiode(it.sjablon.datoFom!!, it.sjablon.datoTom?.let { justerSjablonTomDato(it) }))
@@ -74,17 +81,21 @@ class BeregnSamværsklasseApi(private val sjablonService: SjablonService) {
         val grunnlagKalkulator = GrunnlagDto(
             type = Grunnlagstype.SAMVÆRSKALKULATOR,
             innhold = POJONode(kalkulator),
-            referanse = "samværskalkulator_hash_${kalkulator.hashCode()}",
+            referanse = "samværskalkulator_hash_${kalkulator.hashCode()}_${bidragspliktigreferanse}_$søknadsbarnReferanse",
+            gjelderReferanse = bidragspliktigreferanse,
+            gjelderBarnReferanse = søknadsbarnReferanse,
         )
         val gjennomsnittligSamvær = resultat.gjennomsnittligSamvær.avrundetMedToDesimaler
         val grunnlagSamværsklasse = GrunnlagDto(
             type = Grunnlagstype.DELBEREGNING_SAMVÆRSKLASSE,
             referanse = "delberegning_samværsklasse_${resultat.samværsklasse}" +
-                "_gjennomsnittlig_samvær_${gjennomsnittligSamvær.multiply(BigDecimal(100)).toInt()}",
+                "_gjennomsnittlig_samvær_${gjennomsnittligSamvær.multiply(BigDecimal(100)).toInt()}_${bidragspliktigreferanse}_$søknadsbarnReferanse",
             innhold = POJONode(
                 DelberegningSamværsklasse(resultat.samværsklasse, gjennomsnittligSamvær),
             ),
             grunnlagsreferanseListe = listOfNotNull(grunnlagSamværsklasseNetter?.referanse, grunnlagKalkulator.referanse),
+            gjelderReferanse = bidragspliktigreferanse,
+            gjelderBarnReferanse = søknadsbarnReferanse,
         )
         return listOfNotNull(grunnlagSamværsklasseNetter, grunnlagSamværsklasse, grunnlagKalkulator) + grunnlagSjablon
     }
