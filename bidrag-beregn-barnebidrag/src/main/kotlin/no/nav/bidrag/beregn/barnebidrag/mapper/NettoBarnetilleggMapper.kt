@@ -24,6 +24,7 @@ internal object NettoBarnetilleggMapper : CoreMapper() {
                 .map {
                     BarnetilleggPeriodeGrunnlag2(
                         referanse = it.referanse,
+                        gjelderReferanse = it.gjelderReferanse!!,
                         barnetilleggPeriode = it.innhold,
                     )
                 }
@@ -41,6 +42,7 @@ internal object NettoBarnetilleggMapper : CoreMapper() {
                 .map {
                     BarnetilleggSkattesatsDelberegningPeriodeGrunnlag(
                         referanse = it.referanse,
+                        gjelderReferanse = it.gjelderReferanse!!,
                         barnetilleggSkattesatsPeriode = it.innhold,
                     )
                 }

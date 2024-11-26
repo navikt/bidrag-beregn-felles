@@ -5,6 +5,7 @@ import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Barnetillegg
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBarnetilleggSkattesats
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagPeriodeInnhold
+import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import java.math.BigDecimal
 
 data class NettoBarnetilleggPeriodeGrunnlag(
@@ -15,6 +16,7 @@ data class NettoBarnetilleggPeriodeGrunnlag(
 
 data class BarnetilleggSkattesatsDelberegningPeriodeGrunnlag(
     val referanse: String,
+    val gjelderReferanse: String,
     val barnetilleggSkattesatsPeriode: DelberegningBarnetilleggSkattesats,
 )
 
@@ -39,10 +41,15 @@ data class NettoBarnetilleggBeregningResultat(
 // Skal erstattes av BarnetilleggPeriode etter endring av denne. Fjern skattFaktor og legg til Barnetilleggstype
 data class BarnetilleggPeriode2(
     override val periode: ÅrMånedsperiode,
+    val gjelderBarn: Grunnlagsreferanse,
     val type: Barnetilleggstype,
     val beløp: BigDecimal,
     override val manueltRegistrert: Boolean,
 ) : GrunnlagPeriodeInnhold
 
 // Fjernes også
-data class BarnetilleggPeriodeGrunnlag2(val referanse: String, val barnetilleggPeriode: BarnetilleggPeriode2)
+data class BarnetilleggPeriodeGrunnlag2(
+    val referanse: String,
+    val gjelderReferanse: String,
+    val barnetilleggPeriode: BarnetilleggPeriode2
+)
