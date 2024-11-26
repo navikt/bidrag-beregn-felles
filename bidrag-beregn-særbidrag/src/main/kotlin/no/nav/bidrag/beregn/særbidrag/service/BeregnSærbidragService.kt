@@ -3,6 +3,7 @@ package no.nav.bidrag.beregn.særbidrag.service
 import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.core.dto.SjablonResultatGrunnlagCore
 import no.nav.bidrag.beregn.core.exception.UgyldigInputException
+import no.nav.bidrag.beregn.core.mapping.bestemGrunnlagstype
 import no.nav.bidrag.beregn.core.mapping.mapTilGrunnlag
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.BidragsevneCore
