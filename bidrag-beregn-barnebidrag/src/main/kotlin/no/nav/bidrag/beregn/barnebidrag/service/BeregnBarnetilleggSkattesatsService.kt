@@ -29,14 +29,14 @@ internal object BeregnBarnetilleggSkattesatsService : BeregnService() {
         )
 
         // Lager sjablon grunnlagsobjekter
-        //TODO - sjabloner for barnetillegg skattesats
+        // TODO - sjabloner for barnetillegg skattesats
         val sjablonGrunnlag = lagSjablonGrunnlagsobjekter(periode = mottattGrunnlag.periode) { it.barnetilleggSkattesats }
 
         // Mapper ut grunnlag som skal brukes for å beregne barnetilleggSkattesats
         val barnetilleggSkattesatsPeriodeGrunnlag = mapBarnetilleggSkattesatsGrunnlag(
             mottattGrunnlag = mottattGrunnlag,
             sjablonGrunnlag = sjablonGrunnlag,
-            referanseTilRolle = referanseTilRolle
+            referanseTilRolle = referanseTilRolle,
         )
 
         // Lager liste over bruddperioder
@@ -82,7 +82,7 @@ internal object BeregnBarnetilleggSkattesatsService : BeregnService() {
             mapDelberegningBarnetilleggSkattesats(
                 barnetilleggSkattesatsPeriodeResultatListe = barnetilleggSkattesatsBeregningResultatListe,
                 mottattGrunnlag = mottattGrunnlag,
-                referanseTilRolle = referanseTilRolle
+                referanseTilRolle = referanseTilRolle,
             ),
         )
 
@@ -104,7 +104,8 @@ internal object BeregnBarnetilleggSkattesatsService : BeregnService() {
             .plus(grunnlagListe.sjablonSjablontallPeriodeGrunnlagListe.asSequence().map { it.sjablonSjablontallPeriode.periode })
             .plus(
                 grunnlagListe.sjablonTrinnvisSkattesatsPeriodeGrunnlagListe.asSequence()
-                    .map { it.sjablonTrinnvisSkattesatsPeriode.periode })
+                    .map { it.sjablonTrinnvisSkattesatsPeriode.periode },
+            )
 
         return lagBruddPeriodeListe(periodeListe, beregningsperiode)
     }
@@ -113,32 +114,30 @@ internal object BeregnBarnetilleggSkattesatsService : BeregnService() {
     private fun lagBarnetilleggSkattesatsBeregningGrunnlag(
         barnetilleggSkattesatsPeriodeGrunnlag: BarnetilleggSkattesatsPeriodeGrunnlag,
         bruddPeriode: ÅrMånedsperiode,
-    ): BarnetilleggSkattesatsBeregningGrunnlag =
-
-        BarnetilleggSkattesatsBeregningGrunnlag(
-            inntektBeregningGrunnlag = barnetilleggSkattesatsPeriodeGrunnlag.sumInntektBeregningGrunnlag
-                .firstOrNull { it.sumInntektPeriode.periode.inneholder(bruddPeriode) }
-                ?.let { InntektBeregningGrunnlag(referanse = it.referanse, sumInntekt = it.sumInntektPeriode.totalinntekt) }
-                ?: throw IllegalArgumentException("Delberegning sum inntekt mangler for periode $bruddPeriode"),
-            sjablonSjablontallBeregningGrunnlagListe = barnetilleggSkattesatsPeriodeGrunnlag.sjablonSjablontallPeriodeGrunnlagListe
-                .filter { it.sjablonSjablontallPeriode.periode.inneholder(bruddPeriode) }
-                .map {
-                    SjablonSjablontallBeregningGrunnlag(
-                        referanse = it.referanse,
-                        type = it.sjablonSjablontallPeriode.sjablon.navn,
-                        verdi = it.sjablonSjablontallPeriode.verdi.toDouble(),
-                    )
-                },
-            sjablonTrinnvisSkattesatsBeregningGrunnlag = barnetilleggSkattesatsPeriodeGrunnlag.sjablonTrinnvisSkattesatsPeriodeGrunnlagListe
-                .firstOrNull { it.sjablonTrinnvisSkattesatsPeriode.periode.inneholder(bruddPeriode) }
-                ?.let {
-                    SjablonTrinnvisSkattesatsBeregningGrunnlag(
-                        referanse = it.referanse,
-                        trinnliste = it.sjablonTrinnvisSkattesatsPeriode.trinnliste,
-                    )
-                }
-                ?: throw IllegalArgumentException("Ingen sjablonverdier for trinnvis skattesats funnet for periode $bruddPeriode"),
-        )
+    ): BarnetilleggSkattesatsBeregningGrunnlag = BarnetilleggSkattesatsBeregningGrunnlag(
+        inntektBeregningGrunnlag = barnetilleggSkattesatsPeriodeGrunnlag.sumInntektBeregningGrunnlag
+            .firstOrNull { it.sumInntektPeriode.periode.inneholder(bruddPeriode) }
+            ?.let { InntektBeregningGrunnlag(referanse = it.referanse, sumInntekt = it.sumInntektPeriode.totalinntekt) }
+            ?: throw IllegalArgumentException("Delberegning sum inntekt mangler for periode $bruddPeriode"),
+        sjablonSjablontallBeregningGrunnlagListe = barnetilleggSkattesatsPeriodeGrunnlag.sjablonSjablontallPeriodeGrunnlagListe
+            .filter { it.sjablonSjablontallPeriode.periode.inneholder(bruddPeriode) }
+            .map {
+                SjablonSjablontallBeregningGrunnlag(
+                    referanse = it.referanse,
+                    type = it.sjablonSjablontallPeriode.sjablon.navn,
+                    verdi = it.sjablonSjablontallPeriode.verdi.toDouble(),
+                )
+            },
+        sjablonTrinnvisSkattesatsBeregningGrunnlag = barnetilleggSkattesatsPeriodeGrunnlag.sjablonTrinnvisSkattesatsPeriodeGrunnlagListe
+            .firstOrNull { it.sjablonTrinnvisSkattesatsPeriode.periode.inneholder(bruddPeriode) }
+            ?.let {
+                SjablonTrinnvisSkattesatsBeregningGrunnlag(
+                    referanse = it.referanse,
+                    trinnliste = it.sjablonTrinnvisSkattesatsPeriode.trinnliste,
+                )
+            }
+            ?: throw IllegalArgumentException("Ingen sjablonverdier for trinnvis skattesats funnet for periode $bruddPeriode"),
+    )
 
     private fun mapBarnetilleggSkattesatsResultatGrunnlag(
         barnetilleggSkattesatsBeregningResultatListe: List<BarnetilleggSkattesatsPeriodeResultat>,
@@ -188,7 +187,7 @@ internal object BeregnBarnetilleggSkattesatsService : BeregnService() {
     private fun mapDelberegningBarnetilleggSkattesats(
         barnetilleggSkattesatsPeriodeResultatListe: List<BarnetilleggSkattesatsPeriodeResultat>,
         mottattGrunnlag: BeregnGrunnlag,
-        referanseTilRolle: String
+        referanseTilRolle: String,
     ): List<GrunnlagDto> = barnetilleggSkattesatsPeriodeResultatListe
         .map {
             GrunnlagDto(
@@ -196,7 +195,7 @@ internal object BeregnBarnetilleggSkattesatsService : BeregnService() {
                     type = Grunnlagstype.DELBEREGNING_BARNETILLEGG_SKATTESATS,
                     periode = ÅrMånedsperiode(fom = mottattGrunnlag.periode.fom, til = null),
                     søknadsbarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
-                    gjelderReferanse = referanseTilRolle
+                    gjelderReferanse = referanseTilRolle,
                 ),
                 type = Grunnlagstype.DELBEREGNING_BARNETILLEGG_SKATTESATS,
                 innhold = POJONode(

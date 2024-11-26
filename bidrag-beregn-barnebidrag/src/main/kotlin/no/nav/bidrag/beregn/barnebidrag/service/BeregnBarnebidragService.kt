@@ -6,6 +6,7 @@ import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnetilleggSkattesatsServ
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBidragsevneService.delberegningBidragsevne
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBpAndelUnderholdskostnadService.delberegningBpAndelUnderholdskostnad
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnEndeligBidragService.delberegningEndeligBidrag
+import no.nav.bidrag.beregn.barnebidrag.service.BeregnNettoBarnetilleggService.delberegningNettoBarnetillegg
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnNettoTilsynsutgiftService.delberegningNettoTilsynsutgift
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnSamværsfradragService.delberegningSamværsfradrag
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnUnderholdskostnadService.delberegningUnderholdskostnad
@@ -166,6 +167,24 @@ class BeregnBarnebidragService : BeregnService() {
         val delberegningBpAndelUnderholdskostnadResultat = delberegningBpAndelUnderholdskostnad(mottattGrunnlag)
 
         return delberegningBpAndelUnderholdskostnadResultat
+    }
+
+    // Beregning av netto barnetillegg. Kan gjelde både BM og BP.
+    fun beregnNettoBarnetillegg(mottattGrunnlag: BeregnGrunnlag, rolle: Grunnlagstype): List<GrunnlagDto> {
+        secureLogger.debug { "Beregning av netto barnetillegg - følgende request mottatt: ${tilJson(mottattGrunnlag)}" }
+
+        // Kontroll av inputdata
+        try {
+            // TODO Bør være mulig å ha null i beregnDatoTil?
+            mottattGrunnlag.valider()
+        } catch (e: IllegalArgumentException) {
+            throw IllegalArgumentException("Ugyldig input ved beregning av netto barnetillegg: " + e.message)
+        }
+
+        // Kaller delberegninger
+        val delberegningNettoBarnetilleggResultat = delberegningNettoBarnetillegg(mottattGrunnlag, rolle)
+
+        return delberegningNettoBarnetilleggResultat
     }
 
     // Beregning av samværsfradrag

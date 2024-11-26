@@ -47,7 +47,7 @@ internal object BarnetilleggSkattesatsBeregning {
                 grunnlag.inntektBeregningGrunnlag.referanse,
                 grunnlag.sjablonTrinnvisSkattesatsBeregningGrunnlag.referanse,
             ) +
-                grunnlag.sjablonSjablontallBeregningGrunnlagListe.map { it.referanse }
+                grunnlag.sjablonSjablontallBeregningGrunnlagListe.map { it.referanse },
         )
     }
 
