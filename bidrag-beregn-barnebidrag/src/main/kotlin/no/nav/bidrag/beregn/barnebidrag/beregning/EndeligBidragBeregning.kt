@@ -8,6 +8,7 @@ import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import no.nav.bidrag.domene.util.avrundetTilNærmesteTier
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.util.Collections.emptyList
 
 internal object EndeligBidragBeregning {
 

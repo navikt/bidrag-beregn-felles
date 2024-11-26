@@ -42,7 +42,7 @@ internal class BeregnNettoTilsynsutgiftOgUnderholdskostnadApiTest {
     }
 
     @Test
-    @DisplayName("Underholdskostnad - eksempel 1  ")
+    @DisplayName("Underholdskostnad - eksempel 1")
     fun test_underholdskostnad_kun_sjabloner_flere_perioder() {
         filnavn = "src/test/resources/testfiler/underholdskostnad/underholdskostnad_kun_sjabloner_flere_perioder.json"
         val resultat = utførBeregningerOgEvaluerResultatNettoTilsynsutgiftOgUnderholdskostnad()
@@ -77,7 +77,7 @@ internal class BeregnNettoTilsynsutgiftOgUnderholdskostnadApiTest {
     }
 
     @Test
-    @DisplayName("Underholdskostnad - eksempel 2  ")
+    @DisplayName("Underholdskostnad - eksempel 2")
     fun test_netto_tilsynsugift_og_underholdskostnad_med_barnetilsyn_flere_perioder() {
         filnavn = "src/test/resources/testfiler/nettobarnetilsynogunderholdskostnad/nettotilsynsutgift_og_underholdskostnad_flere_perioder.json"
         val resultat = utførBeregningerOgEvaluerResultatNettoTilsynsutgiftOgUnderholdskostnad()
@@ -148,7 +148,7 @@ internal class BeregnNettoTilsynsutgiftOgUnderholdskostnadApiTest {
     }
 
     @Test
-    @DisplayName("Underholdskostnad - eksempel 3  ")
+    @DisplayName("Underholdskostnad - eksempel 3")
     fun test_netto_tilsynsugift_og_underholdskostnad_med_barnetilsyn_enkel_test() {
         filnavn = "src/test/resources/testfiler/nettobarnetilsynogunderholdskostnad/nettotilsynsutgift_og_underholdskostnad_enkel_test.json"
         val resultat = utførBeregningerOgEvaluerResultatNettoTilsynsutgiftOgUnderholdskostnad()
@@ -174,7 +174,7 @@ internal class BeregnNettoTilsynsutgiftOgUnderholdskostnadApiTest {
     }
 
     @Test
-    @DisplayName("Underholdskostnad - eksempel 3  ")
+    @DisplayName("Underholdskostnad - eksempel 4")
     fun test_netto_tilsynsugift_og_underholdskostnad_med_full_request() {
         filnavn = "src/test/resources/testfiler/nettobarnetilsynogunderholdskostnad/nettotilsynsutgift_og_underholdskostnad_full_request.json"
         val resultat = utførBeregningerOgEvaluerResultatNettoTilsynsutgiftOgUnderholdskostnad()

@@ -9,6 +9,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevn
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsfradrag
 import java.math.BigDecimal
+import java.util.Collections.emptyList
 
 data class EndeligBidragPeriodeGrunnlag(
     val beregningsperiode: ÅrMånedsperiode,

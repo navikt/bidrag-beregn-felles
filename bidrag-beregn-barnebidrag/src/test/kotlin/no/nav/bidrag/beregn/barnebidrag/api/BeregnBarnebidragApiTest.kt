@@ -479,7 +479,7 @@ internal class BeregnBarnebidragApiTest {
             { assertThat(antallSamværsklasse).isEqualTo(1) },
             { assertThat(antallBarnetilleggBP).isEqualTo(forventetAntallBarnetilleggBP) },
             { assertThat(antallBarnetilleggBM).isEqualTo(forventetAntallBarnetilleggBM) },
-            { assertThat(antallSjablonSjablontall).isEqualTo(15) },
+            { assertThat(antallSjablonSjablontall).isEqualTo(10) },
             { assertThat(antallSjablonBidragsevne).isEqualTo(1) },
             { assertThat(antallSjablonTrinnvisSkattesats).isEqualTo(1) },
             { assertThat(antallSjablonSamværsfradrag).isEqualTo(1) },
