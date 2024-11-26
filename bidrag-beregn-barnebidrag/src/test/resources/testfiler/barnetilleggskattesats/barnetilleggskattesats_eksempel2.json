@@ -1,6 +1,6 @@
 {
   "periode": {
-    "fom": "2024-01",
+    "fom": "2024-07",
     "til": "2024-09"
   },
   "søknadsbarnReferanse": "Person_Søknadsbarn",
@@ -39,53 +39,42 @@
       "gjelderReferanse": null
     },
     {
-      "referanse": "Mottatt_FaktiskUtgift_202401_SB1",
-      "type": "FAKTISK_UTGIFT_PERIODE",
+      "referanse": "delberegning_DELBEREGNING_SUM_INNTEKT_Person_Bidragspliktig_Person_Søknadsbarn_202407",
+      "type": "DELBEREGNING_SUM_INNTEKT",
       "innhold": {
         "periode": {
-          "fom": "2024-01",
-          "til": null
+          "fom": "2024-07",
+          "til": "2024-08"
         },
-        "fødselsdatoBarn": "2023-01-17",
-        "faktiskUtgiftBeløp": 500.00,
-        "kostpengerBeløp": 100.00,
-        "manueltRegistrert": false
+        "totalinntekt": 200000.00,
+        "kontantstøtte": null,
+        "skattepliktigInntekt": 200000.00,
+        "barnetillegg": null,
+        "utvidetBarnetrygd": null,
+        "småbarnstillegg": null
       },
       "grunnlagsreferanseListe": [],
-      "gjelderBarnReferanse": "Person_Søknadsbarn",
-      "gjelderReferanse": null
+      "gjelderReferanse": "Person_Bidragspliktig",
+      "gjelderBarnReferanse": null
     },
     {
-      "referanse": "Mottatt_FaktiskUtgift_202402_SB1",
-      "type": "FAKTISK_UTGIFT_PERIODE",
+      "referanse": "delberegning_DELBEREGNING_SUM_INNTEKT_Person_Bidragspliktig_Person_Søknadsbarn_202408",
+      "type": "DELBEREGNING_SUM_INNTEKT",
       "innhold": {
         "periode": {
-          "fom": "2024-02",
-          "til": null
+          "fom": "2024-08",
+          "til": "2024-09"
         },
-        "fødselsdatoBarn": "2023-01-17",
-        "faktiskUtgiftBeløp": 1700.00,
-        "kostpengerBeløp": 200.00,
-        "manueltRegistrert": false
+        "totalinntekt": 1000000.00,
+        "kontantstøtte": null,
+        "skattepliktigInntekt": 1000000.00,
+        "barnetillegg": null,
+        "utvidetBarnetrygd": null,
+        "småbarnstillegg": null
       },
       "grunnlagsreferanseListe": [],
-      "gjelderBarnReferanse": "Person_Søknadsbarn",
-      "gjelderReferanse": null
-    },
-    {
-      "referanse": "Mottatt_Tilleggsstønad_202402_SB1",
-      "type": "TILLEGGSSTØNAD_PERIODE",
-      "innhold": {
-        "periode": {
-          "fom": "2024-02",
-          "til": null
-        },
-        "beløpDagsats": 10.00,
-        "manueltRegistrert": false
-      },
-      "grunnlagsreferanseListe": [],
-      "gjelderBarnReferanse": "Person_Søknadsbarn",
-      "gjelderReferanse": null
+      "gjelderReferanse": "Person_Bidragspliktig",
+      "gjelderBarnReferanse": null
     }
   ]
 }

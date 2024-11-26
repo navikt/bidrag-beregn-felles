@@ -57,13 +57,13 @@
           "fom": "2023-01",
           "til": "2023-12"
         },
-        "gjelderBarn": "Person_Søknadsbarn",
         "fødselsdatoBarn": "2023-01-17",
         "faktiskUtgiftBeløp": 4000.00,
         "kostpengerBeløp": 900.00,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": null
     },
     {
@@ -74,13 +74,13 @@
           "fom": "2024-01",
           "til": null
         },
-        "gjelderBarn": "Person_Søknadsbarn",
         "fødselsdatoBarn": "2023-01-17",
         "faktiskUtgiftBeløp": 500.00,
         "kostpengerBeløp": 100.00,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": null
     },
     {
@@ -91,13 +91,13 @@
           "fom": "2024-04",
           "til": null
         },
-        "gjelderBarn": "person_PERSON_BARN_BIDRAGSMOTTAKER_20051217_102",
         "fødselsdatoBarn": "2021-02-10",
         "faktiskUtgiftBeløp":600.00,
         "kostpengerBeløp": 50.00,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "person_PERSON_BARN_BIDRAGSMOTTAKER_20051217_102",
       "gjelderReferanse": null
     },
     {
@@ -108,11 +108,11 @@
           "fom": "2024-02",
           "til": null
         },
-        "gjelderBarn": "Person_Søknadsbarn",
         "beløpDagsats": 10.00,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": null
     },
     {
@@ -123,11 +123,11 @@
           "fom": "2024-05",
           "til": null
         },
-        "gjelderBarn": "person_PERSON_BARN_BIDRAGSMOTTAKER_20051217_102",
         "beløpDagsats": 17.00,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "person_PERSON_BARN_BIDRAGSMOTTAKER_20051217_102",
       "gjelderReferanse": null
     },
     {

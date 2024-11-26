@@ -42,7 +42,7 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
     private var forventetAntallDelberegningSumInntektPeriodeBM: Int = 1
     private var forventetAntallDelberegningSumInntektPeriodeSB: Int = 1
     private var forventetAntallUnderholdskostnad: Int = 1
-    private var forventetAntallSjablon: Int = 6
+    private var forventetAntallSjablon: Int = 2
 
     @Mock
     private lateinit var beregnBarnebidragService: BeregnBarnebidragService
@@ -165,7 +165,7 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
         forventetAntallDelberegningSumInntektPeriodeBM = 2
         forventetAntallDelberegningSumInntektPeriodeSB = 4
         forventetAntallUnderholdskostnad = 2
-        forventetAntallSjablon = 7
+        forventetAntallSjablon = 3
         utførBeregningerOgEvaluerResultatBpAndelUnderholdskostnadFlerePerioder()
     }
 
@@ -261,7 +261,7 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
             { assertThat(antallDelberegningSumInntektPeriodeBM).isEqualTo(1) },
             { assertThat(antallDelberegningSumInntektPeriodeSB).isEqualTo(1) },
             { assertThat(antallUnderholdskostnad).isEqualTo(1) },
-            { assertThat(antallSjablonSjablonTall).isEqualTo(6) },
+            { assertThat(antallSjablonSjablonTall).isEqualTo(forventetAntallSjablon) },
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
