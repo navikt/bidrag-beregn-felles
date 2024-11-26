@@ -45,7 +45,7 @@ internal class BeregnBidragsevneApiTest {
     private var forventetAntallDelberegningVoksneIHusstandPeriode: Int = 1
     private var forventetAntallBostatusPeriodeBP: Int = 1
     private var forventetAntallBostatusPeriodeSB: Int = 1
-    private var forventetAntallSjablonSjablontall: Int = 10
+    private var forventetAntallSjablonSjablontall: Int = 7
     private var forventetAntallSjablonBidragsevne: Int = 1
     private var forventetAntallSjablonTrinnvisSkattesats: Int = 1
 
@@ -374,7 +374,7 @@ internal class BeregnBidragsevneApiTest {
         forventetAntallDelberegningVoksneIHusstandPeriode = 2
         forventetAntallBostatusPeriodeBP = 2
         forventetAntallBostatusPeriodeSB = 2
-        forventetAntallSjablonSjablontall = 14
+        forventetAntallSjablonSjablontall = 10
         forventetAntallSjablonBidragsevne = 3
         forventetAntallSjablonTrinnvisSkattesats = 2
         utførBeregningerOgEvaluerResultatBidragsevneFlerePerioder()
@@ -479,7 +479,7 @@ internal class BeregnBidragsevneApiTest {
             { assertThat(antallDelberegningVoksneIHusstandPeriode).isEqualTo(1) },
             { assertThat(antallBostatusPeriodeBP).isEqualTo(1) },
             { assertThat(antallBostatusPeriodeSB).isEqualTo(1) },
-            { assertThat(antallSjablonSjablontall).isEqualTo(10) },
+            { assertThat(antallSjablonSjablontall).isEqualTo(forventetAntallSjablonSjablontall) },
             { assertThat(antallSjablonBidragsevne).isEqualTo(1) },
             { assertThat(antallSjablonTrinnvisSkattesats).isEqualTo(1) },
 

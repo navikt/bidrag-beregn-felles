@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.barnebidrag
 
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnebidragService
 import no.nav.bidrag.commons.service.sjablon.EnableSjablonProvider
+import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
@@ -48,9 +49,13 @@ class BeregnBarnebidragApi {
 
     fun beregnBpAndelUnderholdskostnad(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnBpAndelUnderholdskostnad(beregnGrunnlag)
 
-    fun beregnNettoBarnetillegg(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnNettoBarnetillegg(beregnGrunnlag)
+    fun beregnNettoBarnetillegg(beregnGrunnlag: BeregnGrunnlag, rolle: Grunnlagstype): List<GrunnlagDto> =
+        service.beregnNettoBarnetillegg(beregnGrunnlag, rolle)
 
-    fun beregnSamværsfradrag(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnSamværsfradrag(beregnGrunnlag)
+    fun beregnSamværsfradrag(beregnGrunnlag: BeregnGrunnlag, rolle: Grunnlagstype): List<GrunnlagDto> = service.beregnSamværsfradrag(beregnGrunnlag)
+
+    fun beregnBarnetilleggSkattesats(beregnGrunnlag: BeregnGrunnlag, rolle: Grunnlagstype): List<GrunnlagDto> =
+        service.beregnBarnetilleggSkattesats(beregnGrunnlag, rolle)
 
     fun beregnEndeligBidrag(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnEndeligBidrag(beregnGrunnlag)
 }

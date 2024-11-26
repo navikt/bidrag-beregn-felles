@@ -61,7 +61,6 @@ import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.time.format.DateTimeFormatter
 import java.util.Collections.emptyList
-import java.util.HashMap
 
 @Service
 internal class BeregnSærbidragService(

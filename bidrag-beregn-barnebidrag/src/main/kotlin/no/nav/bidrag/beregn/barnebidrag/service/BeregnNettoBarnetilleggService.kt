@@ -19,9 +19,14 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningref
 
 internal object BeregnNettoBarnetilleggService : BeregnService() {
 
-    fun delberegningNettoBarnetillegg(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
+    fun delberegningNettoBarnetillegg(mottattGrunnlag: BeregnGrunnlag, rolle: Grunnlagstype): List<GrunnlagDto> {
+        val referanseTilRolle = finnReferanseTilRolle(
+            grunnlagListe = mottattGrunnlag.grunnlagListe,
+            grunnlagstype = rolle,
+        )
+
         // Mapper ut grunnlag som skal brukes for å beregne nettoBarnetillegg
-        val nettoBarnetilleggPeriodeGrunnlag = mapNettoBarnetilleggGrunnlag(mottattGrunnlag)
+        val nettoBarnetilleggPeriodeGrunnlag = mapNettoBarnetilleggGrunnlag(mottattGrunnlag, referanseTilRolle)
 
         // Lager liste over bruddperioder
         val bruddPeriodeListe = lagBruddPeriodeListeNettoBarnetillegg(nettoBarnetilleggPeriodeGrunnlag, mottattGrunnlag.periode)

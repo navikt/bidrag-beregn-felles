@@ -1,6 +1,6 @@
 {
   "periode": {
-    "fom": "2024-01",
+    "fom": "2024-08",
     "til": "2024-09"
   },
   "søknadsbarnReferanse": "Person_Søknadsbarn",
@@ -15,17 +15,6 @@
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": null
-    },
-    {
-      "referanse" : "person_PERSON_BARN_BIDRAGSPLIKTIG_20051217_102",
-      "type" : "PERSON_SØKNADSBARN",
-      "innhold" : {
-        "ident" : "12121250511",
-        "navn" : null,
-        "fødselsdato" : "2005-12-17"
-      },
-      "grunnlagsreferanseListe" : [],
-      "gjelderReferanse" : null
     },
     {
       "referanse": "Person_Bidragsmottaker",
@@ -50,37 +39,38 @@
       "gjelderReferanse": null
     },
     {
-      "referanse": "Mottatt_FaktiskUtgift_202301_SB1",
-      "type": "FAKTISK_UTGIFT_PERIODE",
+      "referanse": "Mottatt_InntektRapportering_Barnetillegg_Periode_Bidragsmottaker_202408",
+      "type": "BARNETILLEGG_PERIODE",
       "innhold": {
         "periode": {
-          "fom": "2024-01",
-          "til": null
+          "fom": "2024-08",
+          "til": "2024-09"
         },
-        "fødselsdatoBarn": "2023-01-17",
-        "faktiskUtgiftBeløp": 500.00,
-        "kostpengerBeløp": 100.00,
-        "manueltRegistrert": false
+        "gjelderBarn": "Person_Søknadsbarn",
+        "type": "PENSJON",
+        "beløp": 300,
+        "manueltRegistrert": false,
+        "valgt": true
       },
       "grunnlagsreferanseListe": [],
-      "gjelderBarnReferanse": "Person_Søknadsbarn",
-      "gjelderReferanse": null
+      "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {
-      "referanse": "Mottatt_Tilleggsstønad_202301_SB1",
-      "type": "TILLEGGSSTØNAD_PERIODE",
+      "referanse": "Mottatt_InntektRapportering_Barnetillegg_Periode_Bidragsmottaker_202408",
+      "type": "BARNETILLEGG_PERIODE",
       "innhold": {
         "periode": {
-          "fom": "2024-02",
-          "til": null
+          "fom": "2024-08",
+          "til": "2024-09"
         },
-        "beløpDagsats": 10.00,
-        "manueltRegistrert": false
+        "gjelderBarn": "Person_Søknadsbarn",
+        "type": "DAGPENGER",
+        "beløp": 500,
+        "manueltRegistrert": false,
+        "valgt": true
       },
-      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "grunnlagsreferanseListe": [],
-      "gjelderBarnReferanse": "Person_Søknadsbarn",
-      "gjelderReferanse": null
+      "gjelderReferanse": "Person_Bidragsmottaker"
     }
   ]
 }

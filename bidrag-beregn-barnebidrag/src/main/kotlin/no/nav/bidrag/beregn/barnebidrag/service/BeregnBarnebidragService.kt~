@@ -170,7 +170,7 @@ class BeregnBarnebidragService : BeregnService() {
     }
 
     // Beregning av netto barnetillegg. Kan gjelde både BM og BP.
-    fun beregnNettoBarnetillegg(mottattGrunnlag: BeregnGrunnlag, rolle: Grunnlagstype): List<GrunnlagDto> {
+    fun beregnNettoBarnetillegg(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
         secureLogger.debug { "Beregning av netto barnetillegg - følgende request mottatt: ${tilJson(mottattGrunnlag)}" }
 
         // Kontroll av inputdata
@@ -182,7 +182,7 @@ class BeregnBarnebidragService : BeregnService() {
         }
 
         // Kaller delberegninger
-        val delberegningNettoBarnetilleggResultat = delberegningNettoBarnetillegg(mottattGrunnlag, rolle)
+        val delberegningNettoBarnetilleggResultat = delberegningNettoBarnetillegg(mottattGrunnlag)
 
         return delberegningNettoBarnetilleggResultat
     }

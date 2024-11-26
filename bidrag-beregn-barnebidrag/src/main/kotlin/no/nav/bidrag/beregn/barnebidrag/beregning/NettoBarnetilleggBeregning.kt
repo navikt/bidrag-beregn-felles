@@ -32,7 +32,8 @@ internal object NettoBarnetilleggBeregning {
                 ).avrundetMedToDesimaler,
             )
         }
-        val grunnlagsreferanseListe = grunnlag.barnetilleggBeregningGrunnlagListe.map { it.referanse }
+        val grunnlagsreferanseListe = grunnlag.barnetilleggBeregningGrunnlagListe.map { it.referanse } +
+            grunnlag.skattFaktorGrunnlag.referanse
 
         return NettoBarnetilleggBeregningResultat(
             summertBruttoBarnetillegg = summertBruttoBarnetillegg,

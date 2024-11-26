@@ -48,8 +48,4 @@ data class BarnetilleggPeriode2(
 ) : GrunnlagPeriodeInnhold
 
 // Fjernes også
-data class BarnetilleggPeriodeGrunnlag2(
-    val referanse: String,
-    val gjelderReferanse: String,
-    val barnetilleggPeriode: BarnetilleggPeriode2
-)
+data class BarnetilleggPeriodeGrunnlag2(val referanse: String, val gjelderReferanse: String, val barnetilleggPeriode: BarnetilleggPeriode2)
