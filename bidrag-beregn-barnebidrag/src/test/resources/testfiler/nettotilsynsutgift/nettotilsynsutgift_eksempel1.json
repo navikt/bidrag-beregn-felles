@@ -77,6 +77,7 @@
         "beløpDagsats": 10.00,
         "manueltRegistrert": false
       },
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "grunnlagsreferanseListe": [],
       "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": null

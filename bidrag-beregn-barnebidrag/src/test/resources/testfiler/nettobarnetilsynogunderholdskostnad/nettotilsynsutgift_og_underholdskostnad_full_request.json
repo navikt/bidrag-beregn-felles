@@ -259,12 +259,12 @@
         "fom" : "2024-02",
         "til" : "2024-03"
       },
-      "gjelderBarn" : "person_PERSON_SØKNADSBARN_20130615_285",
       "tilsynstype" : "HELTID",
       "skolealder" : "OVER",
       "manueltRegistrert" : true
     },
     "grunnlagsreferanseListe" : [ ],
+    "gjelderBarnReferanse" : "person_PERSON_SØKNADSBARN_20130615_285",
     "gjelderReferanse" : null
   }, {
     "referanse" : "TILLEGGSSTØNAD_PERIODE_person_PERSON_SØKNADSBARN_20130615_285__20240201",

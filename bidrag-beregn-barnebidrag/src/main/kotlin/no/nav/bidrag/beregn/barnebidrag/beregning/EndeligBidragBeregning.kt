@@ -8,6 +8,7 @@ import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import no.nav.bidrag.domene.util.avrundetTilNærmesteTier
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.util.Collections.emptyList
 
 internal object EndeligBidragBeregning {
 
@@ -34,7 +35,6 @@ internal object EndeligBidragBeregning {
 
         // Hvis det er delt bosted gjøres det ingen videre beregning og evt. barnetillegg hensyntas ikke
         if (grunnlag.deltBostedBeregningGrunnlag.deltBosted) {
-
             // Justerer BP's andel hvis det er delt bosted
             val bpAndelJustert = justerBpAndel(grunnlag)
 
@@ -95,7 +95,8 @@ internal object EndeligBidragBeregning {
         bruttoBidragJustertForEvneOg25Prosent = minOf((foreløpigBeregnetBeløp + samværsfradrag), bidragsevne, sumInntekt25Prosent)
         bidragJustertNedTilEvne = (bidragsevne < (foreløpigBeregnetBeløp + samværsfradrag)) && (bidragsevne <= sumInntekt25Prosent)
         bidragJustertNedTil25ProsentAvInntekt =
-            (sumInntekt25Prosent < (foreløpigBeregnetBeløp + samværsfradrag)) && (sumInntekt25Prosent <= bidragsevne)
+            (sumInntekt25Prosent < (foreløpigBeregnetBeløp + samværsfradrag)) &&
+            (sumInntekt25Prosent <= bidragsevne)
         foreløpigBeregnetBeløp = bruttoBidragJustertForEvneOg25Prosent
 
         // Sjekker om eventuelt barnetillegg for BP skal benyttes (hvis regel for BP's barnetillegg slår til overstyrer den BM's barnetillegg)
@@ -136,12 +137,12 @@ internal object EndeligBidragBeregning {
                 grunnlag.deltBostedBeregningGrunnlag.referanse,
             ) +
                 (grunnlag.barnetilleggBPBeregningGrunnlag?.referanse ?: emptyList()) +
-                (grunnlag.barnetilleggBMBeregningGrunnlag?.referanse ?: emptyList())
+                (grunnlag.barnetilleggBMBeregningGrunnlag?.referanse ?: emptyList()),
         )
     }
 
     // Beregner netto barnetillegg ut fra brutto barnetillegg og skattesats
-    //TODO Flytte til egen delberegning
+    // TODO Flytte til egen delberegning
     private fun beregnNettoBarnetillegg(barnetillegg: BarnetilleggBeregningGrunnlag?): BigDecimal {
         if (barnetillegg == null) {
             return BigDecimal.ZERO

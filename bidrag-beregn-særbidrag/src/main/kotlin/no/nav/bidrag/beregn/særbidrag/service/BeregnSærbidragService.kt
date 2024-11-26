@@ -3,7 +3,6 @@ package no.nav.bidrag.beregn.særbidrag.service
 import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.core.dto.SjablonResultatGrunnlagCore
 import no.nav.bidrag.beregn.core.exception.UgyldigInputException
-import no.nav.bidrag.beregn.core.mapping.bestemGrunnlagstype
 import no.nav.bidrag.beregn.core.mapping.mapTilGrunnlag
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.BidragsevneCore
@@ -61,7 +60,6 @@ import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.time.format.DateTimeFormatter
 import java.util.Collections.emptyList
-import java.util.HashMap
 
 @Service
 internal class BeregnSærbidragService(
@@ -638,6 +636,7 @@ internal class BeregnSærbidragService(
                 innhold = it.innhold,
                 grunnlagsreferanseListe = it.grunnlagsreferanseListe,
                 gjelderReferanse = it.gjelderReferanse,
+                gjelderBarnReferanse = it.gjelderBarnReferanse,
             )
         }
 
@@ -795,6 +794,7 @@ internal class BeregnSærbidragService(
                 innhold = it.innhold,
                 grunnlagsreferanseListe = it.grunnlagsreferanseListe,
                 gjelderReferanse = it.gjelderReferanse,
+                gjelderBarnReferanse = it.gjelderBarnReferanse,
             )
         }
 

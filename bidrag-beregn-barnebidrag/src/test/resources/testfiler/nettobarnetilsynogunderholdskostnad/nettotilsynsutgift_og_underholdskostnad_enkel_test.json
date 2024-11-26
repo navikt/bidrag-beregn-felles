@@ -78,12 +78,12 @@
           "fom": "2024-07",
           "til": "2024-11"
         },
-        "gjelderBarn": "Person_Søknadsbarn",
         "tilsynstype": "HELTID",
         "skolealder": "UNDER",
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {

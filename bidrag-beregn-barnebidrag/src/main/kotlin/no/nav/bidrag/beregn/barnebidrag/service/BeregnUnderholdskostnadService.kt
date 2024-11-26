@@ -264,6 +264,7 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
                 innhold = it.innhold,
                 grunnlagsreferanseListe = it.grunnlagsreferanseListe,
                 gjelderReferanse = it.gjelderReferanse,
+                gjelderBarnReferanse = it.gjelderBarnReferanse,
             )
         }
 
@@ -301,6 +302,7 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
                         innhold = it.innhold,
                         grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
                         gjelderReferanse = it.gjelderReferanse,
+                        gjelderBarnReferanse = it.gjelderBarnReferanse,
                     )
                 },
         )
@@ -333,6 +335,7 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
                     grunnlagListe = mottattGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
                 ),
+                gjelderBarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
             )
         }
 
@@ -369,6 +372,7 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
                     grunnlagListe = mottattGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
                 ),
+                gjelderBarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
             )
         }
 }
