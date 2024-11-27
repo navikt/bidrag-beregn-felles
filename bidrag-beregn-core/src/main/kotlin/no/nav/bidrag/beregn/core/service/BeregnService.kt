@@ -7,7 +7,6 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import no.nav.bidrag.beregn.core.dto.AvvikCore
 import no.nav.bidrag.beregn.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.core.exception.UgyldigInputException
-import no.nav.bidrag.beregn.core.mapping.bestemGrunnlagstype
 import no.nav.bidrag.beregn.core.mapping.sjablontallTilGrunnlagsobjekt
 import no.nav.bidrag.beregn.core.mapping.tilGrunnlagsobjekt
 import no.nav.bidrag.beregn.core.mapping.trinnvisSkattesatsTilGrunnlagsobjekt
@@ -59,7 +58,7 @@ abstract class BeregnService {
         .map {
             GrunnlagDto(
                 referanse = it.referanse,
-                type = bestemGrunnlagstype(it.referanse),
+                type = Grunnlagstype.DELBEREGNING_SUM_INNTEKT,
                 innhold = POJONode(
                     DelberegningSumInntekt(
                         periode = ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil),

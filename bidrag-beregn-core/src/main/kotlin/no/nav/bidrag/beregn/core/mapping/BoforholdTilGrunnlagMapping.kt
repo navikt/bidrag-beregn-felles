@@ -15,9 +15,10 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 fun List<BarnIHusstandenPeriodeCore>.mapTilGrunnlag(bidragspliktigReferanse: String? = null) = map {
     it.tilGrunnlag(bidragspliktigReferanse)
 }
+
 fun BarnIHusstandenPeriodeCore.tilGrunnlag(bidragspliktigReferanse: String? = null) = GrunnlagDto(
     referanse = referanse,
-    type = bestemGrunnlagstype(referanse),
+    type = Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND,
     innhold = POJONode(
         DelberegningBarnIHusstand(
             periode = ÅrMånedsperiode(fom = periode.datoFom, til = periode.datoTil),
@@ -32,7 +33,7 @@ fun BarnIHusstandenPeriodeCore.tilGrunnlag(bidragspliktigReferanse: String? = nu
 fun List<VoksneIHusstandenPeriodeCore>.mapTilGrunnlag(bidragspliktigReferanse: String) = map {
     GrunnlagDto(
         referanse = it.referanse,
-        type = bestemGrunnlagstype(it.referanse),
+        type = Grunnlagstype.DELBEREGNING_VOKSNE_I_HUSSTAND,
         innhold = POJONode(
             DelberegningVoksneIHusstand(
                 periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
@@ -48,7 +49,7 @@ fun List<VoksneIHusstandenPeriodeCore>.mapTilGrunnlag(bidragspliktigReferanse: S
 fun List<BoforholdPeriodeCore>.mapTilGrunnlag(bidragspliktigReferanse: String) = map {
     GrunnlagDto(
         referanse = it.referanse,
-        type = bestemGrunnlagstype(it.referanse),
+        type = Grunnlagstype.DELBEREGNING_BOFORHOLD,
         innhold = POJONode(
             it.tilGrunnlag(),
         ),
@@ -62,22 +63,3 @@ fun BoforholdPeriodeCore.tilGrunnlag() = DelberegningBoforhold(
     antallBarn = antallBarn,
     borMedAndreVoksne = borMedAndreVoksne,
 )
-
-fun bestemGrunnlagstype(referanse: String) = when {
-    referanse.contains(Grunnlagstype.DELBEREGNING_SUM_INNTEKT.name) -> Grunnlagstype.DELBEREGNING_SUM_INNTEKT
-    referanse.contains(Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND.name) -> Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND
-    referanse.contains(Grunnlagstype.DELBEREGNING_VOKSNE_I_HUSSTAND.name) -> Grunnlagstype.DELBEREGNING_VOKSNE_I_HUSSTAND
-    referanse.contains(Grunnlagstype.DELBEREGNING_BOFORHOLD.name) -> Grunnlagstype.DELBEREGNING_BOFORHOLD
-    referanse.contains(Grunnlagstype.DELBEREGNING_BIDRAGSEVNE.name) -> Grunnlagstype.DELBEREGNING_BIDRAGSEVNE
-    referanse.contains(
-        Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_BEREGNEDE_TOTALBIDRAG.name,
-    ) -> Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_BEREGNEDE_TOTALBIDRAG
-
-    referanse.contains(Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD.name) -> Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD
-    referanse.contains(Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL.name) -> Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL
-    referanse.contains(Grunnlagstype.DELBEREGNING_FAKTISK_UTGIFT.name) -> Grunnlagstype.DELBEREGNING_FAKTISK_UTGIFT
-    referanse.contains(Grunnlagstype.DELBEREGNING_TILLEGGSSTØNAD.name) -> Grunnlagstype.DELBEREGNING_TILLEGGSSTØNAD
-    referanse.contains(Grunnlagstype.DELBEREGNING_NETTO_TILSYNSUTGIFT.name) -> Grunnlagstype.DELBEREGNING_NETTO_TILSYNSUTGIFT
-
-    else -> throw IllegalArgumentException("Ikke i stand til å utlede grunnlagstype for referanse: $referanse")
-}
