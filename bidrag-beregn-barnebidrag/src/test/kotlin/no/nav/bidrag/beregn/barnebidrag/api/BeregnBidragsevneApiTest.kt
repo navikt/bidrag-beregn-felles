@@ -435,11 +435,13 @@ internal class BeregnBidragsevneApiTest {
         val antallBostatusPeriodeBP = bidragsevneResultat
             .filter { it.type == Grunnlagstype.BOSTATUS_PERIODE }
             .filter { it.gjelderReferanse == referanseBP }
+            .filter { it.gjelderBarnReferanse == null }
             .size
 
         val antallBostatusPeriodeSB = bidragsevneResultat
             .filter { it.type == Grunnlagstype.BOSTATUS_PERIODE }
-            .filter { it.gjelderReferanse == referanseSB }
+            .filter { it.gjelderReferanse == referanseBP }
+            .filter { it.gjelderBarnReferanse == referanseSB }
             .size
 
         val antallSjablonSjablontall = bidragsevneResultat
@@ -543,11 +545,13 @@ internal class BeregnBidragsevneApiTest {
         val antallBostatusPeriodeBP = bidragsevneResultat
             .filter { it.type == Grunnlagstype.BOSTATUS_PERIODE }
             .filter { it.gjelderReferanse == referanseBP }
+            .filter { it.gjelderBarnReferanse == null }
             .size
 
         val antallBostatusPeriodeSB = bidragsevneResultat
             .filter { it.type == Grunnlagstype.BOSTATUS_PERIODE }
-            .filter { it.gjelderReferanse == referanseSB }
+            .filter { it.gjelderReferanse == referanseBP }
+            .filter { it.gjelderBarnReferanse == referanseSB }
             .size
 
         val antallSjablonSjablontall = bidragsevneResultat

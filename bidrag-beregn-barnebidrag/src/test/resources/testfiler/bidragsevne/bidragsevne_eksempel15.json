@@ -75,6 +75,7 @@
         "valgt": true
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": null,
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
@@ -90,7 +91,8 @@
         "relatertTilPart": "Person_Bidragspliktig"
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Søknadsbarn"
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
       "referanse": "Bostatus_Husstandsbarn_01_202408",
@@ -105,7 +107,8 @@
         "relatertTilPart": "Person_Bidragspliktig"
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Husstandsbarn_01"
+      "gjelderBarnReferanse": "Person_Husstandsbarn_01",
+      "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
       "referanse": "Bostatus_Husstandsbarn_02_202408",
@@ -120,7 +123,8 @@
         "relatertTilPart": "Person_Bidragspliktig"
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Husstandsbarn_02"
+      "gjelderBarnReferanse": "Person_Husstandsbarn_02",
+      "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
       "referanse": "Bostatus_Bidragspliktig_202408",
@@ -135,6 +139,7 @@
         "relatertTilPart": "Person_Bidragspliktig"
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": null,
       "gjelderReferanse": "Person_Bidragspliktig"
     }
   ]

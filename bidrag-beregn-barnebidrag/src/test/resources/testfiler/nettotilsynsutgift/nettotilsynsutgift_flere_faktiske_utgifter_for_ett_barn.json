@@ -53,7 +53,7 @@
       },
       "grunnlagsreferanseListe": [],
       "gjelderBarnReferanse": "Person_Søknadsbarn",
-      "gjelderReferanse": null
+      "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {
       "referanse": "Mottatt_FaktiskUtgift_202402_SB1",
@@ -70,7 +70,7 @@
       },
       "grunnlagsreferanseListe": [],
       "gjelderBarnReferanse": "Person_Søknadsbarn",
-      "gjelderReferanse": null
+      "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {
       "referanse": "Mottatt_Tilleggsstønad_202402_SB1",
@@ -85,7 +85,7 @@
       },
       "grunnlagsreferanseListe": [],
       "gjelderBarnReferanse": "Person_Søknadsbarn",
-      "gjelderReferanse": null
+      "gjelderReferanse": "Person_Bidragsmottaker"
     }
   ]
 }

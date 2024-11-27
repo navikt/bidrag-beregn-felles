@@ -243,6 +243,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
                     ),
                 ),
                 grunnlagsreferanseListe = (it.resultat.grunnlagsreferanseListe + mottattGrunnlag.søknadsbarnReferanse).sorted(),
+                gjelderBarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
             )
         }
 }

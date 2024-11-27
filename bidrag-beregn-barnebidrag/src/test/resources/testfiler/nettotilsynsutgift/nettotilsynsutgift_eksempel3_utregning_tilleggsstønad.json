@@ -64,7 +64,7 @@
       },
       "grunnlagsreferanseListe": [],
       "gjelderBarnReferanse": "Person_Søknadsbarn",
-      "gjelderReferanse": null
+      "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {
       "referanse": "Mottatt_Tilleggsstønad_202301_SB1",
@@ -79,7 +79,7 @@
       },
       "grunnlagsreferanseListe": [],
       "gjelderBarnReferanse": "Person_Søknadsbarn",
-      "gjelderReferanse": null
+      "gjelderReferanse": "Person_Bidragsmottaker"
     }
   ]
 }

@@ -64,7 +64,7 @@
       },
       "grunnlagsreferanseListe": [],
       "gjelderBarnReferanse": "Person_Søknadsbarn",
-      "gjelderReferanse": null
+      "gjelderReferanse": "Person_Bidragsmottaker"
     }
   ]
 }

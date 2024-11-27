@@ -60,6 +60,7 @@
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": null,
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
@@ -79,7 +80,8 @@
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": null
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {
       "referanse": "Delberegning_BidragspliktigesAndel_202408",
@@ -96,6 +98,7 @@
         "barnetErSelvforsørget": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
@@ -110,6 +113,7 @@
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
@@ -124,7 +128,8 @@
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": null
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
       "referanse": "Mottatt_InntektRapportering_Ainntekt_Bidragspliktig_202408",
@@ -141,6 +146,7 @@
         "valgt": true
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": null,
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
@@ -152,12 +158,13 @@
           "til": "2024-09"
         },
         "inntektsrapportering": "BARNETILLEGG",
-        "gjelderBarn": null,
+        "gjelderBarn": "Person_Søknadsbarn",
         "beløp": 72000,
         "manueltRegistrert": false,
         "valgt": true
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
@@ -175,6 +182,7 @@
         "valgt": true
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": null,
       "gjelderReferanse": "Person_Bidragsmottaker"
     }
   ]

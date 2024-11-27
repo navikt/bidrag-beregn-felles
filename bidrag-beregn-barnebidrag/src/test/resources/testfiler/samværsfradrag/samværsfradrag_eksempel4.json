@@ -50,7 +50,8 @@
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": null
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragspliktig"
     }
   ]
 }

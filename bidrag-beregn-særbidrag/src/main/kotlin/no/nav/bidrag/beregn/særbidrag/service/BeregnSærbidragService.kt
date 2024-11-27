@@ -3,7 +3,6 @@ package no.nav.bidrag.beregn.særbidrag.service
 import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.core.dto.SjablonResultatGrunnlagCore
 import no.nav.bidrag.beregn.core.exception.UgyldigInputException
-import no.nav.bidrag.beregn.core.mapping.bestemGrunnlagstype
 import no.nav.bidrag.beregn.core.mapping.mapTilGrunnlag
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.BidragsevneCore
@@ -652,7 +651,7 @@ internal class BeregnSærbidragService(
         .map { bidragsevne ->
             GrunnlagDto(
                 referanse = bidragsevne.referanse,
-                type = bestemGrunnlagstype(bidragsevne.referanse),
+                type = Grunnlagstype.DELBEREGNING_BIDRAGSEVNE,
                 innhold = POJONode(
                     DelberegningBidragsevne(
                         periode = ÅrMånedsperiode(fom = bidragsevne.periode.datoFom, til = bidragsevne.periode.datoTil),
@@ -678,7 +677,7 @@ internal class BeregnSærbidragService(
         bidragspliktigReferanse: String,
     ) = GrunnlagDto(
         referanse = bPsBeregnedeTotalbidrag.referanse,
-        type = bestemGrunnlagstype(bPsBeregnedeTotalbidrag.referanse),
+        type = Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_BEREGNEDE_TOTALBIDRAG,
         innhold = POJONode(
             DelberegningBidragspliktigesBeregnedeTotalbidrag(
                 periode = ÅrMånedsperiode(fom = bPsBeregnedeTotalbidrag.periode.datoFom, til = bPsBeregnedeTotalbidrag.periode.datoTil),
@@ -701,7 +700,7 @@ internal class BeregnSærbidragService(
         .map { bPsAndelSærbidrag ->
             GrunnlagDto(
                 referanse = bPsAndelSærbidrag.referanse,
-                type = bestemGrunnlagstype(bPsAndelSærbidrag.referanse),
+                type = Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL,
                 innhold = POJONode(
                     DelberegningBidragspliktigesAndel(
                         periode = ÅrMånedsperiode(fom = bPsAndelSærbidrag.periode.datoFom, til = bPsAndelSærbidrag.periode.datoTil),

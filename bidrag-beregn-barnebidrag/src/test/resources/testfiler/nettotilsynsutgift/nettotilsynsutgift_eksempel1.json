@@ -64,7 +64,7 @@
       },
       "grunnlagsreferanseListe": [],
       "gjelderBarnReferanse": "Person_Søknadsbarn",
-      "gjelderReferanse": null
+      "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {
       "referanse": "Mottatt_Tilleggsstønad_202301_SB1",
@@ -77,10 +77,9 @@
         "beløpDagsats": 10.00,
         "manueltRegistrert": false
       },
-      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "grunnlagsreferanseListe": [],
       "gjelderBarnReferanse": "Person_Søknadsbarn",
-      "gjelderReferanse": null
+      "gjelderReferanse": "Person_Bidragsmottaker"
     }
   ]
 }

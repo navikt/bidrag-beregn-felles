@@ -84,6 +84,7 @@
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": null,
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
@@ -108,6 +109,7 @@
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": null,
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
@@ -132,6 +134,7 @@
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": null,
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
@@ -151,7 +154,8 @@
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": null
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {
       "referanse": "Delberegning_Underholdskostnad_202304",
@@ -170,7 +174,8 @@
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": null
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {
       "referanse": "Delberegning_Underholdskostnad_202408",
@@ -189,7 +194,8 @@
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": null
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {
       "referanse": "Delberegning_BidragspliktigesAndel_202301",
@@ -206,6 +212,7 @@
         "barnetErSelvforsørget": true
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
@@ -223,6 +230,7 @@
         "barnetErSelvforsørget": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
@@ -240,6 +248,7 @@
         "barnetErSelvforsørget": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
@@ -257,6 +266,7 @@
         "barnetErSelvforsørget": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
@@ -274,6 +284,7 @@
         "barnetErSelvforsørget": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
@@ -288,6 +299,7 @@
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
@@ -302,6 +314,7 @@
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
@@ -316,6 +329,7 @@
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
@@ -330,6 +344,7 @@
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
@@ -344,6 +359,7 @@
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
@@ -358,7 +374,8 @@
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": null
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
       "referanse": "Mottatt_Samværsperiode_202401",
@@ -372,7 +389,8 @@
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": null
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
       "referanse": "Mottatt_Samværsperiode_202402",
@@ -386,7 +404,8 @@
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": null
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
       "referanse": "Mottatt_Samværsperiode_202405",
@@ -400,7 +419,8 @@
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": null
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
       "referanse": "Mottatt_InntektRapportering_Barnetillegg_Bidragspliktig_202301",
@@ -411,12 +431,13 @@
           "til": "2023-06"
         },
         "inntektsrapportering": "BARNETILLEGG",
-        "gjelderBarn": null,
+        "gjelderBarn": "Person_Søknadsbarn",
         "beløp": 72000,
         "manueltRegistrert": false,
         "valgt": true
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
@@ -428,12 +449,13 @@
           "til": "2024-01"
         },
         "inntektsrapportering": "BARNETILLEGG",
-        "gjelderBarn": null,
+        "gjelderBarn": "Person_Søknadsbarn",
         "beløp": 24000,
         "manueltRegistrert": false,
         "valgt": true
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
@@ -445,12 +467,13 @@
           "til": null
         },
         "inntektsrapportering": "BARNETILLEGG",
-        "gjelderBarn": null,
+        "gjelderBarn": "Person_Søknadsbarn",
         "beløp": 36000,
         "manueltRegistrert": false,
         "valgt": true
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
@@ -462,12 +485,13 @@
           "til": "2024-01"
         },
         "inntektsrapportering": "BARNETILLEGG",
-        "gjelderBarn": null,
+        "gjelderBarn": "Person_Søknadsbarn",
         "beløp": 216000,
         "manueltRegistrert": false,
         "valgt": true
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {
@@ -479,12 +503,13 @@
           "til": "2024-08"
         },
         "inntektsrapportering": "BARNETILLEGG",
-        "gjelderBarn": null,
+        "gjelderBarn": "Person_Søknadsbarn",
         "beløp": 60000,
         "manueltRegistrert": false,
         "valgt": true
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {
@@ -496,12 +521,13 @@
           "til": null
         },
         "inntektsrapportering": "BARNETILLEGG",
-        "gjelderBarn": null,
+        "gjelderBarn": "Person_Søknadsbarn",
         "beløp": 259200,
         "manueltRegistrert": false,
         "valgt": true
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragsmottaker"
     }
   ]

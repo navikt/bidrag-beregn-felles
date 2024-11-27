@@ -232,6 +232,7 @@ internal object BeregnSamværsfradragService : BeregnService() {
                     ),
                 ),
                 grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe,
+                gjelderBarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
                 gjelderReferanse = referanseTilBP,
             )
         }

@@ -11,12 +11,10 @@ import no.nav.bidrag.beregn.barnebidrag.bo.SjablonMaksTilsynsbeløpBeregningGrun
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSjablontallBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSjablontallPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.Tilleggsstønad
-import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.finnFødselsdatoBarn
 import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.finnReferanseTilRolle
 import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.mapNettoTilsynsutgiftPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.dto.FaktiskUtgiftPeriodeCore
 import no.nav.bidrag.beregn.core.dto.TilleggsstønadPeriodeCore
-import no.nav.bidrag.beregn.core.mapping.bestemGrunnlagstype
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -27,12 +25,9 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningFaktiskTil
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningNettoTilsynsutgift
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningTilleggsstønad
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
-import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
-import java.time.LocalDate
-import java.time.Period
 
 internal object BeregnNettoTilsynsutgiftService : BeregnService() {
 
@@ -329,7 +324,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
             .map {
                 GrunnlagDto(
                     referanse = it.referanse,
-                    type = bestemGrunnlagstype(it.referanse),
+                    type = Grunnlagstype.DELBEREGNING_FAKTISK_UTGIFT,
                     innhold = POJONode(
                         DelberegningFaktiskTilsynsutgift(
                             periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
@@ -348,7 +343,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
             .map {
                 GrunnlagDto(
                     referanse = it.referanse,
-                    type = bestemGrunnlagstype(it.referanse),
+                    type = Grunnlagstype.DELBEREGNING_TILLEGGSSTØNAD,
                     innhold = POJONode(
                         DelberegningTilleggsstønad(
                             periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
@@ -377,13 +372,5 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                 "Feil ved uthenting av sjablon for sjablontall: " + e.message,
             )
         }
-    }
-
-    private fun finnAlderBarn(beregnGrunnlag: List<GrunnlagDto>, referanseBarn: Grunnlagsreferanse, dato: LocalDate): Int {
-        val fødselsdatoBarn = finnFødselsdatoBarn(beregnGrunnlag, referanseBarn)
-        return Period.between(
-            fødselsdatoBarn,
-            dato,
-        ).years
     }
 }
