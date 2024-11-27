@@ -18,26 +18,23 @@ internal object BarnetilleggSkattesatsMapper : CoreMapper() {
     fun mapBarnetilleggSkattesatsGrunnlag(
         mottattGrunnlag: BeregnGrunnlag,
         sjablonGrunnlag: List<GrunnlagDto>,
-        referanseTilRolle: String
-    ): BarnetilleggSkattesatsPeriodeGrunnlag {
-
-        return BarnetilleggSkattesatsPeriodeGrunnlag(
-            beregningsperiode = mottattGrunnlag.periode,
-            sumInntektBeregningGrunnlag = mapSumInntekt(
-                beregnGrunnlag = mottattGrunnlag,
-                referanseTilRolle = referanseTilRolle,
-            ),
-            sjablonSjablontallPeriodeGrunnlagListe = mapSjablonSjablontall(sjablonGrunnlag),
-            sjablonTrinnvisSkattesatsPeriodeGrunnlagListe = mapSjablonTrinnvisSkattesats(sjablonGrunnlag),
-        )
-    }
+        referanseTilRolle: String,
+    ): BarnetilleggSkattesatsPeriodeGrunnlag = BarnetilleggSkattesatsPeriodeGrunnlag(
+        beregningsperiode = mottattGrunnlag.periode,
+        sumInntektBeregningGrunnlag = mapSumInntekt(
+            beregnGrunnlag = mottattGrunnlag,
+            referanseTilRolle = referanseTilRolle,
+        ),
+        sjablonSjablontallPeriodeGrunnlagListe = mapSjablonSjablontall(sjablonGrunnlag),
+        sjablonTrinnvisSkattesatsPeriodeGrunnlagListe = mapSjablonTrinnvisSkattesats(sjablonGrunnlag),
+    )
 
     private fun mapSumInntekt(beregnGrunnlag: BeregnGrunnlag, referanseTilRolle: String): List<SumInntektDelberegningPeriodeGrunnlag> {
         try {
             return beregnGrunnlag.grunnlagListe
                 .filtrerOgKonverterBasertPåFremmedReferanse<DelberegningSumInntekt>(
                     grunnlagType = Grunnlagstype.DELBEREGNING_SUM_INNTEKT,
-                    referanse = referanseTilRolle
+                    referanse = referanseTilRolle,
                 )
                 .map {
                     SumInntektDelberegningPeriodeGrunnlag(
