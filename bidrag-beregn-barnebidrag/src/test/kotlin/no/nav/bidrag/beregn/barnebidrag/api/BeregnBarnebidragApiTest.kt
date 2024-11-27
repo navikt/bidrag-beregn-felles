@@ -356,11 +356,13 @@ internal class BeregnBarnebidragApiTest {
         val antallBostatusPeriodeBP = barnebidragResultatGrunnlagListe
             .filter { it.type == Grunnlagstype.BOSTATUS_PERIODE }
             .filter { it.gjelderReferanse == referanseBP }
+            .filter { it.gjelderBarnReferanse == null }
             .size
 
         val antallBostatusPeriodeSB = barnebidragResultatGrunnlagListe
             .filter { it.type == Grunnlagstype.BOSTATUS_PERIODE }
-            .filter { it.gjelderReferanse == referanseSB }
+            .filter { it.gjelderReferanse == referanseBP }
+            .filter { it.gjelderBarnReferanse == referanseSB }
             .size
 
         val antallUnderholdskostnad = barnebidragResultatGrunnlagListe

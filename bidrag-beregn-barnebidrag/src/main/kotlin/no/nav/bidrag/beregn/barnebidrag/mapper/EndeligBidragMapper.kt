@@ -151,7 +151,9 @@ internal object EndeligBidragMapper : CoreMapper() {
                     grunnlagType = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
                     referanse = referanseTilRolle,
                 )
+                .filter { it.gjelderBarnReferanse == beregnGrunnlag.søknadsbarnReferanse }
                 .filter { it.innhold.inntektsrapportering == Inntektsrapportering.BARNETILLEGG }
+                .filter { it.innhold.valgt }
                 .map {
                     BarnetilleggPeriodeGrunnlag(
                         referanse = it.referanse,

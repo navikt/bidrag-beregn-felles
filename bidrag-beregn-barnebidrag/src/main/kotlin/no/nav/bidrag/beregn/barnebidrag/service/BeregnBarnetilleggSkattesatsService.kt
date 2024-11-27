@@ -206,6 +206,7 @@ internal object BeregnBarnetilleggSkattesatsService : BeregnService() {
                     ),
                 ),
                 grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe.distinct().sorted(),
+                gjelderBarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
                 gjelderReferanse = referanseTilRolle,
             )
         }

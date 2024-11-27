@@ -1,530 +1,647 @@
 {
-  "periode" : {
-    "fom" : "2024-02",
-    "til" : "2024-12"
+  "periode": {
+    "fom": "2024-02",
+    "til": "2024-12"
   },
-  "søknadsbarnReferanse" : "person_PERSON_SØKNADSBARN_20130615_285",
-  "grunnlagListe" : [ {
-    "referanse" : "person_PERSON_BIDRAGSMOTTAKER_19790718_284",
-    "type" : "PERSON_BIDRAGSMOTTAKER",
-    "innhold" : {
-      "ident" : "18477924413",
-      "navn" : null,
-      "fødselsdato" : "1979-07-18"
-    },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderReferanse" : null
-  }, {
-    "referanse" : "person_PERSON_BIDRAGSPLIKTIG_19830916_286",
-    "type" : "PERSON_BIDRAGSPLIKTIG",
-    "innhold" : {
-      "ident" : "16498311338",
-      "navn" : null,
-      "fødselsdato" : "1983-09-16"
-    },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderReferanse" : null
-  }, {
-    "referanse" : "person_PERSON_SØKNADSBARN_20130615_285",
-    "type" : "PERSON_SØKNADSBARN",
-    "innhold" : {
-      "ident" : "15461398089",
-      "navn" : null,
-      "fødselsdato" : "2013-06-15"
-    },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderReferanse" : null
-  }, {
-    "referanse" : "bostatus_person_PERSON_HUSSTANDSMEDLEM_20151210_414_20240201",
-    "type" : "BOSTATUS_PERIODE",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-02",
-        "til" : null
+  "søknadsbarnReferanse": "person_PERSON_SØKNADSBARN_20130615_285",
+  "grunnlagListe": [
+    {
+      "referanse": "person_PERSON_BIDRAGSMOTTAKER_19790718_284",
+      "type": "PERSON_BIDRAGSMOTTAKER",
+      "innhold": {
+        "ident": "18477924413",
+        "navn": null,
+        "fødselsdato": "1979-07-18"
       },
-      "bostatus" : "MED_FORELDER",
-      "relatertTilPart" : "person_PERSON_BIDRAGSPLIKTIG_19830916_286",
-      "manueltRegistrert" : false
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
     },
-    "grunnlagsreferanseListe" : [ "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19830916_286_person_PERSON_HUSSTANDSMEDLEM_20151210_414" ],
-    "gjelderReferanse" : "person_PERSON_HUSSTANDSMEDLEM_20151210_414"
-  }, {
-    "referanse" : "bostatus_person_PERSON_HUSSTANDSMEDLEM_20051224_417_20240901",
-    "type" : "BOSTATUS_PERIODE",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-09",
-        "til" : null
+    {
+      "referanse": "person_PERSON_BIDRAGSPLIKTIG_19830916_286",
+      "type": "PERSON_BIDRAGSPLIKTIG",
+      "innhold": {
+        "ident": "16498311338",
+        "navn": null,
+        "fødselsdato": "1983-09-16"
       },
-      "bostatus" : "REGNES_IKKE_SOM_BARN",
-      "relatertTilPart" : "person_PERSON_BIDRAGSPLIKTIG_19830916_286",
-      "manueltRegistrert" : false
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
     },
-    "grunnlagsreferanseListe" : [ "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19830916_286_person_PERSON_HUSSTANDSMEDLEM_20051224_417" ],
-    "gjelderReferanse" : "person_PERSON_HUSSTANDSMEDLEM_20051224_417"
-  }, {
-    "referanse" : "bostatus_person_PERSON_HUSSTANDSMEDLEM_20051224_417_20240201",
-    "type" : "BOSTATUS_PERIODE",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-02",
-        "til" : "2024-09"
+    {
+      "referanse": "person_PERSON_SØKNADSBARN_20130615_285",
+      "type": "PERSON_SØKNADSBARN",
+      "innhold": {
+        "ident": "15461398089",
+        "navn": null,
+        "fødselsdato": "2013-06-15"
       },
-      "bostatus" : "IKKE_MED_FORELDER",
-      "relatertTilPart" : "person_PERSON_BIDRAGSPLIKTIG_19830916_286",
-      "manueltRegistrert" : false
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
     },
-    "grunnlagsreferanseListe" : [ "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19830916_286_person_PERSON_HUSSTANDSMEDLEM_20051224_417" ],
-    "gjelderReferanse" : "person_PERSON_HUSSTANDSMEDLEM_20051224_417"
-  }, {
-    "referanse" : "bostatus_person_PERSON_SØKNADSBARN_20130615_285_20240201",
-    "type" : "BOSTATUS_PERIODE",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-02",
-        "til" : null
+    {
+      "referanse": "bostatus_person_PERSON_HUSSTANDSMEDLEM_20151210_414_20240201",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-02",
+          "til": null
+        },
+        "bostatus": "MED_FORELDER",
+        "relatertTilPart": "person_PERSON_BIDRAGSPLIKTIG_19830916_286",
+        "manueltRegistrert": false
       },
-      "bostatus" : "IKKE_MED_FORELDER",
-      "relatertTilPart" : "person_PERSON_BIDRAGSPLIKTIG_19830916_286",
-      "manueltRegistrert" : false
+      "grunnlagsreferanseListe": [
+        "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19830916_286_person_PERSON_HUSSTANDSMEDLEM_20151210_414"
+      ],
+      "gjelderBarnReferanse": "person_PERSON_HUSSTANDSMEDLEM_20151210_414",
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19830916_286"
     },
-    "grunnlagsreferanseListe" : [ "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19830916_286_person_PERSON_SØKNADSBARN_20130615_285" ],
-    "gjelderReferanse" : "person_PERSON_SØKNADSBARN_20130615_285"
-  }, {
-    "referanse" : "bostatus_person_PERSON_HUSSTANDSMEDLEM_20180718_416_20240201",
-    "type" : "BOSTATUS_PERIODE",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-02",
-        "til" : null
+    {
+      "referanse": "bostatus_person_PERSON_HUSSTANDSMEDLEM_20051224_417_20240901",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-09",
+          "til": null
+        },
+        "bostatus": "REGNES_IKKE_SOM_BARN",
+        "relatertTilPart": "person_PERSON_BIDRAGSPLIKTIG_19830916_286",
+        "manueltRegistrert": false
       },
-      "bostatus" : "MED_FORELDER",
-      "relatertTilPart" : "person_PERSON_BIDRAGSPLIKTIG_19830916_286",
-      "manueltRegistrert" : false
+      "grunnlagsreferanseListe": [
+        "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19830916_286_person_PERSON_HUSSTANDSMEDLEM_20051224_417"
+      ],
+      "gjelderBarnReferanse": "person_PERSON_HUSSTANDSMEDLEM_20051224_417",
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19830916_286"
     },
-    "grunnlagsreferanseListe" : [ "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19830916_286_person_PERSON_HUSSTANDSMEDLEM_20180718_416" ],
-    "gjelderReferanse" : "person_PERSON_HUSSTANDSMEDLEM_20180718_416"
-  }, {
-    "referanse" : "bostatus_person_PERSON_BIDRAGSPLIKTIG_19830916_286_20240201",
-    "type" : "BOSTATUS_PERIODE",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-02",
-        "til" : null
+    {
+      "referanse": "bostatus_person_PERSON_HUSSTANDSMEDLEM_20051224_417_20240201",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-02",
+          "til": "2024-09"
+        },
+        "bostatus": "IKKE_MED_FORELDER",
+        "relatertTilPart": "person_PERSON_BIDRAGSPLIKTIG_19830916_286",
+        "manueltRegistrert": false
       },
-      "bostatus" : "BOR_MED_ANDRE_VOKSNE",
-      "relatertTilPart" : "person_PERSON_BIDRAGSPLIKTIG_19830916_286",
-      "manueltRegistrert" : false
+      "grunnlagsreferanseListe": [
+        "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19830916_286_person_PERSON_HUSSTANDSMEDLEM_20051224_417"
+      ],
+      "gjelderBarnReferanse": "person_PERSON_HUSSTANDSMEDLEM_20051224_417",
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19830916_286"
     },
-    "grunnlagsreferanseListe" : [ "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19830916_286_person_PERSON_BIDRAGSPLIKTIG_19830916_286" ],
-    "gjelderReferanse" : "person_PERSON_BIDRAGSPLIKTIG_19830916_286"
-  }, {
-    "referanse" : "person_PERSON_HUSSTANDSMEDLEM_20151210_414",
-    "type" : "PERSON_HUSSTANDSMEDLEM",
-    "innhold" : {
-      "ident" : "10521557864",
-      "navn" : null,
-      "fødselsdato" : "2015-12-10"
-    },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderReferanse" : null
-  }, {
-    "referanse" : "person_PERSON_HUSSTANDSMEDLEM_20051224_417",
-    "type" : "PERSON_HUSSTANDSMEDLEM",
-    "innhold" : {
-      "ident" : "24520577536",
-      "navn" : null,
-      "fødselsdato" : "2005-12-24"
-    },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderReferanse" : null
-  }, {
-    "referanse" : "person_PERSON_HUSSTANDSMEDLEM_20180718_416",
-    "type" : "PERSON_HUSSTANDSMEDLEM",
-    "innhold" : {
-      "ident" : "18471885637",
-      "navn" : null,
-      "fødselsdato" : "2018-07-18"
-    },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderReferanse" : null
-  }, {
-    "referanse" : "inntekt_LØNN_MANUELT_BEREGNET_person_PERSON_BIDRAGSPLIKTIG_19830916_286_20240201_1135",
-    "type" : "INNTEKT_RAPPORTERING_PERIODE",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-02",
-        "til" : null
+    {
+      "referanse": "bostatus_person_PERSON_SØKNADSBARN_20130615_285_20240201",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-02",
+          "til": null
+        },
+        "bostatus": "IKKE_MED_FORELDER",
+        "relatertTilPart": "person_PERSON_BIDRAGSPLIKTIG_19830916_286",
+        "manueltRegistrert": false
       },
-      "manueltRegistrert" : true,
-      "opprinneligPeriode" : null,
-      "versjon" : null,
-      "inntektsrapportering" : "LØNN_MANUELT_BEREGNET",
-      "gjelderBarn" : null,
-      "beløp" : 800000,
-      "valgt" : true,
-      "inntekstpostListe" : [ ]
+      "grunnlagsreferanseListe": [
+        "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19830916_286_person_PERSON_SØKNADSBARN_20130615_285"
+      ],
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20130615_285",
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19830916_286"
     },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderReferanse" : "person_PERSON_BIDRAGSPLIKTIG_19830916_286"
-  }, {
-    "referanse" : "inntekt_BARNETILLEGG_BARNETILLEGG_UFØRETRYGD_person_PERSON_BIDRAGSPLIKTIG_19830916_286_ba_person_PERSON_SØKNADSBARN_20130615_285_20240201_1137",
-    "type" : "INNTEKT_RAPPORTERING_PERIODE",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-02",
-        "til" : null
+    {
+      "referanse": "bostatus_person_PERSON_HUSSTANDSMEDLEM_20180718_416_20240201",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-02",
+          "til": null
+        },
+        "bostatus": "MED_FORELDER",
+        "relatertTilPart": "person_PERSON_BIDRAGSPLIKTIG_19830916_286",
+        "manueltRegistrert": false
       },
-      "manueltRegistrert" : true,
-      "opprinneligPeriode" : null,
-      "versjon" : null,
-      "inntektsrapportering" : "BARNETILLEGG",
-      "gjelderBarn" : "person_PERSON_SØKNADSBARN_20130615_285",
-      "beløp" : 3996,
-      "valgt" : true,
-      "inntekstpostListe" : [ {
-        "kode" : "BARNETILLEGG",
-        "inntekstype" : "BARNETILLEGG_UFØRETRYGD",
-        "beløp" : 3996
-      } ]
+      "grunnlagsreferanseListe": [
+        "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19830916_286_person_PERSON_HUSSTANDSMEDLEM_20180718_416"
+      ],
+      "gjelderBarnReferanse": "person_PERSON_HUSSTANDSMEDLEM_20180718_416",
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19830916_286"
     },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderReferanse" : "person_PERSON_BIDRAGSPLIKTIG_19830916_286"
-  }, {
-    "referanse" : "inntekt_AINNTEKT_person_PERSON_BIDRAGSMOTTAKER_19790718_284_20230101_20231231_1118",
-    "type" : "INNTEKT_RAPPORTERING_PERIODE",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-02",
-        "til" : null
+    {
+      "referanse": "bostatus_person_PERSON_BIDRAGSPLIKTIG_19830916_286_20240201",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-02",
+          "til": null
+        },
+        "bostatus": "BOR_MED_ANDRE_VOKSNE",
+        "relatertTilPart": "person_PERSON_BIDRAGSPLIKTIG_19830916_286",
+        "manueltRegistrert": false
       },
-      "manueltRegistrert" : false,
-      "opprinneligPeriode" : {
-        "fom" : "2023-01",
-        "til" : "2024-01"
+      "grunnlagsreferanseListe": [
+        "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19830916_286_person_PERSON_BIDRAGSPLIKTIG_19830916_286"
+      ],
+      "gjelderBarnReferanse": null,
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19830916_286"
+    },
+    {
+      "referanse": "person_PERSON_HUSSTANDSMEDLEM_20151210_414",
+      "type": "PERSON_HUSSTANDSMEDLEM",
+      "innhold": {
+        "ident": "10521557864",
+        "navn": null,
+        "fødselsdato": "2015-12-10"
       },
-      "versjon" : "2024.11.13.150507_432a08d",
-      "inntektsrapportering" : "AINNTEKT",
-      "gjelderBarn" : null,
-      "beløp" : 732000,
-      "valgt" : true,
-      "inntekstpostListe" : [ {
-        "kode" : "fastloenn",
-        "inntekstype" : null,
-        "beløp" : 660000
-      }, {
-        "kode" : "foreldrepenger",
-        "inntekstype" : null,
-        "beløp" : 45000
-      }, {
-        "kode" : "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere",
-        "inntekstype" : null,
-        "beløp" : 9000
-      }, {
-        "kode" : "sykepenger",
-        "inntekstype" : null,
-        "beløp" : 18000
-      } ]
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
     },
-    "grunnlagsreferanseListe" : [ "innhentet_ainntekt_person_PERSON_BIDRAGSMOTTAKER_19790718_284" ],
-    "gjelderReferanse" : "person_PERSON_BIDRAGSMOTTAKER_19790718_284"
-  }, {
-    "referanse" : "inntekt_BARNETILLEGG_BARNETILLEGG_PENSJON_person_PERSON_BIDRAGSMOTTAKER_19790718_284_ba_person_PERSON_SØKNADSBARN_20130615_285_20240201_1136",
-    "type" : "INNTEKT_RAPPORTERING_PERIODE",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-02",
-        "til" : null
+    {
+      "referanse": "person_PERSON_HUSSTANDSMEDLEM_20051224_417",
+      "type": "PERSON_HUSSTANDSMEDLEM",
+      "innhold": {
+        "ident": "24520577536",
+        "navn": null,
+        "fødselsdato": "2005-12-24"
       },
-      "manueltRegistrert" : true,
-      "opprinneligPeriode" : null,
-      "versjon" : null,
-      "inntektsrapportering" : "BARNETILLEGG",
-      "gjelderBarn" : "person_PERSON_SØKNADSBARN_20130615_285",
-      "beløp" : 6660,
-      "valgt" : true,
-      "inntekstpostListe" : [ {
-        "kode" : "BARNETILLEGG",
-        "inntekstype" : "BARNETILLEGG_PENSJON",
-        "beløp" : 6660
-      } ]
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
     },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderReferanse" : "person_PERSON_BIDRAGSMOTTAKER_19790718_284"
-  }, {
-    "referanse" : "BARNETILSYN_MED_STØNAD_PERIODE_person_PERSON_SØKNADSBARN_20130615_285_20240201_20240229",
-    "type" : "BARNETILSYN_MED_STØNAD_PERIODE",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-02",
-        "til" : "2024-03"
+    {
+      "referanse": "person_PERSON_HUSSTANDSMEDLEM_20180718_416",
+      "type": "PERSON_HUSSTANDSMEDLEM",
+      "innhold": {
+        "ident": "18471885637",
+        "navn": null,
+        "fødselsdato": "2018-07-18"
       },
-      "tilsynstype" : "HELTID",
-      "skolealder" : "OVER",
-      "manueltRegistrert" : true
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
     },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderBarnReferanse" : "person_PERSON_SØKNADSBARN_20130615_285",
-    "gjelderReferanse" : null
-  }, {
-    "referanse" : "TILLEGGSSTØNAD_PERIODE_person_PERSON_SØKNADSBARN_20130615_285__20240201",
-    "type" : "TILLEGGSSTØNAD_PERIODE",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-02",
-        "til" : null
+    {
+      "referanse": "inntekt_LØNN_MANUELT_BEREGNET_person_PERSON_BIDRAGSPLIKTIG_19830916_286_20240201_1135",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-02",
+          "til": null
+        },
+        "manueltRegistrert": true,
+        "opprinneligPeriode": null,
+        "versjon": null,
+        "inntektsrapportering": "LØNN_MANUELT_BEREGNET",
+        "gjelderBarn": null,
+        "beløp": 800000,
+        "valgt": true,
+        "inntekstpostListe": []
       },
-      "beløpDagsats" : 1200,
-      "manueltRegistrert" : true
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": null,
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19830916_286"
     },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderBarnReferanse" : "person_PERSON_SØKNADSBARN_20130615_285",
-    "gjelderReferanse" : null
-  }, {
-    "referanse" : "FAKTISK_UTGIFT_PERIODE_person_PERSON_SØKNADSBARN_20130615_285__20240201",
-    "type" : "FAKTISK_UTGIFT_PERIODE",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-02",
-        "til" : null
+    {
+      "referanse": "inntekt_BARNETILLEGG_BARNETILLEGG_UFØRETRYGD_person_PERSON_BIDRAGSPLIKTIG_19830916_286_ba_person_PERSON_SØKNADSBARN_20130615_285_20240201_1137",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-02",
+          "til": null
+        },
+        "manueltRegistrert": true,
+        "opprinneligPeriode": null,
+        "versjon": null,
+        "inntektsrapportering": "BARNETILLEGG",
+        "gjelderBarn": "person_PERSON_SØKNADSBARN_20130615_285",
+        "beløp": 3996,
+        "valgt": true,
+        "inntekstpostListe": [
+          {
+            "kode": "BARNETILLEGG",
+            "inntekstype": "BARNETILLEGG_UFØRETRYGD",
+            "beløp": 3996
+          }
+        ]
       },
-      "fødselsdatoBarn" : "2013-06-15",
-      "faktiskUtgiftBeløp" : 10,
-      "kostpengerBeløp" : 0,
-      "manueltRegistrert" : true
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20130615_285",
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19830916_286"
     },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderBarnReferanse" : "person_PERSON_SØKNADSBARN_20130615_285",
-    "gjelderReferanse" : null
-  }, {
-    "referanse" : "delberegning_samværsklasse_netter",
-    "type" : "DELBEREGNING_SAMVÆRSKLASSE_NETTER",
-    "innhold" : {
-      "samværsklasserNetter" : [ {
-        "samværsklasse" : "SAMVÆRSKLASSE_0",
-        "antallNetterFra" : 0,
-        "antallNetterTil" : 1.99
-      }, {
-        "samværsklasse" : "SAMVÆRSKLASSE_1",
-        "antallNetterFra" : 2,
-        "antallNetterTil" : 3.99
-      }, {
-        "samværsklasse" : "SAMVÆRSKLASSE_2",
-        "antallNetterFra" : 4,
-        "antallNetterTil" : 8.99
-      }, {
-        "samværsklasse" : "SAMVÆRSKLASSE_3",
-        "antallNetterFra" : 9,
-        "antallNetterTil" : 13.99
-      }, {
-        "samværsklasse" : "SAMVÆRSKLASSE_4",
-        "antallNetterFra" : 14,
-        "antallNetterTil" : 15.00
-      } ]
-    },
-    "grunnlagsreferanseListe" : [ "sjablon_SJABLON_SAMVARSFRADRAG_201307_00_99", "sjablon_SJABLON_SAMVARSFRADRAG_202407_01_5", "sjablon_SJABLON_SAMVARSFRADRAG_202407_02_5", "sjablon_SJABLON_SAMVARSFRADRAG_202407_03_5", "sjablon_SJABLON_SAMVARSFRADRAG_202407_04_5" ],
-    "gjelderReferanse" : null
-  }, {
-    "referanse" : "delberegning_samværsklasse_SAMVÆRSKLASSE_2_gjennomsnittlig_samvær_888",
-    "type" : "DELBEREGNING_SAMVÆRSKLASSE",
-    "innhold" : {
-      "samværsklasse" : "SAMVÆRSKLASSE_2",
-      "gjennomsnittligSamværPerMåned" : 8.88
-    },
-    "grunnlagsreferanseListe" : [ "delberegning_samværsklasse_netter", "samværskalkulator_hash_1829729671" ],
-    "gjelderReferanse" : null
-  }, {
-    "referanse" : "samværskalkulator_hash_1829729671",
-    "type" : "SAMVÆRSKALKULATOR",
-    "innhold" : {
-      "ferier" : [ {
-        "type" : "JUL_NYTTÅR",
-        "bidragsmottakerNetter" : 4,
-        "bidragspliktigNetter" : 4,
-        "frekvens" : "ANNET_HVERT_ÅR"
-      }, {
-        "type" : "VINTERFERIE",
-        "bidragsmottakerNetter" : 0,
-        "bidragspliktigNetter" : 4,
-        "frekvens" : "ANNET_HVERT_ÅR"
-      }, {
-        "type" : "PÅSKE",
-        "bidragsmottakerNetter" : 0,
-        "bidragspliktigNetter" : 0,
-        "frekvens" : "ANNET_HVERT_ÅR"
-      }, {
-        "type" : "SOMMERFERIE",
-        "bidragsmottakerNetter" : 0,
-        "bidragspliktigNetter" : 0,
-        "frekvens" : "HVERT_ÅR"
-      }, {
-        "type" : "HØSTFERIE",
-        "bidragsmottakerNetter" : 0,
-        "bidragspliktigNetter" : 0,
-        "frekvens" : "ANNET_HVERT_ÅR"
-      }, {
-        "type" : "ANNET",
-        "bidragsmottakerNetter" : 0,
-        "bidragspliktigNetter" : 0,
-        "frekvens" : "ANNET_HVERT_ÅR"
-      } ],
-      "regelmessigSamværNetter" : 4
-    },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderReferanse" : null
-  }, {
-    "referanse" : "sjablon_SJABLON_SAMVARSFRADRAG_201307_00_99",
-    "type" : "SJABLON_SAMVARSFRADRAG",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2013-07",
-        "til" : null
+    {
+      "referanse": "inntekt_AINNTEKT_person_PERSON_BIDRAGSMOTTAKER_19790718_284_20230101_20231231_1118",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-02",
+          "til": null
+        },
+        "manueltRegistrert": false,
+        "opprinneligPeriode": {
+          "fom": "2023-01",
+          "til": "2024-01"
+        },
+        "versjon": "2024.11.13.150507_432a08d",
+        "inntektsrapportering": "AINNTEKT",
+        "gjelderBarn": null,
+        "beløp": 732000,
+        "valgt": true,
+        "inntekstpostListe": [
+          {
+            "kode": "fastloenn",
+            "inntekstype": null,
+            "beløp": 660000
+          },
+          {
+            "kode": "foreldrepenger",
+            "inntekstype": null,
+            "beløp": 45000
+          },
+          {
+            "kode": "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere",
+            "inntekstype": null,
+            "beløp": 9000
+          },
+          {
+            "kode": "sykepenger",
+            "inntekstype": null,
+            "beløp": 18000
+          }
+        ]
       },
-      "samværsklasse" : "00",
-      "alderTom" : 99,
-      "antallDagerTom" : 1,
-      "antallNetterTom" : 1,
-      "beløpFradrag" : 0.0
+      "grunnlagsreferanseListe": [
+        "innhentet_ainntekt_person_PERSON_BIDRAGSMOTTAKER_19790718_284"
+      ],
+      "gjelderBarnReferanse": null,
+      "gjelderReferanse": "person_PERSON_BIDRAGSMOTTAKER_19790718_284"
     },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderReferanse" : null
-  }, {
-    "referanse" : "sjablon_SJABLON_SAMVARSFRADRAG_202407_01_5",
-    "type" : "SJABLON_SAMVARSFRADRAG",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-07",
-        "til" : null
+    {
+      "referanse": "inntekt_BARNETILLEGG_BARNETILLEGG_PENSJON_person_PERSON_BIDRAGSMOTTAKER_19790718_284_ba_person_PERSON_SØKNADSBARN_20130615_285_20240201_1136",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-02",
+          "til": null
+        },
+        "manueltRegistrert": true,
+        "opprinneligPeriode": null,
+        "versjon": null,
+        "inntektsrapportering": "BARNETILLEGG",
+        "gjelderBarn": "person_PERSON_SØKNADSBARN_20130615_285",
+        "beløp": 6660,
+        "valgt": true,
+        "inntekstpostListe": [
+          {
+            "kode": "BARNETILLEGG",
+            "inntekstype": "BARNETILLEGG_PENSJON",
+            "beløp": 6660
+          }
+        ]
       },
-      "samværsklasse" : "01",
-      "alderTom" : 5,
-      "antallDagerTom" : 3,
-      "antallNetterTom" : 3,
-      "beløpFradrag" : 317.0
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20130615_285",
+      "gjelderReferanse": "person_PERSON_BIDRAGSMOTTAKER_19790718_284"
     },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderReferanse" : null
-  }, {
-    "referanse" : "sjablon_SJABLON_SAMVARSFRADRAG_202407_02_5",
-    "type" : "SJABLON_SAMVARSFRADRAG",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-07",
-        "til" : null
+    {
+      "referanse": "BARNETILSYN_MED_STØNAD_PERIODE_person_PERSON_SØKNADSBARN_20130615_285_20240201_20240229",
+      "type": "BARNETILSYN_MED_STØNAD_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-02",
+          "til": "2024-03"
+        },
+        "tilsynstype": "HELTID",
+        "skolealder": "OVER",
+        "manueltRegistrert": true
       },
-      "samværsklasse" : "02",
-      "alderTom" : 5,
-      "antallDagerTom" : 0,
-      "antallNetterTom" : 8,
-      "beløpFradrag" : 1048.0
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20130615_285",
+      "gjelderReferanse": "person_PERSON_BIDRAGSMOTTAKER_19790718_284"
     },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderReferanse" : null
-  }, {
-    "referanse" : "sjablon_SJABLON_SAMVARSFRADRAG_202407_03_5",
-    "type" : "SJABLON_SAMVARSFRADRAG",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-07",
-        "til" : null
+    {
+      "referanse": "TILLEGGSSTØNAD_PERIODE_person_PERSON_SØKNADSBARN_20130615_285__20240201",
+      "type": "TILLEGGSSTØNAD_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-02",
+          "til": null
+        },
+        "beløpDagsats": 1200,
+        "manueltRegistrert": true
       },
-      "samværsklasse" : "03",
-      "alderTom" : 5,
-      "antallDagerTom" : 0,
-      "antallNetterTom" : 13,
-      "beløpFradrag" : 2847.0
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20130615_285",
+      "gjelderReferanse": "person_PERSON_BIDRAGSMOTTAKER_19790718_284"
     },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderReferanse" : null
-  }, {
-    "referanse" : "sjablon_SJABLON_SAMVARSFRADRAG_202407_04_5",
-    "type" : "SJABLON_SAMVARSFRADRAG",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-07",
-        "til" : null
+    {
+      "referanse": "FAKTISK_UTGIFT_PERIODE_person_PERSON_SØKNADSBARN_20130615_285__20240201",
+      "type": "FAKTISK_UTGIFT_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-02",
+          "til": null
+        },
+        "fødselsdatoBarn": "2013-06-15",
+        "faktiskUtgiftBeløp": 10,
+        "kostpengerBeløp": 0,
+        "manueltRegistrert": true
       },
-      "samværsklasse" : "04",
-      "alderTom" : 5,
-      "antallDagerTom" : 0,
-      "antallNetterTom" : 15,
-      "beløpFradrag" : 3574.0
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20130615_285",
+      "gjelderReferanse": "person_PERSON_BIDRAGSMOTTAKER_19790718_284"
     },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderReferanse" : null
-  }, {
-    "referanse" : "samvær_SAMVÆRSPERIODE_20240201_20240930_person_PERSON_SØKNADSBARN_20130615_285",
-    "type" : "SAMVÆRSPERIODE",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-02",
-        "til" : "2024-10"
+    {
+      "referanse": "delberegning_samværsklasse_netter",
+      "type": "DELBEREGNING_SAMVÆRSKLASSE_NETTER",
+      "innhold": {
+        "samværsklasserNetter": [
+          {
+            "samværsklasse": "SAMVÆRSKLASSE_0",
+            "antallNetterFra": 0,
+            "antallNetterTil": 1.99
+          },
+          {
+            "samværsklasse": "SAMVÆRSKLASSE_1",
+            "antallNetterFra": 2,
+            "antallNetterTil": 3.99
+          },
+          {
+            "samværsklasse": "SAMVÆRSKLASSE_2",
+            "antallNetterFra": 4,
+            "antallNetterTil": 8.99
+          },
+          {
+            "samværsklasse": "SAMVÆRSKLASSE_3",
+            "antallNetterFra": 9,
+            "antallNetterTil": 13.99
+          },
+          {
+            "samværsklasse": "SAMVÆRSKLASSE_4",
+            "antallNetterFra": 14,
+            "antallNetterTil": 15.00
+          }
+        ]
       },
-      "manueltRegistrert" : true,
-      "samværsklasse" : "SAMVÆRSKLASSE_2"
+      "grunnlagsreferanseListe": [
+        "sjablon_SJABLON_SAMVARSFRADRAG_201307_00_99",
+        "sjablon_SJABLON_SAMVARSFRADRAG_202407_01_5",
+        "sjablon_SJABLON_SAMVARSFRADRAG_202407_02_5",
+        "sjablon_SJABLON_SAMVARSFRADRAG_202407_03_5",
+        "sjablon_SJABLON_SAMVARSFRADRAG_202407_04_5"
+      ],
+      "gjelderReferanse": null
     },
-    "grunnlagsreferanseListe" : [ "delberegning_samværsklasse_netter", "delberegning_samværsklasse_SAMVÆRSKLASSE_2_gjennomsnittlig_samvær_888", "samværskalkulator_hash_1829729671", "sjablon_SJABLON_SAMVARSFRADRAG_201307_00_99", "sjablon_SJABLON_SAMVARSFRADRAG_202407_01_5", "sjablon_SJABLON_SAMVARSFRADRAG_202407_02_5", "sjablon_SJABLON_SAMVARSFRADRAG_202407_03_5", "sjablon_SJABLON_SAMVARSFRADRAG_202407_04_5" ],
-    "gjelderReferanse" : "person_PERSON_SØKNADSBARN_20130615_285"
-  }, {
-    "referanse" : "delberegning_samværsklasse_SAMVÆRSKLASSE_3_gjennomsnittlig_samvær_1094",
-    "type" : "DELBEREGNING_SAMVÆRSKLASSE",
-    "innhold" : {
-      "samværsklasse" : "SAMVÆRSKLASSE_3",
-      "gjennomsnittligSamværPerMåned" : 10.94
-    },
-    "grunnlagsreferanseListe" : [ "delberegning_samværsklasse_netter", "samværskalkulator_hash_-2116829043" ],
-    "gjelderReferanse" : null
-  }, {
-    "referanse" : "samværskalkulator_hash_-2116829043",
-    "type" : "SAMVÆRSKALKULATOR",
-    "innhold" : {
-      "ferier" : [ {
-        "type" : "JUL_NYTTÅR",
-        "bidragsmottakerNetter" : 0,
-        "bidragspliktigNetter" : 0,
-        "frekvens" : "ANNET_HVERT_ÅR"
-      }, {
-        "type" : "VINTERFERIE",
-        "bidragsmottakerNetter" : 0,
-        "bidragspliktigNetter" : 3,
-        "frekvens" : "ANNET_HVERT_ÅR"
-      }, {
-        "type" : "PÅSKE",
-        "bidragsmottakerNetter" : 0,
-        "bidragspliktigNetter" : 0,
-        "frekvens" : "ANNET_HVERT_ÅR"
-      }, {
-        "type" : "SOMMERFERIE",
-        "bidragsmottakerNetter" : 3,
-        "bidragspliktigNetter" : 0,
-        "frekvens" : "HVERT_ÅR"
-      }, {
-        "type" : "HØSTFERIE",
-        "bidragsmottakerNetter" : 0,
-        "bidragspliktigNetter" : 3,
-        "frekvens" : "ANNET_HVERT_ÅR"
-      }, {
-        "type" : "ANNET",
-        "bidragsmottakerNetter" : 0,
-        "bidragspliktigNetter" : 0,
-        "frekvens" : "ANNET_HVERT_ÅR"
-      } ],
-      "regelmessigSamværNetter" : 5
-    },
-    "grunnlagsreferanseListe" : [ ],
-    "gjelderReferanse" : null
-  }, {
-    "referanse" : "samvær_SAMVÆRSPERIODE_20241001null_person_PERSON_SØKNADSBARN_20130615_285",
-    "type" : "SAMVÆRSPERIODE",
-    "innhold" : {
-      "periode" : {
-        "fom" : "2024-10",
-        "til" : null
+    {
+      "referanse": "delberegning_samværsklasse_SAMVÆRSKLASSE_2_gjennomsnittlig_samvær_888",
+      "type": "DELBEREGNING_SAMVÆRSKLASSE",
+      "innhold": {
+        "samværsklasse": "SAMVÆRSKLASSE_2",
+        "gjennomsnittligSamværPerMåned": 8.88
       },
-      "manueltRegistrert" : true,
-      "samværsklasse" : "SAMVÆRSKLASSE_3"
+      "grunnlagsreferanseListe": [
+        "delberegning_samværsklasse_netter",
+        "samværskalkulator_hash_1829729671"
+      ],
+      "gjelderReferanse": null
     },
-    "grunnlagsreferanseListe" : [ "delberegning_samværsklasse_netter", "delberegning_samværsklasse_SAMVÆRSKLASSE_3_gjennomsnittlig_samvær_1094", "samværskalkulator_hash_-2116829043", "sjablon_SJABLON_SAMVARSFRADRAG_201307_00_99", "sjablon_SJABLON_SAMVARSFRADRAG_202407_01_5", "sjablon_SJABLON_SAMVARSFRADRAG_202407_02_5", "sjablon_SJABLON_SAMVARSFRADRAG_202407_03_5", "sjablon_SJABLON_SAMVARSFRADRAG_202407_04_5" ],
-    "gjelderReferanse" : "person_PERSON_SØKNADSBARN_20130615_285"
-  } ]
+    {
+      "referanse": "samværskalkulator_hash_1829729671",
+      "type": "SAMVÆRSKALKULATOR",
+      "innhold": {
+        "ferier": [
+          {
+            "type": "JUL_NYTTÅR",
+            "bidragsmottakerNetter": 4,
+            "bidragspliktigNetter": 4,
+            "frekvens": "ANNET_HVERT_ÅR"
+          },
+          {
+            "type": "VINTERFERIE",
+            "bidragsmottakerNetter": 0,
+            "bidragspliktigNetter": 4,
+            "frekvens": "ANNET_HVERT_ÅR"
+          },
+          {
+            "type": "PÅSKE",
+            "bidragsmottakerNetter": 0,
+            "bidragspliktigNetter": 0,
+            "frekvens": "ANNET_HVERT_ÅR"
+          },
+          {
+            "type": "SOMMERFERIE",
+            "bidragsmottakerNetter": 0,
+            "bidragspliktigNetter": 0,
+            "frekvens": "HVERT_ÅR"
+          },
+          {
+            "type": "HØSTFERIE",
+            "bidragsmottakerNetter": 0,
+            "bidragspliktigNetter": 0,
+            "frekvens": "ANNET_HVERT_ÅR"
+          },
+          {
+            "type": "ANNET",
+            "bidragsmottakerNetter": 0,
+            "bidragspliktigNetter": 0,
+            "frekvens": "ANNET_HVERT_ÅR"
+          }
+        ],
+        "regelmessigSamværNetter": 4
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "sjablon_SJABLON_SAMVARSFRADRAG_201307_00_99",
+      "type": "SJABLON_SAMVARSFRADRAG",
+      "innhold": {
+        "periode": {
+          "fom": "2013-07",
+          "til": null
+        },
+        "samværsklasse": "00",
+        "alderTom": 99,
+        "antallDagerTom": 1,
+        "antallNetterTom": 1,
+        "beløpFradrag": 0.0
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "sjablon_SJABLON_SAMVARSFRADRAG_202407_01_5",
+      "type": "SJABLON_SAMVARSFRADRAG",
+      "innhold": {
+        "periode": {
+          "fom": "2024-07",
+          "til": null
+        },
+        "samværsklasse": "01",
+        "alderTom": 5,
+        "antallDagerTom": 3,
+        "antallNetterTom": 3,
+        "beløpFradrag": 317.0
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "sjablon_SJABLON_SAMVARSFRADRAG_202407_02_5",
+      "type": "SJABLON_SAMVARSFRADRAG",
+      "innhold": {
+        "periode": {
+          "fom": "2024-07",
+          "til": null
+        },
+        "samværsklasse": "02",
+        "alderTom": 5,
+        "antallDagerTom": 0,
+        "antallNetterTom": 8,
+        "beløpFradrag": 1048.0
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "sjablon_SJABLON_SAMVARSFRADRAG_202407_03_5",
+      "type": "SJABLON_SAMVARSFRADRAG",
+      "innhold": {
+        "periode": {
+          "fom": "2024-07",
+          "til": null
+        },
+        "samværsklasse": "03",
+        "alderTom": 5,
+        "antallDagerTom": 0,
+        "antallNetterTom": 13,
+        "beløpFradrag": 2847.0
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "sjablon_SJABLON_SAMVARSFRADRAG_202407_04_5",
+      "type": "SJABLON_SAMVARSFRADRAG",
+      "innhold": {
+        "periode": {
+          "fom": "2024-07",
+          "til": null
+        },
+        "samværsklasse": "04",
+        "alderTom": 5,
+        "antallDagerTom": 0,
+        "antallNetterTom": 15,
+        "beløpFradrag": 3574.0
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "samvær_SAMVÆRSPERIODE_20240201_20240930_person_PERSON_SØKNADSBARN_20130615_285",
+      "type": "SAMVÆRSPERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-02",
+          "til": "2024-10"
+        },
+        "manueltRegistrert": true,
+        "samværsklasse": "SAMVÆRSKLASSE_2"
+      },
+      "grunnlagsreferanseListe": [
+        "delberegning_samværsklasse_netter",
+        "delberegning_samværsklasse_SAMVÆRSKLASSE_2_gjennomsnittlig_samvær_888",
+        "samværskalkulator_hash_1829729671",
+        "sjablon_SJABLON_SAMVARSFRADRAG_201307_00_99",
+        "sjablon_SJABLON_SAMVARSFRADRAG_202407_01_5",
+        "sjablon_SJABLON_SAMVARSFRADRAG_202407_02_5",
+        "sjablon_SJABLON_SAMVARSFRADRAG_202407_03_5",
+        "sjablon_SJABLON_SAMVARSFRADRAG_202407_04_5"
+      ],
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20130615_285",
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19830916_286"
+    },
+    {
+      "referanse": "delberegning_samværsklasse_SAMVÆRSKLASSE_3_gjennomsnittlig_samvær_1094",
+      "type": "DELBEREGNING_SAMVÆRSKLASSE",
+      "innhold": {
+        "samværsklasse": "SAMVÆRSKLASSE_3",
+        "gjennomsnittligSamværPerMåned": 10.94
+      },
+      "grunnlagsreferanseListe": [
+        "delberegning_samværsklasse_netter",
+        "samværskalkulator_hash_-2116829043"
+      ],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "samværskalkulator_hash_-2116829043",
+      "type": "SAMVÆRSKALKULATOR",
+      "innhold": {
+        "ferier": [
+          {
+            "type": "JUL_NYTTÅR",
+            "bidragsmottakerNetter": 0,
+            "bidragspliktigNetter": 0,
+            "frekvens": "ANNET_HVERT_ÅR"
+          },
+          {
+            "type": "VINTERFERIE",
+            "bidragsmottakerNetter": 0,
+            "bidragspliktigNetter": 3,
+            "frekvens": "ANNET_HVERT_ÅR"
+          },
+          {
+            "type": "PÅSKE",
+            "bidragsmottakerNetter": 0,
+            "bidragspliktigNetter": 0,
+            "frekvens": "ANNET_HVERT_ÅR"
+          },
+          {
+            "type": "SOMMERFERIE",
+            "bidragsmottakerNetter": 3,
+            "bidragspliktigNetter": 0,
+            "frekvens": "HVERT_ÅR"
+          },
+          {
+            "type": "HØSTFERIE",
+            "bidragsmottakerNetter": 0,
+            "bidragspliktigNetter": 3,
+            "frekvens": "ANNET_HVERT_ÅR"
+          },
+          {
+            "type": "ANNET",
+            "bidragsmottakerNetter": 0,
+            "bidragspliktigNetter": 0,
+            "frekvens": "ANNET_HVERT_ÅR"
+          }
+        ],
+        "regelmessigSamværNetter": 5
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "samvær_SAMVÆRSPERIODE_20241001null_person_PERSON_SØKNADSBARN_20130615_285",
+      "type": "SAMVÆRSPERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-10",
+          "til": null
+        },
+        "manueltRegistrert": true,
+        "samværsklasse": "SAMVÆRSKLASSE_3"
+      },
+      "grunnlagsreferanseListe": [
+        "delberegning_samværsklasse_netter",
+        "delberegning_samværsklasse_SAMVÆRSKLASSE_3_gjennomsnittlig_samvær_1094",
+        "samværskalkulator_hash_-2116829043",
+        "sjablon_SJABLON_SAMVARSFRADRAG_201307_00_99",
+        "sjablon_SJABLON_SAMVARSFRADRAG_202407_01_5",
+        "sjablon_SJABLON_SAMVARSFRADRAG_202407_02_5",
+        "sjablon_SJABLON_SAMVARSFRADRAG_202407_03_5",
+        "sjablon_SJABLON_SAMVARSFRADRAG_202407_04_5"
+      ],
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20130615_285",
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19830916_286"
+    }
+  ]
 }

@@ -235,6 +235,7 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
                     ),
                 ),
                 grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe.sorted(),
+                gjelderBarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
                 gjelderReferanse = referanseTilBP,
             )
         }

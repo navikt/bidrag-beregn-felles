@@ -52,6 +52,7 @@
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {
@@ -68,6 +69,7 @@
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {
@@ -90,6 +92,7 @@
           }
         ],
         "grunnlagsreferanseListe": [],
+        "gjelderBarnReferanse": "Person_Søknadsbarn",
         "gjelderReferanse": "Person_Bidragsmottaker"
       }
     },
@@ -113,6 +116,7 @@
           }
         ],
         "grunnlagsreferanseListe": [],
+        "gjelderBarnReferanse": "Person_Søknadsbarn",
         "gjelderReferanse": "Person_Bidragsmottaker"
       }
     }
