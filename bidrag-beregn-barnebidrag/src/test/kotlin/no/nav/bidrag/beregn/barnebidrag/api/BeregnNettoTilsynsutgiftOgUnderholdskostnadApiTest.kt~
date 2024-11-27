@@ -169,7 +169,7 @@ internal class BeregnNettoTilsynsutgiftOgUnderholdskostnadApiTest {
             { assertEquals(0, resultat[0].barnetilsynMedStønad?.compareTo(BigDecimal.valueOf(621))) },
             { assertEquals(0, resultat[0].nettoTilsynsutgift?.compareTo(BigDecimal.valueOf(58.83))) },
             { assertEquals(0, resultat[0].barnetrygd.compareTo(BigDecimal.valueOf(1510))) },
-            { assertEquals(0, resultat[0].underholdskostnad.compareTo(BigDecimal.valueOf(10352.83))) },
+            { assertEquals(0, resultat[0].underholdskostnad.compareTo(BigDecimal.valueOf(10352.833))) },
         )
     }
 

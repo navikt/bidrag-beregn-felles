@@ -58,3 +58,9 @@ data class UnderholdskostnadBeregningResultat(
     val underholdskostnad: BigDecimal,
     val grunnlagsreferanseListe: List<String>,
 )
+
+enum class BarnetrygdType {
+    INGEN,
+    ORDINÆR,
+    FORHØYET,
+}
