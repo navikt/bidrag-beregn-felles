@@ -46,7 +46,6 @@ internal class BeregnSamværsklasseApiTest {
 
         val samværskalkulatorGrunnlag = grunnlagsliste.hentSamværskalkulatorDetaljer()
         samværskalkulatorGrunnlag.shouldNotBeNull()
-        samværskalkulatorGrunnlag.grunnlagsreferanseListe
 
         val samværsklasserNetterGrunnlag = grunnlagsliste.hentDelberegningSamværsklasseNetter()
         samværsklasserNetterGrunnlag.shouldNotBeNull()
