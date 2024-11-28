@@ -81,7 +81,7 @@ class BeregnSamværsklasseApi(private val sjablonService: SjablonService) {
         val grunnlagKalkulator = GrunnlagDto(
             type = Grunnlagstype.SAMVÆRSKALKULATOR,
             innhold = POJONode(kalkulator),
-            referanse = "samværskalkulator_hash_${kalkulator.hashCode()}_${bidragspliktigreferanse}_$søknadsbarnReferanse",
+            referanse = "samværskalkulator_${kalkulator.hashCode()}_${bidragspliktigreferanse}_$søknadsbarnReferanse",
             gjelderReferanse = bidragspliktigreferanse,
             gjelderBarnReferanse = søknadsbarnReferanse,
         )
