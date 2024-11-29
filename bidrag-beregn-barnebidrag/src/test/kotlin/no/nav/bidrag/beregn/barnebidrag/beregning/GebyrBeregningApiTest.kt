@@ -239,6 +239,21 @@ class BeregnGebyrServiceTest {
     }
 
     @Test
+    fun `skal beregne gebyr uten noen inntekter`() {
+        val resultat = gebyrBeregningApi.beregnGebyr(emptyList(), bmReferanse)
+
+        resultat shouldHaveSize 2
+
+        val sluttberegningListe = resultat.filtrerOgKonverterBasertPåFremmedReferanse<SluttberegningGebyr>(Grunnlagstype.SLUTTBEREGNING_GEBYR)
+        sluttberegningListe shouldHaveSize 1
+        val sluttberegning = sluttberegningListe.first()
+        sluttberegning.grunnlag.grunnlagsreferanseListe shouldHaveSize 1
+        sluttberegning.gjelderReferanse shouldBe bmReferanse
+        resultat.finnGrunnlagSomErReferertAv(Grunnlagstype.SJABLON_SJABLONTALL, sluttberegning.grunnlag) shouldHaveSize 1
+        sluttberegning.innhold.ilagtGebyr shouldBe false
+    }
+
+    @Test
     fun `skal legge til grunnlag sjablon`() {
         val grunnlagInput = opprettGrunnlagDelberegningInntekter()
 
