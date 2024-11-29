@@ -5,7 +5,6 @@ import no.nav.bidrag.beregn.core.mapping.tilGrunnlagsobjekt
 import no.nav.bidrag.commons.service.sjablon.SjablonService
 import no.nav.bidrag.commons.service.sjablon.Sjablontall
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
-import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BaseGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningInnteksbasertGebyr
@@ -19,15 +18,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBase
 import no.nav.bidrag.transport.behandling.felles.grunnlag.innholdTilObjekt
 import java.math.BigDecimal
 
-val eksplisitteYtelser =
-    setOf(
-        Inntektsrapportering.BARNETILLEGG,
-        Inntektsrapportering.KONTANTSTØTTE,
-        Inntektsrapportering.SMÅBARNSTILLEGG,
-        Inntektsrapportering.UTVIDET_BARNETRYGD,
-    )
-
-internal data class DelberegningMaksInntektIntern(val maksInntekt: BigDecimal?, val grunnlagsliste: List<InnholdMedReferanse<*>>)
+internal data class DelberegningMaksInntektIntern(val maksInntekt: BigDecimal?, val grunnlagsliste: Set<InnholdMedReferanse<*>>)
 internal data class DelberegningInntektsbasertGebyrIntern(
     val skalIleggesGebyr: Boolean,
     val grunnlagsliste: Set<BaseGrunnlag>,
@@ -117,7 +108,7 @@ class BeregnGebyrService(private val sjablonService: SjablonService) {
                 (barnetilleggSistePeriode?.innhold?.barnetillegg ?: BigDecimal.ZERO)
         }
 
-        return DelberegningMaksInntektIntern(inntektsgrunnlagForGebyrBeregning, listOfNotNull(barnetilleggSistePeriode, årsinntektSistePeriode))
+        return DelberegningMaksInntektIntern(inntektsgrunnlagForGebyrBeregning, setOfNotNull(barnetilleggSistePeriode, årsinntektSistePeriode))
     }
 }
 

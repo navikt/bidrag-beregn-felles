@@ -68,6 +68,51 @@ class BeregnGebyrServiceTest {
     }
 
     @Test
+    fun `skal beregne gebyr med bare en barnetillegg`() {
+        val grunnlagInput = listOf(
+            opprettDelberegningSumInntektGrunnlag(
+                "ref1",
+                bmReferanse,
+                barn1Referanse,
+                BigDecimal(900000),
+                BigDecimal(3000),
+                LocalDate.parse("2024-01-01"),
+            ),
+        )
+
+        val resultat = gebyrBeregningApi.beregnGebyr(grunnlagInput, bmReferanse)
+
+        resultat shouldHaveSize 5
+
+        val sluttberegningListe = resultat.filtrerOgKonverterBasertPåFremmedReferanse<SluttberegningGebyr>(Grunnlagstype.SLUTTBEREGNING_GEBYR)
+        sluttberegningListe shouldHaveSize 1
+        val sluttberegning = sluttberegningListe.first()
+        sluttberegning.grunnlag.grunnlagsreferanseListe shouldHaveSize 2
+        sluttberegning.gjelderReferanse shouldBe bmReferanse
+        resultat.finnGrunnlagSomErReferertAv(Grunnlagstype.DELBEREGNING_INNTEKTSBASERT_GEBYR, sluttberegning.grunnlag) shouldHaveSize 1
+        val sjablonGrunnlag = resultat.finnGrunnlagSomErReferertAv(Grunnlagstype.SJABLON_SJABLONTALL, sluttberegning.grunnlag)
+        sjablonGrunnlag shouldHaveSize 1
+        sjablonGrunnlag.first().innholdTilObjekt<SjablonSjablontallPeriode>().sjablon shouldBe SjablonTallNavn.FASTSETTELSESGEBYR_BELØP
+
+        sluttberegning.innhold.ilagtGebyr shouldBe true
+
+        val delberegningInnteksbasertGebyrListe = resultat.finnOgKonverterGrunnlagSomErReferertAv<DelberegningInnteksbasertGebyr>(
+            Grunnlagstype.DELBEREGNING_INNTEKTSBASERT_GEBYR,
+            sluttberegning.grunnlag,
+        )
+        delberegningInnteksbasertGebyrListe.shouldHaveSize(1)
+        val delberegningInnteksbasertGebyr = delberegningInnteksbasertGebyrListe.first()
+        delberegningInnteksbasertGebyr.grunnlag.grunnlagsreferanseListe shouldHaveSize 2
+        delberegningInnteksbasertGebyr.gjelderReferanse shouldBe bmReferanse
+        resultat.finnGrunnlagSomErReferertAv(Grunnlagstype.DELBEREGNING_SUM_INNTEKT, delberegningInnteksbasertGebyr.grunnlag) shouldHaveSize 1
+        resultat.finnGrunnlagSomErReferertAv(Grunnlagstype.SJABLON_SJABLONTALL, delberegningInnteksbasertGebyr.grunnlag) shouldHaveSize 1
+        assertSoftly(delberegningInnteksbasertGebyr.innhold) {
+            it.ileggesGebyr shouldBe true
+            it.sumInntekt shouldBe BigDecimal(903000)
+        }
+    }
+
+    @Test
     fun `skal beregne med manuelt overstyrt gebyr`() {
         val grunnlagInput = opprettGrunnlagDelberegningInntekter()
         grunnlagInput.add(
@@ -191,6 +236,21 @@ class BeregnGebyrServiceTest {
         resultat.finnGrunnlagSomErReferertAv(Grunnlagstype.DELBEREGNING_INNTEKTSBASERT_GEBYR, sluttberegning.grunnlag) shouldHaveSize 1
         resultat.finnGrunnlagSomErReferertAv(Grunnlagstype.SJABLON_SJABLONTALL, sluttberegning.grunnlag) shouldHaveSize 1
         sluttberegning.innhold.ilagtGebyr shouldBe true
+    }
+
+    @Test
+    fun `skal beregne gebyr uten noen inntekter`() {
+        val resultat = gebyrBeregningApi.beregnGebyr(emptyList(), bmReferanse)
+
+        resultat shouldHaveSize 2
+
+        val sluttberegningListe = resultat.filtrerOgKonverterBasertPåFremmedReferanse<SluttberegningGebyr>(Grunnlagstype.SLUTTBEREGNING_GEBYR)
+        sluttberegningListe shouldHaveSize 1
+        val sluttberegning = sluttberegningListe.first()
+        sluttberegning.grunnlag.grunnlagsreferanseListe shouldHaveSize 1
+        sluttberegning.gjelderReferanse shouldBe bmReferanse
+        resultat.finnGrunnlagSomErReferertAv(Grunnlagstype.SJABLON_SJABLONTALL, sluttberegning.grunnlag) shouldHaveSize 1
+        sluttberegning.innhold.ilagtGebyr shouldBe false
     }
 
     @Test
