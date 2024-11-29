@@ -68,10 +68,11 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
             }
         }
 
-        // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato)
+        // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato). Hjøres ikke hvis tildato er før tildato på
+        // beregningsperioden. Delberegning netto tilsynsutgifter kan gjelde deler av beregningsperioden.
         if (nettoTilsynsutgiftBeregningResultatListe.isNotEmpty()) {
             val sisteElement = nettoTilsynsutgiftBeregningResultatListe.last()
-            if (sisteElement.periode.til != null) {
+            if (sisteElement.periode.til != null && sisteElement.periode.til!! == mottattGrunnlag.periode.til) {
                 val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
                 nettoTilsynsutgiftBeregningResultatListe[nettoTilsynsutgiftBeregningResultatListe.size - 1] = oppdatertSisteElement
             }
