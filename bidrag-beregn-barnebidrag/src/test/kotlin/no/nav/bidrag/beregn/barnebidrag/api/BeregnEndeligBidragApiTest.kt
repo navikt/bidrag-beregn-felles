@@ -49,6 +49,9 @@ internal class BeregnEndeligBidragApiTest {
     private var forventetAntallDelberegningUnderholdskostnad: Int = 1
     private var forventetAntallDelberegningBPAndelUnderholdskostnad: Int = 1
     private var forventetAntallDelberegningSamværsfradrag: Int = 1
+    private var forventetAntallDelberegningSumInntekt: Int = 1
+    private var forventetAntallDelberegningBarnetilleggSkattesats: Int = 1
+    private var forventetAntallDelberegningNettoBarnetillegg: Int = 1
     private var forventetAntallSamværsklasse: Int = 1
     private var forventetAntallBarnetilleggBM: Int = 1
     private var forventetAntallBarnetilleggBP: Int = 1
@@ -82,6 +85,9 @@ internal class BeregnEndeligBidragApiTest {
         forventetBidragJustertForNettoBarnetilleggBM = false
         forventetBidragJustertNedTilEvne = false
         forventetBidragJustertNedTil25ProsentAvInntekt = false
+        forventetAntallDelberegningSumInntekt = 0
+        forventetAntallDelberegningBarnetilleggSkattesats = 0
+        forventetAntallDelberegningNettoBarnetillegg = 0
         forventetAntallBarnetilleggBP = 0
         forventetAntallBarnetilleggBM = 0
         utførBeregningerOgEvaluerResultatEndeligBidrag(0)
@@ -107,6 +113,9 @@ internal class BeregnEndeligBidragApiTest {
         forventetBidragJustertForNettoBarnetilleggBM = false
         forventetBidragJustertNedTilEvne = true
         forventetBidragJustertNedTil25ProsentAvInntekt = false
+        forventetAntallDelberegningSumInntekt = 0
+        forventetAntallDelberegningBarnetilleggSkattesats = 0
+        forventetAntallDelberegningNettoBarnetillegg = 0
         forventetAntallBarnetilleggBP = 0
         forventetAntallBarnetilleggBM = 0
         utførBeregningerOgEvaluerResultatEndeligBidrag()
@@ -132,6 +141,9 @@ internal class BeregnEndeligBidragApiTest {
         forventetBidragJustertForNettoBarnetilleggBM = false
         forventetBidragJustertNedTilEvne = false
         forventetBidragJustertNedTil25ProsentAvInntekt = true
+        forventetAntallDelberegningSumInntekt = 0
+        forventetAntallDelberegningBarnetilleggSkattesats = 0
+        forventetAntallDelberegningNettoBarnetillegg = 0
         forventetAntallBarnetilleggBP = 0
         forventetAntallBarnetilleggBM = 0
         utførBeregningerOgEvaluerResultatEndeligBidrag()
@@ -157,6 +169,9 @@ internal class BeregnEndeligBidragApiTest {
         forventetBidragJustertForNettoBarnetilleggBM = false
         forventetBidragJustertNedTilEvne = false
         forventetBidragJustertNedTil25ProsentAvInntekt = false
+        forventetAntallDelberegningSumInntekt = 0
+        forventetAntallDelberegningBarnetilleggSkattesats = 0
+        forventetAntallDelberegningNettoBarnetillegg = 0
         forventetAntallBarnetilleggBP = 0
         forventetAntallBarnetilleggBM = 0
         utførBeregningerOgEvaluerResultatEndeligBidrag()
@@ -182,7 +197,10 @@ internal class BeregnEndeligBidragApiTest {
         forventetBidragJustertForNettoBarnetilleggBM = false
         forventetBidragJustertNedTilEvne = false
         forventetBidragJustertNedTil25ProsentAvInntekt = false
-        forventetAntallBarnetilleggBP = 0
+        forventetAntallDelberegningSumInntekt = 1
+        forventetAntallDelberegningBarnetilleggSkattesats = 1
+        forventetAntallDelberegningNettoBarnetillegg = 1
+        forventetAntallBarnetilleggBP = 1
         forventetAntallBarnetilleggBM = 0
         utførBeregningerOgEvaluerResultatEndeligBidrag()
     }
@@ -191,14 +209,14 @@ internal class BeregnEndeligBidragApiTest {
     @DisplayName("Endelig bidrag - eksempel 5 - Bidrag satt til barnetillegg BP")
     fun testEndeligBidrag_Eksempel5() {
         filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel5.json"
-        forventetBeregnetBeløp = BigDecimal.valueOf(500).setScale(2)
-        forventetResultatbeløp = BigDecimal.valueOf(500).setScale(0)
-        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(1500).setScale(2)
-        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(4500).setScale(2)
-        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(1500).setScale(2)
+        forventetBeregnetBeløp = BigDecimal.valueOf(2828.41).setScale(2)
+        forventetResultatbeløp = BigDecimal.valueOf(2830).setScale(0)
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(990.37).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(3990.37).setScale(2)
+        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(990.37).setScale(2)
         forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(2500).setScale(2)
-        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(3500).setScale(2)
-        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(500).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(5828.41).setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(2828.41).setScale(2)
         forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
         forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
         forventetBarnetErSelvforsørget = false
@@ -207,6 +225,9 @@ internal class BeregnEndeligBidragApiTest {
         forventetBidragJustertForNettoBarnetilleggBM = true
         forventetBidragJustertNedTilEvne = true
         forventetBidragJustertNedTil25ProsentAvInntekt = true
+        forventetAntallDelberegningSumInntekt = 2
+        forventetAntallDelberegningBarnetilleggSkattesats = 2
+        forventetAntallDelberegningNettoBarnetillegg = 2
         forventetAntallBarnetilleggBP = 1
         forventetAntallBarnetilleggBM = 1
         utførBeregningerOgEvaluerResultatEndeligBidrag()
@@ -216,14 +237,14 @@ internal class BeregnEndeligBidragApiTest {
     @DisplayName("Endelig bidrag - eksempel 6 - Bidrag redusert til evne")
     fun testEndeligBidrag_Eksempel6() {
         filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel6.json"
-        forventetBeregnetBeløp = BigDecimal.valueOf(2501).setScale(2)
-        forventetResultatbeløp = BigDecimal.valueOf(2500).setScale(0)
-        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(7500).setScale(2)
-        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(8499).setScale(2)
-        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(7500).setScale(2)
-        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(3500).setScale(2)
-        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(3500).setScale(2)
-        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(2501).setScale(2)
+        forventetBeregnetBeløp = BigDecimal.valueOf(801).setScale(2)
+        forventetResultatbeløp = BigDecimal.valueOf(800).setScale(0)
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(990.37).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(1989.37).setScale(2)
+        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(990.37).setScale(2)
+        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(1800).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(1800).setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(801).setScale(2)
         forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
         forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
         forventetBarnetErSelvforsørget = false
@@ -232,6 +253,9 @@ internal class BeregnEndeligBidragApiTest {
         forventetBidragJustertForNettoBarnetilleggBM = true
         forventetBidragJustertNedTilEvne = true
         forventetBidragJustertNedTil25ProsentAvInntekt = true
+        forventetAntallDelberegningSumInntekt = 2
+        forventetAntallDelberegningBarnetilleggSkattesats = 2
+        forventetAntallDelberegningNettoBarnetillegg = 2
         forventetAntallBarnetilleggBP = 1
         forventetAntallBarnetilleggBM = 1
         utførBeregningerOgEvaluerResultatEndeligBidrag()
@@ -241,14 +265,14 @@ internal class BeregnEndeligBidragApiTest {
     @DisplayName("Endelig bidrag - eksempel 7 - Bidrag redusert til 25 prosent av inntekt")
     fun testEndeligBidrag_Eksempel7() {
         filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel7.json"
-        forventetBeregnetBeløp = BigDecimal.valueOf(2501).setScale(2)
-        forventetResultatbeløp = BigDecimal.valueOf(2500).setScale(0)
-        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(7500).setScale(2)
-        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(8499).setScale(2)
-        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(7500).setScale(2)
-        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(3500).setScale(2)
-        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(3500).setScale(2)
-        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(2501).setScale(2)
+        forventetBeregnetBeløp = BigDecimal.valueOf(801).setScale(2)
+        forventetResultatbeløp = BigDecimal.valueOf(800).setScale(0)
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(990.37).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(1989.37).setScale(2)
+        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(990.37).setScale(2)
+        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(1800).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(1800).setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(801).setScale(2)
         forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
         forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
         forventetBarnetErSelvforsørget = false
@@ -257,6 +281,9 @@ internal class BeregnEndeligBidragApiTest {
         forventetBidragJustertForNettoBarnetilleggBM = true
         forventetBidragJustertNedTilEvne = false
         forventetBidragJustertNedTil25ProsentAvInntekt = true
+        forventetAntallDelberegningSumInntekt = 2
+        forventetAntallDelberegningBarnetilleggSkattesats = 2
+        forventetAntallDelberegningNettoBarnetillegg = 2
         forventetAntallBarnetilleggBP = 1
         forventetAntallBarnetilleggBM = 1
         utførBeregningerOgEvaluerResultatEndeligBidrag()
@@ -266,14 +293,14 @@ internal class BeregnEndeligBidragApiTest {
     @DisplayName("Endelig bidrag - eksempel 8A - Bidrag satt til underholdskostnad minus barnetillegg BM")
     fun testEndeligBidrag_Eksempel8A() {
         filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel8A.json"
-        forventetBeregnetBeløp = BigDecimal.valueOf(1900).setScale(2)
-        forventetResultatbeløp = BigDecimal.valueOf(1900).setScale(0)
-        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(1900).setScale(2)
-        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(2799).setScale(2)
-        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(1900).setScale(2)
-        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(2799).setScale(2)
-        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(2799).setScale(2)
-        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(1900).setScale(2)
+        forventetBeregnetBeløp = BigDecimal.valueOf(990.37).setScale(2)
+        forventetResultatbeløp = BigDecimal.valueOf(990).setScale(0)
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(990.37).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(1889.37).setScale(2)
+        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(990.37).setScale(2)
+        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(1889.37).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(1889.37).setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(990.37).setScale(2)
         forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
         forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
         forventetBarnetErSelvforsørget = false
@@ -282,6 +309,9 @@ internal class BeregnEndeligBidragApiTest {
         forventetBidragJustertForNettoBarnetilleggBM = true
         forventetBidragJustertNedTilEvne = false
         forventetBidragJustertNedTil25ProsentAvInntekt = false
+        forventetAntallDelberegningSumInntekt = 2
+        forventetAntallDelberegningBarnetilleggSkattesats = 2
+        forventetAntallDelberegningNettoBarnetillegg = 2
         forventetAntallBarnetilleggBP = 1
         forventetAntallBarnetilleggBM = 1
         utførBeregningerOgEvaluerResultatEndeligBidrag()
@@ -291,14 +321,14 @@ internal class BeregnEndeligBidragApiTest {
     @DisplayName("Endelig bidrag - eksempel 8B - Bidrag satt til underholdskostnad minus barnetillegg BM - flere typer barnetillegg")
     fun testEndeligBidrag_Eksempel8B() {
         filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel8B.json"
-        forventetBeregnetBeløp = BigDecimal.valueOf(1900).setScale(2)
-        forventetResultatbeløp = BigDecimal.valueOf(1900).setScale(0)
-        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(1900).setScale(2)
-        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(2799).setScale(2)
-        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(1900).setScale(2)
-        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(2799).setScale(2)
-        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(2799).setScale(2)
-        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(1900).setScale(2)
+        forventetBeregnetBeløp = BigDecimal.valueOf(990.37).setScale(2)
+        forventetResultatbeløp = BigDecimal.valueOf(990).setScale(0)
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(990.37).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(1889.37).setScale(2)
+        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(990.37).setScale(2)
+        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(1889.37).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(1889.37).setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(990.37).setScale(2)
         forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
         forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
         forventetBarnetErSelvforsørget = false
@@ -307,8 +337,11 @@ internal class BeregnEndeligBidragApiTest {
         forventetBidragJustertForNettoBarnetilleggBM = true
         forventetBidragJustertNedTilEvne = false
         forventetBidragJustertNedTil25ProsentAvInntekt = false
+        forventetAntallDelberegningSumInntekt = 2
+        forventetAntallDelberegningBarnetilleggSkattesats = 2
+        forventetAntallDelberegningNettoBarnetillegg = 2
         forventetAntallBarnetilleggBP = 1
-        forventetAntallBarnetilleggBM = 2
+        forventetAntallBarnetilleggBM = 1
         utførBeregningerOgEvaluerResultatEndeligBidrag()
     }
 
@@ -318,7 +351,7 @@ internal class BeregnEndeligBidragApiTest {
         filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel9.json"
         forventetBeregnetBeløp = BigDecimal.valueOf(5001).setScale(2)
         forventetResultatbeløp = BigDecimal.valueOf(5000).setScale(0)
-        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(7500).setScale(2)
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(8514.87).setScale(2)
         forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(6000).setScale(2)
         forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(5001).setScale(2)
         forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(6000).setScale(2)
@@ -332,6 +365,9 @@ internal class BeregnEndeligBidragApiTest {
         forventetBidragJustertForNettoBarnetilleggBM = false
         forventetBidragJustertNedTilEvne = false
         forventetBidragJustertNedTil25ProsentAvInntekt = false
+        forventetAntallDelberegningSumInntekt = 2
+        forventetAntallDelberegningBarnetilleggSkattesats = 2
+        forventetAntallDelberegningNettoBarnetillegg = 2
         forventetAntallBarnetilleggBP = 1
         forventetAntallBarnetilleggBM = 1
         utførBeregningerOgEvaluerResultatEndeligBidrag()
@@ -345,9 +381,12 @@ internal class BeregnEndeligBidragApiTest {
         forventetAntallDelberegningUnderholdskostnad = 2
         forventetAntallDelberegningBPAndelUnderholdskostnad = 5
         forventetAntallDelberegningSamværsfradrag = 5
+        forventetAntallDelberegningSumInntekt = 2
+        forventetAntallDelberegningBarnetilleggSkattesats = 2
+        forventetAntallDelberegningNettoBarnetillegg = 6
         forventetAntallSamværsklasse = 4
-        forventetAntallBarnetilleggBP = 2
-        forventetAntallBarnetilleggBM = 2
+        forventetAntallBarnetilleggBP = 3
+        forventetAntallBarnetilleggBM = 3
         utførBeregningerOgEvaluerResultatEndeligBidragFlerePerioder()
     }
 
@@ -410,6 +449,18 @@ internal class BeregnEndeligBidragApiTest {
             .filter { it.type == Grunnlagstype.DELBEREGNING_SAMVÆRSFRADRAG }
             .size
 
+        val antallDelberegningSumInntekt = endeligBidragResultat
+            .filter { it.type == Grunnlagstype.DELBEREGNING_SUM_INNTEKT }
+            .size
+
+        val antallDelberegningBarnetilleggSkattesats = endeligBidragResultat
+            .filter { it.type == Grunnlagstype.DELBEREGNING_BARNETILLEGG_SKATTESATS }
+            .size
+
+        val antallDelberegningNettoBarnetillegg = endeligBidragResultat
+            .filter { it.type == Grunnlagstype.DELBEREGNING_NETTO_BARNETILLEGG }
+            .size
+
         val antallSamværsklasse = endeligBidragResultat
             .filter { it.type == Grunnlagstype.SAMVÆRSPERIODE }
             .size
@@ -454,6 +505,9 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(antallDelberegningUnderholdskostnad).isEqualTo(antallGrunnlag) },
             { assertThat(antallDelberegningBPAndelUnderholdskostnad).isEqualTo(1) },
             { assertThat(antallDelberegningSamværsfradrag).isEqualTo(antallGrunnlag) },
+            { assertThat(antallDelberegningSumInntekt).isEqualTo(forventetAntallDelberegningSumInntekt) },
+            { assertThat(antallDelberegningBarnetilleggSkattesats).isEqualTo(forventetAntallDelberegningBarnetilleggSkattesats) },
+            { assertThat(antallDelberegningNettoBarnetillegg).isEqualTo(forventetAntallDelberegningNettoBarnetillegg) },
             { assertThat(antallSamværsklasse).isEqualTo(antallGrunnlag) },
             { assertThat(antallBarnetilleggBP).isEqualTo(forventetAntallBarnetilleggBP) },
             { assertThat(antallBarnetilleggBM).isEqualTo(forventetAntallBarnetilleggBM) },
@@ -522,6 +576,18 @@ internal class BeregnEndeligBidragApiTest {
             .filter { it.type == Grunnlagstype.DELBEREGNING_SAMVÆRSFRADRAG }
             .size
 
+        val antallDelberegningSumInntekt = endeligBidragResultat
+            .filter { it.type == Grunnlagstype.DELBEREGNING_SUM_INNTEKT }
+            .size
+
+        val antallDelberegningBarnetilleggSkattesats = endeligBidragResultat
+            .filter { it.type == Grunnlagstype.DELBEREGNING_BARNETILLEGG_SKATTESATS }
+            .size
+
+        val antallDelberegningNettoBarnetillegg = endeligBidragResultat
+            .filter { it.type == Grunnlagstype.DELBEREGNING_NETTO_BARNETILLEGG }
+            .size
+
         val antallSamværsklasse = endeligBidragResultat
             .filter { it.type == Grunnlagstype.SAMVÆRSPERIODE }
             .size
@@ -562,16 +628,16 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[0].bidragJustertNedTilEvne).isFalse },
             { assertThat(endeligBidragResultatListe[0].bidragJustertNedTil25ProsentAvInntekt).isFalse },
 
-            // Bidrag redusert til evne
+            // Bidrag satt til underholdskostnad minus barnetillegg BM
             { assertThat(endeligBidragResultatListe[1].periode).isEqualTo(ÅrMånedsperiode("2023-04", "2023-06")) },
-            { assertThat(endeligBidragResultatListe[1].beregnetBeløp).isEqualTo(BigDecimal.valueOf(9001).setScale(2)) },
-            { assertThat(endeligBidragResultatListe[1].resultatBeløp).isEqualTo(BigDecimal.valueOf(9000).setScale(0)) },
-            { assertThat(endeligBidragResultatListe[1].uMinusNettoBarnetilleggBM).isEqualTo(BigDecimal.valueOf(11000).setScale(2)) },
-            { assertThat(endeligBidragResultatListe[1].bruttoBidragEtterBarnetilleggBM).isEqualTo(BigDecimal.valueOf(11999).setScale(2)) },
-            { assertThat(endeligBidragResultatListe[1].nettoBidragEtterBarnetilleggBM).isEqualTo(BigDecimal.valueOf(11000).setScale(2)) },
-            { assertThat(endeligBidragResultatListe[1].bruttoBidragJustertForEvneOg25Prosent).isEqualTo(BigDecimal.valueOf(10000).setScale(2)) },
-            { assertThat(endeligBidragResultatListe[1].bruttoBidragEtterBarnetilleggBP).isEqualTo(BigDecimal.valueOf(10000).setScale(2)) },
-            { assertThat(endeligBidragResultatListe[1].nettoBidragEtterSamværsfradrag).isEqualTo(BigDecimal.valueOf(9001).setScale(2)) },
+            { assertThat(endeligBidragResultatListe[1].beregnetBeløp).isEqualTo(BigDecimal.valueOf(4758.41).setScale(2)) },
+            { assertThat(endeligBidragResultatListe[1].resultatBeløp).isEqualTo(BigDecimal.valueOf(4760).setScale(0)) },
+            { assertThat(endeligBidragResultatListe[1].uMinusNettoBarnetilleggBM).isEqualTo(BigDecimal.valueOf(4758.41).setScale(2)) },
+            { assertThat(endeligBidragResultatListe[1].bruttoBidragEtterBarnetilleggBM).isEqualTo(BigDecimal.valueOf(5757.41).setScale(2)) },
+            { assertThat(endeligBidragResultatListe[1].nettoBidragEtterBarnetilleggBM).isEqualTo(BigDecimal.valueOf(4758.41).setScale(2)) },
+            { assertThat(endeligBidragResultatListe[1].bruttoBidragJustertForEvneOg25Prosent).isEqualTo(BigDecimal.valueOf(5757.41).setScale(2)) },
+            { assertThat(endeligBidragResultatListe[1].bruttoBidragEtterBarnetilleggBP).isEqualTo(BigDecimal.valueOf(5757.41).setScale(2)) },
+            { assertThat(endeligBidragResultatListe[1].nettoBidragEtterSamværsfradrag).isEqualTo(BigDecimal.valueOf(4758.41).setScale(2)) },
             { assertThat(endeligBidragResultatListe[1].bpAndelAvUVedDeltBostedFaktor).isEqualTo(BigDecimal.ZERO.setScale(10)) },
             { assertThat(endeligBidragResultatListe[1].bpAndelAvUVedDeltBostedBeløp).isEqualTo(BigDecimal.ZERO.setScale(2)) },
             { assertThat(endeligBidragResultatListe[1].ingenEndringUnderGrense).isFalse },
@@ -579,16 +645,16 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[1].bidragJustertForDeltBosted).isFalse },
             { assertThat(endeligBidragResultatListe[1].bidragJustertForNettoBarnetilleggBP).isFalse },
             { assertThat(endeligBidragResultatListe[1].bidragJustertForNettoBarnetilleggBM).isTrue },
-            { assertThat(endeligBidragResultatListe[1].bidragJustertNedTilEvne).isTrue },
-            { assertThat(endeligBidragResultatListe[1].bidragJustertNedTil25ProsentAvInntekt).isTrue },
+            { assertThat(endeligBidragResultatListe[1].bidragJustertNedTilEvne).isFalse },
+            { assertThat(endeligBidragResultatListe[1].bidragJustertNedTil25ProsentAvInntekt).isFalse },
 
             // Bidrag redusert til evne
             { assertThat(endeligBidragResultatListe[2].periode).isEqualTo(ÅrMånedsperiode("2023-06", "2023-10")) },
             { assertThat(endeligBidragResultatListe[2].beregnetBeløp).isEqualTo(BigDecimal.valueOf(2601).setScale(2)) },
             { assertThat(endeligBidragResultatListe[2].resultatBeløp).isEqualTo(BigDecimal.valueOf(2600).setScale(0)) },
-            { assertThat(endeligBidragResultatListe[2].uMinusNettoBarnetilleggBM).isEqualTo(BigDecimal.valueOf(11000).setScale(2)) },
-            { assertThat(endeligBidragResultatListe[2].bruttoBidragEtterBarnetilleggBM).isEqualTo(BigDecimal.valueOf(11899).setScale(2)) },
-            { assertThat(endeligBidragResultatListe[2].nettoBidragEtterBarnetilleggBM).isEqualTo(BigDecimal.valueOf(11000).setScale(2)) },
+            { assertThat(endeligBidragResultatListe[2].uMinusNettoBarnetilleggBM).isEqualTo(BigDecimal.valueOf(4758.41).setScale(2)) },
+            { assertThat(endeligBidragResultatListe[2].bruttoBidragEtterBarnetilleggBM).isEqualTo(BigDecimal.valueOf(5657.41).setScale(2)) },
+            { assertThat(endeligBidragResultatListe[2].nettoBidragEtterBarnetilleggBM).isEqualTo(BigDecimal.valueOf(4758.41).setScale(2)) },
             { assertThat(endeligBidragResultatListe[2].bruttoBidragJustertForEvneOg25Prosent).isEqualTo(BigDecimal.valueOf(3500).setScale(2)) },
             { assertThat(endeligBidragResultatListe[2].bruttoBidragEtterBarnetilleggBP).isEqualTo(BigDecimal.valueOf(3500).setScale(2)) },
             { assertThat(endeligBidragResultatListe[2].nettoBidragEtterSamværsfradrag).isEqualTo(BigDecimal.valueOf(2601).setScale(2)) },
@@ -606,9 +672,9 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[3].periode).isEqualTo(ÅrMånedsperiode("2023-10", "2024-01")) },
             { assertThat(endeligBidragResultatListe[3].beregnetBeløp).isEqualTo(BigDecimal.valueOf(2601).setScale(2)) },
             { assertThat(endeligBidragResultatListe[3].resultatBeløp).isEqualTo(BigDecimal.valueOf(2600).setScale(0)) },
-            { assertThat(endeligBidragResultatListe[3].uMinusNettoBarnetilleggBM).isEqualTo(BigDecimal.valueOf(11000).setScale(2)) },
-            { assertThat(endeligBidragResultatListe[3].bruttoBidragEtterBarnetilleggBM).isEqualTo(BigDecimal.valueOf(8000).setScale(2)) },
-            { assertThat(endeligBidragResultatListe[3].nettoBidragEtterBarnetilleggBM).isEqualTo(BigDecimal.valueOf(7101).setScale(2)) },
+            { assertThat(endeligBidragResultatListe[3].uMinusNettoBarnetilleggBM).isEqualTo(BigDecimal.valueOf(4758.41).setScale(2)) },
+            { assertThat(endeligBidragResultatListe[3].bruttoBidragEtterBarnetilleggBM).isEqualTo(BigDecimal.valueOf(5657.41).setScale(2)) },
+            { assertThat(endeligBidragResultatListe[3].nettoBidragEtterBarnetilleggBM).isEqualTo(BigDecimal.valueOf(4758.41).setScale(2)) },
             { assertThat(endeligBidragResultatListe[3].bruttoBidragJustertForEvneOg25Prosent).isEqualTo(BigDecimal.valueOf(3500).setScale(2)) },
             { assertThat(endeligBidragResultatListe[3].bruttoBidragEtterBarnetilleggBP).isEqualTo(BigDecimal.valueOf(3500).setScale(2)) },
             { assertThat(endeligBidragResultatListe[3].nettoBidragEtterSamværsfradrag).isEqualTo(BigDecimal.valueOf(2601).setScale(2)) },
@@ -618,7 +684,7 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[3].barnetErSelvforsørget).isFalse },
             { assertThat(endeligBidragResultatListe[3].bidragJustertForDeltBosted).isFalse },
             { assertThat(endeligBidragResultatListe[3].bidragJustertForNettoBarnetilleggBP).isFalse },
-            { assertThat(endeligBidragResultatListe[3].bidragJustertForNettoBarnetilleggBM).isFalse },
+            { assertThat(endeligBidragResultatListe[3].bidragJustertForNettoBarnetilleggBM).isTrue },
             { assertThat(endeligBidragResultatListe[3].bidragJustertNedTilEvne).isFalse },
             { assertThat(endeligBidragResultatListe[3].bidragJustertNedTil25ProsentAvInntekt).isTrue },
 
@@ -646,7 +712,7 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[5].periode).isEqualTo(ÅrMånedsperiode("2024-02", "2024-05")) },
             { assertThat(endeligBidragResultatListe[5].beregnetBeløp).isEqualTo(BigDecimal.valueOf(2601).setScale(2)) },
             { assertThat(endeligBidragResultatListe[5].resultatBeløp).isEqualTo(BigDecimal.valueOf(2600).setScale(0)) },
-            { assertThat(endeligBidragResultatListe[5].uMinusNettoBarnetilleggBM).isEqualTo(BigDecimal.valueOf(17500).setScale(2)) },
+            { assertThat(endeligBidragResultatListe[5].uMinusNettoBarnetilleggBM).isEqualTo(BigDecimal.valueOf(15766.23).setScale(2)) },
             { assertThat(endeligBidragResultatListe[5].bruttoBidragEtterBarnetilleggBM).isEqualTo(BigDecimal.valueOf(12000).setScale(2)) },
             { assertThat(endeligBidragResultatListe[5].nettoBidragEtterBarnetilleggBM).isEqualTo(BigDecimal.valueOf(11101).setScale(2)) },
             { assertThat(endeligBidragResultatListe[5].bruttoBidragJustertForEvneOg25Prosent).isEqualTo(BigDecimal.valueOf(3500).setScale(2)) },
@@ -707,6 +773,9 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(antallDelberegningUnderholdskostnad).isEqualTo(forventetAntallDelberegningUnderholdskostnad) },
             { assertThat(antallDelberegningBPAndelUnderholdskostnad).isEqualTo(forventetAntallDelberegningBPAndelUnderholdskostnad) },
             { assertThat(antallDelberegningSamværsfradrag).isEqualTo(forventetAntallDelberegningSamværsfradrag) },
+            { assertThat(antallDelberegningSumInntekt).isEqualTo(forventetAntallDelberegningSumInntekt) },
+            { assertThat(antallDelberegningBarnetilleggSkattesats).isEqualTo(forventetAntallDelberegningBarnetilleggSkattesats) },
+            { assertThat(antallDelberegningNettoBarnetillegg).isEqualTo(forventetAntallDelberegningNettoBarnetillegg) },
             { assertThat(antallSamværsklasse).isEqualTo(forventetAntallSamværsklasse) },
             { assertThat(antallBarnetilleggBP).isEqualTo(forventetAntallBarnetilleggBP) },
             { assertThat(antallBarnetilleggBM).isEqualTo(forventetAntallBarnetilleggBM) },

@@ -1,36 +1,48 @@
 package no.nav.bidrag.beregn.barnebidrag.mapper
 
-import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilleggPeriode2
-import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilleggPeriodeGrunnlag2
+import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilleggPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilleggSkattesatsDelberegningPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.NettoBarnetilleggPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
+import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.BarnetilleggPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBarnetilleggSkattesats
+import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåFremmedReferanse
 
 internal object NettoBarnetilleggMapper : CoreMapper() {
     fun mapNettoBarnetilleggGrunnlag(mottattGrunnlag: BeregnGrunnlag, referanseTilRolle: String): NettoBarnetilleggPeriodeGrunnlag =
         NettoBarnetilleggPeriodeGrunnlag(
             beregningsperiode = mottattGrunnlag.periode,
-            barnetilleggPeriodeGrunnlagListe = mapBarnetillegg2(beregnGrunnlag = mottattGrunnlag, referanseTilRolle),
+            barnetilleggPeriodeGrunnlagListe = mapBarnetillegg(beregnGrunnlag = mottattGrunnlag, referanseTilRolle),
             barnetilleggSkattesatsListe = mapBarnetilleggSkattesats(beregnGrunnlag = mottattGrunnlag, referanseTilRolle),
         )
 
-    private fun mapBarnetillegg2(beregnGrunnlag: BeregnGrunnlag, referanseTilRolle: String): List<BarnetilleggPeriodeGrunnlag2> {
+    private fun mapBarnetillegg(beregnGrunnlag: BeregnGrunnlag, referanseTilRolle: String): List<BarnetilleggPeriodeGrunnlag> {
         try {
             return beregnGrunnlag.grunnlagListe
-                .filtrerOgKonverterBasertPåFremmedReferanse<BarnetilleggPeriode2>(
-                    grunnlagType = Grunnlagstype.BARNETILLEGG_PERIODE,
+                .filtrerOgKonverterBasertPåFremmedReferanse<InntektsrapporteringPeriode>(
+                    grunnlagType = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
                     referanse = referanseTilRolle,
                 )
-                .map {
-                    BarnetilleggPeriodeGrunnlag2(
-                        referanse = it.referanse,
-                        gjelderReferanse = it.gjelderReferanse!!,
-                        barnetilleggPeriode = it.innhold,
-                    )
+                .filter { it.innhold.inntektsrapportering == Inntektsrapportering.BARNETILLEGG }
+                .filter { it.innhold.gjelderBarn == beregnGrunnlag.søknadsbarnReferanse }
+                .flatMap {
+                    it.innhold.inntekstpostListe.mapNotNull { inntektspost ->
+                        inntektspost.inntekstype?.let { inntektstype ->
+                            BarnetilleggPeriodeGrunnlag(
+                                referanse = it.referanse,
+                                barnetilleggPeriode = BarnetilleggPeriode(
+                                    periode = it.innhold.periode,
+                                    type = inntektstype,
+                                    beløp = inntektspost.beløp,
+                                    manueltRegistrert = false,
+                                )
+                            )
+                        }
+                    }
                 }
         } catch (e: Exception) {
             throw IllegalArgumentException(
