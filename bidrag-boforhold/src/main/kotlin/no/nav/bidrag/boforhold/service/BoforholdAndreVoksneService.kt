@@ -752,7 +752,7 @@ internal class BoforholdAndreVoksneService {
         var periodeTom: LocalDate? = null
 
         sortertePerioder.forEachIndexed { indeks, bostatusperiode ->
-            if (indeks == 0 || bostatusperiode.periodeFom!!.isAfter(periodeTom?.plusDays(1))) {
+            if (indeks == 0 || periodeTom != null && bostatusperiode.periodeFom!!.isAfter(periodeTom?.plusDays(1))) {
                 if (indeks != 0) {
                     resultatliste.add(Bostatus(periodeFom, periodeTom, Bostatuskode.BOR_MED_ANDRE_VOKSNE, Kilde.OFFENTLIG))
                     periodeFom = null
