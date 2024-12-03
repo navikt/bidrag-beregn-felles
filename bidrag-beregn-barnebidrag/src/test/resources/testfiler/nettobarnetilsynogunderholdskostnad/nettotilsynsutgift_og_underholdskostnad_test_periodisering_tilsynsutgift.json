@@ -1,6 +1,6 @@
 {
   "periode": {
-    "fom": "2024-08",
+    "fom": "2024-01",
     "til": "2024-09"
   },
   "søknadsbarnReferanse": "Person_Søknadsbarn",
@@ -43,8 +43,8 @@
       "type": "FAKTISK_UTGIFT_PERIODE",
       "innhold": {
         "periode": {
-          "fom": "2024-01",
-          "til": null
+          "fom": "2024-03",
+          "til": "2024-05"
         },
         "fødselsdatoBarn": "2023-01-17",
         "faktiskUtgiftBeløp": 500.00,
@@ -61,7 +61,7 @@
       "innhold": {
         "periode": {
           "fom": "2024-02",
-          "til": null
+          "til": "2024-06"
         },
         "beløpDagsats": 10.00,
         "manueltRegistrert": false
@@ -69,46 +69,6 @@
       "grunnlagsreferanseListe": [],
       "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragsmottaker"
-    },
-    {
-      "referanse": "Mottatt_Barnetilsyn_202407_Person_Søknadsbarn",
-      "type": "BARNETILSYN_MED_STØNAD_PERIODE",
-      "innhold": {
-        "periode": {
-          "fom": "2024-07",
-          "til": "2024-11"
-        },
-        "tilsynstype": "HELTID",
-        "skolealder": "UNDER",
-        "manueltRegistrert": false
-      },
-      "grunnlagsreferanseListe": [],
-      "gjelderBarnReferanse": "Person_Søknadsbarn",
-      "gjelderReferanse": "Person_Bidragsmottaker"
-    },
-    {
-      "referanse": "Mottatt_Netto_Tilsynsutgift_202402_Person_Bidragsmottaker",
-      "type": "DELBEREGNING_NETTO_TILSYNSUTGIFT",
-      "innhold": {
-        "periode": {
-          "fom": "2024-02",
-          "til": "2024-09"
-        },
-        "totaltFaktiskUtgiftBeløp": 400.00,
-        "tilsynsutgiftBarnListe": [
-          {
-            "gjelderBarn": "Person_Søknadsbarn",
-            "sumFaktiskeUtgifter": 400.00,
-            "endeligSumFaktiskeUtgifter": 366.67,
-            "skattefradragsbeløpPerBarn": 91.17,
-            "tilleggsstønad": 216.67,
-            "nettoTilsynsutgift": 58.83
-          }
-        ],
-        "grunnlagsreferanseListe": [],
-        "gjelderBarnReferanse": "Person_Søknadsbarn",
-        "gjelderReferanse": "Person_Bidragsmottaker"
-      }
     }
   ]
 }

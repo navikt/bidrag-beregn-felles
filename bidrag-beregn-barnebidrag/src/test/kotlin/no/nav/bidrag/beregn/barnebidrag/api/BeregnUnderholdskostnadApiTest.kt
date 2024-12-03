@@ -183,6 +183,65 @@ internal class BeregnUnderholdskostnadApiTest {
         )
     }
 
+    @Test
+    @DisplayName("Underholdskostnad - fødselsmåned  ")
+    fun test_underholdskostnad_kun_sjabloner_ikke_barnetrygd_fødselsmåned() {
+        filnavn = "src/test/resources/testfiler/underholdskostnad/underholdskostnad_kun_sjabloner_fødselsmåned.json"
+        val resultat = utførBeregningerOgEvaluerResultatUnderholdskostnad()
+
+        assertAll(
+            // Resultat
+            { assertThat(resultat).hasSize(3) },
+
+            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode("2024-01", "2024-02")) },
+            { assertEquals(0, resultat[0].barnetrygd.compareTo(BigDecimal.ZERO)) },
+
+            { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode("2024-02", "2024-07")) },
+            { assertEquals(0, resultat[1].barnetrygd.compareTo(BigDecimal.valueOf(1766))) },
+
+            { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
+            { assertEquals(0, resultat[2].barnetrygd.compareTo(BigDecimal.valueOf(1766))) },
+        )
+    }
+
+    @Test
+    @DisplayName("Underholdskostnad - ingen forhøyet barnetrygd før juli 2021  ")
+    fun test_underholdskostnad_kun_sjabloner_ikke_forhøyet_barnetrygd_før_juli_2021() {
+        filnavn = "src/test/resources/testfiler/underholdskostnad/underholdskostnad_kun_sjabloner_ingen_forhøyet_barnetrygd_før_juli_2021.json"
+        val resultat = utførBeregningerOgEvaluerResultatUnderholdskostnad()
+
+        assertAll(
+            // Resultat
+            { assertThat(resultat).hasSize(2) },
+
+            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode("2021-01", "2021-07")) },
+            { assertEquals(0, resultat[0].barnetrygd.compareTo(BigDecimal.valueOf(1054))) },
+
+            { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2021-07"), null)) },
+            { assertEquals(0, resultat[1].barnetrygd.compareTo(BigDecimal.valueOf(1354))) },
+
+        )
+    }
+
+    @Test
+    @DisplayName("Underholdskostnad - ingen forhøyet barnetrygd etter juli året barnet fyller seks år ")
+    fun test_underholdskostnad_kun_sjabloner_ikke_forhøyet_barnetrygd_etter_fyllte_seks_år() {
+        filnavn = "src/test/resources/testfiler/underholdskostnad/underholdskostnad_kun_sjabloner_seksårsdag.json"
+        val resultat = utførBeregningerOgEvaluerResultatUnderholdskostnad()
+
+        assertAll(
+            // Resultat
+            { assertThat(resultat).hasSize(2) },
+
+            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode("2024-01", "2024-07")) },
+            { assertEquals(0, resultat[0].barnetrygd.compareTo(BigDecimal.valueOf(1766))) },
+
+            { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
+            { assertEquals(0, resultat[1].barnetrygd.compareTo(BigDecimal.valueOf(1510))) },
+
+        )
+    }
+
     private fun utførBeregningerOgEvaluerResultatUnderholdskostnad(): List<DelberegningUnderholdskostnad> {
         val request = lesFilOgByggRequest(filnavn)
         val underholdskostnadResultat = beregnBarnebidragService.beregnUnderholdskostnad(request)

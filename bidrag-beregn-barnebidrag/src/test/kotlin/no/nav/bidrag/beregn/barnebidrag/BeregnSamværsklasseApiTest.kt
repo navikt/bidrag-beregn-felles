@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.junit.jupiter.MockitoExtension
 import java.math.BigDecimal
+import java.util.Collections.emptyList
 
 @ExtendWith(MockitoExtension::class)
 internal class BeregnSamværsklasseApiTest {
@@ -46,7 +47,6 @@ internal class BeregnSamværsklasseApiTest {
 
         val samværskalkulatorGrunnlag = grunnlagsliste.hentSamværskalkulatorDetaljer()
         samværskalkulatorGrunnlag.shouldNotBeNull()
-        samværskalkulatorGrunnlag.grunnlagsreferanseListe
 
         val samværsklasserNetterGrunnlag = grunnlagsliste.hentDelberegningSamværsklasseNetter()
         samværsklasserNetterGrunnlag.shouldNotBeNull()

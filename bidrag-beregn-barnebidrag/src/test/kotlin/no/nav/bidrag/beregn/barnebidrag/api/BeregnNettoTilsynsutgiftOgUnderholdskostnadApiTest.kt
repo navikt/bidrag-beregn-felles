@@ -27,6 +27,8 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.text.SimpleDateFormat
 import java.time.YearMonth
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 @ExtendWith(MockitoExtension::class)
 internal class BeregnNettoTilsynsutgiftOgUnderholdskostnadApiTest {
@@ -164,12 +166,12 @@ internal class BeregnNettoTilsynsutgiftOgUnderholdskostnadApiTest {
             { assertThat(resultat).hasSize(1) },
 
             { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null)) },
-            { assertEquals(0, resultat[0].forbruksutgift.compareTo(BigDecimal.valueOf(4717))) },
+            { assertEquals(0, resultat[0].forbruksutgift.compareTo(BigDecimal.valueOf(7587))) },
             { assertEquals(0, resultat[0].boutgift.compareTo(BigDecimal.valueOf(3596))) },
             { assertEquals(0, resultat[0].barnetilsynMedStønad?.compareTo(BigDecimal.valueOf(621))) },
             { assertEquals(0, resultat[0].nettoTilsynsutgift?.compareTo(BigDecimal.valueOf(58.83))) },
             { assertEquals(0, resultat[0].barnetrygd.compareTo(BigDecimal.valueOf(1510))) },
-            { assertEquals(0, resultat[0].underholdskostnad.compareTo(BigDecimal.valueOf(7482.83))) },
+            { assertEquals(0, resultat[0].underholdskostnad.compareTo(BigDecimal.valueOf(10352.83))) },
         )
     }
 
@@ -184,6 +186,34 @@ internal class BeregnNettoTilsynsutgiftOgUnderholdskostnadApiTest {
 
             { resultat[0].nettoTilsynsutgift?.shouldBeGreaterThanOrEqualTo(BigDecimal.ZERO) },
             { resultat[0].underholdskostnad shouldBeGreaterThanOrEqualTo BigDecimal.ZERO },
+        )
+    }
+
+    @Test
+    @DisplayName("Underholdskostnad - eksempel 5")
+    fun test_netto_tilsynsugift_og_underholdskostnad_tilsynsutgift_kun_i_deler_av_perioden() {
+        filnavn =
+            "src/test/resources/testfiler/nettobarnetilsynogunderholdskostnad/nettotilsynsutgift_og_underholdskostnad_test_periodisering_tilsynsutgift.json"
+        val resultat = utførBeregningerOgEvaluerResultatNettoTilsynsutgiftOgUnderholdskostnad()
+
+        // Netto tilsynsutgift 08.24 -> 09.24: 58.83
+
+        assertAll(
+            // Resultat
+            { assertThat(resultat).hasSize(4) },
+
+            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode("2024-01", "2024-03")) },
+            { assertNull(resultat[0].nettoTilsynsutgift) },
+
+            { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode("2024-03", "2024-05")) },
+            { assertNotNull(resultat[1].nettoTilsynsutgift) },
+
+            { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode("2024-05", "2024-07")) },
+            { assertNull(resultat[2].nettoTilsynsutgift) },
+
+            { assertThat(resultat[3].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
+            { assertNull(resultat[3].nettoTilsynsutgift) },
+
         )
     }
 

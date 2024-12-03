@@ -7,6 +7,7 @@ import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnebidragService
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.inntekt.Inntektstype
+import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningNettoBarnetillegg
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
@@ -98,6 +99,29 @@ internal class BeregnNettoBarnetilleggApiTest {
 
         assertAll(
             { assertThat(resultatBM).hasSize(0) },
+        )
+    }
+
+    @Test
+    @DisplayName("Netto barnetillegg - eksempel 4 periodisering ")
+    fun testNettoBarnetillegg_Eksempel04() {
+        filnavn = "src/test/resources/testfiler/nettobarnetillegg/netto_barnetillegg_eksempel4_periodisering.json"
+
+        val rolleBM = Grunnlagstype.PERSON_BIDRAGSMOTTAKER
+        val resultat = utførBeregningerOgEvaluerResultatNettoBarnetillegg(rolleBM)
+
+        assertAll(
+            { assertThat(resultat).hasSize(3) },
+
+            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode("2024-02", "2024-03")) },
+            { assertEquals(0, resultat[0].summertBruttoBarnetillegg.compareTo(BigDecimal.valueOf(300.00))) },
+
+            { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode("2024-03", "2024-06")) },
+            { assertEquals(0, resultat[1].summertBruttoBarnetillegg.compareTo(BigDecimal.valueOf(800.00))) },
+
+            { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode("2024-06", "2024-07")) },
+            { assertEquals(0, resultat[2].summertBruttoBarnetillegg.compareTo(BigDecimal.valueOf(500.00))) },
+
         )
     }
 

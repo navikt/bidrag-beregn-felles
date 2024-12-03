@@ -49,7 +49,7 @@ internal object BeregnNettoBarnetilleggService : BeregnService() {
         // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato)
         if (nettoBarnetilleggBeregningResultatListe.isNotEmpty()) {
             val sisteElement = nettoBarnetilleggBeregningResultatListe.last()
-            if (sisteElement.periode.til != null) {
+            if (sisteElement.periode.til != null && sisteElement.periode.til!! == mottattGrunnlag.periode.til) {
                 val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
                 nettoBarnetilleggBeregningResultatListe[nettoBarnetilleggBeregningResultatListe.size - 1] = oppdatertSisteElement
             }

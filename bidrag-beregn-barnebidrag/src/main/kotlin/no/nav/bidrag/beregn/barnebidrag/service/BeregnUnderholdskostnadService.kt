@@ -3,6 +3,7 @@ package no.nav.bidrag.beregn.barnebidrag.service
 import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.barnebidrag.beregning.UnderholdskostnadBeregning
 import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilsynMedStønad
+import no.nav.bidrag.beregn.barnebidrag.bo.BarnetrygdType
 import no.nav.bidrag.beregn.barnebidrag.bo.NettoTilsynsutgift
 import no.nav.bidrag.beregn.barnebidrag.bo.NettoTilsynsutgiftPeriodeResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonBarnetilsynBeregningGrunnlag
@@ -26,6 +27,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholds
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
 import java.time.Period
+import java.time.YearMonth
 
 internal object BeregnUnderholdskostnadService : BeregnService() {
 
@@ -36,18 +38,40 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
         // Mapper ut grunnlag som skal brukes for å beregne underholdskostnad
         val underholdskostnadPeriodeGrunnlag = mapUnderholdskostnadGrunnlag(mottattGrunnlag, sjablonGrunnlag)
 
+        val søknadsbarnFødselsdatoÅrMåned =
+            YearMonth.of(
+                underholdskostnadPeriodeGrunnlag.søknadsbarnPeriodeGrunnlag.fødselsdato.year,
+                underholdskostnadPeriodeGrunnlag.søknadsbarnPeriodeGrunnlag.fødselsdato.month,
+            )
+        val søknadsbarnSeksårsdag = søknadsbarnFødselsdatoÅrMåned.withMonth(7).plusYears(6)
+        val datoInnføringForhøyetBarnetrygd = YearMonth.of(2021, 7)
+
         // Lager liste over bruddperioder
-        val bruddPeriodeListe = lagBruddPeriodeListeUnderholdskostnad(underholdskostnadPeriodeGrunnlag, mottattGrunnlag.periode)
+        val bruddPeriodeListe = lagBruddPeriodeListeUnderholdskostnad(
+            underholdskostnadPeriodeGrunnlag,
+            mottattGrunnlag.periode,
+            søknadsbarnFødselsdatoÅrMåned,
+            søknadsbarnSeksårsdag,
+            datoInnføringForhøyetBarnetrygd,
+        )
 
         val underholdskostnadBeregningResultatListe = mutableListOf<UnderholdskostnadPeriodeResultat>()
 
         // Løper gjennom hver bruddperiode og beregner underholdskostnad
         bruddPeriodeListe.forEach { bruddPeriode ->
             val underholdskostnadBeregningGrunnlag = lagUnderholdskostnadBeregningGrunnlag(underholdskostnadPeriodeGrunnlag, bruddPeriode)
+
+            val barnetrygdType = when {
+                bruddPeriode.fom == søknadsbarnFødselsdatoÅrMåned -> BarnetrygdType.INGEN
+                bruddPeriode.fom.isBefore(datoInnføringForhøyetBarnetrygd) -> BarnetrygdType.ORDINÆR
+                bruddPeriode.fom.isBefore(søknadsbarnSeksårsdag) -> BarnetrygdType.FORHØYET
+                else -> BarnetrygdType.ORDINÆR
+            }
+
             underholdskostnadBeregningResultatListe.add(
                 UnderholdskostnadPeriodeResultat(
                     periode = bruddPeriode,
-                    resultat = UnderholdskostnadBeregning.beregn(underholdskostnadBeregningGrunnlag),
+                    resultat = UnderholdskostnadBeregning.beregn(underholdskostnadBeregningGrunnlag, barnetrygdType),
                 ),
             )
         }
@@ -89,6 +113,9 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
     private fun lagBruddPeriodeListeUnderholdskostnad(
         grunnlagListe: UnderholdskostnadPeriodeGrunnlag,
         beregningsperiode: ÅrMånedsperiode,
+        søknadsbarnFødselsdatoÅrMåned: YearMonth,
+        søknadsbarnSeksårsdag: YearMonth,
+        datoInnføringUtvidetBarnetrygd: YearMonth,
     ): List<ÅrMånedsperiode> {
         val periodeListe = sequenceOf(grunnlagListe.beregningsperiode)
             .plus(grunnlagListe.barnetilsynMedStønadPeriodeGrunnlagListe.asSequence().map { it.barnetilsynMedStønadPeriode.periode })
@@ -96,6 +123,9 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
             .plus(grunnlagListe.sjablonSjablontallPeriodeGrunnlagListe.asSequence().map { it.sjablonSjablontallPeriode.periode })
             .plus(grunnlagListe.sjablonBarnetilsynPeriodeGrunnlagListe.asSequence().map { it.sjablonBarnetilsynPeriode.periode })
             .plus(grunnlagListe.sjablonForbruksutgifterPeriodeGrunnlagListe.asSequence().map { it.sjablonForbruksutgifterPeriode.periode })
+            .plus(ÅrMånedsperiode(fom = søknadsbarnFødselsdatoÅrMåned, til = søknadsbarnFødselsdatoÅrMåned.plusMonths(1)))
+            .plus(ÅrMånedsperiode(fom = søknadsbarnSeksårsdag, til = søknadsbarnSeksårsdag))
+            .plus(ÅrMånedsperiode(fom = datoInnføringUtvidetBarnetrygd, til = datoInnføringUtvidetBarnetrygd))
 
         return lagBruddPeriodeListe(periodeListe, beregningsperiode)
     }

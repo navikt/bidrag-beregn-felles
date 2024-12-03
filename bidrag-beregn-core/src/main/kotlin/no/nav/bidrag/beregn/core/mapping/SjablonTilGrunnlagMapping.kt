@@ -1,12 +1,14 @@
 package no.nav.bidrag.beregn.core.mapping
 
 import com.fasterxml.jackson.databind.node.POJONode
+import no.nav.bidrag.beregn.core.util.SjablonUtil.justerSjablonTomDato
 import no.nav.bidrag.commons.service.sjablon.Barnetilsyn
 import no.nav.bidrag.commons.service.sjablon.Bidragsevne
 import no.nav.bidrag.commons.service.sjablon.Forbruksutgifter
 import no.nav.bidrag.commons.service.sjablon.MaksFradrag
 import no.nav.bidrag.commons.service.sjablon.MaksTilsyn
 import no.nav.bidrag.commons.service.sjablon.Samværsfradrag
+import no.nav.bidrag.commons.service.sjablon.Sjablontall
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
@@ -133,7 +135,11 @@ fun trinnvisSkattesatsTilGrunnlagsobjekt(periode: ÅrMånedsperiode, trinnliste:
         ),
     ),
 )
-
+fun Sjablontall.tilGrunnlagsobjekt(sjablontallNavn: SjablonTallNavn): GrunnlagDto = sjablontallTilGrunnlagsobjekt(
+    verdi = verdi!!,
+    sjablontallNavn = sjablontallNavn,
+    periode = ÅrMånedsperiode(datoFom!!, justerSjablonTomDato(datoTom)),
+)
 fun sjablontallTilGrunnlagsobjekt(periode: ÅrMånedsperiode, sjablontallNavn: SjablonTallNavn, verdi: BigDecimal): GrunnlagDto = GrunnlagDto(
     referanse = opprettSjablonreferanse(
         sjablontallNavn.navn,

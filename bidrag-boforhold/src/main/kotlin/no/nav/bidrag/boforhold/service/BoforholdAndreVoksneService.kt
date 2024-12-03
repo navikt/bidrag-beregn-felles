@@ -10,6 +10,7 @@ import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.enums.person.Familierelasjon
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
+import java.util.Collections.emptyList
 
 internal class BoforholdAndreVoksneService {
     fun beregnBoforholdAndreVoksne(virkningstidspunkt: LocalDate, boforholdVoksne: BoforholdVoksneRequest): List<Bostatus> {
@@ -752,7 +753,7 @@ internal class BoforholdAndreVoksneService {
         var periodeTom: LocalDate? = null
 
         sortertePerioder.forEachIndexed { indeks, bostatusperiode ->
-            if (indeks == 0 || bostatusperiode.periodeFom!!.isAfter(periodeTom?.plusDays(1))) {
+            if (indeks == 0 || periodeTom != null && bostatusperiode.periodeFom!!.isAfter(periodeTom?.plusDays(1))) {
                 if (indeks != 0) {
                     resultatliste.add(Bostatus(periodeFom, periodeTom, Bostatuskode.BOR_MED_ANDRE_VOKSNE, Kilde.OFFENTLIG))
                     periodeFom = null
