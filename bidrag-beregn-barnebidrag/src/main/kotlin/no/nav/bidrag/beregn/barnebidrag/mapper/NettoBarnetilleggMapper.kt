@@ -30,8 +30,8 @@ internal object NettoBarnetilleggMapper : CoreMapper() {
                 .filter { it.innhold.inntektsrapportering == Inntektsrapportering.BARNETILLEGG }
                 .filter { it.innhold.gjelderBarn == beregnGrunnlag.søknadsbarnReferanse }
                 .flatMap {
-                    it.innhold.inntekstpostListe.mapNotNull { inntektspost ->
-                        inntektspost.inntekstype?.let { inntektstype ->
+                    it.innhold.inntektspostListe.mapNotNull { inntektspost ->
+                        inntektspost.inntektstype?.let { inntektstype ->
                             BarnetilleggPeriodeGrunnlag(
                                 referanse = it.referanse,
                                 barnetilleggPeriode = BarnetilleggPeriode(
@@ -39,7 +39,7 @@ internal object NettoBarnetilleggMapper : CoreMapper() {
                                     type = inntektstype,
                                     beløp = inntektspost.beløp,
                                     manueltRegistrert = false,
-                                )
+                                ),
                             )
                         }
                     }
