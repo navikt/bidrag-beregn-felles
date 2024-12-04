@@ -53,8 +53,7 @@ class BeregnBarnebidragService : BeregnService() {
         utvidetGrunnlag = mottattGrunnlag.copy(
             grunnlagListe = (
                 mottattGrunnlag.grunnlagListe + delberegningBidragsevneResultat + delberegningNettoTilsynsutgiftResultat +
-                    delberegningUnderholdskostnadResultat +
-                    delberegningBpAndelUnderholdskostnadResultat + delberegningSamværsfradragResultat
+                    delberegningUnderholdskostnadResultat + delberegningBpAndelUnderholdskostnadResultat + delberegningSamværsfradragResultat
                 )
                 .distinctBy(GrunnlagDto::referanse),
         )

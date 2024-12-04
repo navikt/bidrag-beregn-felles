@@ -17,6 +17,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningGebyr
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåFremmedReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.innholdTilObjekt
 import java.math.BigDecimal
+import java.util.Collections.emptySet
 
 internal data class DelberegningMaksInntektIntern(val maksInntekt: BigDecimal?, val grunnlagsliste: Set<InnholdMedReferanse<*>>)
 internal data class DelberegningInntektsbasertGebyrIntern(

@@ -2,11 +2,11 @@ package no.nav.bidrag.beregn.barnebidrag.service
 
 import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.barnebidrag.beregning.NettoBarnetilleggBeregning
-import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilleggBeregningsgrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilleggBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.NettoBarnetilleggBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.NettoBarnetilleggPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.NettoBarnetilleggPeriodeResultat
-import no.nav.bidrag.beregn.barnebidrag.bo.SkattFaktorBeregningsgrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SkattFaktorBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.mapper.NettoBarnetilleggMapper.finnReferanseTilRolle
 import no.nav.bidrag.beregn.barnebidrag.mapper.NettoBarnetilleggMapper.mapNettoBarnetilleggGrunnlag
 import no.nav.bidrag.beregn.core.service.BeregnService
@@ -66,6 +66,7 @@ internal object BeregnNettoBarnetilleggService : BeregnService() {
             mapDelberegningNettoBarnetillegg(
                 nettoBarnetilleggPeriodeResultatListe = nettoBarnetilleggBeregningResultatListe,
                 mottattGrunnlag = mottattGrunnlag,
+                referanseTilRolle = referanseTilRolle,
             ),
         )
 
@@ -96,7 +97,7 @@ internal object BeregnNettoBarnetilleggService : BeregnService() {
                 )
             }
             ?.let {
-                SkattFaktorBeregningsgrunnlag(
+                SkattFaktorBeregningGrunnlag(
                     referanse = it.referanse,
                     skattFaktor = it.barnetilleggSkattesatsPeriode.skattFaktor,
                 )
@@ -108,7 +109,7 @@ internal object BeregnNettoBarnetilleggService : BeregnService() {
                     bruddPeriode,
                 )
             }.map {
-                BarnetilleggBeregningsgrunnlag(
+                BarnetilleggBeregningGrunnlag(
                     referanse = it.referanse,
                     barnetilleggstype = it.barnetilleggPeriode.type,
                     bruttoBarnetillegg = it.barnetilleggPeriode.beløp,
@@ -159,51 +160,11 @@ internal object BeregnNettoBarnetilleggService : BeregnService() {
             )
         }
 
-    private fun mapDelberegninger(
-        mottattGrunnlag: BeregnGrunnlag,
-        nettoBarnetilleggPeriodeGrunnlag: NettoBarnetilleggPeriodeGrunnlag,
-        delberegningNettoBarnetilleggResultat: List<NettoBarnetilleggPeriodeResultat>,
-//        referanseTilSøknadsbarn: String,
-    ): List<GrunnlagDto> {
-        val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
-        val grunnlagReferanseListe =
-            delberegningNettoBarnetilleggResultat
-                .flatMap { it.resultat.grunnlagsreferanseListe }
-                .distinct()
-
-        resultatGrunnlagListe.addAll(
-            mapDelberegningNettoBarnetillegg(
-                nettoBarnetilleggPeriodeResultatListe = delberegningNettoBarnetilleggResultat,
-                mottattGrunnlag = mottattGrunnlag,
-            ),
-        )
-
-        // Lager en liste av referanser som refereres til av delberegningene på laveste nivå og mapper ut tilhørende grunnlag
-        val delberegningReferanseListe =
-            delberegningNettoBarnetilleggResultat.flatMap { it.resultat.grunnlagsreferanseListe }
-                .distinct()
-
-        resultatGrunnlagListe.addAll(
-            mottattGrunnlag.grunnlagListe
-                .filter { it.referanse in delberegningReferanseListe }
-                .map {
-                    GrunnlagDto(
-                        referanse = it.referanse,
-                        type = it.type,
-                        innhold = it.innhold,
-                        grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
-                        gjelderReferanse = it.gjelderReferanse,
-                    )
-                },
-        )
-
-        return resultatGrunnlagListe
-    }
-
     // Mapper ut DelberegningNettoBarnetillegg
     private fun mapDelberegningNettoBarnetillegg(
         nettoBarnetilleggPeriodeResultatListe: List<NettoBarnetilleggPeriodeResultat>,
         mottattGrunnlag: BeregnGrunnlag,
+        referanseTilRolle: String,
     ): List<GrunnlagDto> = nettoBarnetilleggPeriodeResultatListe
         .map {
             GrunnlagDto(
@@ -211,6 +172,7 @@ internal object BeregnNettoBarnetilleggService : BeregnService() {
                     type = Grunnlagstype.DELBEREGNING_NETTO_BARNETILLEGG,
                     periode = it.periode,
                     søknadsbarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
+                    gjelderReferanse = referanseTilRolle,
                 ),
                 type = Grunnlagstype.DELBEREGNING_NETTO_BARNETILLEGG,
                 innhold = POJONode(
@@ -222,10 +184,7 @@ internal object BeregnNettoBarnetilleggService : BeregnService() {
                     ),
                 ),
                 grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe,
-                gjelderReferanse = finnReferanseTilRolle(
-                    grunnlagListe = mottattGrunnlag.grunnlagListe,
-                    grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
-                ),
+                gjelderReferanse = referanseTilRolle,
             )
         }
 }

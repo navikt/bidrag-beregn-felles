@@ -22,6 +22,8 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.innholdTilObjekt
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.util.Collections.emptyList
+
 val bmReferanse = "bmReferanse"
 val bpReferanse = "bpReferanse"
 val barn1Referanse = "barn1Referanse"

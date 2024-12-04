@@ -159,9 +159,16 @@
         },
         "inntektsrapportering": "BARNETILLEGG",
         "gjelderBarn": "Person_Søknadsbarn",
-        "beløp": 36000,
+        "beløp": 24000,
         "manueltRegistrert": false,
-        "valgt": true
+        "valgt": true,
+        "inntekstpostListe": [
+          {
+            "kode": "Inntekt",
+            "inntekstype": "BARNETILLEGG_PENSJON",
+            "beløp": 24000
+          }
+        ]
       },
       "grunnlagsreferanseListe": [],
       "gjelderBarnReferanse": "Person_Søknadsbarn",
@@ -177,7 +184,7 @@
         },
         "inntektsrapportering": "AINNTEKT",
         "gjelderBarn": null,
-        "beløp": 500000,
+        "beløp": 580000,
         "manueltRegistrert": false,
         "valgt": true
       },
@@ -195,13 +202,58 @@
         },
         "inntektsrapportering": "BARNETILLEGG",
         "gjelderBarn": "Person_Søknadsbarn",
-        "beløp": 60000,
+        "beløp": 24000,
         "manueltRegistrert": false,
-        "valgt": true
+        "valgt": true,
+        "inntekstpostListe": [
+          {
+            "kode": "Inntekt",
+            "inntekstype": "BARNETILLEGG_PENSJON",
+            "beløp": 24000
+          }
+        ]
       },
       "grunnlagsreferanseListe": [],
       "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "delberegning_DELBEREGNING_SUM_INNTEKT_Person_Bidragspliktig_Person_Søknadsbarn_202408",
+      "type": "DELBEREGNING_SUM_INNTEKT",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": null
+        },
+        "totalinntekt": 224000.00,
+        "kontantstøtte": null,
+        "skattepliktigInntekt": 200000.00,
+        "barnetillegg": 24000.00,
+        "utvidetBarnetrygd": null,
+        "småbarnstillegg": null
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragspliktig",
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "delberegning_DELBEREGNING_SUM_INNTEKT_Person_Bidragsmottaker_Person_Søknadsbarn_202408",
+      "type": "DELBEREGNING_SUM_INNTEKT",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": null
+        },
+        "totalinntekt": 604000.00,
+        "kontantstøtte": null,
+        "skattepliktigInntekt": 580000.00,
+        "barnetillegg": 24000.00,
+        "utvidetBarnetrygd": null,
+        "småbarnstillegg": null
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker",
+      "gjelderBarnReferanse": null
     }
   ]
 }

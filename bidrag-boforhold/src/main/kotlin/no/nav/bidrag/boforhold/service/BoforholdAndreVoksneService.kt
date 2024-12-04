@@ -10,6 +10,7 @@ import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.enums.person.Familierelasjon
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
+import java.util.Collections.emptyList
 
 internal class BoforholdAndreVoksneService {
     fun beregnBoforholdAndreVoksne(virkningstidspunkt: LocalDate, boforholdVoksne: BoforholdVoksneRequest): List<Bostatus> {
