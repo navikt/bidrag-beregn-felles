@@ -1,7 +1,7 @@
 package no.nav.bidrag.beregn.barnebidrag.service
 
+import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper
 import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.beregnBeløpFaktiskUtgift
-import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.beregnBeløpTilleggsstønad
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnetilleggSkattesatsService.delberegningBarnetilleggSkattesats
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBidragsevneService.delberegningBidragsevne
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBpAndelUnderholdskostnadService.delberegningBpAndelUnderholdskostnad
@@ -256,5 +256,5 @@ class BeregnBarnebidragService : BeregnService() {
     fun beregnMånedsbeløpFaktiskUtgift(faktiskUtgift: BigDecimal, kostpenger: BigDecimal = BigDecimal.ZERO): BigDecimal =
         beregnBeløpFaktiskUtgift(faktiskUtgift, kostpenger).avrundetMedToDesimaler
 
-    fun beregnMånedsbeløpTilleggsstønad(tilleggsstønad: BigDecimal): BigDecimal = beregnBeløpTilleggsstønad(tilleggsstønad).avrundetMedToDesimaler
+    fun beregnMånedsbeløpTilleggsstønad(tilleggsstønad: BigDecimal): BigDecimal = NettoTilsynsutgiftMapper.beregnMånedsbeløpTilleggsstønad(tilleggsstønad).avrundetMedToDesimaler
 }

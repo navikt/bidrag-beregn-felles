@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.barnebidrag.service
 
 import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.barnebidrag.beregning.NettoTilsynsutgiftBeregning
+import no.nav.bidrag.beregn.barnebidrag.bo.BarnBM
 import no.nav.bidrag.beregn.barnebidrag.bo.FaktiskUtgift
 import no.nav.bidrag.beregn.barnebidrag.bo.NettoTilsynsutgiftBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.NettoTilsynsutgiftPeriodeGrunnlag
@@ -28,6 +29,9 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
+import java.time.LocalDate
+import java.time.Period
+import java.time.YearMonth
 
 internal object BeregnNettoTilsynsutgiftService : BeregnService() {
 
@@ -51,6 +55,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
             // Teller antall barn i perioden. Hvis antall er null så gjøres det ingen beregning
             val antallBarnIPerioden = nettoTilsynsutgiftPeriodeGrunnlag.faktiskUtgiftPeriodeCoreListe
                 .filter { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
+                .distinctBy { it.gjelderBarn }
                 .size
             if (antallBarnIPerioden > 0) {
                 val nettoTilsynsutgiftBeregningGrunnlag =
@@ -131,8 +136,10 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
         bruddPeriode: ÅrMånedsperiode,
         antallBarnIPerioden: Int,
     ): NettoTilsynsutgiftBeregningGrunnlag = NettoTilsynsutgiftBeregningGrunnlag(
+        søknadsbarnReferanse = nettoTilsynsutgiftPeriodeGrunnlag.søknadsbarnReferanse,
+        barnBMListe = barnUnderTolvÅr(nettoTilsynsutgiftPeriodeGrunnlag.barnBMListe, bruddPeriode.fom),
         faktiskUtgiftListe = nettoTilsynsutgiftPeriodeGrunnlag.faktiskUtgiftPeriodeCoreListe
-            .filter { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
+        .filter { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
             .map {
                 FaktiskUtgift(
                     referanse = it.referanse,
@@ -141,7 +148,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                 )
             }.takeIf { it.isNotEmpty() } ?: throw IllegalArgumentException("Ingen faktisk utgift funnet for periode $bruddPeriode"),
 
-        tilleggsstønadListe = nettoTilsynsutgiftPeriodeGrunnlag.tilleggsstønadPeriodeCoreListe
+        tilleggsstønad = nettoTilsynsutgiftPeriodeGrunnlag.tilleggsstønadPeriodeCoreListe
             .filter { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
             .map {
                 Tilleggsstønad(
@@ -149,7 +156,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                     gjelderBarn = it.gjelderBarn,
                     beregnetBeløp = it.beregnetBeløp,
                 )
-            },
+            }.first(),
 
         sjablonSjablontallBeregningGrunnlagListe = nettoTilsynsutgiftPeriodeGrunnlag.sjablonSjablontallPeriodeGrunnlagListe
             .filter { it.sjablonSjablontallPeriode.periode.inneholder(bruddPeriode) }
@@ -248,7 +255,12 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                 innhold = POJONode(
                     DelberegningNettoTilsynsutgift(
                         periode = it.periode,
-                        totaltFaktiskUtgiftBeløp = it.resultat.totaltFaktiskUtgiftBeløp,
+                        totalTilsynsutgift = it.resultat.totalTilsynsutgift,
+                        sjablonMaksTilsynsutgift = it.resultat.sjablonMaksTilsynsutgift,
+                        andelTilsynsutgiftBeløp = it.resultat.andelTilsynsutgiftBeløp,
+                        andelTilsynsutgiftFaktor = it.resultat.andelTilsynsutgiftFaktor,
+                        skattefradrag = it.resultat.skattefradrag,
+                        nettoTilsynsutgift = it.resultat.nettoTilsynsutgift,
                         tilsynsutgiftBarnListe = it.resultat.tilsynsutgiftBarnListe,
                     ),
                 ),
@@ -372,6 +384,17 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
             throw IllegalArgumentException(
                 "Feil ved uthenting av sjablon for sjablontall: " + e.message,
             )
+        }
+    }
+
+    private fun barnUnderTolvÅr(barnBMListe: List<BarnBM>, fom: YearMonth): List<BarnBM> {
+        return barnBMListe.filter {
+            it.fødselsdato.let { fødselsdato ->
+                Period.between(
+                    fødselsdato,
+                    LocalDate.of(fom.year, fom.month, 1)
+                ).years < 12
+            }
         }
     }
 }

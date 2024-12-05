@@ -356,7 +356,7 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
                 innhold = POJONode(
                     DelberegningNettoTilsynsutgift(
                         periode = it.periode,
-                        totaltFaktiskUtgiftBeløp = it.resultat.totaltFaktiskUtgiftBeløp,
+                        totaltFaktiskUtgiftBeløp = it.resultat.totalTilsynsutgift,
                         tilsynsutgiftBarnListe = it.resultat.tilsynsutgiftBarnListe,
                     ),
                 ),
