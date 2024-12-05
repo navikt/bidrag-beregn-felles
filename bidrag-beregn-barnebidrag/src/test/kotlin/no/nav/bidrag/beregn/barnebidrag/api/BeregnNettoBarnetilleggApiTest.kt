@@ -5,8 +5,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnebidragService
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
-import no.nav.bidrag.domene.enums.barnetillegg.Barnetilleggstype
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
+import no.nav.bidrag.domene.enums.inntekt.Inntektstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningNettoBarnetillegg
@@ -51,7 +51,7 @@ internal class BeregnNettoBarnetilleggApiTest {
             { assertThat(resultat).hasSize(1) },
             { assertEquals(0, resultat[0].summertBruttoBarnetillegg.compareTo(BigDecimal.valueOf(1700.00))) },
             { assertEquals(0, resultat[0].summertNettoBarnetillegg.compareTo(BigDecimal.valueOf(1105.00))) },
-            { assertEquals(0, resultat[0].barnetilleggTypeListe[0].barnetilleggType.compareTo(Barnetilleggstype.PENSJON)) },
+            { assertEquals(0, resultat[0].barnetilleggTypeListe[0].barnetilleggType.compareTo(Inntektstype.BARNETILLEGG_PENSJON)) },
             { assertEquals(0, resultat[0].barnetilleggTypeListe[0].bruttoBarnetillegg.compareTo(BigDecimal.valueOf(1700.00))) },
             { assertEquals(0, resultat[0].barnetilleggTypeListe[0].nettoBarnetillegg.compareTo(BigDecimal.valueOf(1105.00))) },
         )
@@ -72,7 +72,7 @@ internal class BeregnNettoBarnetilleggApiTest {
             { assertEquals(0, resultatBP[0].summertBruttoBarnetillegg.compareTo(BigDecimal.valueOf(1700.00))) },
             { assertEquals(0, resultatBP[0].summertNettoBarnetillegg.compareTo(BigDecimal.valueOf(1105.00))) },
 
-            { assertEquals(0, resultatBP[0].barnetilleggTypeListe[0].barnetilleggType.compareTo(Barnetilleggstype.PENSJON)) },
+            { assertEquals(0, resultatBP[0].barnetilleggTypeListe[0].barnetilleggType.compareTo(Inntektstype.BARNETILLEGG_PENSJON)) },
             { assertEquals(0, resultatBP[0].barnetilleggTypeListe[0].bruttoBarnetillegg.compareTo(BigDecimal.valueOf(1700.00))) },
             { assertEquals(0, resultatBP[0].barnetilleggTypeListe[0].nettoBarnetillegg.compareTo(BigDecimal.valueOf(1105.00))) },
 
@@ -80,10 +80,10 @@ internal class BeregnNettoBarnetilleggApiTest {
             { assertEquals(0, resultatBM[0].summertBruttoBarnetillegg.compareTo(BigDecimal.valueOf(800.00))) },
             { assertEquals(0, resultatBM[0].summertNettoBarnetillegg.compareTo(BigDecimal.valueOf(560.00))) },
 
-            { assertEquals(0, resultatBM[0].barnetilleggTypeListe[0].barnetilleggType.compareTo(Barnetilleggstype.PENSJON)) },
+            { assertEquals(0, resultatBM[0].barnetilleggTypeListe[0].barnetilleggType.compareTo(Inntektstype.BARNETILLEGG_PENSJON)) },
             { assertEquals(0, resultatBM[0].barnetilleggTypeListe[0].bruttoBarnetillegg.compareTo(BigDecimal.valueOf(300.00))) },
             { assertEquals(0, resultatBM[0].barnetilleggTypeListe[0].nettoBarnetillegg.compareTo(BigDecimal.valueOf(210.00))) },
-            { assertEquals(0, resultatBM[0].barnetilleggTypeListe[1].barnetilleggType.compareTo(Barnetilleggstype.DAGPENGER)) },
+            { assertEquals(0, resultatBM[0].barnetilleggTypeListe[1].barnetilleggType.compareTo(Inntektstype.BARNETILLEGG_DAGPENGER)) },
             { assertEquals(0, resultatBM[0].barnetilleggTypeListe[1].bruttoBarnetillegg.compareTo(BigDecimal.valueOf(500.00))) },
             { assertEquals(0, resultatBM[0].barnetilleggTypeListe[1].nettoBarnetillegg.compareTo(BigDecimal.valueOf(350.00))) },
         )
@@ -99,7 +99,6 @@ internal class BeregnNettoBarnetilleggApiTest {
 
         assertAll(
             { assertThat(resultatBM).hasSize(0) },
-
         )
     }
 
