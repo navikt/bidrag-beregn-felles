@@ -80,10 +80,7 @@ internal object UnderholdskostnadMapper : CoreMapper() {
                                 it.innhold.periode.fom,
                                 it.innhold.periode.til,
                             ),
-                            nettoTilsynsutgift = it.innhold.tilsynsutgiftBarnListe.asSequence()
-                                .filter { tilsynsutgiftBarn -> tilsynsutgiftBarn.gjelderBarn == gjelderBarn }
-                                .map { tilsynsutgiftBarn -> tilsynsutgiftBarn.nettoTilsynsutgift }
-                                .first(),
+                            nettoTilsynsutgift = it.innhold.nettoTilsynsutgift,
                         ),
                     )
                 }

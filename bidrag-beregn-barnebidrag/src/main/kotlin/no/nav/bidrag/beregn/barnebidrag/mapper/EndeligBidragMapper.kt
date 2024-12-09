@@ -1,28 +1,26 @@
 package no.nav.bidrag.beregn.barnebidrag.mapper
 
-import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilleggPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BidragsevneDelberegningPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BpAndelUnderholdskostnadDelberegningPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.NettoBarnetilleggDelberegningPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragDelberegningPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SamværsklassePeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadDelberegningPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
-import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.BarnetilleggPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningNettoBarnetillegg
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsfradrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
-import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SamværsklassePeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåFremmedReferanse
-import java.math.BigDecimal
 
 internal object EndeligBidragMapper : CoreMapper() {
+
     fun mapEndeligBidragGrunnlag(mottattGrunnlag: BeregnGrunnlag): EndeligBidragPeriodeGrunnlag {
         val bidragsevneDelberegningPeriodeGrunnlagListe = mapBidragsevne(mottattGrunnlag)
 
@@ -33,23 +31,19 @@ internal object EndeligBidragMapper : CoreMapper() {
             bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe = mapBpAndelUnderholdskostnad(mottattGrunnlag),
             samværsfradragDelberegningPeriodeGrunnlagListe = mapSamværsfradrag(mottattGrunnlag),
             samværsklassePeriodeGrunnlagListe = mapSamværsklasse(mottattGrunnlag),
-            barnetilleggBPPeriodeGrunnlagListe = mapBarnetillegg(
+            nettoBarnetilleggBPDelberegningPeriodeGrunnlagListe = mapNettoBarnetillegg(
                 beregnGrunnlag = mottattGrunnlag,
                 referanseTilRolle = finnReferanseTilRolle(
                     grunnlagListe = mottattGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
                 ),
-                // TODO Blir det riktig å hente fra siste periode?
-                skattFaktor = bidragsevneDelberegningPeriodeGrunnlagListe.last().bidragsevnePeriode.skatt.sumSkattFaktor,
             ),
-            barnetilleggBMPeriodeGrunnlagListe = mapBarnetillegg(
+            nettoBarnetilleggBMDelberegningPeriodeGrunnlagListe = mapNettoBarnetillegg(
                 beregnGrunnlag = mottattGrunnlag,
                 referanseTilRolle = finnReferanseTilRolle(
                     grunnlagListe = mottattGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
                 ),
-                // TODO Må være skatt som tilhører BM
-                skattFaktor = bidragsevneDelberegningPeriodeGrunnlagListe.last().bidragsevnePeriode.skatt.sumSkattFaktor,
             ),
         )
     }
@@ -140,34 +134,22 @@ internal object EndeligBidragMapper : CoreMapper() {
         }
     }
 
-    private fun mapBarnetillegg(
-        beregnGrunnlag: BeregnGrunnlag,
-        referanseTilRolle: String,
-        skattFaktor: BigDecimal,
-    ): List<BarnetilleggPeriodeGrunnlag> {
+    private fun mapNettoBarnetillegg(beregnGrunnlag: BeregnGrunnlag, referanseTilRolle: String): List<NettoBarnetilleggDelberegningPeriodeGrunnlag> {
         try {
             return beregnGrunnlag.grunnlagListe
-                .filtrerOgKonverterBasertPåFremmedReferanse<InntektsrapporteringPeriode>(
-                    grunnlagType = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
+                .filtrerOgKonverterBasertPåFremmedReferanse<DelberegningNettoBarnetillegg>(
+                    grunnlagType = Grunnlagstype.DELBEREGNING_NETTO_BARNETILLEGG,
                     referanse = referanseTilRolle,
                 )
-                .filter { it.gjelderBarnReferanse == beregnGrunnlag.søknadsbarnReferanse }
-                .filter { it.innhold.inntektsrapportering == Inntektsrapportering.BARNETILLEGG }
-                .filter { it.innhold.valgt }
                 .map {
-                    BarnetilleggPeriodeGrunnlag(
+                    NettoBarnetilleggDelberegningPeriodeGrunnlag(
                         referanse = it.referanse,
-                        barnetilleggPeriode = BarnetilleggPeriode(
-                            periode = it.innhold.periode,
-                            beløp = it.innhold.beløp,
-                            skattFaktor = skattFaktor,
-                            manueltRegistrert = it.innhold.manueltRegistrert,
-                        ),
+                        nettoBarnetilleggPeriode = it.innhold,
                     )
                 }
         } catch (e: Exception) {
             throw IllegalArgumentException(
-                "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE er ikke gyldig: " + e.message,
+                "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.DELBEREGNING_NETTO_BARNETILLEGG er ikke gyldig: " + e.message,
             )
         }
     }

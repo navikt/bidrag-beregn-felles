@@ -40,34 +40,48 @@
     },
     {
       "referanse": "Mottatt_InntektRapportering_Barnetillegg_Periode_Bidragsmottaker_202408",
-      "type": "BARNETILLEGG_PERIODE",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
       "innhold": {
         "periode": {
           "fom": "2024-02",
           "til": "2024-06"
         },
+        "inntektsrapportering": "BARNETILLEGG",
         "gjelderBarn": "Person_Søknadsbarn",
-        "type": "PENSJON",
-        "beløp": 300,
+        "beløp": 3600,
         "manueltRegistrert": false,
-        "valgt": true
+        "valgt": true,
+        "inntekstpostListe": [
+          {
+            "kode": "Inntekt",
+            "inntekstype": "BARNETILLEGG_PENSJON",
+            "beløp": 3600
+          }
+        ]
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {
       "referanse": "Mottatt_InntektRapportering_Barnetillegg_Periode_Bidragsmottaker_202408",
-      "type": "BARNETILLEGG_PERIODE",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
       "innhold": {
         "periode": {
           "fom": "2024-03",
           "til": "2024-08"
         },
+        "inntektsrapportering": "BARNETILLEGG",
         "gjelderBarn": "Person_Søknadsbarn",
-        "type": "DAGPENGER",
-        "beløp": 500,
+        "beløp": 6000,
         "manueltRegistrert": false,
-        "valgt": true
+        "valgt": true,
+        "inntekstpostListe": [
+          {
+            "kode": "Inntekt",
+            "inntekstype": "BARNETILLEGG_PENSJON",
+            "beløp": 6000
+          }
+        ]
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Bidragsmottaker"

@@ -1,5 +1,6 @@
 package no.nav.bidrag.beregn.barnebidrag.mapper
 
+import no.nav.bidrag.beregn.barnebidrag.bo.BarnBM
 import no.nav.bidrag.beregn.barnebidrag.bo.NettoTilsynsutgiftPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonMaksFradragsbeløpPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonMaksTilsynsbeløpPeriodeGrunnlag
@@ -13,13 +14,13 @@ import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.FaktiskUtgiftPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
+import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonMaksFradragPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonMaksTilsynPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.TilleggsstønadPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import java.math.BigDecimal
 import java.math.RoundingMode
-import java.time.LocalDate
 import java.util.Collections.emptyList
 
 internal object NettoTilsynsutgiftMapper : CoreMapper() {
@@ -31,6 +32,8 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
 
         val resultat = NettoTilsynsutgiftPeriodeGrunnlag(
             beregningsperiode = mottattGrunnlag.periode,
+            søknadsbarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
+            barnBMListe = mapBMsBarn(mottattGrunnlag),
             faktiskUtgiftPeriodeCoreListe = mapFaktiskUtgift(mottattGrunnlag, referanseTilBM),
             tilleggsstønadPeriodeCoreListe = mapTilleggsstønad(mottattGrunnlag, referanseTilBM),
             sjablonSjablontallPeriodeGrunnlagListe = BeregnNettoTilsynsutgiftService.mapSjablonSjablontall(sjablonGrunnlag),
@@ -39,6 +42,34 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
 
         )
         return resultat
+    }
+
+    private fun mapBMsBarn(beregnGrunnlag: BeregnGrunnlag): List<BarnBM> {
+        try {
+            val barnBMListe =
+                beregnGrunnlag.grunnlagListe
+                    .filtrerOgKonverterBasertPåEgenReferanse<Person>(referanse = beregnGrunnlag.søknadsbarnReferanse)
+                    .map {
+                        BarnBM(
+                            referanse = it.referanse,
+                            fødselsdato = it.innhold.fødselsdato,
+                        )
+                    } +
+                    beregnGrunnlag.grunnlagListe
+                        .filtrerOgKonverterBasertPåEgenReferanse<Person>(Grunnlagstype.PERSON_BARN_BIDRAGSMOTTAKER)
+                        .map {
+                            BarnBM(
+                                referanse = it.referanse,
+                                fødselsdato = it.innhold.fødselsdato,
+                            )
+                        }
+            return barnBMListe.distinctBy { it.referanse }
+        } catch (e: Exception) {
+            throw IllegalArgumentException(
+                "Ugyldig input ved beregning av netto tilsynsutgifter. Innhold i Grunnlagstype.PERSON_BARN_BIDRAGSMOTTAKER er ikke gyldig: " +
+                    e.message,
+            )
+        }
     }
 
     private fun mapFaktiskUtgift(beregnGrunnlag: BeregnGrunnlag, referanseTilRolle: Grunnlagsreferanse): List<FaktiskUtgiftPeriodeCore> {
@@ -54,7 +85,7 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
                                 datoTil = it.innhold.periode.toDatoperiode().til,
                             ),
                             gjelderBarn = it.gjelderBarnReferanse!!,
-                            beregnetBeløp = beregnBeløpFaktiskUtgift(it.innhold.faktiskUtgiftBeløp, it.innhold.kostpengerBeløp),
+                            beregnetBeløp = beregnMånedsbeløpFaktiskUtgift(it.innhold.faktiskUtgiftBeløp, it.innhold.kostpengerBeløp),
                             grunnlagsreferanseListe = emptyList(),
                         )
                     }
@@ -85,7 +116,7 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
                                 datoTil = it.innhold.periode.toDatoperiode().til,
                             ),
                             gjelderBarn = it.gjelderBarnReferanse!!,
-                            beregnetBeløp = beregnBeløpTilleggsstønad(it.innhold.beløpDagsats),
+                            beregnetBeløp = beregnMånedsbeløpTilleggsstønad(it.innhold.beløpDagsats),
                             grunnlagsreferanseListe = emptyList(),
                         )
                     }
@@ -139,13 +170,10 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
         }
     }
 
-    fun beregnBeløpFaktiskUtgift(faktiskUtgiftBeløp: BigDecimal, kostpengerBeløp: BigDecimal?): BigDecimal =
+    fun beregnMånedsbeløpFaktiskUtgift(faktiskUtgiftBeløp: BigDecimal, kostpengerBeløp: BigDecimal?): BigDecimal =
         faktiskUtgiftBeløp.minus(kostpengerBeløp ?: BigDecimal.ZERO).multiply(BigDecimal.valueOf(11))
             .divide(BigDecimal.valueOf(12), 10, RoundingMode.HALF_UP).coerceAtLeast(BigDecimal.ZERO)
 
-    fun beregnBeløpTilleggsstønad(beløpDagsats: BigDecimal): BigDecimal =
+    fun beregnMånedsbeløpTilleggsstønad(beløpDagsats: BigDecimal): BigDecimal =
         beløpDagsats.multiply(BigDecimal.valueOf(260)).divide(BigDecimal.valueOf(12), 10, RoundingMode.HALF_UP).coerceAtLeast(BigDecimal.ZERO)
-
-    fun finnFødselsdatoBarn(beregnGrunnlag: List<GrunnlagDto>, referanse: String): LocalDate =
-        finnPersonFraReferanse(beregnGrunnlag, referanse).fødselsdato
 }

@@ -17,8 +17,8 @@
       "gjelderReferanse": null
     },
     {
-      "referanse" : "person_PERSON_BARN_BIDRAGSPLIKTIG_20051217_102",
-      "type" : "PERSON_SØKNADSBARN",
+      "referanse" : "person_PERSON_BARN_BIDRAGSMOTTAKER_20051217_102",
+      "type" : "PERSON_BARN_BIDRAGSMOTTAKER",
       "innhold" : {
         "ident" : "12121250511",
         "navn" : null,
