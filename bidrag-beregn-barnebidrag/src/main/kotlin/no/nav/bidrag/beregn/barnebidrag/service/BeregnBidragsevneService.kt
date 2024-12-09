@@ -29,7 +29,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningref
 
 internal object BeregnBidragsevneService : BeregnService() {
 
-    fun delberegningBidragsevne(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
+    fun delberegningBidragsevne(mottattGrunnlag: BeregnGrunnlag, åpenSluttperiode: Boolean = true): List<GrunnlagDto> {
         val referanseTilBP = finnReferanseTilRolle(
             grunnlagListe = mottattGrunnlag.grunnlagListe,
             grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
@@ -42,7 +42,8 @@ internal object BeregnBidragsevneService : BeregnService() {
         val innslagKapitalinntektSjablon = finnInnslagKapitalinntektFraGrunnlag(sjablonGrunnlag)
 
         // Mapper ut grunnlag som skal brukes for å beregne bidragsevne
-        val bidragsevnePeriodeGrunnlag = mapBidragsevneGrunnlag(mottattGrunnlag = mottattGrunnlag, sjablonGrunnlag = sjablonGrunnlag)
+        val bidragsevnePeriodeGrunnlag =
+            mapBidragsevneGrunnlag(mottattGrunnlag = mottattGrunnlag, sjablonGrunnlag = sjablonGrunnlag, åpenSluttperiode = åpenSluttperiode)
 
         // Lager liste over bruddperioder
         val bruddPeriodeListe = lagBruddPeriodeListeBidragsevne(
@@ -66,10 +67,10 @@ internal object BeregnBidragsevneService : BeregnService() {
             )
         }
 
-        // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato)
+        // Setter til-periode i siste element til null hvis det ikke allerede er det og åpenSluttperiode er true
         if (bidragsevneBeregningResultatListe.isNotEmpty()) {
             val sisteElement = bidragsevneBeregningResultatListe.last()
-            if (sisteElement.periode.til != null) {
+            if (sisteElement.periode.til != null && åpenSluttperiode) {
                 val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
                 bidragsevneBeregningResultatListe[bidragsevneBeregningResultatListe.size - 1] = oppdatertSisteElement
             }
@@ -90,6 +91,7 @@ internal object BeregnBidragsevneService : BeregnService() {
                 bidragsevneBeregningResultatListe = bidragsevneBeregningResultatListe,
                 innslagKapitalinntektSjablon = innslagKapitalinntektSjablon,
                 referanseTilBP = referanseTilBP,
+                åpenSluttperiode = åpenSluttperiode,
             ),
         )
 
@@ -271,6 +273,7 @@ internal object BeregnBidragsevneService : BeregnService() {
         bidragsevneBeregningResultatListe: List<BidragsevnePeriodeResultat>,
         innslagKapitalinntektSjablon: Sjablontall?,
         referanseTilBP: String,
+        åpenSluttperiode: Boolean,
     ): List<GrunnlagDto> {
         val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
         val grunnlagReferanseListe =
@@ -296,8 +299,8 @@ internal object BeregnBidragsevneService : BeregnService() {
             .toMutableList()
         if (boforholdListe.isNotEmpty()) {
             val sisteElement = boforholdListe.last()
-            // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato)
-            if (sisteElement.periode.datoTil != null) {
+            // Setter til-periode i siste element til null hvis det ikke allerede er det og åpenSluttperiode er true
+            if (sisteElement.periode.datoTil != null && åpenSluttperiode) {
                 val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(datoTil = null))
                 boforholdListe[boforholdListe.size - 1] = oppdatertSisteElement
             }
@@ -312,8 +315,8 @@ internal object BeregnBidragsevneService : BeregnService() {
             .toMutableList()
         if (sumAntallBarnListe.isNotEmpty()) {
             val sisteElement = sumAntallBarnListe.last()
-            // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato)
-            if (sisteElement.periode.datoTil != null) {
+            // Setter til-periode i siste element til null hvis det ikke allerede er det og åpenSluttperiode er true
+            if (sisteElement.periode.datoTil != null && åpenSluttperiode) {
                 val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(datoTil = null))
                 sumAntallBarnListe[sumAntallBarnListe.size - 1] = oppdatertSisteElement
             }
@@ -328,8 +331,8 @@ internal object BeregnBidragsevneService : BeregnService() {
             .toMutableList()
         if (voksneIHusstandenListe.isNotEmpty()) {
             val sisteElement = voksneIHusstandenListe.last()
-            // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato)
-            if (sisteElement.periode.datoTil != null) {
+            // Setter til-periode i siste element til null hvis det ikke allerede er det og åpenSluttperiode er true
+            if (sisteElement.periode.datoTil != null && åpenSluttperiode) {
                 val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(datoTil = null))
                 voksneIHusstandenListe[voksneIHusstandenListe.size - 1] = oppdatertSisteElement
             }

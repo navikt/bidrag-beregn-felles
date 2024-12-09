@@ -16,7 +16,11 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBase
 
 internal object BidragsevneMapper : CoreMapper() {
     private val beregnApi: BeregnApi = BeregnApi()
-    fun mapBidragsevneGrunnlag(mottattGrunnlag: BeregnGrunnlag, sjablonGrunnlag: List<GrunnlagDto>): BidragsevnePeriodeGrunnlag {
+    fun mapBidragsevneGrunnlag(
+        mottattGrunnlag: BeregnGrunnlag,
+        sjablonGrunnlag: List<GrunnlagDto>,
+        åpenSluttperiode: Boolean
+    ): BidragsevnePeriodeGrunnlag {
         val referanseTilBP = finnReferanseTilRolle(
             grunnlagListe = mottattGrunnlag.grunnlagListe,
             grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
@@ -34,6 +38,7 @@ internal object BidragsevneMapper : CoreMapper() {
                     grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
                 ),
                 innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntektFraGrunnlag(sjablonGrunnlag),
+                åpenSluttperiode = åpenSluttperiode,
             ),
             barnIHusstandenPeriodeGrunnlagListe = barnIHusstandenPeriodeGrunnlagListe,
             voksneIHusstandenPeriodeGrunnlagListe = voksneIHusstandenPeriodeGrunnlagListe,

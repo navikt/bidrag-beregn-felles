@@ -20,9 +20,11 @@ import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatPeriode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.felles.valider
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
+import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import java.math.BigDecimal
+import java.time.YearMonth
 
 class BeregnBarnebidragService : BeregnService() {
 
@@ -38,33 +40,38 @@ class BeregnBarnebidragService : BeregnService() {
             throw IllegalArgumentException("Ugyldig input ved beregning av barnebidrag: " + e.message)
         }
 
+        var åpenSluttperiode: Boolean
+
+        // Sjekker om søknadsbarnet fyller 18 år i beregningsperioden
+        var utvidetGrunnlag = justerTilPeriodeHvisBarnetBlir18ÅrIBeregningsperioden(mottattGrunnlag).also { oppdatertGrunnlag ->
+            åpenSluttperiode = oppdatertGrunnlag.periode.til == mottattGrunnlag.periode.til
+        }
+
         // Kaller delberegninger
-        val delberegningBidragsevneResultat = delberegningBidragsevne(mottattGrunnlag)
-        val delberegningNettoTilsynsutgiftResultat = delberegningNettoTilsynsutgift(mottattGrunnlag)
-        var utvidetGrunnlag = mottattGrunnlag.copy(
-            grunnlagListe = (mottattGrunnlag.grunnlagListe + delberegningNettoTilsynsutgiftResultat).distinctBy(GrunnlagDto::referanse),
+        val delberegningBidragsevneResultat = delberegningBidragsevne(utvidetGrunnlag, åpenSluttperiode)
+        val delberegningNettoTilsynsutgiftResultat = delberegningNettoTilsynsutgift(utvidetGrunnlag, åpenSluttperiode)
+        utvidetGrunnlag = utvidetGrunnlag.copy(
+            grunnlagListe = (utvidetGrunnlag.grunnlagListe + delberegningNettoTilsynsutgiftResultat).distinctBy(GrunnlagDto::referanse),
         )
-        val delberegningUnderholdskostnadResultat = delberegningUnderholdskostnad(utvidetGrunnlag)
-        utvidetGrunnlag = mottattGrunnlag.copy(
-            grunnlagListe = (mottattGrunnlag.grunnlagListe + delberegningUnderholdskostnadResultat).distinctBy(GrunnlagDto::referanse),
+        val delberegningUnderholdskostnadResultat = delberegningUnderholdskostnad(utvidetGrunnlag, åpenSluttperiode)
+        utvidetGrunnlag = utvidetGrunnlag.copy(
+            grunnlagListe = (utvidetGrunnlag.grunnlagListe + delberegningUnderholdskostnadResultat).distinctBy(GrunnlagDto::referanse),
         )
-        val delberegningBpAndelUnderholdskostnadResultat = delberegningBpAndelUnderholdskostnad(utvidetGrunnlag)
-        val delberegningSamværsfradragResultat = delberegningSamværsfradrag(mottattGrunnlag)
-        utvidetGrunnlag = mottattGrunnlag.copy(
+        val delberegningBpAndelUnderholdskostnadResultat = delberegningBpAndelUnderholdskostnad(utvidetGrunnlag, åpenSluttperiode)
+        val delberegningSamværsfradragResultat = delberegningSamværsfradrag(utvidetGrunnlag, åpenSluttperiode)
+        utvidetGrunnlag = utvidetGrunnlag.copy(
             grunnlagListe = (
-                mottattGrunnlag.grunnlagListe + delberegningBidragsevneResultat + delberegningNettoTilsynsutgiftResultat +
+                utvidetGrunnlag.grunnlagListe + delberegningBidragsevneResultat + delberegningNettoTilsynsutgiftResultat +
                     delberegningUnderholdskostnadResultat +
                     delberegningBpAndelUnderholdskostnadResultat + delberegningSamværsfradragResultat
                 )
                 .distinctBy(GrunnlagDto::referanse),
         )
-        val delberegningEndeligBidragResultat = delberegningEndeligBidrag(utvidetGrunnlag)
+        val delberegningEndeligBidragResultat = delberegningEndeligBidrag(utvidetGrunnlag, åpenSluttperiode)
 
-        val resultatGrunnlagListe =
-            (
+        val resultatGrunnlagListe = (
                 delberegningBidragsevneResultat + delberegningNettoTilsynsutgiftResultat + delberegningUnderholdskostnadResultat +
-                    delberegningBpAndelUnderholdskostnadResultat +
-                    delberegningSamværsfradragResultat + delberegningEndeligBidragResultat
+                    delberegningBpAndelUnderholdskostnadResultat + delberegningSamværsfradragResultat + delberegningEndeligBidragResultat
                 )
                 .distinctBy { it.referanse }
                 .sortedBy { it.referanse }
@@ -138,14 +145,26 @@ class BeregnBarnebidragService : BeregnService() {
             throw IllegalArgumentException("Ugyldig input ved beregning av underholdskostnad: " + e.message)
         }
 
-        val delberegningNettoTilsynsutgiftResultat = delberegningNettoTilsynsutgift(mottattGrunnlag)
+        var åpenSluttperiode: Boolean
+
+        // Sjekker om søknadsbarnet fyller 18 år i beregningsperioden (gjøres her fordi dette er en metode som vil bli kalt direkte fra
+        // bidrag-behandling)
+        val utvidetGrunnlag = justerTilPeriodeHvisBarnetBlir18ÅrIBeregningsperioden(mottattGrunnlag).also { oppdatertGrunnlag ->
+            åpenSluttperiode = oppdatertGrunnlag.periode.til == mottattGrunnlag.periode.til
+        }
+
+        val delberegningNettoTilsynsutgiftResultat = delberegningNettoTilsynsutgift(
+            mottattGrunnlag = utvidetGrunnlag,
+            åpenSluttperiode = åpenSluttperiode
+        )
 
         val delberegningUnderholdskostnadResultat = delberegningUnderholdskostnad(
-            BeregnGrunnlag(
-                periode = mottattGrunnlag.periode,
-                søknadsbarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
-                grunnlagListe = (mottattGrunnlag.grunnlagListe + delberegningNettoTilsynsutgiftResultat).distinctBy { it.referanse },
+            mottattGrunnlag = BeregnGrunnlag(
+                periode = utvidetGrunnlag.periode,
+                søknadsbarnReferanse = utvidetGrunnlag.søknadsbarnReferanse,
+                grunnlagListe = (utvidetGrunnlag.grunnlagListe + delberegningNettoTilsynsutgiftResultat).distinctBy { it.referanse },
             ),
+            åpenSluttperiode = åpenSluttperiode
         )
 
         return (delberegningNettoTilsynsutgiftResultat + delberegningUnderholdskostnadResultat).distinctBy { it.referanse }
@@ -252,6 +271,20 @@ class BeregnBarnebidragService : BeregnService() {
                 grunnlagsreferanseListe = listOf(it.referanse),
             )
         }
+
+    // Sjekker om søknadsbarnet fyller 18 år i beregningsperioden. Justerer i så fall til-periode.
+    private fun justerTilPeriodeHvisBarnetBlir18ÅrIBeregningsperioden(mottattGrunnlag: BeregnGrunnlag): BeregnGrunnlag {
+        val periodeSøknadsbarnetFyller18År = mottattGrunnlag.grunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<Person>(Grunnlagstype.PERSON_SØKNADSBARN)
+            .map { YearMonth.from(it.innhold.fødselsdato.plusYears(18)) }
+            .first()
+
+        return if (!periodeSøknadsbarnetFyller18År.isAfter(mottattGrunnlag.periode.til)) {
+            mottattGrunnlag.copy(
+                periode = mottattGrunnlag.periode.copy(til = periodeSøknadsbarnetFyller18År)
+            )
+        } else mottattGrunnlag
+    }
 
     fun beregnMånedsbeløpFaktiskUtgift(faktiskUtgift: BigDecimal, kostpenger: BigDecimal = BigDecimal.ZERO): BigDecimal =
         beregnBeløpFaktiskUtgift(faktiskUtgift, kostpenger).avrundetMedToDesimaler

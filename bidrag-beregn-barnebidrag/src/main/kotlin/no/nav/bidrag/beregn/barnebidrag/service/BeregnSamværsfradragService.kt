@@ -25,7 +25,7 @@ import java.time.Period
 
 internal object BeregnSamværsfradragService : BeregnService() {
 
-    fun delberegningSamværsfradrag(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
+    fun delberegningSamværsfradrag(mottattGrunnlag: BeregnGrunnlag, åpenSluttperiode: Boolean = true): List<GrunnlagDto> {
         val referanseTilBP = finnReferanseTilRolle(
             grunnlagListe = mottattGrunnlag.grunnlagListe,
             grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
@@ -59,10 +59,10 @@ internal object BeregnSamværsfradragService : BeregnService() {
             )
         }
 
-        // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato)
+        // Setter til-periode i siste element til null hvis det ikke allerede er det og åpenSluttperiode er true
         if (samværsfradragBeregningResultatListe.isNotEmpty()) {
             val sisteElement = samværsfradragBeregningResultatListe.last()
-            if (sisteElement.periode.til != null) {
+            if (sisteElement.periode.til != null && åpenSluttperiode) {
                 val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
                 samværsfradragBeregningResultatListe[samværsfradragBeregningResultatListe.size - 1] = oppdatertSisteElement
             }

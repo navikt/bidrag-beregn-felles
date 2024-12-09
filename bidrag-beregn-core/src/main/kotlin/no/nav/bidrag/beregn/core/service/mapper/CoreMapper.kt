@@ -69,6 +69,7 @@ abstract class CoreMapper {
         referanseTilRolle: String,
         innslagKapitalinntektSjablonverdi: BigDecimal,
         erSærbidrag: Boolean = false,
+        åpenSluttperiode : Boolean = false,
     ): List<InntektPeriodeCore> {
         try {
             val inntektGrunnlagListe =
@@ -136,10 +137,10 @@ abstract class CoreMapper {
                 ).toMutableList()
             }
 
-            // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato) (ikke for særbidrag)
+            // Setter til-periode i siste element til null hvis det ikke allerede er det og åpenSluttperiode er true (ikke for særbidrag)
             if ((!erSærbidrag) && (akkumulertInntektListe.isNotEmpty())) {
                 val sisteElement = akkumulertInntektListe.last()
-                if (sisteElement.periode.datoTil != null) {
+                if (sisteElement.periode.datoTil != null && åpenSluttperiode) {
                     val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(datoTil = null))
                     akkumulertInntektListe[akkumulertInntektListe.size - 1] = oppdatertSisteElement
                 }

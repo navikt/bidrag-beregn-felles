@@ -15,6 +15,7 @@ internal object BpAndelUnderholdskostnadMapper : CoreMapper() {
     fun mapBpAndelUnderholdskostnadGrunnlag(
         mottattGrunnlag: BeregnGrunnlag,
         sjablonGrunnlag: List<GrunnlagDto>,
+        åpenSluttperiode: Boolean,
     ): BpAndelUnderholdskostnadPeriodeGrunnlag = BpAndelUnderholdskostnadPeriodeGrunnlag(
         beregningsperiode = mottattGrunnlag.periode,
         underholdskostnadDelberegningPeriodeGrunnlagListe = mapUnderholdskostnad(beregnGrunnlag = mottattGrunnlag),
@@ -25,6 +26,7 @@ internal object BpAndelUnderholdskostnadMapper : CoreMapper() {
                 grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
             ),
             innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntektFraGrunnlag(sjablonGrunnlag),
+            åpenSluttperiode = åpenSluttperiode,
         ),
         inntektBMPeriodeGrunnlagListe = mapInntekt(
             beregnGrunnlag = mottattGrunnlag,
@@ -33,6 +35,7 @@ internal object BpAndelUnderholdskostnadMapper : CoreMapper() {
                 grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
             ),
             innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntektFraGrunnlag(sjablonGrunnlag),
+            åpenSluttperiode = åpenSluttperiode,
         ),
         inntektSBPeriodeGrunnlagListe = mapInntekt(
             beregnGrunnlag = mottattGrunnlag,
@@ -41,6 +44,7 @@ internal object BpAndelUnderholdskostnadMapper : CoreMapper() {
                 grunnlagstype = Grunnlagstype.PERSON_SØKNADSBARN,
             ),
             innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntektFraGrunnlag(sjablonGrunnlag),
+            åpenSluttperiode = åpenSluttperiode,
         ),
         sjablonSjablontallPeriodeGrunnlagListe = mapSjablonSjablontall(sjablonGrunnlag),
     )

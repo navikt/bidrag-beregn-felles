@@ -19,7 +19,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningref
 
 internal object BeregnNettoBarnetilleggService : BeregnService() {
 
-    fun delberegningNettoBarnetillegg(mottattGrunnlag: BeregnGrunnlag, rolle: Grunnlagstype): List<GrunnlagDto> {
+    fun delberegningNettoBarnetillegg(mottattGrunnlag: BeregnGrunnlag, rolle: Grunnlagstype, åpenSluttperiode: Boolean = true): List<GrunnlagDto> {
         val referanseTilRolle = finnReferanseTilRolle(
             grunnlagListe = mottattGrunnlag.grunnlagListe,
             grunnlagstype = rolle,
@@ -46,10 +46,10 @@ internal object BeregnNettoBarnetilleggService : BeregnService() {
             }
         }
 
-        // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato)
+        // Setter til-periode i siste element til null hvis det ikke allerede er det og åpenSluttperiode er true
         if (nettoBarnetilleggBeregningResultatListe.isNotEmpty()) {
             val sisteElement = nettoBarnetilleggBeregningResultatListe.last()
-            if (sisteElement.periode.til != null && sisteElement.periode.til!! == mottattGrunnlag.periode.til) {
+            if (sisteElement.periode.til != null && sisteElement.periode.til!! == mottattGrunnlag.periode.til && åpenSluttperiode) {
                 val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
                 nettoBarnetilleggBeregningResultatListe[nettoBarnetilleggBeregningResultatListe.size - 1] = oppdatertSisteElement
             }
@@ -158,47 +158,6 @@ internal object BeregnNettoBarnetilleggService : BeregnService() {
                 gjelderReferanse = it.gjelderReferanse,
             )
         }
-
-    private fun mapDelberegninger(
-        mottattGrunnlag: BeregnGrunnlag,
-        nettoBarnetilleggPeriodeGrunnlag: NettoBarnetilleggPeriodeGrunnlag,
-        delberegningNettoBarnetilleggResultat: List<NettoBarnetilleggPeriodeResultat>,
-//        referanseTilSøknadsbarn: String,
-    ): List<GrunnlagDto> {
-        val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
-        val grunnlagReferanseListe =
-            delberegningNettoBarnetilleggResultat
-                .flatMap { it.resultat.grunnlagsreferanseListe }
-                .distinct()
-
-        resultatGrunnlagListe.addAll(
-            mapDelberegningNettoBarnetillegg(
-                nettoBarnetilleggPeriodeResultatListe = delberegningNettoBarnetilleggResultat,
-                mottattGrunnlag = mottattGrunnlag,
-            ),
-        )
-
-        // Lager en liste av referanser som refereres til av delberegningene på laveste nivå og mapper ut tilhørende grunnlag
-        val delberegningReferanseListe =
-            delberegningNettoBarnetilleggResultat.flatMap { it.resultat.grunnlagsreferanseListe }
-                .distinct()
-
-        resultatGrunnlagListe.addAll(
-            mottattGrunnlag.grunnlagListe
-                .filter { it.referanse in delberegningReferanseListe }
-                .map {
-                    GrunnlagDto(
-                        referanse = it.referanse,
-                        type = it.type,
-                        innhold = it.innhold,
-                        grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
-                        gjelderReferanse = it.gjelderReferanse,
-                    )
-                },
-        )
-
-        return resultatGrunnlagListe
-    }
 
     // Mapper ut DelberegningNettoBarnetillegg
     private fun mapDelberegningNettoBarnetillegg(

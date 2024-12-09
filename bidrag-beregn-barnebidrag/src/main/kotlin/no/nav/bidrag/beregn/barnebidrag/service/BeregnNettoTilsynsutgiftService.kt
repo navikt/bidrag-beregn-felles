@@ -31,7 +31,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningref
 
 internal object BeregnNettoTilsynsutgiftService : BeregnService() {
 
-    fun delberegningNettoTilsynsutgift(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
+    fun delberegningNettoTilsynsutgift(mottattGrunnlag: BeregnGrunnlag, åpenSluttperiode: Boolean = true): List<GrunnlagDto> {
         val referanseBm = finnReferanseTilRolle(
             grunnlagListe = mottattGrunnlag.grunnlagListe,
             grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
@@ -68,11 +68,11 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
             }
         }
 
-        // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato). Hjøres ikke hvis tildato er før tildato på
-        // beregningsperioden. Delberegning netto tilsynsutgifter kan gjelde deler av beregningsperioden.
+        // Setter til-periode i siste element til null hvis det ikke allerede er det og åpenSluttperiode er true. Gjøres ikke hvis tildato er før
+        // tildato på beregningsperioden. Delberegning netto tilsynsutgifter kan gjelde deler av beregningsperioden.
         if (nettoTilsynsutgiftBeregningResultatListe.isNotEmpty()) {
             val sisteElement = nettoTilsynsutgiftBeregningResultatListe.last()
-            if (sisteElement.periode.til != null && sisteElement.periode.til!! == mottattGrunnlag.periode.til) {
+            if (sisteElement.periode.til != null && sisteElement.periode.til!! == mottattGrunnlag.periode.til && åpenSluttperiode) {
                 val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
                 nettoTilsynsutgiftBeregningResultatListe[nettoTilsynsutgiftBeregningResultatListe.size - 1] = oppdatertSisteElement
             }
