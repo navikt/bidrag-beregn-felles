@@ -55,7 +55,7 @@ internal object EndeligBidragBeregning {
                     grunnlag.samværsfradragBeregningGrunnlag.referanse,
                     grunnlag.deltBostedBeregningGrunnlag.referanse,
                     grunnlag.barnetilleggBPBeregningGrunnlag?.referanse,
-                    grunnlag.barnetilleggBMBeregningGrunnlag?.referanse
+                    grunnlag.barnetilleggBMBeregningGrunnlag?.referanse,
                 ),
             )
         }
@@ -93,7 +93,7 @@ internal object EndeligBidragBeregning {
         bidragJustertNedTilEvne = (bidragsevne < (foreløpigBeregnetBeløp + samværsfradrag)) && (bidragsevne <= sumInntekt25Prosent)
         bidragJustertNedTil25ProsentAvInntekt =
             (sumInntekt25Prosent < (foreløpigBeregnetBeløp + samværsfradrag)) &&
-                (sumInntekt25Prosent <= bidragsevne)
+            (sumInntekt25Prosent <= bidragsevne)
         foreløpigBeregnetBeløp = bruttoBidragJustertForEvneOg25Prosent
 
         // Sjekker om eventuelt barnetillegg for BP skal benyttes (hvis regel for BP's barnetillegg slår til overstyrer den BM's barnetillegg)
@@ -133,8 +133,8 @@ internal object EndeligBidragBeregning {
                 grunnlag.samværsfradragBeregningGrunnlag.referanse,
                 grunnlag.deltBostedBeregningGrunnlag.referanse,
                 grunnlag.barnetilleggBPBeregningGrunnlag?.referanse,
-                grunnlag.barnetilleggBMBeregningGrunnlag?.referanse
-            )
+                grunnlag.barnetilleggBMBeregningGrunnlag?.referanse,
+            ),
         )
     }
 

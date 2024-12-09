@@ -11,18 +11,40 @@
       "innhold": {
         "ident": "11111111110",
         "navn": "Trengende Søknadsbarn",
-        "fødselsdato": "2012-09-13"
+        "fødselsdato": "2022-09-13"
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": null
     },
     {
-      "referanse" : "person_PERSON_BARN_BIDRAGSMOTTAKER_20051217_102",
-      "type" : "PERSON_SØKNADSBARN",
+      "referanse" : "person_PERSON_BARN_BIDRAGSMOTTAKER_20151217_101",
+      "type" : "PERSON_BARN_BIDRAGSMOTTAKER",
       "innhold" : {
-        "ident" : "12121250511",
+        "ident" : null,
         "navn" : null,
         "fødselsdato" : "2015-12-17"
+      },
+      "grunnlagsreferanseListe" : [],
+      "gjelderReferanse" : null
+    },
+    {
+      "referanse" : "person_PERSON_BARN_BIDRAGSMOTTAKER_20050212_102",
+      "type" : "PERSON_BARN_BIDRAGSMOTTAKER",
+      "innhold" : {
+        "ident" : null,
+        "navn" : "Barn Over Tolv jr",
+        "fødselsdato" : "2005-01-12"
+      },
+      "grunnlagsreferanseListe" : [],
+      "gjelderReferanse" : null
+    },
+    {
+      "referanse" : "person_PERSON_BARN_BIDRAGSMOTTAKER_20020414_103",
+      "type" : "PERSON_BARN_BIDRAGSMOTTAKER",
+      "innhold" : {
+        "ident" : null,
+        "navn" : "Barn Over Tolv sr",
+        "fødselsdato" : "2002-04-14"
       },
       "grunnlagsreferanseListe" : [],
       "gjelderReferanse" : null
@@ -74,7 +96,7 @@
           "fom": "2024-01",
           "til": null
         },
-        "fødselsdatoBarn": "2023-01-17",
+        "fødselsdatoBarn": "2022-09-13",
         "faktiskUtgiftBeløp": 500.00,
         "kostpengerBeløp": 100.00,
         "manueltRegistrert": false
@@ -84,20 +106,20 @@
       "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {
-      "referanse": "Mottatt_FaktiskUtgift_202301_person_PERSON_BARN_BIDRAGSPLIKTIG_20051217_102",
+      "referanse": "Mottatt_FaktiskUtgift_202301_person_PERSON_BARN_BIDRAGSMOTTAKER_20151217_102",
       "type": "FAKTISK_UTGIFT_PERIODE",
       "innhold": {
         "periode": {
           "fom": "2024-04",
           "til": null
         },
-        "fødselsdatoBarn": "2021-02-10",
-        "faktiskUtgiftBeløp":600.00,
-        "kostpengerBeløp": 50.00,
+        "fødselsdatoBarn": "2015-12-17",
+        "faktiskUtgiftBeløp":10000.00,
+        "kostpengerBeløp": 0,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
-      "gjelderBarnReferanse": "person_PERSON_BARN_BIDRAGSMOTTAKER_20051217_102",
+      "gjelderBarnReferanse": "person_PERSON_BARN_BIDRAGSMOTTAKER_20151217_102",
       "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {

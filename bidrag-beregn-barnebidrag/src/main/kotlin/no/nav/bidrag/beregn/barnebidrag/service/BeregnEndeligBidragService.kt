@@ -30,7 +30,6 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettSluttberegningr
 internal object BeregnEndeligBidragService : BeregnService() {
 
     fun delberegningEndeligBidrag(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
-
         var delberegningBarnetilleggSkattesatsBPResultat = listOf<GrunnlagDto>()
         var delberegningNettoBarnetilleggBPResultat = listOf<GrunnlagDto>()
         var delberegningBarnetilleggSkattesatsBMResultat = listOf<GrunnlagDto>()
@@ -41,8 +40,12 @@ internal object BeregnEndeligBidragService : BeregnService() {
             delberegningBarnetilleggSkattesatsBPResultat =
                 delberegningBarnetilleggSkattesats(mottattGrunnlag, Grunnlagstype.PERSON_BIDRAGSPLIKTIG)
             delberegningNettoBarnetilleggBPResultat = delberegningNettoBarnetillegg(
-                mottattGrunnlag = (mottattGrunnlag.copy(grunnlagListe = mottattGrunnlag.grunnlagListe + delberegningBarnetilleggSkattesatsBPResultat)),
-                rolle = Grunnlagstype.PERSON_BIDRAGSPLIKTIG
+                mottattGrunnlag = (
+                    mottattGrunnlag.copy(
+                        grunnlagListe = mottattGrunnlag.grunnlagListe + delberegningBarnetilleggSkattesatsBPResultat,
+                    )
+                    ),
+                rolle = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
             )
         }
 
@@ -51,16 +54,20 @@ internal object BeregnEndeligBidragService : BeregnService() {
             delberegningBarnetilleggSkattesatsBMResultat =
                 delberegningBarnetilleggSkattesats(mottattGrunnlag, Grunnlagstype.PERSON_BIDRAGSMOTTAKER)
             delberegningNettoBarnetilleggBMResultat = delberegningNettoBarnetillegg(
-                mottattGrunnlag = (mottattGrunnlag.copy(grunnlagListe = mottattGrunnlag.grunnlagListe + delberegningBarnetilleggSkattesatsBMResultat)),
-                rolle = Grunnlagstype.PERSON_BIDRAGSMOTTAKER
+                mottattGrunnlag = (
+                    mottattGrunnlag.copy(
+                        grunnlagListe = mottattGrunnlag.grunnlagListe + delberegningBarnetilleggSkattesatsBMResultat,
+                    )
+                    ),
+                rolle = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
             )
         }
 
         // Legger til delberegningsobjekter i grunnlaget
         val utvidetGrunnlag = mottattGrunnlag.copy(
             grunnlagListe =
-                (mottattGrunnlag.grunnlagListe + delberegningNettoBarnetilleggBPResultat + delberegningNettoBarnetilleggBMResultat)
-                    .distinctBy(GrunnlagDto::referanse),
+            (mottattGrunnlag.grunnlagListe + delberegningNettoBarnetilleggBPResultat + delberegningNettoBarnetilleggBMResultat)
+                .distinctBy(GrunnlagDto::referanse),
         )
 
         // Mapper ut grunnlag som skal brukes for å beregne endelig bidrag
@@ -119,19 +126,19 @@ internal object BeregnEndeligBidragService : BeregnService() {
 
         return resultatGrunnlagListe.distinctBy { it.referanse }.sortedBy { it.referanse }
     }
+
     // Sjekker om barnetillegg eksisterer for en gitt rolle
-    private fun barnetilleggEksisterer(mottattGrunnlag: BeregnGrunnlag, rolle: Grunnlagstype): Boolean =
-        mottattGrunnlag.grunnlagListe
-            .filtrerOgKonverterBasertPåFremmedReferanse<InntektsrapporteringPeriode>(
-                grunnlagType = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
-                referanse = finnReferanseTilRolle(
-                    grunnlagListe = mottattGrunnlag.grunnlagListe,
-                    grunnlagstype = rolle,
-                ),
-            )
-            .filter { it.innhold.inntektsrapportering == Inntektsrapportering.BARNETILLEGG }
-            .filter { it.innhold.gjelderBarn == mottattGrunnlag.søknadsbarnReferanse }
-            .isNotEmpty()
+    private fun barnetilleggEksisterer(mottattGrunnlag: BeregnGrunnlag, rolle: Grunnlagstype): Boolean = mottattGrunnlag.grunnlagListe
+        .filtrerOgKonverterBasertPåFremmedReferanse<InntektsrapporteringPeriode>(
+            grunnlagType = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
+            referanse = finnReferanseTilRolle(
+                grunnlagListe = mottattGrunnlag.grunnlagListe,
+                grunnlagstype = rolle,
+            ),
+        )
+        .filter { it.innhold.inntektsrapportering == Inntektsrapportering.BARNETILLEGG }
+        .filter { it.innhold.gjelderBarn == mottattGrunnlag.søknadsbarnReferanse }
+        .isNotEmpty()
 
     // Lager en liste over alle bruddperioder basert på grunnlag som skal brukes i beregningen
     private fun lagBruddPeriodeListeEndeligBidrag(

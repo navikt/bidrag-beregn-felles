@@ -200,7 +200,7 @@ internal class BeregnBarnebidragApiTest {
         forventetBidragJustertNedTilEvne = false
         forventetBidragJustertNedTil25ProsentAvInntekt = false
 
-        //Grunnlag
+        // Grunnlag
         forventetAntallBarnetilleggBP = 0
         forventetAntallBarnetilleggBM = 0
 
@@ -257,7 +257,7 @@ internal class BeregnBarnebidragApiTest {
         forventetBidragJustertNedTilEvne = false
         forventetBidragJustertNedTil25ProsentAvInntekt = false
 
-        //Grunnlag
+        // Grunnlag
         forventetAntallInntektRapporteringBP = 2
         forventetAntallInntektRapporteringBM = 2
 

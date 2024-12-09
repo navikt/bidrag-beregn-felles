@@ -11,14 +11,14 @@
       "innhold": {
         "ident": "11111111110",
         "navn": "Trengende Søknadsbarn",
-        "fødselsdato": "2012-09-13"
+        "fødselsdato": "2022-09-13"
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": null
     },
     {
-      "referanse" : "person_PERSON_BARN_BIDRAGSPLIKTIG_20051217_102",
-      "type" : "PERSON_SØKNADSBARN",
+      "referanse" : "person_PERSON_BARN_BIDRAGSMOTTAKER_20051217_102",
+      "type" : "PERSON_BARN_BIDRAGSMOTTAKER",
       "innhold" : {
         "ident" : "12121250511",
         "navn" : null,

@@ -47,7 +47,7 @@
           "til": "2024-06"
         },
         "gjelderBarn": "Person_Søknadsbarn",
-        "type": "PENSJON",
+        "type": "BARNETILLEGG_PENSJON",
         "beløp": 300,
         "manueltRegistrert": false,
         "valgt": true
@@ -64,7 +64,7 @@
           "til": "2024-08"
         },
         "gjelderBarn": "Person_Søknadsbarn",
-        "type": "DAGPENGER",
+        "type": "BARNETILLEGG_DAGPENGER",
         "beløp": 500,
         "manueltRegistrert": false,
         "valgt": true

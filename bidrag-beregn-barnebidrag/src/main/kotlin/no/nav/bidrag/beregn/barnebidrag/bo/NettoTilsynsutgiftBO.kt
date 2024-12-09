@@ -31,7 +31,7 @@ data class NettoTilsynsutgiftBeregningGrunnlag(
     val søknadsbarnReferanse: String,
     val barnBMListe: List<BarnBM>,
     val faktiskUtgiftListe: List<FaktiskUtgift>,
-    val tilleggsstønad: Tilleggsstønad,
+    val tilleggsstønad: Tilleggsstønad?,
     val sjablonSjablontallBeregningGrunnlagListe: List<SjablonSjablontallBeregningGrunnlag>,
     val sjablonMaksTilsynsbeløpBeregningGrunnlag: SjablonMaksTilsynsbeløpBeregningGrunnlag,
     val sjablonMaksFradragsbeløpBeregningGrunnlag: SjablonMaksFradragsbeløpBeregningGrunnlag,
@@ -53,5 +53,5 @@ data class NettoTilsynsutgiftBeregningResultat(
     val grunnlagsreferanseListe: List<String>,
 )
 
-data class FaktiskUtgift(val referanse: String, val gjelderBarn: Grunnlagsreferanse, val beregnetBeløp: BigDecimal)
-data class Tilleggsstønad(val referanse: String, val gjelderBarn: Grunnlagsreferanse, val beregnetBeløp: BigDecimal)
+data class FaktiskUtgift(val referanse: String, val gjelderBarn: Grunnlagsreferanse, val beregnetMånedsbeløp: BigDecimal)
+data class Tilleggsstønad(val referanse: String, val gjelderBarn: Grunnlagsreferanse, val beregnetMånedsbeløp: BigDecimal)

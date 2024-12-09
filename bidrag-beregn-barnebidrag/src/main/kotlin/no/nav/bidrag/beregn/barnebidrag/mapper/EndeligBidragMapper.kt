@@ -134,10 +134,7 @@ internal object EndeligBidragMapper : CoreMapper() {
         }
     }
 
-    private fun mapNettoBarnetillegg(
-        beregnGrunnlag: BeregnGrunnlag,
-        referanseTilRolle: String,
-    ): List<NettoBarnetilleggDelberegningPeriodeGrunnlag> {
+    private fun mapNettoBarnetillegg(beregnGrunnlag: BeregnGrunnlag, referanseTilRolle: String): List<NettoBarnetilleggDelberegningPeriodeGrunnlag> {
         try {
             return beregnGrunnlag.grunnlagListe
                 .filtrerOgKonverterBasertPåFremmedReferanse<DelberegningNettoBarnetillegg>(
@@ -147,7 +144,7 @@ internal object EndeligBidragMapper : CoreMapper() {
                 .map {
                     NettoBarnetilleggDelberegningPeriodeGrunnlag(
                         referanse = it.referanse,
-                        nettoBarnetilleggPeriode = it.innhold
+                        nettoBarnetilleggPeriode = it.innhold,
                     )
                 }
         } catch (e: Exception) {

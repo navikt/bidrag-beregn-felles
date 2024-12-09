@@ -40,7 +40,7 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
             sjablonMaksTilsynsbeløpPeriodeGrunnlagListe = mapSjablonMaksTilsynsbeløp(sjablonGrunnlag),
             sjablonMaksFradragsbeløpPeriodeGrunnlagListe = mapSjablonMaksFradrag(sjablonGrunnlag),
 
-            )
+        )
         return resultat
     }
 
@@ -66,7 +66,8 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
             return barnBMListe.distinctBy { it.referanse }
         } catch (e: Exception) {
             throw IllegalArgumentException(
-                "Ugyldig input ved beregning av netto tilsynsutgifter. Innhold i Grunnlagstype.PERSON_BARN_BIDRAGSMOTTAKER er ikke gyldig: " + e.message,
+                "Ugyldig input ved beregning av netto tilsynsutgifter. Innhold i Grunnlagstype.PERSON_BARN_BIDRAGSMOTTAKER er ikke gyldig: " +
+                    e.message,
             )
         }
     }
@@ -84,7 +85,7 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
                                 datoTil = it.innhold.periode.toDatoperiode().til,
                             ),
                             gjelderBarn = it.gjelderBarnReferanse!!,
-                            beregnetBeløp = beregnBeløpFaktiskUtgift(it.innhold.faktiskUtgiftBeløp, it.innhold.kostpengerBeløp),
+                            beregnetBeløp = beregnMånedsbeløpFaktiskUtgift(it.innhold.faktiskUtgiftBeløp, it.innhold.kostpengerBeløp),
                             grunnlagsreferanseListe = emptyList(),
                         )
                     }
@@ -169,7 +170,7 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
         }
     }
 
-    fun beregnBeløpFaktiskUtgift(faktiskUtgiftBeløp: BigDecimal, kostpengerBeløp: BigDecimal?): BigDecimal =
+    fun beregnMånedsbeløpFaktiskUtgift(faktiskUtgiftBeløp: BigDecimal, kostpengerBeløp: BigDecimal?): BigDecimal =
         faktiskUtgiftBeløp.minus(kostpengerBeløp ?: BigDecimal.ZERO).multiply(BigDecimal.valueOf(11))
             .divide(BigDecimal.valueOf(12), 10, RoundingMode.HALF_UP).coerceAtLeast(BigDecimal.ZERO)
 
