@@ -57,6 +57,31 @@
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
+      "referanse": "Mottatt_InntektRapportering_Barnetillegg_Bidragspliktig_202008",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2020-08",
+          "til": "2021-01"
+        },
+        "inntektsrapportering": "BARNETILLEGG",
+        "gjelderBarn": "Person_Søknadsbarn",
+        "beløp": 24000,
+        "manueltRegistrert": false,
+        "valgt": true,
+        "inntekstpostListe": [
+          {
+            "kode": "Inntekt",
+            "inntekstype": "BARNETILLEGG_PENSJON",
+            "beløp": 24000
+          }
+        ]
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragspliktig"
+    },
+    {
       "referanse": "Mottatt_InntektRapportering_Ainntekt_Bidragsmottaker_202008",
       "type": "INNTEKT_RAPPORTERING_PERIODE",
       "innhold": {
@@ -72,6 +97,31 @@
       },
       "grunnlagsreferanseListe": [],
       "gjelderBarnReferanse": null,
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "Mottatt_InntektRapportering_Barnetillegg_Bidragsmottaker_202008",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2020-08",
+          "til": "2021-01"
+        },
+        "inntektsrapportering": "BARNETILLEGG",
+        "gjelderBarn": "Person_Søknadsbarn",
+        "beløp": 48000,
+        "manueltRegistrert": false,
+        "valgt": true,
+        "inntekstpostListe": [
+          {
+            "kode": "Inntekt",
+            "inntekstype": "BARNETILLEGG_PENSJON",
+            "beløp": 48000
+          }
+        ]
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {

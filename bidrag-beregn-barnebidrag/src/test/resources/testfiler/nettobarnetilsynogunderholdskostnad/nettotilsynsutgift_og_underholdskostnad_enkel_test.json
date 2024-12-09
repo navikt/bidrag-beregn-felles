@@ -94,15 +94,17 @@
           "fom": "2024-02",
           "til": "2024-09"
         },
-        "totaltFaktiskUtgiftBeløp": 400.00,
+        "totalTilsynsutgift": 400.00,
+        "sjablonMaksTilsynsutgift": 400.00,
+        "andelTilsynsutgiftBeløp": 400.00,
+        "andelTilsynsutgiftFaktor": 400.00,
+        "skattefradrag": 400.00,
+        "nettoTilsynsutgift": 58.83,
         "tilsynsutgiftBarnListe": [
           {
             "gjelderBarn": "Person_Søknadsbarn",
-            "sumFaktiskeUtgifter": 400.00,
-            "endeligSumFaktiskeUtgifter": 366.67,
-            "skattefradragsbeløpPerBarn": 91.17,
-            "tilleggsstønad": 216.67,
-            "nettoTilsynsutgift": 58.83
+            "sumTilsynsutgifter": 400.00,
+            "endeligSumTilsynsutgifter": 366.67
           }
         ],
         "grunnlagsreferanseListe": [],

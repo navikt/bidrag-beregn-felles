@@ -11,14 +11,14 @@
       "innhold": {
         "ident": "11111111110",
         "navn": "Trengende Søknadsbarn",
-        "fødselsdato": "2012-09-13"
+        "fødselsdato": "2022-09-13"
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": null
     },
     {
       "referanse" : "person_PERSON_BARN_BIDRAGSMOTTAKER_20151217_102",
-      "type" : "PERSON_SØKNADSBARN",
+      "type" : "PERSON_BARN_BIDRAGSMOTTAKER",
       "innhold" : {
         "ident" : "12121250511",
         "navn" : null,
@@ -29,7 +29,7 @@
     },
     {
       "referanse" : "person_PERSON_BARN_BIDRAGSMOTTAKER_20170719_103",
-      "type" : "PERSON_SØKNADSBARN",
+      "type" : "PERSON_BARN_BIDRAGSMOTTAKER",
       "innhold" : {
         "ident" : "12121250511",
         "navn" : null,
@@ -68,7 +68,7 @@
           "fom": "2023-01",
           "til": "2023-12"
         },
-        "fødselsdatoBarn": "2012-09-13",
+        "fødselsdatoBarn": "2022-09-13",
         "faktiskUtgiftBeløp": 4000.00,
         "kostpengerBeløp": 900.00,
         "manueltRegistrert": false
@@ -85,7 +85,7 @@
           "fom": "2024-01",
           "til": null
         },
-        "fødselsdatoBarn": "2012-09-13",
+        "fødselsdatoBarn": "2022-09-13",
         "faktiskUtgiftBeløp": 2000.00,
         "kostpengerBeløp": 0.00,
         "manueltRegistrert": false
@@ -141,21 +141,6 @@
       },
       "grunnlagsreferanseListe": [],
       "gjelderBarnReferanse": "Person_Søknadsbarn",
-      "gjelderReferanse": "Person_Bidragsmottaker"
-    },
-    {
-      "referanse": "Mottatt_Tilleggsstønad_202301_person_PERSON_BARN_BIDRAGSMOTTAKER_20151217_102",
-      "type": "TILLEGGSSTØNAD_PERIODE",
-      "innhold": {
-        "periode": {
-          "fom": "2024-05",
-          "til": null
-        },
-        "beløpDagsats": 17.00,
-        "manueltRegistrert": false
-      },
-      "grunnlagsreferanseListe": [],
-      "gjelderBarnReferanse": "person_PERSON_BARN_BIDRAGSMOTTAKER_20151217_102",
       "gjelderReferanse": "Person_Bidragsmottaker"
     }
   ]

@@ -1,18 +1,13 @@
 package no.nav.bidrag.beregn.barnebidrag.beregning
 
-import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilleggBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragBeregningResultat
 import no.nav.bidrag.domene.util.avrundetMedTiDesimaler
 import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import no.nav.bidrag.domene.util.avrundetTilNærmesteTier
 import java.math.BigDecimal
-import java.math.RoundingMode
-import java.util.Collections.emptyList
 
 internal object EndeligBidragBeregning {
-
-    val bigDecimal12 = BigDecimal.valueOf(12)
 
     fun beregn(grunnlag: EndeligBidragBeregningGrunnlag): EndeligBidragBeregningResultat {
         // Hvis barnet er selvforsørget gjøres det ingen videre beregning
@@ -53,19 +48,21 @@ internal object EndeligBidragBeregning {
                 bidragJustertForDeltBosted = true,
                 bidragJustertNedTilEvne = bidragJustertNedTilEvne,
                 bidragJustertNedTil25ProsentAvInntekt = bidragJustertNedTil25ProsentAvInntekt,
-                grunnlagsreferanseListe = listOf(
+                grunnlagsreferanseListe = listOfNotNull(
                     grunnlag.bidragsevneBeregningGrunnlag.referanse,
                     grunnlag.underholdskostnadBeregningGrunnlag.referanse,
                     grunnlag.bpAndelUnderholdskostnadBeregningGrunnlag.referanse,
                     grunnlag.samværsfradragBeregningGrunnlag.referanse,
                     grunnlag.deltBostedBeregningGrunnlag.referanse,
+                    grunnlag.barnetilleggBPBeregningGrunnlag?.referanse,
+                    grunnlag.barnetilleggBMBeregningGrunnlag?.referanse,
                 ),
             )
         }
 
         // Beregner netto barnetillegg for BP og BM
-        val nettoBarnetilleggBP = beregnNettoBarnetillegg(grunnlag.barnetilleggBPBeregningGrunnlag)
-        val nettoBarnetilleggBM = beregnNettoBarnetillegg(grunnlag.barnetilleggBMBeregningGrunnlag)
+        val nettoBarnetilleggBP = grunnlag.barnetilleggBPBeregningGrunnlag?.beløp ?: BigDecimal.ZERO
+        val nettoBarnetilleggBM = grunnlag.barnetilleggBMBeregningGrunnlag?.beløp ?: BigDecimal.ZERO
         val uMinusNettoBarnetilleggBM = underholdskostnad - nettoBarnetilleggBM
         var foreløpigBeregnetBeløp = maxOf((bpAndelBeløp - samværsfradrag), BigDecimal.ZERO)
         val bruttoBidragEtterBarnetilleggBM: BigDecimal
@@ -135,20 +132,10 @@ internal object EndeligBidragBeregning {
                 grunnlag.bpAndelUnderholdskostnadBeregningGrunnlag.referanse,
                 grunnlag.samværsfradragBeregningGrunnlag.referanse,
                 grunnlag.deltBostedBeregningGrunnlag.referanse,
-            ) +
-                (grunnlag.barnetilleggBPBeregningGrunnlag?.referanse ?: emptyList()) +
-                (grunnlag.barnetilleggBMBeregningGrunnlag?.referanse ?: emptyList()),
+                grunnlag.barnetilleggBPBeregningGrunnlag?.referanse,
+                grunnlag.barnetilleggBMBeregningGrunnlag?.referanse,
+            ),
         )
-    }
-
-    // Beregner netto barnetillegg ut fra brutto barnetillegg og skattesats
-    // TODO Flytte til egen delberegning
-    private fun beregnNettoBarnetillegg(barnetillegg: BarnetilleggBeregningGrunnlag?): BigDecimal {
-        if (barnetillegg == null) {
-            return BigDecimal.ZERO
-        }
-
-        return (barnetillegg.beløp - (barnetillegg.beløp * barnetillegg.skattFaktor)).divide(bigDecimal12, 10, RoundingMode.HALF_UP)
     }
 
     // Justerer BP's andel hvis det er delt bosted

@@ -8,9 +8,12 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonMaksFradragPeri
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonMaksTilsynPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.TilsynsutgiftBarn
 import java.math.BigDecimal
+import java.time.LocalDate
 
 data class NettoTilsynsutgiftPeriodeGrunnlag(
+    val søknadsbarnReferanse: String,
     val beregningsperiode: ÅrMånedsperiode,
+    val barnBMListe: List<BarnBM>,
     val faktiskUtgiftPeriodeCoreListe: List<FaktiskUtgiftPeriodeCore>,
     val tilleggsstønadPeriodeCoreListe: List<TilleggsstønadPeriodeCore>,
     var sjablonSjablontallPeriodeGrunnlagListe: List<SjablonSjablontallPeriodeGrunnlag>,
@@ -25,21 +28,30 @@ data class SjablonMaksFradragsbeløpPeriodeGrunnlag(val referanse: String, val s
 data class NettoTilsynsutgiftPeriodeResultat(val periode: ÅrMånedsperiode, val resultat: NettoTilsynsutgiftBeregningResultat)
 
 data class NettoTilsynsutgiftBeregningGrunnlag(
+    val søknadsbarnReferanse: String,
+    val barnBMListe: List<BarnBM>,
     val faktiskUtgiftListe: List<FaktiskUtgift>,
-    val tilleggsstønadListe: List<Tilleggsstønad>,
+    val tilleggsstønad: Tilleggsstønad?,
     val sjablonSjablontallBeregningGrunnlagListe: List<SjablonSjablontallBeregningGrunnlag>,
     val sjablonMaksTilsynsbeløpBeregningGrunnlag: SjablonMaksTilsynsbeløpBeregningGrunnlag,
     val sjablonMaksFradragsbeløpBeregningGrunnlag: SjablonMaksFradragsbeløpBeregningGrunnlag,
 )
 
+data class BarnBM(val referanse: String, val fødselsdato: LocalDate)
+
 data class SjablonMaksTilsynsbeløpBeregningGrunnlag(val referanse: String, val antallBarnTom: Int, val maxBeløpTilsyn: BigDecimal)
 data class SjablonMaksFradragsbeløpBeregningGrunnlag(val referanse: String, val antallBarnTom: Int, val maxBeløpFradrag: BigDecimal)
 
 data class NettoTilsynsutgiftBeregningResultat(
-    val totaltFaktiskUtgiftBeløp: BigDecimal,
+    val totalTilsynsutgift: BigDecimal,
+    val sjablonMaksTilsynsutgift: BigDecimal,
+    val andelTilsynsutgiftBeløp: BigDecimal,
+    val andelTilsynsutgiftFaktor: BigDecimal,
+    val skattefradrag: BigDecimal,
+    val nettoTilsynsutgift: BigDecimal,
     val tilsynsutgiftBarnListe: List<TilsynsutgiftBarn>,
     val grunnlagsreferanseListe: List<String>,
 )
 
-data class FaktiskUtgift(val referanse: String, val gjelderBarn: Grunnlagsreferanse, val beregnetBeløp: BigDecimal)
-data class Tilleggsstønad(val referanse: String, val gjelderBarn: Grunnlagsreferanse, val beregnetBeløp: BigDecimal)
+data class FaktiskUtgift(val referanse: String, val gjelderBarn: Grunnlagsreferanse, val beregnetMånedsbeløp: BigDecimal)
+data class Tilleggsstønad(val referanse: String, val gjelderBarn: Grunnlagsreferanse, val beregnetMånedsbeløp: BigDecimal)
