@@ -263,7 +263,7 @@ abstract class BeregnService {
             .sortedWith(compareBy { it == null }) // Legger evt. null-verdi bakerst
             .zipWithNext() // Lager periodepar
             .map { ÅrMånedsperiode(it.first!!, it.second) } // Mapper til ÅrMånedperiode
-            .toList().toMutableList()
+            .toMutableList()
 
         return bruddPeriodeListe
     }

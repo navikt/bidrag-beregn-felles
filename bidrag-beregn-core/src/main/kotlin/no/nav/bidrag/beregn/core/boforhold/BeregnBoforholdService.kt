@@ -47,6 +47,7 @@ internal class BeregnBoforholdService : CoreMapper() {
             gjelderReferanse = gjelderReferanse,
         )
     }
+
     fun beregnDelberegningBoforholdListe(beregnGrunnlag: BeregnGrunnlag, gjelderReferanse: Grunnlagsreferanse? = null): List<DelberegningBoforhold> {
         val respons = beregnBoforholdPeriodeCore(beregnGrunnlag, gjelderReferanse)
 
@@ -89,6 +90,7 @@ internal class BeregnBoforholdService : CoreMapper() {
                 søknadsbarnreferanse = beregnGrunnlag.søknadsbarnReferanse,
                 gjelderReferanse = gjelderReferanse,
                 clazz = BarnIHusstandenPeriodeCore::class.java,
+                beregningsperiode = beregnGrunnlag.periode,
             )
         } catch (e: Exception) {
             throw IllegalArgumentException(
@@ -126,6 +128,7 @@ internal class BeregnBoforholdService : CoreMapper() {
                 beregnGrunnlag.søknadsbarnReferanse,
                 gjelderReferanse,
                 VoksneIHusstandenPeriodeCore::class.java,
+                beregningsperiode = beregnGrunnlag.periode,
             )
         } catch (e: Exception) {
             throw IllegalArgumentException(
