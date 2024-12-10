@@ -22,7 +22,11 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningref
 
 internal object BeregnBarnetilleggSkattesatsService : BeregnService() {
 
-    fun delberegningBarnetilleggSkattesats(mottattGrunnlag: BeregnGrunnlag, rolle: Grunnlagstype): List<GrunnlagDto> {
+    fun delberegningBarnetilleggSkattesats(
+        mottattGrunnlag: BeregnGrunnlag,
+        rolle: Grunnlagstype,
+        åpenSluttperiode: Boolean = true
+    ): List<GrunnlagDto> {
         val referanseTilRolle = finnReferanseTilRolle(
             grunnlagListe = mottattGrunnlag.grunnlagListe,
             grunnlagstype = rolle,
@@ -61,10 +65,10 @@ internal object BeregnBarnetilleggSkattesatsService : BeregnService() {
             )
         }
 
-        // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato)
+        // Setter til-periode i siste element til null hvis det ikke allerede er det og åpenSluttperiode er true
         if (barnetilleggSkattesatsBeregningResultatListe.isNotEmpty()) {
             val sisteElement = barnetilleggSkattesatsBeregningResultatListe.last()
-            if (sisteElement.periode.til != null) {
+            if (sisteElement.periode.til != null && åpenSluttperiode) {
                 val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
                 barnetilleggSkattesatsBeregningResultatListe[barnetilleggSkattesatsBeregningResultatListe.size - 1] = oppdatertSisteElement
             }

@@ -29,7 +29,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettSluttberegningr
 
 internal object BeregnEndeligBidragService : BeregnService() {
 
-    fun delberegningEndeligBidrag(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
+    fun delberegningEndeligBidrag(mottattGrunnlag: BeregnGrunnlag, åpenSluttperiode: Boolean = true): List<GrunnlagDto> {
         var delberegningBarnetilleggSkattesatsBPResultat = listOf<GrunnlagDto>()
         var delberegningNettoBarnetilleggBPResultat = listOf<GrunnlagDto>()
         var delberegningBarnetilleggSkattesatsBMResultat = listOf<GrunnlagDto>()
@@ -95,10 +95,10 @@ internal object BeregnEndeligBidragService : BeregnService() {
             )
         }
 
-        // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato)
+        // Setter til-periode i siste element til null hvis det ikke allerede er det og åpenSluttperiode er true
         if (endeligBidragBeregningResultatListe.isNotEmpty()) {
             val sisteElement = endeligBidragBeregningResultatListe.last()
-            if (sisteElement.periode.til != null) {
+            if (sisteElement.periode.til != null && åpenSluttperiode) {
                 val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
                 endeligBidragBeregningResultatListe[endeligBidragBeregningResultatListe.size - 1] = oppdatertSisteElement
             }

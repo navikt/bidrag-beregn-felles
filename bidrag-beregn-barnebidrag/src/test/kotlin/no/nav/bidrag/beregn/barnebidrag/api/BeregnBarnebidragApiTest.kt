@@ -208,6 +208,63 @@ internal class BeregnBarnebidragApiTest {
     }
 
     @Test
+    @DisplayName("Barnebidrag - eksempel 1A - kostnadsberegnet bidrag (samme som eksempel 1, men barnet fyller 18 år i perioden)")
+    fun testBarnebidrag_Eksempel01A() {
+        filnavn = "src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel1A.json"
+
+        // Beregningsperiode
+        forventetBeregningsperiode = ÅrMånedsperiode(YearMonth.parse("2020-08"), YearMonth.parse("2020-11"))
+
+        // Bidragsevne
+        forventetBidragsevne = BigDecimal.valueOf(16357.14).setScale(2)
+        forventetMinstefradrag = BigDecimal.valueOf(87450.00).setScale(2)
+        forventetSkattAlminneligInntekt = BigDecimal.valueOf(79475.00).setScale(2)
+        forventetTrinnskatt = BigDecimal.valueOf(11711.30).setScale(2)
+        forventetTrygdeavgift = BigDecimal.valueOf(41000.00).setScale(2)
+        forventetSumSkatt = BigDecimal.valueOf(132186.30).setScale(2)
+        forventetSumSkattFaktor = BigDecimal.valueOf(0.2643726000).setScale(10)
+        forventetUnderholdBarnEgenHusstand = BigDecimal.ZERO.setScale(2)
+        forventetSumInntekt25Prosent = BigDecimal.valueOf(10416.67).setScale(2)
+
+        // Underholdskostnad
+        forventetUnderholdskostnad = BigDecimal.valueOf(9724.00).setScale(2)
+
+        // BP andel underholdskostnad
+        forventetEndeligAndelFaktor = BigDecimal.valueOf(0.625).setScale(10)
+        forventetAndelBeløp = BigDecimal.valueOf(6077.50).setScale(2)
+        forventetBeregnetAndelFaktor = BigDecimal.valueOf(0.625).setScale(10)
+        forventetBarnEndeligInntekt = BigDecimal.ZERO.setScale(2)
+        forventetBarnetErSelvforsørgetBp = false
+
+        // Samværsfradrag
+        forventetSamværsfradrag = BigDecimal.valueOf(528.00).setScale(2)
+
+        // Endelig bidrag
+        forventetBeregnetBeløp = BigDecimal.valueOf(5549.50).setScale(2)
+        forventetResultatbeløp = BigDecimal.valueOf(5550).setScale(0)
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(9724).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(6077.50).setScale(2)
+        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(5549.50).setScale(2)
+        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(6077.50).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(6077.50).setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(5549.50).setScale(2)
+        forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
+        forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
+        forventetBarnetErSelvforsørgetEb = false
+        forventetBidragJustertForDeltBosted = false
+        forventetBidragJustertForNettoBarnetilleggBP = false
+        forventetBidragJustertForNettoBarnetilleggBM = false
+        forventetBidragJustertNedTilEvne = false
+        forventetBidragJustertNedTil25ProsentAvInntekt = false
+
+        // Grunnlag
+        forventetAntallBarnetilleggBP = 0
+        forventetAntallBarnetilleggBM = 0
+
+        utførBeregningerOgEvaluerResultatBarnebidrag()
+    }
+
+    @Test
     @DisplayName("Barnebidrag - eksempel 2 - barnetillegg BP og BM")
     fun testBarnebidrag_Eksempel02() {
         filnavn = "src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel2.json"
@@ -471,6 +528,8 @@ internal class BeregnBarnebidragApiTest {
             .filter { it.type == Grunnlagstype.SJABLON_SAMVARSFRADRAG }
             .size
 
+        val alleReferanserUnntattSluttberegning = alleReferanser.filterNot { it.startsWith("sluttberegning_Person_Søknadsbarn_202008") }
+
         assertAll(
             { assertThat(barnebidragResultatGrunnlagListe).isNotNull },
             { assertThat(bidragsevneResultatListe).isNotNull },
@@ -560,7 +619,7 @@ internal class BeregnBarnebidragApiTest {
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
-            { assertThat(alleRefererteReferanser).containsAll(alleReferanser.minusElement("sluttberegning_Person_Søknadsbarn_202008")) },
+            { assertThat(alleRefererteReferanser).containsAll(alleReferanserUnntattSluttberegning) },
         )
     }
 

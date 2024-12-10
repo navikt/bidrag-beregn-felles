@@ -95,6 +95,7 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
                 søknadsbarnreferanse = beregnGrunnlag.søknadsbarnReferanse,
                 gjelderReferanse = referanseTilRolle,
                 clazz = FaktiskUtgiftPeriodeCore::class.java,
+                beregningsperiode = beregnGrunnlag.periode,
             )
         } catch (e: Exception) {
             throw IllegalArgumentException(
@@ -126,6 +127,7 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
                 søknadsbarnreferanse = beregnGrunnlag.søknadsbarnReferanse,
                 gjelderReferanse = referanseTilRolle,
                 clazz = TilleggsstønadPeriodeCore::class.java,
+                beregningsperiode = beregnGrunnlag.periode,
             )
         } catch (e: Exception) {
             throw IllegalArgumentException(

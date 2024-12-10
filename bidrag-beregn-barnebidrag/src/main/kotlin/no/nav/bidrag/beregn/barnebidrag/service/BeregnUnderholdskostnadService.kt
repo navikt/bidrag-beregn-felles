@@ -31,7 +31,7 @@ import java.time.YearMonth
 
 internal object BeregnUnderholdskostnadService : BeregnService() {
 
-    fun delberegningUnderholdskostnad(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
+    fun delberegningUnderholdskostnad(mottattGrunnlag: BeregnGrunnlag, åpenSluttperiode: Boolean = true): List<GrunnlagDto> {
         // Lager sjablon grunnlagsobjekter
         val sjablonGrunnlag = lagSjablonGrunnlagsobjekter(periode = mottattGrunnlag.periode) { it.underholdskostnad }
 
@@ -76,10 +76,10 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
             )
         }
 
-        // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato)
+        // Setter til-periode i siste element til null hvis det ikke allerede er det og åpenSluttperiode er true
         if (underholdskostnadBeregningResultatListe.isNotEmpty()) {
             val sisteElement = underholdskostnadBeregningResultatListe.last()
-            if (sisteElement.periode.til != null) {
+            if (sisteElement.periode.til != null && åpenSluttperiode) {
                 val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
                 underholdskostnadBeregningResultatListe[underholdskostnadBeregningResultatListe.size - 1] = oppdatertSisteElement
             }
@@ -297,48 +297,6 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
                 gjelderBarnReferanse = it.gjelderBarnReferanse,
             )
         }
-
-    private fun mapDelberegninger(
-        mottattGrunnlag: BeregnGrunnlag,
-        underholdskostnadPeriodeGrunnlag: UnderholdskostnadPeriodeGrunnlag,
-        delberegningNettoTilsynsutgiftResultat: List<NettoTilsynsutgiftPeriodeResultat>,
-//        referanseTilSøknadsbarn: String,
-    ): List<GrunnlagDto> {
-        val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
-        val grunnlagReferanseListe =
-            delberegningNettoTilsynsutgiftResultat
-                .flatMap { it.resultat.grunnlagsreferanseListe }
-                .distinct()
-
-        resultatGrunnlagListe.addAll(
-            mapDelberegningNettoTilsynsutgift(
-                nettoTilsynsutgiftPeriodeResultatListe = delberegningNettoTilsynsutgiftResultat,
-                mottattGrunnlag = mottattGrunnlag,
-            ),
-        )
-
-        // Lager en liste av referanser som refereres til av delberegningene på laveste nivå og mapper ut tilhørende grunnlag
-        val delberegningReferanseListe =
-            delberegningNettoTilsynsutgiftResultat.flatMap { it.resultat.grunnlagsreferanseListe }
-                .distinct()
-
-        resultatGrunnlagListe.addAll(
-            mottattGrunnlag.grunnlagListe
-                .filter { it.referanse in delberegningReferanseListe }
-                .map {
-                    GrunnlagDto(
-                        referanse = it.referanse,
-                        type = it.type,
-                        innhold = it.innhold,
-                        grunnlagsreferanseListe = it.grunnlagsreferanseListe.sorted(),
-                        gjelderReferanse = it.gjelderReferanse,
-                        gjelderBarnReferanse = it.gjelderBarnReferanse,
-                    )
-                },
-        )
-
-        return resultatGrunnlagListe
-    }
 
     // Mapper ut DelberegningNettoTilsynsutgift
     private fun mapDelberegningNettoTilsynsutgift(

@@ -18,10 +18,8 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SivilstandPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåFremmedReferanse
-import java.time.LocalDate
 
 internal object ForskuddCoreMapper : CoreMapper() {
-    private val MAX_DATO = LocalDate.parse("9999-12-31")
 
     fun mapGrunnlagTilCore(beregnForskuddGrunnlag: BeregnGrunnlag, sjablontallListe: List<Sjablontall>): BeregnForskuddGrunnlagCore {
         // Lager en map for sjablontall (id og navn)
@@ -42,6 +40,8 @@ internal object ForskuddCoreMapper : CoreMapper() {
             beregnGrunnlag = beregnForskuddGrunnlag,
             referanseTilRolle = referanseBidragsmottaker,
             innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntektFraSjablontall(sjablontallListe),
+            åpenSluttperiode = true,
+            erForskudd = true,
         )
         val sivilstandPeriodeCoreListe = mapSivilstand(beregnForskuddGrunnlag)
         val barnIHusstandenPeriodeCoreListe = mapBarnIHusstanden(beregnForskuddGrunnlag, referanseBidragsmottaker)
@@ -172,7 +172,8 @@ internal object ForskuddCoreMapper : CoreMapper() {
                 grunnlagListe = barnIHusstandenGrunnlagListe,
                 søknadsbarnreferanse = beregnForskuddGrunnlag.søknadsbarnReferanse,
                 gjelderReferanse = referanseBidragsmottaker,
-                BarnIHusstandenPeriodeCore::class.java,
+                clazz = BarnIHusstandenPeriodeCore::class.java,
+                erForskudd = true,
             )
         } catch (e: Exception) {
             throw IllegalArgumentException(

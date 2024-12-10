@@ -25,7 +25,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningref
 
 internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
 
-    fun delberegningBpAndelUnderholdskostnad(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
+    fun delberegningBpAndelUnderholdskostnad(mottattGrunnlag: BeregnGrunnlag, åpenSluttperiode: Boolean = true): List<GrunnlagDto> {
         val referanseTilBP = finnReferanseTilRolle(
             grunnlagListe = mottattGrunnlag.grunnlagListe,
             grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
@@ -46,6 +46,7 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
         val bpAndelUnderholdskostnadPeriodeGrunnlag = mapBpAndelUnderholdskostnadGrunnlag(
             mottattGrunnlag = mottattGrunnlag,
             sjablonGrunnlag = sjablonGrunnlag,
+            åpenSluttperiode = åpenSluttperiode,
         )
 
         // Lager liste over bruddperioder
@@ -71,10 +72,10 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
             )
         }
 
-        // Setter til-periode i siste element til null hvis det ikke allerede er det (åpen sluttdato)
+        // Setter til-periode i siste element til null hvis det ikke allerede er det og åpenSluttperiode er true
         if (bpAndelUnderholdskostnadBeregningResultatListe.isNotEmpty()) {
             val sisteElement = bpAndelUnderholdskostnadBeregningResultatListe.last()
-            if (sisteElement.periode.til != null) {
+            if (sisteElement.periode.til != null && åpenSluttperiode) {
                 val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
                 bpAndelUnderholdskostnadBeregningResultatListe[bpAndelUnderholdskostnadBeregningResultatListe.size - 1] = oppdatertSisteElement
             }
