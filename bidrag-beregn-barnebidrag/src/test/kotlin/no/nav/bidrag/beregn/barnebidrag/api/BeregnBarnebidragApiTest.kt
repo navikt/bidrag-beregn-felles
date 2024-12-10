@@ -213,7 +213,7 @@ internal class BeregnBarnebidragApiTest {
         filnavn = "src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel1A.json"
 
         // Beregningsperiode
-        forventetBeregningsperiode = ÅrMånedsperiode(YearMonth.parse("2020-08"), YearMonth.parse("2020-11"))
+        forventetBeregningsperiode = ÅrMånedsperiode(YearMonth.parse("2020-08"), YearMonth.parse("2020-12"))
 
         // Bidragsevne
         forventetBidragsevne = BigDecimal.valueOf(16357.14).setScale(2)
