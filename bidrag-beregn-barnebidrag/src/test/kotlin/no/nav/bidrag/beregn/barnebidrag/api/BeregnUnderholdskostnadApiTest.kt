@@ -3,7 +3,7 @@ package no.nav.bidrag.beregn.barnebidrag.api
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnebidragService
+import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
@@ -32,12 +32,12 @@ internal class BeregnUnderholdskostnadApiTest {
     private lateinit var filnavn: String
 
     @Mock
-    private lateinit var beregnBarnebidragService: BeregnBarnebidragService
+    private lateinit var api: BeregnBarnebidragApi
 
     @BeforeEach
     fun initMock() {
         stubSjablonProvider()
-        beregnBarnebidragService = BeregnBarnebidragService()
+        api = BeregnBarnebidragApi()
     }
 
     @Test
@@ -220,7 +220,7 @@ internal class BeregnUnderholdskostnadApiTest {
             { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2021-07"), null)) },
             { assertEquals(0, resultat[1].barnetrygd.compareTo(BigDecimal.valueOf(1354))) },
 
-        )
+            )
     }
 
     @Test
@@ -239,12 +239,12 @@ internal class BeregnUnderholdskostnadApiTest {
             { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
             { assertEquals(0, resultat[1].barnetrygd.compareTo(BigDecimal.valueOf(1510))) },
 
-        )
+            )
     }
 
     private fun utførBeregningerOgEvaluerResultatUnderholdskostnad(): List<DelberegningUnderholdskostnad> {
         val request = lesFilOgByggRequest(filnavn)
-        val underholdskostnadResultat = beregnBarnebidragService.beregnUnderholdskostnad(request)
+        val underholdskostnadResultat = api.beregnUnderholdskostnad(request)
         printJson(underholdskostnadResultat)
 
         val alleReferanser = hentAlleReferanser(underholdskostnadResultat)

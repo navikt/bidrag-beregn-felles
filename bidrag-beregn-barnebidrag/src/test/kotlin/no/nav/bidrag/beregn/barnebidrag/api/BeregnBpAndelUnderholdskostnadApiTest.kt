@@ -3,7 +3,7 @@ package no.nav.bidrag.beregn.barnebidrag.api
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnebidragService
+import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
@@ -45,12 +45,12 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
     private var forventetAntallSjablon: Int = 2
 
     @Mock
-    private lateinit var beregnBarnebidragService: BeregnBarnebidragService
+    private lateinit var api: BeregnBarnebidragApi
 
     @BeforeEach
     fun initMock() {
         stubSjablonProvider()
-        beregnBarnebidragService = BeregnBarnebidragService()
+        api = BeregnBarnebidragApi()
     }
 
     @Test
@@ -149,7 +149,7 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
         filnavn = "src/test/resources/testfiler/bpandelunderholdskostnad/bpandel_eksempel7.json"
         val request = lesFilOgByggRequest(filnavn)
         val exception = assertThrows(IllegalArgumentException::class.java) {
-            beregnBarnebidragService.beregnBpAndelUnderholdskostnad(request)
+            api.beregnBpAndelUnderholdskostnad(request)
         }
         assertThat(exception.message).contains("Underholdskostnad grunnlag mangler")
     }
@@ -171,7 +171,7 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
 
     private fun utførBeregningerOgEvaluerResultatBpAndelUnderholdskostnad() {
         val request = lesFilOgByggRequest(filnavn)
-        val bpAndelUnderholdskostnadResultat = beregnBarnebidragService.beregnBpAndelUnderholdskostnad(request)
+        val bpAndelUnderholdskostnadResultat = api.beregnBpAndelUnderholdskostnad(request)
         printJson(bpAndelUnderholdskostnadResultat)
 
         val alleReferanser = hentAlleReferanser(bpAndelUnderholdskostnadResultat)
@@ -270,7 +270,7 @@ internal class BeregnBpAndelUnderholdskostnadApiTest {
 
     private fun utførBeregningerOgEvaluerResultatBpAndelUnderholdskostnadFlerePerioder() {
         val request = lesFilOgByggRequest(filnavn)
-        val bpAndelUnderholdskostnadResultat = beregnBarnebidragService.beregnBpAndelUnderholdskostnad(request)
+        val bpAndelUnderholdskostnadResultat = api.beregnBpAndelUnderholdskostnad(request)
         printJson(bpAndelUnderholdskostnadResultat)
 
         val alleReferanser = hentAlleReferanser(bpAndelUnderholdskostnadResultat)

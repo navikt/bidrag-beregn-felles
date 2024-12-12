@@ -3,14 +3,17 @@ package no.nav.bidrag.beregn.barnebidrag.api
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnebidragService
+import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
+import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
+import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
+import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåFremmedReferanse
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.fail
@@ -49,20 +52,17 @@ internal class BeregnEndeligBidragApiTest {
     private var forventetAntallDelberegningUnderholdskostnad: Int = 1
     private var forventetAntallDelberegningBPAndelUnderholdskostnad: Int = 1
     private var forventetAntallDelberegningSamværsfradrag: Int = 1
-    private var forventetAntallDelberegningSumInntekt: Int = 1
-    private var forventetAntallDelberegningBarnetilleggSkattesats: Int = 1
-    private var forventetAntallDelberegningNettoBarnetillegg: Int = 1
     private var forventetAntallSamværsklasse: Int = 1
     private var forventetAntallBarnetilleggBM: Int = 1
     private var forventetAntallBarnetilleggBP: Int = 1
 
     @Mock
-    private lateinit var beregnBarnebidragService: BeregnBarnebidragService
+    private lateinit var api: BeregnBarnebidragApi
 
     @BeforeEach
     fun initMock() {
         stubSjablonProvider()
-        beregnBarnebidragService = BeregnBarnebidragService()
+        api = BeregnBarnebidragApi()
     }
 
     @Test
@@ -85,9 +85,6 @@ internal class BeregnEndeligBidragApiTest {
         forventetBidragJustertForNettoBarnetilleggBM = false
         forventetBidragJustertNedTilEvne = false
         forventetBidragJustertNedTil25ProsentAvInntekt = false
-        forventetAntallDelberegningSumInntekt = 0
-        forventetAntallDelberegningBarnetilleggSkattesats = 0
-        forventetAntallDelberegningNettoBarnetillegg = 0
         forventetAntallBarnetilleggBP = 0
         forventetAntallBarnetilleggBM = 0
         utførBeregningerOgEvaluerResultatEndeligBidrag(0)
@@ -113,9 +110,6 @@ internal class BeregnEndeligBidragApiTest {
         forventetBidragJustertForNettoBarnetilleggBM = false
         forventetBidragJustertNedTilEvne = true
         forventetBidragJustertNedTil25ProsentAvInntekt = false
-        forventetAntallDelberegningSumInntekt = 0
-        forventetAntallDelberegningBarnetilleggSkattesats = 0
-        forventetAntallDelberegningNettoBarnetillegg = 0
         forventetAntallBarnetilleggBP = 0
         forventetAntallBarnetilleggBM = 0
         utførBeregningerOgEvaluerResultatEndeligBidrag()
@@ -141,9 +135,6 @@ internal class BeregnEndeligBidragApiTest {
         forventetBidragJustertForNettoBarnetilleggBM = false
         forventetBidragJustertNedTilEvne = false
         forventetBidragJustertNedTil25ProsentAvInntekt = true
-        forventetAntallDelberegningSumInntekt = 0
-        forventetAntallDelberegningBarnetilleggSkattesats = 0
-        forventetAntallDelberegningNettoBarnetillegg = 0
         forventetAntallBarnetilleggBP = 0
         forventetAntallBarnetilleggBM = 0
         utførBeregningerOgEvaluerResultatEndeligBidrag()
@@ -169,9 +160,6 @@ internal class BeregnEndeligBidragApiTest {
         forventetBidragJustertForNettoBarnetilleggBM = false
         forventetBidragJustertNedTilEvne = false
         forventetBidragJustertNedTil25ProsentAvInntekt = false
-        forventetAntallDelberegningSumInntekt = 0
-        forventetAntallDelberegningBarnetilleggSkattesats = 0
-        forventetAntallDelberegningNettoBarnetillegg = 0
         forventetAntallBarnetilleggBP = 0
         forventetAntallBarnetilleggBM = 0
         utførBeregningerOgEvaluerResultatEndeligBidrag()
@@ -197,9 +185,6 @@ internal class BeregnEndeligBidragApiTest {
         forventetBidragJustertForNettoBarnetilleggBM = false
         forventetBidragJustertNedTilEvne = false
         forventetBidragJustertNedTil25ProsentAvInntekt = false
-        forventetAntallDelberegningSumInntekt = 1
-        forventetAntallDelberegningBarnetilleggSkattesats = 1
-        forventetAntallDelberegningNettoBarnetillegg = 1
         forventetAntallBarnetilleggBP = 1
         forventetAntallBarnetilleggBM = 0
         utførBeregningerOgEvaluerResultatEndeligBidrag()
@@ -225,9 +210,6 @@ internal class BeregnEndeligBidragApiTest {
         forventetBidragJustertForNettoBarnetilleggBM = true
         forventetBidragJustertNedTilEvne = true
         forventetBidragJustertNedTil25ProsentAvInntekt = true
-        forventetAntallDelberegningSumInntekt = 2
-        forventetAntallDelberegningBarnetilleggSkattesats = 2
-        forventetAntallDelberegningNettoBarnetillegg = 2
         forventetAntallBarnetilleggBP = 1
         forventetAntallBarnetilleggBM = 1
         utførBeregningerOgEvaluerResultatEndeligBidrag()
@@ -253,9 +235,6 @@ internal class BeregnEndeligBidragApiTest {
         forventetBidragJustertForNettoBarnetilleggBM = true
         forventetBidragJustertNedTilEvne = true
         forventetBidragJustertNedTil25ProsentAvInntekt = true
-        forventetAntallDelberegningSumInntekt = 2
-        forventetAntallDelberegningBarnetilleggSkattesats = 2
-        forventetAntallDelberegningNettoBarnetillegg = 2
         forventetAntallBarnetilleggBP = 1
         forventetAntallBarnetilleggBM = 1
         utførBeregningerOgEvaluerResultatEndeligBidrag()
@@ -281,9 +260,6 @@ internal class BeregnEndeligBidragApiTest {
         forventetBidragJustertForNettoBarnetilleggBM = true
         forventetBidragJustertNedTilEvne = false
         forventetBidragJustertNedTil25ProsentAvInntekt = true
-        forventetAntallDelberegningSumInntekt = 2
-        forventetAntallDelberegningBarnetilleggSkattesats = 2
-        forventetAntallDelberegningNettoBarnetillegg = 2
         forventetAntallBarnetilleggBP = 1
         forventetAntallBarnetilleggBM = 1
         utførBeregningerOgEvaluerResultatEndeligBidrag()
@@ -309,9 +285,6 @@ internal class BeregnEndeligBidragApiTest {
         forventetBidragJustertForNettoBarnetilleggBM = true
         forventetBidragJustertNedTilEvne = false
         forventetBidragJustertNedTil25ProsentAvInntekt = false
-        forventetAntallDelberegningSumInntekt = 2
-        forventetAntallDelberegningBarnetilleggSkattesats = 2
-        forventetAntallDelberegningNettoBarnetillegg = 2
         forventetAntallBarnetilleggBP = 1
         forventetAntallBarnetilleggBM = 1
         utførBeregningerOgEvaluerResultatEndeligBidrag()
@@ -337,11 +310,8 @@ internal class BeregnEndeligBidragApiTest {
         forventetBidragJustertForNettoBarnetilleggBM = true
         forventetBidragJustertNedTilEvne = false
         forventetBidragJustertNedTil25ProsentAvInntekt = false
-        forventetAntallDelberegningSumInntekt = 2
-        forventetAntallDelberegningBarnetilleggSkattesats = 2
-        forventetAntallDelberegningNettoBarnetillegg = 2
         forventetAntallBarnetilleggBP = 1
-        forventetAntallBarnetilleggBM = 1
+        forventetAntallBarnetilleggBM = 2
         utførBeregningerOgEvaluerResultatEndeligBidrag()
     }
 
@@ -365,9 +335,6 @@ internal class BeregnEndeligBidragApiTest {
         forventetBidragJustertForNettoBarnetilleggBM = false
         forventetBidragJustertNedTilEvne = false
         forventetBidragJustertNedTil25ProsentAvInntekt = false
-        forventetAntallDelberegningSumInntekt = 2
-        forventetAntallDelberegningBarnetilleggSkattesats = 2
-        forventetAntallDelberegningNettoBarnetillegg = 2
         forventetAntallBarnetilleggBP = 1
         forventetAntallBarnetilleggBM = 1
         utførBeregningerOgEvaluerResultatEndeligBidrag()
@@ -381,9 +348,6 @@ internal class BeregnEndeligBidragApiTest {
         forventetAntallDelberegningUnderholdskostnad = 2
         forventetAntallDelberegningBPAndelUnderholdskostnad = 5
         forventetAntallDelberegningSamværsfradrag = 5
-        forventetAntallDelberegningSumInntekt = 2
-        forventetAntallDelberegningBarnetilleggSkattesats = 2
-        forventetAntallDelberegningNettoBarnetillegg = 6
         forventetAntallSamværsklasse = 4
         forventetAntallBarnetilleggBP = 3
         forventetAntallBarnetilleggBM = 3
@@ -392,7 +356,7 @@ internal class BeregnEndeligBidragApiTest {
 
     private fun utførBeregningerOgEvaluerResultatEndeligBidrag(antallGrunnlag: Int = 1) {
         val request = lesFilOgByggRequest(filnavn)
-        val endeligBidragResultat = beregnBarnebidragService.beregnEndeligBidrag(request)
+        val endeligBidragResultat = api.beregnEndeligBidrag(request)
         printJson(endeligBidragResultat)
 
         val alleReferanser = hentAlleReferanser(endeligBidragResultat)
@@ -449,30 +413,26 @@ internal class BeregnEndeligBidragApiTest {
             .filter { it.type == Grunnlagstype.DELBEREGNING_SAMVÆRSFRADRAG }
             .size
 
-        val antallDelberegningSumInntekt = endeligBidragResultat
-            .filter { it.type == Grunnlagstype.DELBEREGNING_SUM_INNTEKT }
-            .size
-
-        val antallDelberegningBarnetilleggSkattesats = endeligBidragResultat
-            .filter { it.type == Grunnlagstype.DELBEREGNING_BARNETILLEGG_SKATTESATS }
-            .size
-
-        val antallDelberegningNettoBarnetillegg = endeligBidragResultat
-            .filter { it.type == Grunnlagstype.DELBEREGNING_NETTO_BARNETILLEGG }
-            .size
-
         val antallSamværsklasse = endeligBidragResultat
             .filter { it.type == Grunnlagstype.SAMVÆRSPERIODE }
             .size
 
         val antallBarnetilleggBM = endeligBidragResultat
-            .filter { it.type == Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE }
-            .filter { it.gjelderReferanse == referanseBM }
+            .filtrerOgKonverterBasertPåFremmedReferanse<InntektsrapporteringPeriode>(
+                grunnlagType = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
+                referanse = referanseBM,
+            )
+            .filter { it.innhold.inntektsrapportering == Inntektsrapportering.BARNETILLEGG }
+            .flatMap { it.innhold.inntektspostListe }
             .size
 
         val antallBarnetilleggBP = endeligBidragResultat
-            .filter { it.type == Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE }
-            .filter { it.gjelderReferanse == referanseBP }
+            .filtrerOgKonverterBasertPåFremmedReferanse<InntektsrapporteringPeriode>(
+                grunnlagType = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
+                referanse = referanseBP,
+            )
+            .filter { it.innhold.inntektsrapportering == Inntektsrapportering.BARNETILLEGG }
+            .flatMap { it.innhold.inntektspostListe }
             .size
 
         assertAll(
@@ -481,7 +441,9 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe).hasSize(1) },
 
             // Resultat
-            { assertThat(endeligBidragResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null)) },
+            {
+                assertThat(endeligBidragResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null))
+            },
             { assertThat(endeligBidragResultatListe[0].beregnetBeløp).isEqualTo(forventetBeregnetBeløp) },
             { assertThat(endeligBidragResultatListe[0].resultatBeløp).isEqualTo(forventetResultatbeløp) },
             { assertThat(endeligBidragResultatListe[0].uMinusNettoBarnetilleggBM).isEqualTo(forventetUMinusNettoBarnetilleggBM) },
@@ -505,21 +467,20 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(antallDelberegningUnderholdskostnad).isEqualTo(antallGrunnlag) },
             { assertThat(antallDelberegningBPAndelUnderholdskostnad).isEqualTo(1) },
             { assertThat(antallDelberegningSamværsfradrag).isEqualTo(antallGrunnlag) },
-            { assertThat(antallDelberegningSumInntekt).isEqualTo(forventetAntallDelberegningSumInntekt) },
-            { assertThat(antallDelberegningBarnetilleggSkattesats).isEqualTo(forventetAntallDelberegningBarnetilleggSkattesats) },
-            { assertThat(antallDelberegningNettoBarnetillegg).isEqualTo(forventetAntallDelberegningNettoBarnetillegg) },
             { assertThat(antallSamværsklasse).isEqualTo(antallGrunnlag) },
             { assertThat(antallBarnetilleggBP).isEqualTo(forventetAntallBarnetilleggBP) },
             { assertThat(antallBarnetilleggBM).isEqualTo(forventetAntallBarnetilleggBM) },
 
             // Referanser
-            { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
+            {
+                assertThat(alleReferanser).containsAll(alleRefererteReferanser)
+            },
         )
     }
 
     private fun utførBeregningerOgEvaluerResultatEndeligBidragFlerePerioder() {
         val request = lesFilOgByggRequest(filnavn)
-        val endeligBidragResultat = beregnBarnebidragService.beregnEndeligBidrag(request)
+        val endeligBidragResultat = api.beregnEndeligBidrag(request)
         printJson(endeligBidragResultat)
 
         val alleReferanser = hentAlleReferanser(endeligBidragResultat)
@@ -576,30 +537,26 @@ internal class BeregnEndeligBidragApiTest {
             .filter { it.type == Grunnlagstype.DELBEREGNING_SAMVÆRSFRADRAG }
             .size
 
-        val antallDelberegningSumInntekt = endeligBidragResultat
-            .filter { it.type == Grunnlagstype.DELBEREGNING_SUM_INNTEKT }
-            .size
-
-        val antallDelberegningBarnetilleggSkattesats = endeligBidragResultat
-            .filter { it.type == Grunnlagstype.DELBEREGNING_BARNETILLEGG_SKATTESATS }
-            .size
-
-        val antallDelberegningNettoBarnetillegg = endeligBidragResultat
-            .filter { it.type == Grunnlagstype.DELBEREGNING_NETTO_BARNETILLEGG }
-            .size
-
         val antallSamværsklasse = endeligBidragResultat
             .filter { it.type == Grunnlagstype.SAMVÆRSPERIODE }
             .size
 
         val antallBarnetilleggBM = endeligBidragResultat
-            .filter { it.type == Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE }
-            .filter { it.gjelderReferanse == referanseBM }
+            .filtrerOgKonverterBasertPåFremmedReferanse<InntektsrapporteringPeriode>(
+                grunnlagType = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
+                referanse = referanseBM,
+            )
+            .filter { it.innhold.inntektsrapportering == Inntektsrapportering.BARNETILLEGG }
+            .flatMap { it.innhold.inntektspostListe }
             .size
 
         val antallBarnetilleggBP = endeligBidragResultat
-            .filter { it.type == Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE }
-            .filter { it.gjelderReferanse == referanseBP }
+            .filtrerOgKonverterBasertPåFremmedReferanse<InntektsrapporteringPeriode>(
+                grunnlagType = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
+                referanse = referanseBP,
+            )
+            .filter { it.innhold.inntektsrapportering == Inntektsrapportering.BARNETILLEGG }
+            .flatMap { it.innhold.inntektspostListe }
             .size
 
         assertAll(
@@ -628,7 +585,7 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[0].bidragJustertNedTilEvne).isFalse },
             { assertThat(endeligBidragResultatListe[0].bidragJustertNedTil25ProsentAvInntekt).isFalse },
 
-            // Bidrag satt til underholdskostnad minus barnetillegg BM
+            // Bidrag redusert til evne
             { assertThat(endeligBidragResultatListe[1].periode).isEqualTo(ÅrMånedsperiode("2023-04", "2023-06")) },
             { assertThat(endeligBidragResultatListe[1].beregnetBeløp).isEqualTo(BigDecimal.valueOf(4758.41).setScale(2)) },
             { assertThat(endeligBidragResultatListe[1].resultatBeløp).isEqualTo(BigDecimal.valueOf(4760).setScale(0)) },
@@ -773,9 +730,6 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(antallDelberegningUnderholdskostnad).isEqualTo(forventetAntallDelberegningUnderholdskostnad) },
             { assertThat(antallDelberegningBPAndelUnderholdskostnad).isEqualTo(forventetAntallDelberegningBPAndelUnderholdskostnad) },
             { assertThat(antallDelberegningSamværsfradrag).isEqualTo(forventetAntallDelberegningSamværsfradrag) },
-            { assertThat(antallDelberegningSumInntekt).isEqualTo(forventetAntallDelberegningSumInntekt) },
-            { assertThat(antallDelberegningBarnetilleggSkattesats).isEqualTo(forventetAntallDelberegningBarnetilleggSkattesats) },
-            { assertThat(antallDelberegningNettoBarnetillegg).isEqualTo(forventetAntallDelberegningNettoBarnetillegg) },
             { assertThat(antallSamværsklasse).isEqualTo(forventetAntallSamværsklasse) },
             { assertThat(antallBarnetilleggBP).isEqualTo(forventetAntallBarnetilleggBP) },
             { assertThat(antallBarnetilleggBM).isEqualTo(forventetAntallBarnetilleggBM) },

@@ -3,7 +3,7 @@ package no.nav.bidrag.beregn.barnebidrag.api
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnebidragService
+import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.inntekt.Inntektstype
@@ -32,12 +32,12 @@ internal class BeregnNettoBarnetilleggApiTest {
     private lateinit var filnavn: String
 
     @Mock
-    private lateinit var beregnBarnebidragService: BeregnBarnebidragService
+    private lateinit var api: BeregnBarnebidragApi
 
     @BeforeEach
     fun initMock() {
         stubSjablonProvider()
-        beregnBarnebidragService = BeregnBarnebidragService()
+        api = BeregnBarnebidragApi()
     }
 
     @Test
@@ -99,7 +99,8 @@ internal class BeregnNettoBarnetilleggApiTest {
 
         assertAll(
             { assertThat(resultatBM).hasSize(0) },
-        )
+
+            )
     }
 
     @Test
@@ -122,12 +123,12 @@ internal class BeregnNettoBarnetilleggApiTest {
             { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode("2024-06", "2024-07")) },
             { assertEquals(0, resultat[2].summertBruttoBarnetillegg.compareTo(BigDecimal.valueOf(500.00))) },
 
-        )
+            )
     }
 
     private fun utførBeregningerOgEvaluerResultatNettoBarnetillegg(rolle: Grunnlagstype): List<DelberegningNettoBarnetillegg> {
         val request = lesFilOgByggRequest(filnavn)
-        val nettoBarnetilleggResultat = beregnBarnebidragService.beregnNettoBarnetillegg(request, rolle)
+        val nettoBarnetilleggResultat = api.beregnNettoBarnetillegg(request, rolle)
         printJson(nettoBarnetilleggResultat)
 
         val alleReferanser = hentAlleReferanser(nettoBarnetilleggResultat)

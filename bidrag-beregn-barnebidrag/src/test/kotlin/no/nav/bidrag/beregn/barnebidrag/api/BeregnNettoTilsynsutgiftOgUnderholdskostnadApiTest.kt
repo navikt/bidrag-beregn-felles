@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.kotest.matchers.comparables.shouldBeGreaterThanOrEqualTo
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnebidragService
+import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
@@ -35,12 +35,12 @@ internal class BeregnNettoTilsynsutgiftOgUnderholdskostnadApiTest {
     private lateinit var filnavn: String
 
     @Mock
-    private lateinit var beregnBarnebidragService: BeregnBarnebidragService
+    private lateinit var api: BeregnBarnebidragApi
 
     @BeforeEach
     fun initMock() {
         stubSjablonProvider()
-        beregnBarnebidragService = BeregnBarnebidragService()
+        api = BeregnBarnebidragApi()
     }
 
     @Test
@@ -214,12 +214,12 @@ internal class BeregnNettoTilsynsutgiftOgUnderholdskostnadApiTest {
             { assertThat(resultat[3].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
             { assertNull(resultat[3].nettoTilsynsutgift) },
 
-        )
+            )
     }
 
     private fun utførBeregningerOgEvaluerResultatNettoTilsynsutgiftOgUnderholdskostnad(): List<DelberegningUnderholdskostnad> {
         val request = lesFilOgByggRequest(filnavn)
-        val underholdskostnadResultat = beregnBarnebidragService.beregnNettoTilsynsutgiftOgUnderholdskostnad(request)
+        val underholdskostnadResultat = api.beregnNettoTilsynsutgiftOgUnderholdskostnad(request)
         printJson(underholdskostnadResultat)
 
         val alleReferanser = hentAlleReferanser(underholdskostnadResultat)

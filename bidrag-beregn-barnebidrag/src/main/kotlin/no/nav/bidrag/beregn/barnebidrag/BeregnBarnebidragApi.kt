@@ -52,7 +52,7 @@ class BeregnBarnebidragApi {
     fun beregnNettoBarnetillegg(beregnGrunnlag: BeregnGrunnlag, rolle: Grunnlagstype): List<GrunnlagDto> =
         service.beregnNettoBarnetillegg(beregnGrunnlag, rolle)
 
-    fun beregnSamværsfradrag(beregnGrunnlag: BeregnGrunnlag, rolle: Grunnlagstype): List<GrunnlagDto> = service.beregnSamværsfradrag(beregnGrunnlag)
+    fun beregnSamværsfradrag(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnSamværsfradrag(beregnGrunnlag)
 
     fun beregnBarnetilleggSkattesats(beregnGrunnlag: BeregnGrunnlag, rolle: Grunnlagstype): List<GrunnlagDto> =
         service.beregnBarnetilleggSkattesats(beregnGrunnlag, rolle)
