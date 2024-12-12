@@ -3,7 +3,7 @@ package no.nav.bidrag.beregn.barnebidrag.api
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnebidragService
+import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
@@ -32,12 +32,12 @@ internal class BeregnNettoTilsynsutgiftApiTest {
     private lateinit var filnavn: String
 
     @Mock
-    private lateinit var beregnBarnebidragService: BeregnBarnebidragService
+    private lateinit var api: BeregnBarnebidragApi
 
     @BeforeEach
     fun initMock() {
         stubSjablonProvider()
-        beregnBarnebidragService = BeregnBarnebidragService()
+        api = BeregnBarnebidragApi()
     }
 
     @Test
@@ -290,9 +290,28 @@ internal class BeregnNettoTilsynsutgiftApiTest {
         )
     }
 
+    @Test
+    @DisplayName("Beregn månedsbeløp faktisk utgift og tilleggsstønad")
+    fun testBeregnMånedsbeløpFaktiskUtgiftTilleggsstønad() {
+        val faktiskUtgift = BigDecimal.valueOf(1000)
+        val kostpenger = BigDecimal.valueOf(400)
+        val responseFaktiskUtgift = api.beregnMånedsbeløpFaktiskeUtgifter(faktiskUtgift, kostpenger)
+
+        val tilleggsstønad = BigDecimal.valueOf(17)
+        val responseTilleggsstønad = api.beregnMånedsbeløpTilleggsstønad(tilleggsstønad)
+
+        assertThat(responseFaktiskUtgift).isEqualByComparingTo(BigDecimal.valueOf(550))
+        assertThat(responseTilleggsstønad).isEqualByComparingTo(BigDecimal.valueOf(368.33))
+
+        // Test uten angitt kostpenger, default er BigDecimal.ZERO
+        val faktiskUtgift2 = BigDecimal.valueOf(500)
+        val responseFaktiskUtgift2 = api.beregnMånedsbeløpFaktiskeUtgifter(faktiskUtgift2, BigDecimal.ZERO)
+        assertThat(responseFaktiskUtgift2).isEqualByComparingTo(BigDecimal.valueOf(458.33))
+    }
+
     private fun utførBeregningerOgEvaluerResultatNettoTilsynsutgift(): List<DelberegningNettoTilsynsutgift> {
         val request = lesFilOgByggRequest(filnavn)
-        val nettoTilsynsutgiftResultat = beregnBarnebidragService.beregnNettoTilsynsutgift(request)
+        val nettoTilsynsutgiftResultat = api.beregnNettoTilsynsutgift(request)
         printJson(nettoTilsynsutgiftResultat)
 
         val alleReferanser = hentAlleReferanser(nettoTilsynsutgiftResultat)

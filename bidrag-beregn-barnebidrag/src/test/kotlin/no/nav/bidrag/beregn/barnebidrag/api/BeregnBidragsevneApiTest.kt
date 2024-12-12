@@ -3,7 +3,7 @@ package no.nav.bidrag.beregn.barnebidrag.api
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnebidragService
+import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
@@ -50,12 +50,12 @@ internal class BeregnBidragsevneApiTest {
     private var forventetAntallSjablonTrinnvisSkattesats: Int = 1
 
     @Mock
-    private lateinit var beregnBarnebidragService: BeregnBarnebidragService
+    private lateinit var api: BeregnBarnebidragApi
 
     @BeforeEach
     fun initMock() {
         stubSjablonProvider()
-        beregnBarnebidragService = BeregnBarnebidragService()
+        api = BeregnBarnebidragApi()
     }
 
     @Test
@@ -382,7 +382,7 @@ internal class BeregnBidragsevneApiTest {
 
     private fun utførBeregningerOgEvaluerResultatBidragsevne() {
         val request = lesFilOgByggRequest(filnavn)
-        val bidragsevneResultat = beregnBarnebidragService.beregnBidragsevne(request)
+        val bidragsevneResultat = api.beregnBidragsevne(request)
         printJson(bidragsevneResultat)
 
         val alleReferanser = hentAlleReferanser(bidragsevneResultat)
@@ -492,7 +492,7 @@ internal class BeregnBidragsevneApiTest {
 
     private fun utførBeregningerOgEvaluerResultatBidragsevneFlerePerioder() {
         val request = lesFilOgByggRequest(filnavn)
-        val bidragsevneResultat = beregnBarnebidragService.beregnBidragsevne(request)
+        val bidragsevneResultat = api.beregnBidragsevne(request)
         printJson(bidragsevneResultat)
 
         val alleReferanser = hentAlleReferanser(bidragsevneResultat)
