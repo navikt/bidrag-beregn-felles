@@ -3430,7 +3430,7 @@ class TestUtil {
             ),
         )
 
-        fun byggEndrePeriodeFremITidMedOffentligePerioderV3() = listOf(
+        fun byggEndrePeriodeFremITidMedOffentligePerioderSlettOffentligOgManuellV3() = listOf(
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
@@ -3553,6 +3553,43 @@ class TestUtil {
                         periodeTom = LocalDate.of(2023, 10, 31),
                         bostatus = Bostatuskode.MED_FORELDER,
                         kilde = Kilde.OFFENTLIG,
+                    ),
+                ),
+            ),
+            BoforholdBarnRequestV3(
+                gjelderPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2015, 3, 17),
+                relasjon = Familierelasjon.BARN,
+                innhentedeOffentligeOpplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2020, 1, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                ),
+                behandledeBostatusopplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 3, 1),
+                        periodeTom = LocalDate.of(2023, 10, 31),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 11, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+                endreBostatus = EndreBostatus(
+                    typeEndring = TypeEndring.SLETTET,
+                    nyBostatus = null,
+                    originalBostatus = Bostatus(
+                        periodeFom = LocalDate.of(2023, 11, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.MANUELL,
                     ),
                 ),
             ),
@@ -4350,6 +4387,51 @@ class TestUtil {
                 originalBostatus = null,
             ),
 
+        )
+
+        fun byggSettTomdatoPåNyPeriodeV3() = listOf(
+            BoforholdBarnRequestV3(
+                gjelderPersonId = "98765432109",
+                fødselsdato = LocalDate.of(2015, 3, 17),
+                relasjon = Familierelasjon.BARN,
+                innhentedeOffentligeOpplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2020, 1, 23),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                ),
+                behandledeBostatusopplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2023, 3, 1),
+                        periodeTom = LocalDate.of(2024, 3, 31),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                    Bostatus(
+                        periodeFom = LocalDate.of(2024, 4, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+                endreBostatus = EndreBostatus(
+                    typeEndring = TypeEndring.ENDRET,
+                    nyBostatus = Bostatus(
+                        periodeFom = LocalDate.of(2024, 4, 1),
+                        periodeTom = LocalDate.of(2024, 7, 31),
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                    originalBostatus = Bostatus(
+                        periodeFom = LocalDate.of(2024, 4, 1),
+                        periodeTom = null,
+                        bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                        kilde = Kilde.MANUELL,
+                    ),
+                ),
+            ),
         )
 
         fun byggIngenPerioder() = BoforholdVoksneRequest(

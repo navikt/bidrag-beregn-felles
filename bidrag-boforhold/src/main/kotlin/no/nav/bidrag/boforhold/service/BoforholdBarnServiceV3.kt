@@ -60,7 +60,7 @@ internal class BoforholdBarnServiceV3 {
         //    2a. Hvis behandledeBostatusopplysninger er utfyllt og innhentedeOffentligeOpplysninger er utfyllt: behandledeBostatusopplysninger
         //        skal da justeres etter det som er sendt inn i endreBoforhold. Det kan slettes/legges til eller endres perioder.
         //        Perioder i oppdaterte behandledeBostatusopplysninger sjekkes mot offentlige perioder og kilde evt. endres til Offentlig hvis det
-        //        er match.
+        //        er match. Kun manuelle perioder kan slettes.
         //    2b. Hvis behandledeBostatusopplysninger er utfyllt og innhentedeOffentligeOpplysninger er tom: behandledeBostatusopplysninger skal
         //        da justeres etter det som er sendt inn i endreBoforhold. Det kan slettes/legges til eller endres perioder.
         //        Perioder i oppdaterte behandledeBostatusopplysninger sjekkes mot genererte offentlige perioder (IKKE_MED_FORELDER/
@@ -193,7 +193,10 @@ internal class BoforholdBarnServiceV3 {
         val komplettOffentligTidslinje = fyllUtMedPerioderBarnetIkkeBorIHusstanden(Kilde.OFFENTLIG, startdatoBeregning, justerteOffentligePerioder)
         val offentligePerioderJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, typeBehandling, komplettOffentligTidslinje)
 
-        return oppdaterteBehandledeOpplysninger.map {
+        val sammenslåtteBehandledeOgOffentligePerioder =
+            slåSammenPrimærOgSekundærperioder(oppdaterteBehandledeOpplysninger, offentligePerioderJustertMotAttenårsdag)
+
+        return sammenslåtteBehandledeOgOffentligePerioder.map {
             BoforholdResponseV2(
                 gjelderPersonId = it.gjelderPersonId,
                 periodeFom = it.periodeFom,
@@ -252,7 +255,7 @@ internal class BoforholdBarnServiceV3 {
                                 fødselsdato = liste[indeks].fødselsdato,
                                 kilde = kilde ?: liste[indeks].kilde,
 
-                            ),
+                                ),
                         )
                         periodeFom = null
                         kilde = null
@@ -266,7 +269,7 @@ internal class BoforholdBarnServiceV3 {
                                 fødselsdato = liste[indeks].fødselsdato,
                                 kilde = liste[indeks].kilde,
 
-                            ),
+                                ),
                         )
                     }
                 }
@@ -281,7 +284,7 @@ internal class BoforholdBarnServiceV3 {
                         fødselsdato = liste[indeks].fødselsdato,
                         kilde = kilde ?: liste[indeks].kilde,
 
-                    ),
+                        ),
                 )
             }
         }
@@ -308,7 +311,7 @@ internal class BoforholdBarnServiceV3 {
                             fødselsdato = liste[indeks].fødselsdato,
                             kilde = kilde,
 
-                        ),
+                            ),
                     )
                     sammenhengendePerioderListe.add(liste[indeks])
                 } else {
@@ -404,7 +407,7 @@ internal class BoforholdBarnServiceV3 {
                                 fødselsdato = liste[indeks].fødselsdato,
                                 kilde = liste[indeks].kilde,
 
-                            ),
+                                ),
                         )
                         listeJustertMotAttenårsdag.add(
                             BoforholdResponseV2(
@@ -415,7 +418,7 @@ internal class BoforholdBarnServiceV3 {
                                 fødselsdato = liste[indeks].fødselsdato,
                                 kilde = liste[indeks].kilde,
 
-                            ),
+                                ),
                         )
                     } else {
                         listeJustertMotAttenårsdag.add(
@@ -655,37 +658,38 @@ internal class BoforholdBarnServiceV3 {
 
                 val indeksMatch = finnIndeksMatch(originalBostatus, behandledeOpplysninger)
 
-                if (indeksMatch == 0) {
-                    // Stemmer kommentar under?
+                if (originalBostatus.kilde == Kilde.OFFENTLIG) {
+                    // Offentlige perioder skal ikke kunne slettes
                     secureLogger.info {
-                        "Periode som skal slettes er første periode i behandledeOpplysninger, denne kan ikke slettes . " +
+                        "Offentlig periode kan ikke slettes. " +
                             "endreBostatus: " +
                             "$boforholdRequest.endreBostatus "
                     }
-                }
-
-                for (indeks in behandledeOpplysninger.sortedBy { it.periodeFom }.indices) {
-                    if (indeks == indeksMatch!! - 1) {
-                        // Periode før periode som skal slettes. Justerer periodeTom til å være lik slettet periodes periodeTom.
-                        endredePerioder.add(behandledeOpplysninger[indeks].copy(periodeTom = originalBostatus.periodeTom))
-                    } else {
-                        if (indeks == indeksMatch) {
-                            // Periode som skal slettes. Hopper over denne.
-                            continue
+                    return behandledeOpplysninger
+                } else {
+                    for (indeks in behandledeOpplysninger.sortedBy { it.periodeFom }.indices) {
+                        if (indeks == indeksMatch!! - 1) {
+                            // Periode før periode som skal slettes. Justerer periodeTom til å være lik slettet periodes periodeTom.
+                            endredePerioder.add(behandledeOpplysninger[indeks].copy(periodeTom = originalBostatus.periodeTom))
                         } else {
-                            endredePerioder.add(behandledeOpplysninger[indeks])
+                            if (indeks == indeksMatch) {
+                                // Periode som skal slettes. Hopper over denne.
+                                continue
+                            } else {
+                                endredePerioder.add(behandledeOpplysninger[indeks])
+                            }
                         }
                     }
-                }
 
-                if (endredePerioder.isEmpty()) {
-                    return emptyList()
-                } else {
-                    // Justerer perioder mot 18årsdag. Dette må gjøres siden periodeTom er endret på periode før den som er slettet.
-                    val endredePerioderJustertMotAttenårsdag =
-                        justerMotAttenårsdag(attenårFraDato, typeBehandling, endredePerioder)
-                    // Gjør en sammenslåing av perioder med lik bostatuskode og justerer periodeTom
-                    return slåSammenPerioderOgJusterPeriodeTom(endredePerioderJustertMotAttenårsdag)
+                    if (endredePerioder.isEmpty()) {
+                        return emptyList()
+                    } else {
+                        // Justerer perioder mot 18årsdag. Dette må gjøres siden periodeTom er endret på periode før den som er slettet.
+                        val endredePerioderJustertMotAttenårsdag =
+                            justerMotAttenårsdag(attenårFraDato, typeBehandling, endredePerioder)
+                        // Gjør en sammenslåing av perioder med lik bostatuskode og justerer periodeTom
+                        return slåSammenPerioderOgJusterPeriodeTom(endredePerioderJustertMotAttenårsdag)
+                    }
                 }
             }
 

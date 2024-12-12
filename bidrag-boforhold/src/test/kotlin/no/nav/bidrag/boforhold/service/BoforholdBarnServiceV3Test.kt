@@ -962,15 +962,15 @@ internal class BoforholdBarnServiceV3Test {
     }
 
     @Test
-    fun `Test ny periode, endre periode frem i tid og slett periode, med offentlige perioder`() {
+    fun `Test ny periode, endre periode frem i tid og slett offentlig periode, så slett manuell periode`() {
         boforholdBarnServiceV3 = BoforholdBarnServiceV3()
-        val mottatteBoforhold = TestUtil.byggEndrePeriodeFremITidMedOffentligePerioderV3()
+        val mottatteBoforhold = TestUtil.byggEndrePeriodeFremITidMedOffentligePerioderSlettOffentligOgManuellV3()
         val virkningstidspunkt = LocalDate.of(2023, 3, 1)
         val resultat = boforholdBarnServiceV3.beregnBoforholdBarn(virkningstidspunkt, TypeBehandling.FORSKUDD, mottatteBoforhold)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
-            resultat.size shouldBe 6
+            resultat.size shouldBe 8
 
             // Beregning 1
             resultat[0].periodeFom shouldBe LocalDate.of(2023, 3, 1)
@@ -1000,11 +1000,23 @@ internal class BoforholdBarnServiceV3Test {
             resultat[4].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
             resultat[4].kilde shouldBe Kilde.MANUELL
 
-            // Beregning 4.
-            resultat[5].periodeFom shouldBe LocalDate.of(2023, 11, 1)
-            resultat[5].periodeTom shouldBe null
-            resultat[5].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
-            resultat[5].kilde shouldBe Kilde.MANUELL
+            // Beregning 4 med forsøk på å slette offentlig periode, dette er ikke tillatt og periode blir værende.
+            resultat[5].periodeFom shouldBe LocalDate.of(2023, 3, 1)
+            resultat[5].periodeTom shouldBe LocalDate.of(2023, 10, 31)
+            resultat[5].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[5].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[6].periodeFom shouldBe LocalDate.of(2023, 11, 1)
+            resultat[6].periodeTom shouldBe null
+            resultat[6].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[6].kilde shouldBe Kilde.MANUELL
+
+            // Beregning 5. Sletter manuell periode.
+            resultat[7].periodeFom shouldBe LocalDate.of(2023, 3, 1)
+            resultat[7].periodeTom shouldBe null
+            resultat[7].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[7].kilde shouldBe Kilde.OFFENTLIG
+
         }
     }
 
@@ -1133,6 +1145,35 @@ internal class BoforholdBarnServiceV3Test {
             resultat[4].periodeTom shouldBe null
             resultat[4].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
             resultat[4].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
+
+    @Test
+    fun `Test setter tomdato på ny periode der offentlig periode skal fortsette etter satt tomdato`() {
+        boforholdBarnServiceV3 = BoforholdBarnServiceV3()
+        val mottatteBoforhold = TestUtil.byggSettTomdatoPåNyPeriodeV3()
+        val virkningstidspunkt = LocalDate.of(2023, 3, 1)
+        val resultat = boforholdBarnServiceV3.beregnBoforholdBarn(virkningstidspunkt, TypeBehandling.FORSKUDD, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 3
+
+            // Beregning 1
+            resultat[0].periodeFom shouldBe LocalDate.of(2023, 3, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2024, 3, 31)
+            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2024, 4, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2024, 7, 31)
+            resultat[1].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.MANUELL
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2024, 8, 1)
+            resultat[2].periodeTom shouldBe null
+            resultat[2].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[2].kilde shouldBe Kilde.OFFENTLIG
         }
     }
 }
