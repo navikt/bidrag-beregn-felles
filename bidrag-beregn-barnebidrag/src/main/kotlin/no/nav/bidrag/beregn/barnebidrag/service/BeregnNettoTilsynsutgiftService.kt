@@ -138,11 +138,12 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
     ): NettoTilsynsutgiftBeregningGrunnlag {
         // I første versjon må det legges inn faktiske utgifter for alle BMs barn under 12 år. I neste versjon skal alle BMs barn ligge i barnBMListe
         // og denne vil da gi grunnlaget for å telle antall barn i perioden.
-        val antallBarn = maxOf(antallBarnMedUtgifterIPerioden, barnUnderTolvÅr(grunnlag.barnBMListe, bruddPeriode.fom).size)
+        val antallBarnBMUnderTolvÅr = maxOf(antallBarnMedUtgifterIPerioden, barnUnderTolvÅr(grunnlag.barnBMListe, bruddPeriode.fom).size)
 
         val respons = NettoTilsynsutgiftBeregningGrunnlag(
             søknadsbarnReferanse = grunnlag.søknadsbarnReferanse,
-            barnBMListe = barnUnderTolvÅr(grunnlag.barnBMListe, bruddPeriode.fom),
+            barnBMListe = grunnlag.barnBMListe,
+            barnBMListeUnderTolvÅr = barnUnderTolvÅr(grunnlag.barnBMListe, bruddPeriode.fom),
             faktiskUtgiftListe = grunnlag.faktiskUtgiftPeriodeCoreListe
                 .filter { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
                 .map {
@@ -177,7 +178,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                 .asSequence()
                 .filter { it.sjablonMaksTilsynsbeløpPeriode.periode.inneholder(bruddPeriode) }
                 .sortedBy { it.sjablonMaksTilsynsbeløpPeriode.antallBarnTom }
-                .filter { it.sjablonMaksTilsynsbeløpPeriode.antallBarnTom >= antallBarn }
+                .filter { it.sjablonMaksTilsynsbeløpPeriode.antallBarnTom >= antallBarnBMUnderTolvÅr }
                 .map {
                     SjablonMaksTilsynsbeløpBeregningGrunnlag(
                         referanse = it.referanse,
@@ -190,7 +191,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                 .asSequence()
                 .filter { it.sjablonMaksFradragsbeløpPeriode.periode.inneholder(bruddPeriode) }
                 .sortedBy { it.sjablonMaksFradragsbeløpPeriode.antallBarnTom }
-                .filter { it.sjablonMaksFradragsbeløpPeriode.antallBarnTom >= antallBarn }
+                .filter { it.sjablonMaksFradragsbeløpPeriode.antallBarnTom >= antallBarnBMUnderTolvÅr }
                 .map {
                     SjablonMaksFradragsbeløpBeregningGrunnlag(
                         referanse = it.referanse,
@@ -263,12 +264,17 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                     DelberegningNettoTilsynsutgift(
                         periode = it.periode,
                         totalTilsynsutgift = it.resultat.totalTilsynsutgift,
-                        sjablonMaksTilsynsutgift = it.resultat.sjablonMaksTilsynsutgift,
-                        andelTilsynsutgiftBeløp = it.resultat.andelTilsynsutgiftBeløp,
+                        bruttoTilsynsutgift = it.resultat.bruttoTilsynsutgift,
+                        justertBruttoTilsynsutgift = it.resultat.justertBruttoTilsynsutgift,
                         andelTilsynsutgiftFaktor = it.resultat.andelTilsynsutgiftFaktor,
                         skattefradrag = it.resultat.skattefradrag,
+                        antallBarnBMUnderTolvÅr = it.resultat.antallBarn,
                         nettoTilsynsutgift = it.resultat.nettoTilsynsutgift,
                         tilsynsutgiftBarnListe = it.resultat.tilsynsutgiftBarnListe,
+                        erBegrensetAvMaksTilsyn = it.resultat.erBegrensetAvMaksTilsyn,
+                        skattefradragMaksfradrag = it.resultat.skattefradragMaksfradrag,
+                        skattefradragTotalTilsynsutgift = it.resultat.skattefradragTotalTilsynsutgift,
+                        skattefradragPerBarn = it.resultat.skattefradragPerBarn,
                     ),
                 ),
                 grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe,
@@ -397,7 +403,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
     private fun barnUnderTolvÅr(barnBMListe: List<BarnBM>, fom: YearMonth): List<BarnBM> = barnBMListe.filter {
         it.fødselsdato.let { fødselsdato ->
             Period.between(
-                fødselsdato,
+                fødselsdato.plusYears(1).withMonth(1).withDayOfMonth(1),
                 LocalDate.of(fom.year, fom.month, 1),
             ).years < 12
         }

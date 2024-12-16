@@ -81,10 +81,13 @@
           "til": "2024-02"
         },
         "totalTilsynsutgift": 400.00,
-        "sjablonMaksTilsynsutgift": 400.00,
-        "andelTilsynsutgiftBeløp": 400.00,
+        "bruttoTilsynsutgift": 400.00,
+        "justertBruttoTilsynsutgift": 400.00,
         "andelTilsynsutgiftFaktor": 400.00,
         "skattefradrag": 400.00,
+        "skattefradragPerBarn": 400.00,
+        "skattefradragMaksfradrag": 400.00,
+        "skattefradragTotalTilsynsutgift": 400.00,
         "nettoTilsynsutgift": 300.6,
         "tilsynsutgiftBarnListe": [
           {
@@ -106,11 +109,14 @@
           "fom": "2024-02",
           "til": "2024-09"
         },
-        "totalTilsynsutgift": 1000.00,
-        "sjablonMaksTilsynsutgift": 400.00,
-        "andelTilsynsutgiftBeløp": 400.00,
+        "totalTilsynsutgift": 400.00,
+        "bruttoTilsynsutgift": 400.00,
+        "justertBruttoTilsynsutgift": 400.00,
         "andelTilsynsutgiftFaktor": 400.00,
         "skattefradrag": 400.00,
+        "skattefradragPerBarn": 400.00,
+        "skattefradragMaksfradrag": 400.00,
+        "skattefradragTotalTilsynsutgift": 400.00,
         "nettoTilsynsutgift": 1211.18,
         "tilsynsutgiftBarnListe": [
           {
