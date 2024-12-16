@@ -29,6 +29,8 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.time.LocalDate
 import java.time.Period
 import java.time.YearMonth
@@ -138,11 +140,12 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
     ): NettoTilsynsutgiftBeregningGrunnlag {
         // I første versjon må det legges inn faktiske utgifter for alle BMs barn under 12 år. I neste versjon skal alle BMs barn ligge i barnBMListe
         // og denne vil da gi grunnlaget for å telle antall barn i perioden.
-        val antallBarn = maxOf(antallBarnMedUtgifterIPerioden, barnUnderTolvÅr(grunnlag.barnBMListe, bruddPeriode.fom).size)
+        val antallBarn = maxOf(antallBarnMedUtgifterIPerioden, grunnlag.barnBMListe.size)
 
         val respons = NettoTilsynsutgiftBeregningGrunnlag(
             søknadsbarnReferanse = grunnlag.søknadsbarnReferanse,
-            barnBMListe = barnUnderTolvÅr(grunnlag.barnBMListe, bruddPeriode.fom),
+            barnBMListe = grunnlag.barnBMListe,
+//            barnBMListe = barnUnderTolvÅr(grunnlag.barnBMListe, bruddPeriode.fom),
             faktiskUtgiftListe = grunnlag.faktiskUtgiftPeriodeCoreListe
                 .filter { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
                 .map {
@@ -252,6 +255,14 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
         mottattGrunnlag: BeregnGrunnlag,
     ): List<GrunnlagDto> = nettoTilsynsutgiftPeriodeResultatListe
         .map {
+            val sumTilsynsutgifter = it.resultat.tilsynsutgiftBarnListe.sumOf { it.sumTilsynsutgifter }
+            val søknadsbarnFaktiskBeløp =
+                it.resultat.tilsynsutgiftBarnListe
+                    .find { it.gjelderBarn == mottattGrunnlag.søknadsbarnReferanse }
+                    ?.sumTilsynsutgifter
+                    ?: BigDecimal.ZERO
+            val erBegrensetAvMaksTilsyn =
+                it.resultat.totalTilsynsutgift.setScale(0, RoundingMode.HALF_UP) != sumTilsynsutgifter.setScale(0, RoundingMode.HALF_UP)
             GrunnlagDto(
                 referanse = opprettDelberegningreferanse(
                     type = Grunnlagstype.DELBEREGNING_NETTO_TILSYNSUTGIFT,
@@ -265,10 +276,18 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                         totalTilsynsutgift = it.resultat.totalTilsynsutgift,
                         sjablonMaksTilsynsutgift = it.resultat.sjablonMaksTilsynsutgift,
                         andelTilsynsutgiftBeløp = it.resultat.andelTilsynsutgiftBeløp,
+                        bruttoTilsynsutgift = it.resultat.andelTilsynsutgiftBeløp,
                         andelTilsynsutgiftFaktor = it.resultat.andelTilsynsutgiftFaktor,
                         skattefradrag = it.resultat.skattefradrag,
+                        antallBarn = it.resultat.antallBarn,
                         nettoTilsynsutgift = it.resultat.nettoTilsynsutgift,
                         tilsynsutgiftBarnListe = it.resultat.tilsynsutgiftBarnListe,
+                        erBegrensetAvMaksTilsyn = erBegrensetAvMaksTilsyn,
+                        faktiskTilsynsutgift = søknadsbarnFaktiskBeløp,
+                        skattefradragMaksfradrag = it.resultat.skattefradragMaksfradrag,
+                        skattefradragTotalTilsynsutgift = it.resultat.skattefradragTotalTilsynsutgift,
+                        skattefradragPerBarn = it.resultat.skattefradragPerBarn,
+
                     ),
                 ),
                 grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe,

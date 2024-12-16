@@ -5,7 +5,6 @@ import no.nav.bidrag.beregn.barnebidrag.beregning.UnderholdskostnadBeregning
 import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilsynMedStønad
 import no.nav.bidrag.beregn.barnebidrag.bo.BarnetrygdType
 import no.nav.bidrag.beregn.barnebidrag.bo.NettoTilsynsutgift
-import no.nav.bidrag.beregn.barnebidrag.bo.NettoTilsynsutgiftPeriodeResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonBarnetilsynBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonForbruksutgifterBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonForbruksutgifterPeriodeGrunnlag
@@ -22,7 +21,6 @@ import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningNettoTilsynsutgift
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
@@ -295,40 +293,6 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
                 grunnlagsreferanseListe = it.grunnlagsreferanseListe,
                 gjelderReferanse = it.gjelderReferanse,
                 gjelderBarnReferanse = it.gjelderBarnReferanse,
-            )
-        }
-
-    // Mapper ut DelberegningNettoTilsynsutgift
-    private fun mapDelberegningNettoTilsynsutgift(
-        nettoTilsynsutgiftPeriodeResultatListe: List<NettoTilsynsutgiftPeriodeResultat>,
-        mottattGrunnlag: BeregnGrunnlag,
-    ): List<GrunnlagDto> = nettoTilsynsutgiftPeriodeResultatListe
-        .map {
-            GrunnlagDto(
-                referanse = opprettDelberegningreferanse(
-                    type = Grunnlagstype.DELBEREGNING_NETTO_TILSYNSUTGIFT,
-                    periode = it.periode,
-                    søknadsbarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
-                ),
-                type = Grunnlagstype.DELBEREGNING_NETTO_TILSYNSUTGIFT,
-                innhold = POJONode(
-                    DelberegningNettoTilsynsutgift(
-                        periode = it.periode,
-                        totalTilsynsutgift = it.resultat.totalTilsynsutgift,
-                        sjablonMaksTilsynsutgift = it.resultat.sjablonMaksTilsynsutgift,
-                        andelTilsynsutgiftBeløp = it.resultat.andelTilsynsutgiftBeløp,
-                        andelTilsynsutgiftFaktor = it.resultat.andelTilsynsutgiftFaktor,
-                        skattefradrag = it.resultat.skattefradrag,
-                        nettoTilsynsutgift = it.resultat.nettoTilsynsutgift,
-                        tilsynsutgiftBarnListe = it.resultat.tilsynsutgiftBarnListe,
-                    ),
-                ),
-                grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe,
-                gjelderReferanse = finnReferanseTilRolle(
-                    grunnlagListe = mottattGrunnlag.grunnlagListe,
-                    grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
-                ),
-                gjelderBarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
             )
         }
 
