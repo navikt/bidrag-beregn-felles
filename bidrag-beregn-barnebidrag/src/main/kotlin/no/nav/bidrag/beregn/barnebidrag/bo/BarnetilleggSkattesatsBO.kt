@@ -21,4 +21,13 @@ data class BarnetilleggSkattesatsBeregningGrunnlag(
     val sjablonTrinnvisSkattesatsBeregningGrunnlag: SjablonTrinnvisSkattesatsBeregningGrunnlag,
 )
 
-data class BarnetilleggSkattesatsBeregningResultat(val skattFaktor: BigDecimal, val grunnlagsreferanseListe: List<String>)
+data class BarnetilleggSkattesatsBeregningResultat(
+    val skattFaktor: BigDecimal,
+    val minstefradrag: BigDecimal,
+    val skattAlminneligInntekt: BigDecimal,
+    val trygdeavgift: BigDecimal,
+    val trinnskatt: BigDecimal,
+    val sumSkatt: BigDecimal,
+    val sumInntekt: BigDecimal,
+    val grunnlagsreferanseListe: List<String>
+)
