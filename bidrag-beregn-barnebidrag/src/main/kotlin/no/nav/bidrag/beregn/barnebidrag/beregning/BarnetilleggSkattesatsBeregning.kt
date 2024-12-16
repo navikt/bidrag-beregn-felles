@@ -5,6 +5,7 @@ import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilleggSkattesatsBeregningResult
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import no.nav.bidrag.domene.util.avrundetMedNullDesimaler
 import no.nav.bidrag.domene.util.avrundetMedTiDesimaler
+import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -43,6 +44,12 @@ internal object BarnetilleggSkattesatsBeregning {
 
         return BarnetilleggSkattesatsBeregningResultat(
             skattFaktor = sumSkattFaktor.avrundetMedTiDesimaler,
+            minstefradrag = minstefradrag.avrundetMedToDesimaler,
+            skattAlminneligInntekt = skattAlminneligInntekt.avrundetMedToDesimaler,
+            trygdeavgift = trygdeavgift.avrundetMedToDesimaler,
+            trinnskatt = trinnskatt.avrundetMedToDesimaler,
+            sumSkatt = sumSkatt.avrundetMedToDesimaler,
+            sumInntekt = sumInntekt.avrundetMedToDesimaler,
             grunnlagsreferanseListe = listOf(
                 grunnlag.inntektBeregningGrunnlag.referanse,
                 grunnlag.sjablonTrinnvisSkattesatsBeregningGrunnlag.referanse,

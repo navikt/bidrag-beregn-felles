@@ -86,6 +86,12 @@ internal class BeregnBarnetilleggSkattesatsApiTest {
                 DelberegningBarnetilleggSkattesats(
                     periode = it.innhold.periode,
                     skattFaktor = it.innhold.skattFaktor,
+                    minstefradrag = it.innhold.minstefradrag,
+                    skattAlminneligInntekt = it.innhold.skattAlminneligInntekt,
+                    trygdeavgift = it.innhold.trygdeavgift,
+                    trinnskatt = it.innhold.trinnskatt,
+                    sumSkatt = it.innhold.sumSkatt,
+                    sumInntekt = it.innhold.sumInntekt,
                 )
             }
 
