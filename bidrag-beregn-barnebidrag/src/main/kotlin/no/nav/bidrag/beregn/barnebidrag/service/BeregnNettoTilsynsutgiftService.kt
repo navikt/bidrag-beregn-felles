@@ -403,7 +403,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
     private fun barnUnderTolvÅr(barnBMListe: List<BarnBM>, fom: YearMonth): List<BarnBM> = barnBMListe.filter {
         it.fødselsdato.let { fødselsdato ->
             Period.between(
-                fødselsdato.withMonth(7).withDayOfMonth(1),
+                fødselsdato.plusYears(1).withMonth(1).withDayOfMonth(1),
                 LocalDate.of(fom.year, fom.month, 1),
             ).years < 12
         }
