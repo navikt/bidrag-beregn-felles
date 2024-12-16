@@ -96,7 +96,7 @@ internal class BeregnNettoTilsynsutgiftApiTest {
             { assertEquals(0, resultat[0].totalTilsynsutgift.compareTo(BigDecimal.valueOf(366.67))) },
             { assertEquals(0, resultat[0].justertBruttoTilsynsutgift.compareTo(BigDecimal.valueOf(366.67))) },
             { assertEquals(0, resultat[0].andelTilsynsutgiftFaktor.compareTo(BigDecimal.valueOf(1.0))) },
-            { assertEquals(0, resultat[0].skattefradrag.compareTo(BigDecimal.valueOf(45.56))) },
+            { assertEquals(0, resultat[0].skattefradragPerBarn.compareTo(BigDecimal.valueOf(45.56))) },
             { assertEquals(0, resultat[0].nettoTilsynsutgift.compareTo(BigDecimal.valueOf(321.11))) },
 
             { assertThat(resultat[0].tilsynsutgiftBarnListe).hasSize(1) },
@@ -107,7 +107,7 @@ internal class BeregnNettoTilsynsutgiftApiTest {
             { assertEquals(0, resultat[1].totalTilsynsutgift.compareTo(BigDecimal.valueOf(168.06))) },
             { assertEquals(0, resultat[1].justertBruttoTilsynsutgift.compareTo(BigDecimal.valueOf(168.06))) },
             { assertEquals(0, resultat[1].andelTilsynsutgiftFaktor.compareTo(BigDecimal.valueOf(1.0))) },
-            { assertEquals(0, resultat[1].skattefradrag.compareTo(BigDecimal.valueOf(20.88))) },
+            { assertEquals(0, resultat[1].skattefradragPerBarn.compareTo(BigDecimal.valueOf(20.88))) },
             { assertEquals(0, resultat[1].nettoTilsynsutgift.compareTo(BigDecimal.valueOf(147.17))) },
 
             { assertThat(resultat[1].tilsynsutgiftBarnListe).hasSize(1) },
@@ -118,7 +118,7 @@ internal class BeregnNettoTilsynsutgiftApiTest {
             { assertEquals(0, resultat[2].totalTilsynsutgift.compareTo(BigDecimal.valueOf(8906))) },
             { assertEquals(0, resultat[2].justertBruttoTilsynsutgift.compareTo(BigDecimal.valueOf(160.34))) },
             { assertEquals(0, resultat[2].andelTilsynsutgiftFaktor.compareTo(BigDecimal.valueOf(0.01800327330))) },
-            { assertEquals(0, resultat[2].skattefradrag.compareTo(BigDecimal.valueOf(414.13))) },
+            { assertEquals(0, resultat[2].skattefradragPerBarn.compareTo(BigDecimal.valueOf(414.13))) },
             { assertEquals(0, resultat[2].nettoTilsynsutgift.compareTo(BigDecimal.valueOf(0))) },
 
             { assertThat(resultat[2].tilsynsutgiftBarnListe).hasSize(2) },
@@ -133,7 +133,7 @@ internal class BeregnNettoTilsynsutgiftApiTest {
             { assertEquals(0, resultat[3].totalTilsynsutgift.compareTo(BigDecimal.valueOf(8906))) },
             { assertEquals(0, resultat[3].justertBruttoTilsynsutgift.compareTo(BigDecimal.valueOf(160.34))) },
             { assertEquals(0, resultat[3].andelTilsynsutgiftFaktor.compareTo(BigDecimal.valueOf(0.01800327330))) },
-            { assertEquals(0, resultat[3].skattefradrag.compareTo(BigDecimal.valueOf(414.13))) },
+            { assertEquals(0, resultat[3].skattefradragPerBarn.compareTo(BigDecimal.valueOf(414.13))) },
             { assertEquals(0, resultat[3].nettoTilsynsutgift.compareTo(BigDecimal.valueOf(0))) },
 
             { assertThat(resultat[2].tilsynsutgiftBarnListe).hasSize(2) },
@@ -147,7 +147,7 @@ internal class BeregnNettoTilsynsutgiftApiTest {
             { assertEquals(0, resultat[4].totalTilsynsutgift.compareTo(BigDecimal.valueOf(9334.72))) },
             { assertEquals(0, resultat[4].justertBruttoTilsynsutgift.compareTo(BigDecimal.valueOf(168.06))) },
             { assertEquals(0, resultat[4].andelTilsynsutgiftFaktor.compareTo(BigDecimal.valueOf(0.01800327330))) },
-            { assertEquals(0, resultat[4].skattefradrag.compareTo(BigDecimal.valueOf(414.13))) },
+            { assertEquals(0, resultat[4].skattefradragPerBarn.compareTo(BigDecimal.valueOf(414.13))) },
             { assertEquals(0, resultat[4].nettoTilsynsutgift.compareTo(BigDecimal.valueOf(0))) },
 
             { assertThat(resultat[2].tilsynsutgiftBarnListe).hasSize(2) },
@@ -176,7 +176,7 @@ internal class BeregnNettoTilsynsutgiftApiTest {
             { assertEquals(0, resultat[0].totalTilsynsutgift.compareTo(BigDecimal.valueOf(10742))) },
             { assertEquals(0, resultat[0].justertBruttoTilsynsutgift.compareTo(BigDecimal.valueOf(1625.73))) },
             { assertEquals(0, resultat[0].andelTilsynsutgiftFaktor.compareTo(BigDecimal.valueOf(0.1513437058))) },
-            { assertEquals(0, resultat[0].skattefradrag.compareTo(BigDecimal.valueOf(379.63))) },
+            { assertEquals(0, resultat[0].skattefradragPerBarn.compareTo(BigDecimal.valueOf(379.63))) },
             { assertEquals(0, resultat[0].nettoTilsynsutgift.compareTo(BigDecimal.valueOf(1246.11))) },
 
             { assertEquals(0, resultat[0].tilsynsutgiftBarnListe[0].sumTilsynsutgifter.compareTo(BigDecimal.valueOf(1634.72))) },
