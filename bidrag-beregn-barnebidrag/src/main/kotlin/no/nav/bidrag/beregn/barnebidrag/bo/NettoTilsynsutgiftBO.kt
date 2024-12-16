@@ -30,6 +30,7 @@ data class NettoTilsynsutgiftPeriodeResultat(val periode: ÅrMånedsperiode, val
 data class NettoTilsynsutgiftBeregningGrunnlag(
     val søknadsbarnReferanse: String,
     val barnBMListe: List<BarnBM>,
+    val barnBMListeUnderTolvÅr: List<BarnBM>,
     val faktiskUtgiftListe: List<FaktiskUtgift>,
     val tilleggsstønad: Tilleggsstønad?,
     val sjablonSjablontallBeregningGrunnlagListe: List<SjablonSjablontallBeregningGrunnlag>,
@@ -43,9 +44,11 @@ data class SjablonMaksTilsynsbeløpBeregningGrunnlag(val referanse: String, val 
 data class SjablonMaksFradragsbeløpBeregningGrunnlag(val referanse: String, val antallBarnTom: Int, val maxBeløpFradrag: BigDecimal)
 
 data class NettoTilsynsutgiftBeregningResultat(
+    val erBegrensetAvMaksTilsyn: Boolean,
     val totalTilsynsutgift: BigDecimal,
     val sjablonMaksTilsynsutgift: BigDecimal,
-    val andelTilsynsutgiftBeløp: BigDecimal,
+    val bruttoTilsynsutgift: BigDecimal,
+    val justertBruttoTilsynsutgift: BigDecimal,
     val andelTilsynsutgiftFaktor: BigDecimal,
     val antallBarn: Int,
     val skattefradrag: BigDecimal,
