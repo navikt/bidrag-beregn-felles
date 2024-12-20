@@ -25,7 +25,7 @@ internal object BeregnBarnetilleggSkattesatsService : BeregnService() {
     fun delberegningBarnetilleggSkattesats(
         mottattGrunnlag: BeregnGrunnlag,
         rolle: Grunnlagstype,
-        åpenSluttperiode: Boolean = true
+        åpenSluttperiode: Boolean = true,
     ): List<GrunnlagDto> {
         val referanseTilRolle = finnReferanseTilRolle(
             grunnlagListe = mottattGrunnlag.grunnlagListe,

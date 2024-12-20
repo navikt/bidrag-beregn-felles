@@ -100,7 +100,7 @@ internal class BeregnNettoBarnetilleggApiTest {
         assertAll(
             { assertThat(resultatBM).hasSize(0) },
 
-            )
+        )
     }
 
     @Test
@@ -123,7 +123,7 @@ internal class BeregnNettoBarnetilleggApiTest {
             { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode("2024-06", "2024-07")) },
             { assertEquals(0, resultat[2].summertBruttoBarnetillegg.compareTo(BigDecimal.valueOf(500.00))) },
 
-            )
+        )
     }
 
     private fun utførBeregningerOgEvaluerResultatNettoBarnetillegg(rolle: Grunnlagstype): List<DelberegningNettoBarnetillegg> {

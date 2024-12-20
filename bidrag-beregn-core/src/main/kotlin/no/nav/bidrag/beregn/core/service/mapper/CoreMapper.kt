@@ -69,7 +69,7 @@ abstract class CoreMapper {
         referanseTilRolle: String,
         innslagKapitalinntektSjablonverdi: BigDecimal,
         erSærbidrag: Boolean = false,
-        åpenSluttperiode : Boolean = false,
+        åpenSluttperiode: Boolean = false,
         erForskudd: Boolean = false,
     ): List<InntektPeriodeCore> {
         try {
@@ -243,9 +243,8 @@ abstract class CoreMapper {
         beregningsperiode: ÅrMånedsperiode = ÅrMånedsperiode(fom = LocalDate.MIN, til = LocalDate.MAX),
         erForskudd: Boolean = false,
     ): List<T> {
-
-        //TODO Logikken bør være lik for forskudd, særbidrag og bidrag. Splittet opp ifbm. at beregningsperiode blir justert hvis barnet fyller 18 år
-        //TODO i perioden. Dette medførte feil i forskuddstestene. Holder derfor logikken adskilt for nå.
+        // TODO Logikken bør være lik for forskudd, særbidrag og bidrag. Splittet opp ifbm. at beregningsperiode blir justert hvis barnet fyller 18 år
+        // TODO i perioden. Dette medførte feil i forskuddstestene. Holder derfor logikken adskilt for nå.
         val periodeListe: List<Periode>
 
         if (erForskudd) {
@@ -257,7 +256,6 @@ abstract class CoreMapper {
                 .sortedWith(compareBy { it == null })
                 .zipWithNext()
                 .map { Periode(it.first!!, it.second) }
-
         } else {
             // Legger til beregningsperiode i bruddato-listen
             val bruddatoListe = grunnlagListe

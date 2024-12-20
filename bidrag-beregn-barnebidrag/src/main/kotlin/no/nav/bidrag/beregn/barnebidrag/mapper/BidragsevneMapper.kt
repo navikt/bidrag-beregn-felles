@@ -19,7 +19,7 @@ internal object BidragsevneMapper : CoreMapper() {
     fun mapBidragsevneGrunnlag(
         mottattGrunnlag: BeregnGrunnlag,
         sjablonGrunnlag: List<GrunnlagDto>,
-        åpenSluttperiode: Boolean
+        åpenSluttperiode: Boolean,
     ): BidragsevnePeriodeGrunnlag {
         val referanseTilBP = finnReferanseTilRolle(
             grunnlagListe = mottattGrunnlag.grunnlagListe,

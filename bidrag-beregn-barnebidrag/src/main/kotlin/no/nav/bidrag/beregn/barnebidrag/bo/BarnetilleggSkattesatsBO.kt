@@ -29,5 +29,5 @@ data class BarnetilleggSkattesatsBeregningResultat(
     val trinnskatt: BigDecimal,
     val sumSkatt: BigDecimal,
     val sumInntekt: BigDecimal,
-    val grunnlagsreferanseListe: List<String>
+    val grunnlagsreferanseListe: List<String>,
 )
