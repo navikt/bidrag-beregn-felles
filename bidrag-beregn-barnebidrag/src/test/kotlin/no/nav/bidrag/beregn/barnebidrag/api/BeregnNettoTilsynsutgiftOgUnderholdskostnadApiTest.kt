@@ -214,7 +214,33 @@ internal class BeregnNettoTilsynsutgiftOgUnderholdskostnadApiTest {
             { assertThat(resultat[3].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
             { assertNull(resultat[3].nettoTilsynsutgift) },
 
-            )
+        )
+    }
+
+    @Test
+    @DisplayName("Underholdskostnad - eksempel 5")
+    fun test_netto_tilsynsugift_og_underholdskostnad_alle_barn_refereres_i_resultatet() {
+        filnavn =
+            "src/test/resources/testfiler/nettobarnetilsynogunderholdskostnad/nettotilsynsutgift_og_underholdskostnad_flere_barn.json"
+        val resultat = utførBeregningerOgEvaluerResultatNettoTilsynsutgiftOgUnderholdskostnad()
+
+        assertAll(
+            // Resultat
+            { assertThat(resultat).hasSize(4) },
+
+            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode("2024-01", "2024-03")) },
+            { assertNull(resultat[0].nettoTilsynsutgift) },
+
+            { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode("2024-03", "2024-05")) },
+            { assertNotNull(resultat[1].nettoTilsynsutgift) },
+
+            { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode("2024-05", "2024-07")) },
+            { assertNull(resultat[2].nettoTilsynsutgift) },
+
+            { assertThat(resultat[3].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
+            { assertNull(resultat[3].nettoTilsynsutgift) },
+
+        )
     }
 
     private fun utførBeregningerOgEvaluerResultatNettoTilsynsutgiftOgUnderholdskostnad(): List<DelberegningUnderholdskostnad> {

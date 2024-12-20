@@ -1,0 +1,172 @@
+{
+  "periode": {
+    "fom": "2024-08",
+    "til": "2024-09"
+  },
+  "søknadsbarnReferanse": "Person_Søknadsbarn",
+  "grunnlagListe": [
+    {
+      "referanse": "Person_Søknadsbarn",
+      "type": "PERSON_SØKNADSBARN",
+      "innhold": {
+        "ident": "11111111110",
+        "navn": "Trengende Søknadsbarn",
+        "fødselsdato": "2017-09-13"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Person_Bidragsmottaker",
+      "type": "PERSON_BIDRAGSMOTTAKER",
+      "innhold": {
+        "ident": "22222222222",
+        "navn": "Søkende Bidragsmottaker",
+        "fødselsdato": "1982-05-05"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Person_Bidragspliktig",
+      "type": "PERSON_BIDRAGSPLIKTIG",
+      "innhold": {
+        "ident": "33333333333",
+        "navn": "Motvillig Bidragspliktig",
+        "fødselsdato": "1981-07-13"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse" : "person_PERSON_BARN_BIDRAGSMOTTAKER_20201217_100",
+      "type" : "PERSON_BARN_BIDRAGSMOTTAKER",
+      "innhold" : {
+        "ident" : "12121250511",
+        "navn" : null,
+        "fødselsdato" : "2020-12-17"
+      },
+      "grunnlagsreferanseListe" : [],
+      "gjelderReferanse" : null
+    },
+    {
+      "referanse" : "person_PERSON_BARN_BIDRAGSMOTTAKER_20190317_101",
+      "type" : "PERSON_BARN_BIDRAGSMOTTAKER",
+      "innhold" : {
+        "ident" : "12121250511",
+        "navn" : null,
+        "fødselsdato" : "2019-12-17"
+      },
+      "grunnlagsreferanseListe" : [],
+      "gjelderReferanse" : null
+    },
+    {
+      "referanse": "Mottatt_FaktiskUtgift_202301_SB1",
+      "type": "FAKTISK_UTGIFT_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-01",
+          "til": null
+        },
+        "fødselsdatoBarn": "2017-09-13",
+        "faktiskUtgiftBeløp": 500.00,
+        "kostpengerBeløp": 100.00,
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "Mottatt_FaktiskUtgift_202301_person_PERSON_BARN_BIDRAGSMOTTAKER_20201217_100",
+      "type": "FAKTISK_UTGIFT_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-01",
+          "til": null
+        },
+        "fødselsdatoBarn": "2020-12-17",
+        "faktiskUtgiftBeløp": 700.00,
+        "kostpengerBeløp": 300.00,
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "person_PERSON_BARN_BIDRAGSMOTTAKER_20201217_100",
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "Mottatt_FaktiskUtgift_202301_person_PERSON_BARN_BIDRAGSMOTTAKER_20190317_101",
+      "type": "FAKTISK_UTGIFT_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-01",
+          "til": null
+        },
+        "fødselsdatoBarn": "2020-12-17",
+        "faktiskUtgiftBeløp": 200.00,
+        "kostpengerBeløp": 300.00,
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "person_PERSON_BARN_BIDRAGSMOTTAKER_20190317_101",
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "Mottatt_Tilleggsstønad_202301_SB1",
+      "type": "TILLEGGSSTØNAD_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-02",
+          "til": null
+        },
+        "beløpDagsats": 10.00,
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "Mottatt_Barnetilsyn_202407_Person_Søknadsbarn",
+      "type": "BARNETILSYN_MED_STØNAD_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-07",
+          "til": "2024-11"
+        },
+        "tilsynstype": "HELTID",
+        "skolealder": "UNDER",
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "Mottatt_Netto_Tilsynsutgift_202402_Person_Bidragsmottaker",
+      "type": "DELBEREGNING_NETTO_TILSYNSUTGIFT",
+      "innhold": {
+        "periode": {
+          "fom": "2024-02",
+          "til": "2024-09"
+        },
+        "totalTilsynsutgift": 400.00,
+        "sjablonMaksTilsynsutgift": 400.00,
+        "andelTilsynsutgiftBeløp": 400.00,
+        "andelTilsynsutgiftFaktor": 400.00,
+        "skattefradrag": 400.00,
+        "nettoTilsynsutgift": 58.83,
+        "tilsynsutgiftBarnListe": [
+          {
+            "gjelderBarn": "Person_Søknadsbarn",
+            "sumTilsynsutgifter": 400.00,
+            "endeligSumTilsynsutgifter": 366.67
+          }
+        ],
+        "grunnlagsreferanseListe": [],
+        "gjelderBarnReferanse": "Person_Søknadsbarn",
+        "gjelderReferanse": "Person_Bidragsmottaker"
+      }
+    }
+  ]
+}
