@@ -1,6 +1,6 @@
 {
   "periode": {
-    "fom": "2024-08",
+    "fom": "2024-01",
     "til": "2024-09"
   },
   "søknadsbarnReferanse": "Person_Søknadsbarn",
@@ -151,10 +151,15 @@
           "til": "2024-09"
         },
         "totalTilsynsutgift": 400.00,
-        "sjablonMaksTilsynsutgift": 400.00,
-        "andelTilsynsutgiftBeløp": 400.00,
+        "erBegrensetAvMaksTilsyn": false,
+        "bruttoTilsynsutgift": 400.00,
+        "justertBruttoTilsynsutgift": 400.00,
         "andelTilsynsutgiftFaktor": 400.00,
+        "antallBarnBMUnderTolvÅr": 2,
         "skattefradrag": 400.00,
+        "skattefradragPerBarn": 400.00,
+        "skattefradragTotalTilsynsutgift": 400.00,
+        "skattefradragMaksfradrag": 400.00,
         "nettoTilsynsutgift": 58.83,
         "tilsynsutgiftBarnListe": [
           {

@@ -226,19 +226,16 @@ internal class BeregnNettoTilsynsutgiftOgUnderholdskostnadApiTest {
 
         assertAll(
             // Resultat
-            { assertThat(resultat).hasSize(4) },
+            { assertThat(resultat).hasSize(3) },
 
-            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode("2024-01", "2024-03")) },
-            { assertNull(resultat[0].nettoTilsynsutgift) },
+            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode("2024-01", "2024-02")) },
+            { assertNotNull(resultat[0].nettoTilsynsutgift) },
 
-            { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode("2024-03", "2024-05")) },
+            { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode("2024-02", "2024-07")) },
             { assertNotNull(resultat[1].nettoTilsynsutgift) },
 
-            { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode("2024-05", "2024-07")) },
-            { assertNull(resultat[2].nettoTilsynsutgift) },
-
-            { assertThat(resultat[3].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
-            { assertNull(resultat[3].nettoTilsynsutgift) },
+            { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
+            { assertNotNull(resultat[2].nettoTilsynsutgift) },
 
         )
     }
