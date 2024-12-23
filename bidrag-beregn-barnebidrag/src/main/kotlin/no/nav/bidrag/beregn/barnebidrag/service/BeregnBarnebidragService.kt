@@ -150,7 +150,7 @@ class BeregnBarnebidragService : BeregnService() {
 
         val delberegningNettoTilsynsutgiftResultat = delberegningNettoTilsynsutgift(
             mottattGrunnlag = utvidetGrunnlag,
-            åpenSluttperiode = åpenSluttperiode
+            åpenSluttperiode = åpenSluttperiode,
         )
 
         val delberegningUnderholdskostnadResultat = delberegningUnderholdskostnad(
@@ -159,7 +159,7 @@ class BeregnBarnebidragService : BeregnService() {
                 søknadsbarnReferanse = utvidetGrunnlag.søknadsbarnReferanse,
                 grunnlagListe = (utvidetGrunnlag.grunnlagListe + delberegningNettoTilsynsutgiftResultat).distinctBy { it.referanse },
             ),
-            åpenSluttperiode = åpenSluttperiode
+            åpenSluttperiode = åpenSluttperiode,
         )
 
         return (delberegningNettoTilsynsutgiftResultat + delberegningUnderholdskostnadResultat).distinctBy { it.referanse }
@@ -277,9 +277,9 @@ class BeregnBarnebidragService : BeregnService() {
         return if (periodeSøknadsbarnetFyller18År.isBefore(mottattGrunnlag.periode.til)) {
             BeregnGrunnlagJustert(
                 beregnGrunnlag = mottattGrunnlag.copy(
-                    periode = mottattGrunnlag.periode.copy(til = periodeSøknadsbarnetFyller18År.plusMonths(1))
+                    periode = mottattGrunnlag.periode.copy(til = periodeSøknadsbarnetFyller18År.plusMonths(1)),
                 ),
-                åpenSluttperiode = false
+                åpenSluttperiode = false,
             )
         } else {
             BeregnGrunnlagJustert(beregnGrunnlag = mottattGrunnlag, åpenSluttperiode = true)

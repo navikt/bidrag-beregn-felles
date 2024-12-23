@@ -295,6 +295,29 @@ internal class BeregnNettoTilsynsutgiftApiTest {
         assertThat(responseFaktiskUtgift2).isEqualByComparingTo(BigDecimal.valueOf(458.33))
     }
 
+    @Test
+    @DisplayName("Test at antall barn under 12 år ikke tar med barn født før beregning start, skal lage brudd på faktisk fødemåned for disse")
+    fun testBortfiltreringAvBarnSomIkkeErFødtFørBeregningStart() {
+        filnavn = "src/test/resources/testfiler/nettotilsynsutgift/nettotilsynsutgift_barnoverogundertolvår.json"
+        val resultat = utførBeregningerOgEvaluerResultatNettoTilsynsutgift()
+
+        // Bms barn nummer to er født 2024-10-17. Det skal lages bruddperiode fra oktober -24 og antall barn under tolv år skal da gå fra 1 til 2.
+        assertAll(
+            { assertThat(resultat).hasSize(3) },
+
+            // Resultat
+            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-01"), YearMonth.parse("2024-07"))) },
+            { assertThat(resultat[0].antallBarnBMUnderTolvÅr).isEqualTo(1) },
+
+            { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), YearMonth.parse("2024-10"))) },
+            { assertThat(resultat[1].antallBarnBMUnderTolvÅr).isEqualTo(1) },
+
+            { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-10"), null)) },
+            { assertThat(resultat[2].antallBarnBMUnderTolvÅr).isEqualTo(2) },
+
+        )
+    }
+
     private fun utførBeregningerOgEvaluerResultatNettoTilsynsutgift(): List<DelberegningNettoTilsynsutgift> {
         val request = lesFilOgByggRequest(filnavn)
         val nettoTilsynsutgiftResultat = api.beregnNettoTilsynsutgift(request)

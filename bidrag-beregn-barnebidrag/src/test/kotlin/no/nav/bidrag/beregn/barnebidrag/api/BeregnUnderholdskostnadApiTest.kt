@@ -220,7 +220,7 @@ internal class BeregnUnderholdskostnadApiTest {
             { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2021-07"), null)) },
             { assertEquals(0, resultat[1].barnetrygd.compareTo(BigDecimal.valueOf(1354))) },
 
-            )
+        )
     }
 
     @Test
@@ -239,7 +239,7 @@ internal class BeregnUnderholdskostnadApiTest {
             { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
             { assertEquals(0, resultat[1].barnetrygd.compareTo(BigDecimal.valueOf(1510))) },
 
-            )
+        )
     }
 
     private fun utførBeregningerOgEvaluerResultatUnderholdskostnad(): List<DelberegningUnderholdskostnad> {

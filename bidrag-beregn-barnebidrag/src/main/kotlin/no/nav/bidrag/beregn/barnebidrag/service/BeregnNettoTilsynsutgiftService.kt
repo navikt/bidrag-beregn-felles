@@ -121,11 +121,21 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
         grunnlagListe: NettoTilsynsutgiftPeriodeGrunnlag,
         beregningsperiode: ÅrMånedsperiode,
     ): List<ÅrMånedsperiode> {
+        // Barn som er født etter beregningsperiodens start skal ikke regnes med i antall barn under 12 år, det må lages en bruddperiode i disse
+        // barnenes fødselsmåned
+        val fødselsmånederForBarnFødtEtterberegningsperiodeFra = grunnlagListe.barnBMListe
+            .filter {
+                it.fødselsdato.withDayOfMonth(1).isAfter(LocalDate.of(beregningsperiode.fom.year, beregningsperiode.fom.month, 1).minusDays(1))
+            }
+            .map { ÅrMånedsperiode(YearMonth.from(it.fødselsdato), YearMonth.from(it.fødselsdato)) }
+            .distinct()
+
         val periodeListe = sequenceOf(grunnlagListe.beregningsperiode)
             .plus(grunnlagListe.faktiskUtgiftPeriodeCoreListe.asSequence().map { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil) })
             .plus(grunnlagListe.tilleggsstønadPeriodeCoreListe.asSequence().map { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil) })
             .plus(grunnlagListe.sjablonMaksTilsynsbeløpPeriodeGrunnlagListe.asSequence().map { it.sjablonMaksTilsynsbeløpPeriode.periode })
             .plus(grunnlagListe.sjablonMaksFradragsbeløpPeriodeGrunnlagListe.asSequence().map { it.sjablonMaksFradragsbeløpPeriode.periode })
+            .plus(fødselsmånederForBarnFødtEtterberegningsperiodeFra.asSequence())
 
         return lagBruddPeriodeListe(periodeListe, beregningsperiode)
     }
@@ -400,12 +410,15 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
         }
     }
 
-    private fun barnUnderTolvÅr(barnBMListe: List<BarnBM>, fom: YearMonth): List<BarnBM> = barnBMListe.filter {
-        it.fødselsdato.let { fødselsdato ->
-            Period.between(
-                fødselsdato.withMonth(7).withDayOfMonth(1),
-                LocalDate.of(fom.year, fom.month, 1),
-            ).years < 12
+    private fun barnUnderTolvÅr(barnBMListe: List<BarnBM>, fom: YearMonth): List<BarnBM> = barnBMListe
+        // Filtrer først bort barn som er født etter periodens start
+        .filter { YearMonth.from(it.fødselsdato).isBefore(fom.plusMonths(1)) }
+        .filter {
+            it.fødselsdato.let { fødselsdato ->
+                Period.between(
+                    fødselsdato.withMonth(7).withDayOfMonth(1),
+                    LocalDate.of(fom.year, fom.month, 1),
+                ).years < 12
+            }
         }
-    }
 }
