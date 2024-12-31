@@ -178,4 +178,10 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
 
     fun beregnMånedsbeløpTilleggsstønad(beløpDagsats: BigDecimal): BigDecimal =
         beløpDagsats.multiply(BigDecimal.valueOf(260)).divide(BigDecimal.valueOf(12), 10, RoundingMode.HALF_UP).coerceAtLeast(BigDecimal.ZERO)
+
+    fun beregnAntallBarnBM(barnBMListeUnderTolvÅr: List<BarnBM>, barnMedUtgifterReferanseListe: List<Grunnlagsreferanse>): Int {
+        val barnUnderTolvÅrReferanser = barnBMListeUnderTolvÅr.map { it.referanse }
+        val antallBarnMedUtgifterOgBMsBarnIPeriode = (barnMedUtgifterReferanseListe + barnUnderTolvÅrReferanser).toSet().size
+        return maxOf(antallBarnMedUtgifterOgBMsBarnIPeriode, barnBMListeUnderTolvÅr.size)
+    }
 }
