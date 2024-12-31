@@ -12,6 +12,7 @@ import no.nav.bidrag.beregn.barnebidrag.bo.SjablonMaksTilsynsbeløpBeregningGrun
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSjablontallBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSjablontallPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.Tilleggsstønad
+import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.beregnAntallBarnBM
 import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.finnReferanseTilRolle
 import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.mapNettoTilsynsutgiftPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.dto.FaktiskUtgiftPeriodeCore
@@ -53,16 +54,15 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
 
         bruddPeriodeListe.forEach { bruddPeriode ->
             // Teller antall barn i perioden. Hvis antall er null så gjøres det ingen beregning
-            val antallBarnMedUtgifterIPerioden = nettoTilsynsutgiftPeriodeGrunnlag.faktiskUtgiftPeriodeCoreListe
+            val barnMedUtgifterIPerioden = nettoTilsynsutgiftPeriodeGrunnlag.faktiskUtgiftPeriodeCoreListe
                 .filter { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
                 .distinctBy { it.gjelderBarn }
-                .size
-            if (antallBarnMedUtgifterIPerioden > 0) {
+            if (barnMedUtgifterIPerioden.isNotEmpty()) {
                 val nettoTilsynsutgiftBeregningGrunnlag =
                     lagNettoTilsynsutgiftBeregningGrunnlag(
                         nettoTilsynsutgiftPeriodeGrunnlag,
                         bruddPeriode,
-                        antallBarnMedUtgifterIPerioden,
+                        barnMedUtgifterIPerioden,
                     )
                 nettoTilsynsutgiftBeregningResultatListe.add(
                     NettoTilsynsutgiftPeriodeResultat(
@@ -144,16 +144,17 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
     private fun lagNettoTilsynsutgiftBeregningGrunnlag(
         grunnlag: NettoTilsynsutgiftPeriodeGrunnlag,
         bruddPeriode: ÅrMånedsperiode,
-        antallBarnMedUtgifterIPerioden: Int,
+        barnMedUtgifterIPerioden: List<FaktiskUtgiftPeriodeCore>,
     ): NettoTilsynsutgiftBeregningGrunnlag {
-        // I første versjon må det legges inn faktiske utgifter for alle BMs barn under 12 år. I neste versjon skal alle BMs barn ligge i barnBMListe
-        // og denne vil da gi grunnlaget for å telle antall barn i perioden.
-        val antallBarnBMUnderTolvÅr = maxOf(antallBarnMedUtgifterIPerioden, barnUnderTolvÅr(grunnlag.barnBMListe, bruddPeriode.fom).size)
+        val barnBMListeUnderTolvÅr = barnUnderTolvÅr(grunnlag.barnBMListe, bruddPeriode.fom)
+        val barnMedUtgifterReferanser = barnMedUtgifterIPerioden.map { it.gjelderBarn }
+        val antallBarnBMBeregnet = beregnAntallBarnBM(barnBMListeUnderTolvÅr, barnMedUtgifterReferanser)
 
         val respons = NettoTilsynsutgiftBeregningGrunnlag(
             søknadsbarnReferanse = grunnlag.søknadsbarnReferanse,
             barnBMListe = grunnlag.barnBMListe,
-            barnBMListeUnderTolvÅr = barnUnderTolvÅr(grunnlag.barnBMListe, bruddPeriode.fom),
+            antallBarnBMBeregnet = antallBarnBMBeregnet,
+            barnBMListeUnderTolvÅr = barnBMListeUnderTolvÅr,
             faktiskUtgiftListe = grunnlag.faktiskUtgiftPeriodeCoreListe
                 .filter { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
                 .map {
@@ -188,7 +189,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                 .asSequence()
                 .filter { it.sjablonMaksTilsynsbeløpPeriode.periode.inneholder(bruddPeriode) }
                 .sortedBy { it.sjablonMaksTilsynsbeløpPeriode.antallBarnTom }
-                .filter { it.sjablonMaksTilsynsbeløpPeriode.antallBarnTom >= antallBarnBMUnderTolvÅr }
+                .filter { it.sjablonMaksTilsynsbeløpPeriode.antallBarnTom >= antallBarnBMBeregnet }
                 .map {
                     SjablonMaksTilsynsbeløpBeregningGrunnlag(
                         referanse = it.referanse,
@@ -201,7 +202,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                 .asSequence()
                 .filter { it.sjablonMaksFradragsbeløpPeriode.periode.inneholder(bruddPeriode) }
                 .sortedBy { it.sjablonMaksFradragsbeløpPeriode.antallBarnTom }
-                .filter { it.sjablonMaksFradragsbeløpPeriode.antallBarnTom >= antallBarnBMUnderTolvÅr }
+                .filter { it.sjablonMaksFradragsbeløpPeriode.antallBarnTom >= antallBarnBMBeregnet }
                 .map {
                     SjablonMaksFradragsbeløpBeregningGrunnlag(
                         referanse = it.referanse,
@@ -278,7 +279,8 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                         justertBruttoTilsynsutgift = it.resultat.justertBruttoTilsynsutgift,
                         andelTilsynsutgiftFaktor = it.resultat.andelTilsynsutgiftFaktor,
                         skattefradrag = it.resultat.skattefradrag,
-                        antallBarnBMUnderTolvÅr = it.resultat.antallBarn,
+                        antallBarnBMUnderTolvÅr = it.resultat.antallBarnBMUnderTolvÅr,
+                        antallBarnBMBeregnet = it.resultat.antallBarnBMBeregnet,
                         nettoTilsynsutgift = it.resultat.nettoTilsynsutgift,
                         tilsynsutgiftBarnListe = it.resultat.tilsynsutgiftBarnListe,
                         erBegrensetAvMaksTilsyn = it.resultat.erBegrensetAvMaksTilsyn,
