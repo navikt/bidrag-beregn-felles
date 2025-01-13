@@ -25,7 +25,7 @@ internal object BeregnBarnetilleggSkattesatsService : BeregnService() {
     fun delberegningBarnetilleggSkattesats(
         mottattGrunnlag: BeregnGrunnlag,
         rolle: Grunnlagstype,
-        åpenSluttperiode: Boolean = true
+        åpenSluttperiode: Boolean = true,
     ): List<GrunnlagDto> {
         val referanseTilRolle = finnReferanseTilRolle(
             grunnlagListe = mottattGrunnlag.grunnlagListe,
@@ -206,6 +206,12 @@ internal object BeregnBarnetilleggSkattesatsService : BeregnService() {
                     DelberegningBarnetilleggSkattesats(
                         periode = ÅrMånedsperiode(fom = mottattGrunnlag.periode.fom, til = it.periode.til),
                         skattFaktor = it.resultat.skattFaktor,
+                        minstefradrag = it.resultat.minstefradrag,
+                        skattAlminneligInntekt = it.resultat.skattAlminneligInntekt,
+                        trygdeavgift = it.resultat.trygdeavgift,
+                        trinnskatt = it.resultat.trinnskatt,
+                        sumSkatt = it.resultat.sumSkatt,
+                        sumInntekt = it.resultat.sumInntekt,
                     ),
                 ),
                 grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe.distinct().sorted(),

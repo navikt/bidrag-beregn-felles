@@ -9,16 +9,18 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.TilsynsutgiftBarn
 import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode
-
+internal data class SkattefradragBeregningResultat(
+    val antallBarnBeregnet: Int,
+    val skattefradrag: BigDecimal,
+    val skattefradragPerBarn: BigDecimal,
+    val skattefradragTotalTilsynsutgift: BigDecimal = BigDecimal.ZERO,
+    val skattefradragMaksfradrag: BigDecimal = BigDecimal.ZERO,
+)
 internal object NettoTilsynsutgiftBeregning {
     // Beregner netto tilsynsutgift for alle barn  med faktiske utgifter. Hvis samlede faktiske utgifter er større enn
     // sjablon maks tilsynsbeløp, skal beløpene justeres forholdsmessig.
 
     fun beregn(grunnlag: NettoTilsynsutgiftBeregningGrunnlag): NettoTilsynsutgiftBeregningResultat {
-        // Henter antall barn i perioden. Dette skal være antall BMs barn under 12 år. i første versjon så må det legges inn perioder med faktiske
-        // utgifter for alle barn. I neste versjon så skal alle BMs barn ligge i grunnlaget (grunnlag.barnBMListe), og antall barn telles derfra.
-        val antallBarnIPerioden = maxOf(grunnlag.faktiskUtgiftListe.distinctBy { it.gjelderBarn }.size, grunnlag.barnBMListe.size)
-
         val sjablonSkattAlminneligInntektProsent =
             grunnlag.sjablonSjablontallBeregningGrunnlagListe
                 .firstOrNull { it.type == SjablonTallNavn.SKATT_ALMINNELIG_INNTEKT_PROSENT.navn }
@@ -38,22 +40,27 @@ internal object NettoTilsynsutgiftBeregning {
         var totalTilsynsutgift =
             totaltFaktiskUtgiftBeløp.minus(månedsbeløpTilleggsstønad).avrundetMedTiDesimaler.coerceAtLeast(BigDecimal.ZERO)
 
-        val skattefradrag = if (totalTilsynsutgift > BigDecimal.ZERO) {
+        val skattefradragResultat = if (totalTilsynsutgift > BigDecimal.ZERO) {
             beregnFradragsbeløpPerBarn(
-                antallBarnIPerioden = antallBarnIPerioden,
+                antallBarnBeregnet = grunnlag.antallBarnBMBeregnet,
                 totalTilsynsutgift = minOf(totalTilsynsutgift, sjablonMaksTilsynsutgift),
                 sjablonSkattesatsAlminneligInntektProsent = sjablonSkattAlminneligInntektProsent.verdi.toBigDecimal(),
                 sjablonMaksFradragsbeløp = sjablonMaksFradragsbeløp,
             )
         } else {
-            BigDecimal.ZERO
+            SkattefradragBeregningResultat(
+                skattefradrag = BigDecimal.ZERO,
+                skattefradragPerBarn = BigDecimal.ZERO,
+                antallBarnBeregnet = grunnlag.antallBarnBMBeregnet,
+            )
         }
 
         val tilsynsutgiftBarnListe = mutableListOf<TilsynsutgiftBarn>()
 
-        var andelTilsynsutgiftBeløp = BigDecimal.ZERO
+        var justertBruttoTilsynsutgiftBeløp = BigDecimal.ZERO
         var andelTilsynsutgiftFaktor: BigDecimal
-        var andelTilsynsutgifterBeløpSøknadsbarn = BigDecimal.ZERO
+        var justertBruttoTilsynsutgifterBeløpSøknadsbarn = BigDecimal.ZERO
+        var bruttoTilsynsutgifterBeløpSøknadsbarn = BigDecimal.ZERO
         var andelTilsynsutgifterFaktorSøknadsbarn = BigDecimal.ZERO
 
         // Summerer per barn. For søknadsbarn trekkes eventuell tilleggsstønad fra. GroupBy kan fjernes siden utgiftene allerede er summert per barn.
@@ -72,7 +79,7 @@ internal object NettoTilsynsutgiftBeregning {
                 andelTilsynsutgiftFaktor =
                     utgifter.divide(totalTilsynsutgift, MathContext(10, RoundingMode.HALF_UP)).avrundetMedTiDesimaler
 
-                andelTilsynsutgiftBeløp = if (totalTilsynsutgift > sjablonMaksTilsynsutgift) {
+                justertBruttoTilsynsutgiftBeløp = if (totalTilsynsutgift > sjablonMaksTilsynsutgift) {
                     andelTilsynsutgiftFaktor * sjablonMaksTilsynsutgift
                 } else {
                     utgifter
@@ -82,12 +89,13 @@ internal object NettoTilsynsutgiftBeregning {
                     TilsynsutgiftBarn(
                         gjelderBarn = gjelderBarn,
                         sumTilsynsutgifter = utgifter.avrundetMedToDesimaler,
-                        endeligSumTilsynsutgifter = andelTilsynsutgiftBeløp.avrundetMedToDesimaler,
+                        endeligSumTilsynsutgifter = justertBruttoTilsynsutgiftBeløp.avrundetMedToDesimaler,
                     ),
                 )
 
                 if (gjelderBarn == grunnlag.søknadsbarnReferanse) {
-                    andelTilsynsutgifterBeløpSøknadsbarn = andelTilsynsutgiftBeløp
+                    bruttoTilsynsutgifterBeløpSøknadsbarn = utgifter.avrundetMedToDesimaler
+                    justertBruttoTilsynsutgifterBeløpSøknadsbarn = justertBruttoTilsynsutgiftBeløp
                     andelTilsynsutgifterFaktorSøknadsbarn = andelTilsynsutgiftFaktor
                 }
             } else {
@@ -106,14 +114,21 @@ internal object NettoTilsynsutgiftBeregning {
         totalTilsynsutgift = minOf(totalTilsynsutgift, sjablonMaksTilsynsutgift)
 
         val resultat = NettoTilsynsutgiftBeregningResultat(
+            erBegrensetAvMaksTilsyn = totalTilsynsutgift == sjablonMaksTilsynsutgift,
             totalTilsynsutgift = totalTilsynsutgift.avrundetMedToDesimaler,
             sjablonMaksTilsynsutgift = sjablonMaksTilsynsutgift,
-            andelTilsynsutgiftBeløp = andelTilsynsutgifterBeløpSøknadsbarn.avrundetMedToDesimaler,
+            bruttoTilsynsutgift = bruttoTilsynsutgifterBeløpSøknadsbarn.avrundetMedToDesimaler,
+            justertBruttoTilsynsutgift = justertBruttoTilsynsutgifterBeløpSøknadsbarn.avrundetMedToDesimaler,
             andelTilsynsutgiftFaktor = andelTilsynsutgifterFaktorSøknadsbarn,
-            skattefradrag = skattefradrag.avrundetMedToDesimaler,
-            nettoTilsynsutgift = (andelTilsynsutgifterBeløpSøknadsbarn - skattefradrag).avrundetMedToDesimaler
+            skattefradrag = skattefradragResultat.skattefradrag.avrundetMedToDesimaler,
+            skattefradragPerBarn = skattefradragResultat.skattefradragPerBarn.avrundetMedToDesimaler,
+            skattefradragTotalTilsynsutgift = skattefradragResultat.skattefradragTotalTilsynsutgift.avrundetMedToDesimaler,
+            skattefradragMaksfradrag = skattefradragResultat.skattefradragMaksfradrag.avrundetMedToDesimaler,
+            nettoTilsynsutgift = (justertBruttoTilsynsutgifterBeløpSøknadsbarn - skattefradragResultat.skattefradragPerBarn).avrundetMedToDesimaler
                 .coerceAtLeast(BigDecimal.ZERO),
             tilsynsutgiftBarnListe = tilsynsutgiftBarnListe,
+            antallBarnBMBeregnet = skattefradragResultat.antallBarnBeregnet,
+            antallBarnBMUnderTolvÅr = grunnlag.barnBMListeUnderTolvÅr.size,
             grunnlagsreferanseListe = listOfNotNull(
                 grunnlag.barnBMListe.map { it.referanse },
                 grunnlag.faktiskUtgiftListe.map { it.referanse },
@@ -128,15 +143,23 @@ internal object NettoTilsynsutgiftBeregning {
     }
 
     private fun beregnFradragsbeløpPerBarn(
-        antallBarnIPerioden: Int,
+        antallBarnBeregnet: Int,
         totalTilsynsutgift: BigDecimal,
         sjablonSkattesatsAlminneligInntektProsent: BigDecimal,
         sjablonMaksFradragsbeløp: BigDecimal,
-    ): BigDecimal {
+    ): SkattefradragBeregningResultat {
         val skattesatsFaktor = sjablonSkattesatsAlminneligInntektProsent.divide(BigDecimal(100)).avrundetMedTiDesimaler
         val maksFradragsbeløp = sjablonMaksFradragsbeløp * skattesatsFaktor
-        val fradragsbeløp = minOf((totalTilsynsutgift * skattesatsFaktor), maksFradragsbeløp)
+        val skattefradragTotalTilsynsutgift = totalTilsynsutgift.multiply(skattesatsFaktor, MathContext(10, RoundingMode.HALF_UP))
+        val skattefradrag = minOf(skattefradragTotalTilsynsutgift, maksFradragsbeløp)
 
-        return fradragsbeløp.divide(antallBarnIPerioden.toBigDecimal(), MathContext(10, RoundingMode.HALF_UP))
+        val skattefradragPerBarn = skattefradrag.divide(antallBarnBeregnet.toBigDecimal(), MathContext(10, RoundingMode.HALF_UP))
+        return SkattefradragBeregningResultat(
+            skattefradrag = skattefradrag,
+            skattefradragPerBarn = skattefradragPerBarn,
+            skattefradragMaksfradrag = maksFradragsbeløp,
+            skattefradragTotalTilsynsutgift = skattefradragTotalTilsynsutgift,
+            antallBarnBeregnet = antallBarnBeregnet,
+        )
     }
 }

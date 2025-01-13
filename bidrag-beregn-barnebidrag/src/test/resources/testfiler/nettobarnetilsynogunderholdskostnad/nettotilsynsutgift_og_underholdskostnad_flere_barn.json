@@ -1,6 +1,6 @@
 {
   "periode": {
-    "fom": "2024-08",
+    "fom": "2024-01",
     "til": "2024-09"
   },
   "søknadsbarnReferanse": "Person_Søknadsbarn",
@@ -11,7 +11,7 @@
       "innhold": {
         "ident": "11111111110",
         "navn": "Trengende Søknadsbarn",
-        "fødselsdato": "2012-09-13"
+        "fødselsdato": "2017-09-13"
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": null
@@ -39,6 +39,28 @@
       "gjelderReferanse": null
     },
     {
+      "referanse" : "person_PERSON_BARN_BIDRAGSMOTTAKER_20201217_100",
+      "type" : "PERSON_BARN_BIDRAGSMOTTAKER",
+      "innhold" : {
+        "ident" : "12121250511",
+        "navn" : null,
+        "fødselsdato" : "2020-12-17"
+      },
+      "grunnlagsreferanseListe" : [],
+      "gjelderReferanse" : null
+    },
+    {
+      "referanse" : "person_PERSON_BARN_BIDRAGSMOTTAKER_20190317_101",
+      "type" : "PERSON_BARN_BIDRAGSMOTTAKER",
+      "innhold" : {
+        "ident" : "12121250511",
+        "navn" : null,
+        "fødselsdato" : "2019-12-17"
+      },
+      "grunnlagsreferanseListe" : [],
+      "gjelderReferanse" : null
+    },
+    {
       "referanse": "Mottatt_FaktiskUtgift_202301_SB1",
       "type": "FAKTISK_UTGIFT_PERIODE",
       "innhold": {
@@ -46,13 +68,47 @@
           "fom": "2024-01",
           "til": null
         },
-        "fødselsdatoBarn": "2023-01-17",
+        "fødselsdatoBarn": "2017-09-13",
         "faktiskUtgiftBeløp": 500.00,
         "kostpengerBeløp": 100.00,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
       "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "Mottatt_FaktiskUtgift_202301_person_PERSON_BARN_BIDRAGSMOTTAKER_20201217_100",
+      "type": "FAKTISK_UTGIFT_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-01",
+          "til": null
+        },
+        "fødselsdatoBarn": "2020-12-17",
+        "faktiskUtgiftBeløp": 700.00,
+        "kostpengerBeløp": 300.00,
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "person_PERSON_BARN_BIDRAGSMOTTAKER_20201217_100",
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "Mottatt_FaktiskUtgift_202301_person_PERSON_BARN_BIDRAGSMOTTAKER_20190317_101",
+      "type": "FAKTISK_UTGIFT_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-01",
+          "til": null
+        },
+        "fødselsdatoBarn": "2020-12-17",
+        "faktiskUtgiftBeløp": 200.00,
+        "kostpengerBeløp": 300.00,
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "person_PERSON_BARN_BIDRAGSMOTTAKER_20190317_101",
       "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {
@@ -95,13 +151,15 @@
           "til": "2024-09"
         },
         "totalTilsynsutgift": 400.00,
+        "erBegrensetAvMaksTilsyn": false,
         "bruttoTilsynsutgift": 400.00,
         "justertBruttoTilsynsutgift": 400.00,
         "andelTilsynsutgiftFaktor": 400.00,
+        "antallBarnBMUnderTolvÅr": 2,
         "skattefradrag": 400.00,
         "skattefradragPerBarn": 400.00,
-        "skattefradragMaksfradrag": 400.00,
         "skattefradragTotalTilsynsutgift": 400.00,
+        "skattefradragMaksfradrag": 400.00,
         "nettoTilsynsutgift": 58.83,
         "tilsynsutgiftBarnListe": [
           {

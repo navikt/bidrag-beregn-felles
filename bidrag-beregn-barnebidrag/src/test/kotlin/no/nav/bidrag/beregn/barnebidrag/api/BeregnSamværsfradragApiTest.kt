@@ -3,7 +3,7 @@ package no.nav.bidrag.beregn.barnebidrag.api
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnebidragService
+import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
@@ -34,12 +34,12 @@ internal class BeregnSamværsfradragApiTest {
     private var forventetAntallSjablonSamværsfradrag: Int = 1
 
     @Mock
-    private lateinit var beregnBarnebidragService: BeregnBarnebidragService
+    private lateinit var api: BeregnBarnebidragApi
 
     @BeforeEach
     fun initMock() {
         stubSjablonProvider()
-        beregnBarnebidragService = BeregnBarnebidragService()
+        api = BeregnBarnebidragApi()
     }
 
     @Test
@@ -48,7 +48,7 @@ internal class BeregnSamværsfradragApiTest {
         filnavn = "src/test/resources/testfiler/samværsfradrag/samværsfradrag_eksempel1.json"
         val request = lesFilOgByggRequest(filnavn)
         val exception = assertThrows(IllegalArgumentException::class.java) {
-            beregnBarnebidragService.beregnSamværsfradrag(request)
+            api.beregnSamværsfradrag(request)
         }
         assertThat(exception.message).contains("Ingen samværsklasse funnet")
     }
@@ -77,7 +77,7 @@ internal class BeregnSamværsfradragApiTest {
         filnavn = "src/test/resources/testfiler/samværsfradrag/samværsfradrag_eksempel4.json"
         val request = lesFilOgByggRequest(filnavn)
         val exception = assertThrows(IllegalArgumentException::class.java) {
-            beregnBarnebidragService.beregnSamværsfradrag(request)
+            api.beregnSamværsfradrag(request)
         }
         assertThat(exception.message).contains("Innhold i Grunnlagstype.SAMVÆRSPERIODE er ikke gyldig")
     }
@@ -91,7 +91,7 @@ internal class BeregnSamværsfradragApiTest {
 
     private fun utførBeregningerOgEvaluerResultatSamværsfradrag() {
         val request = lesFilOgByggRequest(filnavn)
-        val samværsfradragResultat = beregnBarnebidragService.beregnSamværsfradrag(request)
+        val samværsfradragResultat = api.beregnSamværsfradrag(request)
         printJson(samværsfradragResultat)
 
         val alleReferanser = hentAlleReferanser(samværsfradragResultat)
@@ -134,7 +134,7 @@ internal class BeregnSamværsfradragApiTest {
 
     private fun utførBeregningerOgEvaluerResultatSamværsfradragFlerePerioder() {
         val request = lesFilOgByggRequest(filnavn)
-        val samværsfradragResultat = beregnBarnebidragService.beregnSamværsfradrag(request)
+        val samværsfradragResultat = api.beregnSamværsfradrag(request)
         printJson(samværsfradragResultat)
 
         val alleReferanser = hentAlleReferanser(samværsfradragResultat)

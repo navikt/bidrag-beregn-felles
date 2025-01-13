@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.kotest.matchers.comparables.shouldBeGreaterThanOrEqualTo
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnebidragService
+import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
@@ -35,12 +35,12 @@ internal class BeregnNettoTilsynsutgiftOgUnderholdskostnadApiTest {
     private lateinit var filnavn: String
 
     @Mock
-    private lateinit var beregnBarnebidragService: BeregnBarnebidragService
+    private lateinit var api: BeregnBarnebidragApi
 
     @BeforeEach
     fun initMock() {
         stubSjablonProvider()
-        beregnBarnebidragService = BeregnBarnebidragService()
+        api = BeregnBarnebidragApi()
     }
 
     @Test
@@ -217,9 +217,32 @@ internal class BeregnNettoTilsynsutgiftOgUnderholdskostnadApiTest {
         )
     }
 
+    @Test
+    @DisplayName("Underholdskostnad - eksempel 5")
+    fun test_netto_tilsynsugift_og_underholdskostnad_alle_barn_refereres_i_resultatet() {
+        filnavn =
+            "src/test/resources/testfiler/nettobarnetilsynogunderholdskostnad/nettotilsynsutgift_og_underholdskostnad_flere_barn.json"
+        val resultat = utførBeregningerOgEvaluerResultatNettoTilsynsutgiftOgUnderholdskostnad()
+
+        assertAll(
+            // Resultat
+            { assertThat(resultat).hasSize(3) },
+
+            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode("2024-01", "2024-02")) },
+            { assertNotNull(resultat[0].nettoTilsynsutgift) },
+
+            { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode("2024-02", "2024-07")) },
+            { assertNotNull(resultat[1].nettoTilsynsutgift) },
+
+            { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
+            { assertNotNull(resultat[2].nettoTilsynsutgift) },
+
+        )
+    }
+
     private fun utførBeregningerOgEvaluerResultatNettoTilsynsutgiftOgUnderholdskostnad(): List<DelberegningUnderholdskostnad> {
         val request = lesFilOgByggRequest(filnavn)
-        val underholdskostnadResultat = beregnBarnebidragService.beregnNettoTilsynsutgiftOgUnderholdskostnad(request)
+        val underholdskostnadResultat = api.beregnNettoTilsynsutgiftOgUnderholdskostnad(request)
         printJson(underholdskostnadResultat)
 
         val alleReferanser = hentAlleReferanser(underholdskostnadResultat)

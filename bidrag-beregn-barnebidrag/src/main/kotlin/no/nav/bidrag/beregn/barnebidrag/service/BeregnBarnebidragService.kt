@@ -39,12 +39,10 @@ class BeregnBarnebidragService : BeregnService() {
             throw IllegalArgumentException("Ugyldig input ved beregning av barnebidrag: " + e.message)
         }
 
-        var åpenSluttperiode: Boolean
-
         // Sjekker om søknadsbarnet fyller 18 år i beregningsperioden
-        var utvidetGrunnlag = justerTilPeriodeHvisBarnetBlir18ÅrIBeregningsperioden(mottattGrunnlag).also { oppdatertGrunnlag ->
-            åpenSluttperiode = oppdatertGrunnlag.periode.til == mottattGrunnlag.periode.til
-        }
+        val utvidetGrunnlagJustert = justerTilPeriodeHvisBarnetBlir18ÅrIBeregningsperioden(mottattGrunnlag)
+        var utvidetGrunnlag = utvidetGrunnlagJustert.beregnGrunnlag
+        val åpenSluttperiode = utvidetGrunnlagJustert.åpenSluttperiode
 
         // Kaller delberegninger
         val delberegningBidragsevneResultat = delberegningBidragsevne(utvidetGrunnlag, åpenSluttperiode)
@@ -69,11 +67,11 @@ class BeregnBarnebidragService : BeregnService() {
         val delberegningEndeligBidragResultat = delberegningEndeligBidrag(utvidetGrunnlag, åpenSluttperiode)
 
         val resultatGrunnlagListe = (
-                delberegningBidragsevneResultat + delberegningNettoTilsynsutgiftResultat + delberegningUnderholdskostnadResultat +
-                    delberegningBpAndelUnderholdskostnadResultat + delberegningSamværsfradragResultat + delberegningEndeligBidragResultat
-                )
-                .distinctBy { it.referanse }
-                .sortedBy { it.referanse }
+            delberegningBidragsevneResultat + delberegningNettoTilsynsutgiftResultat + delberegningUnderholdskostnadResultat +
+                delberegningBpAndelUnderholdskostnadResultat + delberegningSamværsfradragResultat + delberegningEndeligBidragResultat
+            )
+            .distinctBy { it.referanse }
+            .sortedBy { it.referanse }
 
         return BeregnetBarnebidragResultat(
             beregnetBarnebidragPeriodeListe = lagResultatPerioder(delberegningEndeligBidragResultat),
@@ -144,17 +142,15 @@ class BeregnBarnebidragService : BeregnService() {
             throw IllegalArgumentException("Ugyldig input ved beregning av underholdskostnad: " + e.message)
         }
 
-        var åpenSluttperiode: Boolean
-
         // Sjekker om søknadsbarnet fyller 18 år i beregningsperioden (gjøres her fordi dette er en metode som vil bli kalt direkte fra
         // bidrag-behandling)
-        val utvidetGrunnlag = justerTilPeriodeHvisBarnetBlir18ÅrIBeregningsperioden(mottattGrunnlag).also { oppdatertGrunnlag ->
-            åpenSluttperiode = oppdatertGrunnlag.periode.til == mottattGrunnlag.periode.til
-        }
+        val utvidetGrunnlagJustert = justerTilPeriodeHvisBarnetBlir18ÅrIBeregningsperioden(mottattGrunnlag)
+        var utvidetGrunnlag = utvidetGrunnlagJustert.beregnGrunnlag
+        val åpenSluttperiode = utvidetGrunnlagJustert.åpenSluttperiode
 
         val delberegningNettoTilsynsutgiftResultat = delberegningNettoTilsynsutgift(
             mottattGrunnlag = utvidetGrunnlag,
-            åpenSluttperiode = åpenSluttperiode
+            åpenSluttperiode = åpenSluttperiode,
         )
 
         val delberegningUnderholdskostnadResultat = delberegningUnderholdskostnad(
@@ -163,7 +159,7 @@ class BeregnBarnebidragService : BeregnService() {
                 søknadsbarnReferanse = utvidetGrunnlag.søknadsbarnReferanse,
                 grunnlagListe = (utvidetGrunnlag.grunnlagListe + delberegningNettoTilsynsutgiftResultat).distinctBy { it.referanse },
             ),
-            åpenSluttperiode = åpenSluttperiode
+            åpenSluttperiode = åpenSluttperiode,
         )
 
         return (delberegningNettoTilsynsutgiftResultat + delberegningUnderholdskostnadResultat).distinctBy { it.referanse }
@@ -272,17 +268,22 @@ class BeregnBarnebidragService : BeregnService() {
         }
 
     // Sjekker om søknadsbarnet fyller 18 år i beregningsperioden. Justerer i så fall til-periode.
-    private fun justerTilPeriodeHvisBarnetBlir18ÅrIBeregningsperioden(mottattGrunnlag: BeregnGrunnlag): BeregnGrunnlag {
+    private fun justerTilPeriodeHvisBarnetBlir18ÅrIBeregningsperioden(mottattGrunnlag: BeregnGrunnlag): BeregnGrunnlagJustert {
         val periodeSøknadsbarnetFyller18År = mottattGrunnlag.grunnlagListe
             .filtrerOgKonverterBasertPåEgenReferanse<Person>(Grunnlagstype.PERSON_SØKNADSBARN)
             .map { YearMonth.from(it.innhold.fødselsdato.plusYears(18)) }
             .first()
 
-        return if (!periodeSøknadsbarnetFyller18År.isAfter(mottattGrunnlag.periode.til)) {
-            mottattGrunnlag.copy(
-                periode = mottattGrunnlag.periode.copy(til = periodeSøknadsbarnetFyller18År)
+        return if (periodeSøknadsbarnetFyller18År.isBefore(mottattGrunnlag.periode.til)) {
+            BeregnGrunnlagJustert(
+                beregnGrunnlag = mottattGrunnlag.copy(
+                    periode = mottattGrunnlag.periode.copy(til = periodeSøknadsbarnetFyller18År.plusMonths(1)),
+                ),
+                åpenSluttperiode = false,
             )
-        } else mottattGrunnlag
+        } else {
+            BeregnGrunnlagJustert(beregnGrunnlag = mottattGrunnlag, åpenSluttperiode = true)
+        }
     }
 
     fun beregnMånedsbeløpFaktiskUtgift(faktiskUtgift: BigDecimal, kostpenger: BigDecimal = BigDecimal.ZERO): BigDecimal =
@@ -290,4 +291,6 @@ class BeregnBarnebidragService : BeregnService() {
 
     fun beregnMånedsbeløpTilleggsstønad(tilleggsstønad: BigDecimal): BigDecimal =
         NettoTilsynsutgiftMapper.beregnMånedsbeløpTilleggsstønad(tilleggsstønad).avrundetMedToDesimaler
+
+    data class BeregnGrunnlagJustert(val beregnGrunnlag: BeregnGrunnlag, val åpenSluttperiode: Boolean)
 }

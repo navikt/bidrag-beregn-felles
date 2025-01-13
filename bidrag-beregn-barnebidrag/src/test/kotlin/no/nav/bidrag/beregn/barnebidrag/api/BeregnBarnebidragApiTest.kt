@@ -3,7 +3,7 @@ package no.nav.bidrag.beregn.barnebidrag.api
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnebidragService
+import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
@@ -82,18 +82,20 @@ internal class BeregnBarnebidragApiTest {
     private var forventetBidragJustertForNettoBarnetilleggBM: Boolean = false
     private var forventetBidragJustertNedTilEvne: Boolean = false
     private var forventetBidragJustertNedTil25ProsentAvInntekt: Boolean = false
-    private var forventetAntallInntektRapporteringBP: Int = 1
-    private var forventetAntallInntektRapporteringBM: Int = 1
+
+    // Grunnlag
+    private var forventetAntallInntektrapporteringBP: Int = 1
+    private var forventetAntallInntektrapporteringBM: Int = 1
     private var forventetAntallBarnetilleggBP: Int = 1
     private var forventetAntallBarnetilleggBM: Int = 1
 
     @Mock
-    private lateinit var beregnBarnebidragService: BeregnBarnebidragService
+    private lateinit var api: BeregnBarnebidragApi
 
     @BeforeEach
     fun initMock() {
         stubSjablonProvider()
-        beregnBarnebidragService = BeregnBarnebidragService()
+        api = BeregnBarnebidragApi()
     }
 
     @Test
@@ -213,7 +215,7 @@ internal class BeregnBarnebidragApiTest {
         filnavn = "src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel1A.json"
 
         // Beregningsperiode
-        forventetBeregningsperiode = ÅrMånedsperiode(YearMonth.parse("2020-08"), YearMonth.parse("2020-11"))
+        forventetBeregningsperiode = ÅrMånedsperiode(YearMonth.parse("2020-08"), YearMonth.parse("2020-12"))
 
         // Bidragsevne
         forventetBidragsevne = BigDecimal.valueOf(16357.14).setScale(2)
@@ -315,15 +317,15 @@ internal class BeregnBarnebidragApiTest {
         forventetBidragJustertNedTil25ProsentAvInntekt = false
 
         // Grunnlag
-        forventetAntallInntektRapporteringBP = 2
-        forventetAntallInntektRapporteringBM = 2
+        forventetAntallInntektrapporteringBP = 2
+        forventetAntallInntektrapporteringBM = 2
 
         utførBeregningerOgEvaluerResultatBarnebidrag()
     }
 
     private fun utførBeregningerOgEvaluerResultatBarnebidrag() {
         val request = lesFilOgByggRequest(filnavn)
-        val barnebidragResultat = beregnBarnebidragService.beregnBarnebidrag(request)
+        val barnebidragResultat = api.beregn(request)
         val barnebidragResultatGrunnlagListe = barnebidragResultat.grunnlagListe
         printJson(barnebidragResultat)
 
@@ -502,6 +504,7 @@ internal class BeregnBarnebidragApiTest {
                 referanse = referanseBM,
             )
             .filter { it.innhold.inntektsrapportering == Inntektsrapportering.BARNETILLEGG }
+            .flatMap { it.innhold.inntektspostListe }
             .size
 
         val antallBarnetilleggBP = barnebidragResultatGrunnlagListe
@@ -510,6 +513,7 @@ internal class BeregnBarnebidragApiTest {
                 referanse = referanseBP,
             )
             .filter { it.innhold.inntektsrapportering == Inntektsrapportering.BARNETILLEGG }
+            .flatMap { it.innhold.inntektspostListe }
             .size
 
         val antallSjablonSjablontall = barnebidragResultatGrunnlagListe
@@ -593,8 +597,8 @@ internal class BeregnBarnebidragApiTest {
             { assertThat(endeligBidragResultatListe[0].bidragJustertNedTil25ProsentAvInntekt).isEqualTo(forventetBidragJustertNedTil25ProsentAvInntekt) },
 
             // Grunnlag
-            { assertThat(antallInntektRapporteringPeriodeBP).isEqualTo(forventetAntallInntektRapporteringBP) },
-            { assertThat(antallInntektRapporteringPeriodeBM).isEqualTo(forventetAntallInntektRapporteringBM) },
+            { assertThat(antallInntektRapporteringPeriodeBP).isEqualTo(forventetAntallInntektrapporteringBP) },
+            { assertThat(antallInntektRapporteringPeriodeBM).isEqualTo(forventetAntallInntektrapporteringBM) },
             { assertThat(antallInntektRapporteringPeriodeSB).isEqualTo(1) },
             { assertThat(antallDelberegningSumInntektPeriodeBP).isEqualTo(1) },
             { assertThat(antallDelberegningSumInntektPeriodeBM).isEqualTo(1) },
@@ -621,25 +625,6 @@ internal class BeregnBarnebidragApiTest {
             { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
             { assertThat(alleRefererteReferanser).containsAll(alleReferanserUnntattSluttberegning) },
         )
-    }
-
-    @Test
-    @DisplayName("Beregn månedsbeløp faktisk utgift og tilleggsstønad")
-    fun testBeregnMånedsbeløpFaktiskUtgiftTilleggsstønad() {
-        val faktiskUtgift = BigDecimal.valueOf(1000)
-        val kostpenger = BigDecimal.valueOf(400)
-        val responseFaktiskUtgift = beregnBarnebidragService.beregnMånedsbeløpFaktiskUtgift(faktiskUtgift, kostpenger)
-
-        val tilleggsstønad = BigDecimal.valueOf(17)
-        val responseTilleggsstønad = beregnBarnebidragService.beregnMånedsbeløpTilleggsstønad(tilleggsstønad)
-
-        assertThat(responseFaktiskUtgift).isEqualByComparingTo(BigDecimal.valueOf(550))
-        assertThat(responseTilleggsstønad).isEqualByComparingTo(BigDecimal.valueOf(368.33))
-
-        // Test uten angitt kostpenger, default er BigDecimal.ZERO
-        val faktiskUtgift2 = BigDecimal.valueOf(500)
-        val responseFaktiskUtgift2 = beregnBarnebidragService.beregnMånedsbeløpFaktiskUtgift(faktiskUtgift2)
-        assertThat(responseFaktiskUtgift2).isEqualByComparingTo(BigDecimal.valueOf(458.33))
     }
 
     fun hentAlleReferanser(resultatGrunnlagListe: List<GrunnlagDto>) = resultatGrunnlagListe

@@ -65,6 +65,7 @@ fun MaksTilsyn.tilGrunnlagsobjekt(periode: ÅrMånedsperiode): GrunnlagDto = Gru
     referanse = opprettSjablonreferanse(
         Grunnlagstype.SJABLON_MAKS_TILSYN.name,
         periode,
+        "$antallBarnTom",
     ),
     type = Grunnlagstype.SJABLON_MAKS_TILSYN,
     innhold = POJONode(
@@ -80,6 +81,7 @@ fun MaksFradrag.tilGrunnlagsobjekt(periode: ÅrMånedsperiode): GrunnlagDto = Gr
     referanse = opprettSjablonreferanse(
         Grunnlagstype.SJABLON_MAKS_FRADRAG.name,
         periode,
+        "$antallBarnTom",
     ),
     type = Grunnlagstype.SJABLON_MAKS_FRADRAG,
     innhold = POJONode(
@@ -95,6 +97,7 @@ fun Barnetilsyn.tilGrunnlagsobjekt(periode: ÅrMånedsperiode): GrunnlagDto = Gr
     referanse = opprettSjablonreferanse(
         Grunnlagstype.SJABLON_BARNETILSYN.name,
         periode,
+        "${typeStønad}_$typeTilsyn",
     ),
     type = Grunnlagstype.SJABLON_BARNETILSYN,
     innhold = POJONode(
@@ -111,6 +114,7 @@ fun Forbruksutgifter.tilGrunnlagsobjekt(periode: ÅrMånedsperiode): GrunnlagDto
     referanse = opprettSjablonreferanse(
         Grunnlagstype.SJABLON_FORBRUKSUTGIFTER.name,
         periode,
+        "$alderTom",
     ),
     type = Grunnlagstype.SJABLON_FORBRUKSUTGIFTER,
     innhold = POJONode(

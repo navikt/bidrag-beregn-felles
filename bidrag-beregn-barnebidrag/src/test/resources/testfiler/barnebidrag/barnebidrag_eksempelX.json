@@ -53,6 +53,7 @@
         "valgt": true
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": null,
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
@@ -70,6 +71,7 @@
         "valgt": true
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": null,
       "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {
@@ -87,7 +89,42 @@
         "valgt": true
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": null,
       "gjelderReferanse": "Person_Søknadsbarn"
+    },
+    {
+      "referanse": "Mottatt_InntektRapportering_Barnetillegg_Bidragspliktig_202408",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": "2024-09"
+        },
+        "inntektsrapportering": "BARNETILLEGG",
+        "gjelderBarn": null,
+        "beløp": 3000,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragspliktig"
+    },
+    {
+      "referanse": "Mottatt_InntektRapportering_Barnetillegg_Bidragsmottaker_202408",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": "2024-09"
+        },
+        "inntektsrapportering": "BARNETILLEGG",
+        "gjelderBarn": null,
+        "beløp": 5000,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {
       "referanse": "Bostatus_Søknadsbarn_202408",
@@ -102,7 +139,8 @@
         "relatertTilPart": "Person_Bidragspliktig"
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Søknadsbarn"
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
       "referanse": "Bostatus_Bidragspliktig_202408",
@@ -117,6 +155,7 @@
         "relatertTilPart": "Person_Bidragspliktig"
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": null,
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
@@ -131,7 +170,8 @@
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": null
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
       "referanse": "Mottatt_InntektRapportering_Barnetillegg_Bidragspliktig_202408",
