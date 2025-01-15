@@ -39,7 +39,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
         }
 
         // Henter sjabloner
-        val sjablontallListe: List<Sjablontall> = SjablonProvider.hentSjablontall()
+        val sjablontallListe: List<Sjablontall> = SjablonProvider.hentSjablontall().sortedWith(compareBy({ it.typeSjablon }, { it.datoFom }))
 
         if (sjablontallListe.isEmpty()) {
             logger.error { "Klarte ikke å hente sjabloner" }
