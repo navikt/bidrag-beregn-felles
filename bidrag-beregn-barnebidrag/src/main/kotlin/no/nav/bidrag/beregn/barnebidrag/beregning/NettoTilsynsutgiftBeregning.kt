@@ -10,7 +10,7 @@ import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode
 internal data class SkattefradragBeregningResultat(
-    val antallBarnBeregnet: Int,
+    val antallBarnMedUtgifter: Int,
     val skattefradrag: BigDecimal,
     val skattefradragPerBarn: BigDecimal,
     val skattefradragTotalTilsynsutgift: BigDecimal = BigDecimal.ZERO,
@@ -42,7 +42,7 @@ internal object NettoTilsynsutgiftBeregning {
 
         val skattefradragResultat = if (totalTilsynsutgift > BigDecimal.ZERO) {
             beregnFradragsbeløpPerBarn(
-                antallBarnBeregnet = grunnlag.antallBarnBMBeregnet,
+                antallBarnMedUtgifter = grunnlag.antallBarnMedUtgifter,
                 totalTilsynsutgift = minOf(totalTilsynsutgift, sjablonMaksTilsynsutgift),
                 sjablonSkattesatsAlminneligInntektProsent = sjablonSkattAlminneligInntektProsent.verdi.toBigDecimal(),
                 sjablonMaksFradragsbeløp = sjablonMaksFradragsbeløp,
@@ -51,7 +51,7 @@ internal object NettoTilsynsutgiftBeregning {
             SkattefradragBeregningResultat(
                 skattefradrag = BigDecimal.ZERO,
                 skattefradragPerBarn = BigDecimal.ZERO,
-                antallBarnBeregnet = grunnlag.antallBarnBMBeregnet,
+                antallBarnMedUtgifter = grunnlag.antallBarnMedUtgifter,
             )
         }
 
@@ -127,7 +127,8 @@ internal object NettoTilsynsutgiftBeregning {
             nettoTilsynsutgift = (justertBruttoTilsynsutgifterBeløpSøknadsbarn - skattefradragResultat.skattefradragPerBarn).avrundetMedToDesimaler
                 .coerceAtLeast(BigDecimal.ZERO),
             tilsynsutgiftBarnListe = tilsynsutgiftBarnListe,
-            antallBarnBMBeregnet = skattefradragResultat.antallBarnBeregnet,
+            antallBarnBMBeregnet = grunnlag.antallBarnBMBeregnet,
+            antallBarnMedUtgifter = skattefradragResultat.antallBarnMedUtgifter,
             antallBarnBMUnderTolvÅr = grunnlag.barnBMListeUnderTolvÅr.size,
             grunnlagsreferanseListe = listOfNotNull(
                 grunnlag.barnBMListe.map { it.referanse },
@@ -143,7 +144,7 @@ internal object NettoTilsynsutgiftBeregning {
     }
 
     private fun beregnFradragsbeløpPerBarn(
-        antallBarnBeregnet: Int,
+        antallBarnMedUtgifter: Int,
         totalTilsynsutgift: BigDecimal,
         sjablonSkattesatsAlminneligInntektProsent: BigDecimal,
         sjablonMaksFradragsbeløp: BigDecimal,
@@ -153,13 +154,13 @@ internal object NettoTilsynsutgiftBeregning {
         val skattefradragTotalTilsynsutgift = totalTilsynsutgift.multiply(skattesatsFaktor, MathContext(10, RoundingMode.HALF_UP))
         val skattefradrag = minOf(skattefradragTotalTilsynsutgift, maksFradragsbeløp)
 
-        val skattefradragPerBarn = skattefradrag.divide(antallBarnBeregnet.toBigDecimal(), MathContext(10, RoundingMode.HALF_UP))
+        val skattefradragPerBarn = skattefradrag.divide(antallBarnMedUtgifter.toBigDecimal(), MathContext(10, RoundingMode.HALF_UP))
         return SkattefradragBeregningResultat(
             skattefradrag = skattefradrag,
             skattefradragPerBarn = skattefradragPerBarn,
             skattefradragMaksfradrag = maksFradragsbeløp,
             skattefradragTotalTilsynsutgift = skattefradragTotalTilsynsutgift,
-            antallBarnBeregnet = antallBarnBeregnet,
+            antallBarnMedUtgifter = antallBarnMedUtgifter,
         )
     }
 }
