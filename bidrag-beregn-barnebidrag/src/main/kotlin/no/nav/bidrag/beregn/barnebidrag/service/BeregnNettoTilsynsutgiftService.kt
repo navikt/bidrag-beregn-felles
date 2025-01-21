@@ -154,7 +154,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
             søknadsbarnReferanse = grunnlag.søknadsbarnReferanse,
             barnBMListe = grunnlag.barnBMListe,
             antallBarnBMBeregnet = antallBarnBMBeregnet,
-            antallBarnMedUtgifter = barnMedUtgifterReferanser.size,
+            antallBarnMedTilsynsutgifter = barnMedUtgifterReferanser.size,
             barnBMListeUnderTolvÅr = barnBMListeUnderTolvÅr,
             faktiskUtgiftListe = grunnlag.faktiskUtgiftPeriodeCoreListe
                 .filter { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
@@ -282,7 +282,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                         skattefradrag = it.resultat.skattefradrag,
                         antallBarnBMUnderTolvÅr = it.resultat.antallBarnBMUnderTolvÅr,
                         antallBarnBMBeregnet = it.resultat.antallBarnBMBeregnet,
-                        antallBarnMedUtgifter = it.resultat.antallBarnMedUtgifter,
+                        antallBarnMedTilsynsutgifter = it.resultat.antallBarnMedTilsynsutgifter,
                         nettoTilsynsutgift = it.resultat.nettoTilsynsutgift,
                         tilsynsutgiftBarnListe = it.resultat.tilsynsutgiftBarnListe,
                         erBegrensetAvMaksTilsyn = it.resultat.erBegrensetAvMaksTilsyn,
