@@ -186,4 +186,22 @@ internal class BoforholdAndreVoksneServiceTest {
             resultat[0].kilde shouldBe Kilde.OFFENTLIG
         }
     }
+
+    @Test
+    fun `Test flere husstandsmedlemmer med periodeTom er lik null`() {
+        boforholdAndreVoksneService = BoforholdAndreVoksneService()
+        val mottatteBoforhold = TestUtil.byggTestFlereHusstandsmedlemmerPeriodeTomNull()
+        val virkningstidspunkt = LocalDate.of(2024, 1, 1)
+        val resultat = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 1
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2024, 1, 1)
+            resultat[0].periodeTom shouldBe null
+            resultat[0].bostatus shouldBe Bostatuskode.BOR_MED_ANDRE_VOKSNE
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
 }
