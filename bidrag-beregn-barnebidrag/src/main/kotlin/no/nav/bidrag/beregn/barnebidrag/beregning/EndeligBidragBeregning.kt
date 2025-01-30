@@ -27,6 +27,7 @@ internal object EndeligBidragBeregning {
         val bruttoBidragJustertForEvneOg25Prosent: BigDecimal
         val bidragJustertNedTilEvne: Boolean
         val bidragJustertNedTil25ProsentAvInntekt: Boolean
+        var bidragJustertTilForskuddssats = false
 
         // Hvis det er delt bosted gjøres det ingen videre beregning og evt. barnetillegg hensyntas ikke
         if (grunnlag.deltBostedBeregningGrunnlag.deltBosted) {
@@ -37,17 +38,34 @@ internal object EndeligBidragBeregning {
             bruttoBidragJustertForEvneOg25Prosent = minOf(bpAndelJustert.beløp, bidragsevne, sumInntekt25Prosent)
             bidragJustertNedTilEvne = (bidragsevne < bpAndelJustert.beløp) && (bidragsevne <= sumInntekt25Prosent)
             bidragJustertNedTil25ProsentAvInntekt = (sumInntekt25Prosent < bpAndelJustert.beløp) && (sumInntekt25Prosent <= bidragsevne)
+            var beregnetBeløp = bruttoBidragJustertForEvneOg25Prosent
+
+            // Sjekker om det er begrenset revurdering
+            // Hvis beregnet beløp er større enn løpende forskudd settes beregnet beløp = løpende forskudd
+            if (grunnlag.utførBegrensetRevurdering && beregnetBeløp > grunnlag.løpendeForskuddBeløp) {
+                bidragJustertTilForskuddssats = true
+                beregnetBeløp = grunnlag.løpendeForskuddBeløp!!
+            }
+
+            // Setter et flagg hvis det er begrenset revurdering og beregnet beløp er lavere enn løpende bidrag
+            val beregnetBidragErLavereEnnLøpendeBidrag =
+                grunnlag.utførBegrensetRevurdering && (beregnetBeløp.avrundetTilNærmesteTier < grunnlag.løpendeBidragBeløp)
 
             return EndeligBidragBeregningResultat(
-                beregnetBeløp = bruttoBidragJustertForEvneOg25Prosent.avrundetMedToDesimaler,
-                resultatBeløp = bruttoBidragJustertForEvneOg25Prosent.avrundetTilNærmesteTier,
+                beregnetBeløp = beregnetBeløp.avrundetMedToDesimaler,
+                resultatBeløp = beregnetBeløp.avrundetTilNærmesteTier,
                 bruttoBidragJustertForEvneOg25Prosent = bruttoBidragJustertForEvneOg25Prosent.avrundetMedToDesimaler,
                 nettoBidragEtterSamværsfradrag = bruttoBidragJustertForEvneOg25Prosent.avrundetMedToDesimaler,
                 bpAndelAvUVedDeltBostedFaktor = bpAndelJustert.andel.avrundetMedTiDesimaler,
                 bpAndelAvUVedDeltBostedBeløp = bpAndelJustert.beløp.avrundetMedToDesimaler,
+                løpendeForskudd = grunnlag.løpendeForskuddBeløp,
+                løpendeBidrag = grunnlag.løpendeBidragBeløp,
                 bidragJustertForDeltBosted = true,
                 bidragJustertNedTilEvne = bidragJustertNedTilEvne,
                 bidragJustertNedTil25ProsentAvInntekt = bidragJustertNedTil25ProsentAvInntekt,
+                bidragJustertTilForskuddssats = bidragJustertTilForskuddssats,
+                begrensetRevurderingUtført = grunnlag.utførBegrensetRevurdering,
+                beregnetBidragErLavereEnnLøpendeBidrag = beregnetBidragErLavereEnnLøpendeBidrag,
                 grunnlagsreferanseListe = listOfNotNull(
                     grunnlag.bidragsevneBeregningGrunnlag.referanse,
                     grunnlag.underholdskostnadBeregningGrunnlag.referanse,
@@ -56,7 +74,7 @@ internal object EndeligBidragBeregning {
                     grunnlag.deltBostedBeregningGrunnlag.referanse,
                     grunnlag.barnetilleggBPBeregningGrunnlag?.referanse,
                     grunnlag.barnetilleggBMBeregningGrunnlag?.referanse,
-                ),
+                ) + grunnlag.engangsreferanser,
             )
         }
 
@@ -67,6 +85,7 @@ internal object EndeligBidragBeregning {
         var foreløpigBeregnetBeløp = maxOf((bpAndelBeløp - samværsfradrag), BigDecimal.ZERO)
         val bruttoBidragEtterBarnetilleggBM: BigDecimal
         val nettoBidragEtterBarnetilleggBM: BigDecimal
+        val bruttoBidragEtterBegrensetRevurdering: BigDecimal
         val bruttoBidragEtterBarnetilleggBP: BigDecimal
         var bidragJustertForNettoBarnetilleggBM = false
         var bidragJustertForNettoBarnetilleggBP = false
@@ -93,25 +112,30 @@ internal object EndeligBidragBeregning {
         bidragJustertNedTilEvne = (bidragsevne < (foreløpigBeregnetBeløp + samværsfradrag)) && (bidragsevne <= sumInntekt25Prosent)
         bidragJustertNedTil25ProsentAvInntekt =
             (sumInntekt25Prosent < (foreløpigBeregnetBeløp + samværsfradrag)) &&
-            (sumInntekt25Prosent <= bidragsevne)
+                (sumInntekt25Prosent <= bidragsevne)
         foreløpigBeregnetBeløp = bruttoBidragJustertForEvneOg25Prosent
 
-        // Sjekker om eventuelt barnetillegg for BP skal benyttes (hvis regel for BP's barnetillegg slår til overstyrer den BM's barnetillegg)
-        // Samværsfradrag trekkes fra i beregningen, men ikke i sammenligningen
-        if (nettoBarnetilleggBP > BigDecimal.ZERO) {
-            if (nettoBarnetilleggBP > foreløpigBeregnetBeløp) {
-                foreløpigBeregnetBeløp = nettoBarnetilleggBP
-                bruttoBidragEtterBarnetilleggBP = nettoBarnetilleggBP
-                bidragJustertForNettoBarnetilleggBP = true
-            } else {
-                bruttoBidragEtterBarnetilleggBP = foreløpigBeregnetBeløp
-            }
-        } else {
-            bruttoBidragEtterBarnetilleggBP = foreløpigBeregnetBeløp
+        // Sjekker om det er begrenset revurdering
+        // Hvis beregnet beløp er større enn løpende forskudd settes beregnet beløp = løpende forskudd
+        if (grunnlag.utførBegrensetRevurdering && foreløpigBeregnetBeløp > (grunnlag.løpendeForskuddBeløp!! + samværsfradrag)) {
+            bidragJustertTilForskuddssats = true
+            foreløpigBeregnetBeløp = grunnlag.løpendeForskuddBeløp + samværsfradrag
         }
+        bruttoBidragEtterBegrensetRevurdering = foreløpigBeregnetBeløp
 
-        // Hvis ingen av barnetilleggene eksisterer eller skal benyttes, settes beregnet beløp lik "kostnadsberegnet" bidrag - samværsfradrag
+        // Sjekker om eventuelt barnetillegg for BP skal benyttes (hvis regel for BP's barnetillegg slår til overstyrer den BM's barnetillegg)
+        if ((nettoBarnetilleggBP > BigDecimal.ZERO) && (nettoBarnetilleggBP > foreløpigBeregnetBeløp)) {
+            foreløpigBeregnetBeløp = nettoBarnetilleggBP
+            bidragJustertForNettoBarnetilleggBP = true
+        }
+        bruttoBidragEtterBarnetilleggBP = foreløpigBeregnetBeløp
+
+        // Samværsfradrag trekkes fra til slutt
         val nettoBidragEtterSamværsfradrag = maxOf((foreløpigBeregnetBeløp - samværsfradrag), BigDecimal.ZERO)
+
+        // Setter et flagg hvis det er begrenset revurdering og beregnet beløp er lavere enn løpende bidrag
+        val beregnetBidragErLavereEnnLøpendeBidrag =
+            grunnlag.utførBegrensetRevurdering && (nettoBidragEtterSamværsfradrag.avrundetTilNærmesteTier <= grunnlag.løpendeBidragBeløp)
 
         return EndeligBidragBeregningResultat(
             beregnetBeløp = nettoBidragEtterSamværsfradrag.avrundetMedToDesimaler,
@@ -120,12 +144,18 @@ internal object EndeligBidragBeregning {
             bruttoBidragEtterBarnetilleggBM = bruttoBidragEtterBarnetilleggBM.avrundetMedToDesimaler,
             nettoBidragEtterBarnetilleggBM = nettoBidragEtterBarnetilleggBM.avrundetMedToDesimaler,
             bruttoBidragJustertForEvneOg25Prosent = bruttoBidragJustertForEvneOg25Prosent.avrundetMedToDesimaler,
+            bruttoBidragEtterBegrensetRevurdering = bruttoBidragEtterBegrensetRevurdering.avrundetMedToDesimaler,
             bruttoBidragEtterBarnetilleggBP = bruttoBidragEtterBarnetilleggBP.avrundetMedToDesimaler,
             nettoBidragEtterSamværsfradrag = nettoBidragEtterSamværsfradrag.avrundetMedToDesimaler,
+            løpendeForskudd = grunnlag.løpendeForskuddBeløp,
+            løpendeBidrag = grunnlag.løpendeBidragBeløp,
             bidragJustertForNettoBarnetilleggBP = bidragJustertForNettoBarnetilleggBP,
             bidragJustertForNettoBarnetilleggBM = bidragJustertForNettoBarnetilleggBM,
             bidragJustertNedTilEvne = bidragJustertNedTilEvne,
             bidragJustertNedTil25ProsentAvInntekt = bidragJustertNedTil25ProsentAvInntekt,
+            bidragJustertTilForskuddssats = bidragJustertTilForskuddssats,
+            begrensetRevurderingUtført = grunnlag.utførBegrensetRevurdering,
+            beregnetBidragErLavereEnnLøpendeBidrag = beregnetBidragErLavereEnnLøpendeBidrag,
             grunnlagsreferanseListe = listOfNotNull(
                 grunnlag.bidragsevneBeregningGrunnlag.referanse,
                 grunnlag.underholdskostnadBeregningGrunnlag.referanse,
@@ -134,7 +164,7 @@ internal object EndeligBidragBeregning {
                 grunnlag.deltBostedBeregningGrunnlag.referanse,
                 grunnlag.barnetilleggBPBeregningGrunnlag?.referanse,
                 grunnlag.barnetilleggBMBeregningGrunnlag?.referanse,
-            ),
+            ) + grunnlag.engangsreferanser,
         )
     }
 
