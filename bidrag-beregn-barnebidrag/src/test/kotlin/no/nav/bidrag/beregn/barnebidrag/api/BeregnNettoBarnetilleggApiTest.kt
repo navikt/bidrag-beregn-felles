@@ -126,6 +126,27 @@ internal class BeregnNettoBarnetilleggApiTest {
         )
     }
 
+    @Test
+    @DisplayName("Netto barnetillegg - eksempel 5 - tiltakspenger")
+    fun testNettoBarnetillegg_Eksempel05() {
+        filnavn = "src/test/resources/testfiler/nettobarnetillegg/netto_barnetillegg_eksempel5.json"
+        val rolle = Grunnlagstype.PERSON_BIDRAGSPLIKTIG
+        val resultat = utførBeregningerOgEvaluerResultatNettoBarnetillegg(rolle)
+
+        assertAll(
+            { assertThat(resultat).hasSize(1) },
+            { assertThat(resultat[0].summertBruttoBarnetillegg).isEqualTo(BigDecimal.valueOf(1700).setScale(2)) },
+            { assertThat(resultat[0].summertNettoBarnetillegg).isEqualTo(BigDecimal.valueOf(2105).setScale(2)) },
+            { assertThat(resultat[0].barnetilleggTypeListe).hasSize(2) },
+            { assertThat(resultat[0].barnetilleggTypeListe[0].barnetilleggType).isEqualTo(Inntektstype.BARNETILLEGG_PENSJON) },
+            { assertThat(resultat[0].barnetilleggTypeListe[0].bruttoBarnetillegg).isEqualTo(BigDecimal.valueOf(1700).setScale(2)) },
+            { assertThat(resultat[0].barnetilleggTypeListe[0].nettoBarnetillegg).isEqualTo(BigDecimal.valueOf(1105).setScale(2)) },
+            { assertThat(resultat[0].barnetilleggTypeListe[1].barnetilleggType).isEqualTo(Inntektstype.BARNETILLEGG_TILTAKSPENGER) },
+            { assertThat(resultat[0].barnetilleggTypeListe[1].bruttoBarnetillegg).isEqualTo(BigDecimal.ZERO.setScale(2)) },
+            { assertThat(resultat[0].barnetilleggTypeListe[1].nettoBarnetillegg).isEqualTo(BigDecimal.valueOf(1000).setScale(2)) },
+        )
+    }
+
     private fun utførBeregningerOgEvaluerResultatNettoBarnetillegg(rolle: Grunnlagstype): List<DelberegningNettoBarnetillegg> {
         val request = lesFilOgByggRequest(filnavn)
         val nettoBarnetilleggResultat = api.beregnNettoBarnetillegg(request, rolle)
