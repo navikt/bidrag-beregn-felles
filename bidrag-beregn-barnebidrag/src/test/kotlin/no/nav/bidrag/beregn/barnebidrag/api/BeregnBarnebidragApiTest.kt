@@ -391,6 +391,7 @@ internal class BeregnBarnebidragApiTest {
                     bruttoBidragEtterBarnetilleggBM = it.innhold.bruttoBidragEtterBarnetilleggBM,
                     nettoBidragEtterBarnetilleggBM = it.innhold.nettoBidragEtterBarnetilleggBM,
                     bruttoBidragJustertForEvneOg25Prosent = it.innhold.bruttoBidragJustertForEvneOg25Prosent,
+                    bruttoBidragEtterBegrensetRevurdering = it.innhold.bruttoBidragEtterBegrensetRevurdering,
                     bruttoBidragEtterBarnetilleggBP = it.innhold.bruttoBidragEtterBarnetilleggBP,
                     nettoBidragEtterSamværsfradrag = it.innhold.nettoBidragEtterSamværsfradrag,
                     bpAndelAvUVedDeltBostedFaktor = it.innhold.bpAndelAvUVedDeltBostedFaktor,
@@ -402,6 +403,7 @@ internal class BeregnBarnebidragApiTest {
                     bidragJustertForNettoBarnetilleggBM = it.innhold.bidragJustertForNettoBarnetilleggBM,
                     bidragJustertNedTilEvne = it.innhold.bidragJustertNedTilEvne,
                     bidragJustertNedTil25ProsentAvInntekt = it.innhold.bidragJustertNedTil25ProsentAvInntekt,
+                    bidragJustertTilForskuddssats = it.innhold.bidragJustertTilForskuddssats,
                 )
             }
 
