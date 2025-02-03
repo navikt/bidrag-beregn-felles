@@ -4386,7 +4386,6 @@ class TestUtil {
                 ),
                 originalBostatus = null,
             ),
-
         )
 
         fun byggSettTomdatoPåNyPeriodeV3() = listOf(
@@ -4438,6 +4437,66 @@ class TestUtil {
             innhentedeOffentligeOpplysninger = emptyList(),
             behandledeBostatusopplysninger = emptyList(),
             endreBostatus = null,
+        )
+
+        fun byggTestFlereHusstandsmedlemmerPeriodeTomNull() = BoforholdVoksneRequest(
+            innhentedeOffentligeOpplysninger = listOf(
+                Husstandsmedlemmer(
+                    gjelderPersonId = "1",
+                    fødselsdato = LocalDate.of(1980, 3, 17),
+                    relasjon = Familierelasjon.INGEN,
+                    borISammeHusstandListe = listOf(
+                        Bostatus(
+                            periodeFom = LocalDate.of(2022, 3, 5),
+                            periodeTom = LocalDate.of(2024, 3, 18),
+                            bostatus = null,
+                            kilde = Kilde.OFFENTLIG,
+                        ),
+                    ),
+                ),
+                Husstandsmedlemmer(
+                    gjelderPersonId = "2",
+                    fødselsdato = LocalDate.of(1981, 3, 17),
+                    relasjon = Familierelasjon.INGEN,
+                    borISammeHusstandListe = listOf(
+                        Bostatus(
+                            periodeFom = LocalDate.of(2023, 8, 1),
+                            periodeTom = LocalDate.of(2024, 4, 21),
+                            bostatus = null,
+                            kilde = Kilde.OFFENTLIG,
+                        ),
+                    ),
+                ),
+                Husstandsmedlemmer(
+                    gjelderPersonId = "3",
+                    fødselsdato = LocalDate.of(1982, 3, 17),
+                    relasjon = Familierelasjon.INGEN,
+                    borISammeHusstandListe = listOf(
+                        Bostatus(
+                            periodeFom = LocalDate.of(2022, 3, 5),
+                            periodeTom = LocalDate.of(2024, 3, 18),
+                            bostatus = null,
+                            kilde = Kilde.OFFENTLIG,
+                        ),
+                    ),
+                ),
+                Husstandsmedlemmer(
+                    gjelderPersonId = "4",
+                    fødselsdato = LocalDate.of(1983, 3, 17),
+                    relasjon = Familierelasjon.MOTPART_TIL_FELLES_BARN,
+                    borISammeHusstandListe = listOf(
+                        Bostatus(
+                            periodeFom = LocalDate.of(2022, 5, 10),
+                            periodeTom = null,
+                            bostatus = null,
+                            kilde = Kilde.OFFENTLIG,
+                        ),
+                    ),
+                ),
+            ),
+            behandledeBostatusopplysninger = emptyList(),
+            endreBostatus = null,
+
         )
     }
 }

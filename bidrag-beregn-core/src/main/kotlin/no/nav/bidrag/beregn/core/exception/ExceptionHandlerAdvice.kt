@@ -19,6 +19,17 @@ class ExceptionHandlerAdvice {
         .header("Error", errorMsg(exception))
         .build<Any>()
 
+    @ExceptionHandler(BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException::class)
+    fun handleBegrensetRevurderingException(exception: BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException): ResponseEntity<Map<String, Any>> {
+        return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+            .body(
+                mapOf(
+                    "melding" to exception.melding,
+                    "data" to exception.data
+                )
+            )
+    }
+
     private fun errorMsg(runtimeException: RuntimeException): String =
         String.format("%s: %s", runtimeException.javaClass.getSimpleName(), runtimeException.message)
 }

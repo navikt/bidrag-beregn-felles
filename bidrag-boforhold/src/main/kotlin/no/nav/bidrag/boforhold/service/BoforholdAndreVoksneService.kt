@@ -773,7 +773,19 @@ internal class BoforholdAndreVoksneService {
                 periodeFom = bostatusperiode.periodeFom
                 periodeTom = bostatusperiode.periodeTom
             } else if (bostatusperiode.periodeTom == null || bostatusperiode.periodeTom.isAfter(periodeTom)) {
-                periodeTom = bostatusperiode.periodeTom
+                if (bostatusperiode.periodeTom == null) {
+                    resultatliste.add(
+                        Bostatus(
+                            periodeFom = periodeFom,
+                            periodeTom = null,
+                            bostatus = Bostatuskode.BOR_MED_ANDRE_VOKSNE,
+                            kilde = Kilde.OFFENTLIG,
+                        ),
+                    )
+                    return resultatliste
+                } else {
+                    periodeTom = bostatusperiode.periodeTom
+                }
             }
 
             if (indeks == sortertePerioder.size - 1) {

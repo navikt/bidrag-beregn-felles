@@ -4,6 +4,7 @@ import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.avrundetMedNullDesimaler
 import no.nav.bidrag.domene.util.avrundetMedTiDesimaler
 import no.nav.bidrag.domene.util.avrundetMedToDesimaler
+import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningNettoBarnetillegg
@@ -20,6 +21,9 @@ data class EndeligBidragPeriodeGrunnlag(
     val samværsklassePeriodeGrunnlagListe: List<SamværsklassePeriodeGrunnlag>,
     val nettoBarnetilleggBPDelberegningPeriodeGrunnlagListe: List<NettoBarnetilleggDelberegningPeriodeGrunnlag>,
     val nettoBarnetilleggBMDelberegningPeriodeGrunnlagListe: List<NettoBarnetilleggDelberegningPeriodeGrunnlag>,
+    val beløpshistorikkForskuddPeriodeGrunnlag: BeløpshistorikkPeriodeGrunnlag?,
+    val beløpshistorikkBidragPeriodeGrunnlag: BeløpshistorikkPeriodeGrunnlag?,
+    val begrensetRevurderingPeriodeGrunnlag: BegrensetRevurderingPeriodeGrunnlag?,
 )
 
 data class BidragsevneDelberegningPeriodeGrunnlag(val referanse: String, val bidragsevnePeriode: DelberegningBidragsevne)
@@ -33,6 +37,10 @@ data class SamværsfradragDelberegningPeriodeGrunnlag(val referanse: String, val
 
 data class NettoBarnetilleggDelberegningPeriodeGrunnlag(val referanse: String, val nettoBarnetilleggPeriode: DelberegningNettoBarnetillegg)
 
+data class BeløpshistorikkPeriodeGrunnlag(val referanse: String, val beløpshistorikkPeriode: BeløpshistorikkGrunnlag)
+
+data class BegrensetRevurderingPeriodeGrunnlag(val referanse: String, val begrensetRevurdering: Boolean)
+
 data class EndeligBidragPeriodeResultat(val periode: ÅrMånedsperiode, val resultat: EndeligBidragBeregningResultat)
 
 data class EndeligBidragBeregningGrunnlag(
@@ -43,6 +51,10 @@ data class EndeligBidragBeregningGrunnlag(
     val deltBostedBeregningGrunnlag: DeltBostedBeregningGrunnlag,
     val barnetilleggBPBeregningGrunnlag: BarnetilleggDelberegningBeregningGrunnlag?,
     val barnetilleggBMBeregningGrunnlag: BarnetilleggDelberegningBeregningGrunnlag?,
+    val løpendeForskuddBeløp: BigDecimal?,
+    val løpendeBidragBeløp: BigDecimal?,
+    val utførBegrensetRevurdering: Boolean,
+    val engangsreferanser: List<String> = emptyList(),
 )
 
 data class BidragsevneDelberegningBeregningGrunnlag(val referanse: String, val beløp: BigDecimal, val sumInntekt25Prosent: BigDecimal)
@@ -69,10 +81,13 @@ data class EndeligBidragBeregningResultat(
     val bruttoBidragEtterBarnetilleggBM: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
     val nettoBidragEtterBarnetilleggBM: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
     val bruttoBidragJustertForEvneOg25Prosent: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
+    val bruttoBidragEtterBegrensetRevurdering: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
     val bruttoBidragEtterBarnetilleggBP: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
     val nettoBidragEtterSamværsfradrag: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
     val bpAndelAvUVedDeltBostedFaktor: BigDecimal = BigDecimal.ZERO.avrundetMedTiDesimaler,
     val bpAndelAvUVedDeltBostedBeløp: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
+    val løpendeForskudd: BigDecimal? = null,
+    val løpendeBidrag: BigDecimal? = null,
     val ingenEndringUnderGrense: Boolean = false,
     val barnetErSelvforsørget: Boolean = false,
     val bidragJustertForDeltBosted: Boolean = false,
@@ -80,5 +95,9 @@ data class EndeligBidragBeregningResultat(
     val bidragJustertForNettoBarnetilleggBM: Boolean = false,
     val bidragJustertNedTilEvne: Boolean = false,
     val bidragJustertNedTil25ProsentAvInntekt: Boolean = false,
+    val bidragJustertTilForskuddssats: Boolean = false,
+    val beregnetBeløpErLavereEnnLøpendeBidrag: Boolean = false,
+    val begrensetRevurderingUtført: Boolean = false,
+    val beregnetBidragErLavereEnnLøpendeBidrag: Boolean = false,
     val grunnlagsreferanseListe: List<String> = emptyList(),
 )

@@ -12,6 +12,7 @@ import no.nav.bidrag.domene.enums.inntekt.Inntektstype
 import no.nav.bidrag.domene.enums.rolle.Rolle
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import no.nav.bidrag.domene.enums.vedtak.Formål
+import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.LocalDate
@@ -276,45 +277,45 @@ object InntektUtil {
                         PeriodisertInntekt(
                             periode = it.getPeriode(),
                             summertBeløp =
-                            summerInntektPeriode(
-                                periode = it.getPeriode(),
-                                justertInntektPeriodeGrunnlagListe = justertInntektPeriodeGrunnlagListeAlleInntekter,
-                            ),
+                                summerInntektPeriode(
+                                    periode = it.getPeriode(),
+                                    justertInntektPeriodeGrunnlagListe = justertInntektPeriodeGrunnlagListeAlleInntekter,
+                                ),
                             fordelSærfradragBeløp = BigDecimal.ZERO,
                             sjablon0004FordelSkatteklasse2Beløp =
-                            finnSjablonverdi(
-                                periode = it.getPeriode(),
-                                justertsjablonListe = justertSjablonListe,
-                                sjablonTallNavn = SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELØP,
-                            ),
+                                finnSjablonverdi(
+                                    periode = it.getPeriode(),
+                                    justertsjablonListe = justertSjablonListe,
+                                    sjablonTallNavn = SjablonTallNavn.FORDEL_SKATTEKLASSE2_BELØP,
+                                ),
                             sjablon0030ØvreInntektsgrenseBeløp =
-                            finnSjablonverdi(
-                                periode = it.getPeriode(),
-                                justertsjablonListe = justertSjablonListe,
-                                sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_IKKE_I_SKATTEPOSISJON_BELØP,
-                            ),
+                                finnSjablonverdi(
+                                    periode = it.getPeriode(),
+                                    justertsjablonListe = justertSjablonListe,
+                                    sjablonTallNavn = SjablonTallNavn.ØVRE_INNTEKTSGRENSE_IKKE_I_SKATTEPOSISJON_BELØP,
+                                ),
                             sjablon0031NedreInntektsgrenseBeløp =
-                            finnSjablonverdi(
-                                periode = it.getPeriode(),
-                                justertsjablonListe = justertSjablonListe,
-                                sjablonTallNavn = SjablonTallNavn.NEDRE_INNTEKTSGRENSE_FULL_SKATTEPOSISJON_BELØP,
-                            ),
+                                finnSjablonverdi(
+                                    periode = it.getPeriode(),
+                                    justertsjablonListe = justertSjablonListe,
+                                    sjablonTallNavn = SjablonTallNavn.NEDRE_INNTEKTSGRENSE_FULL_SKATTEPOSISJON_BELØP,
+                                ),
                             sjablon0039FordelSærfradragBeløp =
-                            finnSjablonverdi(
-                                periode = it.getPeriode(),
-                                justertsjablonListe = justertSjablonListe,
-                                sjablonTallNavn = SjablonTallNavn.FORDEL_SÆRFRADRAG_BELØP,
-                            ),
+                                finnSjablonverdi(
+                                    periode = it.getPeriode(),
+                                    justertsjablonListe = justertSjablonListe,
+                                    sjablonTallNavn = SjablonTallNavn.FORDEL_SÆRFRADRAG_BELØP,
+                                ),
                             deltFordel =
-                            finnDeltFordel(
-                                periode = it.getPeriode(),
-                                justertInntektPeriodeGrunnlagListe = justertInntektPeriodeGrunnlagListeAlleInntekter,
-                            ),
+                                finnDeltFordel(
+                                    periode = it.getPeriode(),
+                                    justertInntektPeriodeGrunnlagListe = justertInntektPeriodeGrunnlagListeAlleInntekter,
+                                ),
                             skatteklasse2 =
-                            finnSkatteklasse2(
-                                periode = it.getPeriode(),
-                                justertInntektPeriodeGrunnlagListe = justertInntektPeriodeGrunnlagListeAlleInntekter,
-                            ),
+                                finnSkatteklasse2(
+                                    periode = it.getPeriode(),
+                                    justertInntektPeriodeGrunnlagListe = justertInntektPeriodeGrunnlagListeAlleInntekter,
+                                ),
                         ),
                     )
                 }
@@ -473,7 +474,20 @@ object InntektUtil {
         return if (kapitalinntekt < BigDecimal.ZERO) BigDecimal.ZERO else kapitalinntekt
     }
 
+    // Barntillegg tiltakspenger skal ikke være med i inntektsgrunnlaget som skal summeres
+    fun justerForBarnetilleggTiltakspenger(inntektsrapporteringPeriode: InntektsrapporteringPeriode) =
+        inntektsrapporteringPeriode.beløp -
+            (inntektsrapporteringPeriode.inntektspostListe
+                .filter { it.inntektstype == Inntektstype.BARNETILLEGG_TILTAKSPENGER }
+                .sumOf { it.beløp }
+                )
+
     // Sjekker om inntekten er kapitalinntekt
     fun erKapitalinntekt(inntektsrapportering: Inntektsrapportering) =
         inntektsrapportering in listOf(Inntektsrapportering.KAPITALINNTEKT, Inntektsrapportering.KAPITALINNTEKT_EGNE_OPPLYSNINGER)
+
+    // Sjekker om inntekten inneholder barnetillegg tiltakspenger
+    fun inneholderBarnetilleggTiltakspenger(inntektsrapporteringPeriode: InntektsrapporteringPeriode) =
+        (inntektsrapporteringPeriode.inntektsrapportering == Inntektsrapportering.BARNETILLEGG) &&
+            (inntektsrapporteringPeriode.inntektspostListe.any { it.inntektstype == Inntektstype.BARNETILLEGG_TILTAKSPENGER })
 }

@@ -1,5 +1,7 @@
 package no.nav.bidrag.beregn.barnebidrag.mapper
 
+import no.nav.bidrag.beregn.barnebidrag.bo.BegrensetRevurderingPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.BeløpshistorikkPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BidragsevneDelberegningPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BpAndelUnderholdskostnadDelberegningPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragPeriodeGrunnlag
@@ -10,23 +12,24 @@ import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadDelberegningPeriodeG
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningNettoBarnetillegg
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsfradrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SamværsklassePeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SøknadGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåFremmedReferanse
 
 internal object EndeligBidragMapper : CoreMapper() {
 
     fun mapEndeligBidragGrunnlag(mottattGrunnlag: BeregnGrunnlag): EndeligBidragPeriodeGrunnlag {
-        val bidragsevneDelberegningPeriodeGrunnlagListe = mapBidragsevne(mottattGrunnlag)
 
         return EndeligBidragPeriodeGrunnlag(
             beregningsperiode = mottattGrunnlag.periode,
-            bidragsevneDelberegningPeriodeGrunnlagListe = bidragsevneDelberegningPeriodeGrunnlagListe,
+            bidragsevneDelberegningPeriodeGrunnlagListe = mapBidragsevne(mottattGrunnlag),
             underholdskostnadDelberegningPeriodeGrunnlagListe = mapUnderholdskostnad(mottattGrunnlag),
             bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe = mapBpAndelUnderholdskostnad(mottattGrunnlag),
             samværsfradragDelberegningPeriodeGrunnlagListe = mapSamværsfradrag(mottattGrunnlag),
@@ -45,6 +48,15 @@ internal object EndeligBidragMapper : CoreMapper() {
                     grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
                 ),
             ),
+            beløpshistorikkForskuddPeriodeGrunnlag = mapBeløpshistorikk(
+                beregnGrunnlag = mottattGrunnlag,
+                grunnlagstype = Grunnlagstype.BELØPSHISTORIKK_FORSKUDD
+            ),
+            beløpshistorikkBidragPeriodeGrunnlag = mapBeløpshistorikk(
+                beregnGrunnlag = mottattGrunnlag,
+                grunnlagstype = Grunnlagstype.BELØPSHISTORIKK_BIDRAG
+            ),
+            begrensetRevurderingPeriodeGrunnlag = mapSøknadGrunnlag(mottattGrunnlag),
         )
     }
 
@@ -152,5 +164,29 @@ internal object EndeligBidragMapper : CoreMapper() {
                 "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.DELBEREGNING_NETTO_BARNETILLEGG er ikke gyldig: " + e.message,
             )
         }
+    }
+
+    private fun mapBeløpshistorikk(beregnGrunnlag: BeregnGrunnlag, grunnlagstype: Grunnlagstype): BeløpshistorikkPeriodeGrunnlag? {
+        return beregnGrunnlag.grunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(grunnlagType = grunnlagstype)
+            .map {
+                BeløpshistorikkPeriodeGrunnlag(
+                    referanse = it.referanse,
+                    beløpshistorikkPeriode = it.innhold,
+                )
+            }
+            .firstOrNull()
+    }
+
+    private fun mapSøknadGrunnlag(beregnGrunnlag: BeregnGrunnlag): BegrensetRevurderingPeriodeGrunnlag? {
+        return beregnGrunnlag.grunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<SøknadGrunnlag>(Grunnlagstype.SØKNAD)
+            .map {
+                BegrensetRevurderingPeriodeGrunnlag(
+                    referanse = it.referanse,
+                    begrensetRevurdering = it.innhold.begrensetRevurdering,
+                )
+            }
+            .firstOrNull()
     }
 }

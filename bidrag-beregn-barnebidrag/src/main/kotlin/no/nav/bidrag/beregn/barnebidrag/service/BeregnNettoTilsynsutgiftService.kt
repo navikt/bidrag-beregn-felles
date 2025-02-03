@@ -149,11 +149,13 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
         val barnBMListeUnderTolvÅr = barnUnderTolvÅr(grunnlag.barnBMListe, bruddPeriode.fom)
         val barnMedUtgifterReferanser = barnMedUtgifterIPerioden.map { it.gjelderBarn }
         val antallBarnBMBeregnet = beregnAntallBarnBM(barnBMListeUnderTolvÅr, barnMedUtgifterReferanser)
+        val antallBarnMedTilsynsutgifter = barnMedUtgifterReferanser.size
 
         val respons = NettoTilsynsutgiftBeregningGrunnlag(
             søknadsbarnReferanse = grunnlag.søknadsbarnReferanse,
             barnBMListe = grunnlag.barnBMListe,
             antallBarnBMBeregnet = antallBarnBMBeregnet,
+            antallBarnMedTilsynsutgifter = antallBarnMedTilsynsutgifter,
             barnBMListeUnderTolvÅr = barnBMListeUnderTolvÅr,
             faktiskUtgiftListe = grunnlag.faktiskUtgiftPeriodeCoreListe
                 .filter { ÅrMånedsperiode(it.periode.datoFom, it.periode.datoTil).inneholder(bruddPeriode) }
@@ -189,7 +191,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                 .asSequence()
                 .filter { it.sjablonMaksTilsynsbeløpPeriode.periode.inneholder(bruddPeriode) }
                 .sortedBy { it.sjablonMaksTilsynsbeløpPeriode.antallBarnTom }
-                .filter { it.sjablonMaksTilsynsbeløpPeriode.antallBarnTom >= antallBarnBMBeregnet }
+                .filter { it.sjablonMaksTilsynsbeløpPeriode.antallBarnTom >= antallBarnMedTilsynsutgifter }
                 .map {
                     SjablonMaksTilsynsbeløpBeregningGrunnlag(
                         referanse = it.referanse,
@@ -281,6 +283,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                         skattefradrag = it.resultat.skattefradrag,
                         antallBarnBMUnderTolvÅr = it.resultat.antallBarnBMUnderTolvÅr,
                         antallBarnBMBeregnet = it.resultat.antallBarnBMBeregnet,
+                        antallBarnMedTilsynsutgifter = it.resultat.antallBarnMedTilsynsutgifter,
                         nettoTilsynsutgift = it.resultat.nettoTilsynsutgift,
                         tilsynsutgiftBarnListe = it.resultat.tilsynsutgiftBarnListe,
                         erBegrensetAvMaksTilsyn = it.resultat.erBegrensetAvMaksTilsyn,
