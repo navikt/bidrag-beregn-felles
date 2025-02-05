@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
-import no.nav.bidrag.beregn.core.exception.BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
@@ -55,6 +54,9 @@ internal class BeregnEndeligBidragApiTest {
     private var forventetBidragJustertNedTil25ProsentAvInntekt: Boolean = false
     private var forventetBidragJustertTilForskuddssats: Boolean = false
     private var forventetBegrensetRevurderingUtført: Boolean = false
+    private var forventetFeilmelding = ""
+    private var forventetPerioderMedFeilListe = emptyList<ÅrMånedsperiode>()
+    private var forventetExceptionBegrensetRevurdering = false
     private var forventetAntallDelberegningBidragsevne: Int = 1
     private var forventetAntallDelberegningUnderholdskostnad: Int = 1
     private var forventetAntallDelberegningBPAndelUnderholdskostnad: Int = 1
@@ -342,56 +344,27 @@ internal class BeregnEndeligBidragApiTest {
     }
 
     @Test
-    @DisplayName("Endelig bidrag - eksempel 10C - Begrenset revurdering - beregnet bidrag er lavere enn løpende bidrag")
-    //TODO: Skal kaste exception
+    @DisplayName("Endelig bidrag - eksempel 10C - Begrenset revurdering - beregnet bidrag er lavere enn løpende bidrag - skal kaste exception")
     fun testEndeligBidrag_Eksempel10C() {
         filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel10C.json"
-        val request = lesFilOgByggRequest(filnavn)
-        val exception = assertThrows(BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException::class.java) {
-            api.beregnEndeligBidrag(request)
-        }
-
-        val endeligBidragResultatListe = hentSluttberegning(exception.data)
-        val alleReferanser = hentAlleReferanser(exception.data)
-        val alleRefererteReferanser = hentAlleRefererteReferanser(exception.data).filter { it != "Person_Søknadsbarn" }
-
-        assertAll(
-            { assertThat(endeligBidragResultatListe).isNotNull },
-            { assertThat(endeligBidragResultatListe).hasSize(1) },
-
-            // Resultat
-            { assertThat(endeligBidragResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null)) },
-            { assertThat(endeligBidragResultatListe[0].beregnetBeløp).isEqualTo(BigDecimal.valueOf(5001).setScale(2)) },
-            { assertThat(endeligBidragResultatListe[0].resultatBeløp).isEqualTo(BigDecimal.valueOf(5000).setScale(0)) },
-            { assertThat(endeligBidragResultatListe[0].uMinusNettoBarnetilleggBM).isEqualTo(BigDecimal.valueOf(8514.87).setScale(2)) },
-            { assertThat(endeligBidragResultatListe[0].bruttoBidragEtterBarnetilleggBM).isEqualTo(BigDecimal.valueOf(6000).setScale(2)) },
-            { assertThat(endeligBidragResultatListe[0].nettoBidragEtterBarnetilleggBM).isEqualTo(BigDecimal.valueOf(5001).setScale(2)) },
-            { assertThat(endeligBidragResultatListe[0].bruttoBidragJustertForEvneOg25Prosent).isEqualTo(BigDecimal.valueOf(6000).setScale(2)) },
-            { assertThat(endeligBidragResultatListe[0].bruttoBidragEtterBegrensetRevurdering).isEqualTo(BigDecimal.valueOf(6000).setScale(2)) },
-            { assertThat(endeligBidragResultatListe[0].bruttoBidragEtterBarnetilleggBP).isEqualTo(BigDecimal.valueOf(6000).setScale(2)) },
-            { assertThat(endeligBidragResultatListe[0].nettoBidragEtterSamværsfradrag).isEqualTo(BigDecimal.valueOf(5001).setScale(2)) },
-            { assertThat(endeligBidragResultatListe[0].bpAndelAvUVedDeltBostedFaktor).isEqualTo(BigDecimal.ZERO.setScale(10)) },
-            { assertThat(endeligBidragResultatListe[0].bpAndelAvUVedDeltBostedBeløp).isEqualTo(BigDecimal.ZERO.setScale(2)) },
-            { assertThat(endeligBidragResultatListe[0].løpendeForskudd).isEqualTo(BigDecimal.valueOf(5500).setScale(0)) },
-            { assertThat(endeligBidragResultatListe[0].løpendeBidrag).isEqualTo(BigDecimal.valueOf(5200).setScale(0)) },
-            { assertThat(endeligBidragResultatListe[0].ingenEndringUnderGrense).isFalse() },
-            { assertThat(endeligBidragResultatListe[0].barnetErSelvforsørget).isFalse() },
-            { assertThat(endeligBidragResultatListe[0].bidragJustertForDeltBosted).isFalse() },
-            { assertThat(endeligBidragResultatListe[0].bidragJustertForNettoBarnetilleggBP).isFalse() },
-            { assertThat(endeligBidragResultatListe[0].bidragJustertForNettoBarnetilleggBM).isFalse() },
-            { assertThat(endeligBidragResultatListe[0].bidragJustertNedTilEvne).isFalse() },
-            { assertThat(endeligBidragResultatListe[0].bidragJustertNedTil25ProsentAvInntekt).isFalse() },
-            { assertThat(endeligBidragResultatListe[0].bidragJustertTilForskuddssats).isFalse() },
-            { assertThat(endeligBidragResultatListe[0].begrensetRevurderingUtført).isTrue() },
-
-            // Referanser
-            { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
-
-            // Exception melding
-            {
-                assertThat(exception.melding).contains("Kan ikke fatte vedtak fordi beregnet bidrag for følgende perioder er lavere enn løpende bidrag: 2024-08 - null")
-            },
-        )
+        forventetBeregnetBeløp = BigDecimal.valueOf(5001).setScale(2)
+        forventetResultatbeløp = BigDecimal.valueOf(5000).setScale(0)
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(8514.87).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(6000).setScale(2)
+        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(5001).setScale(2)
+        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(6000).setScale(2)
+        forventetBruttoBidragEtterBegrensetRevurdering = BigDecimal.valueOf(6000).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(6000).setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(5001).setScale(2)
+        forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
+        forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
+        forventetLøpendeForskudd = BigDecimal.valueOf(5500).setScale(0)
+        forventetLøpendeBidrag = BigDecimal.valueOf(5200).setScale(0)
+        forventetBegrensetRevurderingUtført = true
+        forventetFeilmelding = "Kan ikke fatte vedtak fordi beregnet bidrag for følgende perioder er lavere enn løpende bidrag: 2024-08 - "
+        forventetPerioderMedFeilListe = listOf(ÅrMånedsperiode(YearMonth.parse("2024-08"), null))
+        forventetExceptionBegrensetRevurdering = true
+        utførBeregningerOgEvaluerResultatEndeligBidrag()
     }
 
     @Test
@@ -500,10 +473,13 @@ internal class BeregnEndeligBidragApiTest {
         val endeligBidragResultat = api.beregnEndeligBidrag(request)
         printJson(endeligBidragResultat)
 
-        val alleReferanser = hentAlleReferanser(endeligBidragResultat)
-        val alleRefererteReferanser = hentAlleRefererteReferanser(endeligBidragResultat).filter { it != "Person_Søknadsbarn" }
+        val alleReferanser = hentAlleReferanser(endeligBidragResultat.grunnlagListe)
+        val alleRefererteReferanser = hentAlleRefererteReferanser(endeligBidragResultat.grunnlagListe).filter { it != "Person_Søknadsbarn" }
 
-        val endeligBidragResultatListe = hentSluttberegning(endeligBidragResultat)
+        val endeligBidragResultatListe = hentSluttberegning(endeligBidragResultat.grunnlagListe)
+        val feilmelding = endeligBidragResultat.feilmelding
+        val perioderMedFeilListe = endeligBidragResultat.perioderMedFeilListe
+        val skalKasteBegrensetRevurderingException = endeligBidragResultat.skalKasteBegrensetRevurderingException
 
         val referanseBP = request.grunnlagListe
             .filter { it.type == Grunnlagstype.PERSON_BIDRAGSPLIKTIG }
@@ -515,27 +491,27 @@ internal class BeregnEndeligBidragApiTest {
             .map { it.referanse }
             .first()
 
-        val antallDelberegningBidragsevne = endeligBidragResultat
+        val antallDelberegningBidragsevne = endeligBidragResultat.grunnlagListe
             .filter { it.type == Grunnlagstype.DELBEREGNING_BIDRAGSEVNE }
             .size
 
-        val antallDelberegningUnderholdskostnad = endeligBidragResultat
+        val antallDelberegningUnderholdskostnad = endeligBidragResultat.grunnlagListe
             .filter { it.type == Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD }
             .size
 
-        val antallDelberegningBPAndelUnderholdskostnad = endeligBidragResultat
+        val antallDelberegningBPAndelUnderholdskostnad = endeligBidragResultat.grunnlagListe
             .filter { it.type == Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL }
             .size
 
-        val antallDelberegningSamværsfradrag = endeligBidragResultat
+        val antallDelberegningSamværsfradrag = endeligBidragResultat.grunnlagListe
             .filter { it.type == Grunnlagstype.DELBEREGNING_SAMVÆRSFRADRAG }
             .size
 
-        val antallSamværsklasse = endeligBidragResultat
+        val antallSamværsklasse = endeligBidragResultat.grunnlagListe
             .filter { it.type == Grunnlagstype.SAMVÆRSPERIODE }
             .size
 
-        val antallBarnetilleggBM = endeligBidragResultat
+        val antallBarnetilleggBM = endeligBidragResultat.grunnlagListe
             .filtrerOgKonverterBasertPåFremmedReferanse<InntektsrapporteringPeriode>(
                 grunnlagType = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
                 referanse = referanseBM,
@@ -544,7 +520,7 @@ internal class BeregnEndeligBidragApiTest {
             .flatMap { it.innhold.inntektspostListe }
             .size
 
-        val antallBarnetilleggBP = endeligBidragResultat
+        val antallBarnetilleggBP = endeligBidragResultat.grunnlagListe
             .filtrerOgKonverterBasertPåFremmedReferanse<InntektsrapporteringPeriode>(
                 grunnlagType = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
                 referanse = referanseBP,
@@ -585,6 +561,10 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[0].bidragJustertTilForskuddssats).isEqualTo(forventetBidragJustertTilForskuddssats) },
             { assertThat(endeligBidragResultatListe[0].begrensetRevurderingUtført).isEqualTo(forventetBegrensetRevurderingUtført) },
 
+            { assertThat(feilmelding).isEqualTo(forventetFeilmelding) },
+            { assertThat(perioderMedFeilListe).isEqualTo(forventetPerioderMedFeilListe) },
+            { assertThat(skalKasteBegrensetRevurderingException).isEqualTo(forventetExceptionBegrensetRevurdering) },
+
             // Grunnlag
             { assertThat(antallDelberegningBidragsevne).isEqualTo(antallGrunnlag) },
             { assertThat(antallDelberegningUnderholdskostnad).isEqualTo(antallGrunnlag) },
@@ -606,10 +586,10 @@ internal class BeregnEndeligBidragApiTest {
         val endeligBidragResultat = api.beregnEndeligBidrag(request)
         printJson(endeligBidragResultat)
 
-        val alleReferanser = hentAlleReferanser(endeligBidragResultat)
-        val alleRefererteReferanser = hentAlleRefererteReferanser(endeligBidragResultat).filter { it != "Person_Søknadsbarn" }
+        val alleReferanser = hentAlleReferanser(endeligBidragResultat.grunnlagListe)
+        val alleRefererteReferanser = hentAlleRefererteReferanser(endeligBidragResultat.grunnlagListe).filter { it != "Person_Søknadsbarn" }
 
-        val endeligBidragResultatListe = hentSluttberegning(endeligBidragResultat)
+        val endeligBidragResultatListe = hentSluttberegning(endeligBidragResultat.grunnlagListe)
 
         val referanseBP = request.grunnlagListe
             .filter { it.type == Grunnlagstype.PERSON_BIDRAGSPLIKTIG }
@@ -621,27 +601,27 @@ internal class BeregnEndeligBidragApiTest {
             .map { it.referanse }
             .first()
 
-        val antallDelberegningBidragsevne = endeligBidragResultat
+        val antallDelberegningBidragsevne = endeligBidragResultat.grunnlagListe
             .filter { it.type == Grunnlagstype.DELBEREGNING_BIDRAGSEVNE }
             .size
 
-        val antallDelberegningUnderholdskostnad = endeligBidragResultat
+        val antallDelberegningUnderholdskostnad = endeligBidragResultat.grunnlagListe
             .filter { it.type == Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD }
             .size
 
-        val antallDelberegningBPAndelUnderholdskostnad = endeligBidragResultat
+        val antallDelberegningBPAndelUnderholdskostnad = endeligBidragResultat.grunnlagListe
             .filter { it.type == Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL }
             .size
 
-        val antallDelberegningSamværsfradrag = endeligBidragResultat
+        val antallDelberegningSamværsfradrag = endeligBidragResultat.grunnlagListe
             .filter { it.type == Grunnlagstype.DELBEREGNING_SAMVÆRSFRADRAG }
             .size
 
-        val antallSamværsklasse = endeligBidragResultat
+        val antallSamværsklasse = endeligBidragResultat.grunnlagListe
             .filter { it.type == Grunnlagstype.SAMVÆRSPERIODE }
             .size
 
-        val antallBarnetilleggBM = endeligBidragResultat
+        val antallBarnetilleggBM = endeligBidragResultat.grunnlagListe
             .filtrerOgKonverterBasertPåFremmedReferanse<InntektsrapporteringPeriode>(
                 grunnlagType = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
                 referanse = referanseBM,
@@ -650,7 +630,7 @@ internal class BeregnEndeligBidragApiTest {
             .flatMap { it.innhold.inntektspostListe }
             .size
 
-        val antallBarnetilleggBP = endeligBidragResultat
+        val antallBarnetilleggBP = endeligBidragResultat.grunnlagListe
             .filtrerOgKonverterBasertPåFremmedReferanse<InntektsrapporteringPeriode>(
                 grunnlagType = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
                 referanse = referanseBP,
@@ -881,15 +861,16 @@ internal class BeregnEndeligBidragApiTest {
 
     private fun utførBeregningerOgEvaluerResultatEndeligBidragFlerePerioderBegrensetRevurdering() {
         val request = lesFilOgByggRequest(filnavn)
-        val exception = assertThrows(BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException::class.java) {
-            api.beregnEndeligBidrag(request)
-        }
-        printJson(exception.data)
+        val endeligBidragResultat = api.beregnEndeligBidrag(request)
+        printJson(endeligBidragResultat)
 
-        val alleReferanser = hentAlleReferanser(exception.data)
-        val alleRefererteReferanser = hentAlleRefererteReferanser(exception.data).filter { it != "Person_Søknadsbarn" }
+        val alleReferanser = hentAlleReferanser(endeligBidragResultat.grunnlagListe)
+        val alleRefererteReferanser = hentAlleRefererteReferanser(endeligBidragResultat.grunnlagListe).filter { it != "Person_Søknadsbarn" }
 
-        val endeligBidragResultatListe = hentSluttberegning(exception.data)
+        val endeligBidragResultatListe = hentSluttberegning(endeligBidragResultat.grunnlagListe)
+        val feilmelding = endeligBidragResultat.feilmelding
+        val perioderMedFeilListe = endeligBidragResultat.perioderMedFeilListe
+        val skalKasteBegrensetRevurderingException = endeligBidragResultat.skalKasteBegrensetRevurderingException
 
         assertAll(
             { assertThat(endeligBidragResultatListe).isNotNull },
@@ -971,13 +952,12 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[2].bidragJustertTilForskuddssats).isFalse },
             { assertThat(endeligBidragResultatListe[2].begrensetRevurderingUtført).isTrue },
 
+            { assertThat(feilmelding).isEqualTo("Kan ikke fatte vedtak fordi beregnet bidrag for følgende perioder er lavere enn løpende bidrag: 2024-10 - ") },
+            { assertThat(perioderMedFeilListe).isEqualTo(listOf(ÅrMånedsperiode(YearMonth.parse("2024-10"), null))) },
+            { assertThat(skalKasteBegrensetRevurderingException).isTrue },
+
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
-
-            // Exception melding
-            {
-                assertThat(exception.melding).contains("Kan ikke fatte vedtak fordi beregnet bidrag for følgende perioder er lavere enn løpende bidrag: 2024-10 - null")
-            },
         )
     }
 

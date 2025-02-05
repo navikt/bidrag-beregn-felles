@@ -1,5 +1,6 @@
 package no.nav.bidrag.beregn.barnebidrag
 
+import no.nav.bidrag.beregn.barnebidrag.bo.BeregnEndeligBidragServiceRespons
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnebidragService
 import no.nav.bidrag.commons.service.sjablon.EnableSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -57,5 +58,5 @@ class BeregnBarnebidragApi {
     fun beregnBarnetilleggSkattesats(beregnGrunnlag: BeregnGrunnlag, rolle: Grunnlagstype): List<GrunnlagDto> =
         service.beregnBarnetilleggSkattesats(beregnGrunnlag, rolle)
 
-    fun beregnEndeligBidrag(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnEndeligBidrag(beregnGrunnlag)
+    fun beregnEndeligBidrag(beregnGrunnlag: BeregnGrunnlag): BeregnEndeligBidragServiceRespons = service.beregnEndeligBidrag(beregnGrunnlag)
 }
