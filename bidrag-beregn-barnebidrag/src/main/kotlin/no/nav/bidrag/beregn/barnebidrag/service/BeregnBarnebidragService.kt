@@ -1,5 +1,6 @@
 package no.nav.bidrag.beregn.barnebidrag.service
 
+import no.nav.bidrag.beregn.barnebidrag.bo.BeregnEndeligBidragServiceRespons
 import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnetilleggSkattesatsService.delberegningBarnetilleggSkattesats
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBidragsevneService.delberegningBidragsevne
@@ -9,6 +10,7 @@ import no.nav.bidrag.beregn.barnebidrag.service.BeregnNettoBarnetilleggService.d
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnNettoTilsynsutgiftService.delberegningNettoTilsynsutgift
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnSamværsfradragService.delberegningSamværsfradrag
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnUnderholdskostnadService.delberegningUnderholdskostnad
+import no.nav.bidrag.beregn.core.exception.BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -68,15 +70,27 @@ class BeregnBarnebidragService : BeregnService() {
 
         val resultatGrunnlagListe = (
             delberegningBidragsevneResultat + delberegningNettoTilsynsutgiftResultat + delberegningUnderholdskostnadResultat +
-                delberegningBpAndelUnderholdskostnadResultat + delberegningSamværsfradragResultat + delberegningEndeligBidragResultat
+                delberegningBpAndelUnderholdskostnadResultat + delberegningSamværsfradragResultat + delberegningEndeligBidragResultat.grunnlagListe
             )
             .distinctBy { it.referanse }
             .sortedBy { it.referanse }
 
-        return BeregnetBarnebidragResultat(
-            beregnetBarnebidragPeriodeListe = lagResultatPerioder(delberegningEndeligBidragResultat),
+        val resultatPeriodeListe = lagResultatPerioder(delberegningEndeligBidragResultat.grunnlagListe)
+        val beregnetBarnebidragResultat = BeregnetBarnebidragResultat(
+            beregnetBarnebidragPeriodeListe = resultatPeriodeListe,
             grunnlagListe = resultatGrunnlagListe,
         )
+
+        // Kaster exception hvis det er utført begrenset revurdering og det er minst ett tilfelle hvor beregnet bidrag er lavere enn løpende bidrag
+        if (delberegningEndeligBidragResultat.skalKasteBegrensetRevurderingException) {
+            throw BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException(
+                melding = delberegningEndeligBidragResultat.feilmelding,
+                periodeListe = delberegningEndeligBidragResultat.perioderMedFeilListe,
+                data = beregnetBarnebidragResultat
+            )
+        }
+
+        return beregnetBarnebidragResultat
     }
 
     // Beregning av bidragsevne
@@ -145,7 +159,7 @@ class BeregnBarnebidragService : BeregnService() {
         // Sjekker om søknadsbarnet fyller 18 år i beregningsperioden (gjøres her fordi dette er en metode som vil bli kalt direkte fra
         // bidrag-behandling)
         val utvidetGrunnlagJustert = justerTilPeriodeHvisBarnetBlir18ÅrIBeregningsperioden(mottattGrunnlag)
-        var utvidetGrunnlag = utvidetGrunnlagJustert.beregnGrunnlag
+        val utvidetGrunnlag = utvidetGrunnlagJustert.beregnGrunnlag
         val åpenSluttperiode = utvidetGrunnlagJustert.åpenSluttperiode
 
         val delberegningNettoTilsynsutgiftResultat = delberegningNettoTilsynsutgift(
@@ -238,7 +252,7 @@ class BeregnBarnebidragService : BeregnService() {
     }
 
     // Beregning av endelig bidrag (sluttberegning)
-    fun beregnEndeligBidrag(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
+    fun beregnEndeligBidrag(mottattGrunnlag: BeregnGrunnlag): BeregnEndeligBidragServiceRespons {
         secureLogger.debug { "Beregning av endelig bidrag (sluttberegning) - følgende request mottatt: ${tilJson(mottattGrunnlag)}" }
 
         // Kontroll av inputdata
