@@ -932,7 +932,8 @@ internal class BoforholdBarnServiceV3 {
                     }
                 }
 
-                val endredePerioderJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, typeBehandling, endredePerioder)
+                val endredePerioderJustertMotAttenårsdag =
+                    justerMotAttenårsdag(attenårFraDato, typeBehandling, endredePerioder.sortedBy { it.periodeFom })
                 return slåSammenPerioderOgJusterPeriodeTom(endredePerioderJustertMotAttenårsdag)
             }
         }

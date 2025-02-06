@@ -109,4 +109,3 @@ data class BeregnEndeligBidragServiceRespons(
     val perioderMedFeilListe: List<ÅrMånedsperiode>,
     val skalKasteBegrensetRevurderingException: Boolean = false,
 )
-

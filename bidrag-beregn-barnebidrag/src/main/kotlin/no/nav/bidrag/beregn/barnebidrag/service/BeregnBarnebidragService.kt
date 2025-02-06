@@ -86,7 +86,7 @@ class BeregnBarnebidragService : BeregnService() {
             throw BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException(
                 melding = delberegningEndeligBidragResultat.feilmelding,
                 periodeListe = delberegningEndeligBidragResultat.perioderMedFeilListe,
-                data = beregnetBarnebidragResultat
+                data = beregnetBarnebidragResultat,
             )
         }
 
