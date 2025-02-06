@@ -6,5 +6,5 @@ import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebid
 class BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException(
     val melding: String,
     val periodeListe: List<ÅrMånedsperiode>,
-    val data: BeregnetBarnebidragResultat
+    val data: BeregnetBarnebidragResultat,
 ) : RuntimeException(melding)

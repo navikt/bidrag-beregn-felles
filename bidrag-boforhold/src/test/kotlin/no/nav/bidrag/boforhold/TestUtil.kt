@@ -4685,5 +4685,66 @@ class TestUtil {
                 ),
             ),
         )
+
+        fun barnUtvidPeriodeForbiNestePeriode() = BoforholdBarnRequestV3(
+            gjelderPersonId = "98765432109",
+            fødselsdato = LocalDate.of(2015, 10, 7),
+            relasjon = Familierelasjon.BARN,
+            innhentedeOffentligeOpplysninger = listOf(
+                Bostatus(
+                    periodeFom = LocalDate.of(2024, 1, 1),
+                    periodeTom = null,
+                    bostatus = Bostatuskode.MED_FORELDER,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+            ),
+            behandledeBostatusopplysninger = listOf(
+                Bostatus(
+                    periodeFom = LocalDate.of(2024, 1, 1),
+                    periodeTom = LocalDate.of(2024, 4, 30),
+                    bostatus = Bostatuskode.MED_FORELDER,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+                Bostatus(
+                    periodeFom = LocalDate.of(2024, 5, 1),
+                    periodeTom = LocalDate.of(2024, 6, 30),
+                    bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                    kilde = Kilde.MANUELL,
+                ),
+                Bostatus(
+                    periodeFom = LocalDate.of(2024, 7, 1),
+                    periodeTom = LocalDate.of(2024, 9, 30),
+                    bostatus = Bostatuskode.MED_FORELDER,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+                Bostatus(
+                    periodeFom = LocalDate.of(2024, 10, 1),
+                    periodeTom = LocalDate.of(2024, 10, 31),
+                    bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                    kilde = Kilde.MANUELL,
+                ),
+                Bostatus(
+                    periodeFom = LocalDate.of(2024, 11, 1),
+                    periodeTom = null,
+                    bostatus = Bostatuskode.MED_FORELDER,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+            ),
+            endreBostatus = EndreBostatus(
+                typeEndring = TypeEndring.ENDRET,
+                nyBostatus = Bostatus(
+                    periodeFom = LocalDate.of(2024, 7, 1),
+                    periodeTom = LocalDate.of(2024, 10, 31),
+                    bostatus = Bostatuskode.MED_FORELDER,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+                originalBostatus = Bostatus(
+                    periodeFom = LocalDate.of(2024, 7, 1),
+                    periodeTom = LocalDate.of(2024, 9, 30),
+                    bostatus = Bostatuskode.MED_FORELDER,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+            ),
+        )
     }
 }
