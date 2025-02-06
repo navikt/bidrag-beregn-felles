@@ -343,6 +343,7 @@ internal class BeregnEndeligBidragApiTest {
         utførBeregningerOgEvaluerResultatEndeligBidrag()
     }
 
+    // TODO: Skal kaste exception
     @Test
     @DisplayName("Endelig bidrag - eksempel 10C - Begrenset revurdering - beregnet bidrag er lavere enn løpende bidrag - skal kaste exception")
     fun testEndeligBidrag_Eksempel10C() {
@@ -961,36 +962,35 @@ internal class BeregnEndeligBidragApiTest {
         )
     }
 
-    private fun hentSluttberegning(endeligBidragResultat: List<GrunnlagDto>) =
-        endeligBidragResultat
-            .filtrerOgKonverterBasertPåEgenReferanse<SluttberegningBarnebidrag>(Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG)
-            .map {
-                SluttberegningBarnebidrag(
-                    periode = it.innhold.periode,
-                    beregnetBeløp = it.innhold.beregnetBeløp,
-                    resultatBeløp = it.innhold.resultatBeløp,
-                    uMinusNettoBarnetilleggBM = it.innhold.uMinusNettoBarnetilleggBM,
-                    bruttoBidragEtterBarnetilleggBM = it.innhold.bruttoBidragEtterBarnetilleggBM,
-                    nettoBidragEtterBarnetilleggBM = it.innhold.nettoBidragEtterBarnetilleggBM,
-                    bruttoBidragJustertForEvneOg25Prosent = it.innhold.bruttoBidragJustertForEvneOg25Prosent,
-                    bruttoBidragEtterBegrensetRevurdering = it.innhold.bruttoBidragEtterBegrensetRevurdering,
-                    bruttoBidragEtterBarnetilleggBP = it.innhold.bruttoBidragEtterBarnetilleggBP,
-                    nettoBidragEtterSamværsfradrag = it.innhold.nettoBidragEtterSamværsfradrag,
-                    bpAndelAvUVedDeltBostedFaktor = it.innhold.bpAndelAvUVedDeltBostedFaktor,
-                    bpAndelAvUVedDeltBostedBeløp = it.innhold.bpAndelAvUVedDeltBostedBeløp,
-                    løpendeForskudd = it.innhold.løpendeForskudd,
-                    løpendeBidrag = it.innhold.løpendeBidrag,
-                    ingenEndringUnderGrense = it.innhold.ingenEndringUnderGrense,
-                    barnetErSelvforsørget = it.innhold.barnetErSelvforsørget,
-                    bidragJustertForDeltBosted = it.innhold.bidragJustertForDeltBosted,
-                    bidragJustertForNettoBarnetilleggBP = it.innhold.bidragJustertForNettoBarnetilleggBP,
-                    bidragJustertForNettoBarnetilleggBM = it.innhold.bidragJustertForNettoBarnetilleggBM,
-                    bidragJustertNedTilEvne = it.innhold.bidragJustertNedTilEvne,
-                    bidragJustertNedTil25ProsentAvInntekt = it.innhold.bidragJustertNedTil25ProsentAvInntekt,
-                    bidragJustertTilForskuddssats = it.innhold.bidragJustertTilForskuddssats,
-                    begrensetRevurderingUtført = it.innhold.begrensetRevurderingUtført,
-                )
-            }
+    private fun hentSluttberegning(endeligBidragResultat: List<GrunnlagDto>) = endeligBidragResultat
+        .filtrerOgKonverterBasertPåEgenReferanse<SluttberegningBarnebidrag>(Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG)
+        .map {
+            SluttberegningBarnebidrag(
+                periode = it.innhold.periode,
+                beregnetBeløp = it.innhold.beregnetBeløp,
+                resultatBeløp = it.innhold.resultatBeløp,
+                uMinusNettoBarnetilleggBM = it.innhold.uMinusNettoBarnetilleggBM,
+                bruttoBidragEtterBarnetilleggBM = it.innhold.bruttoBidragEtterBarnetilleggBM,
+                nettoBidragEtterBarnetilleggBM = it.innhold.nettoBidragEtterBarnetilleggBM,
+                bruttoBidragJustertForEvneOg25Prosent = it.innhold.bruttoBidragJustertForEvneOg25Prosent,
+                bruttoBidragEtterBegrensetRevurdering = it.innhold.bruttoBidragEtterBegrensetRevurdering,
+                bruttoBidragEtterBarnetilleggBP = it.innhold.bruttoBidragEtterBarnetilleggBP,
+                nettoBidragEtterSamværsfradrag = it.innhold.nettoBidragEtterSamværsfradrag,
+                bpAndelAvUVedDeltBostedFaktor = it.innhold.bpAndelAvUVedDeltBostedFaktor,
+                bpAndelAvUVedDeltBostedBeløp = it.innhold.bpAndelAvUVedDeltBostedBeløp,
+                løpendeForskudd = it.innhold.løpendeForskudd,
+                løpendeBidrag = it.innhold.løpendeBidrag,
+                ingenEndringUnderGrense = it.innhold.ingenEndringUnderGrense,
+                barnetErSelvforsørget = it.innhold.barnetErSelvforsørget,
+                bidragJustertForDeltBosted = it.innhold.bidragJustertForDeltBosted,
+                bidragJustertForNettoBarnetilleggBP = it.innhold.bidragJustertForNettoBarnetilleggBP,
+                bidragJustertForNettoBarnetilleggBM = it.innhold.bidragJustertForNettoBarnetilleggBM,
+                bidragJustertNedTilEvne = it.innhold.bidragJustertNedTilEvne,
+                bidragJustertNedTil25ProsentAvInntekt = it.innhold.bidragJustertNedTil25ProsentAvInntekt,
+                bidragJustertTilForskuddssats = it.innhold.bidragJustertTilForskuddssats,
+                begrensetRevurderingUtført = it.innhold.begrensetRevurderingUtført,
+            )
+        }
 
     // TODO Flytte til felles
     private fun hentAlleReferanser(resultatGrunnlagListe: List<GrunnlagDto>) = resultatGrunnlagListe

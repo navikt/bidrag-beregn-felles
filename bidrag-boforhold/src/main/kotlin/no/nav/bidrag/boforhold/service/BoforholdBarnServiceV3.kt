@@ -60,7 +60,7 @@ internal class BoforholdBarnServiceV3 {
         //    2a. Hvis behandledeBostatusopplysninger er utfyllt og innhentedeOffentligeOpplysninger er utfyllt: behandledeBostatusopplysninger
         //        skal da justeres etter det som er sendt inn i endreBoforhold. Det kan slettes/legges til eller endres perioder.
         //        Perioder i oppdaterte behandledeBostatusopplysninger sjekkes mot offentlige perioder og kilde evt. endres til Offentlig hvis det
-        //        er match.
+        //        er match. Kun manuelle perioder kan slettes.
         //    2b. Hvis behandledeBostatusopplysninger er utfyllt og innhentedeOffentligeOpplysninger er tom: behandledeBostatusopplysninger skal
         //        da justeres etter det som er sendt inn i endreBoforhold. Det kan slettes/legges til eller endres perioder.
         //        Perioder i oppdaterte behandledeBostatusopplysninger sjekkes mot genererte offentlige perioder (IKKE_MED_FORELDER/
@@ -193,7 +193,10 @@ internal class BoforholdBarnServiceV3 {
         val komplettOffentligTidslinje = fyllUtMedPerioderBarnetIkkeBorIHusstanden(Kilde.OFFENTLIG, startdatoBeregning, justerteOffentligePerioder)
         val offentligePerioderJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, typeBehandling, komplettOffentligTidslinje)
 
-        return oppdaterteBehandledeOpplysninger.map {
+        val sammenslåtteBehandledeOgOffentligePerioder =
+            slåSammenPrimærOgSekundærperioder(oppdaterteBehandledeOpplysninger, offentligePerioderJustertMotAttenårsdag)
+
+        return sammenslåtteBehandledeOgOffentligePerioder.map {
             BoforholdResponseV2(
                 gjelderPersonId = it.gjelderPersonId,
                 periodeFom = it.periodeFom,
@@ -562,7 +565,12 @@ internal class BoforholdBarnServiceV3 {
                     // Den primære perioden overlapper etter starten på den sekundære perioden og periodeTom må forskyves på den sekundære perioden
                     periodeTom = overlappendePerioder[indeks].periodeFom.minusDays(1)
                 }
-                if (periodeTom != null) {
+                if (periodeTom != null &&
+                    (
+                        overlappendePerioder[indeks].kilde != sekundærperiode.kilde ||
+                            overlappendePerioder[indeks].bostatus != sekundærperiode.bostatus
+                        )
+                ) {
                     // Første primære periode starter etter sekundær periode. Den sekundære perioden skrives med justert tomdato. Senere i logikken
                     // må det sjekkes på om den sekundære perioden må splittes i mer enn én periode.
                     justertSekundærPeriodeListe.add(
@@ -580,7 +588,12 @@ internal class BoforholdBarnServiceV3 {
                 }
             }
             if (indeks < overlappendePerioder.size - 1) {
-                if (overlappendePerioder[indeks + 1].periodeFom.isAfter(overlappendePerioder[indeks].periodeTom!!.plusDays(1))) {
+                if (overlappendePerioder[indeks + 1].periodeFom.isAfter(overlappendePerioder[indeks].periodeTom!!.plusDays(1)) &&
+                    (
+                        overlappendePerioder[indeks].kilde != sekundærperiode.kilde ||
+                            overlappendePerioder[indeks].bostatus != sekundærperiode.bostatus
+                        )
+                ) {
                     // Det er en åpen tidsperiode mellom to primære perioder, og den sekundære perioden skal fylle denne tidsperioden
                     periodeTom = overlappendePerioder[indeks + 1].periodeFom.minusDays(1)
                     justertSekundærPeriodeListe.add(
@@ -600,7 +613,7 @@ internal class BoforholdBarnServiceV3 {
 //                    periodeFom = overlappendePerioder[indeks].periodeTom!!.plusDays(1)
                 }
             } else {
-                // Siste manuelle periode
+                // Siste sekundærperiode
                 if (overlappendePerioder[indeks].periodeTom != null) {
                     if (sekundærperiode.periodeTom == null || sekundærperiode.periodeTom.isAfter(overlappendePerioder[indeks].periodeTom)) {
                         justertSekundærPeriodeListe.add(
@@ -655,37 +668,38 @@ internal class BoforholdBarnServiceV3 {
 
                 val indeksMatch = finnIndeksMatch(originalBostatus, behandledeOpplysninger)
 
-                if (indeksMatch == 0) {
-                    // Stemmer kommentar under?
+                if (originalBostatus.kilde == Kilde.OFFENTLIG) {
+                    // Offentlige perioder skal ikke kunne slettes
                     secureLogger.info {
-                        "Periode som skal slettes er første periode i behandledeOpplysninger, denne kan ikke slettes . " +
+                        "Offentlig periode kan ikke slettes. " +
                             "endreBostatus: " +
                             "$boforholdRequest.endreBostatus "
                     }
-                }
-
-                for (indeks in behandledeOpplysninger.sortedBy { it.periodeFom }.indices) {
-                    if (indeks == indeksMatch!! - 1) {
-                        // Periode før periode som skal slettes. Justerer periodeTom til å være lik slettet periodes periodeTom.
-                        endredePerioder.add(behandledeOpplysninger[indeks].copy(periodeTom = originalBostatus.periodeTom))
-                    } else {
-                        if (indeks == indeksMatch) {
-                            // Periode som skal slettes. Hopper over denne.
-                            continue
+                    return behandledeOpplysninger
+                } else {
+                    for (indeks in behandledeOpplysninger.sortedBy { it.periodeFom }.indices) {
+                        if (indeks == indeksMatch!! - 1) {
+                            // Periode før periode som skal slettes. Justerer periodeTom til å være lik slettet periodes periodeTom.
+                            endredePerioder.add(behandledeOpplysninger[indeks].copy(periodeTom = originalBostatus.periodeTom))
                         } else {
-                            endredePerioder.add(behandledeOpplysninger[indeks])
+                            if (indeks == indeksMatch) {
+                                // Periode som skal slettes. Hopper over denne.
+                                continue
+                            } else {
+                                endredePerioder.add(behandledeOpplysninger[indeks])
+                            }
                         }
                     }
-                }
 
-                if (endredePerioder.isEmpty()) {
-                    return emptyList()
-                } else {
-                    // Justerer perioder mot 18årsdag. Dette må gjøres siden periodeTom er endret på periode før den som er slettet.
-                    val endredePerioderJustertMotAttenårsdag =
-                        justerMotAttenårsdag(attenårFraDato, typeBehandling, endredePerioder)
-                    // Gjør en sammenslåing av perioder med lik bostatuskode og justerer periodeTom
-                    return slåSammenPerioderOgJusterPeriodeTom(endredePerioderJustertMotAttenårsdag)
+                    if (endredePerioder.isEmpty()) {
+                        return emptyList()
+                    } else {
+                        // Justerer perioder mot 18årsdag. Dette må gjøres siden periodeTom er endret på periode før den som er slettet.
+                        val endredePerioderJustertMotAttenårsdag =
+                            justerMotAttenårsdag(attenårFraDato, typeBehandling, endredePerioder)
+                        // Gjør en sammenslåing av perioder med lik bostatuskode og justerer periodeTom
+                        return slåSammenPerioderOgJusterPeriodeTom(endredePerioderJustertMotAttenårsdag)
+                    }
                 }
             }
 
@@ -840,7 +854,7 @@ internal class BoforholdBarnServiceV3 {
                         kilde = nyBostatus.kilde,
                     ),
                 )
-                // Hvis nyBostatus ikke dekker hele perioden til originalBostatus så må det sjekkes om det finnes en periode etter nyBostatus.
+                // Hvis nyBostatus ikke dekker hele perioden til originalBostatus så må det sjekkes om det finnes en periode etter originalBostatus.
                 // PeriodeFom må i så fall endres på denne til å bli lik nyBostatus' periodeTom pluss én dag.
                 if ((originalBostatus.periodeTom == null && nyBostatus.periodeTom != null) ||
                     (nyBostatus.periodeTom != null && nyBostatus.periodeTom.isBefore(originalBostatus.periodeTom))
@@ -882,7 +896,42 @@ internal class BoforholdBarnServiceV3 {
                             }
                         }
                     }
+                } else {
+                    // Hvis nyBostatus dekker hele perioden til originalBostatus så må det sjekkes om det finnes en periode etter originalBostatus.
+                    // PeriodeFom må i så fall endres på denne til å bli lik nyBostatus' periodeTom pluss én dag. Perioder som helt dekkes av nyBostatus
+                    // skal ikke skrives til endredePerioder.
+                    if (nyBostatus.periodeTom != null && nyBostatus.periodeTom.isAfter(originalBostatus.periodeTom)
+                    ) {
+                        val indeksMatch = finnIndeksMatch(originalBostatus, behandledeOpplysninger)
+
+                        for (indeks in behandledeOpplysninger.sortedBy { it.periodeFom }.indices) {
+                            if (indeks > indeksMatch!!) {
+                                if (behandledeOpplysninger[indeks].periodeTom == null ||
+                                    behandledeOpplysninger[indeks].periodeTom!!.isAfter(nyBostatus.periodeFom)
+                                ) {
+                                    if (behandledeOpplysninger[indeks].periodeFom.isBefore(nyBostatus.periodeTom) &&
+                                        (
+                                            behandledeOpplysninger[indeks].periodeTom == null ||
+                                                behandledeOpplysninger[indeks].periodeTom!!.isAfter(nyBostatus.periodeTom)
+                                            )
+                                    ) {
+                                        // Periode som overlapper med nyBostatus. Justerer periodeFom til å være lik nyBostatus periodeTom pluss én dag.
+                                        endredePerioder.add(behandledeOpplysninger[indeks].copy(periodeFom = nyBostatus.periodeTom.plusDays(1)))
+                                    } else {
+                                        if (behandledeOpplysninger[indeks].periodeFom.isAfter(nyBostatus.periodeTom)) {
+                                            endredePerioder.add(behandledeOpplysninger[indeks])
+                                        }
+                                    }
+                                } else {
+                                    endredePerioder.add(behandledeOpplysninger[indeks])
+                                }
+                            } else if (indeks < indeksMatch) {
+                                endredePerioder.add(behandledeOpplysninger[indeks])
+                            }
+                        }
+                    }
                 }
+
                 val endredePerioderJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, typeBehandling, endredePerioder)
                 return slåSammenPerioderOgJusterPeriodeTom(endredePerioderJustertMotAttenårsdag)
             }
