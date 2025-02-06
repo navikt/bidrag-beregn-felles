@@ -255,7 +255,7 @@ internal class BoforholdBarnServiceV3 {
                                 fødselsdato = liste[indeks].fødselsdato,
                                 kilde = kilde ?: liste[indeks].kilde,
 
-                                ),
+                            ),
                         )
                         periodeFom = null
                         kilde = null
@@ -269,7 +269,7 @@ internal class BoforholdBarnServiceV3 {
                                 fødselsdato = liste[indeks].fødselsdato,
                                 kilde = liste[indeks].kilde,
 
-                                ),
+                            ),
                         )
                     }
                 }
@@ -284,7 +284,7 @@ internal class BoforholdBarnServiceV3 {
                         fødselsdato = liste[indeks].fødselsdato,
                         kilde = kilde ?: liste[indeks].kilde,
 
-                        ),
+                    ),
                 )
             }
         }
@@ -311,7 +311,7 @@ internal class BoforholdBarnServiceV3 {
                             fødselsdato = liste[indeks].fødselsdato,
                             kilde = kilde,
 
-                            ),
+                        ),
                     )
                     sammenhengendePerioderListe.add(liste[indeks])
                 } else {
@@ -407,7 +407,7 @@ internal class BoforholdBarnServiceV3 {
                                 fødselsdato = liste[indeks].fødselsdato,
                                 kilde = liste[indeks].kilde,
 
-                                ),
+                            ),
                         )
                         listeJustertMotAttenårsdag.add(
                             BoforholdResponseV2(
@@ -418,7 +418,7 @@ internal class BoforholdBarnServiceV3 {
                                 fødselsdato = liste[indeks].fødselsdato,
                                 kilde = liste[indeks].kilde,
 
-                                ),
+                            ),
                         )
                     } else {
                         listeJustertMotAttenårsdag.add(
@@ -565,7 +565,12 @@ internal class BoforholdBarnServiceV3 {
                     // Den primære perioden overlapper etter starten på den sekundære perioden og periodeTom må forskyves på den sekundære perioden
                     periodeTom = overlappendePerioder[indeks].periodeFom.minusDays(1)
                 }
-                if (periodeTom != null) {
+                if (periodeTom != null &&
+                    (
+                        overlappendePerioder[indeks].kilde != sekundærperiode.kilde ||
+                            overlappendePerioder[indeks].bostatus != sekundærperiode.bostatus
+                        )
+                ) {
                     // Første primære periode starter etter sekundær periode. Den sekundære perioden skrives med justert tomdato. Senere i logikken
                     // må det sjekkes på om den sekundære perioden må splittes i mer enn én periode.
                     justertSekundærPeriodeListe.add(
@@ -583,7 +588,12 @@ internal class BoforholdBarnServiceV3 {
                 }
             }
             if (indeks < overlappendePerioder.size - 1) {
-                if (overlappendePerioder[indeks + 1].periodeFom.isAfter(overlappendePerioder[indeks].periodeTom!!.plusDays(1))) {
+                if (overlappendePerioder[indeks + 1].periodeFom.isAfter(overlappendePerioder[indeks].periodeTom!!.plusDays(1)) &&
+                    (
+                        overlappendePerioder[indeks].kilde != sekundærperiode.kilde ||
+                            overlappendePerioder[indeks].bostatus != sekundærperiode.bostatus
+                        )
+                ) {
                     // Det er en åpen tidsperiode mellom to primære perioder, og den sekundære perioden skal fylle denne tidsperioden
                     periodeTom = overlappendePerioder[indeks + 1].periodeFom.minusDays(1)
                     justertSekundærPeriodeListe.add(
@@ -603,7 +613,7 @@ internal class BoforholdBarnServiceV3 {
 //                    periodeFom = overlappendePerioder[indeks].periodeTom!!.plusDays(1)
                 }
             } else {
-                // Siste manuelle periode
+                // Siste sekundærperiode
                 if (overlappendePerioder[indeks].periodeTom != null) {
                     if (sekundærperiode.periodeTom == null || sekundærperiode.periodeTom.isAfter(overlappendePerioder[indeks].periodeTom)) {
                         justertSekundærPeriodeListe.add(
@@ -844,7 +854,7 @@ internal class BoforholdBarnServiceV3 {
                         kilde = nyBostatus.kilde,
                     ),
                 )
-                // Hvis nyBostatus ikke dekker hele perioden til originalBostatus så må det sjekkes om det finnes en periode etter nyBostatus.
+                // Hvis nyBostatus ikke dekker hele perioden til originalBostatus så må det sjekkes om det finnes en periode etter originalBostatus.
                 // PeriodeFom må i så fall endres på denne til å bli lik nyBostatus' periodeTom pluss én dag.
                 if ((originalBostatus.periodeTom == null && nyBostatus.periodeTom != null) ||
                     (nyBostatus.periodeTom != null && nyBostatus.periodeTom.isBefore(originalBostatus.periodeTom))
@@ -886,7 +896,42 @@ internal class BoforholdBarnServiceV3 {
                             }
                         }
                     }
+                } else {
+                    // Hvis nyBostatus dekker hele perioden til originalBostatus så må det sjekkes om det finnes en periode etter originalBostatus.
+                    // PeriodeFom må i så fall endres på denne til å bli lik nyBostatus' periodeTom pluss én dag. Perioder som helt dekkes av nyBostatus
+                    // skal ikke skrives til endredePerioder.
+                    if (nyBostatus.periodeTom != null && nyBostatus.periodeTom.isAfter(originalBostatus.periodeTom)
+                    ) {
+                        val indeksMatch = finnIndeksMatch(originalBostatus, behandledeOpplysninger)
+
+                        for (indeks in behandledeOpplysninger.sortedBy { it.periodeFom }.indices) {
+                            if (indeks > indeksMatch!!) {
+                                if (behandledeOpplysninger[indeks].periodeTom == null ||
+                                    behandledeOpplysninger[indeks].periodeTom!!.isAfter(nyBostatus.periodeFom)
+                                ) {
+                                    if (behandledeOpplysninger[indeks].periodeFom.isBefore(nyBostatus.periodeTom) &&
+                                        (
+                                            behandledeOpplysninger[indeks].periodeTom == null ||
+                                                behandledeOpplysninger[indeks].periodeTom!!.isAfter(nyBostatus.periodeTom)
+                                            )
+                                    ) {
+                                        // Periode som overlapper med nyBostatus. Justerer periodeFom til å være lik nyBostatus periodeTom pluss én dag.
+                                        endredePerioder.add(behandledeOpplysninger[indeks].copy(periodeFom = nyBostatus.periodeTom.plusDays(1)))
+                                    } else {
+                                        if (behandledeOpplysninger[indeks].periodeFom.isAfter(nyBostatus.periodeTom)) {
+                                            endredePerioder.add(behandledeOpplysninger[indeks])
+                                        }
+                                    }
+                                } else {
+                                    endredePerioder.add(behandledeOpplysninger[indeks])
+                                }
+                            } else if (indeks < indeksMatch) {
+                                endredePerioder.add(behandledeOpplysninger[indeks])
+                            }
+                        }
+                    }
                 }
+
                 val endredePerioderJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, typeBehandling, endredePerioder)
                 return slåSammenPerioderOgJusterPeriodeTom(endredePerioderJustertMotAttenårsdag)
             }

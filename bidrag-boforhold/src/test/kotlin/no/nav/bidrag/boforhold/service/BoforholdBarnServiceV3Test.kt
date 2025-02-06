@@ -1016,7 +1016,6 @@ internal class BoforholdBarnServiceV3Test {
             resultat[7].periodeTom shouldBe null
             resultat[7].bostatus shouldBe Bostatuskode.MED_FORELDER
             resultat[7].kilde shouldBe Kilde.OFFENTLIG
-
         }
     }
 
@@ -1173,6 +1172,127 @@ internal class BoforholdBarnServiceV3Test {
             resultat[2].periodeFom shouldBe LocalDate.of(2024, 8, 1)
             resultat[2].periodeTom shouldBe null
             resultat[2].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[2].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
+
+    @Test
+    fun `Test endring tomdato frem i tid kun manuelle perioder`() {
+        boforholdBarnServiceV3 = BoforholdBarnServiceV3()
+        val mottatteBoforhold = TestUtil.byggEndreFørstePeriodeFremITid()
+        val virkningstidspunkt = LocalDate.of(2023, 3, 1)
+        val resultat = boforholdBarnServiceV3.beregnBoforholdBarn(virkningstidspunkt, TypeBehandling.FORSKUDD, listOf(mottatteBoforhold))
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 4
+
+            // Beregning 1
+            resultat[0].periodeFom shouldBe LocalDate.of(2024, 1, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2024, 9, 30)
+            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.MANUELL
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2024, 10, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2024, 10, 31)
+            resultat[1].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.MANUELL
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2024, 11, 1)
+            resultat[2].periodeTom shouldBe LocalDate.of(2024, 11, 30)
+            resultat[2].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[2].kilde shouldBe Kilde.MANUELL
+
+            resultat[3].periodeFom shouldBe LocalDate.of(2024, 12, 1)
+            resultat[3].periodeTom shouldBe null
+            resultat[3].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[3].kilde shouldBe Kilde.MANUELL
+        }
+    }
+
+    @Test
+    fun `Test endring tomdato frem i tid andre periode kun manuelle perioder`() {
+        boforholdBarnServiceV3 = BoforholdBarnServiceV3()
+        val mottatteBoforhold = TestUtil.byggEndreAndrePeriodeFremITid()
+        val virkningstidspunkt = LocalDate.of(2023, 3, 1)
+        val resultat = boforholdBarnServiceV3.beregnBoforholdBarn(virkningstidspunkt, TypeBehandling.FORSKUDD, listOf(mottatteBoforhold))
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 4
+
+            // Beregning 1
+            resultat[0].periodeFom shouldBe LocalDate.of(2024, 1, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2024, 8, 31)
+            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.MANUELL
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2024, 9, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2025, 1, 31)
+            resultat[1].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.MANUELL
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2025, 2, 1)
+            resultat[2].periodeTom shouldBe LocalDate.of(2025, 3, 31)
+            resultat[2].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[2].kilde shouldBe Kilde.MANUELL
+
+            resultat[3].periodeFom shouldBe LocalDate.of(2025, 4, 1)
+            resultat[3].periodeTom shouldBe null
+            resultat[3].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[3].kilde shouldBe Kilde.MANUELL
+        }
+    }
+
+    @Test
+    fun `Test endring tomdato frem i tid over flere perioder kun manuelle perioder`() {
+        boforholdBarnServiceV3 = BoforholdBarnServiceV3()
+        val mottatteBoforhold = TestUtil.byggEndreOverFlerePerioderFremITid()
+        val virkningstidspunkt = LocalDate.of(2023, 3, 1)
+        val resultat = boforholdBarnServiceV3.beregnBoforholdBarn(virkningstidspunkt, TypeBehandling.FORSKUDD, listOf(mottatteBoforhold))
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 2
+
+            // Beregning 1
+            resultat[0].periodeFom shouldBe LocalDate.of(2024, 1, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2025, 5, 31)
+            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.MANUELL
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2025, 6, 1)
+            resultat[1].periodeTom shouldBe null
+            resultat[1].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.MANUELL
+        }
+    }
+
+    @Test
+    fun `Test avslutter manuell periode offentlig periode legges til `() {
+        boforholdBarnServiceV3 = BoforholdBarnServiceV3()
+        val mottatteBoforhold = TestUtil.barnAvslutterPeriodeUtfyllesMedOffentligPeriode()
+        val virkningstidspunkt = LocalDate.of(2020, 9, 1)
+        val resultat = boforholdBarnServiceV3.beregnBoforholdBarn(virkningstidspunkt, TypeBehandling.FORSKUDD, listOf(mottatteBoforhold))
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 3
+
+            // Beregning 1
+            resultat[0].periodeFom shouldBe LocalDate.of(2020, 9, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2021, 10, 31)
+            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2021, 11, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2024, 5, 31)
+            resultat[1].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.MANUELL
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2024, 6, 1)
+            resultat[2].periodeTom shouldBe null
+            resultat[2].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
             resultat[2].kilde shouldBe Kilde.OFFENTLIG
         }
     }

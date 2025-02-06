@@ -4498,5 +4498,192 @@ class TestUtil {
             endreBostatus = null,
 
         )
+
+        fun byggEndreFørstePeriodeFremITid() = BoforholdBarnRequestV3(
+            gjelderPersonId = "98765432109",
+            fødselsdato = LocalDate.of(2020, 3, 1),
+            relasjon = Familierelasjon.BARN,
+            innhentedeOffentligeOpplysninger = emptyList(),
+            behandledeBostatusopplysninger = listOf(
+                Bostatus(
+                    periodeFom = LocalDate.of(2024, 1, 1),
+                    periodeTom = LocalDate.of(2024, 8, 31),
+                    bostatus = Bostatuskode.MED_FORELDER,
+                    kilde = Kilde.MANUELL,
+                ),
+                Bostatus(
+                    periodeFom = LocalDate.of(2024, 9, 1),
+                    periodeTom = LocalDate.of(2024, 10, 31),
+                    bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                    kilde = Kilde.MANUELL,
+                ),
+                Bostatus(
+                    periodeFom = LocalDate.of(2024, 11, 1),
+                    periodeTom = LocalDate.of(2024, 11, 30),
+                    bostatus = Bostatuskode.MED_FORELDER,
+                    kilde = Kilde.MANUELL,
+                ),
+                Bostatus(
+                    periodeFom = LocalDate.of(2024, 12, 1),
+                    periodeTom = null,
+                    bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                    kilde = Kilde.MANUELL,
+                ),
+            ),
+            endreBostatus = EndreBostatus(
+                typeEndring = TypeEndring.ENDRET,
+                nyBostatus = Bostatus(
+                    periodeFom = LocalDate.of(2024, 1, 1),
+                    periodeTom = LocalDate.of(2024, 9, 30),
+                    bostatus = Bostatuskode.MED_FORELDER,
+                    kilde = Kilde.MANUELL,
+                ),
+                originalBostatus = Bostatus(
+                    periodeFom = LocalDate.of(2024, 1, 1),
+                    periodeTom = LocalDate.of(2024, 8, 31),
+                    bostatus = Bostatuskode.MED_FORELDER,
+                    kilde = Kilde.MANUELL,
+                ),
+            ),
+        )
+
+        fun byggEndreAndrePeriodeFremITid() = BoforholdBarnRequestV3(
+            gjelderPersonId = "98765432109",
+            fødselsdato = LocalDate.of(2020, 3, 1),
+            relasjon = Familierelasjon.BARN,
+            innhentedeOffentligeOpplysninger = emptyList(),
+            behandledeBostatusopplysninger = listOf(
+                Bostatus(
+                    periodeFom = LocalDate.of(2024, 1, 1),
+                    periodeTom = LocalDate.of(2024, 8, 31),
+                    bostatus = Bostatuskode.MED_FORELDER,
+                    kilde = Kilde.MANUELL,
+                ),
+                Bostatus(
+                    periodeFom = LocalDate.of(2024, 9, 1),
+                    periodeTom = LocalDate.of(2024, 12, 31),
+                    bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                    kilde = Kilde.MANUELL,
+                ),
+                Bostatus(
+                    periodeFom = LocalDate.of(2025, 1, 1),
+                    periodeTom = LocalDate.of(2025, 3, 31),
+                    bostatus = Bostatuskode.MED_FORELDER,
+                    kilde = Kilde.MANUELL,
+                ),
+                Bostatus(
+                    periodeFom = LocalDate.of(2025, 4, 1),
+                    periodeTom = null,
+                    bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                    kilde = Kilde.MANUELL,
+                ),
+            ),
+            endreBostatus = EndreBostatus(
+                typeEndring = TypeEndring.ENDRET,
+                nyBostatus = Bostatus(
+                    periodeFom = LocalDate.of(2024, 9, 1),
+                    periodeTom = LocalDate.of(2025, 1, 31),
+                    bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                    kilde = Kilde.MANUELL,
+                ),
+                originalBostatus = Bostatus(
+                    periodeFom = LocalDate.of(2024, 9, 1),
+                    periodeTom = LocalDate.of(2024, 12, 31),
+                    bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                    kilde = Kilde.MANUELL,
+                ),
+            ),
+        )
+
+        fun byggEndreOverFlerePerioderFremITid() = BoforholdBarnRequestV3(
+            gjelderPersonId = "98765432109",
+            fødselsdato = LocalDate.of(2020, 3, 1),
+            relasjon = Familierelasjon.BARN,
+            innhentedeOffentligeOpplysninger = emptyList(),
+            behandledeBostatusopplysninger = listOf(
+                Bostatus(
+                    periodeFom = LocalDate.of(2024, 1, 1),
+                    periodeTom = LocalDate.of(2024, 8, 31),
+                    bostatus = Bostatuskode.MED_FORELDER,
+                    kilde = Kilde.MANUELL,
+                ),
+                Bostatus(
+                    periodeFom = LocalDate.of(2024, 9, 1),
+                    periodeTom = LocalDate.of(2024, 12, 31),
+                    bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                    kilde = Kilde.MANUELL,
+                ),
+                Bostatus(
+                    periodeFom = LocalDate.of(2025, 1, 1),
+                    periodeTom = LocalDate.of(2025, 3, 31),
+                    bostatus = Bostatuskode.MED_FORELDER,
+                    kilde = Kilde.MANUELL,
+                ),
+                Bostatus(
+                    periodeFom = LocalDate.of(2025, 4, 1),
+                    periodeTom = null,
+                    bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                    kilde = Kilde.MANUELL,
+                ),
+            ),
+            endreBostatus = EndreBostatus(
+                typeEndring = TypeEndring.ENDRET,
+                nyBostatus = Bostatus(
+                    periodeFom = LocalDate.of(2024, 1, 1),
+                    periodeTom = LocalDate.of(2025, 5, 31),
+                    bostatus = Bostatuskode.MED_FORELDER,
+                    kilde = Kilde.MANUELL,
+                ),
+                originalBostatus = Bostatus(
+                    periodeFom = LocalDate.of(2024, 1, 1),
+                    periodeTom = LocalDate.of(2024, 8, 31),
+                    bostatus = Bostatuskode.MED_FORELDER,
+                    kilde = Kilde.MANUELL,
+                ),
+            ),
+        )
+
+        fun barnAvslutterPeriodeUtfyllesMedOffentligPeriode() = BoforholdBarnRequestV3(
+            gjelderPersonId = "98765432109",
+            fødselsdato = LocalDate.of(2015, 10, 7),
+            relasjon = Familierelasjon.BARN,
+            innhentedeOffentligeOpplysninger = listOf(
+                Bostatus(
+                    periodeFom = LocalDate.of(2015, 10, 7),
+                    periodeTom = null,
+                    bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+            ),
+            behandledeBostatusopplysninger = listOf(
+                Bostatus(
+                    periodeFom = LocalDate.of(2020, 9, 1),
+                    periodeTom = LocalDate.of(2021, 10, 31),
+                    bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+                Bostatus(
+                    periodeFom = LocalDate.of(2021, 11, 1),
+                    periodeTom = null,
+                    bostatus = Bostatuskode.MED_FORELDER,
+                    kilde = Kilde.MANUELL,
+                ),
+            ),
+            endreBostatus = EndreBostatus(
+                typeEndring = TypeEndring.ENDRET,
+                nyBostatus = Bostatus(
+                    periodeFom = LocalDate.of(2021, 11, 1),
+                    periodeTom = LocalDate.of(2024, 5, 31),
+                    bostatus = Bostatuskode.MED_FORELDER,
+                    kilde = Kilde.MANUELL,
+                ),
+                originalBostatus = Bostatus(
+                    periodeFom = LocalDate.of(2021, 11, 1),
+                    periodeTom = null,
+                    bostatus = Bostatuskode.MED_FORELDER,
+                    kilde = Kilde.MANUELL,
+                ),
+            ),
+        )
     }
 }

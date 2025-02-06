@@ -25,40 +25,37 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBase
 
 internal object EndeligBidragMapper : CoreMapper() {
 
-    fun mapEndeligBidragGrunnlag(mottattGrunnlag: BeregnGrunnlag): EndeligBidragPeriodeGrunnlag {
-
-        return EndeligBidragPeriodeGrunnlag(
-            beregningsperiode = mottattGrunnlag.periode,
-            bidragsevneDelberegningPeriodeGrunnlagListe = mapBidragsevne(mottattGrunnlag),
-            underholdskostnadDelberegningPeriodeGrunnlagListe = mapUnderholdskostnad(mottattGrunnlag),
-            bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe = mapBpAndelUnderholdskostnad(mottattGrunnlag),
-            samværsfradragDelberegningPeriodeGrunnlagListe = mapSamværsfradrag(mottattGrunnlag),
-            samværsklassePeriodeGrunnlagListe = mapSamværsklasse(mottattGrunnlag),
-            nettoBarnetilleggBPDelberegningPeriodeGrunnlagListe = mapNettoBarnetillegg(
-                beregnGrunnlag = mottattGrunnlag,
-                referanseTilRolle = finnReferanseTilRolle(
-                    grunnlagListe = mottattGrunnlag.grunnlagListe,
-                    grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
-                ),
+    fun mapEndeligBidragGrunnlag(mottattGrunnlag: BeregnGrunnlag): EndeligBidragPeriodeGrunnlag = EndeligBidragPeriodeGrunnlag(
+        beregningsperiode = mottattGrunnlag.periode,
+        bidragsevneDelberegningPeriodeGrunnlagListe = mapBidragsevne(mottattGrunnlag),
+        underholdskostnadDelberegningPeriodeGrunnlagListe = mapUnderholdskostnad(mottattGrunnlag),
+        bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe = mapBpAndelUnderholdskostnad(mottattGrunnlag),
+        samværsfradragDelberegningPeriodeGrunnlagListe = mapSamværsfradrag(mottattGrunnlag),
+        samværsklassePeriodeGrunnlagListe = mapSamværsklasse(mottattGrunnlag),
+        nettoBarnetilleggBPDelberegningPeriodeGrunnlagListe = mapNettoBarnetillegg(
+            beregnGrunnlag = mottattGrunnlag,
+            referanseTilRolle = finnReferanseTilRolle(
+                grunnlagListe = mottattGrunnlag.grunnlagListe,
+                grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
             ),
-            nettoBarnetilleggBMDelberegningPeriodeGrunnlagListe = mapNettoBarnetillegg(
-                beregnGrunnlag = mottattGrunnlag,
-                referanseTilRolle = finnReferanseTilRolle(
-                    grunnlagListe = mottattGrunnlag.grunnlagListe,
-                    grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
-                ),
+        ),
+        nettoBarnetilleggBMDelberegningPeriodeGrunnlagListe = mapNettoBarnetillegg(
+            beregnGrunnlag = mottattGrunnlag,
+            referanseTilRolle = finnReferanseTilRolle(
+                grunnlagListe = mottattGrunnlag.grunnlagListe,
+                grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
             ),
-            beløpshistorikkForskuddPeriodeGrunnlag = mapBeløpshistorikk(
-                beregnGrunnlag = mottattGrunnlag,
-                grunnlagstype = Grunnlagstype.BELØPSHISTORIKK_FORSKUDD
-            ),
-            beløpshistorikkBidragPeriodeGrunnlag = mapBeløpshistorikk(
-                beregnGrunnlag = mottattGrunnlag,
-                grunnlagstype = Grunnlagstype.BELØPSHISTORIKK_BIDRAG
-            ),
-            begrensetRevurderingPeriodeGrunnlag = mapSøknadGrunnlag(mottattGrunnlag),
-        )
-    }
+        ),
+        beløpshistorikkForskuddPeriodeGrunnlag = mapBeløpshistorikk(
+            beregnGrunnlag = mottattGrunnlag,
+            grunnlagstype = Grunnlagstype.BELØPSHISTORIKK_FORSKUDD,
+        ),
+        beløpshistorikkBidragPeriodeGrunnlag = mapBeløpshistorikk(
+            beregnGrunnlag = mottattGrunnlag,
+            grunnlagstype = Grunnlagstype.BELØPSHISTORIKK_BIDRAG,
+        ),
+        begrensetRevurderingPeriodeGrunnlag = mapSøknadGrunnlag(mottattGrunnlag),
+    )
 
     private fun mapBidragsevne(beregnGrunnlag: BeregnGrunnlag): List<BidragsevneDelberegningPeriodeGrunnlag> {
         try {
@@ -166,8 +163,8 @@ internal object EndeligBidragMapper : CoreMapper() {
         }
     }
 
-    private fun mapBeløpshistorikk(beregnGrunnlag: BeregnGrunnlag, grunnlagstype: Grunnlagstype): BeløpshistorikkPeriodeGrunnlag? {
-        return beregnGrunnlag.grunnlagListe
+    private fun mapBeløpshistorikk(beregnGrunnlag: BeregnGrunnlag, grunnlagstype: Grunnlagstype): BeløpshistorikkPeriodeGrunnlag? =
+        beregnGrunnlag.grunnlagListe
             .filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(grunnlagType = grunnlagstype)
             .map {
                 BeløpshistorikkPeriodeGrunnlag(
@@ -176,17 +173,14 @@ internal object EndeligBidragMapper : CoreMapper() {
                 )
             }
             .firstOrNull()
-    }
 
-    private fun mapSøknadGrunnlag(beregnGrunnlag: BeregnGrunnlag): BegrensetRevurderingPeriodeGrunnlag? {
-        return beregnGrunnlag.grunnlagListe
-            .filtrerOgKonverterBasertPåEgenReferanse<SøknadGrunnlag>(Grunnlagstype.SØKNAD)
-            .map {
-                BegrensetRevurderingPeriodeGrunnlag(
-                    referanse = it.referanse,
-                    begrensetRevurdering = it.innhold.begrensetRevurdering,
-                )
-            }
-            .firstOrNull()
-    }
+    private fun mapSøknadGrunnlag(beregnGrunnlag: BeregnGrunnlag): BegrensetRevurderingPeriodeGrunnlag? = beregnGrunnlag.grunnlagListe
+        .filtrerOgKonverterBasertPåEgenReferanse<SøknadGrunnlag>(Grunnlagstype.SØKNAD)
+        .map {
+            BegrensetRevurderingPeriodeGrunnlag(
+                referanse = it.referanse,
+                begrensetRevurdering = it.innhold.begrensetRevurdering,
+            )
+        }
+        .firstOrNull()
 }

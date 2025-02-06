@@ -68,8 +68,8 @@ internal object BeregnEndeligBidragService : BeregnService() {
         // Legger til delberegningsobjekter i grunnlaget
         val utvidetGrunnlag = mottattGrunnlag.copy(
             grunnlagListe =
-                (mottattGrunnlag.grunnlagListe + delberegningNettoBarnetilleggBPResultat + delberegningNettoBarnetilleggBMResultat)
-                    .distinctBy(GrunnlagDto::referanse),
+            (mottattGrunnlag.grunnlagListe + delberegningNettoBarnetilleggBPResultat + delberegningNettoBarnetilleggBMResultat)
+                .distinctBy(GrunnlagDto::referanse),
         )
 
         // Mapper ut grunnlag som skal brukes for å beregne endelig bidrag
@@ -269,9 +269,11 @@ internal object BeregnEndeligBidragService : BeregnService() {
         }
 
         // Legger til referanser for grunnlagsobjekter som ikke er lister (skal refereres av alle perioder hvis det er begrenset revurdering
-        val engangsreferanser = listOfNotNull(endeligBidragPeriodeGrunnlag.beløpshistorikkForskuddPeriodeGrunnlag?.referanse,
+        val engangsreferanser = listOfNotNull(
+            endeligBidragPeriodeGrunnlag.beløpshistorikkForskuddPeriodeGrunnlag?.referanse,
             endeligBidragPeriodeGrunnlag.beløpshistorikkBidragPeriodeGrunnlag?.referanse,
-            endeligBidragPeriodeGrunnlag.begrensetRevurderingPeriodeGrunnlag?.referanse)
+            endeligBidragPeriodeGrunnlag.begrensetRevurderingPeriodeGrunnlag?.referanse,
+        )
 
         return EndeligBidragBeregningGrunnlag(
             bidragsevneBeregningGrunnlag = bidragsevneBeregningGrunnlag,

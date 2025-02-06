@@ -14,7 +14,6 @@ internal object NettoBarnetilleggBeregning {
     val bigDecimal12 = BigDecimal.valueOf(12)
 
     fun beregn(grunnlag: NettoBarnetilleggBeregningGrunnlag): NettoBarnetilleggBeregningResultat {
-
         // Barnetillegg tiltakspenger er skattefritt (nettoverdi). Filtreres bort fra sum brutto og legges til i sum netto.
         val barnetilleggTiltakspenger =
             grunnlag.barnetilleggBeregningGrunnlagListe
@@ -35,22 +34,22 @@ internal object NettoBarnetilleggBeregning {
             Barnetillegg(
                 barnetilleggType = it.barnetilleggstype,
                 bruttoBarnetillegg =
-                    if (it.barnetilleggstype != Inntektstype.BARNETILLEGG_TILTAKSPENGER) {
-                        it.bruttoBarnetillegg.divide(bigDecimal12, 10, RoundingMode.HALF_UP)
-                    } else {
-                        BigDecimal.ZERO
-                    }.avrundetMedToDesimaler,
+                if (it.barnetilleggstype != Inntektstype.BARNETILLEGG_TILTAKSPENGER) {
+                    it.bruttoBarnetillegg.divide(bigDecimal12, 10, RoundingMode.HALF_UP)
+                } else {
+                    BigDecimal.ZERO
+                }.avrundetMedToDesimaler,
                 nettoBarnetillegg =
-                    if (it.barnetilleggstype != Inntektstype.BARNETILLEGG_TILTAKSPENGER) {
-                        it.bruttoBarnetillegg.minus(
-                            beregnSkattefradrag(
-                                beløp = it.bruttoBarnetillegg,
-                                skattFaktor = grunnlag.skattFaktorGrunnlag.skattFaktor,
-                            )
-                        ).divide(bigDecimal12, 10, RoundingMode.HALF_UP)
-                    } else {
-                        it.bruttoBarnetillegg.divide(bigDecimal12, 10, RoundingMode.HALF_UP)
-                    }.avrundetMedToDesimaler,
+                if (it.barnetilleggstype != Inntektstype.BARNETILLEGG_TILTAKSPENGER) {
+                    it.bruttoBarnetillegg.minus(
+                        beregnSkattefradrag(
+                            beløp = it.bruttoBarnetillegg,
+                            skattFaktor = grunnlag.skattFaktorGrunnlag.skattFaktor,
+                        ),
+                    ).divide(bigDecimal12, 10, RoundingMode.HALF_UP)
+                } else {
+                    it.bruttoBarnetillegg.divide(bigDecimal12, 10, RoundingMode.HALF_UP)
+                }.avrundetMedToDesimaler,
             )
         }
 
