@@ -3,6 +3,7 @@ package no.nav.bidrag.beregn.barnebidrag.beregning
 import no.nav.bidrag.beregn.barnebidrag.bo.BpAndelUnderholdskostnadBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BpAndelUnderholdskostnadBeregningResultat
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.domene.util.avrundetMedNullDesimaler
 import no.nav.bidrag.domene.util.avrundetMedTiDesimaler
 import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import java.math.BigDecimal
@@ -36,7 +37,13 @@ internal object BpAndelUnderholdskostnadBeregning {
             // Barnets inntekt reduseres med 30 ganger sats for forhøyet forskudd
             barnEndeligInntekt = (inntektSB - sjablonverdiForskuddssatsBeløp * bigDecimal30).coerceAtLeast(BigDecimal.ZERO)
 
-            beregnetAndelFaktor = inntektBP.divide(inntektBP + inntektBM + barnEndeligInntekt, 10, RoundingMode.HALF_UP)
+            val sumInntekt = inntektBP + inntektBM + barnEndeligInntekt
+            beregnetAndelFaktor = if (sumInntekt.avrundetMedNullDesimaler != BigDecimal.ZERO) {
+                inntektBP.divide(sumInntekt, 10, RoundingMode.HALF_UP)
+            } else {
+                BigDecimal.ZERO
+            }
+
             endeligAndelFaktor = beregnetAndelFaktor.coerceAtMost(bigDecimalFemSjettedeler)
             andelBeløp = grunnlag.underholdskostnadBeregningGrunnlag.beløp * endeligAndelFaktor
         }
@@ -56,7 +63,7 @@ internal object BpAndelUnderholdskostnadBeregning {
                 .filter { it.isNotBlank() } +
                 grunnlag.sjablonSjablontallBeregningGrunnlagListe.map { it.referanse },
 
-        )
+            )
     }
 
     private fun hentSjablonverdier(grunnlag: BpAndelUnderholdskostnadBeregningGrunnlag) {
