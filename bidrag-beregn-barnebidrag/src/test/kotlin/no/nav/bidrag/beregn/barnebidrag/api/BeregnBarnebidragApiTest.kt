@@ -1,8 +1,5 @@
 package no.nav.bidrag.beregn.barnebidrag.api
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
 import no.nav.bidrag.beregn.core.exception.BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
@@ -10,12 +7,10 @@ import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
-import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsfradrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
-import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
@@ -23,7 +18,6 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBase
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
@@ -32,13 +26,10 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import java.math.BigDecimal
-import java.nio.file.Files
-import java.nio.file.Paths
-import java.text.SimpleDateFormat
 import java.time.YearMonth
 
 @ExtendWith(MockitoExtension::class)
-internal class BeregnBarnebidragApiTest {
+internal class BeregnBarnebidragApiTest: FellesApiTest() {
     private lateinit var filnavn: String
 
     // Beregningsperiode
@@ -727,36 +718,5 @@ internal class BeregnBarnebidragApiTest {
             { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
             { assertThat(alleRefererteReferanser).containsAll(alleReferanserUnntattSluttberegning) },
         )
-    }
-
-    fun hentAlleReferanser(resultatGrunnlagListe: List<GrunnlagDto>) = resultatGrunnlagListe
-        .map { it.referanse }
-        .distinct()
-
-    fun hentAlleRefererteReferanser(resultatGrunnlagListe: List<GrunnlagDto>) = resultatGrunnlagListe
-        .flatMap { it.grunnlagsreferanseListe }
-        .distinct()
-
-    private fun lesFilOgByggRequest(filnavn: String): BeregnGrunnlag {
-        var json = ""
-
-        // Les inn fil med request-data (json)
-        try {
-            json = Files.readString(Paths.get(filnavn))
-        } catch (e: Exception) {
-            fail("Klarte ikke å lese fil: $filnavn")
-        }
-
-        // Lag request
-        return ObjectMapper().findAndRegisterModules().readValue(json, BeregnGrunnlag::class.java)
-    }
-
-    private fun <T> printJson(json: T) {
-        val objectMapper = ObjectMapper()
-        objectMapper.registerKotlinModule()
-        objectMapper.registerModule(JavaTimeModule())
-        objectMapper.dateFormat = SimpleDateFormat("yyyy-MM-dd")
-
-        println(objectMapper.writeValueAsString(json))
     }
 }

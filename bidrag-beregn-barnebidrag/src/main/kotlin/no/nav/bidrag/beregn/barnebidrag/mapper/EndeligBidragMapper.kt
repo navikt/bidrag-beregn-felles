@@ -25,37 +25,53 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBase
 
 internal object EndeligBidragMapper : CoreMapper() {
 
-    fun mapEndeligBidragGrunnlag(mottattGrunnlag: BeregnGrunnlag): EndeligBidragPeriodeGrunnlag = EndeligBidragPeriodeGrunnlag(
-        beregningsperiode = mottattGrunnlag.periode,
-        bidragsevneDelberegningPeriodeGrunnlagListe = mapBidragsevne(mottattGrunnlag),
-        underholdskostnadDelberegningPeriodeGrunnlagListe = mapUnderholdskostnad(mottattGrunnlag),
-        bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe = mapBpAndelUnderholdskostnad(mottattGrunnlag),
-        samværsfradragDelberegningPeriodeGrunnlagListe = mapSamværsfradrag(mottattGrunnlag),
-        samværsklassePeriodeGrunnlagListe = mapSamværsklasse(mottattGrunnlag),
-        nettoBarnetilleggBPDelberegningPeriodeGrunnlagListe = mapNettoBarnetillegg(
-            beregnGrunnlag = mottattGrunnlag,
-            referanseTilRolle = finnReferanseTilRolle(
-                grunnlagListe = mottattGrunnlag.grunnlagListe,
-                grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
+    fun mapEndeligBidragGrunnlag(mottattGrunnlag: BeregnGrunnlag): EndeligBidragPeriodeGrunnlag {
+        val begrensetRevurderingPeriodeGrunnlag = mapSøknadGrunnlag(mottattGrunnlag)
+
+        return EndeligBidragPeriodeGrunnlag(
+            beregningsperiode = mottattGrunnlag.periode,
+            bidragsevneDelberegningPeriodeGrunnlagListe = mapBidragsevne(mottattGrunnlag),
+            underholdskostnadDelberegningPeriodeGrunnlagListe = mapUnderholdskostnad(mottattGrunnlag),
+            bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe = mapBpAndelUnderholdskostnad(mottattGrunnlag),
+            samværsfradragDelberegningPeriodeGrunnlagListe = mapSamværsfradrag(mottattGrunnlag),
+            samværsklassePeriodeGrunnlagListe = mapSamværsklasse(mottattGrunnlag),
+            nettoBarnetilleggBPDelberegningPeriodeGrunnlagListe = mapNettoBarnetillegg(
+                beregnGrunnlag = mottattGrunnlag,
+                referanseTilRolle = finnReferanseTilRolle(
+                    grunnlagListe = mottattGrunnlag.grunnlagListe,
+                    grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
+                ),
             ),
-        ),
-        nettoBarnetilleggBMDelberegningPeriodeGrunnlagListe = mapNettoBarnetillegg(
-            beregnGrunnlag = mottattGrunnlag,
-            referanseTilRolle = finnReferanseTilRolle(
-                grunnlagListe = mottattGrunnlag.grunnlagListe,
-                grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
+            nettoBarnetilleggBMDelberegningPeriodeGrunnlagListe = mapNettoBarnetillegg(
+                beregnGrunnlag = mottattGrunnlag,
+                referanseTilRolle = finnReferanseTilRolle(
+                    grunnlagListe = mottattGrunnlag.grunnlagListe,
+                    grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
+                ),
             ),
-        ),
-        beløpshistorikkForskuddPeriodeGrunnlag = mapBeløpshistorikk(
-            beregnGrunnlag = mottattGrunnlag,
-            grunnlagstype = Grunnlagstype.BELØPSHISTORIKK_FORSKUDD,
-        ),
-        beløpshistorikkBidragPeriodeGrunnlag = mapBeløpshistorikk(
-            beregnGrunnlag = mottattGrunnlag,
-            grunnlagstype = Grunnlagstype.BELØPSHISTORIKK_BIDRAG,
-        ),
-        begrensetRevurderingPeriodeGrunnlag = mapSøknadGrunnlag(mottattGrunnlag),
-    )
+            // Legger null i beløpshistorikk forskudd hvis indikator for begrenset revurdering er false
+            beløpshistorikkForskuddPeriodeGrunnlag =
+                if (begrensetRevurderingPeriodeGrunnlag == null || begrensetRevurderingPeriodeGrunnlag.begrensetRevurdering == false) {
+                    null
+                } else {
+                    mapBeløpshistorikk(
+                        beregnGrunnlag = mottattGrunnlag,
+                        grunnlagstype = Grunnlagstype.BELØPSHISTORIKK_FORSKUDD
+                    )
+                },
+            // Legger null i beløpshistorikk bidrag hvis indikator for begrenset revurdering er false
+            beløpshistorikkBidragPeriodeGrunnlag =
+                if (begrensetRevurderingPeriodeGrunnlag == null || begrensetRevurderingPeriodeGrunnlag.begrensetRevurdering == false) {
+                    null
+                } else {
+                    mapBeløpshistorikk(
+                        beregnGrunnlag = mottattGrunnlag,
+                        grunnlagstype = Grunnlagstype.BELØPSHISTORIKK_BIDRAG
+                    )
+                },
+            begrensetRevurderingPeriodeGrunnlag = begrensetRevurderingPeriodeGrunnlag,
+        )
+    }
 
     private fun mapBidragsevne(beregnGrunnlag: BeregnGrunnlag): List<BidragsevneDelberegningPeriodeGrunnlag> {
         try {

@@ -4,7 +4,6 @@ import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.avrundetMedNullDesimaler
 import no.nav.bidrag.domene.util.avrundetMedTiDesimaler
 import no.nav.bidrag.domene.util.avrundetMedToDesimaler
-import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningNettoBarnetillegg
@@ -37,8 +36,6 @@ data class BpAndelUnderholdskostnadDelberegningPeriodeGrunnlag(
 data class SamværsfradragDelberegningPeriodeGrunnlag(val referanse: String, val samværsfradragPeriode: DelberegningSamværsfradrag)
 
 data class NettoBarnetilleggDelberegningPeriodeGrunnlag(val referanse: String, val nettoBarnetilleggPeriode: DelberegningNettoBarnetillegg)
-
-data class BeløpshistorikkPeriodeGrunnlag(val referanse: String, val beløpshistorikkPeriode: BeløpshistorikkGrunnlag)
 
 data class BegrensetRevurderingPeriodeGrunnlag(val referanse: String, val begrensetRevurdering: Boolean)
 

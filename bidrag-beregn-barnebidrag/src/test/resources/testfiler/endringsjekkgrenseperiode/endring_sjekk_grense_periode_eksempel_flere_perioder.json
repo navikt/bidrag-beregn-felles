@@ -1,0 +1,161 @@
+{
+  "periode": {
+    "fom": "2024-08",
+    "til": "2025-01"
+  },
+  "søknadsbarnReferanse": "Person_Søknadsbarn",
+  "grunnlagListe": [
+    {
+      "referanse": "Person_Søknadsbarn",
+      "type": "PERSON_SØKNADSBARN",
+      "innhold": {
+        "ident": "11111111110",
+        "navn": "Trengende Søknadsbarn",
+        "fødselsdato": "2012-09-13"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "sluttberegning_Person_Søknadsbarn_202408",
+      "type": "SLUTTBEREGNING_BARNEBIDRAG",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": "2024-09"
+        },
+        "beregnetBeløp": 4500.00,
+        "resultatBeløp": 4500,
+        "bruttoBidragEtterBarnetilleggBM": 6000.00,
+        "nettoBidragEtterBarnetilleggBM": 5001.00,
+        "bruttoBidragJustertForEvneOg25Prosent": 6000.00,
+        "bruttoBidragEtterBegrensetRevurdering": 5499.00,
+        "bruttoBidragEtterBarnetilleggBP": 5499.00,
+        "nettoBidragEtterSamværsfradrag": 4500.00,
+        "bpAndelAvUVedDeltBostedFaktor": 0E-10,
+        "bpAndelAvUVedDeltBostedBeløp": 0.00,
+        "løpendeForskudd": 4500,
+        "løpendeBidrag": 4000,
+        "ingenEndringUnderGrense": false,
+        "barnetErSelvforsørget": false,
+        "bidragJustertForDeltBosted": false,
+        "bidragJustertForNettoBarnetilleggBP": false,
+        "bidragJustertForNettoBarnetilleggBM": false,
+        "bidragJustertNedTilEvne": false,
+        "bidragJustertNedTil25ProsentAvInntekt": false,
+        "bidragJustertTilForskuddssats": true,
+        "begrensetRevurderingUtført": true,
+        "uminusNettoBarnetilleggBM": 8514.87
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": "Person_Søknadsbarn"
+    },
+    {
+      "referanse": "sluttberegning_Person_Søknadsbarn_202409",
+      "type": "SLUTTBEREGNING_BARNEBIDRAG",
+      "innhold": {
+        "periode": {
+          "fom": "2024-09",
+          "til": "2024-12"
+        },
+        "beregnetBeløp": 3800.00,
+        "resultatBeløp": 3800,
+        "bruttoBidragEtterBarnetilleggBM": 6000.00,
+        "nettoBidragEtterBarnetilleggBM": 5001.00,
+        "bruttoBidragJustertForEvneOg25Prosent": 6000.00,
+        "bruttoBidragEtterBegrensetRevurdering": 5499.00,
+        "bruttoBidragEtterBarnetilleggBP": 5499.00,
+        "nettoBidragEtterSamværsfradrag": 4500.00,
+        "bpAndelAvUVedDeltBostedFaktor": 0E-10,
+        "bpAndelAvUVedDeltBostedBeløp": 0.00,
+        "løpendeForskudd": 0,
+        "løpendeBidrag": 4000,
+        "ingenEndringUnderGrense": false,
+        "barnetErSelvforsørget": false,
+        "bidragJustertForDeltBosted": false,
+        "bidragJustertForNettoBarnetilleggBP": false,
+        "bidragJustertForNettoBarnetilleggBM": false,
+        "bidragJustertNedTilEvne": false,
+        "bidragJustertNedTil25ProsentAvInntekt": false,
+        "bidragJustertTilForskuddssats": true,
+        "begrensetRevurderingUtført": true,
+        "uminusNettoBarnetilleggBM": 8514.87
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": "Person_Søknadsbarn"
+    },
+    {
+      "referanse": "sluttberegning_Person_Søknadsbarn_202412",
+      "type": "SLUTTBEREGNING_BARNEBIDRAG",
+      "innhold": {
+        "periode": {
+          "fom": "2024-12",
+          "til": null
+        },
+        "beregnetBeløp": 6000.00,
+        "resultatBeløp": 6000,
+        "bruttoBidragEtterBarnetilleggBM": 6000.00,
+        "nettoBidragEtterBarnetilleggBM": 5001.00,
+        "bruttoBidragJustertForEvneOg25Prosent": 6000.00,
+        "bruttoBidragEtterBegrensetRevurdering": 5499.00,
+        "bruttoBidragEtterBarnetilleggBP": 5499.00,
+        "nettoBidragEtterSamværsfradrag": 4500.00,
+        "bpAndelAvUVedDeltBostedFaktor": 0E-10,
+        "bpAndelAvUVedDeltBostedBeløp": 0.00,
+        "løpendeForskudd": 0,
+        "løpendeBidrag": 4000,
+        "ingenEndringUnderGrense": false,
+        "barnetErSelvforsørget": false,
+        "bidragJustertForDeltBosted": false,
+        "bidragJustertForNettoBarnetilleggBP": false,
+        "bidragJustertForNettoBarnetilleggBM": false,
+        "bidragJustertNedTilEvne": false,
+        "bidragJustertNedTil25ProsentAvInntekt": false,
+        "bidragJustertTilForskuddssats": true,
+        "begrensetRevurderingUtført": true,
+        "uminusNettoBarnetilleggBM": 8514.87
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": "Person_Søknadsbarn"
+    },
+    {
+      "referanse": "Mottatt_BeløpshistorikkBidrag_202408",
+      "type": "BELØPSHISTORIKK_BIDRAG",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": null
+        },
+        "beløpshistorikk": [
+          {
+            "periode": {
+              "fom": "2024-08",
+              "til": "2024-10"
+            },
+            "beløp": 4000
+          },
+          {
+            "periode": {
+              "fom": "2024-10",
+              "til": "2024-11"
+            },
+            "beløp": null
+          },
+          {
+            "periode": {
+              "fom": "2024-12",
+              "til": "2025-01"
+            },
+            "beløp": 4000
+          }
+        ]
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragspliktig"
+    }
+  ]
+}

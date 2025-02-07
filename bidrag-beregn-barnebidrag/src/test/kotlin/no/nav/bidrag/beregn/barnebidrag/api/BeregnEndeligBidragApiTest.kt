@@ -1,23 +1,15 @@
 package no.nav.bidrag.beregn.barnebidrag.api
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
-import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåFremmedReferanse
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -25,13 +17,10 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import java.math.BigDecimal
-import java.nio.file.Files
-import java.nio.file.Paths
-import java.text.SimpleDateFormat
 import java.time.YearMonth
 
 @ExtendWith(MockitoExtension::class)
-internal class BeregnEndeligBidragApiTest {
+internal class BeregnEndeligBidragApiTest: FellesApiTest() {
     private lateinit var filnavn: String
     private lateinit var forventetBeregnetBeløp: BigDecimal
     private lateinit var forventetResultatbeløp: BigDecimal
@@ -449,9 +438,29 @@ internal class BeregnEndeligBidragApiTest {
     }
 
     @Test
-    @DisplayName("Endelig bidrag - eksempel 10H - Begrenset revurdering - flere perioder")
+    @DisplayName("Endelig bidrag - eksempel 10H - Begrenset revurdering - indikator for begrenset revurdering er false")
     fun testEndeligBidrag_Eksempel10H() {
         filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel10H.json"
+        forventetBeregnetBeløp = BigDecimal.valueOf(5001).setScale(2)
+        forventetResultatbeløp = BigDecimal.valueOf(5000).setScale(0)
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(8514.87).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(6000).setScale(2)
+        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(5001).setScale(2)
+        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(6000).setScale(2)
+        forventetBruttoBidragEtterBegrensetRevurdering = BigDecimal.valueOf(6000).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(6000).setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(5001).setScale(2)
+        forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
+        forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
+        forventetLøpendeForskudd = null
+        forventetLøpendeBidrag = null
+        utførBeregningerOgEvaluerResultatEndeligBidrag()
+    }
+
+    @Test
+    @DisplayName("Endelig bidrag - eksempel 10I - Begrenset revurdering - flere perioder")
+    fun testEndeligBidrag_Eksempel10I() {
+        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel10I.json"
         utførBeregningerOgEvaluerResultatEndeligBidragFlerePerioderBegrensetRevurdering()
     }
 
@@ -960,69 +969,5 @@ internal class BeregnEndeligBidragApiTest {
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
         )
-    }
-
-    private fun hentSluttberegning(endeligBidragResultat: List<GrunnlagDto>) = endeligBidragResultat
-        .filtrerOgKonverterBasertPåEgenReferanse<SluttberegningBarnebidrag>(Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG)
-        .map {
-            SluttberegningBarnebidrag(
-                periode = it.innhold.periode,
-                beregnetBeløp = it.innhold.beregnetBeløp,
-                resultatBeløp = it.innhold.resultatBeløp,
-                uMinusNettoBarnetilleggBM = it.innhold.uMinusNettoBarnetilleggBM,
-                bruttoBidragEtterBarnetilleggBM = it.innhold.bruttoBidragEtterBarnetilleggBM,
-                nettoBidragEtterBarnetilleggBM = it.innhold.nettoBidragEtterBarnetilleggBM,
-                bruttoBidragJustertForEvneOg25Prosent = it.innhold.bruttoBidragJustertForEvneOg25Prosent,
-                bruttoBidragEtterBegrensetRevurdering = it.innhold.bruttoBidragEtterBegrensetRevurdering,
-                bruttoBidragEtterBarnetilleggBP = it.innhold.bruttoBidragEtterBarnetilleggBP,
-                nettoBidragEtterSamværsfradrag = it.innhold.nettoBidragEtterSamværsfradrag,
-                bpAndelAvUVedDeltBostedFaktor = it.innhold.bpAndelAvUVedDeltBostedFaktor,
-                bpAndelAvUVedDeltBostedBeløp = it.innhold.bpAndelAvUVedDeltBostedBeløp,
-                løpendeForskudd = it.innhold.løpendeForskudd,
-                løpendeBidrag = it.innhold.løpendeBidrag,
-                ingenEndringUnderGrense = it.innhold.ingenEndringUnderGrense,
-                barnetErSelvforsørget = it.innhold.barnetErSelvforsørget,
-                bidragJustertForDeltBosted = it.innhold.bidragJustertForDeltBosted,
-                bidragJustertForNettoBarnetilleggBP = it.innhold.bidragJustertForNettoBarnetilleggBP,
-                bidragJustertForNettoBarnetilleggBM = it.innhold.bidragJustertForNettoBarnetilleggBM,
-                bidragJustertNedTilEvne = it.innhold.bidragJustertNedTilEvne,
-                bidragJustertNedTil25ProsentAvInntekt = it.innhold.bidragJustertNedTil25ProsentAvInntekt,
-                bidragJustertTilForskuddssats = it.innhold.bidragJustertTilForskuddssats,
-                begrensetRevurderingUtført = it.innhold.begrensetRevurderingUtført,
-            )
-        }
-
-    // TODO Flytte til felles
-    private fun hentAlleReferanser(resultatGrunnlagListe: List<GrunnlagDto>) = resultatGrunnlagListe
-        .map { it.referanse }
-        .distinct()
-
-    // TODO Flytte til felles
-    private fun hentAlleRefererteReferanser(resultatGrunnlagListe: List<GrunnlagDto>) = resultatGrunnlagListe
-        .flatMap { it.grunnlagsreferanseListe }
-        .distinct()
-
-    // TODO Flytte til felles
-    private fun lesFilOgByggRequest(filnavn: String): BeregnGrunnlag {
-        var json = ""
-
-        // Les inn fil med request-data (json)
-        try {
-            json = Files.readString(Paths.get(filnavn))
-        } catch (e: Exception) {
-            fail("Klarte ikke å lese fil: $filnavn")
-        }
-
-        // Lag request
-        return ObjectMapper().findAndRegisterModules().readValue(json, BeregnGrunnlag::class.java)
-    }
-
-    private fun <T> printJson(json: T) {
-        val objectMapper = ObjectMapper()
-        objectMapper.registerKotlinModule()
-        objectMapper.registerModule(JavaTimeModule())
-        objectMapper.dateFormat = SimpleDateFormat("yyyy-MM-dd")
-
-        println(objectMapper.writeValueAsString(json))
     }
 }
