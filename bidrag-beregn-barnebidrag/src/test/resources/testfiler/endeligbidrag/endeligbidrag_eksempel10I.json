@@ -1,7 +1,7 @@
 {
   "periode": {
     "fom": "2024-08",
-    "til": "2024-09"
+    "til": "2024-11"
   },
   "søknadsbarnReferanse": "Person_Søknadsbarn",
   "grunnlagListe": [
@@ -44,7 +44,7 @@
       "innhold": {
         "periode": {
           "fom": "2024-08",
-          "til": "2024-09"
+          "til": "2024-11"
         },
         "beløp": 10000,
         "skatt": {
@@ -69,7 +69,7 @@
       "innhold": {
         "periode": {
           "fom": "2024-08",
-          "til": "2024-09"
+          "til": "2024-11"
         },
         "forbruksutgift": 2000,
         "boutgift": 2000,
@@ -89,7 +89,7 @@
       "innhold": {
         "periode": {
           "fom": "2024-08",
-          "til": "2024-09"
+          "til": "2024-11"
         },
         "endeligAndelFaktor": 0.600,
         "andelBeløp": 6000,
@@ -107,7 +107,7 @@
       "innhold": {
         "periode": {
           "fom": "2024-08",
-          "til": "2024-09"
+          "til": "2024-11"
         },
         "beløp": 999,
         "manueltRegistrert": false
@@ -122,7 +122,7 @@
       "innhold": {
         "periode": {
           "fom": "2024-08",
-          "til": "2024-09"
+          "til": "2024-11"
         },
         "samværsklasse": "SAMVÆRSKLASSE_1",
         "manueltRegistrert": false
@@ -137,7 +137,7 @@
       "innhold": {
         "periode": {
           "fom": "2024-08",
-          "til": "2024-09"
+          "til": "2024-11"
         },
         "inntektsrapportering": "AINNTEKT",
         "gjelderBarn": null,
@@ -155,7 +155,7 @@
       "innhold": {
         "periode": {
           "fom": "2024-08",
-          "til": "2024-09"
+          "til": "2024-11"
         },
         "inntektsrapportering": "BARNETILLEGG",
         "gjelderBarn": "Person_Søknadsbarn",
@@ -180,7 +180,7 @@
       "innhold": {
         "periode": {
           "fom": "2024-08",
-          "til": "2024-09"
+          "til": "2024-11"
         },
         "inntektsrapportering": "AINNTEKT",
         "gjelderBarn": null,
@@ -198,7 +198,7 @@
       "innhold": {
         "periode": {
           "fom": "2024-08",
-          "til": "2024-09"
+          "til": "2024-11"
         },
         "inntektsrapportering": "BARNETILLEGG",
         "gjelderBarn": "Person_Søknadsbarn",
@@ -262,7 +262,7 @@
         "mottattDato": "2024-07-01",
         "søktFraDato": "2024-08-01",
         "søktAv": "BIDRAGSMOTTAKER",
-        "begrensetRevurdering": false
+        "begrensetRevurdering": true
       },
       "grunnlagsreferanseListe": [],
       "gjelderBarnReferanse": "Person_Søknadsbarn",
@@ -283,6 +283,13 @@
               "til": "2024-09"
             },
             "beløp": 4500
+          },
+          {
+            "periode": {
+              "fom": "2024-09",
+              "til": "2024-11"
+            },
+            "beløp": 5500
           }
         ]
       },
@@ -302,9 +309,16 @@
           {
             "periode": {
               "fom": "2024-08",
-              "til": "2024-09"
+              "til": "2024-10"
             },
             "beløp": 4000
+          },
+          {
+            "periode": {
+              "fom": "2024-10",
+              "til": "2024-11"
+            },
+            "beløp": 5200
           }
         ]
       },

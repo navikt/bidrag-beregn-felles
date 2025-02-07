@@ -26,6 +26,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBase
 internal object EndeligBidragMapper : CoreMapper() {
 
     fun mapEndeligBidragGrunnlag(mottattGrunnlag: BeregnGrunnlag): EndeligBidragPeriodeGrunnlag {
+        val begrensetRevurderingPeriodeGrunnlag = mapSøknadGrunnlag(mottattGrunnlag)
 
         return EndeligBidragPeriodeGrunnlag(
             beregningsperiode = mottattGrunnlag.periode,
@@ -48,15 +49,27 @@ internal object EndeligBidragMapper : CoreMapper() {
                     grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
                 ),
             ),
-            beløpshistorikkForskuddPeriodeGrunnlag = mapBeløpshistorikk(
-                beregnGrunnlag = mottattGrunnlag,
-                grunnlagstype = Grunnlagstype.BELØPSHISTORIKK_FORSKUDD
-            ),
-            beløpshistorikkBidragPeriodeGrunnlag = mapBeløpshistorikk(
-                beregnGrunnlag = mottattGrunnlag,
-                grunnlagstype = Grunnlagstype.BELØPSHISTORIKK_BIDRAG
-            ),
-            begrensetRevurderingPeriodeGrunnlag = mapSøknadGrunnlag(mottattGrunnlag),
+            // Legger null i beløpshistorikk forskudd hvis indikator for begrenset revurdering er false
+            beløpshistorikkForskuddPeriodeGrunnlag =
+                if (begrensetRevurderingPeriodeGrunnlag == null || begrensetRevurderingPeriodeGrunnlag.begrensetRevurdering == false) {
+                    null
+                } else {
+                    mapBeløpshistorikk(
+                        beregnGrunnlag = mottattGrunnlag,
+                        grunnlagstype = Grunnlagstype.BELØPSHISTORIKK_FORSKUDD
+                    )
+                },
+            // Legger null i beløpshistorikk bidrag hvis indikator for begrenset revurdering er false
+            beløpshistorikkBidragPeriodeGrunnlag =
+                if (begrensetRevurderingPeriodeGrunnlag == null || begrensetRevurderingPeriodeGrunnlag.begrensetRevurdering == false) {
+                    null
+                } else {
+                    mapBeløpshistorikk(
+                        beregnGrunnlag = mottattGrunnlag,
+                        grunnlagstype = Grunnlagstype.BELØPSHISTORIKK_BIDRAG
+                    )
+                },
+            begrensetRevurderingPeriodeGrunnlag = begrensetRevurderingPeriodeGrunnlag,
         )
     }
 

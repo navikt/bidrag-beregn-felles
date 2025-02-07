@@ -5,6 +5,7 @@ import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnetilleggSkattesatsServ
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBidragsevneService.delberegningBidragsevne
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBpAndelUnderholdskostnadService.delberegningBpAndelUnderholdskostnad
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnEndeligBidragService.delberegningEndeligBidrag
+import no.nav.bidrag.beregn.barnebidrag.service.BeregnEndringSjekkGrensePeriodeService.delberegningEndringSjekkGrensePeriode
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnNettoBarnetilleggService.delberegningNettoBarnetillegg
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnNettoTilsynsutgiftService.delberegningNettoTilsynsutgift
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnSamværsfradragService.delberegningSamværsfradrag
@@ -145,7 +146,7 @@ class BeregnBarnebidragService : BeregnService() {
         // Sjekker om søknadsbarnet fyller 18 år i beregningsperioden (gjøres her fordi dette er en metode som vil bli kalt direkte fra
         // bidrag-behandling)
         val utvidetGrunnlagJustert = justerTilPeriodeHvisBarnetBlir18ÅrIBeregningsperioden(mottattGrunnlag)
-        var utvidetGrunnlag = utvidetGrunnlagJustert.beregnGrunnlag
+        val utvidetGrunnlag = utvidetGrunnlagJustert.beregnGrunnlag
         val åpenSluttperiode = utvidetGrunnlagJustert.åpenSluttperiode
 
         val delberegningNettoTilsynsutgiftResultat = delberegningNettoTilsynsutgift(
@@ -253,6 +254,24 @@ class BeregnBarnebidragService : BeregnService() {
         val delberegningEndeligBidragResultat = delberegningEndeligBidrag(mottattGrunnlag)
 
         return delberegningEndeligBidragResultat
+    }
+
+    // Beregning av om endelig bidrag (sluttberegning) er under eller over grense ("12%"-regelen) ifht løpende bidrag
+    fun beregnEndringSjekkGrensePeriode(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
+        secureLogger.debug { "Beregning av om endring i bidrag er over eller under grense - følgende request mottatt: ${tilJson(mottattGrunnlag)}" }
+
+        // Kontroll av inputdata
+        try {
+            // TODO Bør være mulig å ha null i beregnDatoTil?
+            mottattGrunnlag.valider()
+        } catch (e: IllegalArgumentException) {
+            throw IllegalArgumentException("Ugyldig input ved beregning av endring sjekk grense: " + e.message)
+        }
+
+        // Kaller delberegninger
+        val delberegningEndringSjekkGrensePeriodeResultat = delberegningEndringSjekkGrensePeriode(mottattGrunnlag)
+
+        return delberegningEndringSjekkGrensePeriodeResultat
     }
 
     private fun lagResultatPerioder(delberegningEndeligBidragResultat: List<GrunnlagDto>): List<ResultatPeriode> = delberegningEndeligBidragResultat

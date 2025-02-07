@@ -58,4 +58,6 @@ class BeregnBarnebidragApi {
         service.beregnBarnetilleggSkattesats(beregnGrunnlag, rolle)
 
     fun beregnEndeligBidrag(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnEndeligBidrag(beregnGrunnlag)
+
+    fun beregnEndringSjekkGrensePeriode(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnEndringSjekkGrensePeriode(beregnGrunnlag)
 }
