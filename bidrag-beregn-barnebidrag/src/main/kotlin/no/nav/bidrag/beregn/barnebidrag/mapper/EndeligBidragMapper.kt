@@ -179,8 +179,8 @@ internal object EndeligBidragMapper : CoreMapper() {
         }
     }
 
-    private fun mapBeløpshistorikk(beregnGrunnlag: BeregnGrunnlag, grunnlagstype: Grunnlagstype): BeløpshistorikkPeriodeGrunnlag? {
-        return beregnGrunnlag.grunnlagListe
+    private fun mapBeløpshistorikk(beregnGrunnlag: BeregnGrunnlag, grunnlagstype: Grunnlagstype): BeløpshistorikkPeriodeGrunnlag? =
+        beregnGrunnlag.grunnlagListe
             .filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(grunnlagType = grunnlagstype)
             .map {
                 BeløpshistorikkPeriodeGrunnlag(
@@ -189,17 +189,14 @@ internal object EndeligBidragMapper : CoreMapper() {
                 )
             }
             .firstOrNull()
-    }
 
-    private fun mapSøknadGrunnlag(beregnGrunnlag: BeregnGrunnlag): BegrensetRevurderingPeriodeGrunnlag? {
-        return beregnGrunnlag.grunnlagListe
-            .filtrerOgKonverterBasertPåEgenReferanse<SøknadGrunnlag>(Grunnlagstype.SØKNAD)
-            .map {
-                BegrensetRevurderingPeriodeGrunnlag(
-                    referanse = it.referanse,
-                    begrensetRevurdering = it.innhold.begrensetRevurdering,
-                )
-            }
-            .firstOrNull()
-    }
+    private fun mapSøknadGrunnlag(beregnGrunnlag: BeregnGrunnlag): BegrensetRevurderingPeriodeGrunnlag? = beregnGrunnlag.grunnlagListe
+        .filtrerOgKonverterBasertPåEgenReferanse<SøknadGrunnlag>(Grunnlagstype.SØKNAD)
+        .map {
+            BegrensetRevurderingPeriodeGrunnlag(
+                referanse = it.referanse,
+                begrensetRevurdering = it.innhold.begrensetRevurdering,
+            )
+        }
+        .firstOrNull()
 }

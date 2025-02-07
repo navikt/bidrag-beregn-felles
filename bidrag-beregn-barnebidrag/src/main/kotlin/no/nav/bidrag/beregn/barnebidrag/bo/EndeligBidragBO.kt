@@ -8,6 +8,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevn
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningNettoBarnetillegg
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsfradrag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import java.math.BigDecimal
 import java.util.Collections.emptyList
 
@@ -97,4 +98,11 @@ data class EndeligBidragBeregningResultat(
     val begrensetRevurderingUtført: Boolean = false,
     val beregnetBidragErLavereEnnLøpendeBidrag: Boolean = false,
     val grunnlagsreferanseListe: List<String> = emptyList(),
+)
+
+data class BeregnEndeligBidragServiceRespons(
+    val grunnlagListe: List<GrunnlagDto>,
+    val feilmelding: String,
+    val perioderMedFeilListe: List<ÅrMånedsperiode>,
+    val skalKasteBegrensetRevurderingException: Boolean = false,
 )

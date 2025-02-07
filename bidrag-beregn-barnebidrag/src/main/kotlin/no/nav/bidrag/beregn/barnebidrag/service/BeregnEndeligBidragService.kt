@@ -3,6 +3,7 @@ package no.nav.bidrag.beregn.barnebidrag.service
 import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.barnebidrag.beregning.EndeligBidragBeregning
 import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilleggDelberegningBeregningGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.BeregnEndeligBidragServiceRespons
 import no.nav.bidrag.beregn.barnebidrag.bo.BidragsevneDelberegningBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BpAndelUnderholdskostnadDelberegningBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.DeltBostedBeregningGrunnlag
@@ -15,7 +16,6 @@ import no.nav.bidrag.beregn.barnebidrag.mapper.EndeligBidragMapper.mapEndeligBid
 import no.nav.bidrag.beregn.barnebidrag.mapper.NettoBarnetilleggMapper.finnReferanseTilRolle
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnetilleggSkattesatsService.delberegningBarnetilleggSkattesats
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnNettoBarnetilleggService.delberegningNettoBarnetillegg
-import no.nav.bidrag.beregn.core.exception.BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.domene.enums.beregning.Samværsklasse
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -31,7 +31,7 @@ import java.math.BigDecimal
 
 internal object BeregnEndeligBidragService : BeregnService() {
 
-    fun delberegningEndeligBidrag(mottattGrunnlag: BeregnGrunnlag, åpenSluttperiode: Boolean = true): List<GrunnlagDto> {
+    fun delberegningEndeligBidrag(mottattGrunnlag: BeregnGrunnlag, åpenSluttperiode: Boolean = true): BeregnEndeligBidragServiceRespons {
         var delberegningBarnetilleggSkattesatsBPResultat = listOf<GrunnlagDto>()
         var delberegningNettoBarnetilleggBPResultat = listOf<GrunnlagDto>()
         var delberegningBarnetilleggSkattesatsBMResultat = listOf<GrunnlagDto>()
@@ -68,8 +68,8 @@ internal object BeregnEndeligBidragService : BeregnService() {
         // Legger til delberegningsobjekter i grunnlaget
         val utvidetGrunnlag = mottattGrunnlag.copy(
             grunnlagListe =
-                (mottattGrunnlag.grunnlagListe + delberegningNettoBarnetilleggBPResultat + delberegningNettoBarnetilleggBMResultat)
-                    .distinctBy(GrunnlagDto::referanse),
+            (mottattGrunnlag.grunnlagListe + delberegningNettoBarnetilleggBPResultat + delberegningNettoBarnetilleggBMResultat)
+                .distinctBy(GrunnlagDto::referanse),
         )
 
         // Mapper ut grunnlag som skal brukes for å beregne endelig bidrag
@@ -107,13 +107,16 @@ internal object BeregnEndeligBidragService : BeregnService() {
         }
 
         // Løper gjennom resultatlista for å sjekke om det finnes elementer hvor det er begrenset revurdering og beregnet bidrag er lavere enn
-        // løpende bidrag. Dette skal resultere i exception lenger ned i koden.
+        // løpende bidrag. Dette skal resultere i exception lenger ned i koden. Selve exceptionen kastes i BeregnBarnebidragService
         var feilmelding = "Kan ikke fatte vedtak fordi beregnet bidrag for følgende perioder er lavere enn løpende bidrag:"
+        val perioderMedFeilListe = mutableListOf<ÅrMånedsperiode>()
         var skalKasteBegrensetRevurderingException = false
         endeligBidragBeregningResultatListe.forEach {
             if (it.resultat.beregnetBidragErLavereEnnLøpendeBidrag) {
                 skalKasteBegrensetRevurderingException = true
-                feilmelding += " ${it.periode.fom} - ${it.periode.til},"
+                val periodeTil = it.periode.til ?: ""
+                feilmelding += " ${it.periode.fom} - $periodeTil,"
+                perioderMedFeilListe.add(it.periode)
             }
         }
 
@@ -139,12 +142,18 @@ internal object BeregnEndeligBidragService : BeregnService() {
 
         val resultat = resultatGrunnlagListe.distinctBy { it.referanse }.sortedBy { it.referanse }
 
-        // Kaster exception hvis det er utført begrenset revurdering og det er minst ett tilfelle hvor beregnet bidrag er lavere enn løpende bidrag
         if (skalKasteBegrensetRevurderingException) {
-            throw BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException(feilmelding.dropLast(1), resultat)
+            feilmelding = feilmelding.dropLast(1)
+        } else {
+            feilmelding = ""
         }
 
-        return resultat
+        return BeregnEndeligBidragServiceRespons(
+            grunnlagListe = resultat,
+            feilmelding = feilmelding,
+            perioderMedFeilListe = perioderMedFeilListe,
+            skalKasteBegrensetRevurderingException = skalKasteBegrensetRevurderingException,
+        )
     }
 
     // Sjekker om barnetillegg eksisterer for en gitt rolle
@@ -269,9 +278,11 @@ internal object BeregnEndeligBidragService : BeregnService() {
         }
 
         // Legger til referanser for grunnlagsobjekter som ikke er lister (skal refereres av alle perioder hvis det er begrenset revurdering
-        val engangsreferanser = listOfNotNull(endeligBidragPeriodeGrunnlag.beløpshistorikkForskuddPeriodeGrunnlag?.referanse,
+        val engangsreferanser = listOfNotNull(
+            endeligBidragPeriodeGrunnlag.beløpshistorikkForskuddPeriodeGrunnlag?.referanse,
             endeligBidragPeriodeGrunnlag.beløpshistorikkBidragPeriodeGrunnlag?.referanse,
-            endeligBidragPeriodeGrunnlag.begrensetRevurderingPeriodeGrunnlag?.referanse)
+            endeligBidragPeriodeGrunnlag.begrensetRevurderingPeriodeGrunnlag?.referanse,
+        )
 
         return EndeligBidragBeregningGrunnlag(
             bidragsevneBeregningGrunnlag = bidragsevneBeregningGrunnlag,
