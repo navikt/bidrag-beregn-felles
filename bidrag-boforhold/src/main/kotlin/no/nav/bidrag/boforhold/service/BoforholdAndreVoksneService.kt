@@ -132,7 +132,7 @@ internal class BoforholdAndreVoksneService {
                 // Slår sammen sammenhengende perioder med lik Bostatuskode
                 val sammenslåttListe = slåSammenPerioderOgJusterPeriodeTom(sammenslåtteBehandledeOgOffentligePerioder)
 
-                return sammenslåttListe.map {
+                return justerPerioderForOpphørsdato(sammenslåttListe, opphørsdato).map {
                     Bostatus(
                         periodeFom = it.periodeFom,
                         periodeTom = it.periodeTom,
