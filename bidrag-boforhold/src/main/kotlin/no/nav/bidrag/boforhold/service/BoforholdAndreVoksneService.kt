@@ -13,7 +13,11 @@ import java.time.temporal.ChronoUnit
 import java.util.Collections.emptyList
 
 internal class BoforholdAndreVoksneService {
-    fun beregnBoforholdAndreVoksne(virkningstidspunkt: LocalDate, boforholdVoksne: BoforholdVoksneRequest): List<Bostatus> {
+    fun beregnBoforholdAndreVoksne(
+        virkningstidspunkt: LocalDate,
+        boforholdVoksne: BoforholdVoksneRequest,
+        opphørsdato: LocalDate? = null,
+    ): List<Bostatus> {
         secureLogger.info { "Beregner om BP bor med andre voksne. Input: $virkningstidspunkt $boforholdVoksne" }
 
         val offentligeBostatusperioder = mutableListOf<Bostatus>()
@@ -48,14 +52,30 @@ internal class BoforholdAndreVoksneService {
             sammenslåtteOffentligePerioder,
             boforholdVoksne.behandledeBostatusopplysninger,
             boforholdVoksne.endreBostatus,
+            opphørsdato,
         )
     }
-
+    private fun justerPerioderForOpphørsdato(bostatusList: List<Bostatus>, opphørsdato: LocalDate?): List<Bostatus> {
+        if (opphørsdato == null) return bostatusList
+        // Antar at opphørsdato er måneden perioden skal opphøre
+        val justerOpphørsdato = opphørsdato.withDayOfMonth(1).minusDays(1)
+        return bostatusList.filter {
+            it.periodeFom!!.isBefore(justerOpphørsdato)
+        }
+            .map { grunnlag ->
+                if (grunnlag.periodeTom == null || grunnlag.periodeTom.isAfter(justerOpphørsdato)) {
+                    grunnlag.copy(periodeTom = justerOpphørsdato)
+                } else {
+                    grunnlag
+                }
+            }
+    }
     private fun beregnPerioder(
         virkningstidspunkt: LocalDate,
         sammenslåtteOffentligePerioder: List<Bostatus>,
         behandledeBostatusopplysninger: List<Bostatus>,
         endreBostatus: EndreBostatus?,
+        opphørsdato: LocalDate? = null,
     ): List<Bostatus> {
         // 1. endreBoforhold = null. Beregning gjøres da enten på offentlige opplysninger eller behandledeBostatusopplysninger.
         //    1a. Hvis behandledeBostatusopplysninger er utfyllt og innhentedeOffentligeOpplysninger er utfyllt:
@@ -134,7 +154,7 @@ internal class BoforholdAndreVoksneService {
                 }
             }
             // Førstegangs beregning av boforhold for BP. Beregn fra innhentede offentlige opplysninger.
-            return slåSammenPerioderOgJusterPeriodeTom(komplettOffentligTidslinje)
+            return justerPerioderForOpphørsdato(slåSammenPerioderOgJusterPeriodeTom(komplettOffentligTidslinje), opphørsdato)
         }
 
         val oppdaterteBehandledeOpplysninger = behandleEndringer(virkningstidspunkt, endreBostatus, behandledeOpplysninger)
@@ -145,10 +165,13 @@ internal class BoforholdAndreVoksneService {
 
             if (endreBostatus.typeEndring != TypeEndring.NY) {
                 // Feilsituasjon. Må alltid være ny hvis det ikke finnes perioder fra før.
-                return slåSammenPerioderOgJusterPeriodeTom(komplettOffentligTidslinje)
+                return justerPerioderForOpphørsdato(slåSammenPerioderOgJusterPeriodeTom(komplettOffentligTidslinje), opphørsdato)
             }
 
-            return slåSammenPrimærOgSekundærperioder(oppdaterteBehandledeOpplysninger, komplettOffentligTidslinje).map {
+            return justerPerioderForOpphørsdato(
+                slåSammenPrimærOgSekundærperioder(oppdaterteBehandledeOpplysninger, komplettOffentligTidslinje),
+                opphørsdato,
+            ).map {
                 Bostatus(
                     periodeFom = it.periodeFom,
                     periodeTom = it.periodeTom,
@@ -171,7 +194,7 @@ internal class BoforholdAndreVoksneService {
         }
 
         // Det finnes både behandlede og endrede perioder
-        return oppdaterteBehandledeOpplysninger.map {
+        return justerPerioderForOpphørsdato(oppdaterteBehandledeOpplysninger, opphørsdato).map {
             Bostatus(
                 periodeFom = it.periodeFom,
                 periodeTom = it.periodeTom,
