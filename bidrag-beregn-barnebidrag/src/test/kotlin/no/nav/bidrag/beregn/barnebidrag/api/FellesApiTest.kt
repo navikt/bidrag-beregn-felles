@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
+import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
@@ -50,8 +51,13 @@ internal open class FellesApiTest {
         .map { it.referanse }
         .distinct()
 
-    fun hentAlleRefererteReferanser(resultatGrunnlagListe: List<GrunnlagDto>) = resultatGrunnlagListe
-        .flatMap { it.grunnlagsreferanseListe }
+    fun hentAlleRefererteReferanser(resultatGrunnlagListe: List<GrunnlagDto>) =
+        resultatGrunnlagListe.flatMap { it.grunnlagsreferanseListe }
+        .distinct()
+
+    fun hentAlleRefererteReferanser(resultatGrunnlagListe: List<GrunnlagDto>, barnebidragResultat: BeregnetBarnebidragResultat) =
+        (resultatGrunnlagListe.flatMap { it.grunnlagsreferanseListe } +
+            barnebidragResultat.beregnetBarnebidragPeriodeListe.flatMap { it.grunnlagsreferanseListe })
         .distinct()
 
     fun lesFilOgByggRequest(filnavn: String): BeregnGrunnlag {
