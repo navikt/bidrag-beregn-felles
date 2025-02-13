@@ -68,8 +68,8 @@ internal object BeregnEndeligBidragService : BeregnService() {
         // Legger til delberegningsobjekter i grunnlaget
         val utvidetGrunnlag = mottattGrunnlag.copy(
             grunnlagListe =
-            (mottattGrunnlag.grunnlagListe + delberegningNettoBarnetilleggBPResultat + delberegningNettoBarnetilleggBMResultat)
-                .distinctBy(GrunnlagDto::referanse),
+                (mottattGrunnlag.grunnlagListe + delberegningNettoBarnetilleggBPResultat + delberegningNettoBarnetilleggBMResultat)
+                    .distinctBy(GrunnlagDto::referanse),
         )
 
         // Mapper ut grunnlag som skal brukes for å beregne endelig bidrag
@@ -107,12 +107,13 @@ internal object BeregnEndeligBidragService : BeregnService() {
         }
 
         // Løper gjennom resultatlista for å sjekke om det finnes elementer hvor det er begrenset revurdering og beregnet bidrag er lavere enn
-        // løpende bidrag. Dette skal resultere i exception lenger ned i koden. Selve exceptionen kastes i BeregnBarnebidragService
+        // løpende bidrag (hvis beregnet bidrag > 0). Dette skal resultere i exception lenger ned i koden. Selve exceptionen kastes i
+        // BeregnBarnebidragService
         var feilmelding = "Kan ikke fatte vedtak fordi beregnet bidrag for følgende perioder er lavere enn løpende bidrag:"
         val perioderMedFeilListe = mutableListOf<ÅrMånedsperiode>()
         var skalKasteBegrensetRevurderingException = false
         endeligBidragBeregningResultatListe.forEach {
-            if (it.resultat.beregnetBidragErLavereEnnLøpendeBidrag) {
+            if ((it.resultat.beregnetBidragErLavereEnnLøpendeBidrag) && (it.resultat.beregnetBeløp > BigDecimal.ZERO)) {
                 skalKasteBegrensetRevurderingException = true
                 val periodeTil = it.periode.til ?: ""
                 feilmelding += " ${it.periode.fom} - $periodeTil,"
@@ -273,9 +274,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
         }
         // Kaster exception hvis det skal utføres begrenset revurdering, men beløpshistorikk for forskudd eller bidrag mangler
         val utførBegrensetRevurdering = endeligBidragPeriodeGrunnlag.begrensetRevurderingPeriodeGrunnlag?.begrensetRevurdering ?: false
-        if (utførBegrensetRevurdering && (løpendeForskuddBeløp == null || løpendeBidragBeløp == null)) {
-            throw IllegalArgumentException("Beløpshistorikk grunnlag mangler for begrenset revurdering")
-        }
+        require(!(utførBegrensetRevurdering && (løpendeForskuddBeløp == null || løpendeBidragBeløp == null))) { "Beløpshistorikk grunnlag mangler for begrenset revurdering" }
 
         // Legger til referanser for grunnlagsobjekter som ikke er lister (skal refereres av alle perioder hvis det er begrenset revurdering
         val engangsreferanser = listOfNotNull(

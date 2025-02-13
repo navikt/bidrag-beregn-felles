@@ -1,7 +1,7 @@
 {
   "periode": {
     "fom": "2024-08",
-    "til": "2024-09"
+    "til": "2024-11"
   },
   "søknadsbarnReferanse": "Person_Søknadsbarn",
   "grunnlagListe": [
@@ -44,9 +44,9 @@
       "innhold": {
         "periode": {
           "fom": "2024-08",
-          "til": "2024-09"
+          "til": "2024-11"
         },
-        "beløp": 0,
+        "beløp": 10000,
         "skatt": {
           "minstefradrag": 0,
           "skattAlminneligInntekt": 0,
@@ -56,7 +56,7 @@
           "sumSkattFaktor": 0.5
         },
         "underholdBarnEgenHusstand": 0,
-        "sumInntekt25Prosent": 0,
+        "sumInntekt25Prosent": 10000,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
@@ -69,7 +69,7 @@
       "innhold": {
         "periode": {
           "fom": "2024-08",
-          "til": "2024-09"
+          "til": "2024-11"
         },
         "forbruksutgift": 2000,
         "boutgift": 2000,
@@ -89,7 +89,7 @@
       "innhold": {
         "periode": {
           "fom": "2024-08",
-          "til": "2024-09"
+          "til": "2024-11"
         },
         "endeligAndelFaktor": 0.600,
         "andelBeløp": 6000,
@@ -107,7 +107,7 @@
       "innhold": {
         "periode": {
           "fom": "2024-08",
-          "til": "2024-09"
+          "til": "2024-11"
         },
         "beløp": 999,
         "manueltRegistrert": false
@@ -122,7 +122,7 @@
       "innhold": {
         "periode": {
           "fom": "2024-08",
-          "til": "2024-09"
+          "til": "2024-11"
         },
         "samværsklasse": "SAMVÆRSKLASSE_1",
         "manueltRegistrert": false
@@ -137,11 +137,11 @@
       "innhold": {
         "periode": {
           "fom": "2024-08",
-          "til": "2024-09"
+          "til": "2024-11"
         },
         "inntektsrapportering": "AINNTEKT",
         "gjelderBarn": null,
-        "beløp": 0,
+        "beløp": 200000,
         "manueltRegistrert": false,
         "valgt": true
       },
@@ -150,12 +150,37 @@
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
+      "referanse": "Mottatt_InntektRapportering_Barnetillegg_Bidragspliktig_202408",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": "2024-11"
+        },
+        "inntektsrapportering": "BARNETILLEGG",
+        "gjelderBarn": "Person_Søknadsbarn",
+        "beløp": 24000,
+        "manueltRegistrert": false,
+        "valgt": true,
+        "inntekstpostListe": [
+          {
+            "kode": "Inntekt",
+            "inntekstype": "BARNETILLEGG_PENSJON",
+            "beløp": 24000
+          }
+        ]
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragspliktig"
+    },
+    {
       "referanse": "Mottatt_InntektRapportering_Ainntekt_Bidragsmottaker_202408",
       "type": "INNTEKT_RAPPORTERING_PERIODE",
       "innhold": {
         "periode": {
           "fom": "2024-08",
-          "til": "2024-09"
+          "til": "2024-11"
         },
         "inntektsrapportering": "AINNTEKT",
         "gjelderBarn": null,
@@ -173,7 +198,7 @@
       "innhold": {
         "periode": {
           "fom": "2024-08",
-          "til": "2024-09"
+          "til": "2024-11"
         },
         "inntektsrapportering": "BARNETILLEGG",
         "gjelderBarn": "Person_Søknadsbarn",
@@ -200,10 +225,10 @@
           "fom": "2024-08",
           "til": null
         },
-        "totalinntekt": 0,
+        "totalinntekt": 224000.00,
         "kontantstøtte": null,
-        "skattepliktigInntekt": null,
-        "barnetillegg": null,
+        "skattepliktigInntekt": 200000.00,
+        "barnetillegg": 24000.00,
         "utvidetBarnetrygd": null,
         "småbarnstillegg": null
       },
@@ -257,6 +282,13 @@
               "fom": "2024-08",
               "til": "2024-09"
             },
+            "beløp": 4500
+          },
+          {
+            "periode": {
+              "fom": "2024-09",
+              "til": "2024-11"
+            },
             "beløp": 5500
           }
         ]
@@ -277,7 +309,14 @@
           {
             "periode": {
               "fom": "2024-08",
-              "til": "2024-09"
+              "til": "2024-10"
+            },
+            "beløp": 4000
+          },
+          {
+            "periode": {
+              "fom": "2024-10",
+              "til": "2024-11"
             },
             "beløp": 5200
           }
