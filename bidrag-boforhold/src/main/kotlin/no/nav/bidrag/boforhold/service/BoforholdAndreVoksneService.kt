@@ -3,6 +3,7 @@ package no.nav.bidrag.boforhold.service
 import no.nav.bidrag.boforhold.dto.BoforholdVoksneRequest
 import no.nav.bidrag.boforhold.dto.Bostatus
 import no.nav.bidrag.boforhold.dto.EndreBostatus
+import no.nav.bidrag.boforhold.utils.justerBostatusPerioderForOpphørsdato
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.diverse.Kilde
 import no.nav.bidrag.domene.enums.diverse.TypeEndring
@@ -55,21 +56,7 @@ internal class BoforholdAndreVoksneService {
             opphørsdato,
         )
     }
-    private fun justerPerioderForOpphørsdato(bostatusList: List<Bostatus>, opphørsdato: LocalDate?): List<Bostatus> {
-        if (opphørsdato == null) return bostatusList
-        // Antar at opphørsdato er måneden perioden skal opphøre
-        val justerOpphørsdato = opphørsdato.withDayOfMonth(1).minusDays(1)
-        return bostatusList.filter {
-            it.periodeFom!!.isBefore(justerOpphørsdato)
-        }
-            .map { grunnlag ->
-                if (grunnlag.periodeTom == null || grunnlag.periodeTom.isAfter(justerOpphørsdato)) {
-                    grunnlag.copy(periodeTom = justerOpphørsdato)
-                } else {
-                    grunnlag
-                }
-            }
-    }
+
     private fun beregnPerioder(
         virkningstidspunkt: LocalDate,
         sammenslåtteOffentligePerioder: List<Bostatus>,
@@ -132,7 +119,7 @@ internal class BoforholdAndreVoksneService {
                 // Slår sammen sammenhengende perioder med lik Bostatuskode
                 val sammenslåttListe = slåSammenPerioderOgJusterPeriodeTom(sammenslåtteBehandledeOgOffentligePerioder)
 
-                return justerPerioderForOpphørsdato(sammenslåttListe, opphørsdato).map {
+                return sammenslåttListe.justerBostatusPerioderForOpphørsdato(opphørsdato).map {
                     Bostatus(
                         periodeFom = it.periodeFom,
                         periodeTom = it.periodeTom,
@@ -154,7 +141,7 @@ internal class BoforholdAndreVoksneService {
                 }
             }
             // Førstegangs beregning av boforhold for BP. Beregn fra innhentede offentlige opplysninger.
-            return justerPerioderForOpphørsdato(slåSammenPerioderOgJusterPeriodeTom(komplettOffentligTidslinje), opphørsdato)
+            return slåSammenPerioderOgJusterPeriodeTom(komplettOffentligTidslinje).justerBostatusPerioderForOpphørsdato(opphørsdato)
         }
 
         val oppdaterteBehandledeOpplysninger = behandleEndringer(virkningstidspunkt, endreBostatus, behandledeOpplysninger)
@@ -165,13 +152,13 @@ internal class BoforholdAndreVoksneService {
 
             if (endreBostatus.typeEndring != TypeEndring.NY) {
                 // Feilsituasjon. Må alltid være ny hvis det ikke finnes perioder fra før.
-                return justerPerioderForOpphørsdato(slåSammenPerioderOgJusterPeriodeTom(komplettOffentligTidslinje), opphørsdato)
+                return slåSammenPerioderOgJusterPeriodeTom(komplettOffentligTidslinje).justerBostatusPerioderForOpphørsdato(opphørsdato)
             }
 
-            return justerPerioderForOpphørsdato(
-                slåSammenPrimærOgSekundærperioder(oppdaterteBehandledeOpplysninger, komplettOffentligTidslinje),
-                opphørsdato,
-            ).map {
+            return slåSammenPrimærOgSekundærperioder(
+                oppdaterteBehandledeOpplysninger,
+                komplettOffentligTidslinje,
+            ).justerBostatusPerioderForOpphørsdato(opphørsdato).map {
                 Bostatus(
                     periodeFom = it.periodeFom,
                     periodeTom = it.periodeTom,
@@ -194,7 +181,7 @@ internal class BoforholdAndreVoksneService {
         }
 
         // Det finnes både behandlede og endrede perioder
-        return justerPerioderForOpphørsdato(oppdaterteBehandledeOpplysninger, opphørsdato).map {
+        return oppdaterteBehandledeOpplysninger.justerBostatusPerioderForOpphørsdato(opphørsdato).map {
             Bostatus(
                 periodeFom = it.periodeFom,
                 periodeTom = it.periodeTom,
