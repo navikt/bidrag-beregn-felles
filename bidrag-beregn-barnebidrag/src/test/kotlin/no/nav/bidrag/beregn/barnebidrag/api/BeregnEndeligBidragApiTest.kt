@@ -332,7 +332,6 @@ internal class BeregnEndeligBidragApiTest: FellesApiTest() {
         utførBeregningerOgEvaluerResultatEndeligBidrag()
     }
 
-    // TODO: Skal kaste exception
     @Test
     @DisplayName("Endelig bidrag - eksempel 10C - Begrenset revurdering - beregnet bidrag er lavere enn løpende bidrag - skal kaste exception")
     fun testEndeligBidrag_Eksempel10C() {
@@ -458,9 +457,34 @@ internal class BeregnEndeligBidragApiTest: FellesApiTest() {
     }
 
     @Test
-    @DisplayName("Endelig bidrag - eksempel 10I - Begrenset revurdering - flere perioder")
+    @DisplayName("Endelig bidrag - eksempel 10I - Begrenset revurdering - beregnet bidrag er lavere enn løpende bidrag - skal kaste exception")
     fun testEndeligBidrag_Eksempel10I() {
         filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel10I.json"
+        forventetBeregnetBeløp = BigDecimal.ZERO.setScale(2)
+        forventetResultatbeløp = BigDecimal.ZERO.setScale(0)
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(8514.87).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(6000).setScale(2)
+        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(5001).setScale(2)
+        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.ZERO.setScale(2)
+        forventetBruttoBidragEtterBegrensetRevurdering = BigDecimal.ZERO.setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.ZERO.setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.ZERO.setScale(2)
+        forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
+        forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
+        forventetLøpendeForskudd = BigDecimal.valueOf(5500).setScale(0)
+        forventetLøpendeBidrag = BigDecimal.valueOf(5200).setScale(0)
+        forventetBidragJustertNedTilEvne = true
+        forventetBidragJustertNedTil25ProsentAvInntekt = true
+        forventetBegrensetRevurderingUtført = true
+        forventetExceptionBegrensetRevurdering = false
+        forventetAntallBarnetilleggBP = 0
+        utførBeregningerOgEvaluerResultatEndeligBidrag()
+    }
+
+    @Test
+    @DisplayName("Endelig bidrag - eksempel 10J - Begrenset revurdering - flere perioder")
+    fun testEndeligBidrag_Eksempel10J() {
+        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel10J.json"
         utførBeregningerOgEvaluerResultatEndeligBidragFlerePerioderBegrensetRevurdering()
     }
 
