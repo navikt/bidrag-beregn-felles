@@ -143,7 +143,7 @@ internal class BeregnBoforholdService : CoreMapper() {
         // Antar at opphørsdato er måneden perioden skal opphøre
         val justerOpphørsdato = opphørsdato.withDayOfMonth(1).minusDays(1)
         return periodeliste.filter {
-            it.datoFom.isBefore(justerOpphørsdato)
+            it.datoFom.isBefore(opphørsdato)
         }
             .map { grunnlag ->
                 if (grunnlag.datoTil == null || grunnlag.datoTil.isAfter(justerOpphørsdato)) {

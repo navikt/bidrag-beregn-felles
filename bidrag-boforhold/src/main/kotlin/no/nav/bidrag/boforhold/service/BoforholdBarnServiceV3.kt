@@ -3,6 +3,7 @@ package no.nav.bidrag.boforhold.service
 import no.nav.bidrag.boforhold.dto.BoforholdBarnRequestV3
 import no.nav.bidrag.boforhold.dto.BoforholdResponseV2
 import no.nav.bidrag.boforhold.dto.Bostatus
+import no.nav.bidrag.boforhold.utils.justerBoforholdPerioderForOpphørsdato
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.behandling.TypeBehandling
 import no.nav.bidrag.domene.enums.diverse.Kilde
@@ -136,7 +137,7 @@ internal class BoforholdBarnServiceV3 {
                 // Slår sammen sammenhengende perioder med lik Bostatuskode
                 val sammenslåttListe = slåSammenPerioderOgJusterPeriodeTom(sammenslåtteBehandledeOgOffentligePerioder)
 
-                return justerPerioderForOpphørsdato(sammenslåttListe, opphørsdato).map {
+                return sammenslåttListe.justerBoforholdPerioderForOpphørsdato(opphørsdato).map {
                     BoforholdResponseV2(
                         gjelderPersonId = it.gjelderPersonId,
                         periodeFom = it.periodeFom,
@@ -169,7 +170,7 @@ internal class BoforholdBarnServiceV3 {
                 // Justerer offentlige perioder mot 18-årsdager og lager bruddperiode hvis barnet fyllet 18 år i perioden bor i husstanden
                 val offentligePerioderJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, typeBehandling, komplettOffentligTidslinje)
                 // Slår sammen sammenhengende perioder med lik Bostatuskode.
-                return justerPerioderForOpphørsdato(slåSammenPerioderOgJusterPeriodeTom(offentligePerioderJustertMotAttenårsdag), opphørsdato)
+                return slåSammenPerioderOgJusterPeriodeTom(offentligePerioderJustertMotAttenårsdag).justerBoforholdPerioderForOpphørsdato(opphørsdato)
             }
         }
 
@@ -185,10 +186,8 @@ internal class BoforholdBarnServiceV3 {
                 return emptyList()
             }
 
-            return justerPerioderForOpphørsdato(
-                slåSammenPrimærOgSekundærperioder(oppdaterteBehandledeOpplysninger, justerteOffentligePerioder),
-                opphørsdato,
-            )
+            return slåSammenPrimærOgSekundærperioder(oppdaterteBehandledeOpplysninger, justerteOffentligePerioder)
+                .justerBoforholdPerioderForOpphørsdato(opphørsdato)
         }
 
         // Det finnes både behandlede og endrede perioder
@@ -201,7 +200,7 @@ internal class BoforholdBarnServiceV3 {
         val sammenslåtteBehandledeOgOffentligePerioder =
             slåSammenPrimærOgSekundærperioder(oppdaterteBehandledeOpplysninger, offentligePerioderJustertMotAttenårsdag)
 
-        return justerPerioderForOpphørsdato(sammenslåtteBehandledeOgOffentligePerioder, opphørsdato).map {
+        return sammenslåtteBehandledeOgOffentligePerioder.justerBoforholdPerioderForOpphørsdato(opphørsdato).map {
             BoforholdResponseV2(
                 gjelderPersonId = it.gjelderPersonId,
                 periodeFom = it.periodeFom,
@@ -220,21 +219,7 @@ internal class BoforholdBarnServiceV3 {
             )
         }
     }
-    private fun justerPerioderForOpphørsdato(grunnlagsliste: List<BoforholdResponseV2>, opphørsdato: LocalDate?): List<BoforholdResponseV2> {
-        if (opphørsdato == null) return grunnlagsliste
-        // Antar at opphørsdato er måneden perioden skal opphøre
-        val justerOpphørsdato = opphørsdato.withDayOfMonth(1).minusDays(1)
-        return grunnlagsliste.filter {
-            it.periodeFom.isBefore(justerOpphørsdato)
-        }
-            .map { grunnlag ->
-                if (grunnlag.periodeTom == null || grunnlag.periodeTom.isAfter(justerOpphørsdato)) {
-                    grunnlag.copy(periodeTom = justerOpphørsdato)
-                } else {
-                    grunnlag
-                }
-            }
-    }
+
     private fun slåSammenPerioderOgJusterPeriodeTom(liste: List<BoforholdResponseV2>): List<BoforholdResponseV2> {
         var periodeFom: LocalDate? = null
         var periodeTom: LocalDate? = null
