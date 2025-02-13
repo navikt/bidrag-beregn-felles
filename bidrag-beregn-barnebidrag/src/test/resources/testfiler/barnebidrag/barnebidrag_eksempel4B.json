@@ -138,6 +138,41 @@
       "grunnlagsreferanseListe": [],
       "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragspliktig"
+    },
+    {
+      "referanse": "Mottatt_SøknadGrunnlag_202008",
+      "type": "SØKNAD",
+      "innhold": {
+        "mottattDato": "2020-09-01",
+        "søktFraDato": "2020-08-01",
+        "søktAv": "BIDRAGSMOTTAKER",
+        "egetTiltak": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "Mottatt_BeløpshistorikkBidrag_202008",
+      "type": "BELØPSHISTORIKK_BIDRAG",
+      "innhold": {
+        "periode": {
+          "fom": "2020-08",
+          "til": "2021-01"
+        },
+        "beløpshistorikk": [
+          {
+            "periode": {
+              "fom": "2020-08",
+              "til": "2021-01"
+            },
+            "beløp": 3500
+          }
+        ]
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragspliktig"
     }
   ]
 }
