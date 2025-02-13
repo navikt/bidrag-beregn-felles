@@ -32,13 +32,22 @@ class BoforholdApi {
         private val boforholdBarnServiceV3 = BoforholdBarnServiceV3()
         fun beregnBoforholdBarnV3(
             virkningstidspunkt: LocalDate,
+            opphørsdato: LocalDate? = null,
             // Angir hvilken type behandling som kaller beregningen
             typeBehandling: TypeBehandling? = TypeBehandling.FORSKUDD,
             boforholdBarnRequestV3Liste: List<BoforholdBarnRequestV3>,
-        ): List<BoforholdResponseV2> = boforholdBarnServiceV3.beregnBoforholdBarn(virkningstidspunkt, typeBehandling, boforholdBarnRequestV3Liste)
+        ): List<BoforholdResponseV2> = boforholdBarnServiceV3.beregnBoforholdBarn(
+            virkningstidspunkt,
+            typeBehandling,
+            boforholdBarnRequestV3Liste,
+            opphørsdato,
+        )
 
         private val boforholdAndreVoksneService = BoforholdAndreVoksneService()
-        fun beregnBoforholdAndreVoksne(virkningstidspunkt: LocalDate, boforholdVoksneRequest: BoforholdVoksneRequest): List<Bostatus> =
-            boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, boforholdVoksneRequest)
+        fun beregnBoforholdAndreVoksne(
+            virkningstidspunkt: LocalDate,
+            boforholdVoksneRequest: BoforholdVoksneRequest,
+            opphørsdato: LocalDate? = null,
+        ): List<Bostatus> = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, boforholdVoksneRequest, opphørsdato)
     }
 }

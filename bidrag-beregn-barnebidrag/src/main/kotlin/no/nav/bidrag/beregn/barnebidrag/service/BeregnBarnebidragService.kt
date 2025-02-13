@@ -489,7 +489,7 @@ class BeregnBarnebidragService : BeregnService() {
                 åpenSluttperiode = false,
             )
         } else {
-            BeregnGrunnlagJustert(beregnGrunnlag = mottattGrunnlag, åpenSluttperiode = true)
+            BeregnGrunnlagJustert(beregnGrunnlag = mottattGrunnlag, åpenSluttperiode = mottattGrunnlag.opphørSistePeriode == false)
         }
     }
 
