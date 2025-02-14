@@ -130,7 +130,7 @@ val LocalDate?.sluttenAvForrigeMåned get() = this?.withDayOfMonth(1)?.minusDays
 
 // Antar opphørsdato er til dato og ikke til-og.med (starten av måneden det opphøres)
 fun justerPeriodeTilOpphørsdato(oppphørsdato: LocalDate?) = if (oppphørsdato == null ||
-    oppphørsdato.isAfter(sluttenAvForrigeMåned)
+    oppphørsdato.withDayOfMonth(1).minusDays(1).isAfter(sluttenAvForrigeMåned)
 ) {
     null
 } else {
