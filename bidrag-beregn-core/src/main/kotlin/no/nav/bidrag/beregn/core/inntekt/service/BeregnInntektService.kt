@@ -6,6 +6,7 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.util.InntektUtil.erKapitalinntekt
 import no.nav.bidrag.beregn.core.util.InntektUtil.justerKapitalinntekt
+import no.nav.bidrag.beregn.core.util.justerPeriodeTilOpphørsdato
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.inntekt.Inntektstype
@@ -159,7 +160,7 @@ internal class BeregnInntektService {
         }
             .map { grunnlag ->
                 if (grunnlag.periode.til == null || grunnlag.periode.til!!.isAfter(periode.til)) {
-                    grunnlag.copy(periode = grunnlag.periode.copy(til = periode.til))
+                    grunnlag.copy(periode = grunnlag.periode.copy(til = justerPeriodeTilOpphørsdato(periode.til)))
                 } else {
                     grunnlag
                 }

@@ -6,6 +6,7 @@ import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.VoksneIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.core.mapping.tilGrunnlag
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
+import no.nav.bidrag.beregn.core.util.justerPeriodeTilOpphørsdato
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
@@ -141,13 +142,12 @@ internal class BeregnBoforholdService : CoreMapper() {
     fun justerPerioderForOpphørsdato(periodeliste: List<PeriodeCore>, opphørsdato: LocalDate?): List<PeriodeCore> {
         if (opphørsdato == null) return periodeliste
         // Antar at opphørsdato er måneden perioden skal opphøre
-        val justerOpphørsdato = opphørsdato.withDayOfMonth(1).minusDays(1)
         return periodeliste.filter {
             it.datoFom.isBefore(opphørsdato)
         }
             .map { grunnlag ->
-                if (grunnlag.datoTil == null || grunnlag.datoTil.isAfter(justerOpphørsdato)) {
-                    grunnlag.copy(datoTil = justerOpphørsdato)
+                if (grunnlag.datoTil == null || grunnlag.datoTil.isAfter(opphørsdato)) {
+                    grunnlag.copy(datoTil = justerPeriodeTilOpphørsdato(opphørsdato))
                 } else {
                     grunnlag
                 }
