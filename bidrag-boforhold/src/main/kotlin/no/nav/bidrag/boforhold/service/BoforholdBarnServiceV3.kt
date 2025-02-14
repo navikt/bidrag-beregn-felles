@@ -31,19 +31,18 @@ internal class BoforholdBarnServiceV3 {
             .sortedWith(
                 compareBy { it.gjelderPersonId },
             ).forEach { barn ->
-                resultat.addAll(beregnPerioderForBarn(virkningstidspunkt, typeBehandling!!, barn, opphørsdato))
+                resultat.addAll(beregnPerioderForBarn(virkningstidspunkt, typeBehandling!!, barn))
             }
 
         secureLogger.info { "Resultat av beregning bostatus for BM/BPs egne barn V3: $resultat" }
 
-        return resultat
+        return resultat.justerBoforholdPerioderForOpphørsdato(opphørsdato)
     }
 
     private fun beregnPerioderForBarn(
         virkningstidspunkt: LocalDate,
         typeBehandling: TypeBehandling,
         boforholdRequest: BoforholdBarnRequestV3,
-        opphørsdato: LocalDate?,
     ): List<BoforholdResponseV2> {
         // 1. endreBoforhold = null. Beregning gjøres da enten på offentlige opplysninger eller behandledeBostatusopplysninger.
         //    1a. Hvis behandledeBostatusopplysninger er utfyllt og innhentedeOffentligeOpplysninger er utfyllt:
@@ -137,7 +136,7 @@ internal class BoforholdBarnServiceV3 {
                 // Slår sammen sammenhengende perioder med lik Bostatuskode
                 val sammenslåttListe = slåSammenPerioderOgJusterPeriodeTom(sammenslåtteBehandledeOgOffentligePerioder)
 
-                return sammenslåttListe.justerBoforholdPerioderForOpphørsdato(opphørsdato).map {
+                return sammenslåttListe.map {
                     BoforholdResponseV2(
                         gjelderPersonId = it.gjelderPersonId,
                         periodeFom = it.periodeFom,
@@ -170,7 +169,7 @@ internal class BoforholdBarnServiceV3 {
                 // Justerer offentlige perioder mot 18-årsdager og lager bruddperiode hvis barnet fyllet 18 år i perioden bor i husstanden
                 val offentligePerioderJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, typeBehandling, komplettOffentligTidslinje)
                 // Slår sammen sammenhengende perioder med lik Bostatuskode.
-                return slåSammenPerioderOgJusterPeriodeTom(offentligePerioderJustertMotAttenårsdag).justerBoforholdPerioderForOpphørsdato(opphørsdato)
+                return slåSammenPerioderOgJusterPeriodeTom(offentligePerioderJustertMotAttenårsdag)
             }
         }
 
@@ -187,7 +186,6 @@ internal class BoforholdBarnServiceV3 {
             }
 
             return slåSammenPrimærOgSekundærperioder(oppdaterteBehandledeOpplysninger, justerteOffentligePerioder)
-                .justerBoforholdPerioderForOpphørsdato(opphørsdato)
         }
 
         // Det finnes både behandlede og endrede perioder
@@ -200,7 +198,7 @@ internal class BoforholdBarnServiceV3 {
         val sammenslåtteBehandledeOgOffentligePerioder =
             slåSammenPrimærOgSekundærperioder(oppdaterteBehandledeOpplysninger, offentligePerioderJustertMotAttenårsdag)
 
-        return sammenslåtteBehandledeOgOffentligePerioder.justerBoforholdPerioderForOpphørsdato(opphørsdato).map {
+        return sammenslåtteBehandledeOgOffentligePerioder.map {
             BoforholdResponseV2(
                 gjelderPersonId = it.gjelderPersonId,
                 periodeFom = it.periodeFom,
