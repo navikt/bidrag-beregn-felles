@@ -8,28 +8,28 @@ import java.time.LocalDate
 fun List<BoforholdResponseV2>.justerBoforholdPerioderForOpphørsdato(opphørsdato: LocalDate?): List<BoforholdResponseV2> {
     if (opphørsdato == null) return this
     // Antar at opphørsdato er måneden perioden skal opphøre
-    return filter {
-        it.periodeFom.isBefore(opphørsdato)
-    }
-        .map { grunnlag ->
-            if (grunnlag.periodeTom == null || grunnlag.periodeTom.isAfter(opphørsdato)) {
-                grunnlag.copy(periodeTom = justerPeriodeTilOpphørsdato(opphørsdato))
+    val filtrertePerioder = filter { it.periodeFom.isBefore(opphørsdato) }
+    val sistePeriode = filtrertePerioder.maxByOrNull { it.periodeFom }
+    return filtrertePerioder
+        .map { periode ->
+            if (periode == sistePeriode) {
+                periode.copy(periodeTom = justerPeriodeTilOpphørsdato(opphørsdato))
             } else {
-                grunnlag
+                periode
             }
         }
 }
 fun List<Bostatus>.justerBostatusPerioderForOpphørsdato(opphørsdato: LocalDate?): List<Bostatus> {
     if (opphørsdato == null) return this
     // Antar at opphørsdato er måneden perioden skal opphøre
-    return filter {
-        it.periodeFom!!.isBefore(opphørsdato)
-    }
-        .map { grunnlag ->
-            if (grunnlag.periodeTom == null || grunnlag.periodeTom.isAfter(opphørsdato)) {
-                grunnlag.copy(periodeTom = justerPeriodeTilOpphørsdato(opphørsdato))
+    val filtrertePerioder = filter { it.periodeFom!!.isBefore(opphørsdato) }
+    val sistePeriode = filtrertePerioder.maxByOrNull { it.periodeFom!! }
+    return filtrertePerioder
+        .map { periode ->
+            if (periode == sistePeriode) {
+                periode.copy(periodeTom = justerPeriodeTilOpphørsdato(opphørsdato))
             } else {
-                grunnlag
+                periode
             }
         }
 }

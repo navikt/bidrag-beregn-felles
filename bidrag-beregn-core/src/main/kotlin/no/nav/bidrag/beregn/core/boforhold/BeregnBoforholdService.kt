@@ -40,7 +40,7 @@ internal class BeregnBoforholdService : CoreMapper() {
             voksneIHusstandenPeriodeGrunnlagListe = voksneIHusstandenPeriodeCoreListe,
             søknadsbarnReferanse = beregnGrunnlag.søknadsbarnReferanse,
             gjelderReferanse = gjelderReferanse,
-            opphørsdato = if (beregnGrunnlag.opphørSistePeriode == true) beregnGrunnlag.periode.til?.plusMonths(1)?.atDay(1) else null,
+            opphørsdato = if (beregnGrunnlag.opphørSistePeriode) beregnGrunnlag.periode.til?.plusMonths(1)?.atDay(1) else null,
         )
 
         return BeregnBoforholdPeriodeCoreRespons(
