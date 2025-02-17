@@ -91,7 +91,7 @@ class BeregnBarnebidragService : BeregnService() {
                 mottattGrunnlag = mottattGrunnlag,
                 utvidetGrunnlagJustert = utvidetGrunnlagJustert,
                 delberegningEndeligBidragResultat = delberegningEndeligBidragResultat,
-                åpenSluttperiode = åpenSluttperiode
+                åpenSluttperiode = åpenSluttperiode,
             )
             resultatPeriodeListe = sjekkMotMinimumsgrenseForEndringResultat.resultatPeriodeListe
             delberegningEndringSjekkGrensePeriodeResultat = sjekkMotMinimumsgrenseForEndringResultat.delberegningEndringSjekkGrensePeriodeResultat
@@ -346,22 +346,21 @@ class BeregnBarnebidragService : BeregnService() {
         mottattGrunnlag: BeregnGrunnlag,
         utvidetGrunnlagJustert: BeregnGrunnlagJustert,
         delberegningEndeligBidragResultat: BeregnEndeligBidragServiceRespons,
-        åpenSluttperiode: Boolean
+        åpenSluttperiode: Boolean,
     ): SjekkMotMinimumsgrenseForEndringResultat {
-
         // Filtrerer ut beløpshistorikk
         val beløpshistorikkGrunnlag = filtrerBeløpshistorikkGrunnlag(mottattGrunnlag)
 
         // Delberegning for å sjekke om endring i bidrag er over grense (pr periode)
         var grunnlagTilEndringSjekkGrense = utvidetGrunnlagJustert.beregnGrunnlag.copy(
-            grunnlagListe = beløpshistorikkGrunnlag + delberegningEndeligBidragResultat.grunnlagListe
+            grunnlagListe = beløpshistorikkGrunnlag + delberegningEndeligBidragResultat.grunnlagListe,
         )
         val delberegningEndringSjekkGrensePeriodeResultat =
             delberegningEndringSjekkGrensePeriode(grunnlagTilEndringSjekkGrense, åpenSluttperiode)
 
         // Delberegning for å sjekke om endring i bidrag er over grense (totalt)
         grunnlagTilEndringSjekkGrense = grunnlagTilEndringSjekkGrense.copy(
-            grunnlagListe = (grunnlagTilEndringSjekkGrense.grunnlagListe + delberegningEndringSjekkGrensePeriodeResultat)
+            grunnlagListe = (grunnlagTilEndringSjekkGrense.grunnlagListe + delberegningEndringSjekkGrensePeriodeResultat),
         )
         val delberegningEndringSjekkGrenseResultat = delberegningEndringSjekkGrense(grunnlagTilEndringSjekkGrense, åpenSluttperiode)
         val beregnetBidragErOverMinimumsgrenseForEndring = erOverMinimumsgrenseForEndring(delberegningEndringSjekkGrenseResultat)
@@ -369,7 +368,7 @@ class BeregnBarnebidragService : BeregnService() {
         val resultatPeriodeListe = lagResultatPerioder(
             delberegningEndeligBidragResultat = delberegningEndeligBidragResultat.grunnlagListe,
             beregnetBidragErOverMinimumsgrenseForEndring = beregnetBidragErOverMinimumsgrenseForEndring,
-            beløpshistorikkGrunnlag = beløpshistorikkGrunnlag
+            beløpshistorikkGrunnlag = beløpshistorikkGrunnlag,
         )
 
         return SjekkMotMinimumsgrenseForEndringResultat(
@@ -380,18 +379,16 @@ class BeregnBarnebidragService : BeregnService() {
     }
 
     // Sjekk mot minimumsgrense for endring ("12%-regelen") skal bare utføres hvis det ikke er eget tiltak
-    private fun skalSjekkeMotMinimumsgrenseForEndring(mottattGrunnlag: BeregnGrunnlag): Boolean =
-        mottattGrunnlag.grunnlagListe
-            .filtrerOgKonverterBasertPåEgenReferanse<SøknadGrunnlag>(Grunnlagstype.SØKNAD)
-            .map { !it.innhold.egetTiltak }
-            .firstOrNull() ?: true
+    private fun skalSjekkeMotMinimumsgrenseForEndring(mottattGrunnlag: BeregnGrunnlag): Boolean = mottattGrunnlag.grunnlagListe
+        .filtrerOgKonverterBasertPåEgenReferanse<SøknadGrunnlag>(Grunnlagstype.SØKNAD)
+        .map { !it.innhold.egetTiltak }
+        .firstOrNull() ?: true
 
     // Henter ut verdi fra delberegning for endring sjekk av grense (her skal det være kun en forekomst)
-    private fun erOverMinimumsgrenseForEndring(endringSjekkGrenseGrunnlagliste: List<GrunnlagDto>): Boolean =
-        endringSjekkGrenseGrunnlagliste
-            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndringSjekkGrense>(grunnlagType = Grunnlagstype.DELBEREGNING_ENDRING_SJEKK_GRENSE)
-            .map { it.innhold.endringErOverGrense }
-            .firstOrNull() ?: true
+    private fun erOverMinimumsgrenseForEndring(endringSjekkGrenseGrunnlagliste: List<GrunnlagDto>): Boolean = endringSjekkGrenseGrunnlagliste
+        .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndringSjekkGrense>(grunnlagType = Grunnlagstype.DELBEREGNING_ENDRING_SJEKK_GRENSE)
+        .map { it.innhold.endringErOverGrense }
+        .firstOrNull() ?: true
 
     private fun filtrerBeløpshistorikkGrunnlag(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> =
         beregnGrunnlag.grunnlagListe.filter { it.type == Grunnlagstype.BELØPSHISTORIKK_BIDRAG }
@@ -399,27 +396,25 @@ class BeregnBarnebidragService : BeregnService() {
     // Standardlogikk for å lage resultatperioder
     private fun lagResultatPerioder(
         delberegningEndeligBidragResultat: List<GrunnlagDto>,
-        beløpshistorikkPeriodeGrunnlagReferanse: String? = null
-    ): List<ResultatPeriode> =
-        delberegningEndeligBidragResultat
-            .filtrerOgKonverterBasertPåEgenReferanse<SluttberegningBarnebidrag>(Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG)
-            .map {
-                ResultatPeriode(
-                    periode = it.innhold.periode,
-                    resultat = ResultatBeregning(
-                        beløp = it.innhold.resultatBeløp,
-                    ),
-                    grunnlagsreferanseListe = listOfNotNull(it.referanse, beløpshistorikkPeriodeGrunnlagReferanse),
-                )
-            }
+        beløpshistorikkPeriodeGrunnlagReferanse: String? = null,
+    ): List<ResultatPeriode> = delberegningEndeligBidragResultat
+        .filtrerOgKonverterBasertPåEgenReferanse<SluttberegningBarnebidrag>(Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG)
+        .map {
+            ResultatPeriode(
+                periode = it.innhold.periode,
+                resultat = ResultatBeregning(
+                    beløp = it.innhold.resultatBeløp!!,
+                ),
+                grunnlagsreferanseListe = listOfNotNull(it.referanse, beløpshistorikkPeriodeGrunnlagReferanse),
+            )
+        }
 
     // Lager resultatperioder basert på beløpshistorikk hvis beregnet bidrag ikke er over minimumsgrense for endring
     private fun lagResultatPerioder(
         delberegningEndeligBidragResultat: List<GrunnlagDto>,
         beregnetBidragErOverMinimumsgrenseForEndring: Boolean,
-        beløpshistorikkGrunnlag: List<GrunnlagDto>
+        beløpshistorikkGrunnlag: List<GrunnlagDto>,
     ): List<ResultatPeriode> {
-
         // Henter beløpshistorikk (det finnes kun en forekomst, som dekker hele perioden)
         val beløpshistorikkPeriodeGrunnlag = beløpshistorikkGrunnlag
             .filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(Grunnlagstype.BELØPSHISTORIKK_BIDRAG)
@@ -457,7 +452,7 @@ class BeregnBarnebidragService : BeregnService() {
                     ),
                     grunnlagsreferanseListe = listOf(beløpshistorikkPeriodeGrunnlag.referanse) + finnSluttberegningReferanserSomMatcher(
                         periode = it.periode,
-                        sluttberegningPeriodeGrunnlagListe = sluttberegningPeriodeGrunnlagListe
+                        sluttberegningPeriodeGrunnlagListe = sluttberegningPeriodeGrunnlagListe,
                     ),
                 )
             }
@@ -467,12 +462,10 @@ class BeregnBarnebidragService : BeregnService() {
 
     private fun finnSluttberegningReferanserSomMatcher(
         periode: ÅrMånedsperiode,
-        sluttberegningPeriodeGrunnlagListe: List<SluttberegningPeriodeGrunnlag>
-    ): List<String> {
-        return sluttberegningPeriodeGrunnlagListe
-            .filter { it.sluttberegningPeriode.periode.inneholder(periode) }
-            .map { it.referanse }
-    }
+        sluttberegningPeriodeGrunnlagListe: List<SluttberegningPeriodeGrunnlag>,
+    ): List<String> = sluttberegningPeriodeGrunnlagListe
+        .filter { it.sluttberegningPeriode.periode.inneholder(periode) }
+        .map { it.referanse }
 
     // Sjekker om søknadsbarnet fyller 18 år i beregningsperioden. Justerer i så fall til-periode.
     private fun justerTilPeriodeHvisBarnetBlir18ÅrIBeregningsperioden(mottattGrunnlag: BeregnGrunnlag): BeregnGrunnlagJustert {
@@ -504,6 +497,6 @@ class BeregnBarnebidragService : BeregnService() {
     data class SjekkMotMinimumsgrenseForEndringResultat(
         val resultatPeriodeListe: List<ResultatPeriode>,
         val delberegningEndringSjekkGrensePeriodeResultat: List<GrunnlagDto>,
-        val delberegningEndringSjekkGrenseResultat: List<GrunnlagDto>
+        val delberegningEndringSjekkGrenseResultat: List<GrunnlagDto>,
     )
 }

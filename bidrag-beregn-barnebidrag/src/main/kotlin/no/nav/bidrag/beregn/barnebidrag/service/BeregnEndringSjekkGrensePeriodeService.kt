@@ -22,7 +22,6 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningref
 internal object BeregnEndringSjekkGrensePeriodeService : BeregnService() {
 
     fun delberegningEndringSjekkGrensePeriode(mottattGrunnlag: BeregnGrunnlag, åpenSluttperiode: Boolean = true): List<GrunnlagDto> {
-
         // Lager sjablon grunnlagsobjekter
         val sjablonGrunnlag = lagSjablonGrunnlagsobjekter(periode = mottattGrunnlag.periode) { it.endringSjekkGrense }
 
@@ -77,7 +76,6 @@ internal object BeregnEndringSjekkGrensePeriodeService : BeregnService() {
         return resultatGrunnlagListe.sortedBy { it.referanse }
     }
 
-
     // Lager grunnlagsobjekter for sjabloner (ett objekt pr sjablonverdi som er innenfor perioden)
     private fun lagSjablonGrunnlagsobjekter(periode: ÅrMånedsperiode, delberegning: (SjablonTallNavn) -> Boolean): List<GrunnlagDto> =
         mapSjablonSjablontallGrunnlag(periode = periode, sjablonListe = SjablonProvider.hentSjablontall(), delberegning = delberegning)
@@ -89,8 +87,10 @@ internal object BeregnEndringSjekkGrensePeriodeService : BeregnService() {
     ): List<ÅrMånedsperiode> {
         val periodeListe = sequenceOf(grunnlagListe.beregningsperiode)
             .plus(grunnlagListe.sluttberegningPeriodeGrunnlagListe.asSequence().map { it.sluttberegningPeriode.periode })
-            .plus(grunnlagListe.beløpshistorikkBidragPeriodeGrunnlag?.beløpshistorikkPeriode?.beløpshistorikk
-                ?.asSequence()?.map { it.periode } ?: emptySequence())
+            .plus(
+                grunnlagListe.beløpshistorikkBidragPeriodeGrunnlag?.beløpshistorikkPeriode?.beløpshistorikk
+                    ?.asSequence()?.map { it.periode } ?: emptySequence(),
+            )
             .plus(grunnlagListe.sjablonSjablontallPeriodeGrunnlagListe.asSequence().map { it.sjablonSjablontallPeriode.periode })
 
         return lagBruddPeriodeListe(periodeListe, beregningsperiode)
@@ -100,28 +100,26 @@ internal object BeregnEndringSjekkGrensePeriodeService : BeregnService() {
     private fun lagBeregningGrunnlag(
         periodeGrunnlag: EndringSjekkGrensePeriodePeriodeGrunnlag,
         bruddPeriode: ÅrMånedsperiode,
-    ): EndringSjekkGrensePeriodeBeregningGrunnlag {
-        return EndringSjekkGrensePeriodeBeregningGrunnlag(
-            beregnetBidragBeregningGrunnlag = periodeGrunnlag.sluttberegningPeriodeGrunnlagListe
-                .firstOrNull { it.sluttberegningPeriode.periode.inneholder(bruddPeriode) }
-                ?.let { BeregnetBidragBeregningGrunnlag(referanse = it.referanse, beløp = it.sluttberegningPeriode.beregnetBeløp) }
-                ?: throw IllegalArgumentException("Sluttberegning grunnlag mangler for periode $bruddPeriode"),
-            løpendeBidragBeregningGrunnlag = periodeGrunnlag.beløpshistorikkBidragPeriodeGrunnlag?.run {
-                beløpshistorikkPeriode.beløpshistorikk.firstOrNull { it.periode.inneholder(bruddPeriode) }?.let {
-                    LøpendeBidragBeregningGrunnlag(referanse = referanse, beløp = it.beløp)
-                }
+    ): EndringSjekkGrensePeriodeBeregningGrunnlag = EndringSjekkGrensePeriodeBeregningGrunnlag(
+        beregnetBidragBeregningGrunnlag = periodeGrunnlag.sluttberegningPeriodeGrunnlagListe
+            .firstOrNull { it.sluttberegningPeriode.periode.inneholder(bruddPeriode) }
+            ?.let { BeregnetBidragBeregningGrunnlag(referanse = it.referanse, beløp = it.sluttberegningPeriode.beregnetBeløp!!) }
+            ?: throw IllegalArgumentException("Sluttberegning grunnlag mangler for periode $bruddPeriode"),
+        løpendeBidragBeregningGrunnlag = periodeGrunnlag.beløpshistorikkBidragPeriodeGrunnlag?.run {
+            beløpshistorikkPeriode.beløpshistorikk.firstOrNull { it.periode.inneholder(bruddPeriode) }?.let {
+                LøpendeBidragBeregningGrunnlag(referanse = referanse, beløp = it.beløp)
+            }
+        },
+        sjablonSjablontallBeregningGrunnlagListe = periodeGrunnlag.sjablonSjablontallPeriodeGrunnlagListe
+            .filter { it.sjablonSjablontallPeriode.periode.inneholder(bruddPeriode) }
+            .map {
+                SjablonSjablontallBeregningGrunnlag(
+                    referanse = it.referanse,
+                    type = it.sjablonSjablontallPeriode.sjablon.navn,
+                    verdi = it.sjablonSjablontallPeriode.verdi.toDouble(),
+                )
             },
-            sjablonSjablontallBeregningGrunnlagListe = periodeGrunnlag.sjablonSjablontallPeriodeGrunnlagListe
-                .filter { it.sjablonSjablontallPeriode.periode.inneholder(bruddPeriode) }
-                .map {
-                    SjablonSjablontallBeregningGrunnlag(
-                        referanse = it.referanse,
-                        type = it.sjablonSjablontallPeriode.sjablon.navn,
-                        verdi = it.sjablonSjablontallPeriode.verdi.toDouble(),
-                    )
-                },
-        )
-    }
+    )
 
     private fun mapResultatGrunnlag(
         beregningResultatListe: List<EndringSjekkGrensePeriodePeriodeResultat>,
