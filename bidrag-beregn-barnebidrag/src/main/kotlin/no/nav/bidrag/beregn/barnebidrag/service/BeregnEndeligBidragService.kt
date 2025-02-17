@@ -152,7 +152,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
             grunnlagListe = resultat,
             feilmelding = feilmelding,
             perioderMedFeilListe = perioderMedFeilListe,
-            skalKasteBegrensetRevurderingException = skalKasteBegrensetRevurderingException
+            skalKasteBegrensetRevurderingException = skalKasteBegrensetRevurderingException,
         )
     }
 

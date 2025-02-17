@@ -63,7 +63,7 @@ internal object BpAndelUnderholdskostnadBeregning {
                 .filter { it.isNotBlank() } +
                 grunnlag.sjablonSjablontallBeregningGrunnlagListe.map { it.referanse },
 
-            )
+        )
     }
 
     private fun hentSjablonverdier(grunnlag: BpAndelUnderholdskostnadBeregningGrunnlag) {
