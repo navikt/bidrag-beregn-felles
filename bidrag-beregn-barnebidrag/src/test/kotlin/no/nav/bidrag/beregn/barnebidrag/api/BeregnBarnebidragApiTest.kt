@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.barnebidrag.api
 
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
 import no.nav.bidrag.beregn.core.exception.BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException
+import no.nav.bidrag.beregn.core.exception.BegrensetRevurderingLøpendeForskuddManglerException
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
@@ -90,7 +91,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
     private var forventetIkkeOmsorgForBarnet: Boolean = false
     private var forventetFeilmelding = ""
     private var forventetPerioderMedFeilListe = emptyList<ÅrMånedsperiode>()
-    private var forventetExceptionBegrensetRevurdering = false
+    private var forventetExceptionBegrensetRevurderingBeregnetBidragErLavereEnnLøpendeBidrag = false
+    private var forventetExceptionBegrensetRevurderingLøpendeForskuddMangler = false
 
     // Sjabloner
     private var forventetAntallSjablonSjablontall: Int = 11
@@ -328,9 +330,9 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
     }
 
     @Test
-    @DisplayName("Barnebidrag - eksempel 3 - begrenset revurdering som skal kaste exception")
-    fun testBarnebidrag_Eksempel03() {
-        filnavn = "src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel3.json"
+    @DisplayName("Barnebidrag - eksempel 3A - begrenset revurdering som skal kaste exception fordi beregnet bidrag er lavere enn løpende bidrag")
+    fun testBarnebidrag_Eksempel03A() {
+        filnavn = "src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel3A.json"
 
         // Beregningsperiode
         forventetBeregningsperiode = ÅrMånedsperiode(YearMonth.parse("2020-08"), null)
@@ -378,7 +380,68 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
         forventetBegrensetRevurderingUtført = true
         forventetFeilmelding = "Kan ikke fatte vedtak fordi beregnet bidrag for følgende perioder er lavere enn løpende bidrag: 2020-08 - "
         forventetPerioderMedFeilListe = listOf(ÅrMånedsperiode(YearMonth.parse("2020-08"), null))
-        forventetExceptionBegrensetRevurdering = true
+        forventetExceptionBegrensetRevurderingBeregnetBidragErLavereEnnLøpendeBidrag = true
+
+        // Grunnlag
+        forventetAntallBarnetilleggBP = 0
+        forventetAntallBarnetilleggBM = 0
+
+        utførBeregningerOgEvaluerResultatBarnebidrag()
+    }
+
+    @Test
+    @DisplayName("Barnebidrag - eksempel 3B - begrenset revurdering som skal kaste exception fordi løpende forskudd mangler i starten av beregningsperioden")
+    fun testBarnebidrag_Eksempel03B() {
+        filnavn = "src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel3B.json"
+
+        // Beregningsperiode
+        forventetBeregningsperiode = ÅrMånedsperiode(YearMonth.parse("2020-08"), null)
+
+        // Resultat
+        forventetEndeligResultatbeløp = BigDecimal.ZERO.setScale(0)
+
+        // Bidragsevne
+        forventetBidragsevne = BigDecimal.valueOf(16357.14).setScale(2)
+        forventetMinstefradrag = BigDecimal.valueOf(87450.00).setScale(2)
+        forventetSkattAlminneligInntekt = BigDecimal.valueOf(79475.00).setScale(2)
+        forventetTrinnskatt = BigDecimal.valueOf(11711.30).setScale(2)
+        forventetTrygdeavgift = BigDecimal.valueOf(41000.00).setScale(2)
+        forventetSumSkatt = BigDecimal.valueOf(132186.30).setScale(2)
+        forventetSumSkattFaktor = BigDecimal.valueOf(0.2643726000).setScale(10)
+        forventetUnderholdBarnEgenHusstand = BigDecimal.ZERO.setScale(2)
+        forventetSumInntekt25Prosent = BigDecimal.valueOf(10416.67).setScale(2)
+
+        // Underholdskostnad
+        forventetUnderholdskostnad = BigDecimal.valueOf(5999.00).setScale(2)
+
+        // BP andel underholdskostnad
+        forventetEndeligAndelFaktor = BigDecimal.valueOf(0.625).setScale(10)
+        forventetAndelBeløp = BigDecimal.valueOf(3749.38).setScale(2)
+        forventetBeregnetAndelFaktor = BigDecimal.valueOf(0.625).setScale(10)
+        forventetBarnEndeligInntekt = BigDecimal.ZERO.setScale(2)
+
+        // Samværsfradrag
+        forventetSamværsfradrag = BigDecimal.valueOf(256.00).setScale(2)
+
+        // Endelig bidrag
+        forventetBeregnetBeløp = BigDecimal.ZERO.setScale(2)
+        forventetResultatbeløp = BigDecimal.ZERO.setScale(0)
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(5999).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(3749.38).setScale(2)
+        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(3493.38).setScale(2)
+        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(3749.38).setScale(2)
+        forventetBruttoBidragEtterBegrensetRevurdering = BigDecimal.valueOf(256).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(256).setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.ZERO.setScale(2)
+        forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
+        forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
+        forventetLøpendeForskudd = BigDecimal.ZERO.setScale(0)
+        forventetLøpendeBidrag = BigDecimal.valueOf(5200).setScale(0)
+        forventetBidragJustertTilForskuddssats = true
+        forventetBegrensetRevurderingUtført = true
+        forventetFeilmelding = "Kan ikke fatte vedtak fordi løpende forskudd mangler i første beregningsperiode: 2020-08 - "
+        forventetPerioderMedFeilListe = listOf(ÅrMånedsperiode(YearMonth.parse("2020-08"), null))
+        forventetExceptionBegrensetRevurderingLøpendeForskuddMangler = true
 
         // Grunnlag
         forventetAntallBarnetilleggBP = 0
@@ -617,13 +680,20 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
     private fun utførBeregningerOgEvaluerResultatBarnebidrag() {
         val request = lesFilOgByggRequest(filnavn)
 
-        val exception: BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException
+        val exception: RuntimeException
         var feilmelding = ""
         var perioderMedFeilListe = emptyList<ÅrMånedsperiode>()
         val barnebidragResultat: BeregnetBarnebidragResultat
 
-        if (forventetExceptionBegrensetRevurdering == true) {
+        if (forventetExceptionBegrensetRevurderingBeregnetBidragErLavereEnnLøpendeBidrag == true) {
             exception = assertThrows(BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException::class.java) {
+                api.beregn(request)
+            }
+            barnebidragResultat = exception.data
+            perioderMedFeilListe = exception.periodeListe
+            feilmelding = exception.message!!
+        } else if (forventetExceptionBegrensetRevurderingLøpendeForskuddMangler == true) {
+            exception = assertThrows(BegrensetRevurderingLøpendeForskuddManglerException::class.java) {
                 api.beregn(request)
             }
             barnebidragResultat = exception.data

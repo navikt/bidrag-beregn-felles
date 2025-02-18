@@ -9,7 +9,7 @@ import java.math.BigDecimal
 
 internal object EndeligBidragBeregning {
 
-    fun beregn(grunnlag: EndeligBidragBeregningGrunnlag): EndeligBidragBeregningResultat {
+    fun beregn(grunnlag: EndeligBidragBeregningGrunnlag, førsteElement: Boolean): EndeligBidragBeregningResultat {
         // Hvis søknadsbarnet bor hos BP gjøres det ingen videre beregning (skal resultere i avslag og bidragsbeløp settes til null
         if (grunnlag.søknadsbarnetBorHosBpGrunnlag.søknadsbarnetBorHosBp) {
             return EndeligBidragBeregningResultat(
@@ -61,6 +61,12 @@ internal object EndeligBidragBeregning {
             val beregnetBidragErLavereEnnLøpendeBidrag =
                 grunnlag.utførBegrensetRevurdering && (beregnetBeløp.avrundetTilNærmesteTier < grunnlag.løpendeBidragBeløp)
 
+            // Setter et flagg hvis det er begrenset revurdering, løpende forskudd er 0 (dvs. at løpende forskudd mangler for den aktuelle perioden)
+            // og det er første periode som beregnes (det er kun hvis løpende forskudd mangler i starten av beregningsperioden at det skal kastes
+            // exception)
+            val løpendeForskuddMangler =
+                grunnlag.utførBegrensetRevurdering && førsteElement && (grunnlag.løpendeForskuddBeløp == BigDecimal.ZERO)
+
             return EndeligBidragBeregningResultat(
                 beregnetBeløp = beregnetBeløp.avrundetMedToDesimaler,
                 resultatBeløp = beregnetBeløp.avrundetTilNærmesteTier,
@@ -76,6 +82,7 @@ internal object EndeligBidragBeregning {
                 bidragJustertTilForskuddssats = bidragJustertTilForskuddssats,
                 begrensetRevurderingUtført = grunnlag.utførBegrensetRevurdering,
                 beregnetBidragErLavereEnnLøpendeBidrag = beregnetBidragErLavereEnnLøpendeBidrag,
+                løpendeForskuddMangler = løpendeForskuddMangler,
                 grunnlagsreferanseListe = listOfNotNull(
                     grunnlag.bidragsevneBeregningGrunnlag.referanse,
                     grunnlag.underholdskostnadBeregningGrunnlag.referanse,
@@ -148,6 +155,12 @@ internal object EndeligBidragBeregning {
         val beregnetBidragErLavereEnnLøpendeBidrag =
             grunnlag.utførBegrensetRevurdering && (nettoBidragEtterSamværsfradrag.avrundetTilNærmesteTier <= grunnlag.løpendeBidragBeløp)
 
+        // Setter et flagg hvis det er begrenset revurdering, løpende forskudd er 0 (dvs. at løpende forskudd mangler for den aktuelle perioden)
+        // og det er første periode som beregnes (det er kun hvis løpende forskudd mangler i starten av beregningsperioden at det skal kastes
+        // exception)
+        val løpendeForskuddMangler =
+            grunnlag.utførBegrensetRevurdering && førsteElement && (grunnlag.løpendeForskuddBeløp == BigDecimal.ZERO)
+
         return EndeligBidragBeregningResultat(
             beregnetBeløp = nettoBidragEtterSamværsfradrag.avrundetMedToDesimaler,
             resultatBeløp = nettoBidragEtterSamværsfradrag.avrundetTilNærmesteTier,
@@ -167,6 +180,7 @@ internal object EndeligBidragBeregning {
             bidragJustertTilForskuddssats = bidragJustertTilForskuddssats,
             begrensetRevurderingUtført = grunnlag.utførBegrensetRevurdering,
             beregnetBidragErLavereEnnLøpendeBidrag = beregnetBidragErLavereEnnLøpendeBidrag,
+            løpendeForskuddMangler = løpendeForskuddMangler,
             grunnlagsreferanseListe = listOfNotNull(
                 grunnlag.bidragsevneBeregningGrunnlag.referanse,
                 grunnlag.underholdskostnadBeregningGrunnlag.referanse,

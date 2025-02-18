@@ -15,6 +15,7 @@ import no.nav.bidrag.beregn.barnebidrag.service.BeregnNettoTilsynsutgiftService.
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnSamværsfradragService.delberegningSamværsfradrag
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnUnderholdskostnadService.delberegningUnderholdskostnad
 import no.nav.bidrag.beregn.core.exception.BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException
+import no.nav.bidrag.beregn.core.exception.BegrensetRevurderingLøpendeForskuddManglerException
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -34,7 +35,6 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.SøknadGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import java.math.BigDecimal
 import java.time.YearMonth
-import java.util.Collections.emptyList
 
 class BeregnBarnebidragService : BeregnService() {
 
@@ -115,12 +115,21 @@ class BeregnBarnebidragService : BeregnService() {
         )
 
         // Kaster exception hvis det er utført begrenset revurdering og det er minst ett tilfelle hvor beregnet bidrag er lavere enn løpende bidrag
+        // eller hvis løpende forskudd mangler i første beregningsperiode
         if (delberegningEndeligBidragResultat.skalKasteBegrensetRevurderingException) {
-            throw BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException(
-                melding = delberegningEndeligBidragResultat.feilmelding,
-                periodeListe = delberegningEndeligBidragResultat.perioderMedFeilListe,
-                data = beregnetBarnebidragResultat,
-            )
+            if (delberegningEndeligBidragResultat.feilmelding.contains("løpende forskudd mangler")) {
+                throw BegrensetRevurderingLøpendeForskuddManglerException(
+                    melding = delberegningEndeligBidragResultat.feilmelding,
+                    periodeListe = delberegningEndeligBidragResultat.perioderMedFeilListe,
+                    data = beregnetBarnebidragResultat,
+                )
+            } else {
+                throw BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException(
+                    melding = delberegningEndeligBidragResultat.feilmelding,
+                    periodeListe = delberegningEndeligBidragResultat.perioderMedFeilListe,
+                    data = beregnetBarnebidragResultat,
+                )
+            }
         }
 
         secureLogger.debug { "Beregning av barnebidrag - følgende respons returnert: ${tilJson(beregnetBarnebidragResultat)}" }

@@ -86,7 +86,9 @@ internal object BeregnEndeligBidragService : BeregnService() {
         val endeligBidragBeregningResultatListe = mutableListOf<EndeligBidragPeriodeResultat>()
 
         // Løper gjennom hver bruddperiode og beregner endelig bidrag
-        bruddPeriodeListe.forEach { bruddPeriode ->
+        bruddPeriodeListe.forEachIndexed { indeks, bruddPeriode ->
+            val førsteElement = indeks == 0
+
             val endeligBidragBeregningGrunnlag = lagEndeligBidragBeregningGrunnlag(
                 endeligBidragPeriodeGrunnlag = endeligBidragPeriodeGrunnlag,
                 bruddPeriode = bruddPeriode,
@@ -94,7 +96,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
             endeligBidragBeregningResultatListe.add(
                 EndeligBidragPeriodeResultat(
                     periode = bruddPeriode,
-                    resultat = EndeligBidragBeregning.beregn(endeligBidragBeregningGrunnlag),
+                    resultat = EndeligBidragBeregning.beregn(endeligBidragBeregningGrunnlag, førsteElement),
                 ),
             )
         }
@@ -108,18 +110,32 @@ internal object BeregnEndeligBidragService : BeregnService() {
             }
         }
 
-        // Løper gjennom resultatlista for å sjekke om det finnes elementer hvor det er begrenset revurdering og beregnet bidrag er lavere enn
-        // løpende bidrag (hvis beregnet bidrag > 0). Dette skal resultere i exception lenger ned i koden. Selve exceptionen kastes i
-        // BeregnBarnebidragService
-        var feilmelding = "Kan ikke fatte vedtak fordi beregnet bidrag for følgende perioder er lavere enn løpende bidrag:"
+        // Løper gjennom resultatlista for å sjekke om:
+        // - Det finnes elementer hvor det er begrenset revurdering og beregnet bidrag er lavere enn løpende bidrag (hvis beregnet bidrag > 0)
+        // - Det finnes elementer hvor løpende forskudd mangler (vil kun være aktuelt i første element)
+        // Disse situasjonene skal resultere i exception lenger ned i koden. Selve exceptionen kastes i BeregnBarnebidragService
+        // Exception hvor løpende forskudd mangler har forrang
+        var feilmelding = "Kan ikke fatte vedtak fordi løpende forskudd mangler i første beregningsperiode:"
         val perioderMedFeilListe = mutableListOf<ÅrMånedsperiode>()
         var skalKasteBegrensetRevurderingException = false
         endeligBidragBeregningResultatListe.forEach {
-            if ((it.resultat.beregnetBidragErLavereEnnLøpendeBidrag) && (it.resultat.beregnetBeløp!! > BigDecimal.ZERO)) {
+            if (it.resultat.løpendeForskuddMangler) {
                 skalKasteBegrensetRevurderingException = true
                 val periodeTil = it.periode.til ?: ""
                 feilmelding += " ${it.periode.fom} - $periodeTil,"
                 perioderMedFeilListe.add(it.periode)
+            }
+        }
+
+        if (!skalKasteBegrensetRevurderingException) {
+            feilmelding = "Kan ikke fatte vedtak fordi beregnet bidrag for følgende perioder er lavere enn løpende bidrag:"
+            endeligBidragBeregningResultatListe.forEach {
+                if ((it.resultat.beregnetBidragErLavereEnnLøpendeBidrag) && (it.resultat.beregnetBeløp!! > BigDecimal.ZERO)) {
+                    skalKasteBegrensetRevurderingException = true
+                    val periodeTil = it.periode.til ?: ""
+                    feilmelding += " ${it.periode.fom} - $periodeTil,"
+                    perioderMedFeilListe.add(it.periode)
+                }
             }
         }
 

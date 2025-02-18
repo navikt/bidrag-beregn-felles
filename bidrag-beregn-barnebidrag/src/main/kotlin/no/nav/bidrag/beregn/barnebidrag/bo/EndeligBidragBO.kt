@@ -105,6 +105,7 @@ data class EndeligBidragBeregningResultat(
     val begrensetRevurderingUtført: Boolean = false,
     val ikkeOmsorgForBarnet: Boolean = false,
     val beregnetBidragErLavereEnnLøpendeBidrag: Boolean = false,
+    val løpendeForskuddMangler: Boolean = false,
     val grunnlagsreferanseListe: List<String> = emptyList(),
 )
 

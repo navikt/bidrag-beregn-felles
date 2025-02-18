@@ -20,8 +20,19 @@ class ExceptionHandlerAdvice {
         .build<Any>()
 
     @ExceptionHandler(BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException::class)
-    fun handleBegrensetRevurderingException(
+    fun handleBegrensetRevurderingLikEllerLavereEnnLøpendeBidragException(
         exception: BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException,
+    ): ResponseEntity<Map<String, Any>> = ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+        .body(
+            mapOf(
+                "melding" to exception.melding,
+                "data" to exception.data,
+            ),
+        )
+
+    @ExceptionHandler(BegrensetRevurderingLøpendeForskuddManglerException::class)
+    fun handleBegrensetRevurderingLøpendeForskuddManglerException(
+        exception: BegrensetRevurderingLøpendeForskuddManglerException,
     ): ResponseEntity<Map<String, Any>> = ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
         .body(
             mapOf(
