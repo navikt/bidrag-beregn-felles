@@ -103,7 +103,7 @@ internal object BeregnEndringSjekkGrensePeriodeService : BeregnService() {
     ): EndringSjekkGrensePeriodeBeregningGrunnlag = EndringSjekkGrensePeriodeBeregningGrunnlag(
         beregnetBidragBeregningGrunnlag = periodeGrunnlag.sluttberegningPeriodeGrunnlagListe
             .firstOrNull { it.sluttberegningPeriode.periode.inneholder(bruddPeriode) }
-            ?.let { BeregnetBidragBeregningGrunnlag(referanse = it.referanse, beløp = it.sluttberegningPeriode.beregnetBeløp!!) }
+            ?.let { BeregnetBidragBeregningGrunnlag(referanse = it.referanse, beløp = it.sluttberegningPeriode.beregnetBeløp) }
             ?: throw IllegalArgumentException("Sluttberegning grunnlag mangler for periode $bruddPeriode"),
         løpendeBidragBeregningGrunnlag = periodeGrunnlag.beløpshistorikkBidragPeriodeGrunnlag?.run {
             beløpshistorikkPeriode.beløpshistorikk.firstOrNull { it.periode.inneholder(bruddPeriode) }?.let {
