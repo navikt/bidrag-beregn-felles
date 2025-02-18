@@ -18,7 +18,8 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.PrivatAvtaleGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.PrivatAvtalePeriodeGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
-import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåFremmedReferanse
+import no.nav.bidrag.transport.behandling.felles.grunnlag.innholdTilObjekt
+import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.YearMonth
@@ -69,7 +70,7 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
             privatAvtale = privatAvtale,
             privatAvtaleListe = privatAvtalePeriodeListe,
             beregningsperiode = grunnlag.periode,
-            sjablonIndeksreguleringFaktorListe = sjablonIndeksreguleringFaktorListe,
+//            sjablonIndeksreguleringFaktorListe = sjablonIndeksreguleringFaktorListe,
         )
 
         val resultatliste = mutableListOf<GrunnlagDto>()
@@ -79,6 +80,8 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
 
         bruddPeriodeListe.forEach {
             val grunnlagBeregning = lagIndeksreguleringBeregningGrunnlag(
+                bruddperiode = it,
+                skalIndeksreguleres = privatAvtale.skalIndeksreguleres,
                 referanseTilRolle = referanseTilBM,
                 søknadsbarnReferanse = grunnlag.søknadsbarnReferanse,
                 privatAvtale = privatAvtale,
@@ -91,60 +94,167 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
 
             val resultat = beregn(grunnlagBeregning)
 
-            beløpFraForrigeDelberegning = resultat.innhold.get("beløp").decimalValue()
-            referanseForrigeDelberegning = resultat.referanse
+            if (privatAvtale.skalIndeksreguleres) {
+                beløpFraForrigeDelberegning = resultat.innholdTilObjekt<DelberegningPrivatAvtalePeriode>().beløp
+                referanseForrigeDelberegning = resultat.referanse
+            }
 
             resultatliste.add(resultat)
 
         }
 
+        val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
 
-        return resultatliste //.map {
-        //GrunnlagDto(
-        //  type = Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE_PERIODE,
-        //     referanse = it.referanse,
-        //   innhold = POJONode(it),
-        //      gjelderReferanse = referanseTilRolle,
-        //    grunnlagsreferanseListe = listOfNotNull(
-        //      sjablonIndeksreguleringFaktorListe.first().referanse,
-        //  ),
-        // )
-        //    }
+        val grunnlagReferanseListe =
+            resultatliste
+                .flatMap { it.grunnlagsreferanseListe }
+                .distinct()
 
+        // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
+        resultatGrunnlagListe.addAll(
+            mapGrunnlag(
+                grunnlagListe = grunnlag.grunnlagListe,
+                grunnlagReferanseListe = grunnlagReferanseListe,
+            ),
+        )
+
+        // Matcher sjablongrunnlag med grunnlag som er brukt i beregningen og mapper ut
+        resultatGrunnlagListe.addAll(
+            mapGrunnlag(
+                grunnlagListe = sjablonListe,
+                grunnlagReferanseListe = grunnlagReferanseListe,
+            ),
+        )
+
+        return resultatliste + resultatGrunnlagListe
+
+    }
+
+
+    // Lager en liste over alle bruddperioder basert på grunnlag som skal brukes i beregningen
+    private fun lagBruddperiodeListe(
+        privatAvtale: PrivatAvtale,
+        privatAvtaleListe: List<PrivatAvtalePeriode>,
+        beregningsperiode: ÅrMånedsperiode,
+    ): List<ÅrMånedsperiode> {
+
+        var periodeListe: Sequence<ÅrMånedsperiode> = emptySequence()
+
+        if (privatAvtale.skalIndeksreguleres) {
+            var indeksregulerPeriode = maxOf(
+                YearMonth.of(privatAvtale.avtaleInngåttDato.year, privatAvtale.avtaleInngåttDato.month.value),
+                privatAvtaleListe.maxOf { it.periode.fom }).plusYears(1).withMonth(7)
+
+            val indeksregulerPeriodeListe = mutableListOf<ÅrMånedsperiode>()
+
+            while (indeksregulerPeriode <= YearMonth.now()) {
+                if ((beregningsperiode.til != null && indeksregulerPeriode.isBefore(beregningsperiode.til)) || beregningsperiode.til == null) {
+                    indeksregulerPeriodeListe.add(ÅrMånedsperiode(indeksregulerPeriode, indeksregulerPeriode))
+                    indeksregulerPeriode = indeksregulerPeriode.plusYears(1)
+                }
+            }
+
+            periodeListe = indeksregulerPeriodeListe.asSequence()
+
+            return lagBruddPeriodeListe(periodeListe, beregningsperiode)
+        } else {
+            periodeListe = privatAvtaleListe.asSequence().map { it.periode }
+        }
+        return periodeListe.map { it }.toList()
+    }
+
+
+    // Lager grunnlag for indeksregulering som ligger innenfor bruddPeriode
+    private fun lagIndeksreguleringBeregningGrunnlag(
+        bruddperiode: ÅrMånedsperiode,
+        skalIndeksreguleres: Boolean,
+        referanseTilRolle: Grunnlagsreferanse,
+        søknadsbarnReferanse: Grunnlagsreferanse,
+        privatAvtale: PrivatAvtale,
+        privatAvtalePeriodeListe: List<PrivatAvtalePeriode>,
+        sjablonIndeksreguleringFaktorListe: List<SjablonSjablontallPeriodeGrunnlag>,
+        bruddPeriode: ÅrMånedsperiode,
+        beløpFraForrigeDelberegning: BigDecimal?,
+        referanseForrigeDelberegning: String?,
+    ): IndeksreguleringPrivatAvtaleGrunnlag {
+
+        val privatAvtalePeriode = privatAvtalePeriodeListe
+            .firstOrNull { ÅrMånedsperiode(it.periode.fom, it.periode.til).inneholder(bruddPeriode) }
+            ?.let {
+                PrivatAvtalePeriode(
+                    referanse = it.referanse,
+                    periode = it.periode,
+                    beløp = it.beløp,
+                )
+            }
+            ?: throw IllegalArgumentException("Grunnlag privat avtale periode ikke funnet for periode $bruddPeriode")
+
+        val sjablonIndeksreguleringFaktor = if (skalIndeksreguleres) {
+            sjablonIndeksreguleringFaktorListe
+                .firstOrNull { it.sjablonSjablontallPeriode.periode.inneholder(bruddPeriode) }
+                ?.let {
+                    SjablonSjablontallBeregningGrunnlag(
+                        referanse = it.referanse,
+                        type = it.sjablonSjablontallPeriode.sjablon.navn,
+                        verdi = it.sjablonSjablontallPeriode.verdi.toDouble(),
+                    )
+                }
+                ?: throw IllegalArgumentException("Sjablon indeksregulering faktor ikke funnet for periode $bruddPeriode")
+        } else {
+            null
+        }
+
+        return IndeksreguleringPrivatAvtaleGrunnlag(
+            bruddperiode = bruddperiode,
+            referanseTilRolle = referanseTilRolle,
+            søknadsbarnReferanse = søknadsbarnReferanse,
+            periodeSkalIndeksreguleres = privatAvtale.skalIndeksreguleres,
+            privatAvtalePeriode = privatAvtalePeriode,
+            sjablonIndeksreguleringFaktor = sjablonIndeksreguleringFaktor,
+            beløpFraForrigeDelberegning = beløpFraForrigeDelberegning,
+            referanseliste = listOfNotNull(
+                privatAvtale.referanse,
+                privatAvtalePeriode.referanse,
+                sjablonIndeksreguleringFaktor?.referanse,
+                referanseForrigeDelberegning,
+            ),
+        )
     }
 
     private fun beregn(
         grunnlag: IndeksreguleringPrivatAvtaleGrunnlag
     ): GrunnlagDto {
-
         val delberegningResultat: DelberegningPrivatAvtalePeriode
 
         if (grunnlag.periodeSkalIndeksreguleres) {
-            val indeksreguleringFaktor = BigDecimal.valueOf(grunnlag.sjablonIndeksreguleringFaktor.verdi)
+            val indeksreguleringFaktor = BigDecimal.valueOf(grunnlag.sjablonIndeksreguleringFaktor!!.verdi).divide(BigDecimal(100)).setScale(4)
             val beløp = grunnlag.beløpFraForrigeDelberegning ?: grunnlag.privatAvtalePeriode.beløp
-            val indeksregulertBeløp = beløp.multiply(indeksreguleringFaktor).avrundetTilNærmesteTier
+            val indeksregulertBeløp = beløp.plus(beløp.multiply(indeksreguleringFaktor)).avrundetTilNærmesteTier
             delberegningResultat =
                 DelberegningPrivatAvtalePeriode(
-                    periode = grunnlag.privatAvtalePeriode.periode,
+                    periode = grunnlag.bruddperiode,
                     indeksreguleringFaktor = indeksreguleringFaktor,
                     beløp = indeksregulertBeløp,
                 )
-            // beløp = indeksregulertBeløp
         } else {
             delberegningResultat =
                 DelberegningPrivatAvtalePeriode(
-                    periode = grunnlag.privatAvtalePeriode.periode,
+                    periode = grunnlag.bruddperiode,
                     indeksreguleringFaktor = null,
                     beløp = grunnlag.privatAvtalePeriode.beløp,
 
                     )
         }
 
-
         val resultat =
             GrunnlagDto(
                 type = Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE_PERIODE,
-                referanse = "${Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE_PERIODE.name}_$grunnlag.referanseTilRolle_$grunnlag.søknadsbarnReferanse",
+                referanse = opprettDelberegningreferanse(
+                    type = Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE_PERIODE,
+                    periode = grunnlag.bruddperiode,
+                    søknadsbarnReferanse = grunnlag.søknadsbarnReferanse,
+                    gjelderReferanse = grunnlag.referanseTilRolle,
+                ),
                 innhold = POJONode(
                     delberegningResultat,
                 ),
@@ -157,111 +267,38 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
     }
 
 
-    // Lager en liste over alle bruddperioder basert på grunnlag som skal brukes i beregningen
-    private fun lagBruddperiodeListe(
-        privatAvtale: PrivatAvtale,
-        privatAvtaleListe: List<PrivatAvtalePeriode>,
-        beregningsperiode: ÅrMånedsperiode,
-        sjablonIndeksreguleringFaktorListe: List<SjablonSjablontallPeriodeGrunnlag>,
-    ): List<ÅrMånedsperiode> {
-
-        var periodeListe: Sequence<ÅrMånedsperiode> = emptySequence()
-
-        if (privatAvtale.skalIndeksreguleres) {
-            var indeksregulerPeriode = maxOf(
-                YearMonth.of(privatAvtale.avtaleInngåttDato.month.value, privatAvtale.avtaleInngåttDato.year),
-                privatAvtaleListe.maxOf { it.periode.fom }).plusYears(1).withMonth(7)
-
-            val indeksregulerPeriodeListe = mutableListOf<ÅrMånedsperiode>()
-
-            while (beregningsperiode.til == null ||
-                indeksregulerPeriode.isBefore(beregningsperiode.til) && indeksregulerPeriode <= YearMonth.now()
-            ) {
-                indeksregulerPeriodeListe.add(ÅrMånedsperiode(indeksregulerPeriode, indeksregulerPeriode))
-                indeksregulerPeriode = indeksregulerPeriode.plusYears(1)
-            }
-
-            periodeListe = sequenceOf(beregningsperiode)
-                .plus(sjablonIndeksreguleringFaktorListe.asSequence().map { it.sjablonSjablontallPeriode.periode })
-                .plus(indeksregulerPeriodeListe.asSequence())
-
-            return lagBruddPeriodeListe(periodeListe, beregningsperiode)
-        } else {
-            periodeListe = privatAvtaleListe.asSequence().map { it.periode }
-        }
-        return periodeListe.map { it }.toList()
-    }
-
-}
-
-// Lager grunnlag for indeksregulering som ligger innenfor bruddPeriode
-private fun lagIndeksreguleringBeregningGrunnlag(
-    referanseTilRolle: Grunnlagsreferanse,
-    søknadsbarnReferanse: Grunnlagsreferanse,
-    privatAvtale: PrivatAvtale,
-    privatAvtalePeriodeListe: List<PrivatAvtalePeriode>,
-    sjablonIndeksreguleringFaktorListe: List<SjablonSjablontallPeriodeGrunnlag>,
-    bruddPeriode: ÅrMånedsperiode,
-    beløpFraForrigeDelberegning: BigDecimal?,
-    referanseForrigeDelberegning: String?,
-): IndeksreguleringPrivatAvtaleGrunnlag {
-
-    val privatAvtalePeriode = privatAvtalePeriodeListe
-        .firstOrNull { ÅrMånedsperiode(it.periode.fom, it.periode.til).inneholder(bruddPeriode) }
-        ?.let {
-            PrivatAvtalePeriode(
-                referanse = it.referanse,
-                periode = it.periode,
-                beløp = it.beløp,
+    // TODO Flytte til CoreMapper
+    private fun mapSjablonSjablontall(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonSjablontallPeriodeGrunnlag> {
+        try {
+            return sjablonGrunnlag
+                .filter { it.type == Grunnlagstype.SJABLON_SJABLONTALL }
+                .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>()
+                .map {
+                    SjablonSjablontallPeriodeGrunnlag(
+                        referanse = it.referanse,
+                        sjablonSjablontallPeriode = it.innhold,
+                    )
+                }
+        } catch (e: Exception) {
+            throw IllegalArgumentException(
+                "Feil ved uthenting av sjablon for sjablontall: " + e.message,
             )
         }
-        ?: throw IllegalArgumentException("Grunnlag privat avtale periode ikke funnet for periode $bruddPeriode")
+    }
 
-    val sjablonIndeksreguleringFaktor = sjablonIndeksreguleringFaktorListe
-        .firstOrNull { it.sjablonSjablontallPeriode.periode.inneholder(bruddPeriode) }
-        ?.let {
-            SjablonSjablontallBeregningGrunnlag(
+    // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
+    private fun mapGrunnlag(grunnlagListe: List<GrunnlagDto>, grunnlagReferanseListe: List<String>) = grunnlagListe
+        .filter { grunnlagReferanseListe.contains(it.referanse) }
+        .map {
+            GrunnlagDto(
                 referanse = it.referanse,
-                type = it.sjablonSjablontallPeriode.sjablon.navn,
-                verdi = it.sjablonSjablontallPeriode.verdi.toDouble(),
+                type = it.type,
+                innhold = it.innhold,
+                grunnlagsreferanseListe = it.grunnlagsreferanseListe,
+                gjelderReferanse = it.gjelderReferanse,
+                gjelderBarnReferanse = it.gjelderBarnReferanse,
             )
         }
-        ?: throw IllegalArgumentException("Sjablon indeksregulering faktor ikke funnet for periode $bruddPeriode")
-
-    return IndeksreguleringPrivatAvtaleGrunnlag(
-        referanseTilRolle = referanseTilRolle,
-        søknadsbarnReferanse = søknadsbarnReferanse,
-        periodeSkalIndeksreguleres = privatAvtale.skalIndeksreguleres,
-        privatAvtalePeriode = privatAvtalePeriode,
-        sjablonIndeksreguleringFaktor = sjablonIndeksreguleringFaktor,
-        beløpFraForrigeDelberegning = beløpFraForrigeDelberegning,
-        referanseliste = listOfNotNull(
-            privatAvtale.referanse,
-            privatAvtalePeriode.referanse,
-            sjablonIndeksreguleringFaktor.referanse,
-            referanseForrigeDelberegning,
-        ),
-    )
-}
-
-
-// TODO Flytte til CoreMapper
-private fun mapSjablonSjablontall(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonSjablontallPeriodeGrunnlag> {
-    try {
-        return sjablonGrunnlag
-            .filter { it.type == Grunnlagstype.SJABLON_SJABLONTALL }
-            .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>()
-            .map {
-                SjablonSjablontallPeriodeGrunnlag(
-                    referanse = it.referanse,
-                    sjablonSjablontallPeriode = it.innhold,
-                )
-            }
-    } catch (e: Exception) {
-        throw IllegalArgumentException(
-            "Feil ved uthenting av sjablon for sjablontall: " + e.message,
-        )
-    }
 }
 
 

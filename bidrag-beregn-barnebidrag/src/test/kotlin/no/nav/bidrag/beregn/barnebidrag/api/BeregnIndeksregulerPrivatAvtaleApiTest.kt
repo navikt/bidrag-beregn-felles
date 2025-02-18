@@ -26,6 +26,7 @@ import java.math.BigDecimal
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.text.SimpleDateFormat
+import java.time.YearMonth
 
 @ExtendWith(MockitoExtension::class)
 internal class BeregnIndeksregulerPrivatAvtaleApiTest {
@@ -50,10 +51,42 @@ internal class BeregnIndeksregulerPrivatAvtaleApiTest {
             { assertThat(resultat).hasSize(3) },
 
             // Resultat
-            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode("2023-01", "2024-08")) },
-            { assertEquals(0, resultat[0].beløp.compareTo(BigDecimal.valueOf(100.00))) },
+            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode("2023-01", "2024-09")) },
+            { assertThat(resultat[0].beløp.compareTo(BigDecimal.valueOf(100.00))).isEqualTo(0) },
             { assertThat(resultat[0].indeksreguleringFaktor).isNull() },
+
+            { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode("2024-09", "2024-11")) },
+            { assertThat(resultat[1].beløp.compareTo(BigDecimal.valueOf(150.00))).isEqualTo(0) },
+            { assertThat(resultat[1].indeksreguleringFaktor).isNull() },
+
+            { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-11"), null)) },
+            { assertThat(resultat[2].beløp.compareTo(BigDecimal.valueOf(210.00))).isEqualTo(0) },
+            { assertThat(resultat[2].indeksreguleringFaktor).isNull() },
           )
+    }
+
+    @Test
+    @DisplayName("Privat avtale - med indeksregulering")
+    fun testIndeksreguleringPrivatAvtaleMedIndeksregulering() {
+        filnavn = "src/test/resources/testfiler/indeksreguleringprivatavtale/privat_avtale_med_indeksregulering.json"
+        val resultat = utførBeregningerOgEvaluerResultatIndeksreguleringPrivatAvtale()
+
+        assertAll(
+            { assertThat(resultat).hasSize(3) },
+
+            // Resultat
+            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode("2022-01", "2023-07")) },
+            { assertThat(resultat[0].beløp.compareTo(BigDecimal.valueOf(1000.00))).isEqualTo(0) },
+            { assertThat(resultat[0].indeksreguleringFaktor).isNull() },
+
+            { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode("2023-07", "2024-07")) },
+            { assertThat(resultat[1].beløp.compareTo(BigDecimal.valueOf(1070.00))).isEqualTo(0) },
+            { assertThat(resultat[1].indeksreguleringFaktor?.compareTo(BigDecimal.valueOf(7.00))).isEqualTo(0) },
+
+            { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
+            { assertThat(resultat[2].beløp.compareTo(BigDecimal.valueOf(1120.00))).isEqualTo(0) },
+            { assertThat(resultat[2].indeksreguleringFaktor?.compareTo(BigDecimal.valueOf(4.70))).isEqualTo(0) },
+        )
     }
 
     private fun utførBeregningerOgEvaluerResultatIndeksreguleringPrivatAvtale(): List<DelberegningPrivatAvtalePeriode> {
