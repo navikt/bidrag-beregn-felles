@@ -20,7 +20,7 @@ import java.math.BigDecimal
 import java.time.YearMonth
 
 @ExtendWith(MockitoExtension::class)
-internal class BeregnEndeligBidragApiTest: FellesApiTest() {
+internal class BeregnEndeligBidragApiTest : FellesApiTest() {
     private lateinit var filnavn: String
     private var forventetBeregnetBeløp: BigDecimal? = null
     private var forventetResultatbeløp: BigDecimal? = null
@@ -55,6 +55,8 @@ internal class BeregnEndeligBidragApiTest: FellesApiTest() {
     private var forventetAntallBostatus: Int = 1
     private var forventetAntallBarnetilleggBM: Int = 1
     private var forventetAntallBarnetilleggBP: Int = 1
+    private var forventetAntallPerioder: Int = 1
+    private var forventetTilPeriode: YearMonth? = null
 
     @Mock
     private lateinit var api: BeregnBarnebidragApi
@@ -460,7 +462,7 @@ internal class BeregnEndeligBidragApiTest: FellesApiTest() {
     }
 
     @Test
-    @DisplayName("Endelig bidrag - eksempel 10I - Begrenset revurdering - beregnet bidrag er lavere enn løpende bidrag - skal kaste exception")
+    @DisplayName("Endelig bidrag - eksempel 10I - Begrenset revurdering - beregnet bidrag er 0 - skal ikke kaste exception")
     fun testEndeligBidrag_Eksempel10I() {
         filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel10I.json"
         forventetBeregnetBeløp = BigDecimal.ZERO.setScale(2)
@@ -489,6 +491,58 @@ internal class BeregnEndeligBidragApiTest: FellesApiTest() {
     fun testEndeligBidrag_Eksempel10J() {
         filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel10J.json"
         utførBeregningerOgEvaluerResultatEndeligBidragFlerePerioderBegrensetRevurdering()
+    }
+
+    @Test
+    @DisplayName("Endelig bidrag - eksempel 10K - Begrenset revurdering - løpende forskudd mangler i starten av beregningsperioden - skal kaste exception")
+    fun testEndeligBidrag_Eksempel10K() {
+        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel10K.json"
+        forventetBeregnetBeløp = BigDecimal.valueOf(745.35).setScale(2)
+        forventetResultatbeløp = BigDecimal.valueOf(750).setScale(0)
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(8514.87).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(6000).setScale(2)
+        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(5001).setScale(2)
+        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(6000).setScale(2)
+        forventetBruttoBidragEtterBegrensetRevurdering = BigDecimal.valueOf(999).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(1744.35).setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(745.35).setScale(2)
+        forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
+        forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
+        forventetLøpendeForskudd = BigDecimal.ZERO.setScale(0)
+        forventetLøpendeBidrag = BigDecimal.valueOf(4000).setScale(0)
+        forventetBidragJustertForNettoBarnetilleggBP = true
+        forventetBidragJustertTilForskuddssats = true
+        forventetBegrensetRevurderingUtført = true
+        forventetFeilmelding = "Kan ikke fatte vedtak fordi løpende forskudd mangler i første beregningsperiode: 2024-08 - 2024-09"
+        forventetPerioderMedFeilListe = listOf(ÅrMånedsperiode(YearMonth.parse("2024-08"), YearMonth.parse("2024-09")))
+        forventetExceptionBegrensetRevurdering = true
+        forventetAntallPerioder = 2
+        forventetTilPeriode = YearMonth.parse("2024-09")
+        utførBeregningerOgEvaluerResultatEndeligBidrag()
+    }
+
+    @Test
+    @DisplayName("Endelig bidrag - eksempel 10L - Begrenset revurdering - løpende forskudd mangler i slutten av beregningsperioden - skal ikke kaste exception")
+    fun testEndeligBidrag_Eksempel10L() {
+        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel10L.json"
+        forventetBeregnetBeløp = BigDecimal.valueOf(5001).setScale(2)
+        forventetResultatbeløp = BigDecimal.valueOf(5000).setScale(0)
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(8514.87).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(6000).setScale(2)
+        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(5001).setScale(2)
+        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(6000).setScale(2)
+        forventetBruttoBidragEtterBegrensetRevurdering = BigDecimal.valueOf(6000).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(6000).setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(5001).setScale(2)
+        forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
+        forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
+        forventetLøpendeForskudd = BigDecimal.valueOf(5500).setScale(0)
+        forventetLøpendeBidrag = BigDecimal.valueOf(700).setScale(0)
+        forventetBegrensetRevurderingUtført = true
+        forventetExceptionBegrensetRevurdering = false
+        forventetAntallPerioder = 2
+        forventetTilPeriode = YearMonth.parse("2024-09")
+        utførBeregningerOgEvaluerResultatEndeligBidrag()
     }
 
     @Test
@@ -594,11 +648,11 @@ internal class BeregnEndeligBidragApiTest: FellesApiTest() {
         assertAll(
             { assertThat(endeligBidragResultat).isNotNull },
             { assertThat(endeligBidragResultatListe).isNotNull },
-            { assertThat(endeligBidragResultatListe).hasSize(1) },
+            { assertThat(endeligBidragResultatListe).hasSize(forventetAntallPerioder) },
 
             // Resultat
             {
-                assertThat(endeligBidragResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null))
+                assertThat(endeligBidragResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), forventetTilPeriode))
             },
             { assertThat(endeligBidragResultatListe[0].beregnetBeløp).isEqualTo(forventetBeregnetBeløp) },
             { assertThat(endeligBidragResultatListe[0].resultatBeløp).isEqualTo(forventetResultatbeløp) },
