@@ -34,6 +34,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.SøknadGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import java.math.BigDecimal
 import java.time.YearMonth
+import java.util.Collections.emptyList
 
 class BeregnBarnebidragService : BeregnService() {
 

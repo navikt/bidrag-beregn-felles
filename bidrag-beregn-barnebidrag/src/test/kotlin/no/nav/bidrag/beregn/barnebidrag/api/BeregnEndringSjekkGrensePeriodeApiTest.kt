@@ -22,7 +22,7 @@ import java.math.BigDecimal
 import java.time.YearMonth
 
 @ExtendWith(MockitoExtension::class)
-internal class BeregnEndringSjekkGrensePeriodeApiTest : FellesApiTest() {
+internal class BeregnEndringSjekkGrensePeriodeApiTest: FellesApiTest() {
     private lateinit var filnavn: String
     private val forventetEndringsgrenseProsent = BigDecimal.valueOf(12)
     private lateinit var forventetBeregnetBidragBeløp: BigDecimal
@@ -111,7 +111,7 @@ internal class BeregnEndringSjekkGrensePeriodeApiTest : FellesApiTest() {
                 )
             }
 
-        val beregnetBidragBeløp = hentSluttberegning(endringSjekkGrensePeriodeResultat)[0].beregnetBeløp!!.avrundetMedToDesimaler
+        val beregnetBidragBeløp = hentSluttberegning(endringSjekkGrensePeriodeResultat)[0].beregnetBeløp?.avrundetMedToDesimaler
         val sjablonSjablontallEndringsgrense = endringSjekkGrensePeriodeResultat
             .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>(Grunnlagstype.SJABLON_SJABLONTALL)
             .map {

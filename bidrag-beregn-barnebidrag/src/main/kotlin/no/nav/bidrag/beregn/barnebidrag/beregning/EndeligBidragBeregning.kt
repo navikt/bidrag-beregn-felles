@@ -10,6 +10,16 @@ import java.math.BigDecimal
 internal object EndeligBidragBeregning {
 
     fun beregn(grunnlag: EndeligBidragBeregningGrunnlag): EndeligBidragBeregningResultat {
+        // Hvis søknadsbarnet bor hos BP gjøres det ingen videre beregning (skal resultere i avslag og bidragsbeløp settes til null
+        if (grunnlag.søknadsbarnetBorHosBpGrunnlag.søknadsbarnetBorHosBp) {
+            return EndeligBidragBeregningResultat(
+                ikkeOmsorgForBarnet = true,
+                beregnetBeløp = null,
+                resultatBeløp = null,
+                grunnlagsreferanseListe = listOf(grunnlag.søknadsbarnetBorHosBpGrunnlag.referanse)
+            )
+        }
+
         // Hvis barnet er selvforsørget gjøres det ingen videre beregning
         if (grunnlag.bpAndelUnderholdskostnadBeregningGrunnlag.barnetErSelvforsørget) {
             return EndeligBidragBeregningResultat(
@@ -72,6 +82,7 @@ internal object EndeligBidragBeregning {
                     grunnlag.bpAndelUnderholdskostnadBeregningGrunnlag.referanse,
                     grunnlag.samværsfradragBeregningGrunnlag.referanse,
                     grunnlag.deltBostedBeregningGrunnlag.referanse,
+                    grunnlag.søknadsbarnetBorHosBpGrunnlag.referanse,
                     grunnlag.barnetilleggBPBeregningGrunnlag?.referanse,
                     grunnlag.barnetilleggBMBeregningGrunnlag?.referanse,
                 ) + grunnlag.engangsreferanser,
@@ -162,6 +173,7 @@ internal object EndeligBidragBeregning {
                 grunnlag.bpAndelUnderholdskostnadBeregningGrunnlag.referanse,
                 grunnlag.samværsfradragBeregningGrunnlag.referanse,
                 grunnlag.deltBostedBeregningGrunnlag.referanse,
+                grunnlag.søknadsbarnetBorHosBpGrunnlag.referanse,
                 grunnlag.barnetilleggBPBeregningGrunnlag?.referanse,
                 grunnlag.barnetilleggBMBeregningGrunnlag?.referanse,
             ) + grunnlag.engangsreferanser,

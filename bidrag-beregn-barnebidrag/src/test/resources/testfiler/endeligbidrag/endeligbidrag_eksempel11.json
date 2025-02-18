@@ -139,7 +139,7 @@
           "fom": "2024-08",
           "til": "2024-09"
         },
-        "bostatus": "IKKE_MED_FORELDER",
+        "bostatus": "MED_FORELDER",
         "manueltRegistrert": false,
         "relatertTilPart": "Person_Bidragspliktig"
       },
@@ -175,14 +175,14 @@
         },
         "inntektsrapportering": "BARNETILLEGG",
         "gjelderBarn": "Person_Søknadsbarn",
-        "beløp": 84000,
+        "beløp": 24000,
         "manueltRegistrert": false,
         "valgt": true,
         "inntekstpostListe": [
           {
             "kode": "Inntekt",
             "inntekstype": "BARNETILLEGG_PENSJON",
-            "beløp": 84000
+            "beløp": 24000
           }
         ]
       },
@@ -270,63 +270,6 @@
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Bidragsmottaker",
       "gjelderBarnReferanse": null
-    },
-    {
-      "referanse": "Mottatt_SøknadGrunnlag_202408",
-      "type": "SØKNAD",
-      "innhold": {
-        "mottattDato": "2024-07-01",
-        "søktFraDato": "2024-08-01",
-        "søktAv": "BIDRAGSMOTTAKER",
-        "begrensetRevurdering": true
-      },
-      "grunnlagsreferanseListe": [],
-      "gjelderBarnReferanse": "Person_Søknadsbarn",
-      "gjelderReferanse": "Person_Bidragsmottaker"
-    },
-    {
-      "referanse": "Mottatt_BeløpshistorikkForskudd_202408",
-      "type": "BELØPSHISTORIKK_FORSKUDD",
-      "innhold": {
-        "periode": {
-          "fom": "2024-08",
-          "til": null
-        },
-        "beløpshistorikk": [
-          {
-            "periode": {
-              "fom": "2024-08",
-              "til": "2024-09"
-            },
-            "beløp": 4500
-          }
-        ]
-      },
-      "grunnlagsreferanseListe": [],
-      "gjelderBarnReferanse": "Person_Søknadsbarn",
-      "gjelderReferanse": "Person_Bidragsmottaker"
-    },
-    {
-      "referanse": "Mottatt_BeløpshistorikkBidrag_202408",
-      "type": "BELØPSHISTORIKK_BIDRAG",
-      "innhold": {
-        "periode": {
-          "fom": "2024-08",
-          "til": null
-        },
-        "beløpshistorikk": [
-          {
-            "periode": {
-              "fom": "2024-08",
-              "til": "2024-09"
-            },
-            "beløp": 4000
-          }
-        ]
-      },
-      "grunnlagsreferanseListe": [],
-      "gjelderBarnReferanse": "Person_Søknadsbarn",
-      "gjelderReferanse": "Person_Bidragspliktig"
     }
   ]
 }

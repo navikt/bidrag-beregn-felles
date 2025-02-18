@@ -44,6 +44,7 @@ internal open class FellesApiTest {
                     bidragJustertNedTil25ProsentAvInntekt = it.innhold.bidragJustertNedTil25ProsentAvInntekt,
                     bidragJustertTilForskuddssats = it.innhold.bidragJustertTilForskuddssats,
                     begrensetRevurderingUtført = it.innhold.begrensetRevurderingUtført,
+                    ikkeOmsorgForBarnet = it.innhold.ikkeOmsorgForBarnet,
                 )
             }
 

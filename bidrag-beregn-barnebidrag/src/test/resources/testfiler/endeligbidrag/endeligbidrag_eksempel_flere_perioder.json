@@ -423,6 +423,54 @@
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
+      "referanse": "Bostatus_Søknadsbarn_202301",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2023-01",
+          "til": "2024-07"
+        },
+        "bostatus": "IKKE_MED_FORELDER",
+        "manueltRegistrert": false,
+        "relatertTilPart": "Person_Bidragspliktig"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragspliktig"
+    },
+    {
+      "referanse": "Bostatus_Søknadsbarn_202407",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-07",
+          "til": "2024-08"
+        },
+        "bostatus": "MED_FORELDER",
+        "manueltRegistrert": false,
+        "relatertTilPart": "Person_Bidragspliktig"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragspliktig"
+    },
+    {
+      "referanse": "Bostatus_Søknadsbarn_202408",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": "2024-09"
+        },
+        "bostatus": "IKKE_MED_FORELDER",
+        "manueltRegistrert": false,
+        "relatertTilPart": "Person_Bidragspliktig"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragspliktig"
+    },
+    {
       "referanse": "Mottatt_InntektRapportering_Barnetillegg_Bidragspliktig_202301",
       "type": "INNTEKT_RAPPORTERING_PERIODE",
       "innhold": {
