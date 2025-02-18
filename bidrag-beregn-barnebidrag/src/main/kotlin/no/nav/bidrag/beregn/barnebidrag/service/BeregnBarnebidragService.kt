@@ -413,7 +413,7 @@ class BeregnBarnebidragService : BeregnService() {
             ResultatPeriode(
                 periode = it.innhold.periode,
                 resultat = ResultatBeregning(
-                    beløp = it.innhold.resultatBeløp!!,
+                    beløp = it.innhold.resultatBeløp,
                 ),
                 grunnlagsreferanseListe = listOfNotNull(it.referanse, beløpshistorikkPeriodeGrunnlagReferanse),
             )
@@ -458,7 +458,7 @@ class BeregnBarnebidragService : BeregnService() {
                 ResultatPeriode(
                     periode = it.periode,
                     resultat = ResultatBeregning(
-                        beløp = it.beløp ?: BigDecimal.ZERO,
+                        beløp = it.beløp,
                     ),
                     grunnlagsreferanseListe = listOf(beløpshistorikkPeriodeGrunnlag.referanse) + finnSluttberegningReferanserSomMatcher(
                         periode = it.periode,
