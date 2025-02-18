@@ -21,7 +21,7 @@ data class EndringSjekkGrensePeriodeBeregningGrunnlag(
     val sjablonSjablontallBeregningGrunnlagListe: List<SjablonSjablontallBeregningGrunnlag>,
 )
 
-data class BeregnetBidragBeregningGrunnlag(val referanse: String, val beløp: BigDecimal)
+data class BeregnetBidragBeregningGrunnlag(val referanse: String, val beløp: BigDecimal?)
 
 data class LøpendeBidragBeregningGrunnlag(val referanse: String, val beløp: BigDecimal?)
 

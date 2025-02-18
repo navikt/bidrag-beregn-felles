@@ -17,9 +17,9 @@ internal object EndringSjekkGrensePeriodeBeregning {
         val sjablonverdiEndringBidragGrenseProsent = hentSjablonverdi(grunnlag)
         val endringsgrenseFaktor = sjablonverdiEndringBidragGrenseProsent.divide(bigDecimal100, 10, RoundingMode.HALF_UP)
 
-        // Beregner faktisk endring. Hvis det ikke er noe løpende bidrag, settes faktisk endring til null.
+        // Beregner faktisk endring. Hvis det ikke er noe løpende bidrag eller beregnet bidrag er null, settes faktisk endring til null.
         val faktiskEndringFaktor =
-            if (grunnlag.løpendeBidragBeregningGrunnlag?.beløp != null) {
+            if (grunnlag.løpendeBidragBeregningGrunnlag?.beløp != null && grunnlag.beregnetBidragBeregningGrunnlag.beløp != null) {
                 grunnlag.beregnetBidragBeregningGrunnlag.beløp
                     .divide(grunnlag.løpendeBidragBeregningGrunnlag.beløp, 10, RoundingMode.HALF_UP)
                     .minus(BigDecimal(1))

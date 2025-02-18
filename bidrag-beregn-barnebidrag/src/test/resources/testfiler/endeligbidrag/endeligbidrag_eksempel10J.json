@@ -132,6 +132,22 @@
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
+      "referanse": "Bostatus_Søknadsbarn_202408",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": "2024-11"
+        },
+        "bostatus": "IKKE_MED_FORELDER",
+        "manueltRegistrert": false,
+        "relatertTilPart": "Person_Bidragspliktig"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragspliktig"
+    },
+    {
       "referanse": "Mottatt_InntektRapportering_Ainntekt_Bidragspliktig_202408",
       "type": "INNTEKT_RAPPORTERING_PERIODE",
       "innhold": {

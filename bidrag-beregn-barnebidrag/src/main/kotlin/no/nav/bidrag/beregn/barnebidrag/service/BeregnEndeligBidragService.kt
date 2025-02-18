@@ -11,6 +11,7 @@ import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragPeriodeResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragDelberegningBeregningGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnetBorHosBpGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadDelberegningBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.mapper.EndeligBidragMapper.mapEndeligBidragGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.mapper.NettoBarnetilleggMapper.finnReferanseTilRolle
@@ -20,6 +21,7 @@ import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.domene.enums.beregning.Samværsklasse
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
+import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
@@ -113,7 +115,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
         val perioderMedFeilListe = mutableListOf<ÅrMånedsperiode>()
         var skalKasteBegrensetRevurderingException = false
         endeligBidragBeregningResultatListe.forEach {
-            if ((it.resultat.beregnetBidragErLavereEnnLøpendeBidrag) && (it.resultat.beregnetBeløp > BigDecimal.ZERO)) {
+            if ((it.resultat.beregnetBidragErLavereEnnLøpendeBidrag) && (it.resultat.beregnetBeløp!! > BigDecimal.ZERO)) {
                 skalKasteBegrensetRevurderingException = true
                 val periodeTil = it.periode.til ?: ""
                 feilmelding += " ${it.periode.fom} - $periodeTil,"
@@ -184,6 +186,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
             )
             .plus(grunnlagListe.samværsfradragDelberegningPeriodeGrunnlagListe.asSequence().map { it.samværsfradragPeriode.periode })
             .plus(grunnlagListe.samværsklassePeriodeGrunnlagListe.asSequence().map { it.samværsklassePeriode.periode })
+            .plus(grunnlagListe.bostatusPeriodeGrunnlagListe.asSequence().map { it.bostatusPeriode.periode })
             .plus(grunnlagListe.nettoBarnetilleggBPDelberegningPeriodeGrunnlagListe.asSequence().map { it.nettoBarnetilleggPeriode.periode })
             .plus(grunnlagListe.nettoBarnetilleggBMDelberegningPeriodeGrunnlagListe.asSequence().map { it.nettoBarnetilleggPeriode.periode })
             .let { periode ->
@@ -246,6 +249,15 @@ internal object BeregnEndeligBidragService : BeregnService() {
                 )
             }
             ?: throw IllegalArgumentException("Delt bosted grunnlag mangler for periode $bruddPeriode")
+        val søknadsbarnetBorHosBpGrunnlag = endeligBidragPeriodeGrunnlag.bostatusPeriodeGrunnlagListe
+            .firstOrNull { it.bostatusPeriode.periode.inneholder(bruddPeriode) }
+            ?.let {
+                SøknadsbarnetBorHosBpGrunnlag(
+                    referanse = it.referanse,
+                    søknadsbarnetBorHosBp = it.bostatusPeriode.bostatus == Bostatuskode.MED_FORELDER,
+                )
+            }
+            ?: throw IllegalArgumentException("Bostatus grunnlag mangler for periode $bruddPeriode")
         val barnetilleggBPBeregningGrunnlag = endeligBidragPeriodeGrunnlag.nettoBarnetilleggBPDelberegningPeriodeGrunnlagListe
             .firstOrNull { it.nettoBarnetilleggPeriode.periode.inneholder(bruddPeriode) }
             ?.let {
@@ -289,6 +301,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
             bpAndelUnderholdskostnadBeregningGrunnlag = bpAndelUnderholdskostnadBeregningGrunnlag,
             samværsfradragBeregningGrunnlag = samværsfradragBeregningGrunnlag,
             deltBostedBeregningGrunnlag = deltBostedBeregningGrunnlag,
+            søknadsbarnetBorHosBpGrunnlag = søknadsbarnetBorHosBpGrunnlag,
             barnetilleggBPBeregningGrunnlag = barnetilleggBPBeregningGrunnlag,
             barnetilleggBMBeregningGrunnlag = barnetilleggBMBeregningGrunnlag,
             løpendeForskuddBeløp = løpendeForskuddBeløp,
@@ -370,6 +383,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
                         bidragJustertNedTil25ProsentAvInntekt = it.resultat.bidragJustertNedTil25ProsentAvInntekt,
                         bidragJustertTilForskuddssats = it.resultat.bidragJustertTilForskuddssats,
                         begrensetRevurderingUtført = it.resultat.begrensetRevurderingUtført,
+                        ikkeOmsorgForBarnet = it.resultat.ikkeOmsorgForBarnet,
                     ),
                 ),
                 grunnlagsreferanseListe = (it.resultat.grunnlagsreferanseListe + mottattGrunnlag.søknadsbarnReferanse).sorted(),
