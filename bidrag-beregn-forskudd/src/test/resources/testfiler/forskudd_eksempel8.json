@@ -63,7 +63,7 @@
 
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Søknadsbarn"
+      "gjelderBarnReferanse": "Person_Søknadsbarn"
     },
     {
       "referanse": "Bostatus_Husstandsbarn_01_202012",
@@ -79,7 +79,7 @@
 
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Husstandsbarn_01"
+      "gjelderBarnReferanse": "Person_Husstandsbarn_01"
     },
     {
       "referanse": "Bostatus_Husstandsbarn_02_202012",
@@ -94,7 +94,7 @@
         "relatertTilPart": "Person_Bidragsmottaker"
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Husstandsbarn_02"
+      "gjelderBarnReferanse": "Person_Husstandsbarn_02"
     },
     {
       "referanse": "BeregningInntektRapportering_Ainntekt_202012",

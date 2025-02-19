@@ -54,24 +54,24 @@ internal object EndeligBidragMapper : CoreMapper() {
             ),
             // Legger null i beløpshistorikk forskudd hvis indikator for begrenset revurdering er false
             beløpshistorikkForskuddPeriodeGrunnlag =
-                if (begrensetRevurderingPeriodeGrunnlag == null || begrensetRevurderingPeriodeGrunnlag.begrensetRevurdering == false) {
-                    null
-                } else {
-                    mapBeløpshistorikk(
-                        beregnGrunnlag = mottattGrunnlag,
-                        grunnlagstype = Grunnlagstype.BELØPSHISTORIKK_FORSKUDD
-                    )
-                },
+            if (begrensetRevurderingPeriodeGrunnlag == null || begrensetRevurderingPeriodeGrunnlag.begrensetRevurdering == false) {
+                null
+            } else {
+                mapBeløpshistorikk(
+                    beregnGrunnlag = mottattGrunnlag,
+                    grunnlagstype = Grunnlagstype.BELØPSHISTORIKK_FORSKUDD,
+                )
+            },
             // Legger null i beløpshistorikk bidrag hvis indikator for begrenset revurdering er false
             beløpshistorikkBidragPeriodeGrunnlag =
-                if (begrensetRevurderingPeriodeGrunnlag == null || begrensetRevurderingPeriodeGrunnlag.begrensetRevurdering == false) {
-                    null
-                } else {
-                    mapBeløpshistorikk(
-                        beregnGrunnlag = mottattGrunnlag,
-                        grunnlagstype = Grunnlagstype.BELØPSHISTORIKK_BIDRAG
-                    )
-                },
+            if (begrensetRevurderingPeriodeGrunnlag == null || begrensetRevurderingPeriodeGrunnlag.begrensetRevurdering == false) {
+                null
+            } else {
+                mapBeløpshistorikk(
+                    beregnGrunnlag = mottattGrunnlag,
+                    grunnlagstype = Grunnlagstype.BELØPSHISTORIKK_BIDRAG,
+                )
+            },
             begrensetRevurderingPeriodeGrunnlag = begrensetRevurderingPeriodeGrunnlag,
         )
     }
@@ -166,7 +166,9 @@ internal object EndeligBidragMapper : CoreMapper() {
         try {
             return beregnGrunnlag.grunnlagListe
                 .filtrerOgKonverterBasertPåEgenReferanse<BostatusPeriode>(Grunnlagstype.BOSTATUS_PERIODE)
-                .filter { it.gjelderBarnReferanse == beregnGrunnlag.søknadsbarnReferanse }
+                .filter {
+                    it.gjelderBarnReferanse == beregnGrunnlag.søknadsbarnReferanse || it.gjelderReferanse == beregnGrunnlag.søknadsbarnReferanse
+                }
                 .map {
                     BostatusPeriodeGrunnlag(
                         referanse = it.referanse,
