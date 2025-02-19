@@ -28,8 +28,11 @@ internal object EndringSjekkGrensePeriodeBeregning {
                 null
             }
 
-        // Sjekker om endring er over grense (true hvis faktisk endring > sjablonverdi for endringsgrense eller faktisk endring er null)
-        val endringErOverGrense = (faktiskEndringFaktor == null) || (faktiskEndringFaktor > endringsgrenseFaktor)
+        // Sjekker om endring er over grense. true hvis:
+        // - faktisk endring > sjablonverdi for endringsgrense (normalcase)
+        // - faktisk endring er null og beregnet bidragsbeløp ikke er null (beløpshistorikk mangler)
+        val endringErOverGrense = ((faktiskEndringFaktor != null) && (faktiskEndringFaktor > endringsgrenseFaktor)) ||
+            (faktiskEndringFaktor == null && grunnlag.beregnetBidragBeregningGrunnlag.beløp != null)
 
         return EndringSjekkGrensePeriodeBeregningResultat(
             faktiskEndringFaktor = faktiskEndringFaktor?.avrundetMedTiDesimaler,
