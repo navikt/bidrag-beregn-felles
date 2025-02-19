@@ -4746,5 +4746,29 @@ class TestUtil {
                 ),
             ),
         )
+
+        fun barnUtvidPeriodeTilbakeITid() = BoforholdBarnRequestV3(
+            gjelderPersonId = "98765432109",
+            fødselsdato = LocalDate.of(2006, 10, 31),
+            relasjon = Familierelasjon.BARN,
+            innhentedeOffentligeOpplysninger = listOf(
+                Bostatus(
+                    periodeFom = LocalDate.of(2025, 5, 1),
+                    periodeTom = null,
+                    bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+            ),
+            behandledeBostatusopplysninger = listOf(
+                Bostatus(
+                    periodeFom = LocalDate.of(2025, 7, 1),
+                    periodeTom = null,
+                    bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+            ),
+            endreBostatus = null,
+        )
+
     }
 }
