@@ -62,7 +62,7 @@
         "relatertTilPart": "Person_Bidragsmottaker"
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Søknadsbarn"
+      "gjelderBarnReferanse": "Person_Søknadsbarn"
     },
     {
       "referanse": "Bostatus_Søknadsbarn_202309",
@@ -77,7 +77,7 @@
         "relatertTilPart": "Person_Bidragsmottaker"
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Søknadsbarn"
+      "gjelderBarnReferanse": "Person_Søknadsbarn"
     },
     {
       "referanse": "Bostatus_Husstandsbarn_01_202301",

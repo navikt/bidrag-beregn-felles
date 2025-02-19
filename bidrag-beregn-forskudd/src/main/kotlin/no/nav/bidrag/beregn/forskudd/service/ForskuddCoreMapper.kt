@@ -102,7 +102,7 @@ internal object ForskuddCoreMapper : CoreMapper() {
             val bostatusGrunnlag =
                 beregnForskuddGrunnlag.grunnlagListe.filtrerOgKonverterBasertPåFremmedReferanse<BostatusPeriode>(
                     grunnlagType = Grunnlagstype.BOSTATUS_PERIODE,
-                    referanse = beregnForskuddGrunnlag.søknadsbarnReferanse,
+                    gjelderBarnReferanse = beregnForskuddGrunnlag.søknadsbarnReferanse,
                 )
 
             return bostatusGrunnlag.map {
