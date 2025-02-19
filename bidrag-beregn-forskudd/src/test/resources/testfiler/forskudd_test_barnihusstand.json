@@ -84,7 +84,7 @@
         "relatertTilPart": "Person_Bidragsmottaker"
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Søknadsbarn"
+      "gjelderBarnReferanse": "Person_Søknadsbarn"
     },
     {
       "referanse": "Bostatus_Husstandsbarn_01_202201",
@@ -99,7 +99,7 @@
         "relatertTilPart": "Person_Bidragsmottaker"
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Husstandsbarn_01"
+      "gjelderBarnReferanse": "Person_Husstandsbarn_01"
     },
     {
       "referanse": "Bostatus_Husstandsbarn_02_202202",
@@ -114,7 +114,7 @@
         "relatertTilPart": "Person_Bidragsmottaker"
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Husstandsbarn_02"
+      "gjelderBarnReferanse": "Person_Husstandsbarn_02"
     },
     {
       "referanse": "Bostatus_Husstandsbarn_03_202203",
@@ -129,7 +129,7 @@
         "relatertTilPart": "Person_Bidragsmottaker"
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Husstandsbarn_03"
+      "gjelderBarnReferanse": "Person_Husstandsbarn_03"
     },
     {
       "referanse": "Bostatus_Husstandsbarn_04_202204",
@@ -144,7 +144,7 @@
         "relatertTilPart": "Person_Bidragsmottaker"
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Husstandsbarn_04"
+      "gjelderBarnReferanse": "Person_Husstandsbarn_04"
     },
     {
       "referanse": "BeregningInntektRapportering_Ainntekt_BM_202201",

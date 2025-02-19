@@ -41,7 +41,7 @@
 
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Søknadsbarn"
+      "gjelderBarnReferanse": "Person_Søknadsbarn"
     },
     {
       "referanse": "BeregningInntektRapportering_Ainntekt_202012",
