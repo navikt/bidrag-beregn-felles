@@ -35,7 +35,6 @@ internal open class FellesApiTest {
                     bpAndelAvUVedDeltBostedBeløp = it.innhold.bpAndelAvUVedDeltBostedBeløp,
                     løpendeForskudd = it.innhold.løpendeForskudd,
                     løpendeBidrag = it.innhold.løpendeBidrag,
-                    ingenEndringUnderGrense = it.innhold.ingenEndringUnderGrense,
                     barnetErSelvforsørget = it.innhold.barnetErSelvforsørget,
                     bidragJustertForDeltBosted = it.innhold.bidragJustertForDeltBosted,
                     bidragJustertForNettoBarnetilleggBP = it.innhold.bidragJustertForNettoBarnetilleggBP,

@@ -390,7 +390,6 @@ internal object BeregnEndeligBidragService : BeregnService() {
                         bpAndelAvUVedDeltBostedBeløp = it.resultat.bpAndelAvUVedDeltBostedBeløp,
                         løpendeForskudd = it.resultat.løpendeForskudd,
                         løpendeBidrag = it.resultat.løpendeBidrag,
-                        ingenEndringUnderGrense = it.resultat.ingenEndringUnderGrense,
                         barnetErSelvforsørget = it.resultat.barnetErSelvforsørget,
                         bidragJustertForDeltBosted = it.resultat.bidragJustertForDeltBosted,
                         bidragJustertForNettoBarnetilleggBP = it.resultat.bidragJustertForNettoBarnetilleggBP,

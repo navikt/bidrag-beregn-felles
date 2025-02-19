@@ -93,7 +93,6 @@ data class EndeligBidragBeregningResultat(
     val bpAndelAvUVedDeltBostedBeløp: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
     val løpendeForskudd: BigDecimal? = null,
     val løpendeBidrag: BigDecimal? = null,
-    val ingenEndringUnderGrense: Boolean = false,
     val barnetErSelvforsørget: Boolean = false,
     val bidragJustertForDeltBosted: Boolean = false,
     val bidragJustertForNettoBarnetilleggBP: Boolean = false,
