@@ -22,7 +22,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 @ExtendWith(MockitoExtension::class)
-internal class BeregnNettoTilsynsutgiftOgUnderholdskostnadApiTest: FellesApiTest() {
+internal class BeregnNettoTilsynsutgiftOgUnderholdskostnadApiTest : FellesApiTest() {
     private lateinit var filnavn: String
 
     @Mock

@@ -15,9 +15,11 @@ import no.nav.bidrag.beregn.barnebidrag.service.BeregnNettoTilsynsutgiftService.
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnSamværsfradragService.delberegningSamværsfradrag
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnUnderholdskostnadService.delberegningUnderholdskostnad
 import no.nav.bidrag.beregn.core.exception.BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException
+import no.nav.bidrag.beregn.core.exception.BegrensetRevurderingLøpendeForskuddManglerException
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
+import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
@@ -100,26 +102,48 @@ class BeregnBarnebidragService : BeregnService() {
             resultatPeriodeListe = lagResultatPerioder(delberegningEndeligBidragResultat.grunnlagListe)
         }
 
-        val resultatGrunnlagListe = (
+        // Slår sammen grunnlag fra alle delberegninger
+        val foreløpigResultatGrunnlagListe = (
             delberegningBidragsevneResultat + delberegningNettoTilsynsutgiftResultat + delberegningUnderholdskostnadResultat +
                 delberegningBpAndelUnderholdskostnadResultat + delberegningSamværsfradragResultat + delberegningEndeligBidragResultat.grunnlagListe +
-                beløpshistorikkGrunnlag + delberegningEndringSjekkGrenseResultat + delberegningEndringSjekkGrensePeriodeResultat
+                beløpshistorikkGrunnlag
+            )
+            .distinctBy { it.referanse }
+            .sortedBy { it.referanse }
+
+        // Filtrerer bort grunnlag som ikke blir referert (dette vil skje f.eks. hvis barnet er selvforsørget og hvis barnet bor hos BP - da
+        // regnes ikke alle delberegninger som relevante). Delberegninger for sjekk mot minimumsgrense for endring står i ensærstilling ettersom de
+        // ikke refereres noe sted, men likevel skal være med i resultatgrunnlaget om de finnes.
+        val endeligResultatGrunnlagListe = (
+            filtrerResultatGrunnlag(
+                foreløpigResultatGrunnlagListe = foreløpigResultatGrunnlagListe,
+                refererteReferanserListe = resultatPeriodeListe.flatMap { it.grunnlagsreferanseListe }
+            ) + delberegningEndringSjekkGrenseResultat + delberegningEndringSjekkGrensePeriodeResultat
             )
             .distinctBy { it.referanse }
             .sortedBy { it.referanse }
 
         val beregnetBarnebidragResultat = BeregnetBarnebidragResultat(
             beregnetBarnebidragPeriodeListe = resultatPeriodeListe,
-            grunnlagListe = resultatGrunnlagListe,
+            grunnlagListe = endeligResultatGrunnlagListe,
         )
 
         // Kaster exception hvis det er utført begrenset revurdering og det er minst ett tilfelle hvor beregnet bidrag er lavere enn løpende bidrag
+        // eller hvis løpende forskudd mangler i første beregningsperiode
         if (delberegningEndeligBidragResultat.skalKasteBegrensetRevurderingException) {
-            throw BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException(
-                melding = delberegningEndeligBidragResultat.feilmelding,
-                periodeListe = delberegningEndeligBidragResultat.perioderMedFeilListe,
-                data = beregnetBarnebidragResultat,
-            )
+            if (delberegningEndeligBidragResultat.feilmelding.contains("løpende forskudd mangler")) {
+                throw BegrensetRevurderingLøpendeForskuddManglerException(
+                    melding = delberegningEndeligBidragResultat.feilmelding,
+                    periodeListe = delberegningEndeligBidragResultat.perioderMedFeilListe,
+                    data = beregnetBarnebidragResultat,
+                )
+            } else {
+                throw BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException(
+                    melding = delberegningEndeligBidragResultat.feilmelding,
+                    periodeListe = delberegningEndeligBidragResultat.perioderMedFeilListe,
+                    data = beregnetBarnebidragResultat,
+                )
+            }
         }
 
         secureLogger.debug { "Beregning av barnebidrag - følgende respons returnert: ${tilJson(beregnetBarnebidragResultat)}" }
@@ -279,7 +303,7 @@ class BeregnBarnebidragService : BeregnService() {
         }
 
         // Kaller delberegninger
-        val delberegningBarnetilleggSkattesatsResultat = delberegningBarnetilleggSkattesats(mottattGrunnlag, rolle)
+        val delberegningBarnetilleggSkattesatsResultat = delberegningBarnetilleggSkattesats(mottattGrunnlag = mottattGrunnlag, rolle = rolle)
 
         return delberegningBarnetilleggSkattesatsResultat
     }
@@ -364,10 +388,12 @@ class BeregnBarnebidragService : BeregnService() {
         )
         val delberegningEndringSjekkGrenseResultat = delberegningEndringSjekkGrense(grunnlagTilEndringSjekkGrense, åpenSluttperiode)
         val beregnetBidragErOverMinimumsgrenseForEndring = erOverMinimumsgrenseForEndring(delberegningEndringSjekkGrenseResultat)
+        val alleResultatBeløpErNull = erAlleResultatbeløpNull(grunnlagTilEndringSjekkGrense)
 
         val resultatPeriodeListe = lagResultatPerioder(
             delberegningEndeligBidragResultat = delberegningEndeligBidragResultat.grunnlagListe,
             beregnetBidragErOverMinimumsgrenseForEndring = beregnetBidragErOverMinimumsgrenseForEndring,
+            alleResultatBeløpErNull = alleResultatBeløpErNull,
             beløpshistorikkGrunnlag = beløpshistorikkGrunnlag,
         )
 
@@ -390,6 +416,12 @@ class BeregnBarnebidragService : BeregnService() {
         .map { it.innhold.endringErOverGrense }
         .firstOrNull() ?: true
 
+    // Sjekker om alle resultatbeløp fra sluttberegningen er null
+    private fun erAlleResultatbeløpNull(mottattGrunnlag: BeregnGrunnlag): Boolean = mottattGrunnlag.grunnlagListe
+        .filtrerOgKonverterBasertPåEgenReferanse<SluttberegningBarnebidrag>(grunnlagType = Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG)
+        .filter { it.innhold.resultatBeløp != null }
+        .isEmpty()
+
     private fun filtrerBeløpshistorikkGrunnlag(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> =
         beregnGrunnlag.grunnlagListe.filter { it.type == Grunnlagstype.BELØPSHISTORIKK_BIDRAG }
 
@@ -403,7 +435,7 @@ class BeregnBarnebidragService : BeregnService() {
             ResultatPeriode(
                 periode = it.innhold.periode,
                 resultat = ResultatBeregning(
-                    beløp = it.innhold.resultatBeløp!!,
+                    beløp = it.innhold.resultatBeløp,
                 ),
                 grunnlagsreferanseListe = listOfNotNull(it.referanse, beløpshistorikkPeriodeGrunnlagReferanse),
             )
@@ -413,6 +445,7 @@ class BeregnBarnebidragService : BeregnService() {
     private fun lagResultatPerioder(
         delberegningEndeligBidragResultat: List<GrunnlagDto>,
         beregnetBidragErOverMinimumsgrenseForEndring: Boolean,
+        alleResultatBeløpErNull: Boolean,
         beløpshistorikkGrunnlag: List<GrunnlagDto>,
     ): List<ResultatPeriode> {
         // Henter beløpshistorikk (det finnes kun en forekomst, som dekker hele perioden)
@@ -426,8 +459,8 @@ class BeregnBarnebidragService : BeregnService() {
             }
             .firstOrNull()
 
-        // Hvis minst en periode er over grenseverdi for endring, kjøres ordinær logikk, med link til evt. beløpshistorikk
-        if (beregnetBidragErOverMinimumsgrenseForEndring) {
+        // Hvis minst en periode er over grenseverdi for endring eller alle resultatbeløp er null kjøres ordinær logikk, med link til evt. beløpshistorikk
+        if (beregnetBidragErOverMinimumsgrenseForEndring || alleResultatBeløpErNull) {
             return lagResultatPerioder(delberegningEndeligBidragResultat, beløpshistorikkPeriodeGrunnlag?.referanse)
         }
 
@@ -443,13 +476,20 @@ class BeregnBarnebidragService : BeregnService() {
                 )
             }
 
+        // Finner beregningsperiode for å unngå at det mappes ut resultatperioder som ligger utenfor beregningsperioden
+        val beregningStart = sluttberegningPeriodeGrunnlagListe.minOf { it.sluttberegningPeriode.periode.fom }
+        val beregningSlutt = sluttberegningPeriodeGrunnlagListe
+            .maxByOrNull { it.sluttberegningPeriode.periode.fom }
+            ?.sluttberegningPeriode?.periode?.til
+        val beregningsperiode = ÅrMånedsperiode(beregningStart, beregningSlutt)
+
         val resultatperiodeListe = beløpshistorikkPeriodeGrunnlag.beløpshistorikkPeriode.beløpshistorikk
+            .filter { it.periode.fom >= beregningsperiode.fom }
+            .filter { beregningsperiode.til == null || (it.periode.til != null && it.periode.til!! <= beregningsperiode.til!!) }
             .map {
                 ResultatPeriode(
                     periode = it.periode,
-                    resultat = ResultatBeregning(
-                        beløp = it.beløp ?: BigDecimal.ZERO,
-                    ),
+                    resultat = ResultatBeregning(beløp = it.beløp),
                     grunnlagsreferanseListe = listOf(beløpshistorikkPeriodeGrunnlag.referanse) + finnSluttberegningReferanserSomMatcher(
                         periode = it.periode,
                         sluttberegningPeriodeGrunnlagListe = sluttberegningPeriodeGrunnlagListe,
@@ -467,8 +507,13 @@ class BeregnBarnebidragService : BeregnService() {
         .filter { it.sluttberegningPeriode.periode.inneholder(periode) }
         .map { it.referanse }
 
-    // Sjekker om søknadsbarnet fyller 18 år i beregningsperioden. Justerer i så fall til-periode.
+    // Sjekker om søknadsbarnet fyller 18 år i beregningsperioden. Justerer i så fall til-periode. Hvis stønadstype er BIDRAG18AAR skal det ikke
+    // sjekkes om barnet blir 18 år i perioden,
     private fun justerTilPeriodeHvisBarnetBlir18ÅrIBeregningsperioden(mottattGrunnlag: BeregnGrunnlag): BeregnGrunnlagJustert {
+        if (mottattGrunnlag.stønadstype == Stønadstype.BIDRAG18AAR) {
+            return BeregnGrunnlagJustert(beregnGrunnlag = mottattGrunnlag, åpenSluttperiode = !mottattGrunnlag.opphørSistePeriode)
+        }
+
         val periodeSøknadsbarnetFyller18År = mottattGrunnlag.grunnlagListe
             .filtrerOgKonverterBasertPåEgenReferanse<Person>(Grunnlagstype.PERSON_SØKNADSBARN)
             .map { YearMonth.from(it.innhold.fødselsdato.plusYears(18)) }
@@ -482,8 +527,37 @@ class BeregnBarnebidragService : BeregnService() {
                 åpenSluttperiode = false,
             )
         } else {
-            BeregnGrunnlagJustert(beregnGrunnlag = mottattGrunnlag, åpenSluttperiode = mottattGrunnlag.opphørSistePeriode == false)
+            BeregnGrunnlagJustert(beregnGrunnlag = mottattGrunnlag, åpenSluttperiode = !mottattGrunnlag.opphørSistePeriode)
         }
+    }
+
+    // Rekursiv funksjon som traverserer gjennom alle grunnlag fra toppnivået og nedover og filtrerer bort alle grunnlag som ikke blir referert
+    private fun filtrerResultatGrunnlag(
+        foreløpigResultatGrunnlagListe: List<GrunnlagDto>,
+        refererteReferanserListe: List<String>,
+        referanserAlleredeLagtTil: MutableSet<String> = mutableSetOf()
+    ): List<GrunnlagDto> {
+        // Stopper hvis det ikke finnes flere refererte referanser
+        if (refererteReferanserListe.isEmpty()) {
+            return emptyList()
+        }
+
+        // Filtrer ut grunnlag som er referert og som ikke allerede er lagt til
+        val endeligResultatGrunnlagListe = foreløpigResultatGrunnlagListe
+            .filter { it.referanse in refererteReferanserListe && it.referanse !in referanserAlleredeLagtTil }
+
+        // Henter ut referanser til neste nivå
+        val nesteNivåReferanseListe = endeligResultatGrunnlagListe.flatMap { it.grunnlagsreferanseListe }
+
+        // Legger til referanser som allerede er lagt til
+        referanserAlleredeLagtTil.addAll(endeligResultatGrunnlagListe.map { it.referanse })
+
+        // Gjør rekursivt kall og returnerer det endelige resultatet til slutt
+        return endeligResultatGrunnlagListe + filtrerResultatGrunnlag(
+            foreløpigResultatGrunnlagListe = foreløpigResultatGrunnlagListe,
+            refererteReferanserListe = nesteNivåReferanseListe,
+            referanserAlleredeLagtTil = referanserAlleredeLagtTil,
+        )
     }
 
     fun beregnMånedsbeløpFaktiskUtgift(faktiskUtgift: BigDecimal, kostpenger: BigDecimal = BigDecimal.ZERO): BigDecimal =

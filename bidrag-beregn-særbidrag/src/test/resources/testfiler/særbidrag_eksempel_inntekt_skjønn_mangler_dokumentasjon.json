@@ -53,7 +53,7 @@
       "grunnlagsreferanseListe": [
         "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19781115_99_person_PERSON_HUSSTANDSMEDLEM_20220726_169"
       ],
-      "gjelderReferanse": "person_PERSON_HUSSTANDSMEDLEM_20220726_169"
+      "gjelderBarnReferanse": "person_PERSON_HUSSTANDSMEDLEM_20220726_169"
     },
     {
       "referanse": "bostatus_person_PERSON_SØKNADSBARN_20050916_101_20240801",
@@ -70,7 +70,7 @@
       "grunnlagsreferanseListe": [
         "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19781115_99_person_PERSON_SØKNADSBARN_20050916_101"
       ],
-      "gjelderReferanse": "person_PERSON_SØKNADSBARN_20050916_101"
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20050916_101"
     },
     {
       "referanse": "bostatus_person_PERSON_BIDRAGSPLIKTIG_19781115_99_20240801",
@@ -102,7 +102,7 @@
       "grunnlagsreferanseListe": [
         "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19781115_99_person_PERSON_HUSSTANDSMEDLEM_20170707_166"
       ],
-      "gjelderReferanse": "person_PERSON_HUSSTANDSMEDLEM_20170707_166"
+      "gjelderBarnReferanse": "person_PERSON_HUSSTANDSMEDLEM_20170707_166"
     },
     {
       "referanse": "bostatus_person_PERSON_HUSSTANDSMEDLEM_20150513_167_20240801",
@@ -119,7 +119,7 @@
       "grunnlagsreferanseListe": [
         "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19781115_99_person_PERSON_HUSSTANDSMEDLEM_20150513_167"
       ],
-      "gjelderReferanse": "person_PERSON_HUSSTANDSMEDLEM_20150513_167"
+      "gjelderBarnReferanse": "person_PERSON_HUSSTANDSMEDLEM_20150513_167"
     },
     {
       "referanse": "person_PERSON_HUSSTANDSMEDLEM_20220726_169",

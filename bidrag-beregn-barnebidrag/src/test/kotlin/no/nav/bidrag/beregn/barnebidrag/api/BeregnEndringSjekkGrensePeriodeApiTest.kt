@@ -111,7 +111,7 @@ internal class BeregnEndringSjekkGrensePeriodeApiTest : FellesApiTest() {
                 )
             }
 
-        val beregnetBidragBeløp = hentSluttberegning(endringSjekkGrensePeriodeResultat)[0].beregnetBeløp!!.avrundetMedToDesimaler
+        val beregnetBidragBeløp = hentSluttberegning(endringSjekkGrensePeriodeResultat)[0].beregnetBeløp?.avrundetMedToDesimaler
         val sjablonSjablontallEndringsgrense = endringSjekkGrensePeriodeResultat
             .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>(Grunnlagstype.SJABLON_SJABLONTALL)
             .map {

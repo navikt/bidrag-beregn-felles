@@ -1,0 +1,82 @@
+{
+  "periode": {
+    "fom": "2021-01"
+  },
+  "søknadsbarnReferanse": "Person_Søknadsbarn",
+  "grunnlagListe": [
+    {
+      "referanse": "Person_Søknadsbarn",
+      "type": "PERSON_SØKNADSBARN",
+      "innhold": {
+        "ident": "11111111110",
+        "navn": "Trengende Søknadsbarn",
+        "fødselsdato": "2012-09-13"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Person_Bidragsmottaker",
+      "type": "PERSON_BIDRAGSMOTTAKER",
+      "innhold": {
+        "ident": "22222222222",
+        "navn": "Søkende Bidragsmottaker",
+        "fødselsdato": "1982-05-05"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Person_Bidragspliktig",
+      "type": "PERSON_BIDRAGSPLIKTIG",
+      "innhold": {
+        "ident": "33333333333",
+        "navn": "Motvillig Bidragspliktig",
+        "fødselsdato": "1981-07-13"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Mottatt_Privat_Avtale_Grunnlag_Person_Bidragsmottaker_202101",
+      "type": "PRIVAT_AVTALE_GRUNNLAG",
+      "innhold": {
+        "avtaleInngåttDato": "2021-01-01",
+        "skalIndeksreguleres": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "Mottatt_Privat_Avtale_Periode_Grunnlag_Person_Bidragsmottaker_202101_202201",
+      "type": "PRIVAT_AVTALE_PERIODE_GRUNNLAG",
+      "innhold": {
+        "periode": {
+          "fom": "2021-01",
+          "til": "2022-01"
+        },
+        "beløp": 500.00,
+        "manueltRegistrert": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "Mottatt_Privat_Avtale_Periode_Grunnlag_Person_Bidragsmottaker_202201",
+      "type": "PRIVAT_AVTALE_PERIODE_GRUNNLAG",
+      "innhold": {
+        "periode": {
+          "fom": "2022-01",
+          "til": "2023-10"
+        },
+        "beløp": 1000.00,
+        "manueltRegistrert": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    }
+  ]
+}

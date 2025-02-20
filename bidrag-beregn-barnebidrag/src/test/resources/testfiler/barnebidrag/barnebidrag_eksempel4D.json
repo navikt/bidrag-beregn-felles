@@ -1,0 +1,266 @@
+{
+  "periode" : {
+    "fom" : "2025-01",
+    "til" : "2025-03"
+  },
+  "opphørSistePeriode" : false,
+  "søknadsbarnReferanse" : "person_PERSON_SØKNADSBARN_20140513_362",
+  "grunnlagListe" : [ {
+    "referanse" : "person_PERSON_BIDRAGSMOTTAKER_19801110_364",
+    "type" : "PERSON_BIDRAGSMOTTAKER",
+    "innhold" : {
+      "ident" : "10518048274",
+      "navn" : null,
+      "fødselsdato" : "1980-11-10"
+    },
+    "grunnlagsreferanseListe" : [ ],
+    "gjelderReferanse" : null,
+    "gjelderBarnReferanse" : null
+  }, {
+    "referanse" : "person_PERSON_BIDRAGSPLIKTIG_19791212_363",
+    "type" : "PERSON_BIDRAGSPLIKTIG",
+    "innhold" : {
+      "ident" : "12527938048",
+      "navn" : null,
+      "fødselsdato" : "1979-12-12"
+    },
+    "grunnlagsreferanseListe" : [ ],
+    "gjelderReferanse" : null,
+    "gjelderBarnReferanse" : null
+  }, {
+    "referanse" : "person_PERSON_SØKNADSBARN_20140513_362",
+    "type" : "PERSON_SØKNADSBARN",
+    "innhold" : {
+      "ident" : "13451471613",
+      "navn" : null,
+      "fødselsdato" : "2014-05-13"
+    },
+    "grunnlagsreferanseListe" : [ ],
+    "gjelderReferanse" : null,
+    "gjelderBarnReferanse" : null
+  }, {
+    "referanse" : "bostatus_person_PERSON_SØKNADSBARN_20140513_362_20250101",
+    "type" : "BOSTATUS_PERIODE",
+    "innhold" : {
+      "periode" : {
+        "fom" : "2025-01",
+        "til" : null
+      },
+      "bostatus" : "IKKE_MED_FORELDER",
+      "relatertTilPart" : "person_PERSON_BIDRAGSPLIKTIG_19791212_363",
+      "manueltRegistrert" : true
+    },
+    "grunnlagsreferanseListe" : [ ],
+    "gjelderReferanse" : "person_PERSON_BIDRAGSPLIKTIG_19791212_363",
+    "gjelderBarnReferanse" : "person_PERSON_SØKNADSBARN_20140513_362"
+  }, {
+    "referanse" : "bostatus_person_PERSON_BIDRAGSPLIKTIG_19791212_363_20250101",
+    "type" : "BOSTATUS_PERIODE",
+    "innhold" : {
+      "periode" : {
+        "fom" : "2025-01",
+        "til" : null
+      },
+      "bostatus" : "BOR_MED_ANDRE_VOKSNE",
+      "relatertTilPart" : "person_PERSON_BIDRAGSPLIKTIG_19791212_363",
+      "manueltRegistrert" : false
+    },
+    "grunnlagsreferanseListe" : [ "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19791212_363_person_PERSON_BIDRAGSPLIKTIG_19791212_363" ],
+    "gjelderReferanse" : "person_PERSON_BIDRAGSPLIKTIG_19791212_363",
+    "gjelderBarnReferanse" : null
+  }, {
+    "referanse" : "bostatus_person_PERSON_HUSSTANDSMEDLEM_20180921_518_20250101",
+    "type" : "BOSTATUS_PERIODE",
+    "innhold" : {
+      "periode" : {
+        "fom" : "2025-01",
+        "til" : null
+      },
+      "bostatus" : "MED_FORELDER",
+      "relatertTilPart" : "person_PERSON_BIDRAGSPLIKTIG_19791212_363",
+      "manueltRegistrert" : false
+    },
+    "grunnlagsreferanseListe" : [ "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19791212_363_person_PERSON_HUSSTANDSMEDLEM_20180921_518" ],
+    "gjelderReferanse" : "person_PERSON_BIDRAGSPLIKTIG_19791212_363",
+    "gjelderBarnReferanse" : "person_PERSON_HUSSTANDSMEDLEM_20180921_518"
+  }, {
+    "referanse" : "bostatus_person_PERSON_HUSSTANDSMEDLEM_20060509_516_20250101",
+    "type" : "BOSTATUS_PERIODE",
+    "innhold" : {
+      "periode" : {
+        "fom" : "2025-01",
+        "til" : null
+      },
+      "bostatus" : "IKKE_MED_FORELDER",
+      "relatertTilPart" : "person_PERSON_BIDRAGSPLIKTIG_19791212_363",
+      "manueltRegistrert" : false
+    },
+    "grunnlagsreferanseListe" : [ "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19791212_363_person_PERSON_HUSSTANDSMEDLEM_20060509_516" ],
+    "gjelderReferanse" : "person_PERSON_BIDRAGSPLIKTIG_19791212_363",
+    "gjelderBarnReferanse" : "person_PERSON_HUSSTANDSMEDLEM_20060509_516"
+  }, {
+    "referanse" : "person_PERSON_HUSSTANDSMEDLEM_20180921_518",
+    "type" : "PERSON_HUSSTANDSMEDLEM",
+    "innhold" : {
+      "ident" : "21491867881",
+      "navn" : null,
+      "fødselsdato" : "2018-09-21"
+    },
+    "grunnlagsreferanseListe" : [ ],
+    "gjelderReferanse" : null,
+    "gjelderBarnReferanse" : null
+  }, {
+    "referanse" : "person_PERSON_HUSSTANDSMEDLEM_20060509_516",
+    "type" : "PERSON_HUSSTANDSMEDLEM",
+    "innhold" : {
+      "ident" : "09450689596",
+      "navn" : null,
+      "fødselsdato" : "2006-05-09"
+    },
+    "grunnlagsreferanseListe" : [ ],
+    "gjelderReferanse" : null,
+    "gjelderBarnReferanse" : null
+  }, {
+    "referanse" : "inntekt_LØNN_MANUELT_BEREGNET_person_PERSON_BIDRAGSMOTTAKER_19801110_364_20250101_1581",
+    "type" : "INNTEKT_RAPPORTERING_PERIODE",
+    "innhold" : {
+      "periode" : {
+        "fom" : "2025-01",
+        "til" : null
+      },
+      "manueltRegistrert" : true,
+      "opprinneligPeriode" : null,
+      "versjon" : null,
+      "inntektsrapportering" : "LØNN_MANUELT_BEREGNET",
+      "gjelderBarn" : null,
+      "beløp" : 450000,
+      "valgt" : true,
+      "inntektspostListe" : [ ]
+    },
+    "grunnlagsreferanseListe" : [ ],
+    "gjelderReferanse" : "person_PERSON_BIDRAGSMOTTAKER_19801110_364",
+    "gjelderBarnReferanse" : null
+  }, {
+    "referanse" : "inntekt_LØNN_MANUELT_BEREGNET_person_PERSON_BIDRAGSPLIKTIG_19791212_363_20250101_1582",
+    "type" : "INNTEKT_RAPPORTERING_PERIODE",
+    "innhold" : {
+      "periode" : {
+        "fom" : "2025-01",
+        "til" : null
+      },
+      "manueltRegistrert" : true,
+      "opprinneligPeriode" : null,
+      "versjon" : null,
+      "inntektsrapportering" : "LØNN_MANUELT_BEREGNET",
+      "gjelderBarn" : null,
+      "beløp" : 449000,
+      "valgt" : true,
+      "inntektspostListe" : [ ]
+    },
+    "grunnlagsreferanseListe" : [ ],
+    "gjelderReferanse" : "person_PERSON_BIDRAGSPLIKTIG_19791212_363",
+    "gjelderBarnReferanse" : null
+  }, {
+    "referanse" : "søknad",
+    "type" : "SØKNAD",
+    "innhold" : {
+      "mottattDato" : "2024-11-15",
+      "søktFraDato" : "2024-01-01",
+      "søktAv" : "BIDRAGSPLIKTIG",
+      "klageMottattDato" : null,
+      "opprinneligVedtakstype" : null,
+      "begrensetRevurdering" : false,
+      "egetTiltak" : false
+    },
+    "grunnlagsreferanseListe" : [ ],
+    "gjelderReferanse" : null,
+    "gjelderBarnReferanse" : null
+  }, {
+    "referanse" : "samvær_SAMVÆRSPERIODE_20250101_person_PERSON_SØKNADSBARN_20140513_362",
+    "type" : "SAMVÆRSPERIODE",
+    "innhold" : {
+      "periode" : {
+        "fom" : "2025-01",
+        "til" : null
+      },
+      "manueltRegistrert" : true,
+      "samværsklasse" : "SAMVÆRSKLASSE_0"
+    },
+    "grunnlagsreferanseListe" : [ ],
+    "gjelderReferanse" : "person_PERSON_BIDRAGSPLIKTIG_19791212_363",
+    "gjelderBarnReferanse" : "person_PERSON_SØKNADSBARN_20140513_362"
+  }, {
+    "referanse" : "person_PERSON_HUSSTANDSMEDLEM_20060509_516",
+    "type" : "PERSON_BARN_BIDRAGSMOTTAKER",
+    "innhold" : {
+      "ident" : "09450689596",
+      "navn" : null,
+      "fødselsdato" : "2006-05-09"
+    },
+    "grunnlagsreferanseListe" : [ "innhentet_andre_barn_til_bidragsmottaker_person_PERSON_BIDRAGSMOTTAKER_19801110_364" ],
+    "gjelderReferanse" : null,
+    "gjelderBarnReferanse" : null
+  }, {
+    "referanse" : "person_PERSON_HUSSTANDSMEDLEM_20180921_518",
+    "type" : "PERSON_BARN_BIDRAGSMOTTAKER",
+    "innhold" : {
+      "ident" : "21491867881",
+      "navn" : null,
+      "fødselsdato" : "2018-09-21"
+    },
+    "grunnlagsreferanseListe" : [ "innhentet_andre_barn_til_bidragsmottaker_person_PERSON_BIDRAGSMOTTAKER_19801110_364" ],
+    "gjelderReferanse" : null,
+    "gjelderBarnReferanse" : null
+  }, {
+    "referanse" : "BELØPSHISTORIKK_BIDRAG_2500030_13451471613_12527938048_20250220",
+    "type" : "BELØPSHISTORIKK_BIDRAG",
+    "innhold" : {
+      "tidspunktInnhentet" : "2025-02-20T10:02:09.174294",
+      "førsteIndeksreguleringsår" : 2026,
+      "beløpshistorikk" : [ {
+        "periode" : {
+          "fom" : "2024-01",
+          "til" : "2024-06"
+        },
+        "beløp" : 3790,
+        "valutakode" : "NOK",
+        "vedtaksid" : 338
+      }, {
+        "periode" : {
+          "fom" : "2024-06",
+          "til" : "2024-07"
+        },
+        "beløp" : 3790,
+        "valutakode" : "NOK",
+        "vedtaksid" : 338
+      }, {
+        "periode" : {
+          "fom" : "2024-07",
+          "til" : "2024-12"
+        },
+        "beløp" : 3830,
+        "valutakode" : "NOK",
+        "vedtaksid" : 338
+      }, {
+        "periode" : {
+          "fom" : "2024-12",
+          "til" : "2025-01"
+        },
+        "beløp" : 3830,
+        "valutakode" : "NOK",
+        "vedtaksid" : 338
+      }, {
+        "periode" : {
+          "fom" : "2025-01",
+          "til" : null
+        },
+        "beløp" : 3830,
+        "valutakode" : "NOK",
+        "vedtaksid" : 338
+      } ]
+    },
+    "grunnlagsreferanseListe" : [ ],
+    "gjelderReferanse" : "person_PERSON_BIDRAGSPLIKTIG_19791212_363",
+    "gjelderBarnReferanse" : "person_PERSON_SØKNADSBARN_20140513_362"
+  } ]
+}

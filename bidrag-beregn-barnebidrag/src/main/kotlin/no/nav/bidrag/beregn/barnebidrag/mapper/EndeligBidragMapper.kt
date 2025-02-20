@@ -3,6 +3,7 @@ package no.nav.bidrag.beregn.barnebidrag.mapper
 import no.nav.bidrag.beregn.barnebidrag.bo.BegrensetRevurderingPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BeløpshistorikkPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BidragsevneDelberegningPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.BostatusPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BpAndelUnderholdskostnadDelberegningPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.NettoBarnetilleggDelberegningPeriodeGrunnlag
@@ -13,6 +14,7 @@ import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.BostatusPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningNettoBarnetillegg
@@ -35,6 +37,7 @@ internal object EndeligBidragMapper : CoreMapper() {
             bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe = mapBpAndelUnderholdskostnad(mottattGrunnlag),
             samværsfradragDelberegningPeriodeGrunnlagListe = mapSamværsfradrag(mottattGrunnlag),
             samværsklassePeriodeGrunnlagListe = mapSamværsklasse(mottattGrunnlag),
+            bostatusPeriodeGrunnlagListe = mapBostatus(mottattGrunnlag),
             nettoBarnetilleggBPDelberegningPeriodeGrunnlagListe = mapNettoBarnetillegg(
                 beregnGrunnlag = mottattGrunnlag,
                 referanseTilRolle = finnReferanseTilRolle(
@@ -51,24 +54,24 @@ internal object EndeligBidragMapper : CoreMapper() {
             ),
             // Legger null i beløpshistorikk forskudd hvis indikator for begrenset revurdering er false
             beløpshistorikkForskuddPeriodeGrunnlag =
-                if (begrensetRevurderingPeriodeGrunnlag == null || begrensetRevurderingPeriodeGrunnlag.begrensetRevurdering == false) {
-                    null
-                } else {
-                    mapBeløpshistorikk(
-                        beregnGrunnlag = mottattGrunnlag,
-                        grunnlagstype = Grunnlagstype.BELØPSHISTORIKK_FORSKUDD
-                    )
-                },
+            if (begrensetRevurderingPeriodeGrunnlag == null || begrensetRevurderingPeriodeGrunnlag.begrensetRevurdering == false) {
+                null
+            } else {
+                mapBeløpshistorikk(
+                    beregnGrunnlag = mottattGrunnlag,
+                    grunnlagstype = Grunnlagstype.BELØPSHISTORIKK_FORSKUDD,
+                )
+            },
             // Legger null i beløpshistorikk bidrag hvis indikator for begrenset revurdering er false
             beløpshistorikkBidragPeriodeGrunnlag =
-                if (begrensetRevurderingPeriodeGrunnlag == null || begrensetRevurderingPeriodeGrunnlag.begrensetRevurdering == false) {
-                    null
-                } else {
-                    mapBeløpshistorikk(
-                        beregnGrunnlag = mottattGrunnlag,
-                        grunnlagstype = Grunnlagstype.BELØPSHISTORIKK_BIDRAG
-                    )
-                },
+            if (begrensetRevurderingPeriodeGrunnlag == null || begrensetRevurderingPeriodeGrunnlag.begrensetRevurdering == false) {
+                null
+            } else {
+                mapBeløpshistorikk(
+                    beregnGrunnlag = mottattGrunnlag,
+                    grunnlagstype = Grunnlagstype.BELØPSHISTORIKK_BIDRAG,
+                )
+            },
             begrensetRevurderingPeriodeGrunnlag = begrensetRevurderingPeriodeGrunnlag,
         )
     }
@@ -155,6 +158,26 @@ internal object EndeligBidragMapper : CoreMapper() {
         } catch (e: Exception) {
             throw IllegalArgumentException(
                 "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.SAMVÆRSPERIODE er ikke gyldig: " + e.message,
+            )
+        }
+    }
+
+    private fun mapBostatus(beregnGrunnlag: BeregnGrunnlag): List<BostatusPeriodeGrunnlag> {
+        try {
+            return beregnGrunnlag.grunnlagListe
+                .filtrerOgKonverterBasertPåEgenReferanse<BostatusPeriode>(Grunnlagstype.BOSTATUS_PERIODE)
+                .filter {
+                    it.gjelderBarnReferanse == beregnGrunnlag.søknadsbarnReferanse || it.gjelderReferanse == beregnGrunnlag.søknadsbarnReferanse
+                }
+                .map {
+                    BostatusPeriodeGrunnlag(
+                        referanse = it.referanse,
+                        bostatusPeriode = it.innhold,
+                    )
+                }
+        } catch (e: Exception) {
+            throw IllegalArgumentException(
+                "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.BOSTATUS_PERIODE er ikke gyldig: " + e.message,
             )
         }
     }

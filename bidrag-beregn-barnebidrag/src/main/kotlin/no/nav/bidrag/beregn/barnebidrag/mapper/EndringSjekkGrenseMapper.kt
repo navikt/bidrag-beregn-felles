@@ -15,7 +15,9 @@ internal object EndringSjekkGrenseMapper : CoreMapper() {
     private fun mapEndringSjekkGrensePeriode(beregnGrunnlag: BeregnGrunnlag): List<EndringSjekkGrensePeriodeDelberegningPeriodeGrunnlag> {
         try {
             return beregnGrunnlag.grunnlagListe
-                .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndringSjekkGrensePeriode>(Grunnlagstype.DELBEREGNING_ENDRING_SJEKK_GRENSE_PERIODE)
+                .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndringSjekkGrensePeriode>(
+                    Grunnlagstype.DELBEREGNING_ENDRING_SJEKK_GRENSE_PERIODE,
+                )
                 .map {
                     EndringSjekkGrensePeriodeDelberegningPeriodeGrunnlag(
                         referanse = it.referanse,
@@ -24,7 +26,8 @@ internal object EndringSjekkGrenseMapper : CoreMapper() {
                 }
         } catch (e: Exception) {
             throw IllegalArgumentException(
-                "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.DELBEREGNING_ENDRING_SJEKK_GRENSE_PERIODE er ikke gyldig: " + e.message,
+                "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.DELBEREGNING_ENDRING_SJEKK_GRENSE_PERIODE er ikke gyldig: " +
+                    e.message,
             )
         }
     }

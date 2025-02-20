@@ -851,6 +851,7 @@ object TestUtil {
                 type = Grunnlagstype.BOSTATUS_PERIODE,
                 grunnlagsreferanseListe = listOf("Person_Søknadsbarn"),
                 innhold = bostatusInnhold,
+                gjelderBarnReferanse = "Person_Søknadsbarn",
             ),
         )
         grunnlagListe.add(
