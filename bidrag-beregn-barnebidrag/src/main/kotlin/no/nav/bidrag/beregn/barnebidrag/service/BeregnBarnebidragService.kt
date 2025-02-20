@@ -19,6 +19,7 @@ import no.nav.bidrag.beregn.core.exception.BegrensetRevurderingLøpendeForskuddM
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
+import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
@@ -499,8 +500,13 @@ class BeregnBarnebidragService : BeregnService() {
         .filter { it.sluttberegningPeriode.periode.inneholder(periode) }
         .map { it.referanse }
 
-    // Sjekker om søknadsbarnet fyller 18 år i beregningsperioden. Justerer i så fall til-periode.
+    // Sjekker om søknadsbarnet fyller 18 år i beregningsperioden. Justerer i så fall til-periode. Hvis stønadstype er BIDRAG18AAR skal det ikke
+    // sjekkes om barnet blir 18 år i perioden,
     private fun justerTilPeriodeHvisBarnetBlir18ÅrIBeregningsperioden(mottattGrunnlag: BeregnGrunnlag): BeregnGrunnlagJustert {
+        if (mottattGrunnlag.stønadstype == Stønadstype.BIDRAG18AAR) {
+            return BeregnGrunnlagJustert(beregnGrunnlag = mottattGrunnlag, åpenSluttperiode = !mottattGrunnlag.opphørSistePeriode)
+        }
+
         val periodeSøknadsbarnetFyller18År = mottattGrunnlag.grunnlagListe
             .filtrerOgKonverterBasertPåEgenReferanse<Person>(Grunnlagstype.PERSON_SØKNADSBARN)
             .map { YearMonth.from(it.innhold.fødselsdato.plusYears(18)) }
@@ -514,7 +520,7 @@ class BeregnBarnebidragService : BeregnService() {
                 åpenSluttperiode = false,
             )
         } else {
-            BeregnGrunnlagJustert(beregnGrunnlag = mottattGrunnlag, åpenSluttperiode = mottattGrunnlag.opphørSistePeriode == false)
+            BeregnGrunnlagJustert(beregnGrunnlag = mottattGrunnlag, åpenSluttperiode = !mottattGrunnlag.opphørSistePeriode)
         }
     }
 
