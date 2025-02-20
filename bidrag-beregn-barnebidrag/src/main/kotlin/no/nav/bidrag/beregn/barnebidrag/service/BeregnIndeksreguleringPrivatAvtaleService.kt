@@ -41,6 +41,7 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
 
         val privatAvtale = grunnlag.grunnlagListe
             .filtrerOgKonverterBasertPåEgenReferanse<PrivatAvtaleGrunnlag>(Grunnlagstype.PRIVAT_AVTALE_GRUNNLAG)
+            .filter { it.gjelderBarnReferanse == grunnlag.søknadsbarnReferanse }
             .map {
                 PrivatAvtale(
                     referanse = it.referanse,
@@ -136,7 +137,6 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
         ).plusYears(1).withMonth(7)
 
         if (privatAvtale.skalIndeksreguleres && indeksregulerPeriode <= YearMonth.now() && privatAvtaleListe.last().periode.til == null) {
-//            val beregningsperiodeListe = mutableListOf<Beregningsperiode>()
             privatAvtaleListe.forEach {
                 if (it.periode.fom.isBefore(indeksregulerPeriode)) {
                     beregningsperiodeListe.add(
