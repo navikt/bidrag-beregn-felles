@@ -117,7 +117,7 @@ class BeregnBarnebidragService : BeregnService() {
         val endeligResultatGrunnlagListe = (
             filtrerResultatGrunnlag(
                 foreløpigResultatGrunnlagListe = foreløpigResultatGrunnlagListe,
-                refererteReferanserListe = resultatPeriodeListe.flatMap { it.grunnlagsreferanseListe },
+                refererteReferanserListe = resultatPeriodeListe.flatMap { it.grunnlagsreferanseListe }
             ) + delberegningEndringSjekkGrenseResultat + delberegningEndringSjekkGrensePeriodeResultat
             )
             .distinctBy { it.referanse }
@@ -476,13 +476,20 @@ class BeregnBarnebidragService : BeregnService() {
                 )
             }
 
+        // Finner beregningsperiode for å unngå at det mappes ut resultatperioder som ligger utenfor beregningsperioden
+        val beregningStart = sluttberegningPeriodeGrunnlagListe.minOf { it.sluttberegningPeriode.periode.fom }
+        val beregningSlutt = sluttberegningPeriodeGrunnlagListe
+            .maxByOrNull { it.sluttberegningPeriode.periode.fom }
+            ?.sluttberegningPeriode?.periode?.til
+        val beregningsperiode = ÅrMånedsperiode(beregningStart, beregningSlutt)
+
         val resultatperiodeListe = beløpshistorikkPeriodeGrunnlag.beløpshistorikkPeriode.beløpshistorikk
+            .filter { it.periode.fom >= beregningsperiode.fom }
+            .filter { beregningsperiode.til == null || (it.periode.til != null && it.periode.til!! <= beregningsperiode.til!!) }
             .map {
                 ResultatPeriode(
                     periode = it.periode,
-                    resultat = ResultatBeregning(
-                        beløp = it.beløp,
-                    ),
+                    resultat = ResultatBeregning(beløp = it.beløp),
                     grunnlagsreferanseListe = listOf(beløpshistorikkPeriodeGrunnlag.referanse) + finnSluttberegningReferanserSomMatcher(
                         periode = it.periode,
                         sluttberegningPeriodeGrunnlagListe = sluttberegningPeriodeGrunnlagListe,
@@ -528,7 +535,7 @@ class BeregnBarnebidragService : BeregnService() {
     private fun filtrerResultatGrunnlag(
         foreløpigResultatGrunnlagListe: List<GrunnlagDto>,
         refererteReferanserListe: List<String>,
-        referanserAlleredeLagtTil: MutableSet<String> = mutableSetOf(),
+        referanserAlleredeLagtTil: MutableSet<String> = mutableSetOf()
     ): List<GrunnlagDto> {
         // Stopper hvis det ikke finnes flere refererte referanser
         if (refererteReferanserListe.isEmpty()) {

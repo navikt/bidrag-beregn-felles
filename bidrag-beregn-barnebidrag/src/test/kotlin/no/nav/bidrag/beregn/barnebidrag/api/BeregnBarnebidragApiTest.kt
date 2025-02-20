@@ -99,6 +99,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
     // Grunnlag
     private var forventetAntallInntektrapporteringBP: Int = 1
     private var forventetAntallInntektrapporteringBM: Int = 1
+    private var forventetAntallInntektrapporteringSB: Int = 1
     private var forventetAntallBarnetilleggBP: Int = 1
     private var forventetAntallBarnetilleggBM: Int = 1
     private var forventetAntallEndringSjekkGrense: Int = 1
@@ -621,6 +622,64 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
     }
 
     @Test
+    @DisplayName("Barnebidrag - eksempel 4D - kostnadsberegnet bidrag - sjekk mot 12%-regel hvor beløpshistorikk går ut over beregningsperioden")
+    fun testBarnebidrag_Eksempel04D() {
+        filnavn = "src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel4D.json"
+
+        // Beregningsperiode
+        forventetBeregningsperiode = ÅrMånedsperiode(YearMonth.parse("2025-01"), null)
+
+        // Resultat
+        forventetEndeligResultatbeløp = BigDecimal.valueOf(3830).setScale(0)
+
+        // Bidragsevne
+        forventetBidragsevne = BigDecimal.valueOf(7405).setScale(2)
+        forventetMinstefradrag = BigDecimal.valueOf(86250.00).setScale(2)
+        forventetSkattAlminneligInntekt = BigDecimal.valueOf(60390.00).setScale(2)
+        forventetTrinnskatt = BigDecimal.valueOf(7225.05).setScale(2)
+        forventetTrygdeavgift = BigDecimal.valueOf(34573.00).setScale(2)
+        forventetSumSkatt = BigDecimal.valueOf(102188.05).setScale(2)
+        forventetSumSkattFaktor = BigDecimal.valueOf(0.2275903118).setScale(10)
+        forventetUnderholdBarnEgenHusstand = BigDecimal.valueOf(51036).setScale(2)
+        forventetSumInntekt25Prosent = BigDecimal.valueOf(9354.17).setScale(2)
+
+        // Underholdskostnad
+        forventetUnderholdskostnad = BigDecimal.valueOf(8471.00).setScale(2)
+
+        // BP andel underholdskostnad
+        forventetEndeligAndelFaktor = BigDecimal.valueOf(0.4994438265).setScale(10)
+        forventetAndelBeløp = BigDecimal.valueOf(4230.79).setScale(2)
+        forventetBeregnetAndelFaktor = BigDecimal.valueOf(0.4994438265).setScale(10)
+        forventetBarnEndeligInntekt = BigDecimal.ZERO.setScale(2)
+
+        // Samværsfradrag
+        forventetSamværsfradrag = BigDecimal.ZERO.setScale(2)
+
+        // Endelig bidrag
+        forventetBeregnetBeløp = BigDecimal.valueOf(4230.79).setScale(2)
+        forventetResultatbeløp = BigDecimal.valueOf(4230).setScale(0)
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(8471).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(4230.79).setScale(2)
+        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(4230.79).setScale(2)
+        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(4230.79).setScale(2)
+        forventetBruttoBidragEtterBegrensetRevurdering = BigDecimal.valueOf(4230.79).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(4230.79).setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(4230.79).setScale(2)
+        forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
+        forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
+
+        // Sjabloner
+        forventetAntallSjablonSjablontall = 12
+
+        // Grunnlag
+        forventetAntallBarnetilleggBP = 0
+        forventetAntallBarnetilleggBM = 0
+        forventetAntallInntektrapporteringSB = 0
+
+        utførBeregningerOgEvaluerResultatBarnebidrag()
+    }
+
+    @Test
     @DisplayName("Barnebidrag - eksempel 5 - søknadsbarnet bor hos BP - bidrag skal ikke beregnes")
     fun testBarnebidrag_Eksempel05() {
         filnavn = "src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel5.json"
@@ -644,11 +703,18 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
         val alleReferanser = hentAlleReferanser(barnebidragResultatGrunnlagListe)
         val alleRefererteReferanser = hentAlleRefererteReferanser(
             resultatGrunnlagListe = barnebidragResultatGrunnlagListe,
-            barnebidragResultat = barnebidragResultat,
+            barnebidragResultat = barnebidragResultat
         )
-        // DELBEREGNING_ENDRING_SJEKK_GRENSE er "frittstående" (refereres ikke av noe objekt)
-        val alleReferanserUnntattDelberegningEndringSjekkGrense =
-            alleReferanser.filterNot { it.contains("delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_Person_Søknadsbarn") }
+
+        // Fjerner referanser som er "frittstående" (refereres ikke av noe objekt)
+        val alleReferanserFiltrert = alleReferanser
+            .filterNot { it.contains("delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_Person") }
+            .filterNot { it.contains("delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_person") }
+            .filterNot { it.contains("delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_PERSON") }
+
+        // Fjerner referanser som ikke er med i inputen til beregning
+        val alleRefererteReferanserFiltrert = alleRefererteReferanser
+            .filterNot { it.contains("innhentet_husstandsmedlem") }
 
         assertAll(
             { assertThat(barnebidragResultat).isNotNull },
@@ -699,8 +765,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             { assertThat(delberegningEndringSjekkGrenseResultatListe[0].endringErOverGrense).isFalse() },
 
             // Referanser
-            { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
-            { assertThat(alleRefererteReferanser).containsAll(alleReferanserUnntattDelberegningEndringSjekkGrense) },
+            { assertThat(alleReferanser).containsAll(alleRefererteReferanserFiltrert) },
+            { assertThat(alleRefererteReferanser).containsAll(alleReferanserFiltrert) }
         )
     }
 
@@ -845,11 +911,18 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
         val alleReferanser = hentAlleReferanser(barnebidragResultatGrunnlagListe)
         val alleRefererteReferanser = hentAlleRefererteReferanser(
             resultatGrunnlagListe = barnebidragResultatGrunnlagListe,
-            barnebidragResultat = barnebidragResultat,
+            barnebidragResultat = barnebidragResultat
         )
-        // DELBEREGNING_ENDRING_SJEKK_GRENSE er "frittstående" (refereres ikke av noe objekt)
-        val alleReferanserUnntattDelberegningEndringSjekkGrense =
-            alleReferanser.filterNot { it.contains("delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_Person_Søknadsbarn") }
+
+        // Fjerner referanser som er "frittstående" (refereres ikke av noe objekt)
+        val alleReferanserFiltrert = alleReferanser
+            .filterNot { it.contains("delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_Person") }
+            .filterNot { it.contains("delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_person") }
+            .filterNot { it.contains("delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_PERSON") }
+
+        // Fjerner referanser som ikke er med i inputen til beregning
+        val alleRefererteReferanserFiltrert = alleRefererteReferanser
+            .filterNot { it.contains("innhentet_husstandsmedlem") }
 
         val bidragsevneResultatListe = barnebidragResultatGrunnlagListe
             .filtrerOgKonverterBasertPåEgenReferanse<DelberegningBidragsevne>(Grunnlagstype.DELBEREGNING_BIDRAGSEVNE)
@@ -1136,7 +1209,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             // Grunnlag
             { assertThat(antallInntektRapporteringPeriodeBP).isEqualTo(forventetAntallInntektrapporteringBP) },
             { assertThat(antallInntektRapporteringPeriodeBM).isEqualTo(forventetAntallInntektrapporteringBM) },
-            { assertThat(antallInntektRapporteringPeriodeSB).isEqualTo(1) },
+            { assertThat(antallInntektRapporteringPeriodeSB).isEqualTo(forventetAntallInntektrapporteringSB) },
             { assertThat(antallDelberegningSumInntektPeriodeBP).isEqualTo(1) },
             { assertThat(antallDelberegningSumInntektPeriodeBM).isEqualTo(1) },
             { assertThat(antallDelberegningSumInntektPeriodeSB).isEqualTo(1) },
@@ -1161,8 +1234,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             { assertThat(antallSjablonSamværsfradrag).isEqualTo(1) },
 
             // Referanser
-            { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
-            { assertThat(alleRefererteReferanser).containsAll(alleReferanserUnntattDelberegningEndringSjekkGrense) },
+            { assertThat(alleReferanser).containsAll(alleRefererteReferanserFiltrert) },
+            { assertThat(alleRefererteReferanser).containsAll(alleReferanserFiltrert) },
         )
     }
 }
