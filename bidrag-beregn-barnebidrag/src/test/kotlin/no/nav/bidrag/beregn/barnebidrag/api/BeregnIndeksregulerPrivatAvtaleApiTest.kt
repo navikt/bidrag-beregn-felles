@@ -91,6 +91,26 @@ internal class BeregnIndeksregulerPrivatAvtaleApiTest {
         )
     }
 
+    @Test
+    @DisplayName("Privat avtale - med indeksregulering der tildato er satt. Skal da returnere uten å indeksregulere. Skal egentlig ikke skje.")
+    fun testIndeksreguleringPrivatAvtaleMedIndeksreguleringTildatoSatt() {
+        filnavn = "src/test/resources/testfiler/indeksreguleringprivatavtale/privat_avtale_med_indeksregulering_siste_periode_med_satt_tildato.json"
+        val resultat = utførBeregningerOgEvaluerResultatIndeksreguleringPrivatAvtale()
+
+        assertAll(
+            { assertThat(resultat).hasSize(2) },
+
+            // Resultat
+            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode("2021-01", "2022-01")) },
+            { assertThat(resultat[0].beløp.compareTo(BigDecimal.valueOf(500.00))).isEqualTo(0) },
+            { assertThat(resultat[0].indeksreguleringFaktor).isNull() },
+
+            { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode("2022-01", "2023-10")) },
+            { assertThat(resultat[1].beløp.compareTo(BigDecimal.valueOf(1000.00))).isEqualTo(0) },
+            { assertThat(resultat[1].indeksreguleringFaktor).isNull() },
+        )
+    }
+
     private fun utførBeregningerOgEvaluerResultatIndeksreguleringPrivatAvtale(): List<DelberegningPrivatAvtalePeriode> {
         val request = lesFilOgByggRequest(filnavn)
         val resultat = api.beregnIndeksreguleringPrivatAvtale(request)

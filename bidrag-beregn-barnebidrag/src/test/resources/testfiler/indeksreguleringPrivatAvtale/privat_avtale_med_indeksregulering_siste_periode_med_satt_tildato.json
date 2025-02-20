@@ -1,7 +1,6 @@
 {
   "periode": {
-    "fom": "2022-01",
-    "til": "2025-03"
+    "fom": "2021-01"
   },
   "søknadsbarnReferanse": "Person_Søknadsbarn",
   "grunnlagListe": [
@@ -39,11 +38,26 @@
       "gjelderReferanse": null
     },
     {
-      "referanse": "Mottatt_Privat_Avtale_Grunnlag_Person_Bidragsmottaker_202201",
+      "referanse": "Mottatt_Privat_Avtale_Grunnlag_Person_Bidragsmottaker_202101",
       "type": "PRIVAT_AVTALE_GRUNNLAG",
       "innhold": {
-        "avtaleInngåttDato": "2022-01-01",
+        "avtaleInngåttDato": "2021-01-01",
         "skalIndeksreguleres": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "Mottatt_Privat_Avtale_Periode_Grunnlag_Person_Bidragsmottaker_202101_202201",
+      "type": "PRIVAT_AVTALE_PERIODE_GRUNNLAG",
+      "innhold": {
+        "periode": {
+          "fom": "2021-01",
+          "til": "2022-01"
+        },
+        "beløp": 500.00,
+        "manueltRegistrert": true
       },
       "grunnlagsreferanseListe": [],
       "gjelderBarnReferanse": "Person_Søknadsbarn",
@@ -54,7 +68,8 @@
       "type": "PRIVAT_AVTALE_PERIODE_GRUNNLAG",
       "innhold": {
         "periode": {
-          "fom": "2022-01"
+          "fom": "2022-01",
+          "til": "2023-10"
         },
         "beløp": 1000.00,
         "manueltRegistrert": true
