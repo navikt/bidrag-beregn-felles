@@ -19,7 +19,7 @@ import java.math.BigDecimal
 import java.time.YearMonth
 
 @ExtendWith(MockitoExtension::class)
-internal class BeregnBpAndelUnderholdskostnadApiTest: FellesApiTest() {
+internal class BeregnBpAndelUnderholdskostnadApiTest : FellesApiTest() {
     private lateinit var filnavn: String
     private lateinit var forventetEndeligAndelFaktor: BigDecimal
     private lateinit var forventetAndelBeløp: BigDecimal

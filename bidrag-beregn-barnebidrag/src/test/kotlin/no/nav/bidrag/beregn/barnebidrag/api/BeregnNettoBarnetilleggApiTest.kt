@@ -19,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 import java.math.BigDecimal
 
 @ExtendWith(MockitoExtension::class)
-internal class BeregnNettoBarnetilleggApiTest: FellesApiTest() {
+internal class BeregnNettoBarnetilleggApiTest : FellesApiTest() {
     private lateinit var filnavn: String
 
     @Mock

@@ -16,7 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 import java.time.YearMonth
 
 @ExtendWith(MockitoExtension::class)
-internal class BeregnEndringSjekkGrenseApiTest: FellesApiTest() {
+internal class BeregnEndringSjekkGrenseApiTest : FellesApiTest() {
     private lateinit var filnavn: String
     private var forventetEndringErOverGrense: Boolean = false
 
