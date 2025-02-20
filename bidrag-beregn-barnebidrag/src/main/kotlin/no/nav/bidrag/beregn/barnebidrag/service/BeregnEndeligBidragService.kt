@@ -70,8 +70,8 @@ internal object BeregnEndeligBidragService : BeregnService() {
         // Legger til delberegningsobjekter i grunnlaget
         val utvidetGrunnlag = mottattGrunnlag.copy(
             grunnlagListe =
-                (mottattGrunnlag.grunnlagListe + delberegningNettoBarnetilleggBPResultat + delberegningNettoBarnetilleggBMResultat)
-                    .distinctBy(GrunnlagDto::referanse),
+            (mottattGrunnlag.grunnlagListe + delberegningNettoBarnetilleggBPResultat + delberegningNettoBarnetilleggBMResultat)
+                .distinctBy(GrunnlagDto::referanse),
         )
 
         // Mapper ut grunnlag som skal brukes for å beregne endelig bidrag
@@ -302,7 +302,9 @@ internal object BeregnEndeligBidragService : BeregnService() {
         }
         // Kaster exception hvis det skal utføres begrenset revurdering, men beløpshistorikk for forskudd eller bidrag mangler
         val utførBegrensetRevurdering = endeligBidragPeriodeGrunnlag.begrensetRevurderingPeriodeGrunnlag?.begrensetRevurdering ?: false
-        require(!(utførBegrensetRevurdering && (løpendeForskuddBeløp == null || løpendeBidragBeløp == null))) { "Beløpshistorikk grunnlag mangler for begrenset revurdering" }
+        require(!(utførBegrensetRevurdering && (løpendeForskuddBeløp == null || løpendeBidragBeløp == null))) {
+            "Beløpshistorikk grunnlag mangler for begrenset revurdering"
+        }
 
         // Legger til referanser for grunnlagsobjekter som ikke er lister (skal refereres av alle perioder hvis det er begrenset revurdering
         val engangsreferanser = listOfNotNull(

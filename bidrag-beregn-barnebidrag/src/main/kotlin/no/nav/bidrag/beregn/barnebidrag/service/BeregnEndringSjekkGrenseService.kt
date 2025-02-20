@@ -16,7 +16,6 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningref
 internal object BeregnEndringSjekkGrenseService : BeregnService() {
 
     fun delberegningEndringSjekkGrense(mottattGrunnlag: BeregnGrunnlag, åpenSluttperiode: Boolean = true): List<GrunnlagDto> {
-
         // Mapper ut grunnlag som skal brukes i beregningen
         val periodeGrunnlag = mapEndringSjekkGrenseGrunnlag(mottattGrunnlag)
 
@@ -104,6 +103,6 @@ internal object BeregnEndringSjekkGrenseService : BeregnService() {
             ),
             grunnlagsreferanseListe = beregningResultat.grunnlagsreferanseListe,
             gjelderBarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
-        )
+        ),
     )
 }

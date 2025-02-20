@@ -39,17 +39,15 @@ internal object EndringSjekkGrensePeriodeMapper : CoreMapper() {
         }
     }
 
-    private fun mapBeløpshistorikk(beregnGrunnlag: BeregnGrunnlag): BeløpshistorikkPeriodeGrunnlag? {
-        return beregnGrunnlag.grunnlagListe
-            .filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(grunnlagType = Grunnlagstype.BELØPSHISTORIKK_BIDRAG)
-            .map {
-                BeløpshistorikkPeriodeGrunnlag(
-                    referanse = it.referanse,
-                    beløpshistorikkPeriode = it.innhold,
-                )
-            }
-            .firstOrNull()
-    }
+    private fun mapBeløpshistorikk(beregnGrunnlag: BeregnGrunnlag): BeløpshistorikkPeriodeGrunnlag? = beregnGrunnlag.grunnlagListe
+        .filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(grunnlagType = Grunnlagstype.BELØPSHISTORIKK_BIDRAG)
+        .map {
+            BeløpshistorikkPeriodeGrunnlag(
+                referanse = it.referanse,
+                beløpshistorikkPeriode = it.innhold,
+            )
+        }
+        .firstOrNull()
 
     // TODO Flytte til CoreMapper
     private fun mapSjablonSjablontall(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonSjablontallPeriodeGrunnlag> {

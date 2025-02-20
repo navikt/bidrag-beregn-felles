@@ -16,7 +16,7 @@ internal object EndeligBidragBeregning {
                 ikkeOmsorgForBarnet = true,
                 beregnetBeløp = null,
                 resultatBeløp = null,
-                grunnlagsreferanseListe = listOf(grunnlag.søknadsbarnetBorHosBpGrunnlag.referanse)
+                grunnlagsreferanseListe = listOf(grunnlag.søknadsbarnetBorHosBpGrunnlag.referanse),
             )
         }
 

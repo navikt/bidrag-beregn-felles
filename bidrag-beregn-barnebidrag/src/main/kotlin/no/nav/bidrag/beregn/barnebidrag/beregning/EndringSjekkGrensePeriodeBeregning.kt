@@ -12,7 +12,6 @@ internal object EndringSjekkGrensePeriodeBeregning {
     private val bigDecimal100 = BigDecimal.valueOf(100)
 
     fun beregn(grunnlag: EndringSjekkGrensePeriodeBeregningGrunnlag): EndringSjekkGrensePeriodeBeregningResultat {
-
         // Henter sjablonverdi
         val sjablonverdiEndringBidragGrenseProsent = hentSjablonverdi(grunnlag)
         val endringsgrenseFaktor = sjablonverdiEndringBidragGrenseProsent.divide(bigDecimal100, 10, RoundingMode.HALF_UP)
@@ -39,18 +38,17 @@ internal object EndringSjekkGrensePeriodeBeregning {
             endringErOverGrense = endringErOverGrense,
             grunnlagsreferanseListe = listOfNotNull(
                 grunnlag.beregnetBidragBeregningGrunnlag.referanse,
-                grunnlag.løpendeBidragBeregningGrunnlag?.referanse
-            )
-                + grunnlag.sjablonSjablontallBeregningGrunnlagListe.map { it.referanse },
+                grunnlag.løpendeBidragBeregningGrunnlag?.referanse,
+            ) +
+                grunnlag.sjablonSjablontallBeregningGrunnlagListe.map { it.referanse },
         )
     }
 
-    private fun hentSjablonverdi(grunnlag: EndringSjekkGrensePeriodeBeregningGrunnlag): BigDecimal =
-        (
-            grunnlag.sjablonSjablontallBeregningGrunnlagListe
-                .filter { it.type == SjablonTallNavn.ENDRING_BIDRAG_GRENSE_PROSENT.navn }
-                .map { it.verdi }
-                .firstOrNull() ?: 0.0
-            )
-            .toBigDecimal()
+    private fun hentSjablonverdi(grunnlag: EndringSjekkGrensePeriodeBeregningGrunnlag): BigDecimal = (
+        grunnlag.sjablonSjablontallBeregningGrunnlagListe
+            .filter { it.type == SjablonTallNavn.ENDRING_BIDRAG_GRENSE_PROSENT.navn }
+            .map { it.verdi }
+            .firstOrNull() ?: 0.0
+        )
+        .toBigDecimal()
 }

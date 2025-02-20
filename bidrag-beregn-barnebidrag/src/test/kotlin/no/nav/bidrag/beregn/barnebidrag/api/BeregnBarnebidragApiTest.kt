@@ -644,7 +644,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
         val alleReferanser = hentAlleReferanser(barnebidragResultatGrunnlagListe)
         val alleRefererteReferanser = hentAlleRefererteReferanser(
             resultatGrunnlagListe = barnebidragResultatGrunnlagListe,
-            barnebidragResultat = barnebidragResultat
+            barnebidragResultat = barnebidragResultat,
         )
         // DELBEREGNING_ENDRING_SJEKK_GRENSE er "frittstående" (refereres ikke av noe objekt)
         val alleReferanserUnntattDelberegningEndringSjekkGrense =
@@ -693,7 +693,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
-            { assertThat(alleRefererteReferanser).containsAll(alleReferanserUnntattDelberegningEndringSjekkGrense) }
+            { assertThat(alleRefererteReferanser).containsAll(alleReferanserUnntattDelberegningEndringSjekkGrense) },
         )
     }
 
@@ -729,7 +729,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
         val alleReferanser = hentAlleReferanser(barnebidragResultatGrunnlagListe)
         val alleRefererteReferanser = hentAlleRefererteReferanser(
             resultatGrunnlagListe = barnebidragResultatGrunnlagListe,
-            barnebidragResultat = barnebidragResultat
+            barnebidragResultat = barnebidragResultat,
         )
         // DELBEREGNING_ENDRING_SJEKK_GRENSE er "frittstående" (refereres ikke av noe objekt)
         val alleReferanserUnntattDelberegningEndringSjekkGrense =
