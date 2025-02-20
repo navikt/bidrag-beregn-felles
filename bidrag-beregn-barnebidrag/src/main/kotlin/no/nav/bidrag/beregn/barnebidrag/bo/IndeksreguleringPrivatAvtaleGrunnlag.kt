@@ -7,10 +7,10 @@ import java.math.BigDecimal
 
 //
 data class IndeksreguleringPrivatAvtaleGrunnlag(
-    val bruddperiode: ÅrMånedsperiode,
+    val beregningsperiode: ÅrMånedsperiode,
+    val periodeSkalIndeksreguleres: Boolean,
     val referanseTilRolle: Grunnlagsreferanse,
     val søknadsbarnReferanse: Grunnlagsreferanse,
-    val periodeSkalIndeksreguleres: Boolean,
     val privatAvtalePeriode: PrivatAvtalePeriode,
     var sjablonIndeksreguleringFaktor: SjablonSjablontallBeregningGrunnlag? = null,
     val beløpFraForrigeDelberegning: BigDecimal? = null,

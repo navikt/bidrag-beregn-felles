@@ -8,11 +8,13 @@ import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningNettoTilsynsutgift
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningPrivatAvtalePeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -60,7 +62,7 @@ internal class BeregnIndeksregulerPrivatAvtaleApiTest {
             { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-11"), null)) },
             { assertThat(resultat[2].beløp.compareTo(BigDecimal.valueOf(210.00))).isEqualTo(0) },
             { assertThat(resultat[2].indeksreguleringFaktor).isNull() },
-        )
+          )
     }
 
     @Test
@@ -79,11 +81,11 @@ internal class BeregnIndeksregulerPrivatAvtaleApiTest {
 
             { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode("2023-07", "2024-07")) },
             { assertThat(resultat[1].beløp.compareTo(BigDecimal.valueOf(1070.00))).isEqualTo(0) },
-            { assertThat(resultat[1].indeksreguleringFaktor?.compareTo(BigDecimal.valueOf(0.0700))).isEqualTo(0) },
+            { assertThat(resultat[1].indeksreguleringFaktor?.compareTo(BigDecimal.valueOf(7.00))).isEqualTo(0) },
 
             { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
             { assertThat(resultat[2].beløp.compareTo(BigDecimal.valueOf(1120.00))).isEqualTo(0) },
-            { assertThat(resultat[2].indeksreguleringFaktor?.compareTo(BigDecimal.valueOf(0.0470))).isEqualTo(0) },
+            { assertThat(resultat[2].indeksreguleringFaktor?.compareTo(BigDecimal.valueOf(4.70))).isEqualTo(0) },
         )
     }
 
