@@ -4,6 +4,7 @@ import no.nav.bidrag.beregn.core.bo.Avvik
 import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.domene.enums.beregning.Avvikstype
 import java.time.LocalDate
+import java.time.YearMonth
 
 object PeriodeUtil {
     // Validerer at datoer er gyldige
@@ -121,4 +122,24 @@ object PeriodeUtil {
         }
         return avvikListe
     }
+}
+
+val sluttenAvForrigeMåned get() = LocalDate.now().sluttenAvForrigeMåned
+
+val LocalDate?.sluttenAvForrigeMåned get() = this?.withDayOfMonth(1)?.minusDays(1)
+
+// Antar opphørsdato er til dato og ikke til-og.med (starten av måneden det opphøres)
+fun justerPeriodeTilOpphørsdato(oppphørsdato: LocalDate?) = if (oppphørsdato == null ||
+    oppphørsdato.withDayOfMonth(1).minusDays(1).isAfter(sluttenAvForrigeMåned)
+) {
+    null
+} else {
+    oppphørsdato.sluttenAvForrigeMåned
+}
+fun justerPeriodeTilOpphørsdato(oppphørsdato: YearMonth?) = if (oppphørsdato == null ||
+    oppphørsdato.isAfter(YearMonth.from(sluttenAvForrigeMåned))
+) {
+    null
+} else {
+    oppphørsdato
 }

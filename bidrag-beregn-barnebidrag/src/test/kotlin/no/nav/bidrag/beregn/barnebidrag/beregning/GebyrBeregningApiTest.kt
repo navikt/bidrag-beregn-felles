@@ -265,10 +265,10 @@ class BeregnGebyrServiceTest {
         sjablonGrunnlag shouldHaveSize 2
 
         val nedreInntektsgrenseGebyrSjablon = sjablonGrunnlag.find { it.innhold.sjablon == SjablonTallNavn.NEDRE_INNTEKTSGRENSE_GEBYR_BELØP }!!
-        nedreInntektsgrenseGebyrSjablon.innhold.verdi shouldBe BigDecimal(331200)
+        nedreInntektsgrenseGebyrSjablon.innhold.verdi shouldBe BigDecimal(348400)
 
         val fastsettelsegebyrSjablon = sjablonGrunnlag.find { it.innhold.sjablon == SjablonTallNavn.FASTSETTELSESGEBYR_BELØP }!!
-        fastsettelsegebyrSjablon.innhold.verdi shouldBe BigDecimal(1277)
+        fastsettelsegebyrSjablon.innhold.verdi shouldBe BigDecimal(1314)
     }
 }
 

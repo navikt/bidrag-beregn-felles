@@ -1,23 +1,15 @@
 package no.nav.bidrag.beregn.barnebidrag.api
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
-import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåFremmedReferanse
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -25,16 +17,13 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import java.math.BigDecimal
-import java.nio.file.Files
-import java.nio.file.Paths
-import java.text.SimpleDateFormat
 import java.time.YearMonth
 
 @ExtendWith(MockitoExtension::class)
-internal class BeregnEndeligBidragApiTest {
+internal class BeregnEndeligBidragApiTest : FellesApiTest() {
     private lateinit var filnavn: String
-    private lateinit var forventetBeregnetBeløp: BigDecimal
-    private lateinit var forventetResultatbeløp: BigDecimal
+    private var forventetBeregnetBeløp: BigDecimal? = null
+    private var forventetResultatbeløp: BigDecimal? = null
     private lateinit var forventetUMinusNettoBarnetilleggBM: BigDecimal
     private lateinit var forventetBruttoBidragEtterBarnetilleggBM: BigDecimal
     private lateinit var forventetNettoBidragEtterBarnetilleggBM: BigDecimal
@@ -54,6 +43,7 @@ internal class BeregnEndeligBidragApiTest {
     private var forventetBidragJustertNedTil25ProsentAvInntekt: Boolean = false
     private var forventetBidragJustertTilForskuddssats: Boolean = false
     private var forventetBegrensetRevurderingUtført: Boolean = false
+    private var forventetIkkeOmsorgForBarnet: Boolean = false
     private var forventetFeilmelding = ""
     private var forventetPerioderMedFeilListe = emptyList<ÅrMånedsperiode>()
     private var forventetExceptionBegrensetRevurdering = false
@@ -62,8 +52,11 @@ internal class BeregnEndeligBidragApiTest {
     private var forventetAntallDelberegningBPAndelUnderholdskostnad: Int = 1
     private var forventetAntallDelberegningSamværsfradrag: Int = 1
     private var forventetAntallSamværsklasse: Int = 1
+    private var forventetAntallBostatus: Int = 1
     private var forventetAntallBarnetilleggBM: Int = 1
     private var forventetAntallBarnetilleggBP: Int = 1
+    private var forventetAntallPerioder: Int = 1
+    private var forventetTilPeriode: YearMonth? = null
 
     @Mock
     private lateinit var api: BeregnBarnebidragApi
@@ -92,6 +85,7 @@ internal class BeregnEndeligBidragApiTest {
         forventetBarnetErSelvforsørget = true
         forventetAntallBarnetilleggBP = 0
         forventetAntallBarnetilleggBM = 0
+        forventetAntallBostatus = 0
         utførBeregningerOgEvaluerResultatEndeligBidrag(0)
     }
 
@@ -343,7 +337,6 @@ internal class BeregnEndeligBidragApiTest {
         utførBeregningerOgEvaluerResultatEndeligBidrag()
     }
 
-    // TODO: Skal kaste exception
     @Test
     @DisplayName("Endelig bidrag - eksempel 10C - Begrenset revurdering - beregnet bidrag er lavere enn løpende bidrag - skal kaste exception")
     fun testEndeligBidrag_Eksempel10C() {
@@ -449,10 +442,127 @@ internal class BeregnEndeligBidragApiTest {
     }
 
     @Test
-    @DisplayName("Endelig bidrag - eksempel 10H - Begrenset revurdering - flere perioder")
+    @DisplayName("Endelig bidrag - eksempel 10H - Begrenset revurdering - indikator for begrenset revurdering er false")
     fun testEndeligBidrag_Eksempel10H() {
         filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel10H.json"
+        forventetBeregnetBeløp = BigDecimal.valueOf(5001).setScale(2)
+        forventetResultatbeløp = BigDecimal.valueOf(5000).setScale(0)
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(8514.87).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(6000).setScale(2)
+        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(5001).setScale(2)
+        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(6000).setScale(2)
+        forventetBruttoBidragEtterBegrensetRevurdering = BigDecimal.valueOf(6000).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(6000).setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(5001).setScale(2)
+        forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
+        forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
+        forventetLøpendeForskudd = null
+        forventetLøpendeBidrag = null
+        utførBeregningerOgEvaluerResultatEndeligBidrag()
+    }
+
+    @Test
+    @DisplayName("Endelig bidrag - eksempel 10I - Begrenset revurdering - beregnet bidrag er 0 - skal ikke kaste exception")
+    fun testEndeligBidrag_Eksempel10I() {
+        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel10I.json"
+        forventetBeregnetBeløp = BigDecimal.ZERO.setScale(2)
+        forventetResultatbeløp = BigDecimal.ZERO.setScale(0)
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(8514.87).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(6000).setScale(2)
+        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(5001).setScale(2)
+        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.ZERO.setScale(2)
+        forventetBruttoBidragEtterBegrensetRevurdering = BigDecimal.ZERO.setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.ZERO.setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.ZERO.setScale(2)
+        forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
+        forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
+        forventetLøpendeForskudd = BigDecimal.valueOf(5500).setScale(0)
+        forventetLøpendeBidrag = BigDecimal.valueOf(5200).setScale(0)
+        forventetBidragJustertNedTilEvne = true
+        forventetBidragJustertNedTil25ProsentAvInntekt = true
+        forventetBegrensetRevurderingUtført = true
+        forventetExceptionBegrensetRevurdering = false
+        forventetAntallBarnetilleggBP = 0
+        utførBeregningerOgEvaluerResultatEndeligBidrag()
+    }
+
+    @Test
+    @DisplayName("Endelig bidrag - eksempel 10J - Begrenset revurdering - flere perioder")
+    fun testEndeligBidrag_Eksempel10J() {
+        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel10J.json"
         utførBeregningerOgEvaluerResultatEndeligBidragFlerePerioderBegrensetRevurdering()
+    }
+
+    @Test
+    @DisplayName("Endelig bidrag - eksempel 10K - Begrenset revurdering - løpende forskudd mangler i starten av beregningsperioden - skal kaste exception")
+    fun testEndeligBidrag_Eksempel10K() {
+        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel10K.json"
+        forventetBeregnetBeløp = BigDecimal.valueOf(745.35).setScale(2)
+        forventetResultatbeløp = BigDecimal.valueOf(750).setScale(0)
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(8514.87).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(6000).setScale(2)
+        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(5001).setScale(2)
+        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(6000).setScale(2)
+        forventetBruttoBidragEtterBegrensetRevurdering = BigDecimal.valueOf(999).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(1744.35).setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(745.35).setScale(2)
+        forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
+        forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
+        forventetLøpendeForskudd = BigDecimal.ZERO.setScale(0)
+        forventetLøpendeBidrag = BigDecimal.valueOf(4000).setScale(0)
+        forventetBidragJustertForNettoBarnetilleggBP = true
+        forventetBidragJustertTilForskuddssats = true
+        forventetBegrensetRevurderingUtført = true
+        forventetFeilmelding = "Kan ikke fatte vedtak fordi løpende forskudd mangler i første beregningsperiode: 2024-08 - 2024-09"
+        forventetPerioderMedFeilListe = listOf(ÅrMånedsperiode(YearMonth.parse("2024-08"), YearMonth.parse("2024-09")))
+        forventetExceptionBegrensetRevurdering = true
+        forventetAntallPerioder = 2
+        forventetTilPeriode = YearMonth.parse("2024-09")
+        utførBeregningerOgEvaluerResultatEndeligBidrag()
+    }
+
+    @Test
+    @DisplayName("Endelig bidrag - eksempel 10L - Begrenset revurdering - løpende forskudd mangler i slutten av beregningsperioden - skal ikke kaste exception")
+    fun testEndeligBidrag_Eksempel10L() {
+        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel10L.json"
+        forventetBeregnetBeløp = BigDecimal.valueOf(5001).setScale(2)
+        forventetResultatbeløp = BigDecimal.valueOf(5000).setScale(0)
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(8514.87).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(6000).setScale(2)
+        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(5001).setScale(2)
+        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(6000).setScale(2)
+        forventetBruttoBidragEtterBegrensetRevurdering = BigDecimal.valueOf(6000).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(6000).setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(5001).setScale(2)
+        forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
+        forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
+        forventetLøpendeForskudd = BigDecimal.valueOf(5500).setScale(0)
+        forventetLøpendeBidrag = BigDecimal.valueOf(700).setScale(0)
+        forventetBegrensetRevurderingUtført = true
+        forventetExceptionBegrensetRevurdering = false
+        forventetAntallPerioder = 2
+        forventetTilPeriode = YearMonth.parse("2024-09")
+        utførBeregningerOgEvaluerResultatEndeligBidrag()
+    }
+
+    @Test
+    @DisplayName("Endelig bidrag - eksempel 11 - Søknadsbarnet bor hos BP - bidrag skal ikke beregnes")
+    fun testEndeligBidrag_Eksempel11() {
+        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel11.json"
+        forventetBeregnetBeløp = null
+        forventetResultatbeløp = null
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.ZERO.setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.ZERO.setScale(2)
+        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.ZERO.setScale(2)
+        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.ZERO.setScale(2)
+        forventetBruttoBidragEtterBegrensetRevurdering = BigDecimal.ZERO.setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.ZERO.setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.ZERO.setScale(2)
+        forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
+        forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
+        forventetIkkeOmsorgForBarnet = true
+        forventetAntallDelberegningBPAndelUnderholdskostnad = 0
+        utførBeregningerOgEvaluerResultatEndeligBidrag(0)
     }
 
     @Test
@@ -466,6 +576,7 @@ internal class BeregnEndeligBidragApiTest {
         forventetAntallSamværsklasse = 4
         forventetAntallBarnetilleggBP = 3
         forventetAntallBarnetilleggBM = 3
+        forventetAntallBostatus = 3
         utførBeregningerOgEvaluerResultatEndeligBidragFlerePerioder()
     }
 
@@ -512,6 +623,10 @@ internal class BeregnEndeligBidragApiTest {
             .filter { it.type == Grunnlagstype.SAMVÆRSPERIODE }
             .size
 
+        val antallBostatus = endeligBidragResultat.grunnlagListe
+            .filter { it.type == Grunnlagstype.BOSTATUS_PERIODE }
+            .size
+
         val antallBarnetilleggBM = endeligBidragResultat.grunnlagListe
             .filtrerOgKonverterBasertPåFremmedReferanse<InntektsrapporteringPeriode>(
                 grunnlagType = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
@@ -533,11 +648,11 @@ internal class BeregnEndeligBidragApiTest {
         assertAll(
             { assertThat(endeligBidragResultat).isNotNull },
             { assertThat(endeligBidragResultatListe).isNotNull },
-            { assertThat(endeligBidragResultatListe).hasSize(1) },
+            { assertThat(endeligBidragResultatListe).hasSize(forventetAntallPerioder) },
 
             // Resultat
             {
-                assertThat(endeligBidragResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null))
+                assertThat(endeligBidragResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), forventetTilPeriode))
             },
             { assertThat(endeligBidragResultatListe[0].beregnetBeløp).isEqualTo(forventetBeregnetBeløp) },
             { assertThat(endeligBidragResultatListe[0].resultatBeløp).isEqualTo(forventetResultatbeløp) },
@@ -552,7 +667,6 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[0].bpAndelAvUVedDeltBostedBeløp).isEqualTo(forventetBpAndelAvUVedDeltBostedBeløp) },
             { assertThat(endeligBidragResultatListe[0].løpendeForskudd).isEqualTo(forventetLøpendeForskudd) },
             { assertThat(endeligBidragResultatListe[0].løpendeBidrag).isEqualTo(forventetLøpendeBidrag) },
-            { assertThat(endeligBidragResultatListe[0].ingenEndringUnderGrense).isFalse() },
             { assertThat(endeligBidragResultatListe[0].barnetErSelvforsørget).isEqualTo(forventetBarnetErSelvforsørget) },
             { assertThat(endeligBidragResultatListe[0].bidragJustertForDeltBosted).isEqualTo(forventetBidragJustertForDeltBosted) },
             { assertThat(endeligBidragResultatListe[0].bidragJustertForNettoBarnetilleggBP).isEqualTo(forventetBidragJustertForNettoBarnetilleggBP) },
@@ -561,6 +675,7 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[0].bidragJustertNedTil25ProsentAvInntekt).isEqualTo(forventetBidragJustertNedTil25ProsentAvInntekt) },
             { assertThat(endeligBidragResultatListe[0].bidragJustertTilForskuddssats).isEqualTo(forventetBidragJustertTilForskuddssats) },
             { assertThat(endeligBidragResultatListe[0].begrensetRevurderingUtført).isEqualTo(forventetBegrensetRevurderingUtført) },
+            { assertThat(endeligBidragResultatListe[0].ikkeOmsorgForBarnet).isEqualTo(forventetIkkeOmsorgForBarnet) },
 
             { assertThat(feilmelding).isEqualTo(forventetFeilmelding) },
             { assertThat(perioderMedFeilListe).isEqualTo(forventetPerioderMedFeilListe) },
@@ -569,9 +684,10 @@ internal class BeregnEndeligBidragApiTest {
             // Grunnlag
             { assertThat(antallDelberegningBidragsevne).isEqualTo(antallGrunnlag) },
             { assertThat(antallDelberegningUnderholdskostnad).isEqualTo(antallGrunnlag) },
-            { assertThat(antallDelberegningBPAndelUnderholdskostnad).isEqualTo(1) },
+            { assertThat(antallDelberegningBPAndelUnderholdskostnad).isEqualTo(forventetAntallDelberegningBPAndelUnderholdskostnad) },
             { assertThat(antallDelberegningSamværsfradrag).isEqualTo(antallGrunnlag) },
             { assertThat(antallSamværsklasse).isEqualTo(antallGrunnlag) },
+            { assertThat(antallBostatus).isEqualTo(forventetAntallBostatus) },
             { assertThat(antallBarnetilleggBP).isEqualTo(forventetAntallBarnetilleggBP) },
             { assertThat(antallBarnetilleggBM).isEqualTo(forventetAntallBarnetilleggBM) },
 
@@ -622,6 +738,10 @@ internal class BeregnEndeligBidragApiTest {
             .filter { it.type == Grunnlagstype.SAMVÆRSPERIODE }
             .size
 
+        val antallBostatus = endeligBidragResultat.grunnlagListe
+            .filter { it.type == Grunnlagstype.BOSTATUS_PERIODE }
+            .size
+
         val antallBarnetilleggBM = endeligBidragResultat.grunnlagListe
             .filtrerOgKonverterBasertPåFremmedReferanse<InntektsrapporteringPeriode>(
                 grunnlagType = Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE,
@@ -643,7 +763,7 @@ internal class BeregnEndeligBidragApiTest {
         assertAll(
             { assertThat(endeligBidragResultat).isNotNull },
             { assertThat(endeligBidragResultatListe).isNotNull },
-            { assertThat(endeligBidragResultatListe).hasSize(8) },
+            { assertThat(endeligBidragResultatListe).hasSize(9) },
 
             // Resultat
             // Barnet er selvforsørget
@@ -661,7 +781,6 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[0].bpAndelAvUVedDeltBostedBeløp).isEqualTo(BigDecimal.ZERO.setScale(2)) },
             { assertThat(endeligBidragResultatListe[0].løpendeForskudd).isNull() },
             { assertThat(endeligBidragResultatListe[0].løpendeBidrag).isNull() },
-            { assertThat(endeligBidragResultatListe[0].ingenEndringUnderGrense).isFalse },
             { assertThat(endeligBidragResultatListe[0].barnetErSelvforsørget).isTrue },
             { assertThat(endeligBidragResultatListe[0].bidragJustertForDeltBosted).isFalse },
             { assertThat(endeligBidragResultatListe[0].bidragJustertForNettoBarnetilleggBP).isFalse },
@@ -669,7 +788,7 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[0].bidragJustertNedTilEvne).isFalse },
             { assertThat(endeligBidragResultatListe[0].bidragJustertNedTil25ProsentAvInntekt).isFalse },
             { assertThat(endeligBidragResultatListe[0].bidragJustertTilForskuddssats).isFalse },
-            { assertThat(endeligBidragResultatListe[0].begrensetRevurderingUtført).isFalse },
+            { assertThat(endeligBidragResultatListe[0].ikkeOmsorgForBarnet).isFalse },
 
             // Bidrag redusert til evne
             { assertThat(endeligBidragResultatListe[1].periode).isEqualTo(ÅrMånedsperiode("2023-04", "2023-06")) },
@@ -686,7 +805,6 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[1].bpAndelAvUVedDeltBostedBeløp).isEqualTo(BigDecimal.ZERO.setScale(2)) },
             { assertThat(endeligBidragResultatListe[1].løpendeForskudd).isNull() },
             { assertThat(endeligBidragResultatListe[1].løpendeBidrag).isNull() },
-            { assertThat(endeligBidragResultatListe[1].ingenEndringUnderGrense).isFalse },
             { assertThat(endeligBidragResultatListe[1].barnetErSelvforsørget).isFalse },
             { assertThat(endeligBidragResultatListe[1].bidragJustertForDeltBosted).isFalse },
             { assertThat(endeligBidragResultatListe[1].bidragJustertForNettoBarnetilleggBP).isFalse },
@@ -695,6 +813,7 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[1].bidragJustertNedTil25ProsentAvInntekt).isFalse },
             { assertThat(endeligBidragResultatListe[1].bidragJustertTilForskuddssats).isFalse },
             { assertThat(endeligBidragResultatListe[1].begrensetRevurderingUtført).isFalse },
+            { assertThat(endeligBidragResultatListe[1].ikkeOmsorgForBarnet).isFalse },
 
             // Bidrag redusert til evne
             { assertThat(endeligBidragResultatListe[2].periode).isEqualTo(ÅrMånedsperiode("2023-06", "2023-10")) },
@@ -711,7 +830,6 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[2].bpAndelAvUVedDeltBostedBeløp).isEqualTo(BigDecimal.ZERO.setScale(2)) },
             { assertThat(endeligBidragResultatListe[2].løpendeForskudd).isNull() },
             { assertThat(endeligBidragResultatListe[2].løpendeBidrag).isNull() },
-            { assertThat(endeligBidragResultatListe[2].ingenEndringUnderGrense).isFalse },
             { assertThat(endeligBidragResultatListe[2].barnetErSelvforsørget).isFalse },
             { assertThat(endeligBidragResultatListe[2].bidragJustertForDeltBosted).isFalse },
             { assertThat(endeligBidragResultatListe[2].bidragJustertForNettoBarnetilleggBP).isFalse },
@@ -720,6 +838,7 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[2].bidragJustertNedTil25ProsentAvInntekt).isFalse },
             { assertThat(endeligBidragResultatListe[2].bidragJustertTilForskuddssats).isFalse },
             { assertThat(endeligBidragResultatListe[2].begrensetRevurderingUtført).isFalse },
+            { assertThat(endeligBidragResultatListe[2].ikkeOmsorgForBarnet).isFalse },
 
             // Bidrag redusert til 25% av inntekt
             { assertThat(endeligBidragResultatListe[3].periode).isEqualTo(ÅrMånedsperiode("2023-10", "2024-01")) },
@@ -736,7 +855,6 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[3].bpAndelAvUVedDeltBostedBeløp).isEqualTo(BigDecimal.ZERO.setScale(2)) },
             { assertThat(endeligBidragResultatListe[3].løpendeForskudd).isNull() },
             { assertThat(endeligBidragResultatListe[3].løpendeBidrag).isNull() },
-            { assertThat(endeligBidragResultatListe[3].ingenEndringUnderGrense).isFalse },
             { assertThat(endeligBidragResultatListe[3].barnetErSelvforsørget).isFalse },
             { assertThat(endeligBidragResultatListe[3].bidragJustertForDeltBosted).isFalse },
             { assertThat(endeligBidragResultatListe[3].bidragJustertForNettoBarnetilleggBP).isFalse },
@@ -745,6 +863,7 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[3].bidragJustertNedTil25ProsentAvInntekt).isTrue },
             { assertThat(endeligBidragResultatListe[3].bidragJustertTilForskuddssats).isFalse },
             { assertThat(endeligBidragResultatListe[3].begrensetRevurderingUtført).isFalse },
+            { assertThat(endeligBidragResultatListe[3].ikkeOmsorgForBarnet).isFalse },
 
             // Delt bosted
             { assertThat(endeligBidragResultatListe[4].periode).isEqualTo(ÅrMånedsperiode("2024-01", "2024-02")) },
@@ -761,7 +880,6 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[4].bpAndelAvUVedDeltBostedBeløp).isEqualTo(BigDecimal.ZERO.setScale(2)) },
             { assertThat(endeligBidragResultatListe[4].løpendeForskudd).isNull() },
             { assertThat(endeligBidragResultatListe[4].løpendeBidrag).isNull() },
-            { assertThat(endeligBidragResultatListe[4].ingenEndringUnderGrense).isFalse },
             { assertThat(endeligBidragResultatListe[4].barnetErSelvforsørget).isFalse },
             { assertThat(endeligBidragResultatListe[4].bidragJustertForDeltBosted).isTrue },
             { assertThat(endeligBidragResultatListe[4].bidragJustertForNettoBarnetilleggBP).isFalse },
@@ -770,6 +888,7 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[4].bidragJustertNedTil25ProsentAvInntekt).isFalse },
             { assertThat(endeligBidragResultatListe[4].bidragJustertTilForskuddssats).isFalse },
             { assertThat(endeligBidragResultatListe[4].begrensetRevurderingUtført).isFalse },
+            { assertThat(endeligBidragResultatListe[4].ikkeOmsorgForBarnet).isFalse },
 
             // Bidrag redusert til 25% av inntekt
             { assertThat(endeligBidragResultatListe[5].periode).isEqualTo(ÅrMånedsperiode("2024-02", "2024-05")) },
@@ -786,7 +905,6 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[5].bpAndelAvUVedDeltBostedBeløp).isEqualTo(BigDecimal.ZERO.setScale(2)) },
             { assertThat(endeligBidragResultatListe[5].løpendeForskudd).isNull() },
             { assertThat(endeligBidragResultatListe[5].løpendeBidrag).isNull() },
-            { assertThat(endeligBidragResultatListe[5].ingenEndringUnderGrense).isFalse },
             { assertThat(endeligBidragResultatListe[5].barnetErSelvforsørget).isFalse },
             { assertThat(endeligBidragResultatListe[5].bidragJustertForDeltBosted).isFalse },
             { assertThat(endeligBidragResultatListe[5].bidragJustertForNettoBarnetilleggBP).isFalse },
@@ -795,9 +913,10 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[5].bidragJustertNedTil25ProsentAvInntekt).isTrue },
             { assertThat(endeligBidragResultatListe[5].bidragJustertTilForskuddssats).isFalse },
             { assertThat(endeligBidragResultatListe[5].begrensetRevurderingUtført).isFalse },
+            { assertThat(endeligBidragResultatListe[5].ikkeOmsorgForBarnet).isFalse },
 
             // Delt bosted
-            { assertThat(endeligBidragResultatListe[6].periode).isEqualTo(ÅrMånedsperiode("2024-05", "2024-08")) },
+            { assertThat(endeligBidragResultatListe[6].periode).isEqualTo(ÅrMånedsperiode("2024-05", "2024-07")) },
             { assertThat(endeligBidragResultatListe[6].beregnetBeløp).isEqualTo(BigDecimal.valueOf(2000).setScale(2)) },
             { assertThat(endeligBidragResultatListe[6].resultatBeløp).isEqualTo(BigDecimal.valueOf(2000).setScale(0)) },
             { assertThat(endeligBidragResultatListe[6].uMinusNettoBarnetilleggBM).isEqualTo(BigDecimal.ZERO.setScale(2)) },
@@ -811,7 +930,6 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[6].bpAndelAvUVedDeltBostedBeløp).isEqualTo(BigDecimal.valueOf(2000).setScale(2)) },
             { assertThat(endeligBidragResultatListe[6].løpendeForskudd).isNull() },
             { assertThat(endeligBidragResultatListe[6].løpendeBidrag).isNull() },
-            { assertThat(endeligBidragResultatListe[6].ingenEndringUnderGrense).isFalse },
             { assertThat(endeligBidragResultatListe[6].barnetErSelvforsørget).isFalse },
             { assertThat(endeligBidragResultatListe[6].bidragJustertForDeltBosted).isTrue },
             { assertThat(endeligBidragResultatListe[6].bidragJustertForNettoBarnetilleggBP).isFalse },
@@ -820,31 +938,57 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[6].bidragJustertNedTil25ProsentAvInntekt).isFalse },
             { assertThat(endeligBidragResultatListe[6].bidragJustertTilForskuddssats).isFalse },
             { assertThat(endeligBidragResultatListe[6].begrensetRevurderingUtført).isFalse },
+            { assertThat(endeligBidragResultatListe[6].ikkeOmsorgForBarnet).isFalse },
 
             // Delt bosted
-            { assertThat(endeligBidragResultatListe[7].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null)) },
-            { assertThat(endeligBidragResultatListe[7].beregnetBeløp).isEqualTo(BigDecimal.valueOf(1000).setScale(2)) },
-            { assertThat(endeligBidragResultatListe[7].resultatBeløp).isEqualTo(BigDecimal.valueOf(1000).setScale(0)) },
+            { assertThat(endeligBidragResultatListe[7].periode).isEqualTo(ÅrMånedsperiode("2024-07", "2024-08")) },
+            { assertThat(endeligBidragResultatListe[7].beregnetBeløp).isNull() },
+            { assertThat(endeligBidragResultatListe[7].resultatBeløp).isNull() },
             { assertThat(endeligBidragResultatListe[7].uMinusNettoBarnetilleggBM).isEqualTo(BigDecimal.ZERO.setScale(2)) },
             { assertThat(endeligBidragResultatListe[7].bruttoBidragEtterBarnetilleggBM).isEqualTo(BigDecimal.ZERO.setScale(2)) },
             { assertThat(endeligBidragResultatListe[7].nettoBidragEtterBarnetilleggBM).isEqualTo(BigDecimal.ZERO.setScale(2)) },
-            { assertThat(endeligBidragResultatListe[7].bruttoBidragJustertForEvneOg25Prosent).isEqualTo(BigDecimal.valueOf(1000).setScale(2)) },
+            { assertThat(endeligBidragResultatListe[7].bruttoBidragJustertForEvneOg25Prosent).isEqualTo(BigDecimal.ZERO.setScale(2)) },
             { assertThat(endeligBidragResultatListe[7].bruttoBidragEtterBegrensetRevurdering).isEqualTo(BigDecimal.ZERO.setScale(2)) },
             { assertThat(endeligBidragResultatListe[7].bruttoBidragEtterBarnetilleggBP).isEqualTo(BigDecimal.ZERO.setScale(2)) },
-            { assertThat(endeligBidragResultatListe[7].nettoBidragEtterSamværsfradrag).isEqualTo(BigDecimal.valueOf(1000).setScale(2)) },
-            { assertThat(endeligBidragResultatListe[7].bpAndelAvUVedDeltBostedFaktor).isEqualTo(BigDecimal.valueOf(0.1).setScale(10)) },
-            { assertThat(endeligBidragResultatListe[7].bpAndelAvUVedDeltBostedBeløp).isEqualTo(BigDecimal.valueOf(1000).setScale(2)) },
+            { assertThat(endeligBidragResultatListe[7].nettoBidragEtterSamværsfradrag).isEqualTo(BigDecimal.ZERO.setScale(2)) },
+            { assertThat(endeligBidragResultatListe[7].bpAndelAvUVedDeltBostedFaktor).isEqualTo(BigDecimal.ZERO.setScale(10)) },
+            { assertThat(endeligBidragResultatListe[7].bpAndelAvUVedDeltBostedBeløp).isEqualTo(BigDecimal.ZERO.setScale(2)) },
             { assertThat(endeligBidragResultatListe[7].løpendeForskudd).isNull() },
             { assertThat(endeligBidragResultatListe[7].løpendeBidrag).isNull() },
-            { assertThat(endeligBidragResultatListe[7].ingenEndringUnderGrense).isFalse },
             { assertThat(endeligBidragResultatListe[7].barnetErSelvforsørget).isFalse },
-            { assertThat(endeligBidragResultatListe[7].bidragJustertForDeltBosted).isTrue },
+            { assertThat(endeligBidragResultatListe[7].bidragJustertForDeltBosted).isFalse },
             { assertThat(endeligBidragResultatListe[7].bidragJustertForNettoBarnetilleggBP).isFalse },
             { assertThat(endeligBidragResultatListe[7].bidragJustertForNettoBarnetilleggBM).isFalse },
             { assertThat(endeligBidragResultatListe[7].bidragJustertNedTilEvne).isFalse },
             { assertThat(endeligBidragResultatListe[7].bidragJustertNedTil25ProsentAvInntekt).isFalse },
             { assertThat(endeligBidragResultatListe[7].bidragJustertTilForskuddssats).isFalse },
             { assertThat(endeligBidragResultatListe[7].begrensetRevurderingUtført).isFalse },
+            { assertThat(endeligBidragResultatListe[7].ikkeOmsorgForBarnet).isTrue },
+
+            // Delt bosted
+            { assertThat(endeligBidragResultatListe[8].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null)) },
+            { assertThat(endeligBidragResultatListe[8].beregnetBeløp).isEqualTo(BigDecimal.valueOf(1000).setScale(2)) },
+            { assertThat(endeligBidragResultatListe[8].resultatBeløp).isEqualTo(BigDecimal.valueOf(1000).setScale(0)) },
+            { assertThat(endeligBidragResultatListe[8].uMinusNettoBarnetilleggBM).isEqualTo(BigDecimal.ZERO.setScale(2)) },
+            { assertThat(endeligBidragResultatListe[8].bruttoBidragEtterBarnetilleggBM).isEqualTo(BigDecimal.ZERO.setScale(2)) },
+            { assertThat(endeligBidragResultatListe[8].nettoBidragEtterBarnetilleggBM).isEqualTo(BigDecimal.ZERO.setScale(2)) },
+            { assertThat(endeligBidragResultatListe[8].bruttoBidragJustertForEvneOg25Prosent).isEqualTo(BigDecimal.valueOf(1000).setScale(2)) },
+            { assertThat(endeligBidragResultatListe[8].bruttoBidragEtterBegrensetRevurdering).isEqualTo(BigDecimal.ZERO.setScale(2)) },
+            { assertThat(endeligBidragResultatListe[8].bruttoBidragEtterBarnetilleggBP).isEqualTo(BigDecimal.ZERO.setScale(2)) },
+            { assertThat(endeligBidragResultatListe[8].nettoBidragEtterSamværsfradrag).isEqualTo(BigDecimal.valueOf(1000).setScale(2)) },
+            { assertThat(endeligBidragResultatListe[8].bpAndelAvUVedDeltBostedFaktor).isEqualTo(BigDecimal.valueOf(0.1).setScale(10)) },
+            { assertThat(endeligBidragResultatListe[8].bpAndelAvUVedDeltBostedBeløp).isEqualTo(BigDecimal.valueOf(1000).setScale(2)) },
+            { assertThat(endeligBidragResultatListe[8].løpendeForskudd).isNull() },
+            { assertThat(endeligBidragResultatListe[8].løpendeBidrag).isNull() },
+            { assertThat(endeligBidragResultatListe[8].barnetErSelvforsørget).isFalse },
+            { assertThat(endeligBidragResultatListe[8].bidragJustertForDeltBosted).isTrue },
+            { assertThat(endeligBidragResultatListe[8].bidragJustertForNettoBarnetilleggBP).isFalse },
+            { assertThat(endeligBidragResultatListe[8].bidragJustertForNettoBarnetilleggBM).isFalse },
+            { assertThat(endeligBidragResultatListe[8].bidragJustertNedTilEvne).isFalse },
+            { assertThat(endeligBidragResultatListe[8].bidragJustertNedTil25ProsentAvInntekt).isFalse },
+            { assertThat(endeligBidragResultatListe[8].bidragJustertTilForskuddssats).isFalse },
+            { assertThat(endeligBidragResultatListe[8].begrensetRevurderingUtført).isFalse },
+            { assertThat(endeligBidragResultatListe[8].ikkeOmsorgForBarnet).isFalse },
 
             // Grunnlag
             { assertThat(antallDelberegningBidragsevne).isEqualTo(forventetAntallDelberegningBidragsevne) },
@@ -852,6 +996,7 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(antallDelberegningBPAndelUnderholdskostnad).isEqualTo(forventetAntallDelberegningBPAndelUnderholdskostnad) },
             { assertThat(antallDelberegningSamværsfradrag).isEqualTo(forventetAntallDelberegningSamværsfradrag) },
             { assertThat(antallSamværsklasse).isEqualTo(forventetAntallSamværsklasse) },
+            { assertThat(antallBostatus).isEqualTo(forventetAntallBostatus) },
             { assertThat(antallBarnetilleggBP).isEqualTo(forventetAntallBarnetilleggBP) },
             { assertThat(antallBarnetilleggBM).isEqualTo(forventetAntallBarnetilleggBM) },
 
@@ -893,7 +1038,6 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[0].bpAndelAvUVedDeltBostedBeløp).isEqualTo(BigDecimal.ZERO.setScale(2)) },
             { assertThat(endeligBidragResultatListe[0].løpendeForskudd).isEqualTo(BigDecimal.valueOf(4500).setScale(0)) },
             { assertThat(endeligBidragResultatListe[0].løpendeBidrag).isEqualTo(BigDecimal.valueOf(4000).setScale(0)) },
-            { assertThat(endeligBidragResultatListe[0].ingenEndringUnderGrense).isFalse },
             { assertThat(endeligBidragResultatListe[0].barnetErSelvforsørget).isFalse },
             { assertThat(endeligBidragResultatListe[0].bidragJustertForDeltBosted).isFalse },
             { assertThat(endeligBidragResultatListe[0].bidragJustertForNettoBarnetilleggBP).isFalse },
@@ -918,7 +1062,6 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[1].bpAndelAvUVedDeltBostedBeløp).isEqualTo(BigDecimal.ZERO.setScale(2)) },
             { assertThat(endeligBidragResultatListe[1].løpendeForskudd).isEqualTo(BigDecimal.valueOf(5500).setScale(0)) },
             { assertThat(endeligBidragResultatListe[1].løpendeBidrag).isEqualTo(BigDecimal.valueOf(4000).setScale(0)) },
-            { assertThat(endeligBidragResultatListe[1].ingenEndringUnderGrense).isFalse },
             { assertThat(endeligBidragResultatListe[1].barnetErSelvforsørget).isFalse },
             { assertThat(endeligBidragResultatListe[1].bidragJustertForDeltBosted).isFalse },
             { assertThat(endeligBidragResultatListe[1].bidragJustertForNettoBarnetilleggBP).isFalse },
@@ -943,7 +1086,6 @@ internal class BeregnEndeligBidragApiTest {
             { assertThat(endeligBidragResultatListe[2].bpAndelAvUVedDeltBostedBeløp).isEqualTo(BigDecimal.ZERO.setScale(2)) },
             { assertThat(endeligBidragResultatListe[2].løpendeForskudd).isEqualTo(BigDecimal.valueOf(5500).setScale(0)) },
             { assertThat(endeligBidragResultatListe[2].løpendeBidrag).isEqualTo(BigDecimal.valueOf(5200).setScale(0)) },
-            { assertThat(endeligBidragResultatListe[2].ingenEndringUnderGrense).isFalse },
             { assertThat(endeligBidragResultatListe[2].barnetErSelvforsørget).isFalse },
             { assertThat(endeligBidragResultatListe[2].bidragJustertForDeltBosted).isFalse },
             { assertThat(endeligBidragResultatListe[2].bidragJustertForNettoBarnetilleggBP).isFalse },
@@ -960,69 +1102,5 @@ internal class BeregnEndeligBidragApiTest {
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
         )
-    }
-
-    private fun hentSluttberegning(endeligBidragResultat: List<GrunnlagDto>) = endeligBidragResultat
-        .filtrerOgKonverterBasertPåEgenReferanse<SluttberegningBarnebidrag>(Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG)
-        .map {
-            SluttberegningBarnebidrag(
-                periode = it.innhold.periode,
-                beregnetBeløp = it.innhold.beregnetBeløp,
-                resultatBeløp = it.innhold.resultatBeløp,
-                uMinusNettoBarnetilleggBM = it.innhold.uMinusNettoBarnetilleggBM,
-                bruttoBidragEtterBarnetilleggBM = it.innhold.bruttoBidragEtterBarnetilleggBM,
-                nettoBidragEtterBarnetilleggBM = it.innhold.nettoBidragEtterBarnetilleggBM,
-                bruttoBidragJustertForEvneOg25Prosent = it.innhold.bruttoBidragJustertForEvneOg25Prosent,
-                bruttoBidragEtterBegrensetRevurdering = it.innhold.bruttoBidragEtterBegrensetRevurdering,
-                bruttoBidragEtterBarnetilleggBP = it.innhold.bruttoBidragEtterBarnetilleggBP,
-                nettoBidragEtterSamværsfradrag = it.innhold.nettoBidragEtterSamværsfradrag,
-                bpAndelAvUVedDeltBostedFaktor = it.innhold.bpAndelAvUVedDeltBostedFaktor,
-                bpAndelAvUVedDeltBostedBeløp = it.innhold.bpAndelAvUVedDeltBostedBeløp,
-                løpendeForskudd = it.innhold.løpendeForskudd,
-                løpendeBidrag = it.innhold.løpendeBidrag,
-                ingenEndringUnderGrense = it.innhold.ingenEndringUnderGrense,
-                barnetErSelvforsørget = it.innhold.barnetErSelvforsørget,
-                bidragJustertForDeltBosted = it.innhold.bidragJustertForDeltBosted,
-                bidragJustertForNettoBarnetilleggBP = it.innhold.bidragJustertForNettoBarnetilleggBP,
-                bidragJustertForNettoBarnetilleggBM = it.innhold.bidragJustertForNettoBarnetilleggBM,
-                bidragJustertNedTilEvne = it.innhold.bidragJustertNedTilEvne,
-                bidragJustertNedTil25ProsentAvInntekt = it.innhold.bidragJustertNedTil25ProsentAvInntekt,
-                bidragJustertTilForskuddssats = it.innhold.bidragJustertTilForskuddssats,
-                begrensetRevurderingUtført = it.innhold.begrensetRevurderingUtført,
-            )
-        }
-
-    // TODO Flytte til felles
-    private fun hentAlleReferanser(resultatGrunnlagListe: List<GrunnlagDto>) = resultatGrunnlagListe
-        .map { it.referanse }
-        .distinct()
-
-    // TODO Flytte til felles
-    private fun hentAlleRefererteReferanser(resultatGrunnlagListe: List<GrunnlagDto>) = resultatGrunnlagListe
-        .flatMap { it.grunnlagsreferanseListe }
-        .distinct()
-
-    // TODO Flytte til felles
-    private fun lesFilOgByggRequest(filnavn: String): BeregnGrunnlag {
-        var json = ""
-
-        // Les inn fil med request-data (json)
-        try {
-            json = Files.readString(Paths.get(filnavn))
-        } catch (e: Exception) {
-            fail("Klarte ikke å lese fil: $filnavn")
-        }
-
-        // Lag request
-        return ObjectMapper().findAndRegisterModules().readValue(json, BeregnGrunnlag::class.java)
-    }
-
-    private fun <T> printJson(json: T) {
-        val objectMapper = ObjectMapper()
-        objectMapper.registerKotlinModule()
-        objectMapper.registerModule(JavaTimeModule())
-        objectMapper.dateFormat = SimpleDateFormat("yyyy-MM-dd")
-
-        println(objectMapper.writeValueAsString(json))
     }
 }

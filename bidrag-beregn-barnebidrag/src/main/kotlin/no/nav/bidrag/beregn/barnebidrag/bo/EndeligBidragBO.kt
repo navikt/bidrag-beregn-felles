@@ -4,7 +4,7 @@ import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.avrundetMedNullDesimaler
 import no.nav.bidrag.domene.util.avrundetMedTiDesimaler
 import no.nav.bidrag.domene.util.avrundetMedToDesimaler
-import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.BostatusPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningNettoBarnetillegg
@@ -20,6 +20,7 @@ data class EndeligBidragPeriodeGrunnlag(
     val bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe: List<BpAndelUnderholdskostnadDelberegningPeriodeGrunnlag>,
     val samværsfradragDelberegningPeriodeGrunnlagListe: List<SamværsfradragDelberegningPeriodeGrunnlag>,
     val samværsklassePeriodeGrunnlagListe: List<SamværsklassePeriodeGrunnlag>,
+    val bostatusPeriodeGrunnlagListe: List<BostatusPeriodeGrunnlag>,
     val nettoBarnetilleggBPDelberegningPeriodeGrunnlagListe: List<NettoBarnetilleggDelberegningPeriodeGrunnlag>,
     val nettoBarnetilleggBMDelberegningPeriodeGrunnlagListe: List<NettoBarnetilleggDelberegningPeriodeGrunnlag>,
     val beløpshistorikkForskuddPeriodeGrunnlag: BeløpshistorikkPeriodeGrunnlag?,
@@ -36,9 +37,9 @@ data class BpAndelUnderholdskostnadDelberegningPeriodeGrunnlag(
 
 data class SamværsfradragDelberegningPeriodeGrunnlag(val referanse: String, val samværsfradragPeriode: DelberegningSamværsfradrag)
 
-data class NettoBarnetilleggDelberegningPeriodeGrunnlag(val referanse: String, val nettoBarnetilleggPeriode: DelberegningNettoBarnetillegg)
+data class BostatusPeriodeGrunnlag(val referanse: String, val bostatusPeriode: BostatusPeriode)
 
-data class BeløpshistorikkPeriodeGrunnlag(val referanse: String, val beløpshistorikkPeriode: BeløpshistorikkGrunnlag)
+data class NettoBarnetilleggDelberegningPeriodeGrunnlag(val referanse: String, val nettoBarnetilleggPeriode: DelberegningNettoBarnetillegg)
 
 data class BegrensetRevurderingPeriodeGrunnlag(val referanse: String, val begrensetRevurdering: Boolean)
 
@@ -50,6 +51,7 @@ data class EndeligBidragBeregningGrunnlag(
     val bpAndelUnderholdskostnadBeregningGrunnlag: BpAndelUnderholdskostnadDelberegningBeregningGrunnlag,
     val samværsfradragBeregningGrunnlag: SamværsfradragDelberegningBeregningGrunnlag,
     val deltBostedBeregningGrunnlag: DeltBostedBeregningGrunnlag,
+    val søknadsbarnetBorHosBpGrunnlag: SøknadsbarnetBorHosBpGrunnlag,
     val barnetilleggBPBeregningGrunnlag: BarnetilleggDelberegningBeregningGrunnlag?,
     val barnetilleggBMBeregningGrunnlag: BarnetilleggDelberegningBeregningGrunnlag?,
     val løpendeForskuddBeløp: BigDecimal?,
@@ -73,11 +75,13 @@ data class SamværsfradragDelberegningBeregningGrunnlag(val referanse: String, v
 
 data class DeltBostedBeregningGrunnlag(val referanse: String, val deltBosted: Boolean)
 
+data class SøknadsbarnetBorHosBpGrunnlag(val referanse: String, val søknadsbarnetBorHosBp: Boolean)
+
 data class BarnetilleggDelberegningBeregningGrunnlag(val referanse: String, val beløp: BigDecimal)
 
 data class EndeligBidragBeregningResultat(
-    val beregnetBeløp: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
-    val resultatBeløp: BigDecimal = BigDecimal.ZERO.avrundetMedNullDesimaler,
+    val beregnetBeløp: BigDecimal? = BigDecimal.ZERO.avrundetMedToDesimaler,
+    val resultatBeløp: BigDecimal? = BigDecimal.ZERO.avrundetMedNullDesimaler,
     val uMinusNettoBarnetilleggBM: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
     val bruttoBidragEtterBarnetilleggBM: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
     val nettoBidragEtterBarnetilleggBM: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
@@ -89,7 +93,6 @@ data class EndeligBidragBeregningResultat(
     val bpAndelAvUVedDeltBostedBeløp: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
     val løpendeForskudd: BigDecimal? = null,
     val løpendeBidrag: BigDecimal? = null,
-    val ingenEndringUnderGrense: Boolean = false,
     val barnetErSelvforsørget: Boolean = false,
     val bidragJustertForDeltBosted: Boolean = false,
     val bidragJustertForNettoBarnetilleggBP: Boolean = false,
@@ -99,7 +102,9 @@ data class EndeligBidragBeregningResultat(
     val bidragJustertTilForskuddssats: Boolean = false,
     val beregnetBeløpErLavereEnnLøpendeBidrag: Boolean = false,
     val begrensetRevurderingUtført: Boolean = false,
+    val ikkeOmsorgForBarnet: Boolean = false,
     val beregnetBidragErLavereEnnLøpendeBidrag: Boolean = false,
+    val løpendeForskuddMangler: Boolean = false,
     val grunnlagsreferanseListe: List<String> = emptyList(),
 )
 

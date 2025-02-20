@@ -6,6 +6,7 @@ import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.VoksneIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.core.mapping.tilGrunnlag
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
+import no.nav.bidrag.beregn.core.util.justerPeriodeTilOpphørsdato
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
@@ -15,6 +16,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBoforhold
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
+import java.time.LocalDate
 import java.util.Collections
 
 data class BeregnBoforholdPeriodeCoreRespons(
@@ -38,6 +40,7 @@ internal class BeregnBoforholdService : CoreMapper() {
             voksneIHusstandenPeriodeGrunnlagListe = voksneIHusstandenPeriodeCoreListe,
             søknadsbarnReferanse = beregnGrunnlag.søknadsbarnReferanse,
             gjelderReferanse = gjelderReferanse,
+            opphørsdato = if (beregnGrunnlag.opphørSistePeriode) beregnGrunnlag.periode.til?.plusMonths(1)?.atDay(1) else null,
         )
 
         return BeregnBoforholdPeriodeCoreRespons(
@@ -136,6 +139,20 @@ internal class BeregnBoforholdService : CoreMapper() {
             )
         }
     }
+    fun justerPerioderForOpphørsdato(periodeliste: List<PeriodeCore>, opphørsdato: LocalDate?): List<PeriodeCore> {
+        if (opphørsdato == null) return periodeliste
+        // Antar at opphørsdato er måneden perioden skal opphøre
+        return periodeliste.filter {
+            it.datoFom.isBefore(opphørsdato)
+        }
+            .map { grunnlag ->
+                if (grunnlag.datoTil == null || grunnlag.datoTil.isAfter(opphørsdato)) {
+                    grunnlag.copy(datoTil = justerPeriodeTilOpphørsdato(opphørsdato))
+                } else {
+                    grunnlag
+                }
+            }
+    }
 
     // Slår sammen barn i husstanden og voksne i husstanden til et fellesobjekt
     private fun slåSammenBarnOgVoksneIHusstanden(
@@ -143,6 +160,7 @@ internal class BeregnBoforholdService : CoreMapper() {
         voksneIHusstandenPeriodeGrunnlagListe: List<VoksneIHusstandenPeriodeCore>,
         søknadsbarnReferanse: String,
         gjelderReferanse: String,
+        opphørsdato: LocalDate?,
     ): List<BoforholdPeriodeCore> {
         // Lager unik, sortert liste over alle bruddatoer og legger evt. null-forekomst bakerst
         val bruddDatoListe = (
@@ -158,7 +176,7 @@ internal class BeregnBoforholdService : CoreMapper() {
             .zipWithNext()
             .map { PeriodeCore(it.first!!, it.second) }
 
-        return periodeListe.map { bruddPeriode ->
+        return justerPerioderForOpphørsdato(periodeListe, opphørsdato).map { bruddPeriode ->
 
             // Finner matchende barnIHusstanden for aktuell periode
             val barnIHusstanden = barnIHusstandenPeriodeGrunnlagListe

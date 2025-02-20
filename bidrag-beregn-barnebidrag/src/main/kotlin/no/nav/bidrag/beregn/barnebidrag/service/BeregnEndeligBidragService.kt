@@ -11,6 +11,7 @@ import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragPeriodeResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragDelberegningBeregningGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnetBorHosBpGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadDelberegningBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.mapper.EndeligBidragMapper.mapEndeligBidragGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.mapper.NettoBarnetilleggMapper.finnReferanseTilRolle
@@ -20,6 +21,7 @@ import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.domene.enums.beregning.Samværsklasse
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
+import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
@@ -68,8 +70,8 @@ internal object BeregnEndeligBidragService : BeregnService() {
         // Legger til delberegningsobjekter i grunnlaget
         val utvidetGrunnlag = mottattGrunnlag.copy(
             grunnlagListe =
-            (mottattGrunnlag.grunnlagListe + delberegningNettoBarnetilleggBPResultat + delberegningNettoBarnetilleggBMResultat)
-                .distinctBy(GrunnlagDto::referanse),
+                (mottattGrunnlag.grunnlagListe + delberegningNettoBarnetilleggBPResultat + delberegningNettoBarnetilleggBMResultat)
+                    .distinctBy(GrunnlagDto::referanse),
         )
 
         // Mapper ut grunnlag som skal brukes for å beregne endelig bidrag
@@ -84,7 +86,9 @@ internal object BeregnEndeligBidragService : BeregnService() {
         val endeligBidragBeregningResultatListe = mutableListOf<EndeligBidragPeriodeResultat>()
 
         // Løper gjennom hver bruddperiode og beregner endelig bidrag
-        bruddPeriodeListe.forEach { bruddPeriode ->
+        bruddPeriodeListe.forEachIndexed { indeks, bruddPeriode ->
+            val førsteElement = indeks == 0
+
             val endeligBidragBeregningGrunnlag = lagEndeligBidragBeregningGrunnlag(
                 endeligBidragPeriodeGrunnlag = endeligBidragPeriodeGrunnlag,
                 bruddPeriode = bruddPeriode,
@@ -92,7 +96,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
             endeligBidragBeregningResultatListe.add(
                 EndeligBidragPeriodeResultat(
                     periode = bruddPeriode,
-                    resultat = EndeligBidragBeregning.beregn(endeligBidragBeregningGrunnlag),
+                    resultat = EndeligBidragBeregning.beregn(endeligBidragBeregningGrunnlag, førsteElement),
                 ),
             )
         }
@@ -106,17 +110,32 @@ internal object BeregnEndeligBidragService : BeregnService() {
             }
         }
 
-        // Løper gjennom resultatlista for å sjekke om det finnes elementer hvor det er begrenset revurdering og beregnet bidrag er lavere enn
-        // løpende bidrag. Dette skal resultere i exception lenger ned i koden. Selve exceptionen kastes i BeregnBarnebidragService
-        var feilmelding = "Kan ikke fatte vedtak fordi beregnet bidrag for følgende perioder er lavere enn løpende bidrag:"
+        // Løper gjennom resultatlista for å sjekke om:
+        // - Det finnes elementer hvor det er begrenset revurdering og beregnet bidrag er lavere enn løpende bidrag (hvis beregnet bidrag > 0)
+        // - Det finnes elementer hvor løpende forskudd mangler (vil kun være aktuelt i første element)
+        // Disse situasjonene skal resultere i exception lenger ned i koden. Selve exceptionen kastes i BeregnBarnebidragService
+        // Exception hvor løpende forskudd mangler har forrang
+        var feilmelding = "Kan ikke fatte vedtak fordi løpende forskudd mangler i første beregningsperiode:"
         val perioderMedFeilListe = mutableListOf<ÅrMånedsperiode>()
         var skalKasteBegrensetRevurderingException = false
         endeligBidragBeregningResultatListe.forEach {
-            if (it.resultat.beregnetBidragErLavereEnnLøpendeBidrag) {
+            if (it.resultat.løpendeForskuddMangler) {
                 skalKasteBegrensetRevurderingException = true
                 val periodeTil = it.periode.til ?: ""
                 feilmelding += " ${it.periode.fom} - $periodeTil,"
                 perioderMedFeilListe.add(it.periode)
+            }
+        }
+
+        if (!skalKasteBegrensetRevurderingException) {
+            feilmelding = "Kan ikke fatte vedtak fordi beregnet bidrag for følgende perioder er lavere enn løpende bidrag:"
+            endeligBidragBeregningResultatListe.forEach {
+                if ((it.resultat.beregnetBidragErLavereEnnLøpendeBidrag) && (it.resultat.beregnetBeløp!! > BigDecimal.ZERO)) {
+                    skalKasteBegrensetRevurderingException = true
+                    val periodeTil = it.periode.til ?: ""
+                    feilmelding += " ${it.periode.fom} - $periodeTil,"
+                    perioderMedFeilListe.add(it.periode)
+                }
             }
         }
 
@@ -183,6 +202,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
             )
             .plus(grunnlagListe.samværsfradragDelberegningPeriodeGrunnlagListe.asSequence().map { it.samværsfradragPeriode.periode })
             .plus(grunnlagListe.samværsklassePeriodeGrunnlagListe.asSequence().map { it.samværsklassePeriode.periode })
+            .plus(grunnlagListe.bostatusPeriodeGrunnlagListe.asSequence().map { it.bostatusPeriode.periode })
             .plus(grunnlagListe.nettoBarnetilleggBPDelberegningPeriodeGrunnlagListe.asSequence().map { it.nettoBarnetilleggPeriode.periode })
             .plus(grunnlagListe.nettoBarnetilleggBMDelberegningPeriodeGrunnlagListe.asSequence().map { it.nettoBarnetilleggPeriode.periode })
             .let { periode ->
@@ -245,6 +265,15 @@ internal object BeregnEndeligBidragService : BeregnService() {
                 )
             }
             ?: throw IllegalArgumentException("Delt bosted grunnlag mangler for periode $bruddPeriode")
+        val søknadsbarnetBorHosBpGrunnlag = endeligBidragPeriodeGrunnlag.bostatusPeriodeGrunnlagListe
+            .firstOrNull { it.bostatusPeriode.periode.inneholder(bruddPeriode) }
+            ?.let {
+                SøknadsbarnetBorHosBpGrunnlag(
+                    referanse = it.referanse,
+                    søknadsbarnetBorHosBp = it.bostatusPeriode.bostatus == Bostatuskode.MED_FORELDER,
+                )
+            }
+            ?: throw IllegalArgumentException("Bostatus grunnlag mangler for periode $bruddPeriode")
         val barnetilleggBPBeregningGrunnlag = endeligBidragPeriodeGrunnlag.nettoBarnetilleggBPDelberegningPeriodeGrunnlagListe
             .firstOrNull { it.nettoBarnetilleggPeriode.periode.inneholder(bruddPeriode) }
             ?.let {
@@ -273,9 +302,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
         }
         // Kaster exception hvis det skal utføres begrenset revurdering, men beløpshistorikk for forskudd eller bidrag mangler
         val utførBegrensetRevurdering = endeligBidragPeriodeGrunnlag.begrensetRevurderingPeriodeGrunnlag?.begrensetRevurdering ?: false
-        if (utførBegrensetRevurdering && (løpendeForskuddBeløp == null || løpendeBidragBeløp == null)) {
-            throw IllegalArgumentException("Beløpshistorikk grunnlag mangler for begrenset revurdering")
-        }
+        require(!(utførBegrensetRevurdering && (løpendeForskuddBeløp == null || løpendeBidragBeløp == null))) { "Beløpshistorikk grunnlag mangler for begrenset revurdering" }
 
         // Legger til referanser for grunnlagsobjekter som ikke er lister (skal refereres av alle perioder hvis det er begrenset revurdering
         val engangsreferanser = listOfNotNull(
@@ -290,6 +317,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
             bpAndelUnderholdskostnadBeregningGrunnlag = bpAndelUnderholdskostnadBeregningGrunnlag,
             samværsfradragBeregningGrunnlag = samværsfradragBeregningGrunnlag,
             deltBostedBeregningGrunnlag = deltBostedBeregningGrunnlag,
+            søknadsbarnetBorHosBpGrunnlag = søknadsbarnetBorHosBpGrunnlag,
             barnetilleggBPBeregningGrunnlag = barnetilleggBPBeregningGrunnlag,
             barnetilleggBMBeregningGrunnlag = barnetilleggBMBeregningGrunnlag,
             løpendeForskuddBeløp = løpendeForskuddBeløp,
@@ -362,7 +390,6 @@ internal object BeregnEndeligBidragService : BeregnService() {
                         bpAndelAvUVedDeltBostedBeløp = it.resultat.bpAndelAvUVedDeltBostedBeløp,
                         løpendeForskudd = it.resultat.løpendeForskudd,
                         løpendeBidrag = it.resultat.løpendeBidrag,
-                        ingenEndringUnderGrense = it.resultat.ingenEndringUnderGrense,
                         barnetErSelvforsørget = it.resultat.barnetErSelvforsørget,
                         bidragJustertForDeltBosted = it.resultat.bidragJustertForDeltBosted,
                         bidragJustertForNettoBarnetilleggBP = it.resultat.bidragJustertForNettoBarnetilleggBP,
@@ -371,6 +398,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
                         bidragJustertNedTil25ProsentAvInntekt = it.resultat.bidragJustertNedTil25ProsentAvInntekt,
                         bidragJustertTilForskuddssats = it.resultat.bidragJustertTilForskuddssats,
                         begrensetRevurderingUtført = it.resultat.begrensetRevurderingUtført,
+                        ikkeOmsorgForBarnet = it.resultat.ikkeOmsorgForBarnet,
                     ),
                 ),
                 grunnlagsreferanseListe = (it.resultat.grunnlagsreferanseListe + mottattGrunnlag.søknadsbarnReferanse).sorted(),

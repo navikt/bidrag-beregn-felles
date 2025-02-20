@@ -130,7 +130,7 @@
         "relatertTilPart": "Person_Bidragspliktig"
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Søknadsbarn"
+      "gjelderBarnReferanse": "Person_Søknadsbarn"
     },
     {
       "referanse": "Bostatus_Husstandsmedlem1_202008",
@@ -145,7 +145,7 @@
         "relatertTilPart": "Person_Bidragspliktig"
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Husstandsmedlem1"
+      "gjelderBarnReferanse": "Person_Husstandsmedlem1"
     },
     {
       "referanse": "Bostatus_Bidragspliktig_202008",
