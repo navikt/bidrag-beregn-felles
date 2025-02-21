@@ -447,7 +447,7 @@ internal class BoforholdBarnServiceV3 {
     private fun slåSammenPrimærOgSekundærperioder(
         primærperioder: List<BoforholdResponseV2>,
         sekundærperioder: List<BoforholdResponseV2>,
-        slåSammenPerioderMedLikKildeOgBostatus: Boolean,
+        slåSammenPerioderMedLikBostatus: Boolean,
     ): List<BoforholdResponseV2> {
         val resultatliste = mutableListOf<BoforholdResponseV2>()
 
@@ -520,7 +520,7 @@ internal class BoforholdBarnServiceV3 {
             }
 
             val justertSekundærperiode =
-                justerSekundærperiode(sekundærperiode, sammenslåttListeOverlappendePerioder, slåSammenPerioderMedLikKildeOgBostatus)
+                justerSekundærperiode(sekundærperiode, sammenslåttListeOverlappendePerioder, slåSammenPerioderMedLikBostatus)
             if (justertSekundærperiode != null) {
                 resultatliste.addAll(justertSekundærperiode)
             }
@@ -536,7 +536,7 @@ internal class BoforholdBarnServiceV3 {
     private fun justerSekundærperiode(
         sekundærperiode: BoforholdResponseV2,
         overlappendePerioder: List<BoforholdResponseV2>,
-        slåSammenPerioderMedLikKildeOgBostatus: Boolean,
+        slåSammenPerioderMedLikBostatus: Boolean,
     ): List<BoforholdResponseV2>? {
         var periodeFom: LocalDate? = null
         var periodeTom: LocalDate? = null
@@ -573,7 +573,7 @@ internal class BoforholdBarnServiceV3 {
                 if (periodeTom != null &&
                     (
                         overlappendePerioder[indeks].bostatus != sekundærperiode.bostatus ||
-                            slåSammenPerioderMedLikKildeOgBostatus
+                            slåSammenPerioderMedLikBostatus
                         )
                 ) {
                     // Første primære periode starter etter sekundær periode. Den sekundære perioden skrives med justert tomdato. Senere i logikken
@@ -596,7 +596,7 @@ internal class BoforholdBarnServiceV3 {
                 if (overlappendePerioder[indeks + 1].periodeFom.isAfter(overlappendePerioder[indeks].periodeTom!!.plusDays(1)) &&
                     (
                         overlappendePerioder[indeks].bostatus != sekundærperiode.bostatus ||
-                            slåSammenPerioderMedLikKildeOgBostatus
+                            slåSammenPerioderMedLikBostatus
                         )
                 ) {
                     // Det er en åpen tidsperiode mellom to primære perioder, og den sekundære perioden skal fylle denne tidsperioden
@@ -622,7 +622,7 @@ internal class BoforholdBarnServiceV3 {
                 if (overlappendePerioder[indeks].periodeTom != null &&
                     (
                         overlappendePerioder[indeks].bostatus != sekundærperiode.bostatus ||
-                            slåSammenPerioderMedLikKildeOgBostatus
+                            slåSammenPerioderMedLikBostatus
                         )
                 ) {
                     if (sekundærperiode.periodeTom == null || sekundærperiode.periodeTom.isAfter(overlappendePerioder[indeks].periodeTom)) {
