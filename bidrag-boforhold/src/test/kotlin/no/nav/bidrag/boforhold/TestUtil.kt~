@@ -4747,6 +4747,15 @@ class TestUtil {
             ),
         )
 
+<<<<<<<<<<<<<<  ✨ Codeium Command ⭐ >>>>>>>>>>>>>>>>
+        /**
+         * Tester at vi kan endre en periode med virkningstidspunkt tilbake i tid.
+         * Vi har en offentlig periode med periodefom 1.5.2025 og periodeTom null.
+         * Vi har en manuell periode med periodefom 1.7.2025 og periodeTom null.
+         * Vi ønsker å endre den manuelle perioden til å ha periodefom 1.5.2025.
+         * Vi forventer at vi får en periode med periodefom 1.5.2025 og periodeTom null.
+         */
+<<<<<<<  ed1559d1-35f7-4f20-a0a6-21b2f914552c  >>>>>>>
         fun justerVirkningstidspunktTilbakeITid() = BoforholdBarnRequestV3(
             gjelderPersonId = "98765432109",
             fødselsdato = LocalDate.of(2006, 10, 31),
@@ -4769,5 +4778,6 @@ class TestUtil {
             ),
             endreBostatus = null,
         )
+
     }
 }

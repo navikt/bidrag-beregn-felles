@@ -131,7 +131,7 @@ internal class BoforholdBarnServiceV3 {
                 val offentligePerioderJustertMotAttenårsdag =
                     justerMotAttenårsdag(attenårFraDato, typeBehandling, komplettOffentligTidslinje)
                 val sammenslåtteBehandledeOgOffentligePerioder =
-                    slåSammenPrimærOgSekundærperioder(behandledeOpplysninger, offentligePerioderJustertMotAttenårsdag)
+                    slåSammenPrimærOgSekundærperioder(behandledeOpplysninger, offentligePerioderJustertMotAttenårsdag, true)
 
                 // Slår sammen sammenhengende perioder med lik Bostatuskode
                 val sammenslåttListe = slåSammenPerioderOgJusterPeriodeTom(sammenslåtteBehandledeOgOffentligePerioder)
@@ -185,7 +185,7 @@ internal class BoforholdBarnServiceV3 {
                 return emptyList()
             }
 
-            return slåSammenPrimærOgSekundærperioder(oppdaterteBehandledeOpplysninger, justerteOffentligePerioder)
+            return slåSammenPrimærOgSekundærperioder(oppdaterteBehandledeOpplysninger, justerteOffentligePerioder, true)
         }
 
         // Det finnes både behandlede og endrede perioder
@@ -196,7 +196,7 @@ internal class BoforholdBarnServiceV3 {
         val offentligePerioderJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, typeBehandling, komplettOffentligTidslinje)
 
         val sammenslåtteBehandledeOgOffentligePerioder =
-            slåSammenPrimærOgSekundærperioder(oppdaterteBehandledeOpplysninger, offentligePerioderJustertMotAttenårsdag)
+            slåSammenPrimærOgSekundærperioder(oppdaterteBehandledeOpplysninger, offentligePerioderJustertMotAttenårsdag, false)
 
         return sammenslåtteBehandledeOgOffentligePerioder.map {
             BoforholdResponseV2(
@@ -447,6 +447,7 @@ internal class BoforholdBarnServiceV3 {
     private fun slåSammenPrimærOgSekundærperioder(
         primærperioder: List<BoforholdResponseV2>,
         sekundærperioder: List<BoforholdResponseV2>,
+        slåSammenPerioderMedLikKildeOgBostatus: Boolean,
     ): List<BoforholdResponseV2> {
         val resultatliste = mutableListOf<BoforholdResponseV2>()
 
@@ -518,7 +519,8 @@ internal class BoforholdBarnServiceV3 {
                 }
             }
 
-            val justertSekundærperiode = justerSekundærperiode(sekundærperiode, sammenslåttListeOverlappendePerioder)
+            val justertSekundærperiode =
+                justerSekundærperiode(sekundærperiode, sammenslåttListeOverlappendePerioder, slåSammenPerioderMedLikKildeOgBostatus)
             if (justertSekundærperiode != null) {
                 resultatliste.addAll(justertSekundærperiode)
             }
@@ -534,6 +536,7 @@ internal class BoforholdBarnServiceV3 {
     private fun justerSekundærperiode(
         sekundærperiode: BoforholdResponseV2,
         overlappendePerioder: List<BoforholdResponseV2>,
+        slåSammenPerioderMedLikKildeOgBostatus: Boolean,
     ): List<BoforholdResponseV2>? {
         var periodeFom: LocalDate? = null
         var periodeTom: LocalDate? = null
@@ -569,8 +572,11 @@ internal class BoforholdBarnServiceV3 {
                 }
                 if (periodeTom != null &&
                     (
-                        overlappendePerioder[indeks].kilde != sekundærperiode.kilde ||
-                            overlappendePerioder[indeks].bostatus != sekundærperiode.bostatus
+                        (
+                            overlappendePerioder[indeks].kilde != sekundærperiode.kilde ||
+                                overlappendePerioder[indeks].bostatus != sekundærperiode.bostatus
+                            ) ||
+                            slåSammenPerioderMedLikKildeOgBostatus
                         )
                 ) {
                     // Første primære periode starter etter sekundær periode. Den sekundære perioden skrives med justert tomdato. Senere i logikken
@@ -592,8 +598,11 @@ internal class BoforholdBarnServiceV3 {
             if (indeks < overlappendePerioder.size - 1) {
                 if (overlappendePerioder[indeks + 1].periodeFom.isAfter(overlappendePerioder[indeks].periodeTom!!.plusDays(1)) &&
                     (
-                        overlappendePerioder[indeks].kilde != sekundærperiode.kilde ||
-                            overlappendePerioder[indeks].bostatus != sekundærperiode.bostatus
+                        (
+                            overlappendePerioder[indeks].kilde != sekundærperiode.kilde ||
+                                overlappendePerioder[indeks].bostatus != sekundærperiode.bostatus
+                            ) ||
+                            slåSammenPerioderMedLikKildeOgBostatus
                         )
                 ) {
                     // Det er en åpen tidsperiode mellom to primære perioder, og den sekundære perioden skal fylle denne tidsperioden
@@ -707,7 +716,7 @@ internal class BoforholdBarnServiceV3 {
 
             TypeEndring.NY -> {
                 if (nyBostatus == null) {
-                    // Hvis det ikke finnes en ny bostatus så kan det ikke leges til ny periode
+                    // Hvis det ikke finnes en ny bostatus så kan det ikke legges til ny periode
                     secureLogger.info {
                         "Periode som skal legges til må være angitt som nyBostatus i input. endreBostatus: " +
                             "${boforholdRequest.endreBostatus} "
@@ -726,7 +735,7 @@ internal class BoforholdBarnServiceV3 {
                 )
                 // Justerer perioder mot 18årsdag
                 val nyBostatusJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, typeBehandling, endredePerioder)
-                val sammenslåttListe = slåSammenPrimærOgSekundærperioder(nyBostatusJustertMotAttenårsdag, behandledeOpplysninger)
+                val sammenslåttListe = slåSammenPrimærOgSekundærperioder(nyBostatusJustertMotAttenårsdag, behandledeOpplysninger, true)
                 return slåSammenPerioderOgJusterPeriodeTom(sammenslåttListe)
             }
 
@@ -801,7 +810,7 @@ internal class BoforholdBarnServiceV3 {
                     // Justerer perioder mot 18årsdag
                     val nyPeriodeJustertMotAttenårsdag = justerMotAttenårsdag(attenårFraDato, typeBehandling, nyPeriode)
                     // Gjør en sammenslåing av perioder med lik bostatuskode og justerer periodeTom
-                    val sammenslåttListe = slåSammenPrimærOgSekundærperioder(nyPeriodeJustertMotAttenårsdag, endredePerioder)
+                    val sammenslåttListe = slåSammenPrimærOgSekundærperioder(nyPeriodeJustertMotAttenårsdag, endredePerioder, true)
                     return slåSammenPerioderOgJusterPeriodeTom(sammenslåttListe)
                 }
 

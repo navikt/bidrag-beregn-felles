@@ -1327,7 +1327,7 @@ internal class BoforholdBarnServiceV3Test {
     }
 
     @Test
-    fun `Test juster virkningstidspunkt tilbake i tid `() {
+    fun `Test utvid periode tilbake i tid `() {
         boforholdBarnServiceV3 = BoforholdBarnServiceV3()
         val mottatteBoforhold = TestUtil.justerVirkningstidspunktTilbakeITid()
         val virkningstidspunkt = LocalDate.of(2025, 5, 1)
