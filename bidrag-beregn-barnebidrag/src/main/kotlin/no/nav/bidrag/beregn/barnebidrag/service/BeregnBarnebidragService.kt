@@ -116,7 +116,7 @@ class BeregnBarnebidragService : BeregnService() {
         val endeligResultatGrunnlagListe = (
             filtrerResultatGrunnlag(
                 foreløpigResultatGrunnlagListe = foreløpigResultatGrunnlagListe,
-                refererteReferanserListe = resultatPeriodeListe.flatMap { it.grunnlagsreferanseListe }
+                refererteReferanserListe = resultatPeriodeListe.flatMap { it.grunnlagsreferanseListe },
             ) + delberegningEndringSjekkGrenseResultat + delberegningEndringSjekkGrensePeriodeResultat
             )
             .distinctBy { it.referanse }
@@ -522,7 +522,7 @@ class BeregnBarnebidragService : BeregnService() {
     private fun filtrerResultatGrunnlag(
         foreløpigResultatGrunnlagListe: List<GrunnlagDto>,
         refererteReferanserListe: List<String>,
-        referanserAlleredeLagtTil: MutableSet<String> = mutableSetOf()
+        referanserAlleredeLagtTil: MutableSet<String> = mutableSetOf(),
     ): List<GrunnlagDto> {
         // Stopper hvis det ikke finnes flere refererte referanser
         if (refererteReferanserListe.isEmpty()) {
