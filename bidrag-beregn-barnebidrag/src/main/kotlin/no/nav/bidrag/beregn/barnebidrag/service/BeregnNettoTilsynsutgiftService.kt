@@ -9,12 +9,11 @@ import no.nav.bidrag.beregn.barnebidrag.bo.NettoTilsynsutgiftPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.NettoTilsynsutgiftPeriodeResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonMaksFradragsbeløpBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonMaksTilsynsbeløpBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSjablontallBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSjablontallPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.Tilleggsstønad
 import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.beregnAntallBarnBM
 import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.finnReferanseTilRolle
 import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.mapNettoTilsynsutgiftPeriodeGrunnlag
+import no.nav.bidrag.beregn.core.bo.SjablonSjablontallBeregningGrunnlag
 import no.nav.bidrag.beregn.core.dto.FaktiskUtgiftPeriodeCore
 import no.nav.bidrag.beregn.core.dto.TilleggsstønadPeriodeCore
 import no.nav.bidrag.beregn.core.service.BeregnService
@@ -27,8 +26,6 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningFaktiskTil
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningNettoTilsynsutgift
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningTilleggsstønad
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
-import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
 import java.time.LocalDate
 import java.time.Period
@@ -84,8 +81,10 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
         }
 
         // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
-        val resultatGrunnlagListe = mapNettoTilsynsutgiftResultatGrunnlag(
-            nettoTilsynsutgiftBeregningResultatListe = nettoTilsynsutgiftBeregningResultatListe,
+        val resultatGrunnlagListe = mapDelberegningResultatGrunnlag(
+            grunnlagReferanseListe = nettoTilsynsutgiftBeregningResultatListe
+                .flatMap { it.resultat.grunnlagsreferanseListe }
+                .distinct(),
             mottattGrunnlag = mottattGrunnlag,
             sjablonGrunnlag = sjablonGrunnlag,
         )
@@ -215,50 +214,6 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
         )
         return respons
     }
-
-    private fun mapNettoTilsynsutgiftResultatGrunnlag(
-        nettoTilsynsutgiftBeregningResultatListe: List<NettoTilsynsutgiftPeriodeResultat>,
-        mottattGrunnlag: BeregnGrunnlag,
-        sjablonGrunnlag: List<GrunnlagDto>,
-    ): MutableList<GrunnlagDto> {
-        val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
-        val grunnlagReferanseListe =
-            nettoTilsynsutgiftBeregningResultatListe
-                .flatMap { it.resultat.grunnlagsreferanseListe }
-                .distinct()
-
-        // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
-        resultatGrunnlagListe.addAll(
-            mapGrunnlag(
-                grunnlagListe = mottattGrunnlag.grunnlagListe,
-                grunnlagReferanseListe = grunnlagReferanseListe,
-            ),
-        )
-
-        // Matcher sjablongrunnlag med grunnlag som er brukt i beregningen og mapper ut
-        resultatGrunnlagListe.addAll(
-            mapGrunnlag(
-                grunnlagListe = sjablonGrunnlag,
-                grunnlagReferanseListe = grunnlagReferanseListe,
-            ),
-        )
-
-        return resultatGrunnlagListe
-    }
-
-    // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
-    private fun mapGrunnlag(grunnlagListe: List<GrunnlagDto>, grunnlagReferanseListe: List<String>) = grunnlagListe
-        .filter { grunnlagReferanseListe.contains(it.referanse) }
-        .map {
-            GrunnlagDto(
-                referanse = it.referanse,
-                type = it.type,
-                innhold = it.innhold,
-                grunnlagsreferanseListe = it.grunnlagsreferanseListe,
-                gjelderReferanse = it.gjelderReferanse,
-                gjelderBarnReferanse = it.gjelderBarnReferanse,
-            )
-        }
 
     // Mapper ut DelberegningNettoTilsynsutgift
     private fun mapDelberegningNettoTilsynsutgift(
@@ -396,24 +351,6 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
                     gjelderBarnReferanse = it.gjelderBarn,
                 )
             }
-
-    fun mapSjablonSjablontall(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonSjablontallPeriodeGrunnlag> {
-        try {
-            return sjablonGrunnlag
-                .filter { it.type == Grunnlagstype.SJABLON_SJABLONTALL }
-                .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>()
-                .map {
-                    SjablonSjablontallPeriodeGrunnlag(
-                        referanse = it.referanse,
-                        sjablonSjablontallPeriode = it.innhold,
-                    )
-                }
-        } catch (e: Exception) {
-            throw IllegalArgumentException(
-                "Feil ved uthenting av sjablon for sjablontall: " + e.message,
-            )
-        }
-    }
 
     private fun barnUnderTolvÅr(barnBMListe: List<BarnBM>, fom: YearMonth): List<BarnBM> = barnBMListe
         // Filtrer først bort barn som er født etter periodens start

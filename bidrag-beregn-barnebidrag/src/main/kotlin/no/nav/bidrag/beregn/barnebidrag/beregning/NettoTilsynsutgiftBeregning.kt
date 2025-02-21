@@ -57,7 +57,7 @@ internal object NettoTilsynsutgiftBeregning {
 
         val tilsynsutgiftBarnListe = mutableListOf<TilsynsutgiftBarn>()
 
-        var justertBruttoTilsynsutgiftBeløp = BigDecimal.ZERO
+        var justertBruttoTilsynsutgiftBeløp: BigDecimal
         var andelTilsynsutgiftFaktor: BigDecimal
         var justertBruttoTilsynsutgifterBeløpSøknadsbarn = BigDecimal.ZERO
         var bruttoTilsynsutgifterBeløpSøknadsbarn = BigDecimal.ZERO

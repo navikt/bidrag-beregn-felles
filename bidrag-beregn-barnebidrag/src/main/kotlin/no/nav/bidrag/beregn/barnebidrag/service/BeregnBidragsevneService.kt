@@ -8,11 +8,12 @@ import no.nav.bidrag.beregn.barnebidrag.bo.BidragsevnePeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BidragsevnePeriodeResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.InntektBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonBidragsevneBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSjablontallBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonTrinnvisSkattesatsBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.VoksneIHusstandenBeregningGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.mapper.BidragsevneMapper.finnInnslagKapitalinntektFraGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.mapper.BidragsevneMapper.finnReferanseTilRolle
 import no.nav.bidrag.beregn.barnebidrag.mapper.BidragsevneMapper.mapBidragsevneGrunnlag
+import no.nav.bidrag.beregn.core.bo.SjablonSjablontallBeregningGrunnlag
 import no.nav.bidrag.beregn.core.mapping.mapTilGrunnlag
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
@@ -23,9 +24,8 @@ import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
-import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
+import java.math.BigDecimal
 
 internal object BeregnBidragsevneService : BeregnService() {
 
@@ -43,7 +43,12 @@ internal object BeregnBidragsevneService : BeregnService() {
 
         // Mapper ut grunnlag som skal brukes for å beregne bidragsevne
         val bidragsevnePeriodeGrunnlag =
-            mapBidragsevneGrunnlag(mottattGrunnlag = mottattGrunnlag, sjablonGrunnlag = sjablonGrunnlag, åpenSluttperiode = åpenSluttperiode)
+            mapBidragsevneGrunnlag(
+                mottattGrunnlag = mottattGrunnlag,
+                sjablonGrunnlag = sjablonGrunnlag,
+                åpenSluttperiode = åpenSluttperiode,
+                innslagKapitalInntekt = innslagKapitalinntektSjablon?.verdi ?: BigDecimal.ZERO
+            )
 
         // Lager liste over bruddperioder
         val bruddPeriodeListe = lagBruddPeriodeListeBidragsevne(
@@ -77,8 +82,10 @@ internal object BeregnBidragsevneService : BeregnService() {
         }
 
         // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
-        val resultatGrunnlagListe = mapBidragsevneResultatGrunnlag(
-            bidragsevneBeregningResultatListe = bidragsevneBeregningResultatListe,
+        val resultatGrunnlagListe = mapDelberegningResultatGrunnlag(
+            grunnlagReferanseListe = bidragsevneBeregningResultatListe
+                .flatMap { it.resultat.grunnlagsreferanseListe }
+                .distinct(),
             mottattGrunnlag = mottattGrunnlag,
             sjablonGrunnlag = sjablonGrunnlag,
         )
@@ -182,50 +189,6 @@ internal object BeregnBidragsevneService : BeregnService() {
         )
     }
 
-    private fun mapBidragsevneResultatGrunnlag(
-        bidragsevneBeregningResultatListe: List<BidragsevnePeriodeResultat>,
-        mottattGrunnlag: BeregnGrunnlag,
-        sjablonGrunnlag: List<GrunnlagDto>,
-    ): MutableList<GrunnlagDto> {
-        val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
-        val grunnlagReferanseListe =
-            bidragsevneBeregningResultatListe
-                .flatMap { it.resultat.grunnlagsreferanseListe }
-                .distinct()
-
-        // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
-        resultatGrunnlagListe.addAll(
-            mapGrunnlag(
-                grunnlagListe = mottattGrunnlag.grunnlagListe,
-                grunnlagReferanseListe = grunnlagReferanseListe,
-            ),
-        )
-
-        // Matcher sjablongrunnlag med grunnlag som er brukt i beregningen og mapper ut
-        resultatGrunnlagListe.addAll(
-            mapGrunnlag(
-                grunnlagListe = sjablonGrunnlag,
-                grunnlagReferanseListe = grunnlagReferanseListe,
-            ),
-        )
-
-        return resultatGrunnlagListe
-    }
-
-    // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
-    private fun mapGrunnlag(grunnlagListe: List<GrunnlagDto>, grunnlagReferanseListe: List<String>) = grunnlagListe
-        .filter { grunnlagReferanseListe.contains(it.referanse) }
-        .map {
-            GrunnlagDto(
-                referanse = it.referanse,
-                type = it.type,
-                innhold = it.innhold,
-                grunnlagsreferanseListe = it.grunnlagsreferanseListe,
-                gjelderReferanse = it.gjelderReferanse,
-                gjelderBarnReferanse = it.gjelderBarnReferanse,
-            )
-        }
-
     // Mapper ut DelberegningBidragsevne
     private fun mapDelberegningBidragsevne(
         bidragsevnePeriodeResultatListe: List<BidragsevnePeriodeResultat>,
@@ -311,7 +274,9 @@ internal object BeregnBidragsevneService : BeregnService() {
 
         // Mapper ut DelberegningBarnIHusstand (sub-delberegning til DelberegningBoforhold)
         val sumAntallBarnListe = bidragsevnePeriodeGrunnlag.barnIHusstandenPeriodeGrunnlagListe
-            .filter { boforholdListe.flatMap { it.grunnlagsreferanseListe }.contains(it.referanse) }
+            .filter { barnIHustandenPeriode ->
+                boforholdListe.flatMap { it.grunnlagsreferanseListe }.contains(barnIHustandenPeriode.referanse)
+            }
             .toMutableList()
         if (sumAntallBarnListe.isNotEmpty()) {
             val sisteElement = sumAntallBarnListe.last()
@@ -327,7 +292,9 @@ internal object BeregnBidragsevneService : BeregnService() {
 
         // Mapper ut DelberegningVoksneIHusstand (sub-delberegning til DelberegningBoforhold)
         val voksneIHusstandenListe = bidragsevnePeriodeGrunnlag.voksneIHusstandenPeriodeGrunnlagListe
-            .filter { boforholdListe.flatMap { it.grunnlagsreferanseListe }.contains(it.referanse) }
+            .filter { voksneIHusstandenPeriode ->
+                boforholdListe.flatMap { it.grunnlagsreferanseListe }.contains(voksneIHusstandenPeriode.referanse)
+            }
             .toMutableList()
         if (voksneIHusstandenListe.isNotEmpty()) {
             val sisteElement = voksneIHusstandenListe.last()
@@ -369,20 +336,4 @@ internal object BeregnBidragsevneService : BeregnService() {
 
         return resultatGrunnlagListe
     }
-
-    // Henter sjablonverdi for kapitalinntekt
-    // TODO Bør synkes med som ligger i CoreMapper. Pt ligger det bare en gyldig sjablonverdi (uforandret siden 2003).
-    // TODO Logikken her må utvides hvis det legges inn nye sjablonverdier
-    private fun finnInnslagKapitalinntektFraGrunnlag(sjablonListe: List<GrunnlagDto>): Sjablontall? = sjablonListe
-        .filter { it.referanse.contains(SjablonTallNavn.INNSLAG_KAPITALINNTEKT_BELØP.navn) }
-        .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>()
-        .firstOrNull()
-        ?.let { innslagKapitalinntektSjablon ->
-            Sjablontall(
-                typeSjablon = innslagKapitalinntektSjablon.innhold.sjablon.id,
-                datoFom = innslagKapitalinntektSjablon.innhold.periode.fom.atDay(1),
-                datoTom = innslagKapitalinntektSjablon.innhold.periode.til?.atEndOfMonth()?.minusMonths(1),
-                verdi = innslagKapitalinntektSjablon.innhold.verdi,
-            )
-        }
 }

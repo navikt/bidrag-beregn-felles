@@ -1,11 +1,12 @@
 package no.nav.bidrag.beregn.barnebidrag.bo
 
+import no.nav.bidrag.beregn.core.bo.SjablonSjablontallBeregningGrunnlag
+import no.nav.bidrag.beregn.core.bo.SjablonSjablontallPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.dto.InntektPeriodeCore
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
 import java.math.BigDecimal
 
-// TODO Bør endres til å bruke delberegning-objektene for inntekt? Men problemet er at delberegningene produseres av denne servicen også
 data class BpAndelUnderholdskostnadPeriodeGrunnlag(
     val beregningsperiode: ÅrMånedsperiode,
     val underholdskostnadDelberegningPeriodeGrunnlagListe: List<UnderholdskostnadDelberegningPeriodeGrunnlag>,

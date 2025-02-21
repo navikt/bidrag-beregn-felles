@@ -2,17 +2,14 @@ package no.nav.bidrag.beregn.barnebidrag.mapper
 
 import no.nav.bidrag.beregn.barnebidrag.bo.BidragsevnePeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonBidragsevnePeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSjablontallPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SjablonTrinnvisSkattesatsPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.BeregnApi
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonBidragsevnePeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonTrinnvisSkattesatsPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
+import java.math.BigDecimal
 
 internal object BidragsevneMapper : CoreMapper() {
     private val beregnApi: BeregnApi = BeregnApi()
@@ -20,6 +17,7 @@ internal object BidragsevneMapper : CoreMapper() {
         mottattGrunnlag: BeregnGrunnlag,
         sjablonGrunnlag: List<GrunnlagDto>,
         åpenSluttperiode: Boolean,
+        innslagKapitalInntekt: BigDecimal
     ): BidragsevnePeriodeGrunnlag {
         val referanseTilBP = finnReferanseTilRolle(
             grunnlagListe = mottattGrunnlag.grunnlagListe,
@@ -37,7 +35,7 @@ internal object BidragsevneMapper : CoreMapper() {
                     grunnlagListe = mottattGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
                 ),
-                innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntektFraGrunnlag(sjablonGrunnlag),
+                innslagKapitalinntektSjablonverdi = innslagKapitalInntekt,
                 åpenSluttperiode = åpenSluttperiode,
             ),
             barnIHusstandenPeriodeGrunnlagListe = barnIHusstandenPeriodeGrunnlagListe,
@@ -47,25 +45,6 @@ internal object BidragsevneMapper : CoreMapper() {
             sjablonBidragsevnePeriodeGrunnlagListe = mapSjablonBidragsevne(sjablonGrunnlag),
             sjablonTrinnvisSkattesatsPeriodeGrunnlagListe = mapSjablonTrinnvisSkattesats(sjablonGrunnlag),
         )
-    }
-
-    // TODO Flytte til CoreMapper
-    private fun mapSjablonSjablontall(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonSjablontallPeriodeGrunnlag> {
-        try {
-            return sjablonGrunnlag
-                .filter { it.type == Grunnlagstype.SJABLON_SJABLONTALL }
-                .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>()
-                .map {
-                    SjablonSjablontallPeriodeGrunnlag(
-                        referanse = it.referanse,
-                        sjablonSjablontallPeriode = it.innhold,
-                    )
-                }
-        } catch (e: Exception) {
-            throw IllegalArgumentException(
-                "Feil ved uthenting av sjablon for sjablontall: " + e.message,
-            )
-        }
     }
 
     private fun mapSjablonBidragsevne(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonBidragsevnePeriodeGrunnlag> {
@@ -82,24 +61,6 @@ internal object BidragsevneMapper : CoreMapper() {
         } catch (e: Exception) {
             throw IllegalArgumentException(
                 "Feil ved uthenting av sjablon for bidragsevne: " + e.message,
-            )
-        }
-    }
-
-    private fun mapSjablonTrinnvisSkattesats(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonTrinnvisSkattesatsPeriodeGrunnlag> {
-        try {
-            return sjablonGrunnlag
-                .filter { it.type == Grunnlagstype.SJABLON_TRINNVIS_SKATTESATS }
-                .filtrerOgKonverterBasertPåEgenReferanse<SjablonTrinnvisSkattesatsPeriode>()
-                .map {
-                    SjablonTrinnvisSkattesatsPeriodeGrunnlag(
-                        referanse = it.referanse,
-                        sjablonTrinnvisSkattesatsPeriode = it.innhold,
-                    )
-                }
-        } catch (e: Exception) {
-            throw IllegalArgumentException(
-                "Feil ved uthenting av sjablon for trinnvis skattesats: " + e.message,
             )
         }
     }

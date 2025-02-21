@@ -10,14 +10,15 @@ import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUtgift
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
+import java.math.BigDecimal
 
 internal object BPAndelSærbidragCoreMapper : CoreMapper() {
     fun mapBPsAndelSærbidragGrunnlagTilCore(
         beregnGrunnlag: BeregnGrunnlag,
         sjablontallMap: Map<String, SjablonTallNavn>,
         sjablonListe: SjablonListe,
+        innslagKapitalinntekt: BigDecimal,
     ): BeregnBPsAndelSærbidragGrunnlagCore {
-        val innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntektFraSjablontall(sjablonListe.sjablonSjablontallResponse)
 
         // Mapper grunnlagstyper til input for core
         val inntektBPPeriodeCoreListe =
@@ -27,7 +28,7 @@ internal object BPAndelSærbidragCoreMapper : CoreMapper() {
                     grunnlagListe = beregnGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
                 ),
-                innslagKapitalinntektSjablonverdi = innslagKapitalinntektSjablonverdi,
+                innslagKapitalinntektSjablonverdi = innslagKapitalinntekt,
                 erSærbidrag = true,
             )
 
@@ -38,7 +39,7 @@ internal object BPAndelSærbidragCoreMapper : CoreMapper() {
                     grunnlagListe = beregnGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
                 ),
-                innslagKapitalinntektSjablonverdi = innslagKapitalinntektSjablonverdi,
+                innslagKapitalinntektSjablonverdi = innslagKapitalinntekt,
                 erSærbidrag = true,
             )
 
@@ -49,7 +50,7 @@ internal object BPAndelSærbidragCoreMapper : CoreMapper() {
                     grunnlagListe = beregnGrunnlag.grunnlagListe,
                     grunnlagstype = Grunnlagstype.PERSON_SØKNADSBARN,
                 ),
-                innslagKapitalinntektSjablonverdi = innslagKapitalinntektSjablonverdi,
+                innslagKapitalinntektSjablonverdi = innslagKapitalinntekt,
                 erSærbidrag = true,
             )
 

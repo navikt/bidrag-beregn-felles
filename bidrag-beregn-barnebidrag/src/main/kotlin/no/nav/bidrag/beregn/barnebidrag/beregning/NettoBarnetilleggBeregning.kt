@@ -11,7 +11,7 @@ import java.math.RoundingMode
 internal object NettoBarnetilleggBeregning {
     // Beregner netto barnetillegg for alle barn  med barnetillegg.
 
-    val bigDecimal12 = BigDecimal.valueOf(12)
+    private val bigDecimal12 = BigDecimal.valueOf(12)
 
     fun beregn(grunnlag: NettoBarnetilleggBeregningGrunnlag): NettoBarnetilleggBeregningResultat {
         // Barnetillegg tiltakspenger er skattefritt (nettoverdi). Filtreres bort fra sum brutto og legges til i sum netto.

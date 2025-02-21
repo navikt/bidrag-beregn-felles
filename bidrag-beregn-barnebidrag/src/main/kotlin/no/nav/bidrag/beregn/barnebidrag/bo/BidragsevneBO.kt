@@ -1,5 +1,8 @@
 package no.nav.bidrag.beregn.barnebidrag.bo
 
+import no.nav.bidrag.beregn.core.bo.SjablonSjablontallBeregningGrunnlag
+import no.nav.bidrag.beregn.core.bo.SjablonSjablontallPeriodeGrunnlag
+import no.nav.bidrag.beregn.core.bo.SjablonTrinnvisSkattesatsPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.dto.BarnIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.core.dto.BoforholdPeriodeCore
 import no.nav.bidrag.beregn.core.dto.InntektPeriodeCore
@@ -7,10 +10,8 @@ import no.nav.bidrag.beregn.core.dto.VoksneIHusstandenPeriodeCore
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonBidragsevnePeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonTrinnvisSkattesats
-import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonTrinnvisSkattesatsPeriode
 import java.math.BigDecimal
 
-// TODO Bør endres til å bruke delberegning-objektene? Men problemet er at delberegningene produseres av denne servicen også
 data class BidragsevnePeriodeGrunnlag(
     val beregningsperiode: ÅrMånedsperiode,
     val inntektBPPeriodeGrunnlagListe: List<InntektPeriodeCore>,
@@ -23,8 +24,6 @@ data class BidragsevnePeriodeGrunnlag(
 )
 
 data class SjablonBidragsevnePeriodeGrunnlag(val referanse: String, val sjablonBidragsevnePeriode: SjablonBidragsevnePeriode)
-
-data class SjablonTrinnvisSkattesatsPeriodeGrunnlag(val referanse: String, val sjablonTrinnvisSkattesatsPeriode: SjablonTrinnvisSkattesatsPeriode)
 
 data class BidragsevnePeriodeResultat(val periode: ÅrMånedsperiode, val resultat: BidragsevneBeregningResultat)
 

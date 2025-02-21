@@ -1,6 +1,8 @@
 package no.nav.bidrag.beregn.core.service.mapper
 
 import no.nav.bidrag.beregn.core.bo.Periode
+import no.nav.bidrag.beregn.core.bo.SjablonSjablontallPeriodeGrunnlag
+import no.nav.bidrag.beregn.core.bo.SjablonTrinnvisSkattesatsPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.dto.BarnIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.core.dto.Delberegning
 import no.nav.bidrag.beregn.core.dto.FaktiskUtgiftPeriodeCore
@@ -31,6 +33,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonTrinnvisSkattesatsPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåFremmedReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
@@ -43,14 +46,24 @@ abstract class CoreMapper {
     private val maxDato = LocalDate.parse("9999-12-31")
 
     // Henter sjablonverdi for innslag kapitalinntekt
-    // TODO Pt ligger det bare en gyldig sjablonverdi (uforandret siden 2003). Logikken her må utvides hvis det legges inn nye sjablonverdier
-    fun finnInnslagKapitalinntektFraSjablontall(sjablontallListe: List<Sjablontall>): BigDecimal =
-        sjablontallListe.firstOrNull { it.typeSjablon == SjablonTallNavn.INNSLAG_KAPITALINNTEKT_BELØP.id }?.verdi ?: BigDecimal.ZERO
+    // NB! Pt ligger det bare en gyldig sjablonverdi (uforandret siden 2003). Logikken her må utvides hvis det legges inn nye sjablonverdier.
+    fun finnInnslagKapitalinntektFraSjablontallListe(sjablontallListe: List<Sjablontall>): Sjablontall? =
+        sjablontallListe.firstOrNull { it.typeSjablon == SjablonTallNavn.INNSLAG_KAPITALINNTEKT_BELØP.id }
 
-    fun finnInnslagKapitalinntektFraGrunnlag(sjablonListe: List<GrunnlagDto>): BigDecimal = sjablonListe
+    // Henter sjablonverdi for kapitalinntekt og returnerer Sjablontall-objekt
+    // NB! Pt ligger det bare en gyldig sjablonverdi (uforandret siden 2003). Logikken her må utvides hvis det legges inn nye sjablonverdier.
+    fun finnInnslagKapitalinntektFraGrunnlag(sjablonListe: List<GrunnlagDto>): Sjablontall? = sjablonListe
         .filter { it.referanse.contains(SjablonTallNavn.INNSLAG_KAPITALINNTEKT_BELØP.navn) }
         .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>()
-        .firstOrNull()?.innhold?.verdi ?: BigDecimal.ZERO
+        .firstOrNull()
+        ?.let { innslagKapitalinntektSjablon ->
+            Sjablontall(
+                typeSjablon = innslagKapitalinntektSjablon.innhold.sjablon.id,
+                datoFom = innslagKapitalinntektSjablon.innhold.periode.fom.atDay(1),
+                datoTom = innslagKapitalinntektSjablon.innhold.periode.til?.atEndOfMonth()?.minusMonths(1),
+                verdi = innslagKapitalinntektSjablon.innhold.verdi,
+            )
+        }
 
     fun finnReferanseTilRolle(grunnlagListe: List<GrunnlagDto>, grunnlagstype: Grunnlagstype) = grunnlagListe
         .firstOrNull { it.type == grunnlagstype }?.referanse ?: throw NoSuchElementException("Grunnlagstype $grunnlagstype mangler i input")
@@ -162,6 +175,24 @@ abstract class CoreMapper {
         }
     }
 
+    fun mapSjablonSjablontall(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonSjablontallPeriodeGrunnlag> {
+        try {
+            return sjablonGrunnlag
+                .filter { it.type == Grunnlagstype.SJABLON_SJABLONTALL }
+                .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>()
+                .map {
+                    SjablonSjablontallPeriodeGrunnlag(
+                        referanse = it.referanse,
+                        sjablonSjablontallPeriode = it.innhold,
+                    )
+                }
+        } catch (e: Exception) {
+            throw IllegalArgumentException(
+                "Feil ved uthenting av sjablon for sjablontall: " + e.message,
+            )
+        }
+    }
+
     fun mapSjablonSjablontall(
         beregnDatoFra: LocalDate,
         beregnDatoTil: LocalDate,
@@ -197,6 +228,24 @@ abstract class CoreMapper {
                 ),
             )
         }
+
+    fun mapSjablonTrinnvisSkattesats(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonTrinnvisSkattesatsPeriodeGrunnlag> {
+        try {
+            return sjablonGrunnlag
+                .filter { it.type == Grunnlagstype.SJABLON_TRINNVIS_SKATTESATS }
+                .filtrerOgKonverterBasertPåEgenReferanse<SjablonTrinnvisSkattesatsPeriode>()
+                .map {
+                    SjablonTrinnvisSkattesatsPeriodeGrunnlag(
+                        referanse = it.referanse,
+                        sjablonTrinnvisSkattesatsPeriode = it.innhold,
+                    )
+                }
+        } catch (e: Exception) {
+            throw IllegalArgumentException(
+                "Feil ved uthenting av sjablon for trinnvis skattesats: " + e.message,
+            )
+        }
+    }
 
     // Mapper sjabloner av typen trinnvis skattesats
     // Filtrerer bort de sjablonene som ikke er innenfor intervallet beregnDatoFra-beregnDatoTil

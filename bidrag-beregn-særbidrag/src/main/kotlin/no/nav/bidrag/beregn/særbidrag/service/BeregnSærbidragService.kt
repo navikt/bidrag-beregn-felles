@@ -23,6 +23,7 @@ import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BeregnSærbidragResul
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.BidragsevnePeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.særbidrag.dto.ResultatPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.service.mapper.BPAndelSærbidragCoreMapper
+import no.nav.bidrag.beregn.særbidrag.service.mapper.BPAndelSærbidragCoreMapper.finnInnslagKapitalinntektFraSjablontallListe
 import no.nav.bidrag.beregn.særbidrag.service.mapper.BPAndelSærbidragCoreMapper.finnReferanseTilRolle
 import no.nav.bidrag.beregn.særbidrag.service.mapper.BPsBeregnedeTotalbidragCoreMapper
 import no.nav.bidrag.beregn.særbidrag.service.mapper.BidragsevneCoreMapper
@@ -158,9 +159,7 @@ internal class BeregnSærbidragService(
         val bidragsevneResultatFraCore = beregnBidragsevne(bidragsevneGrunnlagTilCore)
 
         // Henter sjablonverdi for kapitalinntekt
-        // TODO Pt ligger det bare en gyldig sjablonverdi (uforandret siden 2003). Logikken her må utvides hvis det legges inn nye sjablonverdier
-        val innslagKapitalinntektSjablon =
-            sjablonListe.sjablonSjablontallResponse.firstOrNull { it.typeSjablon == SjablonTallNavn.INNSLAG_KAPITALINNTEKT_BELØP.id }
+        val innslagKapitalinntektSjablon = finnInnslagKapitalinntektFraSjablontallListe(sjablonListe.sjablonSjablontallResponse)
 
         grunnlagReferanseListe.addAll(
             lagGrunnlagslisteBidragsevne(
@@ -194,6 +193,7 @@ internal class BeregnSærbidragService(
                 beregnGrunnlag = beregnGrunnlag,
                 sjablontallMap = sjablontallMap,
                 sjablonListe = sjablonListe,
+                innslagKapitalinntekt = innslagKapitalinntektSjablon?.verdi ?: BigDecimal.ZERO
             )
 
         val bpAndelSærbidragResultatFraCore = beregnBPAndelSærbidrag(bpAndelSærbidragGrunnlagTilCore)

@@ -8,6 +8,7 @@ import no.nav.bidrag.beregn.forskudd.core.ForskuddCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnetForskuddResultatCore
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatPeriodeCore
+import no.nav.bidrag.beregn.forskudd.service.ForskuddCoreMapper.finnInnslagKapitalinntektFraSjablontallListe
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
 import no.nav.bidrag.commons.service.sjablon.Sjablontall
 import no.nav.bidrag.commons.util.secureLogger
@@ -68,9 +69,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
         secureLogger.debug { "Forskuddberegning - resultat av beregning: ${tilJson(resultatFraCore.beregnetForskuddPeriodeListe)}" }
 
         // Henter sjablonverdi for kapitalinntekt
-        // TODO Pt ligger det bare en gyldig sjablonverdi (uforandret siden 2003). Logikken her må utvides hvis det legges inn nye sjablonverdier
-        val innslagKapitalinntektSjablon =
-            sjablontallListe.firstOrNull { it.typeSjablon == SjablonTallNavn.INNSLAG_KAPITALINNTEKT_BELØP.id }
+        val innslagKapitalinntektSjablon = finnInnslagKapitalinntektFraSjablontallListe(sjablontallListe)
 
         val grunnlagsliste =
             lagGrunnlagsliste(

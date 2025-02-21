@@ -11,17 +11,17 @@ import java.math.RoundingMode
 
 internal object BidragsevneBeregning {
 
-    val bigDecimal100 = BigDecimal.valueOf(100)
-    val bigDecimal12 = BigDecimal.valueOf(12)
-    val bigDecimal025 = BigDecimal.valueOf(0.25).setScale(2)
-    var sjablonverdiTrygdeavgiftProsent = BigDecimal.ZERO
-    var sjablonverdiUnderholdEgneBarnIHusstandBeløp = BigDecimal.ZERO
-    var sjablonverdiMinstefradragInntektBeløp = BigDecimal.ZERO
-    var sjablonverdiMinstefradragInntektProsent = BigDecimal.ZERO
-    var sjablonverdiPersonfradragKlasse1Beløp = BigDecimal.ZERO
-    var sjablonverdiSkattesatsAlminneligInntektProsent = BigDecimal.ZERO
-    var sjablonverdiBoutgiftBeløp = BigDecimal.ZERO
-    var sjablonverdiEgetUnderholdBeløp = BigDecimal.ZERO
+    private val bigDecimal100 = BigDecimal.valueOf(100)
+    private val bigDecimal12 = BigDecimal.valueOf(12)
+    private val bigDecimal025 = BigDecimal.valueOf(0.25).setScale(2)
+    private var sjablonverdiTrygdeavgiftProsent = BigDecimal.ZERO
+    private var sjablonverdiUnderholdEgneBarnIHusstandBeløp = BigDecimal.ZERO
+    private var sjablonverdiMinstefradragInntektBeløp = BigDecimal.ZERO
+    private var sjablonverdiMinstefradragInntektProsent = BigDecimal.ZERO
+    private var sjablonverdiPersonfradragKlasse1Beløp = BigDecimal.ZERO
+    private var sjablonverdiSkattesatsAlminneligInntektProsent = BigDecimal.ZERO
+    private var sjablonverdiBoutgiftBeløp = BigDecimal.ZERO
+    private var sjablonverdiEgetUnderholdBeløp = BigDecimal.ZERO
 
     fun beregn(grunnlag: BidragsevneBeregningGrunnlag): BidragsevneBeregningResultat {
         // Henter sjablonverdier

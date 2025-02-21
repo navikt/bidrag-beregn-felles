@@ -6,10 +6,10 @@ import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilleggSkattesatsBeregningGrunnl
 import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilleggSkattesatsPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilleggSkattesatsPeriodeResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.InntektBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSjablontallBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonTrinnvisSkattesatsBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.mapper.BarnetilleggSkattesatsMapper.finnReferanseTilRolle
 import no.nav.bidrag.beregn.barnebidrag.mapper.BarnetilleggSkattesatsMapper.mapBarnetilleggSkattesatsGrunnlag
+import no.nav.bidrag.beregn.core.bo.SjablonSjablontallBeregningGrunnlag
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -33,7 +33,6 @@ internal object BeregnBarnetilleggSkattesatsService : BeregnService() {
         )
 
         // Lager sjablon grunnlagsobjekter
-        // TODO - sjabloner for barnetillegg skattesats
         val sjablonGrunnlag = lagSjablonGrunnlagsobjekter(periode = mottattGrunnlag.periode) { it.barnetilleggSkattesats }
 
         // Mapper ut grunnlag som skal brukes for å beregne barnetilleggSkattesats
@@ -75,8 +74,10 @@ internal object BeregnBarnetilleggSkattesatsService : BeregnService() {
         }
 
         // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
-        val resultatGrunnlagListe = mapBarnetilleggSkattesatsResultatGrunnlag(
-            barnetilleggSkattesatsBeregningResultatListe = barnetilleggSkattesatsBeregningResultatListe,
+        val resultatGrunnlagListe = mapDelberegningResultatGrunnlag(
+            grunnlagReferanseListe = barnetilleggSkattesatsBeregningResultatListe
+                .flatMap { it.resultat.grunnlagsreferanseListe }
+                .distinct(),
             mottattGrunnlag = mottattGrunnlag,
             sjablonGrunnlag = sjablonGrunnlag,
         )
@@ -142,49 +143,6 @@ internal object BeregnBarnetilleggSkattesatsService : BeregnService() {
             }
             ?: throw IllegalArgumentException("Ingen sjablonverdier for trinnvis skattesats funnet for periode $bruddPeriode"),
     )
-
-    private fun mapBarnetilleggSkattesatsResultatGrunnlag(
-        barnetilleggSkattesatsBeregningResultatListe: List<BarnetilleggSkattesatsPeriodeResultat>,
-        mottattGrunnlag: BeregnGrunnlag,
-        sjablonGrunnlag: List<GrunnlagDto>,
-    ): MutableList<GrunnlagDto> {
-        val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
-        val grunnlagReferanseListe =
-            barnetilleggSkattesatsBeregningResultatListe
-                .flatMap { it.resultat.grunnlagsreferanseListe }
-                .distinct()
-
-        // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
-        resultatGrunnlagListe.addAll(
-            mapGrunnlag(
-                grunnlagListe = mottattGrunnlag.grunnlagListe,
-                grunnlagReferanseListe = grunnlagReferanseListe,
-            ),
-        )
-
-        // Matcher sjablongrunnlag med grunnlag som er brukt i beregningen og mapper ut
-        resultatGrunnlagListe.addAll(
-            mapGrunnlag(
-                grunnlagListe = sjablonGrunnlag,
-                grunnlagReferanseListe = grunnlagReferanseListe,
-            ),
-        )
-
-        return resultatGrunnlagListe
-    }
-
-    // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
-    private fun mapGrunnlag(grunnlagListe: List<GrunnlagDto>, grunnlagReferanseListe: List<String>) = grunnlagListe
-        .filter { grunnlagReferanseListe.contains(it.referanse) }
-        .map {
-            GrunnlagDto(
-                referanse = it.referanse,
-                type = it.type,
-                innhold = it.innhold,
-                grunnlagsreferanseListe = it.grunnlagsreferanseListe,
-                gjelderReferanse = it.gjelderReferanse,
-            )
-        }
 
     // Mapper ut DelberegningBarnetilleggSkattesats. Fom-periode settes lik start beregningsperiode, ettersom skatteprosenten skal vær den samme for
     // hele beregningsperioden.

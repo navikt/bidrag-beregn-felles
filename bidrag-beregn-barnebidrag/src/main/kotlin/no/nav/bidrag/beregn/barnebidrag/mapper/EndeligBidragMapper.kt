@@ -54,7 +54,7 @@ internal object EndeligBidragMapper : CoreMapper() {
             ),
             // Legger null i beløpshistorikk forskudd hvis indikator for begrenset revurdering er false
             beløpshistorikkForskuddPeriodeGrunnlag =
-            if (begrensetRevurderingPeriodeGrunnlag == null || begrensetRevurderingPeriodeGrunnlag.begrensetRevurdering == false) {
+            if (begrensetRevurderingPeriodeGrunnlag == null || !begrensetRevurderingPeriodeGrunnlag.begrensetRevurdering) {
                 null
             } else {
                 mapBeløpshistorikk(
@@ -64,7 +64,7 @@ internal object EndeligBidragMapper : CoreMapper() {
             },
             // Legger null i beløpshistorikk bidrag hvis indikator for begrenset revurdering er false
             beløpshistorikkBidragPeriodeGrunnlag =
-            if (begrensetRevurderingPeriodeGrunnlag == null || begrensetRevurderingPeriodeGrunnlag.begrensetRevurdering == false) {
+            if (begrensetRevurderingPeriodeGrunnlag == null || !begrensetRevurderingPeriodeGrunnlag.begrensetRevurdering) {
                 null
             } else {
                 mapBeløpshistorikk(

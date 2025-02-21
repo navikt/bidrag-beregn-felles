@@ -103,8 +103,6 @@ internal object EndeligBidragBeregning {
         var foreløpigBeregnetBeløp = maxOf((bpAndelBeløp - samværsfradrag), BigDecimal.ZERO)
         val bruttoBidragEtterBarnetilleggBM: BigDecimal
         val nettoBidragEtterBarnetilleggBM: BigDecimal
-        val bruttoBidragEtterBegrensetRevurdering: BigDecimal
-        val bruttoBidragEtterBarnetilleggBP: BigDecimal
         var bidragJustertForNettoBarnetilleggBM = false
         var bidragJustertForNettoBarnetilleggBP = false
 
@@ -139,14 +137,14 @@ internal object EndeligBidragBeregning {
             bidragJustertTilForskuddssats = true
             foreløpigBeregnetBeløp = grunnlag.løpendeForskuddBeløp + samværsfradrag
         }
-        bruttoBidragEtterBegrensetRevurdering = foreløpigBeregnetBeløp
+        val bruttoBidragEtterBegrensetRevurdering: BigDecimal = foreløpigBeregnetBeløp
 
         // Sjekker om eventuelt barnetillegg for BP skal benyttes (hvis regel for BP's barnetillegg slår til overstyrer den BM's barnetillegg)
         if ((nettoBarnetilleggBP > BigDecimal.ZERO) && (nettoBarnetilleggBP > foreløpigBeregnetBeløp)) {
             foreløpigBeregnetBeløp = nettoBarnetilleggBP
             bidragJustertForNettoBarnetilleggBP = true
         }
-        bruttoBidragEtterBarnetilleggBP = foreløpigBeregnetBeløp
+        val bruttoBidragEtterBarnetilleggBP: BigDecimal = foreløpigBeregnetBeløp
 
         // Samværsfradrag trekkes fra til slutt
         val nettoBidragEtterSamværsfradrag = maxOf((foreløpigBeregnetBeløp - samværsfradrag), BigDecimal.ZERO)

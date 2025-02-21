@@ -11,12 +11,12 @@ import java.math.RoundingMode
 
 internal object BarnetilleggSkattesatsBeregning {
 
-    val bigDecimal100 = BigDecimal.valueOf(100)
-    var sjablonverdiTrygdeavgiftProsent = BigDecimal.ZERO
-    var sjablonverdiMinstefradragInntektBeløp = BigDecimal.ZERO
-    var sjablonverdiMinstefradragInntektProsent = BigDecimal.ZERO
-    var sjablonverdiPersonfradragKlasse1Beløp = BigDecimal.ZERO
-    var sjablonverdiSkattesatsAlminneligInntektProsent = BigDecimal.ZERO
+    private val bigDecimal100 = BigDecimal.valueOf(100)
+    private var sjablonverdiTrygdeavgiftProsent = BigDecimal.ZERO
+    private var sjablonverdiMinstefradragInntektBeløp = BigDecimal.ZERO
+    private var sjablonverdiMinstefradragInntektProsent = BigDecimal.ZERO
+    private var sjablonverdiPersonfradragKlasse1Beløp = BigDecimal.ZERO
+    private var sjablonverdiSkattesatsAlminneligInntektProsent = BigDecimal.ZERO
 
     fun beregn(grunnlag: BarnetilleggSkattesatsBeregningGrunnlag): BarnetilleggSkattesatsBeregningResultat {
         // Henter sjablonverdier

@@ -8,11 +8,11 @@ import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import java.math.BigDecimal
 
 internal object UnderholdskostnadBeregning {
-    var sjablonverdiBoutgifterBidragsbarn = BigDecimal.ZERO
-    var sjablonverdiOrdinærBarnetrygd = BigDecimal.ZERO
-    var sjablonverdiForhøyetBarnetrygd = BigDecimal.ZERO
-    var sjablonverdiBarnetilsynBeløp: BigDecimal? = BigDecimal.ZERO
-    var sjablonverdiForbruksutgifterBeløp = BigDecimal.ZERO
+    private var sjablonverdiBoutgifterBidragsbarn = BigDecimal.ZERO
+    private var sjablonverdiOrdinærBarnetrygd = BigDecimal.ZERO
+    private var sjablonverdiForhøyetBarnetrygd = BigDecimal.ZERO
+    private var sjablonverdiBarnetilsynBeløp: BigDecimal? = BigDecimal.ZERO
+    private var sjablonverdiForbruksutgifterBeløp = BigDecimal.ZERO
 
     fun beregn(grunnlag: UnderholdskostnadBeregningGrunnlag, barnetrygdType: BarnetrygdType): UnderholdskostnadBeregningResultat {
         // Henter sjablonverdier
