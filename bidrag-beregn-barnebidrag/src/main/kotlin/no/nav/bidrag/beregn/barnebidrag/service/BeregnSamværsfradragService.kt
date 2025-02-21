@@ -69,8 +69,10 @@ internal object BeregnSamværsfradragService : BeregnService() {
         }
 
         // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
-        val resultatGrunnlagListe = mapSamværsfradragResultatGrunnlag(
-            samværsfradragBeregningResultatListe = samværsfradragBeregningResultatListe,
+        val resultatGrunnlagListe = mapDelberegningResultatGrunnlag(
+            grunnlagReferanseListe = samværsfradragBeregningResultatListe
+                .flatMap { it.resultat.grunnlagsreferanseListe }
+                .distinct(),
             mottattGrunnlag = mottattGrunnlag,
             sjablonGrunnlag = sjablonGrunnlag,
         )
@@ -165,50 +167,6 @@ internal object BeregnSamværsfradragService : BeregnService() {
             .map { it.sjablonSamværsfradragPeriode.alderTom }
             .distinct()
             .sorted()
-
-    private fun mapSamværsfradragResultatGrunnlag(
-        samværsfradragBeregningResultatListe: List<SamværsfradragPeriodeResultat>,
-        mottattGrunnlag: BeregnGrunnlag,
-        sjablonGrunnlag: List<GrunnlagDto>,
-    ): MutableList<GrunnlagDto> {
-        val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
-        val grunnlagReferanseListe =
-            samværsfradragBeregningResultatListe
-                .flatMap { it.resultat.grunnlagsreferanseListe }
-                .distinct()
-
-        // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
-        resultatGrunnlagListe.addAll(
-            mapGrunnlag(
-                grunnlagListe = mottattGrunnlag.grunnlagListe,
-                grunnlagReferanseListe = grunnlagReferanseListe,
-            ),
-        )
-
-        // Matcher sjablongrunnlag med grunnlag som er brukt i beregningen og mapper ut
-        resultatGrunnlagListe.addAll(
-            mapGrunnlag(
-                grunnlagListe = sjablonGrunnlag,
-                grunnlagReferanseListe = grunnlagReferanseListe,
-            ),
-        )
-
-        return resultatGrunnlagListe
-    }
-
-    // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
-    private fun mapGrunnlag(grunnlagListe: List<GrunnlagDto>, grunnlagReferanseListe: List<String>) = grunnlagListe
-        .filter { grunnlagReferanseListe.contains(it.referanse) }
-        .map {
-            GrunnlagDto(
-                referanse = it.referanse,
-                type = it.type,
-                innhold = it.innhold,
-                grunnlagsreferanseListe = it.grunnlagsreferanseListe,
-                gjelderReferanse = it.gjelderReferanse,
-                gjelderBarnReferanse = it.gjelderBarnReferanse,
-            )
-        }
 
     // Mapper ut DelberegningSamværsfradrag
     private fun mapDelberegningSamværsfradrag(

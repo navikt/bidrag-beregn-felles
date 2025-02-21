@@ -1,5 +1,7 @@
 package no.nav.bidrag.beregn.barnebidrag.bo
 
+import no.nav.bidrag.beregn.core.bo.SjablonSjablontallBeregningGrunnlag
+import no.nav.bidrag.beregn.core.bo.SjablonSjablontallPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.dto.FaktiskUtgiftPeriodeCore
 import no.nav.bidrag.beregn.core.dto.TilleggsstønadPeriodeCore
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode

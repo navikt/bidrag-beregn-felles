@@ -45,7 +45,6 @@ class BeregnBarnebidragService : BeregnService() {
 
         // Kontroll av inputdata
         try {
-            // TODO Bør være mulig å ha null i beregnDatoTil?
             mottattGrunnlag.valider()
         } catch (e: IllegalArgumentException) {
             throw IllegalArgumentException("Ugyldig input ved beregning av barnebidrag: " + e.message)
@@ -156,7 +155,6 @@ class BeregnBarnebidragService : BeregnService() {
 
         // Kontroll av inputdata
         try {
-            // TODO Bør være mulig å ha null i beregnDatoTil?
             mottattGrunnlag.valider()
         } catch (e: IllegalArgumentException) {
             throw IllegalArgumentException("Ugyldig input ved beregning av bidragsevne: " + e.message)
@@ -173,7 +171,6 @@ class BeregnBarnebidragService : BeregnService() {
         secureLogger.debug { "Beregning av netto tilsynsutgift - følgende request mottatt: ${tilJson(mottattGrunnlag)}" }
         // Kontroll av inputdata
         try {
-            // TODO Bør være mulig å ha null i beregnDatoTil?
             mottattGrunnlag.valider()
         } catch (e: IllegalArgumentException) {
             throw IllegalArgumentException("Ugyldig input ved beregning av netto tilsynsutgift: " + e.message)
@@ -190,7 +187,6 @@ class BeregnBarnebidragService : BeregnService() {
 
         // Kontroll av inputdata
         try {
-            // TODO Bør være mulig å ha null i beregnDatoTil?
             mottattGrunnlag.valider()
         } catch (e: IllegalArgumentException) {
             throw IllegalArgumentException("Ugyldig input ved beregning av underholdskostnad: " + e.message)
@@ -207,7 +203,6 @@ class BeregnBarnebidragService : BeregnService() {
 
         // Kontroll av inputdata
         try {
-            // TODO Bør være mulig å ha null i beregnDatoTil?
             mottattGrunnlag.valider()
         } catch (e: IllegalArgumentException) {
             throw IllegalArgumentException("Ugyldig input ved beregning av underholdskostnad: " + e.message)
@@ -242,7 +237,6 @@ class BeregnBarnebidragService : BeregnService() {
 
         // Kontroll av inputdata
         try {
-            // TODO Bør være mulig å ha null i beregnDatoTil?
             mottattGrunnlag.valider()
         } catch (e: IllegalArgumentException) {
             throw IllegalArgumentException("Ugyldig input ved beregning av BP's andel av underholdskostnad: " + e.message)
@@ -260,7 +254,6 @@ class BeregnBarnebidragService : BeregnService() {
 
         // Kontroll av inputdata
         try {
-            // TODO Bør være mulig å ha null i beregnDatoTil?
             mottattGrunnlag.valider()
         } catch (e: IllegalArgumentException) {
             throw IllegalArgumentException("Ugyldig input ved beregning av netto barnetillegg: " + e.message)
@@ -278,7 +271,6 @@ class BeregnBarnebidragService : BeregnService() {
 
         // Kontroll av inputdata
         try {
-            // TODO Bør være mulig å ha null i beregnDatoTil?
             mottattGrunnlag.valider()
         } catch (e: IllegalArgumentException) {
             throw IllegalArgumentException("Ugyldig input ved beregning av samværsfradrag: " + e.message)
@@ -296,7 +288,6 @@ class BeregnBarnebidragService : BeregnService() {
 
         // Kontroll av inputdata
         try {
-            // TODO Bør være mulig å ha null i beregnDatoTil?
             mottattGrunnlag.valider()
         } catch (e: IllegalArgumentException) {
             throw IllegalArgumentException("Ugyldig input ved beregning av barnetillegg skattesats " + e.message)
@@ -314,7 +305,6 @@ class BeregnBarnebidragService : BeregnService() {
 
         // Kontroll av inputdata
         try {
-            // TODO Bør være mulig å ha null i beregnDatoTil?
             mottattGrunnlag.valider()
         } catch (e: IllegalArgumentException) {
             throw IllegalArgumentException("Ugyldig input ved beregning av endelig bidrag (sluttberegning): " + e.message)
@@ -335,7 +325,6 @@ class BeregnBarnebidragService : BeregnService() {
 
         // Kontroll av inputdata
         try {
-            // TODO Bør være mulig å ha null i beregnDatoTil?
             mottattGrunnlag.valider()
         } catch (e: IllegalArgumentException) {
             throw IllegalArgumentException("Ugyldig input ved beregning av endring sjekk grense (periode): " + e.message)
@@ -353,7 +342,6 @@ class BeregnBarnebidragService : BeregnService() {
 
         // Kontroll av inputdata
         try {
-            // TODO Bør være mulig å ha null i beregnDatoTil?
             mottattGrunnlag.valider()
         } catch (e: IllegalArgumentException) {
             throw IllegalArgumentException("Ugyldig input ved beregning av endring sjekk grense: " + e.message)
@@ -419,8 +407,7 @@ class BeregnBarnebidragService : BeregnService() {
     // Sjekker om alle resultatbeløp fra sluttberegningen er null
     private fun erAlleResultatbeløpNull(mottattGrunnlag: BeregnGrunnlag): Boolean = mottattGrunnlag.grunnlagListe
         .filtrerOgKonverterBasertPåEgenReferanse<SluttberegningBarnebidrag>(grunnlagType = Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG)
-        .filter { it.innhold.resultatBeløp != null }
-        .isEmpty()
+        .none { it.innhold.resultatBeløp != null }
 
     private fun filtrerBeløpshistorikkGrunnlag(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> =
         beregnGrunnlag.grunnlagListe.filter { it.type == Grunnlagstype.BELØPSHISTORIKK_BIDRAG }

@@ -56,9 +56,12 @@ internal object BeregnNettoBarnetilleggService : BeregnService() {
         }
 
         // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
-        val resultatGrunnlagListe = mapNettoBarnetilleggResultatGrunnlag(
-            nettoBarnetilleggBeregningResultatListe = nettoBarnetilleggBeregningResultatListe,
+        val resultatGrunnlagListe = mapDelberegningResultatGrunnlag(
+            grunnlagReferanseListe = nettoBarnetilleggBeregningResultatListe
+                .flatMap { it.resultat.grunnlagsreferanseListe }
+                .distinct(),
             mottattGrunnlag = mottattGrunnlag,
+            sjablonGrunnlag = emptyList(),
         )
 
         // Mapper ut grunnlag for delberegning nettoBarnetillegg
@@ -126,39 +129,6 @@ internal object BeregnNettoBarnetilleggService : BeregnService() {
             )
         }
     }
-
-    private fun mapNettoBarnetilleggResultatGrunnlag(
-        nettoBarnetilleggBeregningResultatListe: List<NettoBarnetilleggPeriodeResultat>,
-        mottattGrunnlag: BeregnGrunnlag,
-    ): MutableList<GrunnlagDto> {
-        val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
-        val grunnlagReferanseListe =
-            nettoBarnetilleggBeregningResultatListe
-                .flatMap { it.resultat.grunnlagsreferanseListe }
-                .distinct()
-
-        // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
-        resultatGrunnlagListe.addAll(
-            mapGrunnlag(
-                grunnlagListe = mottattGrunnlag.grunnlagListe,
-                grunnlagReferanseListe = grunnlagReferanseListe,
-            ),
-        )
-        return resultatGrunnlagListe
-    }
-
-    // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
-    private fun mapGrunnlag(grunnlagListe: List<GrunnlagDto>, grunnlagReferanseListe: List<String>) = grunnlagListe
-        .filter { grunnlagReferanseListe.contains(it.referanse) }
-        .map {
-            GrunnlagDto(
-                referanse = it.referanse,
-                type = it.type,
-                innhold = it.innhold,
-                grunnlagsreferanseListe = it.grunnlagsreferanseListe,
-                gjelderReferanse = it.gjelderReferanse,
-            )
-        }
 
     // Mapper ut DelberegningNettoBarnetillegg
     private fun mapDelberegningNettoBarnetillegg(

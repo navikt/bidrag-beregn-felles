@@ -194,7 +194,6 @@ abstract class BeregnService {
 
         return sjablonListe
             .filter { sjablontallMap.containsKey(it.typeSjablon) }
-            // TODO Sjekk om periode.overlapper er dekkende
             .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
             .map {
                 sjablontallTilGrunnlagsobjekt(
@@ -207,7 +206,6 @@ abstract class BeregnService {
 
     // Lager grunnlagsobjekter for sjabloner av type Bidragsevne som er innenfor perioden
     protected fun mapSjablonBidragsevneGrunnlag(periode: ÅrMånedsperiode, sjablonListe: List<Bidragsevne>): List<GrunnlagDto> = sjablonListe
-        // TODO Sjekk om periode.overlapper er dekkende
         .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
         .map { it.tilGrunnlagsobjekt(ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom!!))) }
 
@@ -216,7 +214,6 @@ abstract class BeregnService {
         val periodeMap = mutableMapOf<ÅrMånedsperiode, MutableList<SjablonTrinnvisSkattesats>>()
 
         sjablonListe
-            // TODO Sjekk om periode.overlapper er dekkende
             .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
             .sortedBy { it.datoFom }
             .map {
@@ -232,27 +229,22 @@ abstract class BeregnService {
 
     // Lager grunnlagsobjekter for sjabloner av type Samværsfradrag som er innenfor perioden
     protected fun mapSjablonSamværsfradragGrunnlag(periode: ÅrMånedsperiode, sjablonListe: List<Samværsfradrag>): List<GrunnlagDto> = sjablonListe
-        // TODO Sjekk om periode.overlapper er dekkende
         .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
         .map { it.tilGrunnlagsobjekt(ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom))) }
 
     protected fun mapSjablonMaksTilsynsbeløpGrunnlag(periode: ÅrMånedsperiode, sjablonListe: List<MaksTilsyn>): List<GrunnlagDto> = sjablonListe
-        // TODO Sjekk om periode.overlapper er dekkende
         .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
         .map { it.tilGrunnlagsobjekt(ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom))) }
 
     protected fun mapSjablonMaksFradragGrunnlag(periode: ÅrMånedsperiode, sjablonListe: List<MaksFradrag>): List<GrunnlagDto> = sjablonListe
-        // TODO Sjekk om periode.overlapper er dekkende
         .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
         .map { it.tilGrunnlagsobjekt(ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom))) }
 
     protected fun mapSjablonBarnetilsynGrunnlag(periode: ÅrMånedsperiode, sjablonListe: List<Barnetilsyn>): List<GrunnlagDto> = sjablonListe
-        // TODO Sjekk om periode.overlapper er dekkende
         .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
         .map { it.tilGrunnlagsobjekt(ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom))) }
 
     protected fun mapSjablonForbruksutgifterGrunnlag(periode: ÅrMånedsperiode, sjablonListe: List<Forbruksutgifter>): List<GrunnlagDto> = sjablonListe
-        // TODO Sjekk om periode.overlapper er dekkende
         .filter { periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
         .map { it.tilGrunnlagsobjekt(ÅrMånedsperiode(it.datoFom!!, justerSjablonTomDato(it.datoTom))) }
 
@@ -271,6 +263,47 @@ abstract class BeregnService {
 
         return bruddPeriodeListe
     }
+
+
+    fun mapDelberegningResultatGrunnlag(
+        grunnlagReferanseListe: List<String>,
+        mottattGrunnlag: BeregnGrunnlag,
+        sjablonGrunnlag: List<GrunnlagDto>,
+    ): MutableList<GrunnlagDto> {
+        val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
+
+        // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
+        resultatGrunnlagListe.addAll(
+            mapGrunnlag(
+                grunnlagListe = mottattGrunnlag.grunnlagListe,
+                grunnlagReferanseListe = grunnlagReferanseListe,
+            ),
+        )
+
+        // Matcher sjablongrunnlag med grunnlag som er brukt i beregningen og mapper ut
+        resultatGrunnlagListe.addAll(
+            mapGrunnlag(
+                grunnlagListe = sjablonGrunnlag,
+                grunnlagReferanseListe = grunnlagReferanseListe,
+            ),
+        )
+
+        return resultatGrunnlagListe
+    }
+
+    // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
+    private fun mapGrunnlag(grunnlagListe: List<GrunnlagDto>, grunnlagReferanseListe: List<String>) = grunnlagListe
+        .filter { grunnlagReferanseListe.contains(it.referanse) }
+        .map {
+            GrunnlagDto(
+                referanse = it.referanse,
+                type = it.type,
+                innhold = it.innhold,
+                grunnlagsreferanseListe = it.grunnlagsreferanseListe,
+                gjelderReferanse = it.gjelderReferanse,
+                gjelderBarnReferanse = it.gjelderBarnReferanse,
+            )
+        }
 
     fun tilJson(json: Any): String {
         val objectMapper = ObjectMapper()

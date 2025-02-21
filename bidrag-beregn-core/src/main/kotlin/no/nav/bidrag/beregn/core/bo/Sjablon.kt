@@ -1,5 +1,7 @@
 package no.nav.bidrag.beregn.core.bo
 
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonTrinnvisSkattesatsPeriode
 import java.math.BigDecimal
 import java.util.Collections.emptyList
 
@@ -30,3 +32,9 @@ data class SjablonPeriodeInnhold(val sjablonPeriode: Periode, val sjablonInnhold
 data class SjablonNavnVerdi(val navn: String, val verdi: BigDecimal)
 
 data class SjablonPeriodeNavnVerdi(val periode: Periode, val navn: String, val verdi: BigDecimal)
+
+data class SjablonSjablontallPeriodeGrunnlag(val referanse: String, val sjablonSjablontallPeriode: SjablonSjablontallPeriode)
+
+data class SjablonSjablontallBeregningGrunnlag(val referanse: String, val type: String, val verdi: Double)
+
+data class SjablonTrinnvisSkattesatsPeriodeGrunnlag(val referanse: String, val sjablonTrinnvisSkattesatsPeriode: SjablonTrinnvisSkattesatsPeriode)

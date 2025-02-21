@@ -70,8 +70,8 @@ internal object BeregnEndeligBidragService : BeregnService() {
         // Legger til delberegningsobjekter i grunnlaget
         val utvidetGrunnlag = mottattGrunnlag.copy(
             grunnlagListe =
-            (mottattGrunnlag.grunnlagListe + delberegningNettoBarnetilleggBPResultat + delberegningNettoBarnetilleggBMResultat)
-                .distinctBy(GrunnlagDto::referanse),
+                (mottattGrunnlag.grunnlagListe + delberegningNettoBarnetilleggBPResultat + delberegningNettoBarnetilleggBMResultat)
+                    .distinctBy(GrunnlagDto::referanse),
         )
 
         // Mapper ut grunnlag som skal brukes for å beregne endelig bidrag
@@ -140,9 +140,12 @@ internal object BeregnEndeligBidragService : BeregnService() {
         }
 
         // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
-        val resultatGrunnlagListe = mapEndeligBidragResultatGrunnlag(
-            endeligBidragBeregningResultatListe = endeligBidragBeregningResultatListe,
+        val resultatGrunnlagListe = mapDelberegningResultatGrunnlag(
+            grunnlagReferanseListe = endeligBidragBeregningResultatListe
+                .flatMap { it.resultat.grunnlagsreferanseListe }
+                .distinct(),
             mottattGrunnlag = utvidetGrunnlag,
+            sjablonGrunnlag = emptyList(),
         )
 
         // Mapper ut grunnlag for delberegning endelig bidrag (sluttberegning)
@@ -161,10 +164,10 @@ internal object BeregnEndeligBidragService : BeregnService() {
 
         val resultat = resultatGrunnlagListe.distinctBy { it.referanse }.sortedBy { it.referanse }
 
-        if (skalKasteBegrensetRevurderingException) {
-            feilmelding = feilmelding.dropLast(1)
+        feilmelding = if (skalKasteBegrensetRevurderingException) {
+            feilmelding.dropLast(1)
         } else {
-            feilmelding = ""
+            ""
         }
 
         return BeregnEndeligBidragServiceRespons(
@@ -185,8 +188,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
             ),
         )
         .filter { it.innhold.inntektsrapportering == Inntektsrapportering.BARNETILLEGG }
-        .filter { it.innhold.gjelderBarn == mottattGrunnlag.søknadsbarnReferanse }
-        .isNotEmpty()
+        .any { it.innhold.gjelderBarn == mottattGrunnlag.søknadsbarnReferanse }
 
     // Lager en liste over alle bruddperioder basert på grunnlag som skal brukes i beregningen
     private fun lagBruddPeriodeListeEndeligBidrag(
@@ -328,41 +330,6 @@ internal object BeregnEndeligBidragService : BeregnService() {
             engangsreferanser = engangsreferanser,
         )
     }
-
-    private fun mapEndeligBidragResultatGrunnlag(
-        endeligBidragBeregningResultatListe: List<EndeligBidragPeriodeResultat>,
-        mottattGrunnlag: BeregnGrunnlag,
-    ): MutableList<GrunnlagDto> {
-        val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
-        val grunnlagReferanseListe =
-            endeligBidragBeregningResultatListe
-                .flatMap { it.resultat.grunnlagsreferanseListe }
-                .distinct()
-
-        // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
-        resultatGrunnlagListe.addAll(
-            mapGrunnlag(
-                grunnlagListe = mottattGrunnlag.grunnlagListe,
-                grunnlagReferanseListe = grunnlagReferanseListe,
-            ),
-        )
-
-        return resultatGrunnlagListe
-    }
-
-    // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
-    private fun mapGrunnlag(grunnlagListe: List<GrunnlagDto>, grunnlagReferanseListe: List<String>) = grunnlagListe
-        .filter { grunnlagReferanseListe.contains(it.referanse) }
-        .map {
-            GrunnlagDto(
-                referanse = it.referanse,
-                type = it.type,
-                innhold = it.innhold,
-                grunnlagsreferanseListe = it.grunnlagsreferanseListe,
-                gjelderReferanse = it.gjelderReferanse,
-                gjelderBarnReferanse = it.gjelderBarnReferanse,
-            )
-        }
 
     // Mapper ut DelberegningEndeligBidrag
     private fun mapDelberegningEndeligBidrag(

@@ -7,8 +7,8 @@ import no.nav.bidrag.beregn.barnebidrag.bo.EndringSjekkGrensePeriodeBeregningGru
 import no.nav.bidrag.beregn.barnebidrag.bo.EndringSjekkGrensePeriodePeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.EndringSjekkGrensePeriodePeriodeResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.LøpendeBidragBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSjablontallBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.mapper.EndringSjekkGrensePeriodeMapper.mapEndringSjekkGrensePeriodeGrunnlag
+import no.nav.bidrag.beregn.core.bo.SjablonSjablontallBeregningGrunnlag
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -59,8 +59,10 @@ internal object BeregnEndringSjekkGrensePeriodeService : BeregnService() {
         }
 
         // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
-        val resultatGrunnlagListe = mapResultatGrunnlag(
-            beregningResultatListe = beregningResultatListe,
+        val resultatGrunnlagListe = mapDelberegningResultatGrunnlag(
+            grunnlagReferanseListe = beregningResultatListe
+                .flatMap { it.resultat.grunnlagsreferanseListe }
+                .distinct(),
             mottattGrunnlag = mottattGrunnlag,
             sjablonGrunnlag = sjablonGrunnlag,
         )
@@ -120,50 +122,6 @@ internal object BeregnEndringSjekkGrensePeriodeService : BeregnService() {
                 )
             },
     )
-
-    private fun mapResultatGrunnlag(
-        beregningResultatListe: List<EndringSjekkGrensePeriodePeriodeResultat>,
-        mottattGrunnlag: BeregnGrunnlag,
-        sjablonGrunnlag: List<GrunnlagDto>,
-    ): MutableList<GrunnlagDto> {
-        val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
-        val grunnlagReferanseListe =
-            beregningResultatListe
-                .flatMap { it.resultat.grunnlagsreferanseListe }
-                .distinct()
-
-        // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
-        resultatGrunnlagListe.addAll(
-            mapGrunnlag(
-                grunnlagListe = mottattGrunnlag.grunnlagListe,
-                grunnlagReferanseListe = grunnlagReferanseListe,
-            ),
-        )
-
-        // Matcher sjablongrunnlag med grunnlag som er brukt i beregningen og mapper ut
-        resultatGrunnlagListe.addAll(
-            mapGrunnlag(
-                grunnlagListe = sjablonGrunnlag,
-                grunnlagReferanseListe = grunnlagReferanseListe,
-            ),
-        )
-
-        return resultatGrunnlagListe
-    }
-
-    // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
-    private fun mapGrunnlag(grunnlagListe: List<GrunnlagDto>, grunnlagReferanseListe: List<String>) = grunnlagListe
-        .filter { grunnlagReferanseListe.contains(it.referanse) }
-        .map {
-            GrunnlagDto(
-                referanse = it.referanse,
-                type = it.type,
-                innhold = it.innhold,
-                grunnlagsreferanseListe = it.grunnlagsreferanseListe,
-                gjelderReferanse = it.gjelderReferanse,
-                gjelderBarnReferanse = it.gjelderBarnReferanse,
-            )
-        }
 
     // Mapper ut DelberegningEndringSjekkGrensePeriode
     private fun mapDelberegningEndringSjekkGrensePeriode(

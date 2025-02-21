@@ -33,9 +33,10 @@ internal object BeregnEndringSjekkGrenseService : BeregnService() {
         val beregningResultat = EndringSjekkGrenseBeregning.beregn(beregningGrunnlagListe)
 
         // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag)
-        val resultatGrunnlagListe = mapResultatGrunnlag(
-            beregningResultat = beregningResultat,
+        val resultatGrunnlagListe = mapDelberegningResultatGrunnlag(
+            grunnlagReferanseListe = beregningResultat.grunnlagsreferanseListe,
             mottattGrunnlag = mottattGrunnlag,
+            sjablonGrunnlag = emptyList(),
         )
 
         // Mapper ut grunnlag for delberegning endring sjekk grense
@@ -49,38 +50,6 @@ internal object BeregnEndringSjekkGrenseService : BeregnService() {
 
         return resultatGrunnlagListe.sortedBy { it.referanse }
     }
-
-    private fun mapResultatGrunnlag(
-        beregningResultat: EndringSjekkGrenseBeregningResultat,
-        mottattGrunnlag: BeregnGrunnlag,
-    ): MutableList<GrunnlagDto> {
-        val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
-        val grunnlagReferanseListe = beregningResultat.grunnlagsreferanseListe
-
-        // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
-        resultatGrunnlagListe.addAll(
-            mapGrunnlag(
-                grunnlagListe = mottattGrunnlag.grunnlagListe,
-                grunnlagReferanseListe = grunnlagReferanseListe,
-            ),
-        )
-
-        return resultatGrunnlagListe
-    }
-
-    // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
-    private fun mapGrunnlag(grunnlagListe: List<GrunnlagDto>, grunnlagReferanseListe: List<String>) = grunnlagListe
-        .filter { grunnlagReferanseListe.contains(it.referanse) }
-        .map {
-            GrunnlagDto(
-                referanse = it.referanse,
-                type = it.type,
-                innhold = it.innhold,
-                grunnlagsreferanseListe = it.grunnlagsreferanseListe,
-                gjelderReferanse = it.gjelderReferanse,
-                gjelderBarnReferanse = it.gjelderBarnReferanse,
-            )
-        }
 
     // Mapper ut DelberegningEndringSjekkGrense
     private fun mapDelberegningEndringSjekkGrense(

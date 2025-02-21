@@ -18,6 +18,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SivilstandPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåFremmedReferanse
+import java.math.BigDecimal
 
 internal object ForskuddCoreMapper : CoreMapper() {
 
@@ -39,7 +40,7 @@ internal object ForskuddCoreMapper : CoreMapper() {
         val inntektPeriodeCoreListe = mapInntekt(
             beregnGrunnlag = beregnForskuddGrunnlag,
             referanseTilRolle = referanseBidragsmottaker,
-            innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntektFraSjablontall(sjablontallListe),
+            innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntektFraSjablontallListe(sjablontallListe)?.verdi ?: BigDecimal.ZERO,
             åpenSluttperiode = true,
             erForskudd = true,
         )

@@ -1,5 +1,8 @@
 package no.nav.bidrag.beregn.barnebidrag.bo
 
+import no.nav.bidrag.beregn.core.bo.SjablonSjablontallBeregningGrunnlag
+import no.nav.bidrag.beregn.core.bo.SjablonSjablontallPeriodeGrunnlag
+import no.nav.bidrag.beregn.core.bo.SjablonTrinnvisSkattesatsPeriodeGrunnlag
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSumInntekt
 import java.math.BigDecimal

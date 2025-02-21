@@ -11,10 +11,10 @@ import java.math.RoundingMode
 
 internal object BpAndelUnderholdskostnadBeregning {
 
-    val bigDecimal100 = BigDecimal.valueOf(100)
-    val bigDecimal30 = BigDecimal.valueOf(30)
-    val bigDecimalFemSjettedeler = BigDecimal.valueOf(0.833333333333)
-    var sjablonverdiForskuddssatsBeløp = BigDecimal.ZERO
+    private val bigDecimal100 = BigDecimal.valueOf(100)
+    private val bigDecimal30 = BigDecimal.valueOf(30)
+    private val bigDecimalFemSjettedeler = BigDecimal.valueOf(0.833333333333)
+    private var sjablonverdiForskuddssatsBeløp = BigDecimal.ZERO
 
     fun beregn(grunnlag: BpAndelUnderholdskostnadBeregningGrunnlag): BpAndelUnderholdskostnadBeregningResultat {
         // Henter sjablonverdier

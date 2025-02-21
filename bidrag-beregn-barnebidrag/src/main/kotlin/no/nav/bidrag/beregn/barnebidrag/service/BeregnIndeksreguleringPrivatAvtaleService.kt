@@ -2,9 +2,10 @@ package no.nav.bidrag.beregn.barnebidrag.service
 
 import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.barnebidrag.bo.IndeksreguleringPrivatAvtaleGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSjablontallBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSjablontallPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.mapper.BidragsevneMapper.finnReferanseTilRolle
+import no.nav.bidrag.beregn.barnebidrag.mapper.BidragsevneMapper.mapSjablonSjablontall
+import no.nav.bidrag.beregn.core.bo.SjablonSjablontallBeregningGrunnlag
+import no.nav.bidrag.beregn.core.bo.SjablonSjablontallPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -16,7 +17,6 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.PrivatAvtaleGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.PrivatAvtalePeriodeGrunnlag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.innholdTilObjekt
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
@@ -98,28 +98,15 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
             resultatliste.add(resultat)
         }
 
-        val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
-
-        val grunnlagReferanseListe =
-            resultatliste
+        // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
+        val resultatGrunnlagListe = mapDelberegningResultatGrunnlag(
+            grunnlagReferanseListe = resultatliste
                 .flatMap { it.grunnlagsreferanseListe }
-                .distinct()
+                .distinct(),
+            mottattGrunnlag = grunnlag,
+            sjablonGrunnlag = sjablonListe,
+        ).toList()
 
-        // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
-        resultatGrunnlagListe.addAll(
-            mapGrunnlag(
-                grunnlagListe = grunnlag.grunnlagListe,
-                grunnlagReferanseListe = grunnlagReferanseListe,
-            ),
-        )
-
-        // Matcher sjablongrunnlag med grunnlag som er brukt i beregningen og mapper ut
-        resultatGrunnlagListe.addAll(
-            mapGrunnlag(
-                grunnlagListe = sjablonListe,
-                grunnlagReferanseListe = grunnlagReferanseListe,
-            ),
-        )
         return resultatliste + resultatGrunnlagListe
     }
 
@@ -163,7 +150,7 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
             val periodeListe = beregningsperiodeListe.asSequence().map { it.periode }
 
             // Slår sammen og lager periodene som skal beregnes.
-            val sammenslåttePerioder = lagBruddPeriodeListe(periodeListe, beregningsperiode).toMutableList()
+            val sammenslåttePerioder = lagBruddPeriodeListe(periodeListe, beregningsperiode)
             // Til slutt legges det til en periode med åpen tildato
             val endeligListe = sammenslåttePerioder.plus(ÅrMånedsperiode(sammenslåttePerioder.last().til!!, null))
 
@@ -278,39 +265,6 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
             )
         return resultat
     }
-
-    // TODO Flytte til CoreMapper
-    private fun mapSjablonSjablontall(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonSjablontallPeriodeGrunnlag> {
-        try {
-            return sjablonGrunnlag
-                .filter { it.type == Grunnlagstype.SJABLON_SJABLONTALL }
-                .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>()
-                .map {
-                    SjablonSjablontallPeriodeGrunnlag(
-                        referanse = it.referanse,
-                        sjablonSjablontallPeriode = it.innhold,
-                    )
-                }
-        } catch (e: Exception) {
-            throw IllegalArgumentException(
-                "Feil ved uthenting av sjablon for sjablontall: " + e.message,
-            )
-        }
-    }
-
-    // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
-    private fun mapGrunnlag(grunnlagListe: List<GrunnlagDto>, grunnlagReferanseListe: List<String>) = grunnlagListe
-        .filter { grunnlagReferanseListe.contains(it.referanse) }
-        .map {
-            GrunnlagDto(
-                referanse = it.referanse,
-                type = it.type,
-                innhold = it.innhold,
-                grunnlagsreferanseListe = it.grunnlagsreferanseListe,
-                gjelderReferanse = it.gjelderReferanse,
-                gjelderBarnReferanse = it.gjelderBarnReferanse,
-            )
-        }
 }
 
 data class Beregningsperiode(val periode: ÅrMånedsperiode, val periodeSkalIndeksreguleres: Boolean)

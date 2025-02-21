@@ -8,7 +8,7 @@ import no.nav.bidrag.beregn.særbidrag.core.felles.bo.SjablonListe
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
-import java.util.ArrayList
+import java.math.BigDecimal
 
 internal object BidragsevneCoreMapper : CoreMapper() {
     private val beregnApi: BeregnApi = BeregnApi()
@@ -26,7 +26,7 @@ internal object BidragsevneCoreMapper : CoreMapper() {
             mapInntekt(
                 beregnGrunnlag = beregnGrunnlag,
                 referanseTilRolle = referanseTilRolle,
-                innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntektFraSjablontall(sjablonListe.sjablonSjablontallResponse),
+                innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntektFraSjablontallListe(sjablonListe.sjablonSjablontallResponse)?.verdi ?: BigDecimal.ZERO,
                 erSærbidrag = true,
             )
 

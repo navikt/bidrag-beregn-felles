@@ -2,14 +2,12 @@ package no.nav.bidrag.beregn.barnebidrag.mapper
 
 import no.nav.bidrag.beregn.barnebidrag.bo.BeløpshistorikkPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.EndringSjekkGrensePeriodePeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSjablontallPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SluttberegningPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
-import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 
@@ -48,23 +46,4 @@ internal object EndringSjekkGrensePeriodeMapper : CoreMapper() {
             )
         }
         .firstOrNull()
-
-    // TODO Flytte til CoreMapper
-    private fun mapSjablonSjablontall(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonSjablontallPeriodeGrunnlag> {
-        try {
-            return sjablonGrunnlag
-                .filter { it.type == Grunnlagstype.SJABLON_SJABLONTALL }
-                .filtrerOgKonverterBasertPåEgenReferanse<SjablonSjablontallPeriode>()
-                .map {
-                    SjablonSjablontallPeriodeGrunnlag(
-                        referanse = it.referanse,
-                        sjablonSjablontallPeriode = it.innhold,
-                    )
-                }
-        } catch (e: Exception) {
-            throw IllegalArgumentException(
-                "Feil ved uthenting av sjablon for sjablontall: " + e.message,
-            )
-        }
-    }
 }

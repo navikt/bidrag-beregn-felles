@@ -4,7 +4,6 @@ import no.nav.bidrag.beregn.barnebidrag.bo.BarnBM
 import no.nav.bidrag.beregn.barnebidrag.bo.NettoTilsynsutgiftPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonMaksFradragsbeløpPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonMaksTilsynsbeløpPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnNettoTilsynsutgiftService
 import no.nav.bidrag.beregn.core.dto.FaktiskUtgiftPeriodeCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.TilleggsstønadPeriodeCore
@@ -36,7 +35,7 @@ internal object NettoTilsynsutgiftMapper : CoreMapper() {
             barnBMListe = mapBMsBarn(mottattGrunnlag),
             faktiskUtgiftPeriodeCoreListe = mapFaktiskUtgift(mottattGrunnlag, referanseTilBM),
             tilleggsstønadPeriodeCoreListe = mapTilleggsstønad(mottattGrunnlag, referanseTilBM),
-            sjablonSjablontallPeriodeGrunnlagListe = BeregnNettoTilsynsutgiftService.mapSjablonSjablontall(sjablonGrunnlag),
+            sjablonSjablontallPeriodeGrunnlagListe = mapSjablonSjablontall(sjablonGrunnlag),
             sjablonMaksTilsynsbeløpPeriodeGrunnlagListe = mapSjablonMaksTilsynsbeløp(sjablonGrunnlag),
             sjablonMaksFradragsbeløpPeriodeGrunnlagListe = mapSjablonMaksFradrag(sjablonGrunnlag),
 
