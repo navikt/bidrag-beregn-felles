@@ -204,4 +204,31 @@ internal class BoforholdAndreVoksneServiceTest {
             resultat[0].kilde shouldBe Kilde.OFFENTLIG
         }
     }
+
+    @Test
+    fun `Test endre virkningsidspunkt`() {
+        boforholdAndreVoksneService = BoforholdAndreVoksneService()
+        val grunnlag1 = TestUtil.byggEndreVirkningstidspunktVoksne()[0]
+        var virkningstidspunkt = LocalDate.of(2024, 3, 1)
+        val resultat1 = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, grunnlag1)
+
+        val grunnlag2 = TestUtil.byggEndreVirkningstidspunktVoksne()[0]
+        virkningstidspunkt = LocalDate.of(2024, 1, 1)
+        val resultat2 = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, grunnlag2)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat1)
+//            resultat1.size shouldBe 1
+
+            resultat1[0].periodeFom shouldBe LocalDate.of(2024, 3, 1)
+            resultat1[0].periodeTom shouldBe null
+            resultat1[0].bostatus shouldBe Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE
+            resultat1[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat2[0].periodeFom shouldBe LocalDate.of(2024, 1, 1)
+            resultat2[0].periodeTom shouldBe null
+            resultat2[0].bostatus shouldBe Bostatuskode.BOR_IKKE_MED_ANDRE_VOKSNE
+            resultat2[0].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
 }

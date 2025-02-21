@@ -572,10 +572,7 @@ internal class BoforholdBarnServiceV3 {
                 }
                 if (periodeTom != null &&
                     (
-                        (
-                            overlappendePerioder[indeks].kilde != sekundærperiode.kilde ||
-                                overlappendePerioder[indeks].bostatus != sekundærperiode.bostatus
-                            ) ||
+                        overlappendePerioder[indeks].bostatus != sekundærperiode.bostatus ||
                             slåSammenPerioderMedLikKildeOgBostatus
                         )
                 ) {
@@ -598,10 +595,7 @@ internal class BoforholdBarnServiceV3 {
             if (indeks < overlappendePerioder.size - 1) {
                 if (overlappendePerioder[indeks + 1].periodeFom.isAfter(overlappendePerioder[indeks].periodeTom!!.plusDays(1)) &&
                     (
-                        (
-                            overlappendePerioder[indeks].kilde != sekundærperiode.kilde ||
-                                overlappendePerioder[indeks].bostatus != sekundærperiode.bostatus
-                            ) ||
+                        overlappendePerioder[indeks].bostatus != sekundærperiode.bostatus ||
                             slåSammenPerioderMedLikKildeOgBostatus
                         )
                 ) {
@@ -625,7 +619,12 @@ internal class BoforholdBarnServiceV3 {
                 }
             } else {
                 // Siste sekundærperiode
-                if (overlappendePerioder[indeks].periodeTom != null) {
+                if (overlappendePerioder[indeks].periodeTom != null &&
+                    (
+                        overlappendePerioder[indeks].bostatus != sekundærperiode.bostatus ||
+                            slåSammenPerioderMedLikKildeOgBostatus
+                        )
+                ) {
                     if (sekundærperiode.periodeTom == null || sekundærperiode.periodeTom.isAfter(overlappendePerioder[indeks].periodeTom)) {
                         justertSekundærPeriodeListe.add(
                             BoforholdResponseV2(
