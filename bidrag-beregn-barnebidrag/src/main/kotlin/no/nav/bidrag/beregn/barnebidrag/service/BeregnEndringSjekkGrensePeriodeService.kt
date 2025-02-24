@@ -13,6 +13,7 @@ import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndringSjekkGrensePeriode
@@ -25,8 +26,16 @@ internal object BeregnEndringSjekkGrensePeriodeService : BeregnService() {
         // Lager sjablon grunnlagsobjekter
         val sjablonGrunnlag = lagSjablonGrunnlagsobjekter(periode = mottattGrunnlag.periode) { it.endringSjekkGrense }
 
+        // Hvis det er 18-års-bidrag skal BELØPSHISTORIKK_BIDRAG_18_ÅR benyttes
+        val grunnlagstype =
+            if (mottattGrunnlag.stønadstype == Stønadstype.BIDRAG18AAR) Grunnlagstype.BELØPSHISTORIKK_BIDRAG_18_ÅR else Grunnlagstype.BELØPSHISTORIKK_BIDRAG
+
         // Mapper ut grunnlag som skal brukes i beregningen
-        val periodeGrunnlag = mapEndringSjekkGrensePeriodeGrunnlag(mottattGrunnlag, sjablonGrunnlag)
+        val periodeGrunnlag = mapEndringSjekkGrensePeriodeGrunnlag(
+            mottattGrunnlag = mottattGrunnlag,
+            sjablonGrunnlag = sjablonGrunnlag,
+            grunnlagstype = grunnlagstype
+        )
 
         // Lager liste over bruddperioder
         val bruddPeriodeListe = lagBruddPeriodeListeEndringSjekkGrensePeriode(
