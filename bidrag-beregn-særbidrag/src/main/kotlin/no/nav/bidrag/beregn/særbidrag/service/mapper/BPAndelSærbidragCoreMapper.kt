@@ -19,7 +19,6 @@ internal object BPAndelSærbidragCoreMapper : CoreMapper() {
         sjablonListe: SjablonListe,
         innslagKapitalinntekt: BigDecimal,
     ): BeregnBPsAndelSærbidragGrunnlagCore {
-
         // Mapper grunnlagstyper til input for core
         val inntektBPPeriodeCoreListe =
             mapInntekt(

@@ -264,7 +264,6 @@ abstract class BeregnService {
         return bruddPeriodeListe
     }
 
-
     fun mapDelberegningResultatGrunnlag(
         grunnlagReferanseListe: List<String>,
         mottattGrunnlag: BeregnGrunnlag,

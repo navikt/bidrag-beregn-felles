@@ -47,7 +47,7 @@ internal object BeregnBidragsevneService : BeregnService() {
                 mottattGrunnlag = mottattGrunnlag,
                 sjablonGrunnlag = sjablonGrunnlag,
                 åpenSluttperiode = åpenSluttperiode,
-                innslagKapitalInntekt = innslagKapitalinntektSjablon?.verdi ?: BigDecimal.ZERO
+                innslagKapitalInntekt = innslagKapitalinntektSjablon?.verdi ?: BigDecimal.ZERO,
             )
 
         // Lager liste over bruddperioder

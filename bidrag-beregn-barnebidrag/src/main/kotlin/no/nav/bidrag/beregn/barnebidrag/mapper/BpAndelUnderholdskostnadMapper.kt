@@ -15,7 +15,7 @@ internal object BpAndelUnderholdskostnadMapper : CoreMapper() {
         mottattGrunnlag: BeregnGrunnlag,
         sjablonGrunnlag: List<GrunnlagDto>,
         åpenSluttperiode: Boolean,
-        innslagKapitalInntekt: BigDecimal
+        innslagKapitalInntekt: BigDecimal,
     ): BpAndelUnderholdskostnadPeriodeGrunnlag = BpAndelUnderholdskostnadPeriodeGrunnlag(
         beregningsperiode = mottattGrunnlag.periode,
         underholdskostnadDelberegningPeriodeGrunnlagListe = mapUnderholdskostnad(beregnGrunnlag = mottattGrunnlag),
