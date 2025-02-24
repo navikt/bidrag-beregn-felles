@@ -879,6 +879,120 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
         utførBeregningerOgEvaluerResultatBarnebidrag()
     }
 
+    @Test
+    @DisplayName("Barnebidrag - eksempel 7A - 18-års-bidrag - sjekk mot 12%-regel og endring er over grense")
+    fun testBarnebidrag_Eksempel07A() {
+        filnavn = "src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel7A.json"
+
+        // Beregningsperiode
+        forventetBeregningsperiode = ÅrMånedsperiode(YearMonth.parse("2020-08"), YearMonth.parse("2021-01"))
+
+        // Resultat
+        forventetEndeligResultatbeløp = BigDecimal.valueOf(5550).setScale(0)
+
+        // Bidragsevne
+        forventetBidragsevne = BigDecimal.valueOf(16357.14).setScale(2)
+        forventetMinstefradrag = BigDecimal.valueOf(87450.00).setScale(2)
+        forventetSkattAlminneligInntekt = BigDecimal.valueOf(79475.00).setScale(2)
+        forventetTrinnskatt = BigDecimal.valueOf(11711.30).setScale(2)
+        forventetTrygdeavgift = BigDecimal.valueOf(41000.00).setScale(2)
+        forventetSumSkatt = BigDecimal.valueOf(132186.30).setScale(2)
+        forventetSumSkattFaktor = BigDecimal.valueOf(0.2643726000).setScale(10)
+        forventetUnderholdBarnEgenHusstand = BigDecimal.ZERO.setScale(2)
+        forventetSumInntekt25Prosent = BigDecimal.valueOf(10416.67).setScale(2)
+
+        // Underholdskostnad
+        forventetUnderholdskostnad = BigDecimal.valueOf(9724.00).setScale(2)
+
+        // BP andel underholdskostnad
+        forventetEndeligAndelFaktor = BigDecimal.valueOf(0.625).setScale(10)
+        forventetAndelBeløp = BigDecimal.valueOf(6077.50).setScale(2)
+        forventetBeregnetAndelFaktor = BigDecimal.valueOf(0.625).setScale(10)
+        forventetBarnEndeligInntekt = BigDecimal.ZERO.setScale(2)
+
+        // Samværsfradrag
+        forventetSamværsfradrag = BigDecimal.valueOf(528.00).setScale(2)
+
+        // Endelig bidrag
+        forventetBeregnetBeløp = BigDecimal.valueOf(5549.50).setScale(2)
+        forventetResultatbeløp = BigDecimal.valueOf(5550).setScale(0)
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(9724).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(6077.50).setScale(2)
+        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(5549.50).setScale(2)
+        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(6077.50).setScale(2)
+        forventetBruttoBidragEtterBegrensetRevurdering = BigDecimal.valueOf(6077.50).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(6077.50).setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(5549.50).setScale(2)
+        forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
+        forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
+
+        // Endring sjekk grense
+        forventetEndringErOverGrense = true
+
+        // Grunnlag
+        forventetAntallBarnetilleggBP = 0
+        forventetAntallBarnetilleggBM = 0
+
+        utførBeregningerOgEvaluerResultatBarnebidrag()
+    }
+
+    @Test
+    @DisplayName("Barnebidrag - eksempel 7B - 18-års-bidrag - sjekk mot 12%-regel og endring er ikke over grense")
+    fun testBarnebidrag_Eksempel07B() {
+        filnavn = "src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel7B.json"
+
+        // Beregningsperiode
+        forventetBeregningsperiode = ÅrMånedsperiode(YearMonth.parse("2020-08"), YearMonth.parse("2021-01"))
+
+        // Resultat
+        forventetEndeligResultatbeløp = BigDecimal.valueOf(5400).setScale(0)
+
+        // Bidragsevne
+        forventetBidragsevne = BigDecimal.valueOf(16357.14).setScale(2)
+        forventetMinstefradrag = BigDecimal.valueOf(87450.00).setScale(2)
+        forventetSkattAlminneligInntekt = BigDecimal.valueOf(79475.00).setScale(2)
+        forventetTrinnskatt = BigDecimal.valueOf(11711.30).setScale(2)
+        forventetTrygdeavgift = BigDecimal.valueOf(41000.00).setScale(2)
+        forventetSumSkatt = BigDecimal.valueOf(132186.30).setScale(2)
+        forventetSumSkattFaktor = BigDecimal.valueOf(0.2643726000).setScale(10)
+        forventetUnderholdBarnEgenHusstand = BigDecimal.ZERO.setScale(2)
+        forventetSumInntekt25Prosent = BigDecimal.valueOf(10416.67).setScale(2)
+
+        // Underholdskostnad
+        forventetUnderholdskostnad = BigDecimal.valueOf(9724.00).setScale(2)
+
+        // BP andel underholdskostnad
+        forventetEndeligAndelFaktor = BigDecimal.valueOf(0.625).setScale(10)
+        forventetAndelBeløp = BigDecimal.valueOf(6077.50).setScale(2)
+        forventetBeregnetAndelFaktor = BigDecimal.valueOf(0.625).setScale(10)
+        forventetBarnEndeligInntekt = BigDecimal.ZERO.setScale(2)
+
+        // Samværsfradrag
+        forventetSamværsfradrag = BigDecimal.valueOf(528.00).setScale(2)
+
+        // Endelig bidrag
+        forventetBeregnetBeløp = BigDecimal.valueOf(5549.50).setScale(2)
+        forventetResultatbeløp = BigDecimal.valueOf(5550).setScale(0)
+        forventetUMinusNettoBarnetilleggBM = BigDecimal.valueOf(9724).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.valueOf(6077.50).setScale(2)
+        forventetNettoBidragEtterBarnetilleggBM = BigDecimal.valueOf(5549.50).setScale(2)
+        forventetBruttoBidragJustertForEvneOg25Prosent = BigDecimal.valueOf(6077.50).setScale(2)
+        forventetBruttoBidragEtterBegrensetRevurdering = BigDecimal.valueOf(6077.50).setScale(2)
+        forventetBruttoBidragEtterBarnetilleggBP = BigDecimal.valueOf(6077.50).setScale(2)
+        forventetNettoBidragEtterSamværsfradrag = BigDecimal.valueOf(5549.50).setScale(2)
+        forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
+        forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
+
+        // Endring sjekk grense
+        forventetEndringErOverGrense = true
+
+        // Grunnlag
+        forventetAntallBarnetilleggBP = 0
+        forventetAntallBarnetilleggBM = 0
+
+        utførBeregningerOgEvaluerResultatBarnebidrag()
+    }
+
     private fun utførBeregningerOgEvaluerResultatBarnebidrag() {
         val request = lesFilOgByggRequest(filnavn)
 

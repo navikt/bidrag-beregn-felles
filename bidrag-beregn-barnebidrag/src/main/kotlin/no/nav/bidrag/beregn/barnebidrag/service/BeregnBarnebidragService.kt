@@ -360,8 +360,12 @@ class BeregnBarnebidragService : BeregnService() {
         delberegningEndeligBidragResultat: BeregnEndeligBidragServiceRespons,
         åpenSluttperiode: Boolean,
     ): SjekkMotMinimumsgrenseForEndringResultat {
-        // Filtrerer ut beløpshistorikk
-        val beløpshistorikkGrunnlag = filtrerBeløpshistorikkGrunnlag(mottattGrunnlag)
+        // Filtrerer ut beløpshistorikk. Hvis det er 18-års-bidrag benyttes egen beløpshistorikk.
+        val beløpshistorikkGrunnlag = if (mottattGrunnlag.stønadstype == Stønadstype.BIDRAG18AAR) {
+            filtrerBeløpshistorikk18ÅrGrunnlag(mottattGrunnlag)
+        } else {
+            filtrerBeløpshistorikkGrunnlag(mottattGrunnlag)
+        }
 
         // Delberegning for å sjekke om endring i bidrag er over grense (pr periode)
         var grunnlagTilEndringSjekkGrense = utvidetGrunnlagJustert.beregnGrunnlag.copy(
@@ -377,12 +381,15 @@ class BeregnBarnebidragService : BeregnService() {
         val delberegningEndringSjekkGrenseResultat = delberegningEndringSjekkGrense(grunnlagTilEndringSjekkGrense, åpenSluttperiode)
         val beregnetBidragErOverMinimumsgrenseForEndring = erOverMinimumsgrenseForEndring(delberegningEndringSjekkGrenseResultat)
         val alleResultatBeløpErNull = erAlleResultatbeløpNull(grunnlagTilEndringSjekkGrense)
+        val grunnlagstype =
+            if (mottattGrunnlag.stønadstype == Stønadstype.BIDRAG18AAR) Grunnlagstype.BELØPSHISTORIKK_BIDRAG_18_ÅR else Grunnlagstype.BELØPSHISTORIKK_BIDRAG
 
         val resultatPeriodeListe = lagResultatPerioder(
             delberegningEndeligBidragResultat = delberegningEndeligBidragResultat.grunnlagListe,
             beregnetBidragErOverMinimumsgrenseForEndring = beregnetBidragErOverMinimumsgrenseForEndring,
             alleResultatBeløpErNull = alleResultatBeløpErNull,
             beløpshistorikkGrunnlag = beløpshistorikkGrunnlag,
+            grunnlagstype = grunnlagstype,
         )
 
         return SjekkMotMinimumsgrenseForEndringResultat(
@@ -412,6 +419,9 @@ class BeregnBarnebidragService : BeregnService() {
     private fun filtrerBeløpshistorikkGrunnlag(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> =
         beregnGrunnlag.grunnlagListe.filter { it.type == Grunnlagstype.BELØPSHISTORIKK_BIDRAG }
 
+    private fun filtrerBeløpshistorikk18ÅrGrunnlag(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> =
+        beregnGrunnlag.grunnlagListe.filter { it.type == Grunnlagstype.BELØPSHISTORIKK_BIDRAG_18_ÅR }
+
     // Standardlogikk for å lage resultatperioder
     private fun lagResultatPerioder(
         delberegningEndeligBidragResultat: List<GrunnlagDto>,
@@ -434,10 +444,11 @@ class BeregnBarnebidragService : BeregnService() {
         beregnetBidragErOverMinimumsgrenseForEndring: Boolean,
         alleResultatBeløpErNull: Boolean,
         beløpshistorikkGrunnlag: List<GrunnlagDto>,
+        grunnlagstype: Grunnlagstype,
     ): List<ResultatPeriode> {
         // Henter beløpshistorikk (det finnes kun en forekomst, som dekker hele perioden)
         val beløpshistorikkPeriodeGrunnlag = beløpshistorikkGrunnlag
-            .filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(Grunnlagstype.BELØPSHISTORIKK_BIDRAG)
+            .filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(grunnlagstype)
             .map {
                 BeløpshistorikkPeriodeGrunnlag(
                     referanse = it.referanse,
