@@ -26,7 +26,8 @@ internal object BidragsevneCoreMapper : CoreMapper() {
             mapInntekt(
                 beregnGrunnlag = beregnGrunnlag,
                 referanseTilRolle = referanseTilRolle,
-                innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntektFraSjablontallListe(sjablonListe.sjablonSjablontallResponse)?.verdi ?: BigDecimal.ZERO,
+                innslagKapitalinntektSjablonverdi =
+                finnInnslagKapitalinntektFraSjablontallListe(sjablonListe.sjablonSjablontallResponse)?.verdi ?: BigDecimal.ZERO,
                 erSærbidrag = true,
             )
 

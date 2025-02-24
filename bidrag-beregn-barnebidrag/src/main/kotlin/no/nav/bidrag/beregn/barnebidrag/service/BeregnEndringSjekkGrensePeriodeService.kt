@@ -28,13 +28,19 @@ internal object BeregnEndringSjekkGrensePeriodeService : BeregnService() {
 
         // Hvis det er 18-års-bidrag skal BELØPSHISTORIKK_BIDRAG_18_ÅR benyttes
         val grunnlagstype =
-            if (mottattGrunnlag.stønadstype == Stønadstype.BIDRAG18AAR) Grunnlagstype.BELØPSHISTORIKK_BIDRAG_18_ÅR else Grunnlagstype.BELØPSHISTORIKK_BIDRAG
+            if (mottattGrunnlag.stønadstype ==
+                Stønadstype.BIDRAG18AAR
+            ) {
+                Grunnlagstype.BELØPSHISTORIKK_BIDRAG_18_ÅR
+            } else {
+                Grunnlagstype.BELØPSHISTORIKK_BIDRAG
+            }
 
         // Mapper ut grunnlag som skal brukes i beregningen
         val periodeGrunnlag = mapEndringSjekkGrensePeriodeGrunnlag(
             mottattGrunnlag = mottattGrunnlag,
             sjablonGrunnlag = sjablonGrunnlag,
-            grunnlagstype = grunnlagstype
+            grunnlagstype = grunnlagstype,
         )
 
         // Lager liste over bruddperioder

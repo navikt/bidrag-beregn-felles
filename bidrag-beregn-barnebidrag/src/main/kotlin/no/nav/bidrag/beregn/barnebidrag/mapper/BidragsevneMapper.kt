@@ -17,7 +17,7 @@ internal object BidragsevneMapper : CoreMapper() {
         mottattGrunnlag: BeregnGrunnlag,
         sjablonGrunnlag: List<GrunnlagDto>,
         åpenSluttperiode: Boolean,
-        innslagKapitalInntekt: BigDecimal
+        innslagKapitalInntekt: BigDecimal,
     ): BidragsevnePeriodeGrunnlag {
         val referanseTilBP = finnReferanseTilRolle(
             grunnlagListe = mottattGrunnlag.grunnlagListe,

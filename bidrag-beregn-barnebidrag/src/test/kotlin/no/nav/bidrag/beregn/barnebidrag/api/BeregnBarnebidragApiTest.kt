@@ -703,7 +703,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
         val alleReferanser = hentAlleReferanser(barnebidragResultatGrunnlagListe)
         val alleRefererteReferanser = hentAlleRefererteReferanser(
             resultatGrunnlagListe = barnebidragResultatGrunnlagListe,
-            barnebidragResultat = barnebidragResultat
+            barnebidragResultat = barnebidragResultat,
         )
 
         // Fjerner referanser som er "frittstående" (refereres ikke av noe objekt)
@@ -727,8 +727,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2020-08"),
-                        null
-                    )
+                        null,
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].resultat.beløp).isNull() },
@@ -766,13 +766,13 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanserFiltrert) },
-            { assertThat(alleRefererteReferanser).containsAll(alleReferanserFiltrert) }
+            { assertThat(alleRefererteReferanser).containsAll(alleReferanserFiltrert) },
         )
     }
 
+    // Sluttperiode settes til måneden etter barnet fyller 18 år
     @Test
     @DisplayName("Barnebidrag - eksempel 6A - ordinært bidrag - kostnadsberegnet hvor barnet blir 18 år i beregningsperioden")
-    // Sluttperiode settes til måneden etter barnet fyller 18 år
     fun testBarnebidrag_Eksempel06A() {
         filnavn = "src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel6A.json"
 
@@ -1025,7 +1025,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
         val alleReferanser = hentAlleReferanser(barnebidragResultatGrunnlagListe)
         val alleRefererteReferanser = hentAlleRefererteReferanser(
             resultatGrunnlagListe = barnebidragResultatGrunnlagListe,
-            barnebidragResultat = barnebidragResultat
+            barnebidragResultat = barnebidragResultat,
         )
 
         // Fjerner referanser som er "frittstående" (refereres ikke av noe objekt)

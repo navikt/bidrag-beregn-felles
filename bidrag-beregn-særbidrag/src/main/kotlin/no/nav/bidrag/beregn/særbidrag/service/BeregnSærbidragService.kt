@@ -193,7 +193,7 @@ internal class BeregnSærbidragService(
                 beregnGrunnlag = beregnGrunnlag,
                 sjablontallMap = sjablontallMap,
                 sjablonListe = sjablonListe,
-                innslagKapitalinntekt = innslagKapitalinntektSjablon?.verdi ?: BigDecimal.ZERO
+                innslagKapitalinntekt = innslagKapitalinntektSjablon?.verdi ?: BigDecimal.ZERO,
             )
 
         val bpAndelSærbidragResultatFraCore = beregnBPAndelSærbidrag(bpAndelSærbidragGrunnlagTilCore)
