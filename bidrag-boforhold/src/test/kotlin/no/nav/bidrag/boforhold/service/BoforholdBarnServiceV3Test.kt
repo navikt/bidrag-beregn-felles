@@ -1298,7 +1298,7 @@ internal class BoforholdBarnServiceV3Test {
     }
 
     @Test
-    fun `Test utvid periodeforbi neste periode `() {
+    fun `Test utvid periode forbi neste periode `() {
         boforholdBarnServiceV3 = BoforholdBarnServiceV3()
         val mottatteBoforhold = TestUtil.barnUtvidPeriodeForbiNestePeriode()
         val virkningstidspunkt = LocalDate.of(2024, 1, 1)
@@ -1321,6 +1321,52 @@ internal class BoforholdBarnServiceV3Test {
 
             resultat[2].periodeFom shouldBe LocalDate.of(2024, 7, 1)
             resultat[2].periodeTom shouldBe null
+            resultat[2].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[2].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
+
+    @Test
+    fun `Test juster virkningstidspunkt tilbake i tid `() {
+        boforholdBarnServiceV3 = BoforholdBarnServiceV3()
+        val mottatteBoforhold = TestUtil.justerVirkningstidspunktTilbakeITid()
+        val virkningstidspunkt = LocalDate.of(2025, 5, 1)
+        val resultat = boforholdBarnServiceV3.beregnBoforholdBarn(virkningstidspunkt, TypeBehandling.BIDRAG, listOf(mottatteBoforhold))
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 1
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2025, 5, 1)
+            resultat[0].periodeTom shouldBe null
+            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
+
+    @Test
+    fun `Test endre tildato siste periode tilbake i tid `() {
+        boforholdBarnServiceV3 = BoforholdBarnServiceV3()
+        val mottatteBoforhold = TestUtil.justerTildatoSistePeriodeTilbakeITid()
+        val virkningstidspunkt = LocalDate.of(2024, 1, 1)
+        val resultat = boforholdBarnServiceV3.beregnBoforholdBarn(virkningstidspunkt, TypeBehandling.BIDRAG, listOf(mottatteBoforhold))
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 3
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2024, 1, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2024, 6, 30)
+            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2024, 7, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2024, 8, 31)
+            resultat[1].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.MANUELL
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2024, 9, 1)
+            resultat[2].periodeTom shouldBe LocalDate.of(2024, 11, 30)
             resultat[2].bostatus shouldBe Bostatuskode.MED_FORELDER
             resultat[2].kilde shouldBe Kilde.OFFENTLIG
         }
