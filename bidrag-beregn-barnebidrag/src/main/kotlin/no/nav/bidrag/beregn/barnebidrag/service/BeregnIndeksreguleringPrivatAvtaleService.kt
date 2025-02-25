@@ -32,13 +32,6 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
             grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
         )
 
-        val sjablonListe = mapSjablonSjablontallGrunnlag(
-            periode = grunnlag.periode,
-            sjablonListe = SjablonProvider.hentSjablontall(),
-        ) { it.indeksregulering }
-
-        val sjablonIndeksreguleringFaktorListe = mapSjablonSjablontall(sjablonListe)
-
         val privatAvtale = grunnlag.grunnlagListe
             .filtrerOgKonverterBasertPåEgenReferanse<PrivatAvtaleGrunnlag>(Grunnlagstype.PRIVAT_AVTALE_GRUNNLAG)
             .filter { it.gjelderBarnReferanse == grunnlag.søknadsbarnReferanse }
@@ -72,6 +65,13 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
             fom = privatAvtalePeriodeListe.first().periode.fom,
             til = null,
         )
+
+        val sjablonListe = mapSjablonSjablontallGrunnlag(
+            periode = periode,
+            sjablonListe = SjablonProvider.hentSjablontall(),
+        ) { it.indeksregulering }
+
+        val sjablonIndeksreguleringFaktorListe = mapSjablonSjablontall(sjablonListe)
 
         // Lager liste over bruddperioder
         val beregningsperiodeListe = lagBruddperiodeListe(

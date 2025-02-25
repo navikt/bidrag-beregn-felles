@@ -1,14 +1,6 @@
 package no.nav.bidrag.indeksregulering.service
 
-import no.nav.bidrag.domene.enums.person.Sivilstandskode
-import no.nav.bidrag.domene.enums.person.SivilstandskodePDL
-import no.nav.bidrag.sivilstand.response.SivilstandBeregnet
-import no.nav.bidrag.sivilstand.response.SivilstandBo
-import no.nav.bidrag.sivilstand.response.SivilstandV1
-import no.nav.bidrag.sivilstand.response.Status
-import no.nav.bidrag.transport.behandling.grunnlag.response.SivilstandGrunnlagDto
 import java.time.LocalDate
-import java.time.temporal.ChronoUnit
 
 internal class IndeksreguleringService : BeregnService() {
 
@@ -229,7 +221,7 @@ internal class IndeksreguleringService : BeregnService() {
                     indeksreguleringFaktor = null,
                     beløp = grunnlag.privatAvtalePeriode.beløp,
 
-                    )
+                )
         }
 
         val resultat =
@@ -248,7 +240,7 @@ internal class IndeksreguleringService : BeregnService() {
                 gjelderBarnReferanse = grunnlag.referanseTilRolle,
                 grunnlagsreferanseListe = grunnlag.referanseliste,
 
-                )
+            )
         return resultat
     }
 }

@@ -24,7 +24,6 @@ internal class IndeksreguleringServiceTest {
             resultat.sivilstandListe[0].periodeFom shouldBe LocalDate.of(2010, 9, 1)
             resultat.sivilstandListe[0].periodeTom shouldBe LocalDate.of(2017, 7, 31)
             resultat.sivilstandListe[0].sivilstandskode shouldBe Sivilstandskode.BOR_ALENE_MED_BARN
-
         }
     }
 }
