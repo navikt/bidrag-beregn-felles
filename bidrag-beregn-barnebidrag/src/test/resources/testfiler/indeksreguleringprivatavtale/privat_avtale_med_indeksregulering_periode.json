@@ -1,0 +1,67 @@
+{
+  "periode" : {
+    "fom" : "2024-07",
+    "til" : "2025-06"
+  },
+  "opphørSistePeriode" : true,
+  "stønadstype" : "BIDRAG",
+  "søknadsbarnReferanse" : "person_PERSON_SØKNADSBARN_20140913_358",
+  "grunnlagListe" : [ {
+    "referanse" : "person_PERSON_BIDRAGSMOTTAKER_19740225_356",
+    "type" : "PERSON_BIDRAGSMOTTAKER",
+    "innhold" : {
+      "ident" : "25427446711",
+      "navn" : null,
+      "fødselsdato" : "1974-02-25"
+    },
+    "grunnlagsreferanseListe" : [ ],
+    "gjelderReferanse" : null,
+    "gjelderBarnReferanse" : null
+  }, {
+    "referanse" : "person_PERSON_BIDRAGSPLIKTIG_19791125_357",
+    "type" : "PERSON_BIDRAGSPLIKTIG",
+    "innhold" : {
+      "ident" : "25517932860",
+      "navn" : null,
+      "fødselsdato" : "1979-11-25"
+    },
+    "grunnlagsreferanseListe" : [ ],
+    "gjelderReferanse" : null,
+    "gjelderBarnReferanse" : null
+  }, {
+    "referanse" : "person_PERSON_SØKNADSBARN_20140913_358",
+    "type" : "PERSON_SØKNADSBARN",
+    "innhold" : {
+      "ident" : "13491451224",
+      "navn" : null,
+      "fødselsdato" : "2014-09-13"
+    },
+    "grunnlagsreferanseListe" : [ ],
+    "gjelderReferanse" : null,
+    "gjelderBarnReferanse" : null
+  }, {
+    "referanse" : "PRIVAT_AVTALE_PERIODE_GRUNNLAG_person_PERSON_SØKNADSBARN_20140913_358__20230601",
+    "type" : "PRIVAT_AVTALE_PERIODE_GRUNNLAG",
+    "innhold" : {
+      "periode" : {
+        "fom" : "2023-06",
+        "til" : null
+      },
+      "beløp" : 2000,
+      "manueltRegistrert" : true
+    },
+    "grunnlagsreferanseListe" : [ ],
+    "gjelderReferanse" : "person_PERSON_BIDRAGSPLIKTIG_19791125_357",
+    "gjelderBarnReferanse" : "person_PERSON_SØKNADSBARN_20140913_358"
+  }, {
+    "referanse" : "PRIVAT_AVTALE_GRUNNLAG_person_PERSON_SØKNADSBARN_20140913_358",
+    "type" : "PRIVAT_AVTALE_GRUNNLAG",
+    "innhold" : {
+      "avtaleInngåttDato" : "2023-01-01",
+      "skalIndeksreguleres" : true
+    },
+    "grunnlagsreferanseListe" : [ ],
+    "gjelderReferanse" : "person_PERSON_BIDRAGSPLIKTIG_19791125_357",
+    "gjelderBarnReferanse" : "person_PERSON_SØKNADSBARN_20140913_358"
+  } ]
+}

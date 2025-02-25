@@ -27,9 +27,9 @@ import java.time.YearMonth
 internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
 
     fun delberegningPrivatAvtalePeriode(grunnlag: BeregnGrunnlag): List<GrunnlagDto> {
-        val referanseTilBM = finnReferanseTilRolle(
+        val referanseTilBP = finnReferanseTilRolle(
             grunnlagListe = grunnlag.grunnlagListe,
-            grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
+            grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
         )
 
         val sjablonListe = mapSjablonSjablontallGrunnlag(
@@ -48,7 +48,7 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
                     avtaleInngåttDato = it.innhold.avtaleInngåttDato,
                     skalIndeksreguleres = it.innhold.skalIndeksreguleres,
                 )
-            }.first()
+            }.firstOrNull()
 
         val privatAvtalePeriodeListe = grunnlag.grunnlagListe
             .filtrerOgKonverterBasertPåEgenReferanse<PrivatAvtalePeriodeGrunnlag>(
@@ -63,11 +63,21 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
                 )
             }.sortedBy { it.periode.fom }
 
+        // Kast exception om privatAvtalePeriodeListe er tom
+        if (privatAvtale == null || privatAvtalePeriodeListe.isEmpty()) {
+            throw IllegalArgumentException("Ingen privat avtale eller perioder funnet")
+        }
+
+        val periode = ÅrMånedsperiode(
+            fom = privatAvtalePeriodeListe.first().periode.fom,
+            til = null,
+        )
+
         // Lager liste over bruddperioder
         val beregningsperiodeListe = lagBruddperiodeListe(
             privatAvtale = privatAvtale,
             privatAvtaleListe = privatAvtalePeriodeListe,
-            beregningsperiode = grunnlag.periode,
+            beregningsperiode = periode,
         )
 
         val resultatliste = mutableListOf<GrunnlagDto>()
@@ -79,7 +89,7 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
             val grunnlagBeregning = lagIndeksreguleringBeregningGrunnlag(
                 beregningsperiode = it.periode,
                 periodeSkalIndeksreguleres = it.periodeSkalIndeksreguleres,
-                referanseTilRolle = referanseTilBM,
+                referanseTilRolle = referanseTilBP,
                 søknadsbarnReferanse = grunnlag.søknadsbarnReferanse,
                 privatAvtale = privatAvtale,
                 privatAvtalePeriodeListe = privatAvtalePeriodeListe,
@@ -90,7 +100,7 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
 
             val resultat = beregn(grunnlagBeregning)
 
-            if (privatAvtale.skalIndeksreguleres) {
+            if (it.periodeSkalIndeksreguleres) {
                 beløpFraForrigeDelberegning = resultat.innholdTilObjekt<DelberegningPrivatAvtalePeriode>().beløp
                 referanseForrigeDelberegning = resultat.referanse
             }
