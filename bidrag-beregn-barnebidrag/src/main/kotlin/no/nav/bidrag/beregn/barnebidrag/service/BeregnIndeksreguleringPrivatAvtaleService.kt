@@ -56,11 +56,6 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
                 )
             }.sortedBy { it.periode.fom }
 
-        // Kast exception om privatAvtalePeriodeListe er tom
-        if (privatAvtale == null || privatAvtalePeriodeListe.isEmpty()) {
-            throw IllegalArgumentException("Ingen privat avtale eller perioder funnet")
-        }
-
         val periode = ÅrMånedsperiode(
             fom = privatAvtalePeriodeListe.first().periode.fom,
             til = null,
@@ -72,6 +67,11 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
         ) { it.indeksregulering }
 
         val sjablonIndeksreguleringFaktorListe = mapSjablonSjablontall(sjablonListe)
+
+        // Kast exception om privatAvtalePeriodeListe er tom
+        if (privatAvtale == null || privatAvtalePeriodeListe.isEmpty()) {
+            throw IllegalArgumentException("Ingen privat avtale eller perioder funnet")
+        }
 
         // Lager liste over bruddperioder
         val beregningsperiodeListe = lagBruddperiodeListe(
