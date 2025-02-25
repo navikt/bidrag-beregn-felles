@@ -1,6 +1,7 @@
 {
-  "periode": {
-    "fom": "2021-01"
+  "periode" : {
+    "fom" : "2021-07",
+    "til" : "2025-06"
   },
   "søknadsbarnReferanse": "Person_Søknadsbarn",
   "grunnlagListe": [

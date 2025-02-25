@@ -1,36 +1,21 @@
-package no.nav.bidrag.beregn.barnebidrag.service
+package no.nav.bidrag.indeksregulering.service
 
-import com.fasterxml.jackson.databind.node.POJONode
-import no.nav.bidrag.beregn.barnebidrag.bo.IndeksreguleringPrivatAvtaleGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.mapper.BidragsevneMapper.finnReferanseTilRolle
-import no.nav.bidrag.beregn.barnebidrag.mapper.BidragsevneMapper.mapSjablonSjablontall
-import no.nav.bidrag.beregn.core.bo.SjablonSjablontallBeregningGrunnlag
-import no.nav.bidrag.beregn.core.bo.SjablonSjablontallPeriodeGrunnlag
-import no.nav.bidrag.beregn.core.service.BeregnService
-import no.nav.bidrag.commons.service.sjablon.SjablonProvider
-import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
-import no.nav.bidrag.domene.tid.ÅrMånedsperiode
-import no.nav.bidrag.domene.util.avrundetTilNærmesteTier
-import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningPrivatAvtalePeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
-import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
-import no.nav.bidrag.transport.behandling.felles.grunnlag.PrivatAvtaleGrunnlag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.PrivatAvtalePeriodeGrunnlag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
-import no.nav.bidrag.transport.behandling.felles.grunnlag.innholdTilObjekt
-import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
-import java.math.BigDecimal
 import java.time.LocalDate
-import java.time.YearMonth
 
-internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
+internal class IndeksreguleringService : BeregnService() {
 
     fun delberegningPrivatAvtalePeriode(grunnlag: BeregnGrunnlag): List<GrunnlagDto> {
-        val referanseTilBP = finnReferanseTilRolle(
+        val referanseTilBM = finnReferanseTilRolle(
             grunnlagListe = grunnlag.grunnlagListe,
-            grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
+            grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
         )
+
+        val sjablonListe = mapSjablonSjablontallGrunnlag(
+            periode = grunnlag.periode,
+            sjablonListe = SjablonProvider.hentSjablontall(),
+        ) { it.indeksregulering }
+
+        val sjablonIndeksreguleringFaktorListe = mapSjablonSjablontall(sjablonListe)
 
         val privatAvtale = grunnlag.grunnlagListe
             .filtrerOgKonverterBasertPåEgenReferanse<PrivatAvtaleGrunnlag>(Grunnlagstype.PRIVAT_AVTALE_GRUNNLAG)
@@ -41,7 +26,7 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
                     avtaleInngåttDato = it.innhold.avtaleInngåttDato,
                     skalIndeksreguleres = it.innhold.skalIndeksreguleres,
                 )
-            }.firstOrNull()
+            }.first()
 
         val privatAvtalePeriodeListe = grunnlag.grunnlagListe
             .filtrerOgKonverterBasertPåEgenReferanse<PrivatAvtalePeriodeGrunnlag>(
@@ -56,28 +41,11 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
                 )
             }.sortedBy { it.periode.fom }
 
-        // Kast exception om privatAvtalePeriodeListe er tom
-        if (privatAvtale == null || privatAvtalePeriodeListe.isEmpty()) {
-            throw IllegalArgumentException("Ingen privat avtale eller perioder funnet")
-        }
-
-        val periode = ÅrMånedsperiode(
-            fom = privatAvtalePeriodeListe.first().periode.fom,
-            til = null,
-        )
-
-        val sjablonListe = mapSjablonSjablontallGrunnlag(
-            periode = periode,
-            sjablonListe = SjablonProvider.hentSjablontall(),
-        ) { it.indeksregulering }
-
-        val sjablonIndeksreguleringFaktorListe = mapSjablonSjablontall(sjablonListe)
-
         // Lager liste over bruddperioder
         val beregningsperiodeListe = lagBruddperiodeListe(
             privatAvtale = privatAvtale,
             privatAvtaleListe = privatAvtalePeriodeListe,
-            beregningsperiode = periode,
+            beregningsperiode = grunnlag.periode,
         )
 
         val resultatliste = mutableListOf<GrunnlagDto>()
@@ -89,7 +57,7 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
             val grunnlagBeregning = lagIndeksreguleringBeregningGrunnlag(
                 beregningsperiode = it.periode,
                 periodeSkalIndeksreguleres = it.periodeSkalIndeksreguleres,
-                referanseTilRolle = referanseTilBP,
+                referanseTilRolle = referanseTilBM,
                 søknadsbarnReferanse = grunnlag.søknadsbarnReferanse,
                 privatAvtale = privatAvtale,
                 privatAvtalePeriodeListe = privatAvtalePeriodeListe,
@@ -100,7 +68,7 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
 
             val resultat = beregn(grunnlagBeregning)
 
-            if (it.periodeSkalIndeksreguleres) {
+            if (privatAvtale.skalIndeksreguleres) {
                 beløpFraForrigeDelberegning = resultat.innholdTilObjekt<DelberegningPrivatAvtalePeriode>().beløp
                 referanseForrigeDelberegning = resultat.referanse
             }
