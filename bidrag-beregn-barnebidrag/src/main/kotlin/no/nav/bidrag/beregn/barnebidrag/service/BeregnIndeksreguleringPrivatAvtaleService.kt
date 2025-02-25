@@ -269,7 +269,7 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
                     delberegningResultat,
                 ),
                 gjelderReferanse = grunnlag.referanseTilRolle,
-                gjelderBarnReferanse = grunnlag.referanseTilRolle,
+                gjelderBarnReferanse = grunnlag.søknadsbarnReferanse,
                 grunnlagsreferanseListe = grunnlag.referanseliste,
 
             )
