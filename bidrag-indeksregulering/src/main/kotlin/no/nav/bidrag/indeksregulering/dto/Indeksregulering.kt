@@ -1,4 +1,4 @@
-package no.nav.bidrag.sivilstand.dto
+package no.nav.bidrag.indeksregulering.dto
 
 import no.nav.bidrag.domene.enums.diverse.Kilde
 import no.nav.bidrag.domene.enums.diverse.TypeEndring
@@ -6,8 +6,8 @@ import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import no.nav.bidrag.transport.behandling.grunnlag.response.SivilstandGrunnlagDto
 import java.time.LocalDate
 
-data class SivilstandRequest(
-    val fødselsdatoBM: LocalDate,
+data class IndeksreguleringRequest(
+    val fødselsdatoBM: List<Stønad>,
     // Data som er hentet fra PDL. Disse dataene brukes til å beregne offentlige perioder.
     val innhentedeOffentligeOpplysninger: List<SivilstandGrunnlagDto>,
     // Behandlede sivilstandsopplysninger. Dette vil være resultatperioder fra en tidligere beregning.

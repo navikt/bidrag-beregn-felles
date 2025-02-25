@@ -1,4 +1,4 @@
-package no.nav.bidrag.sivilstand.service
+package no.nav.bidrag.indeksregulering.service
 
 import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import no.nav.bidrag.domene.enums.person.SivilstandskodePDL
