@@ -46,8 +46,8 @@ internal object EndeligBidragBeregning {
 
             // Setter kostnadsberegnet bidrag lik laveste verdi av BP's andel av U, bidragsevne og 25% av inntekt
             bruttoBidragJustertForEvneOg25Prosent = minOf(bpAndelJustert.beløp, bidragsevne, sumInntekt25Prosent)
-            bidragJustertNedTilEvne = (bidragsevne < bpAndelJustert.beløp) && (bidragsevne <= sumInntekt25Prosent)
-            bidragJustertNedTil25ProsentAvInntekt = (sumInntekt25Prosent < bpAndelJustert.beløp) && (sumInntekt25Prosent <= bidragsevne)
+            bidragJustertNedTilEvne = (bidragsevne <= bpAndelJustert.beløp) && (bidragsevne <= sumInntekt25Prosent)
+            bidragJustertNedTil25ProsentAvInntekt = (sumInntekt25Prosent <= bpAndelJustert.beløp) && (sumInntekt25Prosent <= bidragsevne)
             var beregnetBeløp = bruttoBidragJustertForEvneOg25Prosent
 
             // Sjekker om det er begrenset revurdering
@@ -125,9 +125,9 @@ internal object EndeligBidragBeregning {
 
         // Setter kostnadsberegnet bidrag lik laveste verdi av BP's andel av U, bidragsevne og 25% av inntekt
         bruttoBidragJustertForEvneOg25Prosent = minOf((foreløpigBeregnetBeløp + samværsfradrag), bidragsevne, sumInntekt25Prosent)
-        bidragJustertNedTilEvne = (bidragsevne < (foreløpigBeregnetBeløp + samværsfradrag)) && (bidragsevne <= sumInntekt25Prosent)
+        bidragJustertNedTilEvne = (bidragsevne <= (foreløpigBeregnetBeløp + samværsfradrag)) && (bidragsevne <= sumInntekt25Prosent)
         bidragJustertNedTil25ProsentAvInntekt =
-            (sumInntekt25Prosent < (foreløpigBeregnetBeløp + samværsfradrag)) &&
+            (sumInntekt25Prosent <= (foreløpigBeregnetBeløp + samværsfradrag)) &&
             (sumInntekt25Prosent <= bidragsevne)
         foreløpigBeregnetBeløp = bruttoBidragJustertForEvneOg25Prosent
 
