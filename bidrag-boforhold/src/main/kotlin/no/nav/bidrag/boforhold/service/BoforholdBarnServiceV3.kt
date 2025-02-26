@@ -339,7 +339,7 @@ internal class BoforholdBarnServiceV3 {
 
             // Siste forekomst. Hvis periodeTom er satt så dannes det en ny periode som dekker perioden fra periodeTom på forrige forekomst
             // og med åpen periodeTom.
-            if (indeks == liste.size - 1 && liste[indeks].periodeTom != null) {
+            if (indeks == liste.size - 1 && liste[indeks].periodeTom != null && liste[indeks].periodeTom!!.isBefore(LocalDate.now())) {
                 sammenhengendePerioderListe.add(
                     BoforholdResponseV2(
                         gjelderPersonId = liste[indeks].gjelderPersonId,
