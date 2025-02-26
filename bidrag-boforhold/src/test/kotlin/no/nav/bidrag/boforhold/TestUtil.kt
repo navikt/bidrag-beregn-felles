@@ -4838,5 +4838,21 @@ class TestUtil {
                 ),
             ),
         )
+
+        fun testBarnFlytterUtIBeregningsmåned() = BoforholdBarnRequestV3(
+            gjelderPersonId = "98765432109",
+            fødselsdato = LocalDate.of(2014, 5, 13),
+            relasjon = Familierelasjon.BARN,
+            innhentedeOffentligeOpplysninger = listOf(
+                Bostatus(
+                    periodeFom = LocalDate.of(2024, 1, 1),
+                    periodeTom = LocalDate.of(2025, 2, 8),
+                    bostatus = Bostatuskode.MED_FORELDER,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+            ),
+            behandledeBostatusopplysninger = emptyList(),
+            endreBostatus = null,
+        )
     }
 }
