@@ -1,4 +1,4 @@
-package no.nav.bidrag.sivilstand
+package no.nav.bidrag.indeksregulering
 
 import com.fasterxml.jackson.databind.ObjectMapper
 
