@@ -1330,14 +1330,14 @@ internal class BoforholdBarnServiceV3Test {
     fun `Test juster virkningstidspunkt tilbake i tid `() {
         boforholdBarnServiceV3 = BoforholdBarnServiceV3()
         val mottatteBoforhold = TestUtil.justerVirkningstidspunktTilbakeITid()
-        val virkningstidspunkt = LocalDate.of(2025, 5, 1)
+        val virkningstidspunkt = LocalDate.of(2024, 5, 1)
         val resultat = boforholdBarnServiceV3.beregnBoforholdBarn(virkningstidspunkt, TypeBehandling.BIDRAG, listOf(mottatteBoforhold))
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
             resultat.size shouldBe 1
 
-            resultat[0].periodeFom shouldBe LocalDate.of(2025, 5, 1)
+            resultat[0].periodeFom shouldBe LocalDate.of(2024, 5, 1)
             resultat[0].periodeTom shouldBe null
             resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
             resultat[0].kilde shouldBe Kilde.OFFENTLIG
@@ -1376,6 +1376,24 @@ internal class BoforholdBarnServiceV3Test {
     fun `Test barnet flytter ut i beregningsmåned `() {
         boforholdBarnServiceV3 = BoforholdBarnServiceV3()
         val mottatteBoforhold = TestUtil.testBarnFlytterUtIBeregningsmåned()
+        val virkningstidspunkt = LocalDate.of(2025, 2, 1)
+        val resultat = boforholdBarnServiceV3.beregnBoforholdBarn(virkningstidspunkt, TypeBehandling.BIDRAG, listOf(mottatteBoforhold))
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 1
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2025, 2, 1)
+            resultat[0].periodeTom shouldBe null
+            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
+
+    @Test
+    fun `Test at fremtidige perioder filtreres bort `() {
+        boforholdBarnServiceV3 = BoforholdBarnServiceV3()
+        val mottatteBoforhold = TestUtil.filtererBortFremtidigePerioder()
         val virkningstidspunkt = LocalDate.of(2025, 2, 1)
         val resultat = boforholdBarnServiceV3.beregnBoforholdBarn(virkningstidspunkt, TypeBehandling.BIDRAG, listOf(mottatteBoforhold))
 
