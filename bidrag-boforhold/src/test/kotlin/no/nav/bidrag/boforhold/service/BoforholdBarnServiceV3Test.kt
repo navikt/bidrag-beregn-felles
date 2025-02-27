@@ -1384,7 +1384,7 @@ internal class BoforholdBarnServiceV3Test {
             resultat.size shouldBe 1
 
             resultat[0].periodeFom shouldBe LocalDate.of(2025, 2, 1)
-            resultat[0].periodeTom shouldBe LocalDate.of(2025, 2, 28)
+            resultat[0].periodeTom shouldBe null
             resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
             resultat[0].kilde shouldBe Kilde.OFFENTLIG
         }

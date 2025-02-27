@@ -4846,7 +4846,7 @@ class TestUtil {
             innhentedeOffentligeOpplysninger = listOf(
                 Bostatus(
                     periodeFom = LocalDate.of(2024, 1, 1),
-                    periodeTom = LocalDate.of(2025, 2, 8),
+                    periodeTom = LocalDate.now(),
                     bostatus = Bostatuskode.MED_FORELDER,
                     kilde = Kilde.OFFENTLIG,
                 ),

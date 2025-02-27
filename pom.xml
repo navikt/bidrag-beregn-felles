@@ -19,7 +19,7 @@
         <jackson.version>2.18.2</jackson.version>
         <kotest.version>5.9.1</kotest.version>
         <swagger.version>2.2.28</swagger.version>
-        <bidrag-felles.version>2025.02.19.141820</bidrag-felles.version>
+        <bidrag-felles.version>2025.02.25.075650</bidrag-felles.version>
         <ktlint.version>1.5.0</ktlint.version>
         <spring-boot.version>3.4.3</spring-boot.version>
         <kotlin-logging-jvm.version>7.0.4</kotlin-logging-jvm.version>
@@ -53,7 +53,7 @@
         <module>bidrag-beregn-særbidrag</module>
         <module>bidrag-beregn-barnebidrag</module>
         <module>bidrag-vedtak</module>
-<!--        <module>bidrag-indeksregulering</module>-->
+        <module>bidrag-indeksregulering</module>
     </modules>
     <repositories>
         <repository>
