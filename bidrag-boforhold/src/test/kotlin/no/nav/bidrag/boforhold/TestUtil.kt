@@ -4749,11 +4749,11 @@ class TestUtil {
 
         fun justerVirkningstidspunktTilbakeITid() = BoforholdBarnRequestV3(
             gjelderPersonId = "98765432109",
-            fødselsdato = LocalDate.of(2006, 10, 31),
+            fødselsdato = LocalDate.of(2005, 10, 31),
             relasjon = Familierelasjon.BARN,
             innhentedeOffentligeOpplysninger = listOf(
                 Bostatus(
-                    periodeFom = LocalDate.of(2025, 5, 1),
+                    periodeFom = LocalDate.of(2024, 5, 1),
                     periodeTom = null,
                     bostatus = Bostatuskode.REGNES_IKKE_SOM_BARN,
                     kilde = Kilde.OFFENTLIG,
@@ -4761,7 +4761,7 @@ class TestUtil {
             ),
             behandledeBostatusopplysninger = listOf(
                 Bostatus(
-                    periodeFom = LocalDate.of(2025, 7, 1),
+                    periodeFom = LocalDate.of(2024, 7, 1),
                     periodeTom = null,
                     bostatus = Bostatuskode.IKKE_MED_FORELDER,
                     kilde = Kilde.OFFENTLIG,
@@ -4839,19 +4839,35 @@ class TestUtil {
             ),
         )
 
-        fun hullIPerioder() = BoforholdBarnRequestV3(
+        fun testBarnFlytterUtIBeregningsmåned() = BoforholdBarnRequestV3(
+            gjelderPersonId = "98765432109",
+            fødselsdato = LocalDate.of(2014, 5, 13),
+            relasjon = Familierelasjon.BARN,
+            innhentedeOffentligeOpplysninger = listOf(
+                Bostatus(
+                    periodeFom = LocalDate.of(2024, 1, 1),
+                    periodeTom = LocalDate.now(),
+                    bostatus = Bostatuskode.MED_FORELDER,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+            ),
+            behandledeBostatusopplysninger = emptyList(),
+            endreBostatus = null,
+        )
+
+        fun filtererBortFremtidigePerioder() = BoforholdBarnRequestV3(
             gjelderPersonId = "98765432109",
             fødselsdato = LocalDate.of(2020, 3, 1),
             relasjon = Familierelasjon.BARN,
             innhentedeOffentligeOpplysninger = listOf(
                 Bostatus(
-                    periodeFom = LocalDate.of(2025, 2, 1),
-                    periodeTom = LocalDate.of(2025, 9, 1),
+                    periodeFom = LocalDate.now().minusMonths(2),
+                    periodeTom = LocalDate.now().plusYears(1),
                     bostatus = Bostatuskode.MED_FORELDER,
                     kilde = Kilde.OFFENTLIG,
                 ),
                 Bostatus(
-                    periodeFom = LocalDate.of(2025, 12, 1),
+                    periodeFom = LocalDate.now().plusYears(2),
                     periodeTom = null,
                     bostatus = Bostatuskode.MED_FORELDER,
                     kilde = Kilde.OFFENTLIG,
