@@ -88,10 +88,17 @@ internal class BoforholdBarnServiceV3 {
             .filter { (it.periodeTom == null || it.periodeTom.isAfter(startdatoBeregning)) }
             .sortedBy { it.periodeFom }
             .map {
+                // Sjekker om beregnet tildato er etter dagens dato. Hvis ikke er det siste periode og tildato settes til null
+                val periodeTom = if (it.periodeTom == null || it.periodeTom.plusMonths(1)?.withDayOfMonth(1)!!.isAfter(LocalDate.now())
+                ) {
+                    null
+                } else {
+                    it.periodeTom.plusMonths(1)?.withDayOfMonth(1)?.minusDays(1)
+                }
                 BoforholdResponseV2(
                     gjelderPersonId = boforholdRequest.gjelderPersonId,
                     periodeFom = if (it.periodeFom == null) startdatoBeregning else it.periodeFom.withDayOfMonth(1),
-                    periodeTom = it.periodeTom?.plusMonths(1)?.withDayOfMonth(1)?.minusDays(1),
+                    periodeTom = periodeTom,
                     bostatus = it.bostatus ?: Bostatuskode.MED_FORELDER,
                     fødselsdato = boforholdRequest.fødselsdato,
                     kilde = Kilde.OFFENTLIG,

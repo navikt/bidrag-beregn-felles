@@ -7,13 +7,11 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagPeriodeInnhold
 import java.math.BigDecimal
 import java.time.YearMonth
 
-
 data class IndeksreguleringGrunnlag(
     val indeksregulerFra: YearMonth,
     val indeksregulerTil: YearMonth?,
-    val sistePeriodeGrunnlag: SistePeriodeGrunnlag
-) :
-    GrunnlagInnhold
+    val sistePeriodeGrunnlag: SistePeriodeGrunnlag,
+) : GrunnlagInnhold
 
 data class SistePeriodeGrunnlag(
     override val periode: ÅrMånedsperiode,
@@ -29,4 +27,3 @@ data class DelberegningIndeksreguleringPeriode(
     val beløp: BigDecimal,
     val valutakode: String,
 ) : Delberegning
-
