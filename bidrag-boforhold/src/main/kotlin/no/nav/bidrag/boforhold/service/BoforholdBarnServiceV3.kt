@@ -86,6 +86,8 @@ internal class BoforholdBarnServiceV3 {
         // Justerer så offentlige perioder slik at de starter på første dag i måneden og slutter på siste dag i måneden
         val justerteOffentligePerioder = boforholdRequest.innhentedeOffentligeOpplysninger
             .filter { (it.periodeTom == null || it.periodeTom.isAfter(startdatoBeregning)) }
+            // Filterer bort perioder som starter etter dagens dato, skal egentlig ikke finnes slike perioder
+            .filter { (it.periodeFom!!.isBefore(LocalDate.now().plusDays(1))) }
             .sortedBy { it.periodeFom }
             .map {
                 BoforholdResponseV2(

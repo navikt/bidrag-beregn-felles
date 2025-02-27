@@ -1371,4 +1371,22 @@ internal class BoforholdBarnServiceV3Test {
             resultat[2].kilde shouldBe Kilde.OFFENTLIG
         }
     }
+
+    @Test
+    fun `Test hull i perioder `() {
+        boforholdBarnServiceV3 = BoforholdBarnServiceV3()
+        val mottatteBoforhold = TestUtil.hullIPerioder()
+        val virkningstidspunkt = LocalDate.of(2025, 2, 1)
+        val resultat = boforholdBarnServiceV3.beregnBoforholdBarn(virkningstidspunkt, TypeBehandling.BIDRAG, listOf(mottatteBoforhold))
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 1
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2025, 2, 1)
+            resultat[0].periodeTom shouldBe null
+            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
 }

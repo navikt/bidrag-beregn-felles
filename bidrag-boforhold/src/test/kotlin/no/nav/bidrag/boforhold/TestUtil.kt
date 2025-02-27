@@ -4838,5 +4838,27 @@ class TestUtil {
                 ),
             ),
         )
+
+        fun hullIPerioder() = BoforholdBarnRequestV3(
+            gjelderPersonId = "98765432109",
+            fødselsdato = LocalDate.of(2020, 3, 1),
+            relasjon = Familierelasjon.BARN,
+            innhentedeOffentligeOpplysninger = listOf(
+                Bostatus(
+                    periodeFom = LocalDate.of(2025, 2, 1),
+                    periodeTom = LocalDate.of(2025, 9, 1),
+                    bostatus = Bostatuskode.MED_FORELDER,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+                Bostatus(
+                    periodeFom = LocalDate.of(2025, 12, 1),
+                    periodeTom = null,
+                    bostatus = Bostatuskode.MED_FORELDER,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+            ),
+            behandledeBostatusopplysninger = emptyList(),
+            endreBostatus = null,
+        )
     }
 }
