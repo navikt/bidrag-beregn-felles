@@ -84,28 +84,32 @@ internal class BoforholdBarnServiceV3 {
 
         // Filterer først bort alle offentlige perioder som avsluttes før startdatoBeregning
         // Justerer så offentlige perioder slik at de starter på første dag i måneden og slutter på siste dag i måneden
-        val justerteOffentligePerioder = boforholdRequest.innhentedeOffentligeOpplysninger
+        val filterteOffentligePerioder = boforholdRequest.innhentedeOffentligeOpplysninger
             .filter { (it.periodeTom == null || it.periodeTom.isAfter(startdatoBeregning)) }
             // Filterer bort perioder som starter etter dagens dato, skal egentlig ikke finnes slike perioder
             .filter { (it.periodeFom!!.isBefore(LocalDate.now().plusDays(1))) }
             .sortedBy { it.periodeFom }
-            .map {
-                // Sjekker om beregnet tildato er etter dagens dato. Hvis ikke er det siste periode og tildato settes til null
-                val periodeTom = if (it.periodeTom == null || it.periodeTom.plusMonths(1)?.withDayOfMonth(1)!!.isAfter(LocalDate.now())
+
+        val justerteOffentligePerioder = filterteOffentligePerioder.mapIndexed { indeks, bostatus ->
+            // Sjekker om forekomst er siste element i listen
+            val sistePeriode = indeks == filterteOffentligePerioder.size - 1
+            // Sjekker om beregnet tildato er etter dagens dato. Hvis ikke er det siste periode og tildato settes til null
+            val periodeTom =
+                if (bostatus.periodeTom == null || bostatus.periodeTom.plusMonths(1)?.withDayOfMonth(1)!!.isAfter(LocalDate.now()) && sistePeriode
                 ) {
                     null
                 } else {
-                    it.periodeTom.plusMonths(1)?.withDayOfMonth(1)?.minusDays(1)
+                    bostatus.periodeTom.plusMonths(1)?.withDayOfMonth(1)?.minusDays(1)
                 }
-                BoforholdResponseV2(
-                    gjelderPersonId = boforholdRequest.gjelderPersonId,
-                    periodeFom = if (it.periodeFom == null) startdatoBeregning else it.periodeFom.withDayOfMonth(1),
-                    periodeTom = periodeTom,
-                    bostatus = it.bostatus ?: Bostatuskode.MED_FORELDER,
-                    fødselsdato = boforholdRequest.fødselsdato,
-                    kilde = Kilde.OFFENTLIG,
-                )
-            }
+            BoforholdResponseV2(
+                gjelderPersonId = boforholdRequest.gjelderPersonId,
+                periodeFom = if (bostatus.periodeFom == null) startdatoBeregning else bostatus.periodeFom.withDayOfMonth(1),
+                periodeTom = periodeTom,
+                bostatus = bostatus.bostatus ?: Bostatuskode.MED_FORELDER,
+                fødselsdato = boforholdRequest.fødselsdato,
+                kilde = Kilde.OFFENTLIG,
+            )
+        }
 
         // Filterer først bort alle perioder med behandlede opplysninger som avsluttes før startdatoBeregning
         val behandledeOpplysninger = boforholdRequest.behandledeBostatusopplysninger
@@ -331,7 +335,6 @@ internal class BoforholdBarnServiceV3 {
             } else {
                 if (liste[indeks - 1].periodeTom?.plusDays(1)?.isBefore(liste[indeks].periodeFom) == true) {
                     // Det er opphold mellom to perioder og det må lages en periode med bostatus IKKE_MED_FORELDER for oppholdet
-
                     sammenhengendePerioderListe.add(
                         BoforholdResponseV2(
                             gjelderPersonId = liste[indeks].gjelderPersonId,

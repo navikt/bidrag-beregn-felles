@@ -4876,5 +4876,27 @@ class TestUtil {
             behandledeBostatusopplysninger = emptyList(),
             endreBostatus = null,
         )
+
+        fun toSammenhengendePerioderIHusstand() = BoforholdBarnRequestV3(
+            gjelderPersonId = "98765432109",
+            fødselsdato = LocalDate.of(2020, 3, 1),
+            relasjon = Familierelasjon.BARN,
+            innhentedeOffentligeOpplysninger = listOf(
+                Bostatus(
+                    periodeFom = LocalDate.of(2023, 3, 1),
+                    periodeTom = LocalDate.now().minusDays(2),
+                    bostatus = Bostatuskode.MED_FORELDER,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+                Bostatus(
+                    periodeFom = LocalDate.now().minusDays(1),
+                    periodeTom = null,
+                    bostatus = Bostatuskode.MED_FORELDER,
+                    kilde = Kilde.OFFENTLIG,
+                ),
+            ),
+            behandledeBostatusopplysninger = emptyList(),
+            endreBostatus = null,
+        )
     }
 }

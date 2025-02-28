@@ -1407,4 +1407,22 @@ internal class BoforholdBarnServiceV3Test {
             resultat[0].kilde shouldBe Kilde.OFFENTLIG
         }
     }
+
+    @Test
+    fun `Test med to sammenhengende perioder i husstanden der siste periode starter i inneværende måned`() {
+        boforholdBarnServiceV3 = BoforholdBarnServiceV3()
+        val mottatteBoforhold = TestUtil.toSammenhengendePerioderIHusstand()
+        val virkningstidspunkt = LocalDate.of(2023, 5, 1)
+        val resultat = boforholdBarnServiceV3.beregnBoforholdBarn(virkningstidspunkt, TypeBehandling.BIDRAG, listOf(mottatteBoforhold))
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 1
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2023, 5, 1)
+            resultat[0].periodeTom shouldBe null
+            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
 }
