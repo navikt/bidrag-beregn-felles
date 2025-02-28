@@ -329,7 +329,7 @@ internal class BoforholdBarnServiceV3 {
                     sammenhengendePerioderListe.add(liste[indeks].copy(periodeFom = startdatoBeregning))
                 }
             } else {
-                if (liste[indeks - 1].periodeTom!!.plusDays(1).isBefore(liste[indeks].periodeFom)) {
+                if (liste[indeks - 1].periodeTom?.plusDays(1)?.isBefore(liste[indeks].periodeFom) == true) {
                     // Det er opphold mellom to perioder og det må lages en periode med bostatus IKKE_MED_FORELDER for oppholdet
 
                     sammenhengendePerioderListe.add(
