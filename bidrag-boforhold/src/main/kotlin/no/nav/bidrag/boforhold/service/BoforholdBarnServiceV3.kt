@@ -335,7 +335,6 @@ internal class BoforholdBarnServiceV3 {
             } else {
                 if (liste[indeks - 1].periodeTom?.plusDays(1)?.isBefore(liste[indeks].periodeFom) == true) {
                     // Det er opphold mellom to perioder og det må lages en periode med bostatus IKKE_MED_FORELDER for oppholdet
-
                     sammenhengendePerioderListe.add(
                         BoforholdResponseV2(
                             gjelderPersonId = liste[indeks].gjelderPersonId,
