@@ -25,6 +25,8 @@ data class BoforholdBarnRequestV3(
     // Personid til barn/husstandsmedlem
     val gjelderPersonId: String?,
     val fødselsdato: LocalDate,
+    // Angir om den barnet er søknadsbarn. Brukes ved beregning av boforhold for 18-årsbidrag
+    val erSøknadsbarn: Boolean,
     // Angir relasjon mellom gjelderPerson og BM/BP
     val relasjon: Familierelasjon,
     // Periodisert liste med offentlige bostatus-opplysninger hentet fra PDL
