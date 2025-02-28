@@ -58,6 +58,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2000, 2, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -96,6 +97,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeBostatusopplysninger = emptyList(),
@@ -127,6 +129,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2000, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeBostatusopplysninger = emptyList(),
@@ -200,6 +203,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2017, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -288,6 +292,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2017, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -386,6 +391,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2004, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -460,6 +466,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2014, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -510,6 +517,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2004, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -580,6 +588,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 8, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -644,6 +653,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2000, 2, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -727,6 +737,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2000, 2, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -742,6 +753,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2000, 2, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -826,6 +838,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2000, 2, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeBostatusopplysninger = emptyList(),
@@ -843,6 +856,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2000, 2, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeBostatusopplysninger = listOf(
@@ -910,6 +924,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2020, 12, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -1139,6 +1154,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 10, 7),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -1154,6 +1170,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 10, 7),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -1191,6 +1208,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 10, 7),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -1357,6 +1375,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 10, 7),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -1372,6 +1391,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 10, 7),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -1414,6 +1434,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 10, 7),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -1714,6 +1735,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2020, 3, 1),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -1735,6 +1757,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2020, 3, 1),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -1860,6 +1883,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2020, 3, 1),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -1875,6 +1899,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2020, 3, 1),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -1977,6 +2002,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "12345678901",
                 fødselsdato = LocalDate.of(2010, 3, 1),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeBostatusopplysninger = emptyList(),
@@ -1985,6 +2011,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2020, 3, 1),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeBostatusopplysninger = emptyList(),
@@ -2177,6 +2204,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "12345678901",
                 fødselsdato = LocalDate.of(2017, 9, 1),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -2198,6 +2226,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "12345678901",
                 fødselsdato = LocalDate.of(2017, 9, 1),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -2241,6 +2270,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "12345678901",
                 fødselsdato = LocalDate.of(2017, 9, 1),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -2360,6 +2390,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2017, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -2554,6 +2585,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -2572,6 +2604,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -2716,6 +2749,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeBostatusopplysninger = listOf(
@@ -2752,6 +2786,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -2809,6 +2844,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -2922,6 +2958,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeBostatusopplysninger = emptyList(),
@@ -2939,6 +2976,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeBostatusopplysninger = listOf(
@@ -2963,6 +3001,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeBostatusopplysninger = listOf(
@@ -3075,6 +3114,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeBostatusopplysninger = emptyList(),
@@ -3092,6 +3132,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeBostatusopplysninger = listOf(
@@ -3121,6 +3162,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeBostatusopplysninger = listOf(
@@ -3233,6 +3275,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeBostatusopplysninger = emptyList(),
@@ -3250,6 +3293,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeBostatusopplysninger = listOf(
@@ -3279,6 +3323,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeBostatusopplysninger = listOf(
@@ -3434,6 +3479,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -3449,6 +3495,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -3480,6 +3527,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -3522,6 +3570,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -3559,6 +3608,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -3678,6 +3728,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeBostatusopplysninger = emptyList(),
@@ -3695,6 +3746,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeBostatusopplysninger = listOf(
@@ -3719,6 +3771,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = emptyList(),
                 behandledeBostatusopplysninger = listOf(
@@ -3794,6 +3847,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -3874,6 +3928,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2005, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -3942,6 +3997,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -4392,6 +4448,7 @@ class TestUtil {
             BoforholdBarnRequestV3(
                 gjelderPersonId = "98765432109",
                 fødselsdato = LocalDate.of(2015, 3, 17),
+                erSøknadsbarn = true,
                 relasjon = Familierelasjon.BARN,
                 innhentedeOffentligeOpplysninger = listOf(
                     Bostatus(
@@ -4502,6 +4559,7 @@ class TestUtil {
         fun byggEndreFørstePeriodeFremITid() = BoforholdBarnRequestV3(
             gjelderPersonId = "98765432109",
             fødselsdato = LocalDate.of(2020, 3, 1),
+            erSøknadsbarn = true,
             relasjon = Familierelasjon.BARN,
             innhentedeOffentligeOpplysninger = emptyList(),
             behandledeBostatusopplysninger = listOf(
@@ -4550,6 +4608,7 @@ class TestUtil {
         fun byggEndreAndrePeriodeFremITid() = BoforholdBarnRequestV3(
             gjelderPersonId = "98765432109",
             fødselsdato = LocalDate.of(2020, 3, 1),
+            erSøknadsbarn = true,
             relasjon = Familierelasjon.BARN,
             innhentedeOffentligeOpplysninger = emptyList(),
             behandledeBostatusopplysninger = listOf(
@@ -4598,6 +4657,7 @@ class TestUtil {
         fun byggEndreOverFlerePerioderFremITid() = BoforholdBarnRequestV3(
             gjelderPersonId = "98765432109",
             fødselsdato = LocalDate.of(2020, 3, 1),
+            erSøknadsbarn = true,
             relasjon = Familierelasjon.BARN,
             innhentedeOffentligeOpplysninger = emptyList(),
             behandledeBostatusopplysninger = listOf(
@@ -4646,6 +4706,7 @@ class TestUtil {
         fun barnAvslutterPeriodeUtfyllesMedOffentligPeriode() = BoforholdBarnRequestV3(
             gjelderPersonId = "98765432109",
             fødselsdato = LocalDate.of(2015, 10, 7),
+            erSøknadsbarn = true,
             relasjon = Familierelasjon.BARN,
             innhentedeOffentligeOpplysninger = listOf(
                 Bostatus(
@@ -4689,6 +4750,7 @@ class TestUtil {
         fun barnUtvidPeriodeForbiNestePeriode() = BoforholdBarnRequestV3(
             gjelderPersonId = "98765432109",
             fødselsdato = LocalDate.of(2015, 10, 7),
+            erSøknadsbarn = true,
             relasjon = Familierelasjon.BARN,
             innhentedeOffentligeOpplysninger = listOf(
                 Bostatus(
@@ -4750,6 +4812,7 @@ class TestUtil {
         fun justerVirkningstidspunktTilbakeITid() = BoforholdBarnRequestV3(
             gjelderPersonId = "98765432109",
             fødselsdato = LocalDate.of(2005, 10, 31),
+            erSøknadsbarn = true,
             relasjon = Familierelasjon.BARN,
             innhentedeOffentligeOpplysninger = listOf(
                 Bostatus(
@@ -4793,6 +4856,7 @@ class TestUtil {
         fun justerTildatoSistePeriodeTilbakeITid() = BoforholdBarnRequestV3(
             gjelderPersonId = "98765432109",
             fødselsdato = LocalDate.of(2014, 5, 13),
+            erSøknadsbarn = true,
             relasjon = Familierelasjon.BARN,
             innhentedeOffentligeOpplysninger = listOf(
                 Bostatus(
@@ -4842,6 +4906,7 @@ class TestUtil {
         fun testBarnFlytterUtIBeregningsmåned() = BoforholdBarnRequestV3(
             gjelderPersonId = "98765432109",
             fødselsdato = LocalDate.of(2014, 5, 13),
+            erSøknadsbarn = true,
             relasjon = Familierelasjon.BARN,
             innhentedeOffentligeOpplysninger = listOf(
                 Bostatus(
@@ -4858,6 +4923,7 @@ class TestUtil {
         fun filtererBortFremtidigePerioder() = BoforholdBarnRequestV3(
             gjelderPersonId = "98765432109",
             fødselsdato = LocalDate.of(2020, 3, 1),
+            erSøknadsbarn = true,
             relasjon = Familierelasjon.BARN,
             innhentedeOffentligeOpplysninger = listOf(
                 Bostatus(
@@ -4880,6 +4946,7 @@ class TestUtil {
         fun toSammenhengendePerioderIHusstand() = BoforholdBarnRequestV3(
             gjelderPersonId = "98765432109",
             fødselsdato = LocalDate.of(2020, 3, 1),
+            erSøknadsbarn = true,
             relasjon = Familierelasjon.BARN,
             innhentedeOffentligeOpplysninger = listOf(
                 Bostatus(
@@ -4897,6 +4964,43 @@ class TestUtil {
             ),
             behandledeBostatusopplysninger = emptyList(),
             endreBostatus = null,
+        )
+
+        fun beregningPerioder18årsbidragSøknadsbarnOgAnnetBarn() = listOf(
+            BoforholdBarnRequestV3(
+                gjelderPersonId = "1",
+                // 18 år fra 01.04.2024
+                fødselsdato = LocalDate.of(2006, 3, 17),
+                erSøknadsbarn = true,
+                relasjon = Familierelasjon.BARN,
+                innhentedeOffentligeOpplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2022, 12, 1),
+                        periodeTom = LocalDate.of(2024, 7, 31),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                ),
+                behandledeBostatusopplysninger = emptyList(),
+                endreBostatus = null,
+            ),
+            BoforholdBarnRequestV3(
+                gjelderPersonId = "2",
+                // Også 18 år fra 01.04.2024
+                fødselsdato = LocalDate.of(2006, 3, 17),
+                erSøknadsbarn = false,
+                relasjon = Familierelasjon.BARN,
+                innhentedeOffentligeOpplysninger = listOf(
+                    Bostatus(
+                        periodeFom = LocalDate.of(2022, 12, 1),
+                        periodeTom = LocalDate.of(2024, 7, 31),
+                        bostatus = Bostatuskode.MED_FORELDER,
+                        kilde = Kilde.OFFENTLIG,
+                    ),
+                ),
+                behandledeBostatusopplysninger = emptyList(),
+                endreBostatus = null,
+            ),
         )
     }
 }
