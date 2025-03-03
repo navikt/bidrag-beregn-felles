@@ -16,16 +16,27 @@ internal object EndringSjekkGrensePeriodeBeregning {
         val sjablonverdiEndringBidragGrenseProsent = hentSjablonverdi(grunnlag)
         val endringsgrenseFaktor = sjablonverdiEndringBidragGrenseProsent.divide(bigDecimal100, 10, RoundingMode.HALF_UP)
 
-        // Beregner faktisk endring. Hvis det ikke er noe løpende bidrag eller beregnet bidrag er null, settes faktisk endring til null.
-        val faktiskEndringFaktor =
-            if (grunnlag.løpendeBidragBeregningGrunnlag?.beløp != null && grunnlag.beregnetBidragBeregningGrunnlag.beløp != null) {
-                grunnlag.beregnetBidragBeregningGrunnlag.beløp
-                    .divide(grunnlag.løpendeBidragBeregningGrunnlag.beløp, 10, RoundingMode.HALF_UP)
-                    .minus(BigDecimal(1))
-                    .abs()
-            } else {
-                null
-            }
+        var harBruktLøpendeBidrag = false
+        var harBruktPrivatAvtale = false
+        var faktiskEndringFaktor: BigDecimal? = null
+
+        // Beregner faktisk endring faktor. Sjekker først om det finnes løpende bidrag å sammenligne mot. Hvis ikke sjekkes det om det finnes privat
+        // avtale å sammenligne mot. Hvis ingen av delene finnes eller beregnet bidrag er null settes faktisk endring faktor til null.
+        if (grunnlag.beregnetBidragBeregningGrunnlag.beløp != null) {
+           if (grunnlag.løpendeBidragBeregningGrunnlag?.beløp != null) {
+               faktiskEndringFaktor = grunnlag.beregnetBidragBeregningGrunnlag.beløp
+                   .divide(grunnlag.løpendeBidragBeregningGrunnlag.beløp, 10, RoundingMode.HALF_UP)
+                   .minus(BigDecimal(1))
+                   .abs()
+               harBruktLøpendeBidrag = true
+           } else if (grunnlag.privatAvtaleBeregningGrunnlag?.beløp != null) {
+               faktiskEndringFaktor = grunnlag.beregnetBidragBeregningGrunnlag.beløp
+                   .divide(grunnlag.privatAvtaleBeregningGrunnlag.beløp, 10, RoundingMode.HALF_UP)
+                   .minus(BigDecimal(1))
+                   .abs()
+               harBruktPrivatAvtale = true
+           }
+        }
 
         // Sjekker om endring er over grense. true hvis:
         // - faktisk endring > sjablonverdi for endringsgrense (normalcase)
@@ -36,9 +47,12 @@ internal object EndringSjekkGrensePeriodeBeregning {
         return EndringSjekkGrensePeriodeBeregningResultat(
             faktiskEndringFaktor = faktiskEndringFaktor?.avrundetMedTiDesimaler,
             endringErOverGrense = endringErOverGrense,
+            harBruktLøpendeBidrag = harBruktLøpendeBidrag,
+            harBruktPrivatAvtale = harBruktPrivatAvtale,
             grunnlagsreferanseListe = listOfNotNull(
                 grunnlag.beregnetBidragBeregningGrunnlag.referanse,
                 grunnlag.løpendeBidragBeregningGrunnlag?.referanse,
+                grunnlag.privatAvtaleBeregningGrunnlag?.referanse,
             ) +
                 grunnlag.sjablonSjablontallBeregningGrunnlagListe.map { it.referanse },
         )

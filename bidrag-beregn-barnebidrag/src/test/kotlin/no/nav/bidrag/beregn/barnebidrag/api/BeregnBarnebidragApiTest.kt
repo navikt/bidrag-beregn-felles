@@ -8,10 +8,12 @@ import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
+import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndringSjekkGrense
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndringSjekkGrensePeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningPrivatAvtalePeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsfradrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
 import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
@@ -703,7 +705,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
         val alleReferanser = hentAlleReferanser(barnebidragResultatGrunnlagListe)
         val alleRefererteReferanser = hentAlleRefererteReferanser(
             resultatGrunnlagListe = barnebidragResultatGrunnlagListe,
-            barnebidragResultat = barnebidragResultat,
+            barnebidragResultat = barnebidragResultat
         )
 
         // Fjerner referanser som er "frittstående" (refereres ikke av noe objekt)
@@ -727,8 +729,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2020-08"),
-                        null,
-                    ),
+                        null
+                    )
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].resultat.beløp).isNull() },
@@ -766,13 +768,13 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanserFiltrert) },
-            { assertThat(alleRefererteReferanser).containsAll(alleReferanserFiltrert) },
+            { assertThat(alleRefererteReferanser).containsAll(alleReferanserFiltrert) }
         )
     }
 
-    // Sluttperiode settes til måneden etter barnet fyller 18 år
     @Test
     @DisplayName("Barnebidrag - eksempel 6A - ordinært bidrag - kostnadsberegnet hvor barnet blir 18 år i beregningsperioden")
+    // Sluttperiode settes til måneden etter barnet fyller 18 år
     fun testBarnebidrag_Eksempel06A() {
         filnavn = "src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel6A.json"
 
@@ -993,6 +995,1395 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
         utførBeregningerOgEvaluerResultatBarnebidrag()
     }
 
+    @Test
+    @DisplayName("Barnebidrag - eksempel 8A - privat avtale og ingen beløpshistorikk - sjekk mot 12%-regel og endring er over grense")
+    fun testBarnebidrag_Eksempel08A() {
+        filnavn = "src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel8A.json"
+        val request = lesFilOgByggRequest(filnavn)
+
+        val barnebidragResultat = api.beregn(request)
+        val barnebidragResultatGrunnlagListe = barnebidragResultat.grunnlagListe
+        printJson(barnebidragResultat)
+
+        val endeligBidragResultatListe = hentSluttberegning(barnebidragResultatGrunnlagListe)
+
+        val delberegningEndringSjekkGrensePeriodeResultatListe = barnebidragResultatGrunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndringSjekkGrensePeriode>(Grunnlagstype.DELBEREGNING_ENDRING_SJEKK_GRENSE_PERIODE)
+            .map {
+                DelberegningEndringSjekkGrensePeriode(
+                    periode = it.innhold.periode,
+                    faktiskEndringFaktor = it.innhold.faktiskEndringFaktor,
+                    endringErOverGrense = it.innhold.endringErOverGrense,
+                )
+            }
+
+        val delberegningEndringSjekkGrenseResultatListe = barnebidragResultatGrunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndringSjekkGrense>(Grunnlagstype.DELBEREGNING_ENDRING_SJEKK_GRENSE)
+            .map {
+                DelberegningEndringSjekkGrense(
+                    periode = it.innhold.periode,
+                    endringErOverGrense = it.innhold.endringErOverGrense,
+                )
+            }
+
+        val delberegningPrivatAvtalePeriodeResultatListe = barnebidragResultatGrunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningPrivatAvtalePeriode>(Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE_PERIODE)
+            .map {
+                DelberegningPrivatAvtalePeriode(
+                    periode = it.innhold.periode,
+                    indeksreguleringFaktor = it.innhold.indeksreguleringFaktor,
+                    beløp = it.innhold.beløp,
+                )
+            }
+
+        val beløpshistorikkGrunnlag = barnebidragResultatGrunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(Grunnlagstype.BELØPSHISTORIKK_BIDRAG)
+            .map {
+                BeløpshistorikkGrunnlag(
+                    tidspunktInnhentet = it.innhold.tidspunktInnhentet,
+                    førsteIndeksreguleringsår = it.innhold.førsteIndeksreguleringsår,
+                    beløpshistorikk = it.innhold.beløpshistorikk,
+                )
+            }
+
+        val beløpshistorikkPeriodeGrunnlagListe = beløpshistorikkGrunnlag.flatMap { it.beløpshistorikk }
+
+        val alleReferanser = hentAlleReferanser(barnebidragResultatGrunnlagListe)
+        val alleRefererteReferanser = hentAlleRefererteReferanser(
+            resultatGrunnlagListe = barnebidragResultatGrunnlagListe,
+            barnebidragResultat = barnebidragResultat
+        )
+
+        // Fjerner referanser som er "frittstående" (refereres ikke av noe objekt)
+        val alleReferanserFiltrert = alleReferanser
+            .filterNot { it.contains("delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_Person") }
+            .filterNot { it.contains("delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_person") }
+            .filterNot { it.contains("delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_PERSON") }
+
+        // Fjerner referanser som ikke er med i inputen til beregning
+        val alleRefererteReferanserFiltrert = alleRefererteReferanser
+            .filterNot { it.contains("innhentet_husstandsmedlem") }
+            .filterNot { it.contains("Privat_Avtale_Grunnlag") }
+            .filterNot { it.contains("Privat_Avtale_Periode_Grunnlag") }
+
+        assertAll(
+            { assertThat(barnebidragResultat).isNotNull },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe).isNotNull },
+            { assertThat(barnebidragResultatGrunnlagListe).isNotNull },
+
+            // Resultat
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe).hasSize(2) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2024-08"),
+                        YearMonth.parse("2025-01")
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].resultat.beløp).isEqualTo(BigDecimal.valueOf(4850)) },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].grunnlagsreferanseListe).contains("sluttberegning_Person_Søknadsbarn_202408_202501") },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].grunnlagsreferanseListe).contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202408") },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2025-01"),
+                        null
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].resultat.beløp).isEqualTo(BigDecimal.valueOf(4850)) },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].grunnlagsreferanseListe).contains("sluttberegning_Person_Søknadsbarn_202501") },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].grunnlagsreferanseListe).contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202408") },
+
+            // Endelig bidrag
+            { assertThat(endeligBidragResultatListe).hasSize(2) },
+            { assertThat(endeligBidragResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), YearMonth.parse("2025-01"))) },
+            { assertThat(endeligBidragResultatListe[0].resultatBeløp).isEqualTo(BigDecimal.valueOf(4850)) },
+            { assertThat(endeligBidragResultatListe[1].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2025-01"), null)) },
+            { assertThat(endeligBidragResultatListe[1].resultatBeløp).isEqualTo(BigDecimal.valueOf(4850)) },
+
+            // Endring sjekk grense
+            { assertThat(delberegningEndringSjekkGrenseResultatListe).hasSize(1) },
+            { assertThat(delberegningEndringSjekkGrenseResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null)) },
+            { assertThat(delberegningEndringSjekkGrenseResultatListe[0].endringErOverGrense).isTrue() },
+
+            // Endring sjekk grense periode
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe).hasSize(2) },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[0].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2024-08"),
+                        YearMonth.parse("2025-01")
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[0].endringErOverGrense).isTrue() },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[1].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2025-01"),
+                        null
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[1].endringErOverGrense).isTrue() },
+
+            // Privat avtale periode
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe).hasSize(1) },
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null)) },
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe[0].beløp).isEqualTo(BigDecimal.valueOf(500)) },
+
+            // Beløpshistorikk
+            { assertThat(beløpshistorikkPeriodeGrunnlagListe).hasSize(0) },
+
+            // Referanser
+            { assertThat(alleReferanser).containsAll(alleRefererteReferanserFiltrert) },
+            { assertThat(alleRefererteReferanser).containsAll(alleReferanserFiltrert) }
+        )
+    }
+
+    @Test
+    @DisplayName("Barnebidrag - eksempel 8B - privat avtale og ingen beløpshistorikk - sjekk mot 12%-regel og endring er under grense")
+    fun testBarnebidrag_Eksempel08B() {
+        filnavn = "src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel8B.json"
+        val request = lesFilOgByggRequest(filnavn)
+
+        val barnebidragResultat = api.beregn(request)
+        val barnebidragResultatGrunnlagListe = barnebidragResultat.grunnlagListe
+        printJson(barnebidragResultat)
+
+        val endeligBidragResultatListe = hentSluttberegning(barnebidragResultatGrunnlagListe)
+
+        val delberegningEndringSjekkGrensePeriodeResultatListe = barnebidragResultatGrunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndringSjekkGrensePeriode>(Grunnlagstype.DELBEREGNING_ENDRING_SJEKK_GRENSE_PERIODE)
+            .map {
+                DelberegningEndringSjekkGrensePeriode(
+                    periode = it.innhold.periode,
+                    faktiskEndringFaktor = it.innhold.faktiskEndringFaktor,
+                    endringErOverGrense = it.innhold.endringErOverGrense,
+                )
+            }
+
+        val delberegningEndringSjekkGrenseResultatListe = barnebidragResultatGrunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndringSjekkGrense>(Grunnlagstype.DELBEREGNING_ENDRING_SJEKK_GRENSE)
+            .map {
+                DelberegningEndringSjekkGrense(
+                    periode = it.innhold.periode,
+                    endringErOverGrense = it.innhold.endringErOverGrense,
+                )
+            }
+
+        val delberegningPrivatAvtalePeriodeResultatListe = barnebidragResultatGrunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningPrivatAvtalePeriode>(Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE_PERIODE)
+            .map {
+                DelberegningPrivatAvtalePeriode(
+                    periode = it.innhold.periode,
+                    indeksreguleringFaktor = it.innhold.indeksreguleringFaktor,
+                    beløp = it.innhold.beløp,
+                )
+            }
+
+        val beløpshistorikkGrunnlag = barnebidragResultatGrunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(Grunnlagstype.BELØPSHISTORIKK_BIDRAG)
+            .map {
+                BeløpshistorikkGrunnlag(
+                    tidspunktInnhentet = it.innhold.tidspunktInnhentet,
+                    førsteIndeksreguleringsår = it.innhold.førsteIndeksreguleringsår,
+                    beløpshistorikk = it.innhold.beløpshistorikk,
+                )
+            }
+
+        val beløpshistorikkPeriodeGrunnlagListe = beløpshistorikkGrunnlag.flatMap { it.beløpshistorikk }
+
+        val alleReferanser = hentAlleReferanser(barnebidragResultatGrunnlagListe)
+        val alleRefererteReferanser = hentAlleRefererteReferanser(
+            resultatGrunnlagListe = barnebidragResultatGrunnlagListe,
+            barnebidragResultat = barnebidragResultat
+        )
+
+        // Fjerner referanser som er "frittstående" (refereres ikke av noe objekt)
+        val alleReferanserFiltrert = alleReferanser
+            .filterNot { it.contains("delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_Person") }
+            .filterNot { it.contains("delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_person") }
+            .filterNot { it.contains("delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_PERSON") }
+
+        // Fjerner referanser som ikke er med i inputen til beregning
+        val alleRefererteReferanserFiltrert = alleRefererteReferanser
+            .filterNot { it.contains("innhentet_husstandsmedlem") }
+            .filterNot { it.contains("Privat_Avtale_Grunnlag") }
+            .filterNot { it.contains("Privat_Avtale_Periode_Grunnlag") }
+
+        assertAll(
+            { assertThat(barnebidragResultat).isNotNull },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe).isNotNull },
+            { assertThat(barnebidragResultatGrunnlagListe).isNotNull },
+
+            // Resultat
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe).hasSize(2) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2024-08"),
+                        YearMonth.parse("2025-01")
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].resultat.beløp).isEqualTo(BigDecimal.valueOf(4800)) },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].grunnlagsreferanseListe).contains("sluttberegning_Person_Søknadsbarn_202408_202501") },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].grunnlagsreferanseListe).contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202408") },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2025-01"),
+                        null
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].resultat.beløp).isEqualTo(BigDecimal.valueOf(4800)) },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].grunnlagsreferanseListe).contains("sluttberegning_Person_Søknadsbarn_202501") },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].grunnlagsreferanseListe).contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202408") },
+
+            // Endelig bidrag
+            { assertThat(endeligBidragResultatListe).hasSize(2) },
+            { assertThat(endeligBidragResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), YearMonth.parse("2025-01"))) },
+            { assertThat(endeligBidragResultatListe[0].resultatBeløp).isEqualTo(BigDecimal.valueOf(4850)) },
+            { assertThat(endeligBidragResultatListe[1].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2025-01"), null)) },
+            { assertThat(endeligBidragResultatListe[1].resultatBeløp).isEqualTo(BigDecimal.valueOf(4850)) },
+
+            // Endring sjekk grense
+            { assertThat(delberegningEndringSjekkGrenseResultatListe).hasSize(1) },
+            { assertThat(delberegningEndringSjekkGrenseResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null)) },
+            { assertThat(delberegningEndringSjekkGrenseResultatListe[0].endringErOverGrense).isFalse() },
+
+            // Endring sjekk grense periode
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe).hasSize(2) },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[0].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2024-08"),
+                        YearMonth.parse("2025-01")
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[0].endringErOverGrense).isFalse() },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[1].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2025-01"),
+                        null
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[1].endringErOverGrense).isFalse() },
+
+            // Privat avtale periode
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe).hasSize(1) },
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null)) },
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe[0].beløp).isEqualTo(BigDecimal.valueOf(4800)) },
+
+            // Beløpshistorikk
+            { assertThat(beløpshistorikkPeriodeGrunnlagListe).hasSize(0) },
+
+            // Referanser
+            { assertThat(alleReferanser).containsAll(alleRefererteReferanserFiltrert) },
+            { assertThat(alleRefererteReferanser).containsAll(alleReferanserFiltrert) }
+        )
+    }
+
+    @Test
+    @DisplayName("Barnebidrag - eksempel 8C - privat avtale og beløpshistorikk deler av perioden - sjekk mot 12%-regel og endring er under grense")
+    fun testBarnebidrag_Eksempel08C() {
+        filnavn = "src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel8C.json"
+        val request = lesFilOgByggRequest(filnavn)
+
+        val barnebidragResultat = api.beregn(request)
+        val barnebidragResultatGrunnlagListe = barnebidragResultat.grunnlagListe
+        printJson(barnebidragResultat)
+
+        val endeligBidragResultatListe = hentSluttberegning(barnebidragResultatGrunnlagListe)
+
+        val delberegningEndringSjekkGrensePeriodeResultatListe = barnebidragResultatGrunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndringSjekkGrensePeriode>(Grunnlagstype.DELBEREGNING_ENDRING_SJEKK_GRENSE_PERIODE)
+            .map {
+                DelberegningEndringSjekkGrensePeriode(
+                    periode = it.innhold.periode,
+                    faktiskEndringFaktor = it.innhold.faktiskEndringFaktor,
+                    endringErOverGrense = it.innhold.endringErOverGrense,
+                )
+            }
+
+        val delberegningEndringSjekkGrenseResultatListe = barnebidragResultatGrunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndringSjekkGrense>(Grunnlagstype.DELBEREGNING_ENDRING_SJEKK_GRENSE)
+            .map {
+                DelberegningEndringSjekkGrense(
+                    periode = it.innhold.periode,
+                    endringErOverGrense = it.innhold.endringErOverGrense,
+                )
+            }
+
+        val delberegningPrivatAvtalePeriodeResultatListe = barnebidragResultatGrunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningPrivatAvtalePeriode>(Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE_PERIODE)
+            .map {
+                DelberegningPrivatAvtalePeriode(
+                    periode = it.innhold.periode,
+                    indeksreguleringFaktor = it.innhold.indeksreguleringFaktor,
+                    beløp = it.innhold.beløp,
+                )
+            }
+
+        val beløpshistorikkGrunnlag = barnebidragResultatGrunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(Grunnlagstype.BELØPSHISTORIKK_BIDRAG)
+            .map {
+                BeløpshistorikkGrunnlag(
+                    tidspunktInnhentet = it.innhold.tidspunktInnhentet,
+                    førsteIndeksreguleringsår = it.innhold.førsteIndeksreguleringsår,
+                    beløpshistorikk = it.innhold.beløpshistorikk,
+                )
+            }
+
+        val beløpshistorikkPeriodeGrunnlagListe = beløpshistorikkGrunnlag.flatMap { it.beløpshistorikk }
+
+        val alleReferanser = hentAlleReferanser(barnebidragResultatGrunnlagListe)
+        val alleRefererteReferanser = hentAlleRefererteReferanser(
+            resultatGrunnlagListe = barnebidragResultatGrunnlagListe,
+            barnebidragResultat = barnebidragResultat
+        )
+
+        // Fjerner referanser som er "frittstående" (refereres ikke av noe objekt)
+        val alleReferanserFiltrert = alleReferanser
+            .filterNot { it.contains("delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_Person") }
+            .filterNot { it.contains("delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_person") }
+            .filterNot { it.contains("delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_PERSON") }
+
+        // Fjerner referanser som ikke er med i inputen til beregning
+        val alleRefererteReferanserFiltrert = alleRefererteReferanser
+            .filterNot { it.contains("innhentet_husstandsmedlem") }
+            .filterNot { it.contains("Privat_Avtale_Grunnlag") }
+            .filterNot { it.contains("Privat_Avtale_Periode_Grunnlag") }
+
+        assertAll(
+            { assertThat(barnebidragResultat).isNotNull },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe).isNotNull },
+            { assertThat(barnebidragResultatGrunnlagListe).isNotNull },
+
+            // Resultat
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe).hasSize(2) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2024-08"),
+                        YearMonth.parse("2025-01")
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].resultat.beløp).isEqualTo(BigDecimal.valueOf(4900)) },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].grunnlagsreferanseListe).contains("sluttberegning_Person_Søknadsbarn_202408_202501") },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].grunnlagsreferanseListe).contains("Mottatt_BeløpshistorikkBidrag_202408") },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2025-01"),
+                        null
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].resultat.beløp).isEqualTo(BigDecimal.valueOf(4800)) },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].grunnlagsreferanseListe).contains("sluttberegning_Person_Søknadsbarn_202501") },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].grunnlagsreferanseListe).contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202408") },
+
+            // Endelig bidrag
+            { assertThat(endeligBidragResultatListe).hasSize(2) },
+            { assertThat(endeligBidragResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), YearMonth.parse("2025-01"))) },
+            { assertThat(endeligBidragResultatListe[0].resultatBeløp).isEqualTo(BigDecimal.valueOf(4850)) },
+            { assertThat(endeligBidragResultatListe[1].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2025-01"), null)) },
+            { assertThat(endeligBidragResultatListe[1].resultatBeløp).isEqualTo(BigDecimal.valueOf(4850)) },
+
+            // Endring sjekk grense
+            { assertThat(delberegningEndringSjekkGrenseResultatListe).hasSize(1) },
+            { assertThat(delberegningEndringSjekkGrenseResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null)) },
+            { assertThat(delberegningEndringSjekkGrenseResultatListe[0].endringErOverGrense).isFalse() },
+
+            // Endring sjekk grense periode
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe).hasSize(2) },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[0].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2024-08"),
+                        YearMonth.parse("2025-01")
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[0].endringErOverGrense).isFalse() },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[1].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2025-01"),
+                        null
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[1].endringErOverGrense).isFalse() },
+
+            // Privat avtale periode
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe).hasSize(1) },
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null)) },
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe[0].beløp).isEqualTo(BigDecimal.valueOf(4800)) },
+
+            // Beløpshistorikk
+            { assertThat(beløpshistorikkPeriodeGrunnlagListe).hasSize(1) },
+            {
+                assertThat(beløpshistorikkPeriodeGrunnlagListe[0].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2024-08"),
+                        YearMonth.parse("2025-01")
+                    )
+                )
+            },
+            { assertThat(beløpshistorikkPeriodeGrunnlagListe[0].beløp).isEqualTo(BigDecimal.valueOf(4900)) },
+
+            // Referanser
+            { assertThat(alleReferanser).containsAll(alleRefererteReferanserFiltrert) },
+            { assertThat(alleRefererteReferanser).containsAll(alleReferanserFiltrert) }
+        )
+    }
+
+    @Test
+    @DisplayName("Barnebidrag - eksempel 8D - privat avtale og beløpshistorikk flere perioder - sjekk mot 12%-regel og endring er over grense")
+    fun testBarnebidrag_Eksempel08D() {
+        filnavn = "src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel8D.json"
+        val request = lesFilOgByggRequest(filnavn)
+
+        val barnebidragResultat = api.beregn(request)
+        val barnebidragResultatGrunnlagListe = barnebidragResultat.grunnlagListe
+        printJson(barnebidragResultat)
+
+        val endeligBidragResultatListe = hentSluttberegning(barnebidragResultatGrunnlagListe)
+
+        val delberegningEndringSjekkGrensePeriodeResultatListe = barnebidragResultatGrunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndringSjekkGrensePeriode>(Grunnlagstype.DELBEREGNING_ENDRING_SJEKK_GRENSE_PERIODE)
+            .map {
+                DelberegningEndringSjekkGrensePeriode(
+                    periode = it.innhold.periode,
+                    faktiskEndringFaktor = it.innhold.faktiskEndringFaktor,
+                    endringErOverGrense = it.innhold.endringErOverGrense,
+                )
+            }
+
+        val delberegningEndringSjekkGrenseResultatListe = barnebidragResultatGrunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndringSjekkGrense>(Grunnlagstype.DELBEREGNING_ENDRING_SJEKK_GRENSE)
+            .map {
+                DelberegningEndringSjekkGrense(
+                    periode = it.innhold.periode,
+                    endringErOverGrense = it.innhold.endringErOverGrense,
+                )
+            }
+
+        val delberegningPrivatAvtalePeriodeResultatListe = barnebidragResultatGrunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningPrivatAvtalePeriode>(Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE_PERIODE)
+            .map {
+                DelberegningPrivatAvtalePeriode(
+                    periode = it.innhold.periode,
+                    indeksreguleringFaktor = it.innhold.indeksreguleringFaktor,
+                    beløp = it.innhold.beløp,
+                )
+            }
+
+        val beløpshistorikkGrunnlag = barnebidragResultatGrunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(Grunnlagstype.BELØPSHISTORIKK_BIDRAG)
+            .map {
+                BeløpshistorikkGrunnlag(
+                    tidspunktInnhentet = it.innhold.tidspunktInnhentet,
+                    førsteIndeksreguleringsår = it.innhold.førsteIndeksreguleringsår,
+                    beløpshistorikk = it.innhold.beløpshistorikk,
+                )
+            }
+
+        val beløpshistorikkPeriodeGrunnlagListe = beløpshistorikkGrunnlag.flatMap { it.beløpshistorikk }
+
+        val alleReferanser = hentAlleReferanser(barnebidragResultatGrunnlagListe)
+        val alleRefererteReferanser = hentAlleRefererteReferanser(
+            resultatGrunnlagListe = barnebidragResultatGrunnlagListe,
+            barnebidragResultat = barnebidragResultat
+        )
+
+        // Fjerner referanser som er "frittstående" (refereres ikke av noe objekt)
+        val alleReferanserFiltrert = alleReferanser
+            .filterNot { it.contains("delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_Person") }
+            .filterNot { it.contains("delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_person") }
+            .filterNot { it.contains("delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_PERSON") }
+
+        // Fjerner referanser som ikke er med i inputen til beregning
+        val alleRefererteReferanserFiltrert = alleRefererteReferanser
+            .filterNot { it.contains("innhentet_husstandsmedlem") }
+
+        assertAll(
+            { assertThat(barnebidragResultat).isNotNull },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe).isNotNull },
+            { assertThat(barnebidragResultatGrunnlagListe).isNotNull },
+
+            // Resultat
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe).hasSize(11) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2021-01"),
+                        YearMonth.parse("2021-07")
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].resultat.beløp).isEqualTo(BigDecimal.valueOf(3490)) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].grunnlagsreferanseListe)
+                    .contains("sluttberegning_Person_Søknadsbarn_202101_202107")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].grunnlagsreferanseListe)
+                    .contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202101_202207")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2021-07"),
+                        YearMonth.parse("2022-01")
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].resultat.beløp).isEqualTo(BigDecimal.valueOf(4310)) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].grunnlagsreferanseListe)
+                    .contains("sluttberegning_Person_Søknadsbarn_202107_202201")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].grunnlagsreferanseListe)
+                    .contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202101_202207")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[2].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2022-01"),
+                        YearMonth.parse("2022-07")
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[2].resultat.beløp).isEqualTo(BigDecimal.valueOf(4310)) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[2].grunnlagsreferanseListe)
+                    .contains("sluttberegning_Person_Søknadsbarn_202201_202207")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[2].grunnlagsreferanseListe)
+                    .contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202101_202207")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[3].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2022-07"),
+                        YearMonth.parse("2022-10")
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[3].resultat.beløp).isEqualTo(BigDecimal.valueOf(4440)) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[3].grunnlagsreferanseListe)
+                    .contains("sluttberegning_Person_Søknadsbarn_202207_202301")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[3].grunnlagsreferanseListe)
+                    .contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202207_202307")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[4].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2022-10"),
+                        YearMonth.parse("2023-01")
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[4].resultat.beløp).isEqualTo(BigDecimal.valueOf(4440)) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[4].grunnlagsreferanseListe)
+                    .contains("sluttberegning_Person_Søknadsbarn_202207_202301")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[4].grunnlagsreferanseListe)
+                    .contains("Mottatt_BeløpshistorikkBidrag_202101")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[5].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2023-01"),
+                        YearMonth.parse("2023-04")
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[5].resultat.beløp).isEqualTo(BigDecimal.valueOf(4440)) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[5].grunnlagsreferanseListe)
+                    .contains("sluttberegning_Person_Søknadsbarn_202301_202307")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[5].grunnlagsreferanseListe)
+                    .contains("Mottatt_BeløpshistorikkBidrag_202101")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[6].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2023-04"),
+                        YearMonth.parse("2023-07")
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[6].resultat.beløp).isEqualTo(BigDecimal.valueOf(4440)) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[6].grunnlagsreferanseListe)
+                    .contains("sluttberegning_Person_Søknadsbarn_202301_202307")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[6].grunnlagsreferanseListe)
+                    .contains("Mottatt_BeløpshistorikkBidrag_202101")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[7].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2023-07"),
+                        YearMonth.parse("2024-01")
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[7].resultat.beløp).isEqualTo(BigDecimal.valueOf(4730)) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[7].grunnlagsreferanseListe)
+                    .contains("sluttberegning_Person_Søknadsbarn_202307_202401")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[7].grunnlagsreferanseListe)
+                    .contains("Mottatt_BeløpshistorikkBidrag_202101")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[8].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2024-01"),
+                        YearMonth.parse("2024-07")
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[8].resultat.beløp).isEqualTo(BigDecimal.valueOf(4730)) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[8].grunnlagsreferanseListe)
+                    .contains("sluttberegning_Person_Søknadsbarn_202401_202407")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[8].grunnlagsreferanseListe)
+                    .contains("Mottatt_BeløpshistorikkBidrag_202101")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[9].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2024-07"),
+                        YearMonth.parse("2025-01")
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[9].resultat.beløp).isEqualTo(BigDecimal.valueOf(4850)) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[9].grunnlagsreferanseListe)
+                    .contains("sluttberegning_Person_Søknadsbarn_202407_202501")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[9].grunnlagsreferanseListe)
+                    .contains("Mottatt_BeløpshistorikkBidrag_202101")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[10].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2025-01"),
+                        null
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[10].resultat.beløp).isEqualTo(BigDecimal.valueOf(4850)) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[10].grunnlagsreferanseListe)
+                    .contains("sluttberegning_Person_Søknadsbarn_202501")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[10].grunnlagsreferanseListe)
+                    .contains("Mottatt_BeløpshistorikkBidrag_202101")
+            },
+
+            // Endelig bidrag
+            { assertThat(endeligBidragResultatListe).hasSize(9) },
+            { assertThat(endeligBidragResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2021-01"), YearMonth.parse("2021-07"))) },
+            { assertThat(endeligBidragResultatListe[0].resultatBeløp).isEqualTo(BigDecimal.valueOf(3490)) },
+            { assertThat(endeligBidragResultatListe[1].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2021-07"), YearMonth.parse("2022-01"))) },
+            { assertThat(endeligBidragResultatListe[1].resultatBeløp).isEqualTo(BigDecimal.valueOf(4310)) },
+            { assertThat(endeligBidragResultatListe[2].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2022-01"), YearMonth.parse("2022-07"))) },
+            { assertThat(endeligBidragResultatListe[2].resultatBeløp).isEqualTo(BigDecimal.valueOf(4310)) },
+            { assertThat(endeligBidragResultatListe[3].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2022-07"), YearMonth.parse("2023-01"))) },
+            { assertThat(endeligBidragResultatListe[3].resultatBeløp).isEqualTo(BigDecimal.valueOf(4440)) },
+            { assertThat(endeligBidragResultatListe[4].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2023-01"), YearMonth.parse("2023-07"))) },
+            { assertThat(endeligBidragResultatListe[4].resultatBeløp).isEqualTo(BigDecimal.valueOf(4440)) },
+            { assertThat(endeligBidragResultatListe[5].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2023-07"), YearMonth.parse("2024-01"))) },
+            { assertThat(endeligBidragResultatListe[5].resultatBeløp).isEqualTo(BigDecimal.valueOf(4730)) },
+            { assertThat(endeligBidragResultatListe[6].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-01"), YearMonth.parse("2024-07"))) },
+            { assertThat(endeligBidragResultatListe[6].resultatBeløp).isEqualTo(BigDecimal.valueOf(4730)) },
+            { assertThat(endeligBidragResultatListe[7].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), YearMonth.parse("2025-01"))) },
+            { assertThat(endeligBidragResultatListe[7].resultatBeløp).isEqualTo(BigDecimal.valueOf(4850)) },
+            { assertThat(endeligBidragResultatListe[8].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2025-01"), null)) },
+            { assertThat(endeligBidragResultatListe[8].resultatBeløp).isEqualTo(BigDecimal.valueOf(4850)) },
+
+            // Endring sjekk grense
+            { assertThat(delberegningEndringSjekkGrenseResultatListe).hasSize(1) },
+            { assertThat(delberegningEndringSjekkGrenseResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2021-01"), null)) },
+            { assertThat(delberegningEndringSjekkGrenseResultatListe[0].endringErOverGrense).isTrue() },
+
+            // Endring sjekk grense periode
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe).hasSize(11) },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[0].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2021-01"),
+                        YearMonth.parse("2021-07")
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[0].endringErOverGrense).isFalse() },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[1].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2021-07"),
+                        YearMonth.parse("2022-01")
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[1].endringErOverGrense).isTrue() },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[2].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2022-01"),
+                        YearMonth.parse("2022-07")
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[2].endringErOverGrense).isTrue() },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[3].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2022-07"),
+                        YearMonth.parse("2022-10")
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[3].endringErOverGrense).isTrue() },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[4].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2022-10"),
+                        YearMonth.parse("2023-01")
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[4].endringErOverGrense).isFalse() },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[5].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2023-01"),
+                        YearMonth.parse("2023-04")
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[5].endringErOverGrense).isFalse() },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[6].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2023-04"),
+                        YearMonth.parse("2023-07")
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[6].endringErOverGrense).isFalse() },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[7].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2023-07"),
+                        YearMonth.parse("2024-01")
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[7].endringErOverGrense).isFalse() },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[8].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2024-01"),
+                        YearMonth.parse("2024-07")
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[8].endringErOverGrense).isFalse() },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[9].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2024-07"),
+                        YearMonth.parse("2025-01")
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[9].endringErOverGrense).isFalse() },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[10].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2025-01"),
+                        null
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[10].endringErOverGrense).isFalse() },
+
+            // Privat avtale periode
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe).hasSize(4) },
+            {
+                assertThat(delberegningPrivatAvtalePeriodeResultatListe[0].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2021-01"),
+                        YearMonth.parse("2022-07")
+                    )
+                )
+            },
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe[0].beløp).isEqualTo(BigDecimal.valueOf(3500)) },
+            {
+                assertThat(delberegningPrivatAvtalePeriodeResultatListe[1].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2022-07"),
+                        YearMonth.parse("2023-07")
+                    )
+                )
+            },
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe[1].beløp).isEqualTo(BigDecimal.valueOf(3610)) },
+            {
+                assertThat(delberegningPrivatAvtalePeriodeResultatListe[2].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2023-07"),
+                        YearMonth.parse("2024-07")
+                    )
+                )
+            },
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe[2].beløp).isEqualTo(BigDecimal.valueOf(3860)) },
+            {
+                assertThat(delberegningPrivatAvtalePeriodeResultatListe[3].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2024-07"),
+                        null
+                    )
+                )
+            },
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe[3].beløp).isEqualTo(BigDecimal.valueOf(4040)) },
+
+            // Beløpshistorikk
+            { assertThat(beløpshistorikkPeriodeGrunnlagListe).hasSize(3) },
+            {
+                assertThat(beløpshistorikkPeriodeGrunnlagListe[0].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2022-10"),
+                        YearMonth.parse("2023-04")
+                    )
+                )
+            },
+            { assertThat(beløpshistorikkPeriodeGrunnlagListe[0].beløp).isEqualTo(BigDecimal.valueOf(4400)) },
+            {
+                assertThat(beløpshistorikkPeriodeGrunnlagListe[1].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2023-04"),
+                        YearMonth.parse("2024-07")
+                    )
+                )
+            },
+            { assertThat(beløpshistorikkPeriodeGrunnlagListe[1].beløp).isEqualTo(BigDecimal.valueOf(4600)) },
+            {
+                assertThat(beløpshistorikkPeriodeGrunnlagListe[2].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2024-07"),
+                        YearMonth.parse("2025-03")
+                    )
+                )
+            },
+            { assertThat(beløpshistorikkPeriodeGrunnlagListe[2].beløp).isEqualTo(BigDecimal.valueOf(5500)) },
+
+            // Referanser
+            { assertThat(alleReferanser).containsAll(alleRefererteReferanserFiltrert) },
+            { assertThat(alleRefererteReferanser).containsAll(alleReferanserFiltrert) }
+        )
+    }
+
+    @Test
+    @DisplayName("Barnebidrag - eksempel 8E - privat avtale og beløpshistorikk flere perioder - sjekk mot 12%-regel og endring er under grense")
+    fun testBarnebidrag_Eksempel08E() {
+        filnavn = "src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel8E.json"
+        val request = lesFilOgByggRequest(filnavn)
+
+        val barnebidragResultat = api.beregn(request)
+        val barnebidragResultatGrunnlagListe = barnebidragResultat.grunnlagListe
+        printJson(barnebidragResultat)
+
+        val endeligBidragResultatListe = hentSluttberegning(barnebidragResultatGrunnlagListe)
+
+        val delberegningEndringSjekkGrensePeriodeResultatListe = barnebidragResultatGrunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndringSjekkGrensePeriode>(Grunnlagstype.DELBEREGNING_ENDRING_SJEKK_GRENSE_PERIODE)
+            .map {
+                DelberegningEndringSjekkGrensePeriode(
+                    periode = it.innhold.periode,
+                    faktiskEndringFaktor = it.innhold.faktiskEndringFaktor,
+                    endringErOverGrense = it.innhold.endringErOverGrense,
+                )
+            }
+
+        val delberegningEndringSjekkGrenseResultatListe = barnebidragResultatGrunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndringSjekkGrense>(Grunnlagstype.DELBEREGNING_ENDRING_SJEKK_GRENSE)
+            .map {
+                DelberegningEndringSjekkGrense(
+                    periode = it.innhold.periode,
+                    endringErOverGrense = it.innhold.endringErOverGrense,
+                )
+            }
+
+        val delberegningPrivatAvtalePeriodeResultatListe = barnebidragResultatGrunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningPrivatAvtalePeriode>(Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE_PERIODE)
+            .map {
+                DelberegningPrivatAvtalePeriode(
+                    periode = it.innhold.periode,
+                    indeksreguleringFaktor = it.innhold.indeksreguleringFaktor,
+                    beløp = it.innhold.beløp,
+                )
+            }
+
+        val beløpshistorikkGrunnlag = barnebidragResultatGrunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(Grunnlagstype.BELØPSHISTORIKK_BIDRAG)
+            .map {
+                BeløpshistorikkGrunnlag(
+                    tidspunktInnhentet = it.innhold.tidspunktInnhentet,
+                    førsteIndeksreguleringsår = it.innhold.førsteIndeksreguleringsår,
+                    beløpshistorikk = it.innhold.beløpshistorikk,
+                )
+            }
+
+        val beløpshistorikkPeriodeGrunnlagListe = beløpshistorikkGrunnlag.flatMap { it.beløpshistorikk }
+
+        val alleReferanser = hentAlleReferanser(barnebidragResultatGrunnlagListe)
+        val alleRefererteReferanser = hentAlleRefererteReferanser(
+            resultatGrunnlagListe = barnebidragResultatGrunnlagListe,
+            barnebidragResultat = barnebidragResultat
+        )
+
+        // Fjerner referanser som er "frittstående" (refereres ikke av noe objekt)
+        val alleReferanserFiltrert = alleReferanser
+            .filterNot { it.contains("delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_Person") }
+            .filterNot { it.contains("delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_person") }
+            .filterNot { it.contains("delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_PERSON") }
+
+        // Fjerner referanser som ikke er med i inputen til beregning
+        val alleRefererteReferanserFiltrert = alleRefererteReferanser
+            .filterNot { it.contains("innhentet_husstandsmedlem") }
+
+        assertAll(
+            { assertThat(barnebidragResultat).isNotNull },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe).isNotNull },
+            { assertThat(barnebidragResultatGrunnlagListe).isNotNull },
+
+            // Resultat
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe).hasSize(11) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2021-01"),
+                        YearMonth.parse("2021-07")
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].resultat.beløp).isEqualTo(BigDecimal.valueOf(3500)) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].grunnlagsreferanseListe)
+                    .contains("sluttberegning_Person_Søknadsbarn_202101_202107")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].grunnlagsreferanseListe)
+                    .contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202101_202207")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2021-07"),
+                        YearMonth.parse("2022-01")
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].resultat.beløp).isEqualTo(BigDecimal.valueOf(3500)) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].grunnlagsreferanseListe)
+                    .contains("sluttberegning_Person_Søknadsbarn_202107_202201")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].grunnlagsreferanseListe)
+                    .contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202101_202207")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[2].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2022-01"),
+                        YearMonth.parse("2022-07")
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[2].resultat.beløp).isEqualTo(BigDecimal.valueOf(3500)) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[2].grunnlagsreferanseListe)
+                    .contains("sluttberegning_Person_Søknadsbarn_202201_202207")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[2].grunnlagsreferanseListe)
+                    .contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202101_202207")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[3].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2022-07"),
+                        YearMonth.parse("2022-10")
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[3].resultat.beløp).isEqualTo(BigDecimal.valueOf(3610)) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[3].grunnlagsreferanseListe)
+                    .contains("sluttberegning_Person_Søknadsbarn_202207_202210")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[3].grunnlagsreferanseListe)
+                    .contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202207_202307")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[4].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2022-10"),
+                        YearMonth.parse("2023-01")
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[4].resultat.beløp).isEqualTo(BigDecimal.valueOf(4400)) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[4].grunnlagsreferanseListe)
+                    .contains("sluttberegning_Person_Søknadsbarn_202210_202301")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[4].grunnlagsreferanseListe)
+                    .contains("Mottatt_BeløpshistorikkBidrag_202101")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[5].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2023-01"),
+                        YearMonth.parse("2023-04")
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[5].resultat.beløp).isEqualTo(BigDecimal.valueOf(4400)) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[5].grunnlagsreferanseListe)
+                    .contains("sluttberegning_Person_Søknadsbarn_202301_202307")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[5].grunnlagsreferanseListe)
+                    .contains("Mottatt_BeløpshistorikkBidrag_202101")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[6].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2023-04"),
+                        YearMonth.parse("2023-07")
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[6].resultat.beløp).isEqualTo(BigDecimal.valueOf(4600)) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[6].grunnlagsreferanseListe)
+                    .contains("sluttberegning_Person_Søknadsbarn_202301_202307")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[6].grunnlagsreferanseListe)
+                    .contains("Mottatt_BeløpshistorikkBidrag_202101")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[7].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2023-07"),
+                        YearMonth.parse("2024-01")
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[7].resultat.beløp).isEqualTo(BigDecimal.valueOf(4600)) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[7].grunnlagsreferanseListe)
+                    .contains("sluttberegning_Person_Søknadsbarn_202307_202401")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[7].grunnlagsreferanseListe)
+                    .contains("Mottatt_BeløpshistorikkBidrag_202101")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[8].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2024-01"),
+                        YearMonth.parse("2024-07")
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[8].resultat.beløp).isEqualTo(BigDecimal.valueOf(4600)) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[8].grunnlagsreferanseListe)
+                    .contains("sluttberegning_Person_Søknadsbarn_202401_202407")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[8].grunnlagsreferanseListe)
+                    .contains("Mottatt_BeløpshistorikkBidrag_202101")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[9].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2024-07"),
+                        YearMonth.parse("2025-01")
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[9].resultat.beløp).isEqualTo(BigDecimal.valueOf(5500)) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[9].grunnlagsreferanseListe)
+                    .contains("sluttberegning_Person_Søknadsbarn_202407_202501")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[9].grunnlagsreferanseListe)
+                    .contains("Mottatt_BeløpshistorikkBidrag_202101")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[10].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2025-01"),
+                        null
+                    )
+                )
+            },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[10].resultat.beløp).isEqualTo(BigDecimal.valueOf(5500)) },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[10].grunnlagsreferanseListe)
+                    .contains("sluttberegning_Person_Søknadsbarn_202501")
+            },
+            {
+                assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[10].grunnlagsreferanseListe)
+                    .contains("Mottatt_BeløpshistorikkBidrag_202101")
+            },
+
+            // Endelig bidrag
+            { assertThat(endeligBidragResultatListe).hasSize(10) },
+            { assertThat(endeligBidragResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2021-01"), YearMonth.parse("2021-07"))) },
+            { assertThat(endeligBidragResultatListe[0].resultatBeløp).isEqualTo(BigDecimal.valueOf(3490)) },
+            { assertThat(endeligBidragResultatListe[1].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2021-07"), YearMonth.parse("2022-01"))) },
+            { assertThat(endeligBidragResultatListe[1].resultatBeløp).isEqualTo(BigDecimal.valueOf(3380)) },
+            { assertThat(endeligBidragResultatListe[2].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2022-01"), YearMonth.parse("2022-07"))) },
+            { assertThat(endeligBidragResultatListe[2].resultatBeløp).isEqualTo(BigDecimal.valueOf(3380)) },
+            { assertThat(endeligBidragResultatListe[3].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2022-07"), YearMonth.parse("2022-10"))) },
+            { assertThat(endeligBidragResultatListe[3].resultatBeløp).isEqualTo(BigDecimal.valueOf(3480)) },
+            { assertThat(endeligBidragResultatListe[4].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2022-10"), YearMonth.parse("2023-01"))) },
+            { assertThat(endeligBidragResultatListe[4].resultatBeløp).isEqualTo(BigDecimal.valueOf(4440)) },
+            { assertThat(endeligBidragResultatListe[5].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2023-01"), YearMonth.parse("2023-07"))) },
+            { assertThat(endeligBidragResultatListe[5].resultatBeløp).isEqualTo(BigDecimal.valueOf(4440)) },
+            { assertThat(endeligBidragResultatListe[6].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2023-07"), YearMonth.parse("2024-01"))) },
+            { assertThat(endeligBidragResultatListe[6].resultatBeløp).isEqualTo(BigDecimal.valueOf(4730)) },
+            { assertThat(endeligBidragResultatListe[7].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-01"), YearMonth.parse("2024-07"))) },
+            { assertThat(endeligBidragResultatListe[7].resultatBeløp).isEqualTo(BigDecimal.valueOf(4730)) },
+            { assertThat(endeligBidragResultatListe[8].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), YearMonth.parse("2025-01"))) },
+            { assertThat(endeligBidragResultatListe[8].resultatBeløp).isEqualTo(BigDecimal.valueOf(4850)) },
+            { assertThat(endeligBidragResultatListe[9].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2025-01"), null)) },
+            { assertThat(endeligBidragResultatListe[9].resultatBeløp).isEqualTo(BigDecimal.valueOf(4850)) },
+
+            // Endring sjekk grense
+            { assertThat(delberegningEndringSjekkGrenseResultatListe).hasSize(1) },
+            { assertThat(delberegningEndringSjekkGrenseResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2021-01"), null)) },
+            { assertThat(delberegningEndringSjekkGrenseResultatListe[0].endringErOverGrense).isFalse() },
+
+            // Endring sjekk grense periode
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe).hasSize(11) },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[0].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2021-01"),
+                        YearMonth.parse("2021-07")
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[0].endringErOverGrense).isFalse() },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[1].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2021-07"),
+                        YearMonth.parse("2022-01")
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[1].endringErOverGrense).isFalse() },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[2].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2022-01"),
+                        YearMonth.parse("2022-07")
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[2].endringErOverGrense).isFalse() },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[3].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2022-07"),
+                        YearMonth.parse("2022-10")
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[3].endringErOverGrense).isFalse() },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[4].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2022-10"),
+                        YearMonth.parse("2023-01")
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[4].endringErOverGrense).isFalse() },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[5].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2023-01"),
+                        YearMonth.parse("2023-04")
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[5].endringErOverGrense).isFalse() },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[6].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2023-04"),
+                        YearMonth.parse("2023-07")
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[6].endringErOverGrense).isFalse() },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[7].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2023-07"),
+                        YearMonth.parse("2024-01")
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[7].endringErOverGrense).isFalse() },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[8].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2024-01"),
+                        YearMonth.parse("2024-07")
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[8].endringErOverGrense).isFalse() },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[9].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2024-07"),
+                        YearMonth.parse("2025-01")
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[9].endringErOverGrense).isFalse() },
+            {
+                assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[10].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2025-01"),
+                        null
+                    )
+                )
+            },
+            { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[10].endringErOverGrense).isFalse() },
+
+            // Privat avtale periode
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe).hasSize(4) },
+            {
+                assertThat(delberegningPrivatAvtalePeriodeResultatListe[0].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2021-01"),
+                        YearMonth.parse("2022-07")
+                    )
+                )
+            },
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe[0].beløp).isEqualTo(BigDecimal.valueOf(3500)) },
+            {
+                assertThat(delberegningPrivatAvtalePeriodeResultatListe[1].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2022-07"),
+                        YearMonth.parse("2023-07")
+                    )
+                )
+            },
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe[1].beløp).isEqualTo(BigDecimal.valueOf(3610)) },
+            {
+                assertThat(delberegningPrivatAvtalePeriodeResultatListe[2].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2023-07"),
+                        YearMonth.parse("2024-07")
+                    )
+                )
+            },
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe[2].beløp).isEqualTo(BigDecimal.valueOf(3860)) },
+            {
+                assertThat(delberegningPrivatAvtalePeriodeResultatListe[3].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2024-07"),
+                        null
+                    )
+                )
+            },
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe[3].beløp).isEqualTo(BigDecimal.valueOf(4040)) },
+
+            // Beløpshistorikk
+            { assertThat(beløpshistorikkPeriodeGrunnlagListe).hasSize(3) },
+            {
+                assertThat(beløpshistorikkPeriodeGrunnlagListe[0].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2022-10"),
+                        YearMonth.parse("2023-04")
+                    )
+                )
+            },
+            { assertThat(beløpshistorikkPeriodeGrunnlagListe[0].beløp).isEqualTo(BigDecimal.valueOf(4400)) },
+            {
+                assertThat(beløpshistorikkPeriodeGrunnlagListe[1].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2023-04"),
+                        YearMonth.parse("2024-07")
+                    )
+                )
+            },
+            { assertThat(beløpshistorikkPeriodeGrunnlagListe[1].beløp).isEqualTo(BigDecimal.valueOf(4600)) },
+            {
+                assertThat(beløpshistorikkPeriodeGrunnlagListe[2].periode).isEqualTo(
+                    ÅrMånedsperiode(
+                        YearMonth.parse("2024-07"),
+                        YearMonth.parse("2025-03")
+                    )
+                )
+            },
+            { assertThat(beløpshistorikkPeriodeGrunnlagListe[2].beløp).isEqualTo(BigDecimal.valueOf(5500)) },
+
+            // Referanser
+            { assertThat(alleReferanser).containsAll(alleRefererteReferanserFiltrert) },
+            { assertThat(alleRefererteReferanser).containsAll(alleReferanserFiltrert) }
+        )
+    }
+
     private fun utførBeregningerOgEvaluerResultatBarnebidrag() {
         val request = lesFilOgByggRequest(filnavn)
 
@@ -1025,7 +2416,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
         val alleReferanser = hentAlleReferanser(barnebidragResultatGrunnlagListe)
         val alleRefererteReferanser = hentAlleRefererteReferanser(
             resultatGrunnlagListe = barnebidragResultatGrunnlagListe,
-            barnebidragResultat = barnebidragResultat,
+            barnebidragResultat = barnebidragResultat
         )
 
         // Fjerner referanser som er "frittstående" (refereres ikke av noe objekt)

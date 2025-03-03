@@ -7,6 +7,7 @@ import no.nav.bidrag.beregn.barnebidrag.bo.EndringSjekkGrensePeriodeBeregningGru
 import no.nav.bidrag.beregn.barnebidrag.bo.EndringSjekkGrensePeriodePeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.EndringSjekkGrensePeriodePeriodeResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.LøpendeBidragBeregningGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.PrivatAvtaleBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.mapper.EndringSjekkGrensePeriodeMapper.mapEndringSjekkGrensePeriodeGrunnlag
 import no.nav.bidrag.beregn.core.bo.SjablonSjablontallBeregningGrunnlag
 import no.nav.bidrag.beregn.core.service.BeregnService
@@ -108,6 +109,7 @@ internal object BeregnEndringSjekkGrensePeriodeService : BeregnService() {
                 grunnlagListe.beløpshistorikkBidragPeriodeGrunnlag?.beløpshistorikkPeriode?.beløpshistorikk
                     ?.asSequence()?.map { it.periode } ?: emptySequence(),
             )
+            .plus(grunnlagListe.privatAvtaleIndeksregulertPeriodeGrunnlagListe.asSequence().map { it.privatAvtaleIndeksregulertPeriode.periode })
             .plus(grunnlagListe.sjablonSjablontallPeriodeGrunnlagListe.asSequence().map { it.sjablonSjablontallPeriode.periode })
 
         return lagBruddPeriodeListe(periodeListe, beregningsperiode)
@@ -127,6 +129,9 @@ internal object BeregnEndringSjekkGrensePeriodeService : BeregnService() {
                 LøpendeBidragBeregningGrunnlag(referanse = referanse, beløp = it.beløp)
             }
         },
+        privatAvtaleBeregningGrunnlag = periodeGrunnlag.privatAvtaleIndeksregulertPeriodeGrunnlagListe
+            .firstOrNull { it.privatAvtaleIndeksregulertPeriode.periode.inneholder(bruddPeriode) }
+            ?.let { PrivatAvtaleBeregningGrunnlag(referanse = it.referanse, beløp = it.privatAvtaleIndeksregulertPeriode.beløp) },
         sjablonSjablontallBeregningGrunnlagListe = periodeGrunnlag.sjablonSjablontallPeriodeGrunnlagListe
             .filter { it.sjablonSjablontallPeriode.periode.inneholder(bruddPeriode) }
             .map {
