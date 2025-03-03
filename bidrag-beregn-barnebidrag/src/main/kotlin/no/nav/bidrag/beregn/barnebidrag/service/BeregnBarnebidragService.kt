@@ -125,10 +125,10 @@ class BeregnBarnebidragService : BeregnService() {
         val endeligResultatGrunnlagListe = (
             filtrerResultatGrunnlag(
                 foreløpigResultatGrunnlagListe = foreløpigResultatGrunnlagListe,
-                refererteReferanserListe = resultatPeriodeListe.flatMap { it.grunnlagsreferanseListe }
-            ) + delberegningEndringSjekkGrenseResultat
-                + delberegningEndringSjekkGrensePeriodeResultat
-                + delberegningIndeksreguleringPrivatAvtaleResultat
+                refererteReferanserListe = resultatPeriodeListe.flatMap { it.grunnlagsreferanseListe },
+            ) + delberegningEndringSjekkGrenseResultat +
+                delberegningEndringSjekkGrensePeriodeResultat +
+                delberegningIndeksreguleringPrivatAvtaleResultat
             )
             .distinctBy { it.referanse }
             .sortedBy { it.referanse }
@@ -371,7 +371,6 @@ class BeregnBarnebidragService : BeregnService() {
         delberegningEndeligBidragResultat: BeregnEndeligBidragServiceRespons,
         åpenSluttperiode: Boolean,
     ): SjekkMotMinimumsgrenseForEndringResultat {
-
         val er18ÅrsBidrag = mottattGrunnlag.stønadstype == Stønadstype.BIDRAG18AAR
 
         // Filtrerer ut beløpshistorikk. Hvis det er 18-års-bidrag benyttes egen beløpshistorikk.
@@ -386,7 +385,8 @@ class BeregnBarnebidragService : BeregnService() {
 
         // Kaller delberegning for å sjekke om endring i bidrag er over grense (pr periode)
         var grunnlagTilEndringSjekkGrense = utvidetGrunnlagJustert.beregnGrunnlag.copy(
-            grunnlagListe = delberegningIndeksreguleringPrivatAvtalePeriodeResultat + beløpshistorikkGrunnlag + delberegningEndeligBidragResultat.grunnlagListe,
+            grunnlagListe =
+            delberegningIndeksreguleringPrivatAvtalePeriodeResultat + beløpshistorikkGrunnlag + delberegningEndeligBidragResultat.grunnlagListe,
         )
         val delberegningEndringSjekkGrensePeriodeResultat =
             delberegningEndringSjekkGrensePeriode(mottattGrunnlag = grunnlagTilEndringSjekkGrense, åpenSluttperiode = åpenSluttperiode)
@@ -397,7 +397,7 @@ class BeregnBarnebidragService : BeregnService() {
         )
         val delberegningEndringSjekkGrenseResultat = delberegningEndringSjekkGrense(
             mottattGrunnlag = grunnlagTilEndringSjekkGrense,
-            åpenSluttperiode = åpenSluttperiode
+            åpenSluttperiode = åpenSluttperiode,
         )
 
         val beregnetBidragErOverMinimumsgrenseForEndring = erOverMinimumsgrenseForEndring(delberegningEndringSjekkGrenseResultat)
@@ -438,33 +438,28 @@ class BeregnBarnebidragService : BeregnService() {
     private fun filtrerBeløpshistorikk18ÅrGrunnlag(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> =
         beregnGrunnlag.grunnlagListe.filter { it.type == Grunnlagstype.BELØPSHISTORIKK_BIDRAG_18_ÅR }
 
-    private fun utførDelberegningPrivatAvtalePeriode(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
-        return if (beregnGrunnlag.grunnlagListe
-                .filtrerOgKonverterBasertPåEgenReferanse<PrivatAvtaleGrunnlag>(Grunnlagstype.PRIVAT_AVTALE_GRUNNLAG)
-                .filter { it.gjelderBarnReferanse == beregnGrunnlag.søknadsbarnReferanse }
-                .isEmpty()
-        ) {
-            emptyList()
-        } else {
-            delberegningPrivatAvtalePeriode(beregnGrunnlag)
-        }
+    private fun utførDelberegningPrivatAvtalePeriode(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = if (beregnGrunnlag.grunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<PrivatAvtaleGrunnlag>(Grunnlagstype.PRIVAT_AVTALE_GRUNNLAG)
+            .filter { it.gjelderBarnReferanse == beregnGrunnlag.søknadsbarnReferanse }
+            .isEmpty()
+    ) {
+        emptyList()
+    } else {
+        delberegningPrivatAvtalePeriode(beregnGrunnlag)
     }
 
     // Standardlogikk for å lage resultatperioder
-    private fun lagResultatPerioder(
-        delberegningEndeligBidragResultat: List<GrunnlagDto>,
-    ): List<ResultatPeriode> =
-        delberegningEndeligBidragResultat
-            .filtrerOgKonverterBasertPåEgenReferanse<SluttberegningBarnebidrag>(Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG)
-            .map {
-                ResultatPeriode(
-                    periode = it.innhold.periode,
-                    resultat = ResultatBeregning(
-                        beløp = it.innhold.resultatBeløp,
-                    ),
-                    grunnlagsreferanseListe = listOf(it.referanse),
-                )
-            }
+    private fun lagResultatPerioder(delberegningEndeligBidragResultat: List<GrunnlagDto>): List<ResultatPeriode> = delberegningEndeligBidragResultat
+        .filtrerOgKonverterBasertPåEgenReferanse<SluttberegningBarnebidrag>(Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG)
+        .map {
+            ResultatPeriode(
+                periode = it.innhold.periode,
+                resultat = ResultatBeregning(
+                    beløp = it.innhold.resultatBeløp,
+                ),
+                grunnlagsreferanseListe = listOf(it.referanse),
+            )
+        }
 
     // Lager resultatperioder basert på beløpshistorikk hvis beregnet bidrag ikke er over minimumsgrense for endring
     private fun lagResultatPerioder(
@@ -475,7 +470,6 @@ class BeregnBarnebidragService : BeregnService() {
         delberegningEndringSjekkGrensePeriodeResultat: List<GrunnlagDto>,
         delberegningIndeksreguleringPrivatAvtalePeriodeResultat: List<GrunnlagDto>,
     ): List<ResultatPeriode> {
-
         // Henter beløpshistorikk (det finnes kun en forekomst, som dekker hele perioden)
         val beløpshistorikkPeriodeGrunnlag = beløpshistorikkGrunnlag
             .filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(beløpshistorikkGrunnlagstype)
@@ -530,14 +524,14 @@ class BeregnBarnebidragService : BeregnService() {
                             periode = it.endringSjekkGrensePeriodePeriode.periode,
                             sluttberegningPeriodeGrunnlagListe = sluttberegningPeriodeGrunnlagListe,
                             beløpshistorikkPeriodeGrunnlag = beløpshistorikkPeriodeGrunnlag,
-                            delberegningIndeksreguleringPrivatAvtalePeriodeGrunnlagListe = delberegningIndeksreguleringPrivatAvtalePeriodeGrunnlagListe
+                            delberegningIndeksregPrivatAvtalePeriodeGrunnlagListe = delberegningIndeksreguleringPrivatAvtalePeriodeGrunnlagListe,
                         ),
                     ),
                     grunnlagsreferanseListe = lagReferanseliste(
                         referanseListe = it.referanseListe,
                         periode = it.endringSjekkGrensePeriodePeriode.periode,
                         beløpshistorikkPeriodeGrunnlag = beløpshistorikkPeriodeGrunnlag,
-                        delberegningIndeksreguleringPrivatAvtalePeriodeGrunnlagListe = delberegningIndeksreguleringPrivatAvtalePeriodeGrunnlagListe
+                        delberegningIndeksreguleringPrivatAvtalePeriodeGrunnlagListe = delberegningIndeksreguleringPrivatAvtalePeriodeGrunnlagListe,
                     ),
                 )
             }
@@ -551,9 +545,9 @@ class BeregnBarnebidragService : BeregnService() {
         periode: ÅrMånedsperiode,
         sluttberegningPeriodeGrunnlagListe: List<SluttberegningPeriodeGrunnlag>,
         beløpshistorikkPeriodeGrunnlag: BeløpshistorikkPeriodeGrunnlag?,
-        delberegningIndeksreguleringPrivatAvtalePeriodeGrunnlagListe: List<PrivatAvtaleIndeksregulertPeriodeGrunnlag>,
+        delberegningIndeksregPrivatAvtalePeriodeGrunnlagListe: List<PrivatAvtaleIndeksregulertPeriodeGrunnlag>,
     ): BigDecimal? {
-        val privatAvtaleBeløp = delberegningIndeksreguleringPrivatAvtalePeriodeGrunnlagListe
+        val privatAvtaleBeløp = delberegningIndeksregPrivatAvtalePeriodeGrunnlagListe
             .filter { it.referanse in referanseListe }
             .map { it.privatAvtaleIndeksregulertPeriode.beløp }
             .firstOrNull()
@@ -566,7 +560,9 @@ class BeregnBarnebidragService : BeregnService() {
                 .filter { it.referanse in referanseListe }
                 .map { it.sluttberegningPeriode.resultatBeløp }
                 .firstOrNull()
-        } else beløpshistorikkBeløp ?: privatAvtaleBeløp
+        } else {
+            beløpshistorikkBeløp ?: privatAvtaleBeløp
+        }
     }
 
     // Fjerner referanser fra sluttberegningen i enkelte tilfeller
@@ -620,7 +616,7 @@ class BeregnBarnebidragService : BeregnService() {
     private fun filtrerResultatGrunnlag(
         foreløpigResultatGrunnlagListe: List<GrunnlagDto>,
         refererteReferanserListe: List<String>,
-        referanserAlleredeLagtTil: MutableSet<String> = mutableSetOf()
+        referanserAlleredeLagtTil: MutableSet<String> = mutableSetOf(),
     ): List<GrunnlagDto> {
         // Stopper hvis det ikke finnes flere refererte referanser
         if (refererteReferanserListe.isEmpty()) {

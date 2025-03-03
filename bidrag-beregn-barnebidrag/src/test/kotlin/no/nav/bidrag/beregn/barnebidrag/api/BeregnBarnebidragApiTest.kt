@@ -705,7 +705,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
         val alleReferanser = hentAlleReferanser(barnebidragResultatGrunnlagListe)
         val alleRefererteReferanser = hentAlleRefererteReferanser(
             resultatGrunnlagListe = barnebidragResultatGrunnlagListe,
-            barnebidragResultat = barnebidragResultat
+            barnebidragResultat = barnebidragResultat,
         )
 
         // Fjerner referanser som er "frittstående" (refereres ikke av noe objekt)
@@ -729,8 +729,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2020-08"),
-                        null
-                    )
+                        null,
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].resultat.beløp).isNull() },
@@ -768,13 +768,13 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanserFiltrert) },
-            { assertThat(alleRefererteReferanser).containsAll(alleReferanserFiltrert) }
+            { assertThat(alleRefererteReferanser).containsAll(alleReferanserFiltrert) },
         )
     }
 
+    // Sluttperiode settes til måneden etter barnet fyller 18 år
     @Test
     @DisplayName("Barnebidrag - eksempel 6A - ordinært bidrag - kostnadsberegnet hvor barnet blir 18 år i beregningsperioden")
-    // Sluttperiode settes til måneden etter barnet fyller 18 år
     fun testBarnebidrag_Eksempel06A() {
         filnavn = "src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel6A.json"
 
@@ -1051,7 +1051,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
         val alleReferanser = hentAlleReferanser(barnebidragResultatGrunnlagListe)
         val alleRefererteReferanser = hentAlleRefererteReferanser(
             resultatGrunnlagListe = barnebidragResultatGrunnlagListe,
-            barnebidragResultat = barnebidragResultat
+            barnebidragResultat = barnebidragResultat,
         )
 
         // Fjerner referanser som er "frittstående" (refereres ikke av noe objekt)
@@ -1077,8 +1077,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2024-08"),
-                        YearMonth.parse("2025-01")
-                    )
+                        YearMonth.parse("2025-01"),
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].resultat.beløp).isEqualTo(BigDecimal.valueOf(4850)) },
@@ -1088,8 +1088,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2025-01"),
-                        null
-                    )
+                        null,
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].resultat.beløp).isEqualTo(BigDecimal.valueOf(4850)) },
@@ -1114,8 +1114,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[0].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2024-08"),
-                        YearMonth.parse("2025-01")
-                    )
+                        YearMonth.parse("2025-01"),
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[0].endringErOverGrense).isTrue() },
@@ -1123,8 +1123,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[1].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2025-01"),
-                        null
-                    )
+                        null,
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[1].endringErOverGrense).isTrue() },
@@ -1139,7 +1139,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanserFiltrert) },
-            { assertThat(alleRefererteReferanser).containsAll(alleReferanserFiltrert) }
+            { assertThat(alleRefererteReferanser).containsAll(alleReferanserFiltrert) },
         )
     }
 
@@ -1199,7 +1199,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
         val alleReferanser = hentAlleReferanser(barnebidragResultatGrunnlagListe)
         val alleRefererteReferanser = hentAlleRefererteReferanser(
             resultatGrunnlagListe = barnebidragResultatGrunnlagListe,
-            barnebidragResultat = barnebidragResultat
+            barnebidragResultat = barnebidragResultat,
         )
 
         // Fjerner referanser som er "frittstående" (refereres ikke av noe objekt)
@@ -1225,8 +1225,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2024-08"),
-                        YearMonth.parse("2025-01")
-                    )
+                        YearMonth.parse("2025-01"),
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].resultat.beløp).isEqualTo(BigDecimal.valueOf(4800)) },
@@ -1236,8 +1236,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2025-01"),
-                        null
-                    )
+                        null,
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].resultat.beløp).isEqualTo(BigDecimal.valueOf(4800)) },
@@ -1262,8 +1262,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[0].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2024-08"),
-                        YearMonth.parse("2025-01")
-                    )
+                        YearMonth.parse("2025-01"),
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[0].endringErOverGrense).isFalse() },
@@ -1271,8 +1271,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[1].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2025-01"),
-                        null
-                    )
+                        null,
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[1].endringErOverGrense).isFalse() },
@@ -1287,7 +1287,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanserFiltrert) },
-            { assertThat(alleRefererteReferanser).containsAll(alleReferanserFiltrert) }
+            { assertThat(alleRefererteReferanser).containsAll(alleReferanserFiltrert) },
         )
     }
 
@@ -1347,7 +1347,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
         val alleReferanser = hentAlleReferanser(barnebidragResultatGrunnlagListe)
         val alleRefererteReferanser = hentAlleRefererteReferanser(
             resultatGrunnlagListe = barnebidragResultatGrunnlagListe,
-            barnebidragResultat = barnebidragResultat
+            barnebidragResultat = barnebidragResultat,
         )
 
         // Fjerner referanser som er "frittstående" (refereres ikke av noe objekt)
@@ -1373,8 +1373,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2024-08"),
-                        YearMonth.parse("2025-01")
-                    )
+                        YearMonth.parse("2025-01"),
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].resultat.beløp).isEqualTo(BigDecimal.valueOf(4900)) },
@@ -1384,8 +1384,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2025-01"),
-                        null
-                    )
+                        null,
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].resultat.beløp).isEqualTo(BigDecimal.valueOf(4800)) },
@@ -1410,8 +1410,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[0].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2024-08"),
-                        YearMonth.parse("2025-01")
-                    )
+                        YearMonth.parse("2025-01"),
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[0].endringErOverGrense).isFalse() },
@@ -1419,8 +1419,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[1].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2025-01"),
-                        null
-                    )
+                        null,
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[1].endringErOverGrense).isFalse() },
@@ -1436,15 +1436,15 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(beløpshistorikkPeriodeGrunnlagListe[0].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2024-08"),
-                        YearMonth.parse("2025-01")
-                    )
+                        YearMonth.parse("2025-01"),
+                    ),
                 )
             },
             { assertThat(beløpshistorikkPeriodeGrunnlagListe[0].beløp).isEqualTo(BigDecimal.valueOf(4900)) },
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanserFiltrert) },
-            { assertThat(alleRefererteReferanser).containsAll(alleReferanserFiltrert) }
+            { assertThat(alleRefererteReferanser).containsAll(alleReferanserFiltrert) },
         )
     }
 
@@ -1504,7 +1504,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
         val alleReferanser = hentAlleReferanser(barnebidragResultatGrunnlagListe)
         val alleRefererteReferanser = hentAlleRefererteReferanser(
             resultatGrunnlagListe = barnebidragResultatGrunnlagListe,
-            barnebidragResultat = barnebidragResultat
+            barnebidragResultat = barnebidragResultat,
         )
 
         // Fjerner referanser som er "frittstående" (refereres ikke av noe objekt)
@@ -1528,8 +1528,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2021-01"),
-                        YearMonth.parse("2021-07")
-                    )
+                        YearMonth.parse("2021-07"),
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].resultat.beløp).isEqualTo(BigDecimal.valueOf(3490)) },
@@ -1545,8 +1545,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2021-07"),
-                        YearMonth.parse("2022-01")
-                    )
+                        YearMonth.parse("2022-01"),
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].resultat.beløp).isEqualTo(BigDecimal.valueOf(4310)) },
@@ -1562,8 +1562,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[2].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2022-01"),
-                        YearMonth.parse("2022-07")
-                    )
+                        YearMonth.parse("2022-07"),
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[2].resultat.beløp).isEqualTo(BigDecimal.valueOf(4310)) },
@@ -1579,8 +1579,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[3].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2022-07"),
-                        YearMonth.parse("2022-10")
-                    )
+                        YearMonth.parse("2022-10"),
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[3].resultat.beløp).isEqualTo(BigDecimal.valueOf(4440)) },
@@ -1596,8 +1596,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[4].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2022-10"),
-                        YearMonth.parse("2023-01")
-                    )
+                        YearMonth.parse("2023-01"),
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[4].resultat.beløp).isEqualTo(BigDecimal.valueOf(4440)) },
@@ -1613,8 +1613,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[5].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2023-01"),
-                        YearMonth.parse("2023-04")
-                    )
+                        YearMonth.parse("2023-04"),
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[5].resultat.beløp).isEqualTo(BigDecimal.valueOf(4440)) },
@@ -1630,8 +1630,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[6].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2023-04"),
-                        YearMonth.parse("2023-07")
-                    )
+                        YearMonth.parse("2023-07"),
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[6].resultat.beløp).isEqualTo(BigDecimal.valueOf(4440)) },
@@ -1647,8 +1647,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[7].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2023-07"),
-                        YearMonth.parse("2024-01")
-                    )
+                        YearMonth.parse("2024-01"),
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[7].resultat.beløp).isEqualTo(BigDecimal.valueOf(4730)) },
@@ -1664,8 +1664,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[8].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2024-01"),
-                        YearMonth.parse("2024-07")
-                    )
+                        YearMonth.parse("2024-07"),
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[8].resultat.beløp).isEqualTo(BigDecimal.valueOf(4730)) },
@@ -1681,8 +1681,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[9].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2024-07"),
-                        YearMonth.parse("2025-01")
-                    )
+                        YearMonth.parse("2025-01"),
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[9].resultat.beløp).isEqualTo(BigDecimal.valueOf(4850)) },
@@ -1698,8 +1698,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[10].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2025-01"),
-                        null
-                    )
+                        null,
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[10].resultat.beløp).isEqualTo(BigDecimal.valueOf(4850)) },
@@ -1744,8 +1744,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[0].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2021-01"),
-                        YearMonth.parse("2021-07")
-                    )
+                        YearMonth.parse("2021-07"),
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[0].endringErOverGrense).isFalse() },
@@ -1753,8 +1753,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[1].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2021-07"),
-                        YearMonth.parse("2022-01")
-                    )
+                        YearMonth.parse("2022-01"),
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[1].endringErOverGrense).isTrue() },
@@ -1762,8 +1762,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[2].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2022-01"),
-                        YearMonth.parse("2022-07")
-                    )
+                        YearMonth.parse("2022-07"),
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[2].endringErOverGrense).isTrue() },
@@ -1771,8 +1771,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[3].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2022-07"),
-                        YearMonth.parse("2022-10")
-                    )
+                        YearMonth.parse("2022-10"),
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[3].endringErOverGrense).isTrue() },
@@ -1780,8 +1780,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[4].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2022-10"),
-                        YearMonth.parse("2023-01")
-                    )
+                        YearMonth.parse("2023-01"),
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[4].endringErOverGrense).isFalse() },
@@ -1789,8 +1789,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[5].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2023-01"),
-                        YearMonth.parse("2023-04")
-                    )
+                        YearMonth.parse("2023-04"),
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[5].endringErOverGrense).isFalse() },
@@ -1798,8 +1798,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[6].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2023-04"),
-                        YearMonth.parse("2023-07")
-                    )
+                        YearMonth.parse("2023-07"),
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[6].endringErOverGrense).isFalse() },
@@ -1807,8 +1807,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[7].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2023-07"),
-                        YearMonth.parse("2024-01")
-                    )
+                        YearMonth.parse("2024-01"),
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[7].endringErOverGrense).isFalse() },
@@ -1816,8 +1816,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[8].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2024-01"),
-                        YearMonth.parse("2024-07")
-                    )
+                        YearMonth.parse("2024-07"),
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[8].endringErOverGrense).isFalse() },
@@ -1825,8 +1825,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[9].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2024-07"),
-                        YearMonth.parse("2025-01")
-                    )
+                        YearMonth.parse("2025-01"),
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[9].endringErOverGrense).isFalse() },
@@ -1834,8 +1834,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[10].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2025-01"),
-                        null
-                    )
+                        null,
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[10].endringErOverGrense).isFalse() },
@@ -1846,8 +1846,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningPrivatAvtalePeriodeResultatListe[0].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2021-01"),
-                        YearMonth.parse("2022-07")
-                    )
+                        YearMonth.parse("2022-07"),
+                    ),
                 )
             },
             { assertThat(delberegningPrivatAvtalePeriodeResultatListe[0].beløp).isEqualTo(BigDecimal.valueOf(3500)) },
@@ -1855,8 +1855,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningPrivatAvtalePeriodeResultatListe[1].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2022-07"),
-                        YearMonth.parse("2023-07")
-                    )
+                        YearMonth.parse("2023-07"),
+                    ),
                 )
             },
             { assertThat(delberegningPrivatAvtalePeriodeResultatListe[1].beløp).isEqualTo(BigDecimal.valueOf(3610)) },
@@ -1864,8 +1864,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningPrivatAvtalePeriodeResultatListe[2].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2023-07"),
-                        YearMonth.parse("2024-07")
-                    )
+                        YearMonth.parse("2024-07"),
+                    ),
                 )
             },
             { assertThat(delberegningPrivatAvtalePeriodeResultatListe[2].beløp).isEqualTo(BigDecimal.valueOf(3860)) },
@@ -1873,8 +1873,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningPrivatAvtalePeriodeResultatListe[3].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2024-07"),
-                        null
-                    )
+                        null,
+                    ),
                 )
             },
             { assertThat(delberegningPrivatAvtalePeriodeResultatListe[3].beløp).isEqualTo(BigDecimal.valueOf(4040)) },
@@ -1885,8 +1885,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(beløpshistorikkPeriodeGrunnlagListe[0].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2022-10"),
-                        YearMonth.parse("2023-04")
-                    )
+                        YearMonth.parse("2023-04"),
+                    ),
                 )
             },
             { assertThat(beløpshistorikkPeriodeGrunnlagListe[0].beløp).isEqualTo(BigDecimal.valueOf(4400)) },
@@ -1894,8 +1894,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(beløpshistorikkPeriodeGrunnlagListe[1].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2023-04"),
-                        YearMonth.parse("2024-07")
-                    )
+                        YearMonth.parse("2024-07"),
+                    ),
                 )
             },
             { assertThat(beløpshistorikkPeriodeGrunnlagListe[1].beløp).isEqualTo(BigDecimal.valueOf(4600)) },
@@ -1903,15 +1903,15 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(beløpshistorikkPeriodeGrunnlagListe[2].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2024-07"),
-                        YearMonth.parse("2025-03")
-                    )
+                        YearMonth.parse("2025-03"),
+                    ),
                 )
             },
             { assertThat(beløpshistorikkPeriodeGrunnlagListe[2].beløp).isEqualTo(BigDecimal.valueOf(5500)) },
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanserFiltrert) },
-            { assertThat(alleRefererteReferanser).containsAll(alleReferanserFiltrert) }
+            { assertThat(alleRefererteReferanser).containsAll(alleReferanserFiltrert) },
         )
     }
 
@@ -1971,7 +1971,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
         val alleReferanser = hentAlleReferanser(barnebidragResultatGrunnlagListe)
         val alleRefererteReferanser = hentAlleRefererteReferanser(
             resultatGrunnlagListe = barnebidragResultatGrunnlagListe,
-            barnebidragResultat = barnebidragResultat
+            barnebidragResultat = barnebidragResultat,
         )
 
         // Fjerner referanser som er "frittstående" (refereres ikke av noe objekt)
@@ -1995,8 +1995,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2021-01"),
-                        YearMonth.parse("2021-07")
-                    )
+                        YearMonth.parse("2021-07"),
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].resultat.beløp).isEqualTo(BigDecimal.valueOf(3500)) },
@@ -2012,8 +2012,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2021-07"),
-                        YearMonth.parse("2022-01")
-                    )
+                        YearMonth.parse("2022-01"),
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].resultat.beløp).isEqualTo(BigDecimal.valueOf(3500)) },
@@ -2029,8 +2029,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[2].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2022-01"),
-                        YearMonth.parse("2022-07")
-                    )
+                        YearMonth.parse("2022-07"),
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[2].resultat.beløp).isEqualTo(BigDecimal.valueOf(3500)) },
@@ -2046,8 +2046,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[3].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2022-07"),
-                        YearMonth.parse("2022-10")
-                    )
+                        YearMonth.parse("2022-10"),
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[3].resultat.beløp).isEqualTo(BigDecimal.valueOf(3610)) },
@@ -2063,8 +2063,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[4].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2022-10"),
-                        YearMonth.parse("2023-01")
-                    )
+                        YearMonth.parse("2023-01"),
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[4].resultat.beløp).isEqualTo(BigDecimal.valueOf(4400)) },
@@ -2080,8 +2080,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[5].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2023-01"),
-                        YearMonth.parse("2023-04")
-                    )
+                        YearMonth.parse("2023-04"),
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[5].resultat.beløp).isEqualTo(BigDecimal.valueOf(4400)) },
@@ -2097,8 +2097,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[6].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2023-04"),
-                        YearMonth.parse("2023-07")
-                    )
+                        YearMonth.parse("2023-07"),
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[6].resultat.beløp).isEqualTo(BigDecimal.valueOf(4600)) },
@@ -2114,8 +2114,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[7].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2023-07"),
-                        YearMonth.parse("2024-01")
-                    )
+                        YearMonth.parse("2024-01"),
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[7].resultat.beløp).isEqualTo(BigDecimal.valueOf(4600)) },
@@ -2131,8 +2131,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[8].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2024-01"),
-                        YearMonth.parse("2024-07")
-                    )
+                        YearMonth.parse("2024-07"),
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[8].resultat.beløp).isEqualTo(BigDecimal.valueOf(4600)) },
@@ -2148,8 +2148,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[9].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2024-07"),
-                        YearMonth.parse("2025-01")
-                    )
+                        YearMonth.parse("2025-01"),
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[9].resultat.beløp).isEqualTo(BigDecimal.valueOf(5500)) },
@@ -2165,8 +2165,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[10].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2025-01"),
-                        null
-                    )
+                        null,
+                    ),
                 )
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[10].resultat.beløp).isEqualTo(BigDecimal.valueOf(5500)) },
@@ -2213,8 +2213,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[0].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2021-01"),
-                        YearMonth.parse("2021-07")
-                    )
+                        YearMonth.parse("2021-07"),
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[0].endringErOverGrense).isFalse() },
@@ -2222,8 +2222,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[1].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2021-07"),
-                        YearMonth.parse("2022-01")
-                    )
+                        YearMonth.parse("2022-01"),
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[1].endringErOverGrense).isFalse() },
@@ -2231,8 +2231,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[2].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2022-01"),
-                        YearMonth.parse("2022-07")
-                    )
+                        YearMonth.parse("2022-07"),
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[2].endringErOverGrense).isFalse() },
@@ -2240,8 +2240,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[3].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2022-07"),
-                        YearMonth.parse("2022-10")
-                    )
+                        YearMonth.parse("2022-10"),
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[3].endringErOverGrense).isFalse() },
@@ -2249,8 +2249,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[4].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2022-10"),
-                        YearMonth.parse("2023-01")
-                    )
+                        YearMonth.parse("2023-01"),
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[4].endringErOverGrense).isFalse() },
@@ -2258,8 +2258,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[5].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2023-01"),
-                        YearMonth.parse("2023-04")
-                    )
+                        YearMonth.parse("2023-04"),
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[5].endringErOverGrense).isFalse() },
@@ -2267,8 +2267,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[6].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2023-04"),
-                        YearMonth.parse("2023-07")
-                    )
+                        YearMonth.parse("2023-07"),
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[6].endringErOverGrense).isFalse() },
@@ -2276,8 +2276,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[7].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2023-07"),
-                        YearMonth.parse("2024-01")
-                    )
+                        YearMonth.parse("2024-01"),
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[7].endringErOverGrense).isFalse() },
@@ -2285,8 +2285,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[8].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2024-01"),
-                        YearMonth.parse("2024-07")
-                    )
+                        YearMonth.parse("2024-07"),
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[8].endringErOverGrense).isFalse() },
@@ -2294,8 +2294,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[9].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2024-07"),
-                        YearMonth.parse("2025-01")
-                    )
+                        YearMonth.parse("2025-01"),
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[9].endringErOverGrense).isFalse() },
@@ -2303,8 +2303,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[10].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2025-01"),
-                        null
-                    )
+                        null,
+                    ),
                 )
             },
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[10].endringErOverGrense).isFalse() },
@@ -2315,8 +2315,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningPrivatAvtalePeriodeResultatListe[0].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2021-01"),
-                        YearMonth.parse("2022-07")
-                    )
+                        YearMonth.parse("2022-07"),
+                    ),
                 )
             },
             { assertThat(delberegningPrivatAvtalePeriodeResultatListe[0].beløp).isEqualTo(BigDecimal.valueOf(3500)) },
@@ -2324,8 +2324,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningPrivatAvtalePeriodeResultatListe[1].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2022-07"),
-                        YearMonth.parse("2023-07")
-                    )
+                        YearMonth.parse("2023-07"),
+                    ),
                 )
             },
             { assertThat(delberegningPrivatAvtalePeriodeResultatListe[1].beløp).isEqualTo(BigDecimal.valueOf(3610)) },
@@ -2333,8 +2333,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningPrivatAvtalePeriodeResultatListe[2].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2023-07"),
-                        YearMonth.parse("2024-07")
-                    )
+                        YearMonth.parse("2024-07"),
+                    ),
                 )
             },
             { assertThat(delberegningPrivatAvtalePeriodeResultatListe[2].beløp).isEqualTo(BigDecimal.valueOf(3860)) },
@@ -2342,8 +2342,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(delberegningPrivatAvtalePeriodeResultatListe[3].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2024-07"),
-                        null
-                    )
+                        null,
+                    ),
                 )
             },
             { assertThat(delberegningPrivatAvtalePeriodeResultatListe[3].beløp).isEqualTo(BigDecimal.valueOf(4040)) },
@@ -2354,8 +2354,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(beløpshistorikkPeriodeGrunnlagListe[0].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2022-10"),
-                        YearMonth.parse("2023-04")
-                    )
+                        YearMonth.parse("2023-04"),
+                    ),
                 )
             },
             { assertThat(beløpshistorikkPeriodeGrunnlagListe[0].beløp).isEqualTo(BigDecimal.valueOf(4400)) },
@@ -2363,8 +2363,8 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(beløpshistorikkPeriodeGrunnlagListe[1].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2023-04"),
-                        YearMonth.parse("2024-07")
-                    )
+                        YearMonth.parse("2024-07"),
+                    ),
                 )
             },
             { assertThat(beløpshistorikkPeriodeGrunnlagListe[1].beløp).isEqualTo(BigDecimal.valueOf(4600)) },
@@ -2372,15 +2372,15 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
                 assertThat(beløpshistorikkPeriodeGrunnlagListe[2].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2024-07"),
-                        YearMonth.parse("2025-03")
-                    )
+                        YearMonth.parse("2025-03"),
+                    ),
                 )
             },
             { assertThat(beløpshistorikkPeriodeGrunnlagListe[2].beløp).isEqualTo(BigDecimal.valueOf(5500)) },
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanserFiltrert) },
-            { assertThat(alleRefererteReferanser).containsAll(alleReferanserFiltrert) }
+            { assertThat(alleRefererteReferanser).containsAll(alleReferanserFiltrert) },
         )
     }
 
@@ -2416,7 +2416,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
         val alleReferanser = hentAlleReferanser(barnebidragResultatGrunnlagListe)
         val alleRefererteReferanser = hentAlleRefererteReferanser(
             resultatGrunnlagListe = barnebidragResultatGrunnlagListe,
-            barnebidragResultat = barnebidragResultat
+            barnebidragResultat = barnebidragResultat,
         )
 
         // Fjerner referanser som er "frittstående" (refereres ikke av noe objekt)

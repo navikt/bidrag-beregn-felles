@@ -23,19 +23,19 @@ internal object EndringSjekkGrensePeriodeBeregning {
         // Beregner faktisk endring faktor. Sjekker først om det finnes løpende bidrag å sammenligne mot. Hvis ikke sjekkes det om det finnes privat
         // avtale å sammenligne mot. Hvis ingen av delene finnes eller beregnet bidrag er null settes faktisk endring faktor til null.
         if (grunnlag.beregnetBidragBeregningGrunnlag.beløp != null) {
-           if (grunnlag.løpendeBidragBeregningGrunnlag?.beløp != null) {
-               faktiskEndringFaktor = grunnlag.beregnetBidragBeregningGrunnlag.beløp
-                   .divide(grunnlag.løpendeBidragBeregningGrunnlag.beløp, 10, RoundingMode.HALF_UP)
-                   .minus(BigDecimal(1))
-                   .abs()
-               harBruktLøpendeBidrag = true
-           } else if (grunnlag.privatAvtaleBeregningGrunnlag?.beløp != null) {
-               faktiskEndringFaktor = grunnlag.beregnetBidragBeregningGrunnlag.beløp
-                   .divide(grunnlag.privatAvtaleBeregningGrunnlag.beløp, 10, RoundingMode.HALF_UP)
-                   .minus(BigDecimal(1))
-                   .abs()
-               harBruktPrivatAvtale = true
-           }
+            if (grunnlag.løpendeBidragBeregningGrunnlag?.beløp != null) {
+                faktiskEndringFaktor = grunnlag.beregnetBidragBeregningGrunnlag.beløp
+                    .divide(grunnlag.løpendeBidragBeregningGrunnlag.beløp, 10, RoundingMode.HALF_UP)
+                    .minus(BigDecimal(1))
+                    .abs()
+                harBruktLøpendeBidrag = true
+            } else if (grunnlag.privatAvtaleBeregningGrunnlag?.beløp != null) {
+                faktiskEndringFaktor = grunnlag.beregnetBidragBeregningGrunnlag.beløp
+                    .divide(grunnlag.privatAvtaleBeregningGrunnlag.beløp, 10, RoundingMode.HALF_UP)
+                    .minus(BigDecimal(1))
+                    .abs()
+                harBruktPrivatAvtale = true
+            }
         }
 
         // Sjekker om endring er over grense. true hvis:
