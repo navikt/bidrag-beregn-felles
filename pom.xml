@@ -37,7 +37,7 @@
         <maven-release.version>3.1.1</maven-release.version>
         <maven-antrun.version>3.1.0</maven-antrun.version>
         <maven-jar.version>3.4.2</maven-jar.version>
-        <flatten-maven.version>1.6.0</flatten-maven.version>
+        <flatten-maven.version>1.7.0</flatten-maven.version>
         <build-helper-maven.version>3.6.0</build-helper-maven.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
