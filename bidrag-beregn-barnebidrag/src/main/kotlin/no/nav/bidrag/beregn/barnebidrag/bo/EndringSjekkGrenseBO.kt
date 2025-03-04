@@ -9,6 +9,7 @@ data class EndringSjekkGrensePeriodeGrunnlag(
 data class EndringSjekkGrensePeriodeDelberegningPeriodeGrunnlag(
     val referanse: String,
     val endringSjekkGrensePeriodePeriode: DelberegningEndringSjekkGrensePeriode,
+    val referanseListe: List<String> = emptyList(),
 )
 
 data class EndringSjekkGrensePeriodeDelberegningBeregningGrunnlag(val referanse: String, val endringErOverGrense: Boolean)

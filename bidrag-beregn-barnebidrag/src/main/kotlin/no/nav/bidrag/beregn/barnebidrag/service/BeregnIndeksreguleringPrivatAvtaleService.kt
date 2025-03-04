@@ -10,6 +10,7 @@ import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
+import no.nav.bidrag.domene.util.avrundetMedNullDesimaler
 import no.nav.bidrag.domene.util.avrundetTilNærmesteTier
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningPrivatAvtalePeriode
@@ -251,7 +252,7 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
                 DelberegningPrivatAvtalePeriode(
                     periode = grunnlag.beregningsperiode,
                     indeksreguleringFaktor = null,
-                    beløp = grunnlag.privatAvtalePeriode.beløp,
+                    beløp = grunnlag.privatAvtalePeriode.beløp.avrundetMedNullDesimaler,
 
                 )
         }

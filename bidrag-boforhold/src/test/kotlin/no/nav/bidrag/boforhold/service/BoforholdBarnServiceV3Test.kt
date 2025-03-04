@@ -1330,14 +1330,14 @@ internal class BoforholdBarnServiceV3Test {
     fun `Test juster virkningstidspunkt tilbake i tid `() {
         boforholdBarnServiceV3 = BoforholdBarnServiceV3()
         val mottatteBoforhold = TestUtil.justerVirkningstidspunktTilbakeITid()
-        val virkningstidspunkt = LocalDate.of(2025, 5, 1)
+        val virkningstidspunkt = LocalDate.of(2024, 5, 1)
         val resultat = boforholdBarnServiceV3.beregnBoforholdBarn(virkningstidspunkt, TypeBehandling.BIDRAG, listOf(mottatteBoforhold))
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
             resultat.size shouldBe 1
 
-            resultat[0].periodeFom shouldBe LocalDate.of(2025, 5, 1)
+            resultat[0].periodeFom shouldBe LocalDate.of(2024, 5, 1)
             resultat[0].periodeTom shouldBe null
             resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
             resultat[0].kilde shouldBe Kilde.OFFENTLIG
@@ -1369,6 +1369,110 @@ internal class BoforholdBarnServiceV3Test {
             resultat[2].periodeTom shouldBe LocalDate.of(2024, 11, 30)
             resultat[2].bostatus shouldBe Bostatuskode.MED_FORELDER
             resultat[2].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
+
+    @Test
+    fun `Test barnet flytter ut i beregningsmåned `() {
+        boforholdBarnServiceV3 = BoforholdBarnServiceV3()
+        val mottatteBoforhold = TestUtil.testBarnFlytterUtIBeregningsmåned()
+        val virkningstidspunkt = LocalDate.of(2025, 2, 1)
+        val resultat = boforholdBarnServiceV3.beregnBoforholdBarn(virkningstidspunkt, TypeBehandling.BIDRAG, listOf(mottatteBoforhold))
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 1
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2025, 2, 1)
+            resultat[0].periodeTom shouldBe null
+            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
+
+    @Test
+    fun `Test at fremtidige perioder filtreres bort `() {
+        boforholdBarnServiceV3 = BoforholdBarnServiceV3()
+        val mottatteBoforhold = TestUtil.filtererBortFremtidigePerioder()
+        val virkningstidspunkt = LocalDate.of(2025, 2, 1)
+        val resultat = boforholdBarnServiceV3.beregnBoforholdBarn(virkningstidspunkt, TypeBehandling.BIDRAG, listOf(mottatteBoforhold))
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 1
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2025, 2, 1)
+            resultat[0].periodeTom shouldBe null
+            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
+
+    @Test
+    fun `Test med to sammenhengende perioder i husstanden der siste periode starter i inneværende måned`() {
+        boforholdBarnServiceV3 = BoforholdBarnServiceV3()
+        val mottatteBoforhold = TestUtil.toSammenhengendePerioderIHusstand()
+        val virkningstidspunkt = LocalDate.of(2023, 5, 1)
+        val resultat = boforholdBarnServiceV3.beregnBoforholdBarn(virkningstidspunkt, TypeBehandling.BIDRAG, listOf(mottatteBoforhold))
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 1
+
+            resultat[0].periodeFom shouldBe LocalDate.of(2023, 5, 1)
+            resultat[0].periodeTom shouldBe null
+            resultat[0].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
+
+    @Test
+    fun `Test beregning 18-årsbidrag`() {
+        boforholdBarnServiceV3 = BoforholdBarnServiceV3()
+        val mottatteBoforhold = TestUtil.beregningPerioder18årsbidragSøknadsbarnOgAnnetBarn()
+        val virkningstidspunkt = LocalDate.of(2022, 5, 1)
+        val resultat = boforholdBarnServiceV3.beregnBoforholdBarn(virkningstidspunkt, TypeBehandling.BIDRAG_18_ÅR, mottatteBoforhold)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 7
+
+            // Søknadsbarn
+            resultat[0].periodeFom shouldBe LocalDate.of(2022, 5, 1)
+            resultat[0].periodeTom shouldBe LocalDate.of(2022, 11, 30)
+            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[1].periodeFom shouldBe LocalDate.of(2022, 12, 1)
+            resultat[1].periodeTom shouldBe LocalDate.of(2024, 7, 31)
+            resultat[1].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[1].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[2].periodeFom shouldBe LocalDate.of(2024, 8, 1)
+            resultat[2].periodeTom shouldBe null
+            resultat[2].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[2].kilde shouldBe Kilde.OFFENTLIG
+
+            // Annet barn
+            resultat[3].periodeFom shouldBe LocalDate.of(2022, 5, 1)
+            resultat[3].periodeTom shouldBe LocalDate.of(2022, 11, 30)
+            resultat[3].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[3].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[4].periodeFom shouldBe LocalDate.of(2022, 12, 1)
+            resultat[4].periodeTom shouldBe LocalDate.of(2024, 3, 31)
+            resultat[4].bostatus shouldBe Bostatuskode.MED_FORELDER
+            resultat[4].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[5].periodeFom shouldBe LocalDate.of(2024, 4, 1)
+            resultat[5].periodeTom shouldBe LocalDate.of(2024, 7, 31)
+            resultat[5].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
+            resultat[5].kilde shouldBe Kilde.OFFENTLIG
+
+            resultat[6].periodeFom shouldBe LocalDate.of(2024, 8, 1)
+            resultat[6].periodeTom shouldBe null
+            resultat[6].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[6].kilde shouldBe Kilde.OFFENTLIG
         }
     }
 }
