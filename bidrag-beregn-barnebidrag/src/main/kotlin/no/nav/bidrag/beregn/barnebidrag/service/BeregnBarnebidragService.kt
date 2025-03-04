@@ -386,7 +386,7 @@ class BeregnBarnebidragService : BeregnService() {
         // Kaller delberegning for å sjekke om endring i bidrag er over grense (pr periode)
         var grunnlagTilEndringSjekkGrense = utvidetGrunnlagJustert.beregnGrunnlag.copy(
             grunnlagListe =
-            delberegningIndeksreguleringPrivatAvtalePeriodeResultat + beløpshistorikkGrunnlag + delberegningEndeligBidragResultat.grunnlagListe,
+                delberegningIndeksreguleringPrivatAvtalePeriodeResultat + beløpshistorikkGrunnlag + delberegningEndeligBidragResultat.grunnlagListe,
         )
         val delberegningEndringSjekkGrensePeriodeResultat =
             delberegningEndringSjekkGrensePeriode(mottattGrunnlag = grunnlagTilEndringSjekkGrense, åpenSluttperiode = åpenSluttperiode)
@@ -440,8 +440,7 @@ class BeregnBarnebidragService : BeregnService() {
 
     private fun utførDelberegningPrivatAvtalePeriode(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = if (beregnGrunnlag.grunnlagListe
             .filtrerOgKonverterBasertPåEgenReferanse<PrivatAvtaleGrunnlag>(Grunnlagstype.PRIVAT_AVTALE_GRUNNLAG)
-            .filter { it.gjelderBarnReferanse == beregnGrunnlag.søknadsbarnReferanse }
-            .isEmpty()
+            .none { it.gjelderBarnReferanse == beregnGrunnlag.søknadsbarnReferanse }
     ) {
         emptyList()
     } else {
@@ -565,7 +564,7 @@ class BeregnBarnebidragService : BeregnService() {
         }
     }
 
-    // Fjerner referanser fra sluttberegningen i enkelte tilfeller
+    // Fjerner referanser som skal legges ut i resultatperioden i enkelte tilfeller (privat avtale og sjablon)
     private fun lagReferanseliste(
         referanseListe: List<String>,
         periode: ÅrMånedsperiode,
@@ -576,15 +575,17 @@ class BeregnBarnebidragService : BeregnService() {
             .filter { it.referanse in referanseListe }
             .map { it.referanse }
             .firstOrNull() ?: ""
+        val sjablonReferanse = referanseListe
+            .firstOrNull { it.startsWith("sjablon") || it.startsWith("Sjablon") || it.startsWith("SJABLON") } ?: ""
         val beløpshistorikkReferanse = beløpshistorikkPeriodeGrunnlag?.beløpshistorikkPeriode?.beløpshistorikk
             ?.filter { (periode.til == null || it.periode.fom < periode.til) && (it.periode.til == null || it.periode.til!! > periode.fom) }
             ?.map { beløpshistorikkPeriodeGrunnlag.referanse }
             ?.firstOrNull() ?: ""
         // beløpshistorikkReferanse trumfer privatAvtaleReferanse hvis begge finnes
         return if (privatAvtaleReferanse.isNotEmpty() && beløpshistorikkReferanse.isNotEmpty()) {
-            referanseListe.minus(privatAvtaleReferanse)
+            referanseListe.minus(privatAvtaleReferanse).minus(sjablonReferanse)
         } else {
-            referanseListe
+            referanseListe.minus(sjablonReferanse)
         }
     }
 
