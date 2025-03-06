@@ -77,6 +77,9 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
             if (sisteElement.periode.til != null && sisteElement.periode.til!! == mottattGrunnlag.periode.til && åpenSluttperiode) {
                 val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
                 nettoTilsynsutgiftBeregningResultatListe[nettoTilsynsutgiftBeregningResultatListe.size - 1] = oppdatertSisteElement
+            } else if (sisteElement.periode.til == null && mottattGrunnlag.opphørsdato != null) {
+                val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = mottattGrunnlag.opphørsdato))
+                nettoTilsynsutgiftBeregningResultatListe[nettoTilsynsutgiftBeregningResultatListe.size - 1] = oppdatertSisteElement
             }
         }
 

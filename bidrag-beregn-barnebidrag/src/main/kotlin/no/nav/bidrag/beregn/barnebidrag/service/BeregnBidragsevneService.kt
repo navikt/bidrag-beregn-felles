@@ -75,8 +75,12 @@ internal object BeregnBidragsevneService : BeregnService() {
         // Setter til-periode i siste element til null hvis det ikke allerede er det og åpenSluttperiode er true
         if (bidragsevneBeregningResultatListe.isNotEmpty()) {
             val sisteElement = bidragsevneBeregningResultatListe.last()
-            if (sisteElement.periode.til != null && åpenSluttperiode) {
+            val opphørsdato = mottattGrunnlag.opphørsdato
+            if (sisteElement.periode.til != null && åpenSluttperiode && opphørsdato == null) {
                 val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
+                bidragsevneBeregningResultatListe[bidragsevneBeregningResultatListe.size - 1] = oppdatertSisteElement
+            } else if (opphørsdato != null) {
+                val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = opphørsdato))
                 bidragsevneBeregningResultatListe[bidragsevneBeregningResultatListe.size - 1] = oppdatertSisteElement
             }
         }
@@ -262,9 +266,13 @@ internal object BeregnBidragsevneService : BeregnService() {
             .toMutableList()
         if (boforholdListe.isNotEmpty()) {
             val sisteElement = boforholdListe.last()
+            val opphørsdato = mottattGrunnlag.opphørsdato
             // Setter til-periode i siste element til null hvis det ikke allerede er det og åpenSluttperiode er true
             if (sisteElement.periode.datoTil != null && åpenSluttperiode) {
                 val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(datoTil = null))
+                boforholdListe[boforholdListe.size - 1] = oppdatertSisteElement
+            } else if (sisteElement.periode.datoTil == null && opphørsdato != null) {
+                val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(datoTil = opphørsdato.atDay(1)))
                 boforholdListe[boforholdListe.size - 1] = oppdatertSisteElement
             }
         }

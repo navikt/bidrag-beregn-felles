@@ -67,8 +67,12 @@ internal object BeregnBarnetilleggSkattesatsService : BeregnService() {
         // Setter til-periode i siste element til null hvis det ikke allerede er det og åpenSluttperiode er true
         if (barnetilleggSkattesatsBeregningResultatListe.isNotEmpty()) {
             val sisteElement = barnetilleggSkattesatsBeregningResultatListe.last()
-            if (sisteElement.periode.til != null && åpenSluttperiode) {
+            val opphørsdato = mottattGrunnlag.opphørsdato
+            if (sisteElement.periode.til != null && åpenSluttperiode && opphørsdato == null) {
                 val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
+                barnetilleggSkattesatsBeregningResultatListe[barnetilleggSkattesatsBeregningResultatListe.size - 1] = oppdatertSisteElement
+            } else if (opphørsdato != null) {
+                val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = opphørsdato))
                 barnetilleggSkattesatsBeregningResultatListe[barnetilleggSkattesatsBeregningResultatListe.size - 1] = oppdatertSisteElement
             }
         }

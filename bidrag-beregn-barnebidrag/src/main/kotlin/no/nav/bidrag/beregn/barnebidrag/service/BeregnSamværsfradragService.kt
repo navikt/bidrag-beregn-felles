@@ -62,8 +62,12 @@ internal object BeregnSamværsfradragService : BeregnService() {
         // Setter til-periode i siste element til null hvis det ikke allerede er det og åpenSluttperiode er true
         if (samværsfradragBeregningResultatListe.isNotEmpty()) {
             val sisteElement = samværsfradragBeregningResultatListe.last()
-            if (sisteElement.periode.til != null && åpenSluttperiode) {
+            val opphørsdato = mottattGrunnlag.opphørsdato
+            if (sisteElement.periode.til != null && åpenSluttperiode && opphørsdato == null) {
                 val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
+                samværsfradragBeregningResultatListe[samværsfradragBeregningResultatListe.size - 1] = oppdatertSisteElement
+            } else if (opphørsdato != null) {
+                val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = opphørsdato))
                 samværsfradragBeregningResultatListe[samværsfradragBeregningResultatListe.size - 1] = oppdatertSisteElement
             }
         }

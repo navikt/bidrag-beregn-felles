@@ -36,6 +36,7 @@ internal object BpAndelUnderholdskostnadMapper : CoreMapper() {
             ),
             innslagKapitalinntektSjablonverdi = innslagKapitalInntekt,
             åpenSluttperiode = åpenSluttperiode,
+
         ),
         inntektSBPeriodeGrunnlagListe = mapInntekt(
             beregnGrunnlag = mottattGrunnlag,
@@ -45,6 +46,7 @@ internal object BpAndelUnderholdskostnadMapper : CoreMapper() {
             ),
             innslagKapitalinntektSjablonverdi = innslagKapitalInntekt,
             åpenSluttperiode = åpenSluttperiode,
+
         ),
         sjablonSjablontallPeriodeGrunnlagListe = mapSjablonSjablontall(sjablonGrunnlag),
     )

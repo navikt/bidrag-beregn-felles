@@ -129,7 +129,7 @@ val sluttenAvForrigeMåned get() = LocalDate.now().sluttenAvForrigeMåned
 val LocalDate?.sluttenAvForrigeMåned get() = this?.withDayOfMonth(1)?.minusDays(1)
 
 // Antar opphørsdato er til dato og ikke til-og.med (starten av måneden det opphøres)
-fun justerPeriodeTilOpphørsdato(oppphørsdato: LocalDate?) = if (oppphørsdato == null ||
+fun justerPeriodeTomOpphørsdato(oppphørsdato: LocalDate?) = if (oppphørsdato == null ||
     oppphørsdato.withDayOfMonth(1).minusDays(1).isAfter(sluttenAvForrigeMåned)
 ) {
     null
@@ -137,7 +137,7 @@ fun justerPeriodeTilOpphørsdato(oppphørsdato: LocalDate?) = if (oppphørsdato 
     oppphørsdato.sluttenAvForrigeMåned
 }
 fun justerPeriodeTilOpphørsdato(oppphørsdato: YearMonth?) = if (oppphørsdato == null ||
-    oppphørsdato.isAfter(YearMonth.from(sluttenAvForrigeMåned))
+    oppphørsdato.isAfter(YearMonth.now())
 ) {
     null
 } else {

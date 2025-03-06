@@ -160,8 +160,12 @@ abstract class CoreMapper {
             // Setter til-periode i siste element til null hvis det ikke allerede er det og åpenSluttperiode er true (ikke for særbidrag)
             if ((!erSærbidrag) && (akkumulertInntektListe.isNotEmpty())) {
                 val sisteElement = akkumulertInntektListe.last()
-                if (sisteElement.periode.datoTil != null && åpenSluttperiode) {
+                val opphørsdato = beregnGrunnlag.opphørsdato
+                if (sisteElement.periode.datoTil != null && åpenSluttperiode && opphørsdato == null) {
                     val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(datoTil = null))
+                    akkumulertInntektListe[akkumulertInntektListe.size - 1] = oppdatertSisteElement
+                } else if (sisteElement.periode.datoTil == null && opphørsdato != null) {
+                    val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(datoTil = opphørsdato.atDay(1)))
                     akkumulertInntektListe[akkumulertInntektListe.size - 1] = oppdatertSisteElement
                 }
             }

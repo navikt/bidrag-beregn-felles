@@ -1,10 +1,8 @@
 {
   "periode": {
     "fom": "2020-08",
-    "til": "2021-01"
+    "til": null
   },
-  "opphørsdato": "2021-01",
-  "stønadstype": "BIDRAG18AAR",
   "søknadsbarnReferanse": "Person_Søknadsbarn",
   "grunnlagListe": [
     {
@@ -13,7 +11,7 @@
       "innhold": {
         "ident": "11111111110",
         "navn": "Trengende Søknadsbarn",
-        "fødselsdato": "2001-10-01"
+        "fødselsdato": "2022-02-01"
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": null
@@ -46,7 +44,7 @@
       "innhold": {
         "periode": {
           "fom": "2020-08",
-          "til": "2021-01"
+          "til": null
         },
         "inntektsrapportering": "AINNTEKT",
         "gjelderBarn": null,
@@ -64,7 +62,7 @@
       "innhold": {
         "periode": {
           "fom": "2020-08",
-          "til": "2021-01"
+          "til": null
         },
         "inntektsrapportering": "AINNTEKT",
         "gjelderBarn": null,
@@ -82,7 +80,7 @@
       "innhold": {
         "periode": {
           "fom": "2020-08",
-          "til": "2021-01"
+          "til": null
         },
         "inntektsrapportering": "AINNTEKT",
         "gjelderBarn": null,
@@ -100,7 +98,7 @@
       "innhold": {
         "periode": {
           "fom": "2020-08",
-          "til": "2021-01"
+          "til": null
         },
         "bostatus": "IKKE_MED_FORELDER",
         "manueltRegistrert": false,
@@ -116,7 +114,7 @@
       "innhold": {
         "periode": {
           "fom": "2020-08",
-          "til": "2021-01"
+          "til": null
         },
         "bostatus": "BOR_MED_ANDRE_VOKSNE",
         "manueltRegistrert": false,
@@ -132,7 +130,7 @@
       "innhold": {
         "periode": {
           "fom": "2020-08",
-          "til": "2021-01"
+          "til": null
         },
         "samværsklasse": "SAMVÆRSKLASSE_1",
         "manueltRegistrert": false

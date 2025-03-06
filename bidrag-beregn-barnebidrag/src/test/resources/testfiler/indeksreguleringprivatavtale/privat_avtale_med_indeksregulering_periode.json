@@ -1,9 +1,9 @@
 {
   "periode" : {
     "fom" : "2021-07",
-    "til" : "2025-06"
+    "til" : "2025-03"
   },
-  "opphørSistePeriode" : true,
+  "opphørsdato": "2025-06",
   "stønadstype" : "BIDRAG",
   "søknadsbarnReferanse" : "person_PERSON_SØKNADSBARN_20140913_358",
   "grunnlagListe" : [ {

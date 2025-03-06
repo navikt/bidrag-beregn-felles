@@ -134,7 +134,7 @@ class BeregnBarnebidragService : BeregnService() {
             .sortedBy { it.referanse }
 
         val beregnetBarnebidragResultat = BeregnetBarnebidragResultat(
-            beregnetBarnebidragPeriodeListe = resultatPeriodeListe,
+            beregnetBarnebidragPeriodeListe = justerPerioderForOpphørsdato(resultatPeriodeListe, mottattGrunnlag.opphørsdato),
             grunnlagListe = endeligResultatGrunnlagListe,
         )
 
@@ -158,6 +158,24 @@ class BeregnBarnebidragService : BeregnService() {
 
         secureLogger.debug { "Beregning av barnebidrag - følgende respons returnert: ${tilJson(beregnetBarnebidragResultat)}" }
         return beregnetBarnebidragResultat
+    }
+    fun justerPerioderForOpphørsdato(periodeliste: List<ResultatPeriode>, opphørsdato: YearMonth?): List<ResultatPeriode> {
+        if (opphørsdato == null) return periodeliste
+
+        val filteredPeriods = periodeliste.filter { it.periode.fom.isBefore(opphørsdato) }
+        if (filteredPeriods.isEmpty()) return emptyList()
+
+        val lastPeriod = filteredPeriods.maxByOrNull { it.periode.fom }!!
+        val lastPeriodIndex = filteredPeriods.indexOf(lastPeriod)
+
+        // Juster siste periodeTil for opphørsdato
+        return filteredPeriods.mapIndexed { index, period ->
+            if (index == lastPeriodIndex) {
+                period.copy(periode = period.periode.copy(til = opphørsdato))
+            } else {
+                period
+            }
+        }
     }
 
     // Beregning av bidragsevne
@@ -386,7 +404,7 @@ class BeregnBarnebidragService : BeregnService() {
         // Kaller delberegning for å sjekke om endring i bidrag er over grense (pr periode)
         var grunnlagTilEndringSjekkGrense = utvidetGrunnlagJustert.beregnGrunnlag.copy(
             grunnlagListe =
-                delberegningIndeksreguleringPrivatAvtalePeriodeResultat + beløpshistorikkGrunnlag + delberegningEndeligBidragResultat.grunnlagListe,
+            delberegningIndeksreguleringPrivatAvtalePeriodeResultat + beløpshistorikkGrunnlag + delberegningEndeligBidragResultat.grunnlagListe,
         )
         val delberegningEndringSjekkGrensePeriodeResultat =
             delberegningEndringSjekkGrensePeriode(mottattGrunnlag = grunnlagTilEndringSjekkGrense, åpenSluttperiode = åpenSluttperiode)
@@ -593,7 +611,11 @@ class BeregnBarnebidragService : BeregnService() {
     // sjekkes om barnet blir 18 år i perioden,
     private fun justerTilPeriodeHvisBarnetBlir18ÅrIBeregningsperioden(mottattGrunnlag: BeregnGrunnlag): BeregnGrunnlagJustert {
         if (mottattGrunnlag.stønadstype == Stønadstype.BIDRAG18AAR) {
-            return BeregnGrunnlagJustert(beregnGrunnlag = mottattGrunnlag, åpenSluttperiode = !mottattGrunnlag.opphørSistePeriode)
+            return BeregnGrunnlagJustert(
+                beregnGrunnlag = mottattGrunnlag,
+                åpenSluttperiode =
+                mottattGrunnlag.opphørsdato == null || mottattGrunnlag.opphørsdato!!.isAfter(YearMonth.now()),
+            )
         }
 
         val periodeSøknadsbarnetFyller18År = mottattGrunnlag.grunnlagListe
@@ -609,7 +631,11 @@ class BeregnBarnebidragService : BeregnService() {
                 åpenSluttperiode = false,
             )
         } else {
-            BeregnGrunnlagJustert(beregnGrunnlag = mottattGrunnlag, åpenSluttperiode = !mottattGrunnlag.opphørSistePeriode)
+            BeregnGrunnlagJustert(
+                beregnGrunnlag = mottattGrunnlag,
+                åpenSluttperiode =
+                mottattGrunnlag.opphørsdato == null || mottattGrunnlag.opphørsdato!!.isAfter(YearMonth.now()),
+            )
         }
     }
 
