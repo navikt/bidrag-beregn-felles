@@ -12,10 +12,12 @@ import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebid
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBoforhold
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndringSjekkGrense
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndringSjekkGrensePeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningPrivatAvtalePeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsfradrag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSumInntekt
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
 import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
@@ -225,50 +227,110 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
 
     @Test
     fun `skal sette opphørsdato på siste peride hvis før dagens dato`() {
-        val request = lesFilOgByggRequest("src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel1A_løpende.json")
-
-        val opphørsdato = YearMonth.now().minusMonths(1)
+        val opphørsdato = YearMonth.now().minusMonths(2)
         val resultat = api.beregn(
-            request.copy(
-                opphørsdato = opphørsdato,
-                periode = request.periode.copy(til = YearMonth.now().minusMonths(1)),
-            ),
+            opprettTestdata(periodeFra = YearMonth.now().minusMonths(5), periodeTil = opphørsdato, opphørsdato = opphørsdato),
         )
 
         val sistePeriode = resultat.beregnetBarnebidragPeriodeListe.maxBy { it.periode.fom }
         sistePeriode.periode.til shouldBe opphørsdato
+        val resultatGrunnlagsliste = resultat.grunnlagListe
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningBidragsevne>(Grunnlagstype.DELBEREGNING_BIDRAGSEVNE)
+            .validerSistePeriodeErLikDato(opphørsdato)
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningSumInntekt>(Grunnlagstype.DELBEREGNING_SUM_INNTEKT)
+            .validerSistePeriodeErLikDato(opphørsdato)
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningBoforhold>(Grunnlagstype.DELBEREGNING_BOFORHOLD)
+            .validerSistePeriodeErLikDato(opphørsdato)
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningBoforhold>(Grunnlagstype.DELBEREGNING_VOKSNE_I_HUSSTAND)
+            .validerSistePeriodeErLikDato(opphørsdato)
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningBoforhold>(Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND)
+            .validerSistePeriodeErLikDato(opphørsdato)
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningBoforhold>(Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD)
+            .validerSistePeriodeErLikDato(opphørsdato)
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningBoforhold>(Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG)
+            .validerSistePeriodeErLikDato(opphørsdato)
     }
 
     @Test
     fun `skal sette opphørsdato på siste peride hvis etter dagens dato`() {
-        val request = lesFilOgByggRequest("src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel1A_løpende.json")
-
         val opphørsdato = YearMonth.now().plusMonths(10)
         val resultat = api.beregn(
-            request.copy(
-                opphørsdato = opphørsdato,
-                periode = request.periode.copy(til = YearMonth.now().plusMonths(1)),
-            ),
+            opprettTestdata(periodeFra = YearMonth.now().minusMonths(3), periodeTil = YearMonth.now().plusMonths(1), opphørsdato = opphørsdato),
         )
 
         val sistePeriode = resultat.beregnetBarnebidragPeriodeListe.maxBy { it.periode.fom }
         sistePeriode.periode.til shouldBe opphørsdato
+
+        val resultatGrunnlagsliste = resultat.grunnlagListe
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningBidragsevne>(Grunnlagstype.DELBEREGNING_BIDRAGSEVNE)
+            .validerSistePeriodeErLikDato(null)
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningSumInntekt>(Grunnlagstype.DELBEREGNING_SUM_INNTEKT)
+            .validerSistePeriodeErLikDato(null)
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningBoforhold>(Grunnlagstype.DELBEREGNING_BOFORHOLD)
+            .validerSistePeriodeErLikDato(null)
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningBoforhold>(Grunnlagstype.DELBEREGNING_VOKSNE_I_HUSSTAND)
+            .validerSistePeriodeErLikDato(null)
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningBoforhold>(Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND)
+            .validerSistePeriodeErLikDato(null)
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningBoforhold>(Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD)
+            .validerSistePeriodeErLikDato(null)
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningBoforhold>(Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG)
+            .validerSistePeriodeErLikDato(null)
     }
 
     @Test
     fun `skal sette opphørsdato på siste periode hvis opphørsdato er inneværende måned`() {
-        val request = lesFilOgByggRequest("src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel1A_løpende.json")
-
         val opphørsdato = YearMonth.now().plusMonths(1)
         val resultat = api.beregn(
-            request.copy(
-                opphørsdato = opphørsdato,
-                periode = request.periode.copy(til = YearMonth.now().plusMonths(1)),
-            ),
+            opprettTestdata(periodeFra = YearMonth.now().minusMonths(3), periodeTil = YearMonth.now().plusMonths(1), opphørsdato = opphørsdato),
         )
 
         val sistePeriode = resultat.beregnetBarnebidragPeriodeListe.maxBy { it.periode.fom }
         sistePeriode.periode.til shouldBe opphørsdato
+
+        val resultatGrunnlagsliste = resultat.grunnlagListe
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningBidragsevne>(Grunnlagstype.DELBEREGNING_BIDRAGSEVNE)
+            .validerSistePeriodeErLikDato(null)
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningSumInntekt>(Grunnlagstype.DELBEREGNING_SUM_INNTEKT)
+            .validerSistePeriodeErLikDato(null)
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningBoforhold>(Grunnlagstype.DELBEREGNING_BOFORHOLD)
+            .validerSistePeriodeErLikDato(null)
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningBoforhold>(Grunnlagstype.DELBEREGNING_VOKSNE_I_HUSSTAND)
+            .validerSistePeriodeErLikDato(null)
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningBoforhold>(Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND)
+            .validerSistePeriodeErLikDato(null)
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningBoforhold>(Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD)
+            .validerSistePeriodeErLikDato(null)
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningBoforhold>(Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG)
+            .validerSistePeriodeErLikDato(null)
+    }
+
+    @Test
+    fun `skal sette opphørsdato på siste periode hvis opphørsdato er frem i tid og beregningsperiode er frem i tid`() {
+        val opphørsdato = YearMonth.now().plusMonths(8)
+        val sluttPeriodeTil = YearMonth.now().plusMonths(5)
+        val resultat = api.beregn(
+            opprettTestdata(periodeFra = YearMonth.now().minusMonths(3), periodeTil = sluttPeriodeTil, opphørsdato = opphørsdato),
+        )
+
+        val sistePeriode = resultat.beregnetBarnebidragPeriodeListe.maxBy { it.periode.fom }
+        sistePeriode.periode.til shouldBe opphørsdato
+
+        val resultatGrunnlagsliste = resultat.grunnlagListe
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningBidragsevne>(Grunnlagstype.DELBEREGNING_BIDRAGSEVNE)
+            .validerSistePeriodeErLikDato(null)
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningSumInntekt>(Grunnlagstype.DELBEREGNING_SUM_INNTEKT)
+            .validerSistePeriodeErLikDato(null)
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningBoforhold>(Grunnlagstype.DELBEREGNING_BOFORHOLD)
+            .validerSistePeriodeErLikDato(null)
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningBoforhold>(Grunnlagstype.DELBEREGNING_VOKSNE_I_HUSSTAND)
+            .validerSistePeriodeErLikDato(null)
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningBoforhold>(Grunnlagstype.DELBEREGNING_BARN_I_HUSSTAND)
+            .validerSistePeriodeErLikDato(null)
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningBoforhold>(Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD)
+            .validerSistePeriodeErLikDato(null)
+        resultatGrunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<DelberegningBoforhold>(Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG)
+            .validerSistePeriodeErLikDato(null)
     }
 
     @Test

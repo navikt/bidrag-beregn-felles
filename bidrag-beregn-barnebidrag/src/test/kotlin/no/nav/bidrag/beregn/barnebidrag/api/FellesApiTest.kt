@@ -3,16 +3,20 @@ package no.nav.bidrag.beregn.barnebidrag.api
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import io.kotest.matchers.shouldBe
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagBeregningPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
+import no.nav.bidrag.transport.behandling.felles.grunnlag.InnholdMedReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import org.junit.jupiter.api.Assertions.fail
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.text.SimpleDateFormat
+import java.time.YearMonth
 
 internal open class FellesApiTest {
 
@@ -73,6 +77,12 @@ internal open class FellesApiTest {
         return ObjectMapper().findAndRegisterModules().readValue(json, BeregnGrunnlag::class.java)
     }
 
+    fun lagBeregningPeriodeTil(opphørsdato: YearMonth) = if (opphørsdato.isAfter(YearMonth.now())) {
+        YearMonth.now().plusMonths(1)
+    } else {
+        opphørsdato
+    }
+
     fun <T> printJson(json: T) {
         val objectMapper = ObjectMapper()
         objectMapper.registerKotlinModule()
@@ -81,4 +91,7 @@ internal open class FellesApiTest {
 
         println(objectMapper.writeValueAsString(json))
     }
+}
+inline fun <reified T : GrunnlagBeregningPeriode> List<InnholdMedReferanse<T>>.validerSistePeriodeErLikDato(opphørsdato: YearMonth?) {
+    maxBy { it.innhold.periode.fom }.innhold.periode.til shouldBe opphørsdato
 }

@@ -104,12 +104,8 @@ internal object BeregnEndeligBidragService : BeregnService() {
         // Setter til-periode i siste element til null hvis det ikke allerede er det og åpenSluttperiode er true
         if (endeligBidragBeregningResultatListe.isNotEmpty()) {
             val sisteElement = endeligBidragBeregningResultatListe.last()
-            val opphørsdato = mottattGrunnlag.opphørsdato
-            if (sisteElement.periode.til != null && åpenSluttperiode && opphørsdato == null) {
+            if (sisteElement.periode.til != null && åpenSluttperiode) {
                 val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
-                endeligBidragBeregningResultatListe[endeligBidragBeregningResultatListe.size - 1] = oppdatertSisteElement
-            } else if (opphørsdato != null) {
-                val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = opphørsdato))
                 endeligBidragBeregningResultatListe[endeligBidragBeregningResultatListe.size - 1] = oppdatertSisteElement
             }
         }
