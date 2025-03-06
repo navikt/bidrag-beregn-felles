@@ -20,6 +20,7 @@ import no.nav.bidrag.transport.behandling.beregning.felles.InntektsgrunnlagPerio
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSumInntekt
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
+import java.time.YearMonth
 
 internal class BeregnInntektService {
     fun beregn(grunnlag: BeregnValgteInntekterGrunnlag): BeregnValgteInntekterResultat {
@@ -69,7 +70,7 @@ internal class BeregnInntektService {
             }
 
         val generelleInntekterAkkumulertOgPeriodisertListe =
-            akkumulerOgPeriodiser(generelleInntekterListe, grunnlag.periode, grunnlag.opphørSistePeriode)
+            akkumulerOgPeriodiser(generelleInntekterListe, grunnlag.opphørsdato)
 
         return listOf(
             InntektPerBarn(
@@ -114,7 +115,7 @@ internal class BeregnInntektService {
                     )
                 }
 
-            val barnInntekterAkkumulertOgPeriodisertListe = akkumulerOgPeriodiser(barnInntekterListe, grunnlag.periode, grunnlag.opphørSistePeriode)
+            val barnInntekterAkkumulertOgPeriodisertListe = akkumulerOgPeriodiser(barnInntekterListe, grunnlag.opphørsdato)
 
             inntektPerBarnListe.add(
                 InntektPerBarn(
@@ -128,12 +129,8 @@ internal class BeregnInntektService {
     }
 
     // Lager en gruppert liste over inntekter summert pr bruddperiode
-    private fun akkumulerOgPeriodiser(
-        grunnlagListe: List<InntektsgrunnlagPeriode>,
-        periode: ÅrMånedsperiode,
-        opphørSistePeriode: Boolean = false,
-    ): List<DelberegningSumInntekt> {
-        val filteredGrunnlagListe = if (opphørSistePeriode) justerPerioderForOpphørsdato(grunnlagListe, periode) else grunnlagListe
+    private fun akkumulerOgPeriodiser(grunnlagListe: List<InntektsgrunnlagPeriode>, opphørsdato: YearMonth? = null): List<DelberegningSumInntekt> {
+        val filteredGrunnlagListe = if (opphørsdato != null) justerPerioderForOpphørsdato(grunnlagListe, opphørsdato) else grunnlagListe
         // Lager unik, sortert liste over alle bruddatoer og legger evt. null-forekomst bakerst
         val bruddatoListe = filteredGrunnlagListe
             .flatMap { listOf(it.periode.fom, it.periode.til) }
@@ -146,21 +143,20 @@ internal class BeregnInntektService {
             .zipWithNext()
             .map { Periode(it.first!!.atDay(1), it.second?.atDay(1)) }.toMutableList()
 
-        if (opphørSistePeriode && periodeListe.isNotEmpty()) {
-            periodeListe[periodeListe.lastIndex] = Periode(periodeListe.last().datoFom, periode.til?.atDay(1))
+        if (opphørsdato != null && periodeListe.isNotEmpty()) {
+            periodeListe[periodeListe.lastIndex] = Periode(periodeListe.last().datoFom, justerPeriodeTilOpphørsdato(opphørsdato)?.atDay(1))
         }
 
         // Returnerer en gruppert og summert liste over inntekter pr bruddperiode
         return akkumulerOgPeriodiserInntekter(filteredGrunnlagListe, periodeListe)
     }
-
-    fun justerPerioderForOpphørsdato(grunnlagsliste: List<InntektsgrunnlagPeriode>, periode: ÅrMånedsperiode): List<InntektsgrunnlagPeriode> =
+    fun justerPerioderForOpphørsdato(grunnlagsliste: List<InntektsgrunnlagPeriode>, opphørsdato: YearMonth?): List<InntektsgrunnlagPeriode> =
         grunnlagsliste.filter {
-            it.periode.fom.isBefore(periode.til)
+            it.periode.fom.isBefore(opphørsdato)
         }
             .map { grunnlag ->
-                if (grunnlag.periode.til == null || grunnlag.periode.til!!.isAfter(periode.til)) {
-                    grunnlag.copy(periode = grunnlag.periode.copy(til = justerPeriodeTilOpphørsdato(periode.til)))
+                if (grunnlag.periode.til == null || grunnlag.periode.til!! >= opphørsdato) {
+                    grunnlag.copy(periode = grunnlag.periode.copy(til = justerPeriodeTilOpphørsdato(opphørsdato)))
                 } else {
                     grunnlag
                 }

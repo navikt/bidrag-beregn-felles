@@ -1,5 +1,6 @@
 package no.nav.bidrag.beregn.barnebidrag.api
 
+import io.kotest.matchers.shouldBe
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
 import no.nav.bidrag.beregn.core.exception.BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException
 import no.nav.bidrag.beregn.core.exception.BegrensetRevurderingLøpendeForskuddManglerException
@@ -220,6 +221,54 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
         forventetAntallBarnetilleggBM = 0
 
         utførBeregningerOgEvaluerResultatBarnebidrag()
+    }
+
+    @Test
+    fun `skal sette opphørsdato på siste peride hvis før dagens dato`() {
+        val request = lesFilOgByggRequest("src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel1A_løpende.json")
+
+        val opphørsdato = YearMonth.now().minusMonths(1)
+        val resultat = api.beregn(
+            request.copy(
+                opphørsdato = opphørsdato,
+                periode = request.periode.copy(til = YearMonth.now().minusMonths(1)),
+            ),
+        )
+
+        val sistePeriode = resultat.beregnetBarnebidragPeriodeListe.maxBy { it.periode.fom }
+        sistePeriode.periode.til shouldBe opphørsdato
+    }
+
+    @Test
+    fun `skal sette opphørsdato på siste peride hvis etter dagens dato`() {
+        val request = lesFilOgByggRequest("src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel1A_løpende.json")
+
+        val opphørsdato = YearMonth.now().plusMonths(10)
+        val resultat = api.beregn(
+            request.copy(
+                opphørsdato = opphørsdato,
+                periode = request.periode.copy(til = YearMonth.now().plusMonths(1)),
+            ),
+        )
+
+        val sistePeriode = resultat.beregnetBarnebidragPeriodeListe.maxBy { it.periode.fom }
+        sistePeriode.periode.til shouldBe opphørsdato
+    }
+
+    @Test
+    fun `skal sette opphørsdato på siste periode hvis opphørsdato er inneværende måned`() {
+        val request = lesFilOgByggRequest("src/test/resources/testfiler/barnebidrag/barnebidrag_eksempel1A_løpende.json")
+
+        val opphørsdato = YearMonth.now().plusMonths(1)
+        val resultat = api.beregn(
+            request.copy(
+                opphørsdato = opphørsdato,
+                periode = request.periode.copy(til = YearMonth.now().plusMonths(1)),
+            ),
+        )
+
+        val sistePeriode = resultat.beregnetBarnebidragPeriodeListe.maxBy { it.periode.fom }
+        sistePeriode.periode.til shouldBe opphørsdato
     }
 
     @Test

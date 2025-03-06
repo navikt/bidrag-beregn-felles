@@ -3,7 +3,7 @@
     "fom": "2020-08",
     "til": "2021-01"
   },
-  "opphørSistePeriode": true,
+  "opphørsdato": "2021-01",
   "stønadstype": "BIDRAG18AAR",
   "søknadsbarnReferanse": "Person_Søknadsbarn",
   "grunnlagListe": [

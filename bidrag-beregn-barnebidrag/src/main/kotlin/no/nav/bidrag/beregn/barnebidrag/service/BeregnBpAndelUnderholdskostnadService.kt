@@ -76,8 +76,12 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
         // Setter til-periode i siste element til null hvis det ikke allerede er det og åpenSluttperiode er true
         if (bpAndelUnderholdskostnadBeregningResultatListe.isNotEmpty()) {
             val sisteElement = bpAndelUnderholdskostnadBeregningResultatListe.last()
-            if (sisteElement.periode.til != null && åpenSluttperiode) {
+            val opphørsdato = mottattGrunnlag.opphørsdato
+            if (sisteElement.periode.til != null && åpenSluttperiode && opphørsdato == null) {
                 val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
+                bpAndelUnderholdskostnadBeregningResultatListe[bpAndelUnderholdskostnadBeregningResultatListe.size - 1] = oppdatertSisteElement
+            } else if (opphørsdato != null) {
+                val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = opphørsdato))
                 bpAndelUnderholdskostnadBeregningResultatListe[bpAndelUnderholdskostnadBeregningResultatListe.size - 1] = oppdatertSisteElement
             }
         }

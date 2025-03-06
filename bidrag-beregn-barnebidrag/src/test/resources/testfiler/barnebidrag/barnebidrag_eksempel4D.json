@@ -3,7 +3,6 @@
     "fom" : "2025-01",
     "til" : "2025-03"
   },
-  "opphørSistePeriode" : false,
   "søknadsbarnReferanse" : "person_PERSON_SØKNADSBARN_20140513_362",
   "grunnlagListe" : [ {
     "referanse" : "person_PERSON_BIDRAGSMOTTAKER_19801110_364",

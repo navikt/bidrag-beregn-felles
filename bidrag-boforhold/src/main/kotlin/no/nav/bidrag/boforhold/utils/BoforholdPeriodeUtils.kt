@@ -1,6 +1,6 @@
 package no.nav.bidrag.boforhold.utils
 
-import no.nav.bidrag.beregn.core.util.justerPeriodeTilOpphørsdato
+import no.nav.bidrag.beregn.core.util.justerPeriodeTomOpphørsdato
 import no.nav.bidrag.boforhold.dto.BoforholdResponseV2
 import no.nav.bidrag.boforhold.dto.Bostatus
 import java.time.LocalDate
@@ -13,7 +13,7 @@ fun List<BoforholdResponseV2>.justerBoforholdPerioderForOpphørsdato(opphørsdat
     return filtrertePerioder
         .map { periode ->
             if (periode == sistePeriode) {
-                periode.copy(periodeTom = justerPeriodeTilOpphørsdato(opphørsdato))
+                periode.copy(periodeTom = justerPeriodeTomOpphørsdato(opphørsdato))
             } else {
                 periode
             }
@@ -27,7 +27,7 @@ fun List<Bostatus>.justerBostatusPerioderForOpphørsdato(opphørsdato: LocalDate
     return filtrertePerioder
         .map { periode ->
             if (periode == sistePeriode) {
-                periode.copy(periodeTom = justerPeriodeTilOpphørsdato(opphørsdato))
+                periode.copy(periodeTom = justerPeriodeTomOpphørsdato(opphørsdato))
             } else {
                 periode
             }
