@@ -10,7 +10,7 @@ import java.math.BigDecimal
 internal object EndeligBidragBeregning {
 
     fun beregn(grunnlag: EndeligBidragBeregningGrunnlag, førsteElement: Boolean): EndeligBidragBeregningResultat {
-        // Hvis søknadsbarnet bor hos BP gjøres det ingen videre beregning (skal resultere i avslag og bidragsbeløp settes til null
+        // Hvis søknadsbarnet bor hos BP gjøres det ingen videre beregning (skal resultere i avslag og bidragsbeløp settes til null)
         if (grunnlag.søknadsbarnetBorHosBpGrunnlag.søknadsbarnetBorHosBp) {
             return EndeligBidragBeregningResultat(
                 ikkeOmsorgForBarnet = true,

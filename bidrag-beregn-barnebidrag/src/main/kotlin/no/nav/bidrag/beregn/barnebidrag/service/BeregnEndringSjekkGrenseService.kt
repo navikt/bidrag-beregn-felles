@@ -8,6 +8,7 @@ import no.nav.bidrag.beregn.barnebidrag.mapper.EndringSjekkGrenseMapper.mapEndri
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
+import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndringSjekkGrense
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
@@ -27,9 +28,12 @@ internal object BeregnEndringSjekkGrenseService : BeregnService() {
                 EndringSjekkGrensePeriodeDelberegningBeregningGrunnlag(
                     referanse = it.referanse,
                     endringErOverGrense = it.endringSjekkGrensePeriodePeriode.endringErOverGrense,
+                    løpendeBidragBeløp = it.endringSjekkGrensePeriodePeriode.løpendeBidragBeløp,
+                    beregnetBidragBeløp = it.endringSjekkGrensePeriodePeriode.beregnetBidragBeløp?.avrundetMedToDesimaler,
                 ),
             )
         }
+
         val beregningResultat = EndringSjekkGrenseBeregning.beregn(beregningGrunnlagListe)
 
         // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag)
