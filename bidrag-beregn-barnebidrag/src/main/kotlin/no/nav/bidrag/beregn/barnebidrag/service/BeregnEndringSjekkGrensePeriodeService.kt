@@ -124,10 +124,10 @@ internal object BeregnEndringSjekkGrensePeriodeService : BeregnService() {
             .firstOrNull { it.sluttberegningPeriode.periode.inneholder(bruddPeriode) }
             ?.let { BeregnetBidragBeregningGrunnlag(referanse = it.referanse, beløp = it.sluttberegningPeriode.beregnetBeløp) }
             ?: throw IllegalArgumentException("Sluttberegning grunnlag mangler for periode $bruddPeriode"),
+        // Hvis perioden mangler, bruk null i beløp, slik at beløpshistorikk-objektet blir referert av delberegningen
         løpendeBidragBeregningGrunnlag = periodeGrunnlag.beløpshistorikkBidragPeriodeGrunnlag?.run {
-            beløpshistorikkPeriode.beløpshistorikk.firstOrNull { it.periode.inneholder(bruddPeriode) }?.let {
-                LøpendeBidragBeregningGrunnlag(referanse = referanse, beløp = it.beløp)
-            }
+            val periode = beløpshistorikkPeriode.beløpshistorikk.firstOrNull { it.periode.inneholder(bruddPeriode) }
+            LøpendeBidragBeregningGrunnlag(referanse = referanse, beløp = periode?.beløp)
         },
         privatAvtaleBeregningGrunnlag = periodeGrunnlag.privatAvtaleIndeksregulertPeriodeGrunnlagListe
             .firstOrNull { it.privatAvtaleIndeksregulertPeriode.periode.inneholder(bruddPeriode) }
@@ -159,6 +159,9 @@ internal object BeregnEndringSjekkGrensePeriodeService : BeregnService() {
                 innhold = POJONode(
                     DelberegningEndringSjekkGrensePeriode(
                         periode = it.periode,
+                        løpendeBidragBeløp = it.resultat.løpendeBidragBeløp,
+                        løpendeBidragFraPrivatAvtale = it.resultat.løpendeBidragFraPrivatAvtale,
+                        beregnetBidragBeløp = it.resultat.beregnetBidragBeløp,
                         faktiskEndringFaktor = it.resultat.faktiskEndringFaktor,
                         endringErOverGrense = it.resultat.endringErOverGrense,
                     ),

@@ -24,6 +24,9 @@
           "fom": "2024-08",
           "til": "2024-09"
         },
+        "løpendeBidragBeløp": 1000,
+        "løpendeBidragFraPrivatAvtale": false,
+        "beregnetBidragBeløp": 1000.00,
         "faktiskEndringFaktor": 0.0150000000,
         "endringErOverGrense": false
       },
@@ -39,6 +42,9 @@
           "fom": "2024-09",
           "til": "2024-10"
         },
+        "løpendeBidragBeløp": 1000,
+        "løpendeBidragFraPrivatAvtale": false,
+        "beregnetBidragBeløp": 1000.00,
         "faktiskEndringFaktor": 0.0588000000,
         "endringErOverGrense": false
       },
@@ -54,6 +60,9 @@
           "fom": "2024-10",
           "til": null
         },
+        "løpendeBidragBeløp": 1000,
+        "løpendeBidragFraPrivatAvtale": false,
+        "beregnetBidragBeløp": 1000.00,
         "faktiskEndringFaktor": 0.1000000000,
         "endringErOverGrense": false
       },

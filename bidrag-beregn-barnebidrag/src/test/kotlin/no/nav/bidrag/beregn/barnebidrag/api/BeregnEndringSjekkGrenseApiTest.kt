@@ -44,6 +44,14 @@ internal class BeregnEndringSjekkGrenseApiTest : FellesApiTest() {
         utførBeregningerOgEvaluerResultat()
     }
 
+    @Test
+    @DisplayName("Endring sjekk grense - eksempel 3 - førstegangsfastsettelse og avslag i alle perioder => endring er over grense")
+    fun testEndringSjekkGrensePeriode_Eksempel03() {
+        filnavn = "src/test/resources/testfiler/endringsjekkgrense/endring_sjekk_grense_eksempel3.json"
+        forventetEndringErOverGrense = true
+        utførBeregningerOgEvaluerResultat()
+    }
+
     private fun utførBeregningerOgEvaluerResultat() {
         val request = lesFilOgByggRequest(filnavn)
         val endringSjekkGrenseResultat = api.beregnEndringSjekkGrense(request)

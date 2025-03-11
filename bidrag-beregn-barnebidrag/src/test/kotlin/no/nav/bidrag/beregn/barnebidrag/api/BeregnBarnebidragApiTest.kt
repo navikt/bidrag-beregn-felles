@@ -875,7 +875,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             // Endring sjekk grense
             { assertThat(delberegningEndringSjekkGrenseResultatListe).hasSize(1) },
             { assertThat(delberegningEndringSjekkGrenseResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2020-08"), null)) },
-            { assertThat(delberegningEndringSjekkGrenseResultatListe[0].endringErOverGrense).isFalse() },
+            { assertThat(delberegningEndringSjekkGrenseResultatListe[0].endringErOverGrense).isTrue() },
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanserFiltrert) },
@@ -1123,6 +1123,9 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             .map {
                 DelberegningEndringSjekkGrensePeriode(
                     periode = it.innhold.periode,
+                    løpendeBidragBeløp = it.innhold.løpendeBidragBeløp,
+                    løpendeBidragFraPrivatAvtale = it.innhold.løpendeBidragFraPrivatAvtale,
+                    beregnetBidragBeløp = it.innhold.beregnetBidragBeløp,
                     faktiskEndringFaktor = it.innhold.faktiskEndringFaktor,
                     endringErOverGrense = it.innhold.endringErOverGrense,
                 )
@@ -1271,6 +1274,9 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             .map {
                 DelberegningEndringSjekkGrensePeriode(
                     periode = it.innhold.periode,
+                    løpendeBidragBeløp = it.innhold.løpendeBidragBeløp,
+                    løpendeBidragFraPrivatAvtale = it.innhold.løpendeBidragFraPrivatAvtale,
+                    beregnetBidragBeløp = it.innhold.beregnetBidragBeløp,
                     faktiskEndringFaktor = it.innhold.faktiskEndringFaktor,
                     endringErOverGrense = it.innhold.endringErOverGrense,
                 )
@@ -1419,6 +1425,9 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             .map {
                 DelberegningEndringSjekkGrensePeriode(
                     periode = it.innhold.periode,
+                    løpendeBidragBeløp = it.innhold.løpendeBidragBeløp,
+                    løpendeBidragFraPrivatAvtale = it.innhold.løpendeBidragFraPrivatAvtale,
+                    beregnetBidragBeløp = it.innhold.beregnetBidragBeløp,
                     faktiskEndringFaktor = it.innhold.faktiskEndringFaktor,
                     endringErOverGrense = it.innhold.endringErOverGrense,
                 )
@@ -1576,6 +1585,9 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             .map {
                 DelberegningEndringSjekkGrensePeriode(
                     periode = it.innhold.periode,
+                    løpendeBidragBeløp = it.innhold.løpendeBidragBeløp,
+                    løpendeBidragFraPrivatAvtale = it.innhold.løpendeBidragFraPrivatAvtale,
+                    beregnetBidragBeløp = it.innhold.beregnetBidragBeløp,
                     faktiskEndringFaktor = it.innhold.faktiskEndringFaktor,
                     endringErOverGrense = it.innhold.endringErOverGrense,
                 )
@@ -2043,6 +2055,9 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             .map {
                 DelberegningEndringSjekkGrensePeriode(
                     periode = it.innhold.periode,
+                    løpendeBidragBeløp = it.innhold.løpendeBidragBeløp,
+                    løpendeBidragFraPrivatAvtale = it.innhold.løpendeBidragFraPrivatAvtale,
+                    beregnetBidragBeløp = it.innhold.beregnetBidragBeløp,
                     faktiskEndringFaktor = it.innhold.faktiskEndringFaktor,
                     endringErOverGrense = it.innhold.endringErOverGrense,
                 )
@@ -2593,6 +2608,9 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             .map {
                 DelberegningEndringSjekkGrensePeriode(
                     periode = it.innhold.periode,
+                    løpendeBidragBeløp = it.innhold.løpendeBidragBeløp,
+                    løpendeBidragFraPrivatAvtale = it.innhold.løpendeBidragFraPrivatAvtale,
+                    beregnetBidragBeløp = it.innhold.beregnetBidragBeløp,
                     faktiskEndringFaktor = it.innhold.faktiskEndringFaktor,
                     endringErOverGrense = it.innhold.endringErOverGrense,
                 )

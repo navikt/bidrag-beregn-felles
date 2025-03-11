@@ -35,9 +35,10 @@ data class LøpendeBidragBeregningGrunnlag(val referanse: String, val beløp: Bi
 data class PrivatAvtaleBeregningGrunnlag(val referanse: String, val beløp: BigDecimal?)
 
 data class EndringSjekkGrensePeriodeBeregningResultat(
+    val løpendeBidragBeløp: BigDecimal?,
+    val løpendeBidragFraPrivatAvtale: Boolean = false,
+    val beregnetBidragBeløp: BigDecimal?,
     val faktiskEndringFaktor: BigDecimal?,
     val endringErOverGrense: Boolean,
-    val harBruktLøpendeBidrag: Boolean,
-    val harBruktPrivatAvtale: Boolean,
     val grunnlagsreferanseListe: List<String>,
 )
