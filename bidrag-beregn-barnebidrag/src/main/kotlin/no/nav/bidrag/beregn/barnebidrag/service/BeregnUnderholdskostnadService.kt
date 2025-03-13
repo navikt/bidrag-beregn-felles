@@ -19,6 +19,7 @@ import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
@@ -42,7 +43,6 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
                 underholdskostnadPeriodeGrunnlag.søknadsbarnPeriodeGrunnlag.fødselsdato.month,
             )
         val søknadsbarnSeksårsdag = søknadsbarnFødselsdatoÅrMåned.withMonth(7).plusYears(6)
-        val søknadsbarnAttenårsdag = søknadsbarnFødselsdatoÅrMåned.withMonth(7).plusYears(18)
         val datoInnføringForhøyetBarnetrygd = YearMonth.of(2021, 7)
 
         // Lager liste over bruddperioder
@@ -51,7 +51,6 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
             mottattGrunnlag.periode,
             søknadsbarnFødselsdatoÅrMåned,
             søknadsbarnSeksårsdag,
-            søknadsbarnAttenårsdag,
             datoInnføringForhøyetBarnetrygd,
         )
 
@@ -62,8 +61,8 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
             val underholdskostnadBeregningGrunnlag = lagUnderholdskostnadBeregningGrunnlag(underholdskostnadPeriodeGrunnlag, bruddPeriode)
 
             val barnetrygdType = when {
+                mottattGrunnlag.stønadstype == Stønadstype.BIDRAG18AAR -> BarnetrygdType.INGEN
                 bruddPeriode.fom == søknadsbarnFødselsdatoÅrMåned -> BarnetrygdType.INGEN
-                bruddPeriode.fom == søknadsbarnAttenårsdag -> BarnetrygdType.INGEN
                 bruddPeriode.fom.isBefore(datoInnføringForhøyetBarnetrygd) -> BarnetrygdType.ORDINÆR
                 bruddPeriode.fom.isBefore(søknadsbarnSeksårsdag) -> BarnetrygdType.FORHØYET
                 else -> BarnetrygdType.ORDINÆR
@@ -118,7 +117,6 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
         beregningsperiode: ÅrMånedsperiode,
         søknadsbarnFødselsdatoÅrMåned: YearMonth,
         søknadsbarnSeksårsdag: YearMonth,
-        søknadsbarnAttenårsdag: YearMonth,
         datoInnføringUtvidetBarnetrygd: YearMonth,
     ): List<ÅrMånedsperiode> {
         val periodeListe = sequenceOf(grunnlagListe.beregningsperiode)
@@ -129,7 +127,6 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
             .plus(grunnlagListe.sjablonForbruksutgifterPeriodeGrunnlagListe.asSequence().map { it.sjablonForbruksutgifterPeriode.periode })
             .plus(ÅrMånedsperiode(fom = søknadsbarnFødselsdatoÅrMåned, til = søknadsbarnFødselsdatoÅrMåned.plusMonths(1)))
             .plus(ÅrMånedsperiode(fom = søknadsbarnSeksårsdag, til = søknadsbarnSeksårsdag))
-            .plus(ÅrMånedsperiode(fom = søknadsbarnAttenårsdag, til = søknadsbarnAttenårsdag))
             .plus(ÅrMånedsperiode(fom = datoInnføringUtvidetBarnetrygd, til = datoInnføringUtvidetBarnetrygd))
 
         return lagBruddPeriodeListe(periodeListe, beregningsperiode)
