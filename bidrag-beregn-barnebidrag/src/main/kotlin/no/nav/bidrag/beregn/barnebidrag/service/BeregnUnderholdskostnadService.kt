@@ -42,6 +42,7 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
                 underholdskostnadPeriodeGrunnlag.søknadsbarnPeriodeGrunnlag.fødselsdato.month,
             )
         val søknadsbarnSeksårsdag = søknadsbarnFødselsdatoÅrMåned.withMonth(7).plusYears(6)
+        val søknadsbarnAttenårsdag = søknadsbarnFødselsdatoÅrMåned.withMonth(7).plusYears(18)
         val datoInnføringForhøyetBarnetrygd = YearMonth.of(2021, 7)
 
         // Lager liste over bruddperioder
@@ -50,6 +51,7 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
             mottattGrunnlag.periode,
             søknadsbarnFødselsdatoÅrMåned,
             søknadsbarnSeksårsdag,
+            søknadsbarnAttenårsdag,
             datoInnføringForhøyetBarnetrygd,
         )
 
@@ -61,6 +63,7 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
 
             val barnetrygdType = when {
                 bruddPeriode.fom == søknadsbarnFødselsdatoÅrMåned -> BarnetrygdType.INGEN
+                bruddPeriode.fom == søknadsbarnAttenårsdag -> BarnetrygdType.INGEN
                 bruddPeriode.fom.isBefore(datoInnføringForhøyetBarnetrygd) -> BarnetrygdType.ORDINÆR
                 bruddPeriode.fom.isBefore(søknadsbarnSeksårsdag) -> BarnetrygdType.FORHØYET
                 else -> BarnetrygdType.ORDINÆR
@@ -115,6 +118,7 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
         beregningsperiode: ÅrMånedsperiode,
         søknadsbarnFødselsdatoÅrMåned: YearMonth,
         søknadsbarnSeksårsdag: YearMonth,
+        søknadsbarnAttenårsdag: YearMonth,
         datoInnføringUtvidetBarnetrygd: YearMonth,
     ): List<ÅrMånedsperiode> {
         val periodeListe = sequenceOf(grunnlagListe.beregningsperiode)
@@ -125,6 +129,7 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
             .plus(grunnlagListe.sjablonForbruksutgifterPeriodeGrunnlagListe.asSequence().map { it.sjablonForbruksutgifterPeriode.periode })
             .plus(ÅrMånedsperiode(fom = søknadsbarnFødselsdatoÅrMåned, til = søknadsbarnFødselsdatoÅrMåned.plusMonths(1)))
             .plus(ÅrMånedsperiode(fom = søknadsbarnSeksårsdag, til = søknadsbarnSeksårsdag))
+            .plus(ÅrMånedsperiode(fom = søknadsbarnAttenårsdag, til = søknadsbarnAttenårsdag))
             .plus(ÅrMånedsperiode(fom = datoInnføringUtvidetBarnetrygd, til = datoInnføringUtvidetBarnetrygd))
 
         return lagBruddPeriodeListe(periodeListe, beregningsperiode)
