@@ -251,6 +251,7 @@ class BeregnBarnebidragService : BeregnService() {
         val delberegningUnderholdskostnadResultat = delberegningUnderholdskostnad(
             mottattGrunnlag = BeregnGrunnlag(
                 periode = utvidetGrunnlag.periode,
+                stønadstype = utvidetGrunnlag.stønadstype,
                 søknadsbarnReferanse = utvidetGrunnlag.søknadsbarnReferanse,
                 grunnlagListe = (utvidetGrunnlag.grunnlagListe + delberegningNettoTilsynsutgiftResultat).distinctBy { it.referanse },
             ),
