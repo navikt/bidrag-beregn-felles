@@ -159,6 +159,7 @@ class BeregnBarnebidragService : BeregnService() {
         secureLogger.debug { "Beregning av barnebidrag - følgende respons returnert: ${tilJson(beregnetBarnebidragResultat)}" }
         return beregnetBarnebidragResultat
     }
+
     fun justerPerioderForOpphørsdato(periodeliste: List<ResultatPeriode>, opphørsdato: YearMonth?): List<ResultatPeriode> {
         if (opphørsdato == null) return periodeliste
 
