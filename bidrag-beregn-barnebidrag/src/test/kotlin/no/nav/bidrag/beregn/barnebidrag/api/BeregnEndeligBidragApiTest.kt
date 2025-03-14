@@ -71,8 +71,8 @@ internal class BeregnEndeligBidragApiTest : FellesApiTest() {
     @DisplayName("Endelig bidrag - eksempel 1 - Barnet er selvforsørget")
     fun testEndeligBidrag_Eksempel1() {
         filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidrag_eksempel1.json"
-        forventetBeregnetBeløp = BigDecimal.ZERO.setScale(2)
-        forventetResultatbeløp = BigDecimal.ZERO.setScale(0)
+        forventetBeregnetBeløp = null
+        forventetResultatbeløp = null
         forventetUMinusNettoBarnetilleggBM = BigDecimal.ZERO.setScale(2)
         forventetBruttoBidragEtterBarnetilleggBM = BigDecimal.ZERO.setScale(2)
         forventetNettoBidragEtterBarnetilleggBM = BigDecimal.ZERO.setScale(2)
@@ -768,8 +768,8 @@ internal class BeregnEndeligBidragApiTest : FellesApiTest() {
             // Resultat
             // Barnet er selvforsørget
             { assertThat(endeligBidragResultatListe[0].periode).isEqualTo(ÅrMånedsperiode("2023-01", "2023-04")) },
-            { assertThat(endeligBidragResultatListe[0].beregnetBeløp).isEqualTo(BigDecimal.ZERO.setScale(2)) },
-            { assertThat(endeligBidragResultatListe[0].resultatBeløp).isEqualTo(BigDecimal.ZERO.setScale(0)) },
+            { assertThat(endeligBidragResultatListe[0].beregnetBeløp).isNull() },
+            { assertThat(endeligBidragResultatListe[0].resultatBeløp).isNull() },
             { assertThat(endeligBidragResultatListe[0].uMinusNettoBarnetilleggBM).isEqualTo(BigDecimal.ZERO.setScale(2)) },
             { assertThat(endeligBidragResultatListe[0].bruttoBidragEtterBarnetilleggBM).isEqualTo(BigDecimal.ZERO.setScale(2)) },
             { assertThat(endeligBidragResultatListe[0].nettoBidragEtterBarnetilleggBM).isEqualTo(BigDecimal.ZERO.setScale(2)) },

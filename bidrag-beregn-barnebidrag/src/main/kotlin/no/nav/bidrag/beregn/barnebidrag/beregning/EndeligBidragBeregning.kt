@@ -20,10 +20,12 @@ internal object EndeligBidragBeregning {
             )
         }
 
-        // Hvis barnet er selvforsørget gjøres det ingen videre beregning
+        // Hvis barnet er selvforsørget gjøres det ingen videre beregning (skal resultere i avslag og bidragsbeløp settes til null)
         if (grunnlag.bpAndelUnderholdskostnadBeregningGrunnlag.barnetErSelvforsørget) {
             return EndeligBidragBeregningResultat(
                 barnetErSelvforsørget = true,
+                beregnetBeløp = null,
+                resultatBeløp = null,
                 grunnlagsreferanseListe = listOf(grunnlag.bpAndelUnderholdskostnadBeregningGrunnlag.referanse),
             )
         }
