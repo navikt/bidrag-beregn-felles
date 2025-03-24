@@ -1,6 +1,7 @@
 package no.nav.bidrag.beregn.barnebidrag.mapper
 
 import no.nav.bidrag.beregn.barnebidrag.bo.AldersjusteringBeregningGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.BeløpshistorikkPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.exception.UgyldigInputException
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
@@ -9,6 +10,7 @@ import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlagVedtak
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BarnetilsynMedStønadPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
@@ -29,7 +31,8 @@ internal object AldersjusteringMapper : CoreMapper() {
         bidragsmottakerReferanse: String,
         bidragspliktigReferanse: String,
         vedtak: BeregnGrunnlagVedtak,
-        sjablonGrunnlag: List<GrunnlagDto>
+        sjablonGrunnlagListe: List<GrunnlagDto>,
+        beløpshistorikkGrunnlagListe: List<GrunnlagDto>
     ): AldersjusteringBeregningGrunnlag {
 
         // Henter ut alle grunnlag fra vedtak
@@ -106,11 +109,22 @@ internal object AldersjusteringMapper : CoreMapper() {
             beregningsperiode.fom.atDay(1),
         ).years
 
+        val beløpshistorikk = beløpshistorikkGrunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(Grunnlagstype.BELØPSHISTORIKK_BIDRAG)
+            .filter { it.gjelderBarnReferanse == søknadsbarn.referanse }
+            .map {
+                BeløpshistorikkPeriodeGrunnlag(
+                    referanse = it.referanse,
+                    beløpshistorikkPeriode = it.innhold,
+                )
+            }
+            .firstOrNull()
+
         // Henter sjabloner
-        val sjablonSjablontallPeriodeGrunnlagListe = mapSjablonSjablontall(sjablonGrunnlag)
-        val sjablonBarnetilsynPeriodeGrunnlagListe = mapSjablonBarnetilsyn(sjablonGrunnlag)
-        val sjablonForbruksutgifterPeriodeGrunnlagListe = mapSjablonForbruksutgifter(sjablonGrunnlag)
-        val sjablonSamværsfradragPeriodeGrunnlagListe = mapSjablonSamværsfradrag(sjablonGrunnlag)
+        val sjablonSjablontallPeriodeGrunnlagListe = mapSjablonSjablontall(sjablonGrunnlagListe)
+        val sjablonBarnetilsynPeriodeGrunnlagListe = mapSjablonBarnetilsyn(sjablonGrunnlagListe)
+        val sjablonForbruksutgifterPeriodeGrunnlagListe = mapSjablonForbruksutgifter(sjablonGrunnlagListe)
+        val sjablonSamværsfradragPeriodeGrunnlagListe = mapSjablonSamværsfradrag(sjablonGrunnlagListe)
 
         return AldersjusteringBeregningGrunnlag(
             beregningsperiode = beregningsperiode,
@@ -125,6 +139,7 @@ internal object AldersjusteringMapper : CoreMapper() {
             bpAndelFaktor = bpAndelFaktor,
             samværsklasse = samværsklasse,
             søknadsbarnAlder = søknadsbarnAlder,
+            beløpshistorikk = beløpshistorikk,
             sjablonSjablontallPeriodeGrunnlagListe = sjablonSjablontallPeriodeGrunnlagListe,
             sjablonBarnetilsynPeriodeGrunnlagListe = sjablonBarnetilsynPeriodeGrunnlagListe,
             sjablonForbruksutgifterPeriodeGrunnlagListe = sjablonForbruksutgifterPeriodeGrunnlagListe,

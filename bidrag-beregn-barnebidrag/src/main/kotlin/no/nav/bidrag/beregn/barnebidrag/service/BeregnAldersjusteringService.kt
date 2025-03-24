@@ -7,6 +7,7 @@ import no.nav.bidrag.beregn.barnebidrag.beregning.UnderholdskostnadBeregning
 import no.nav.bidrag.beregn.barnebidrag.bo.AldersjusteringBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilsynMedStønad
 import no.nav.bidrag.beregn.barnebidrag.bo.BarnetrygdType
+import no.nav.bidrag.beregn.barnebidrag.bo.BeløpshistorikkPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragBeregningAldersjusteringGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragBeregningAldersjusteringResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.KopiBpAndelUnderholdskostnadDelberegningBeregningGrunnlag
@@ -26,6 +27,7 @@ import no.nav.bidrag.beregn.barnebidrag.mapper.AldersjusteringMapper.mapAldersju
 import no.nav.bidrag.beregn.barnebidrag.mapper.AldersjusteringMapper.mapSøknadsbarnGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.mapper.UnderholdskostnadMapper.finnReferanseTilRolle
 import no.nav.bidrag.beregn.core.bo.SjablonSjablontallBeregningGrunnlag
+import no.nav.bidrag.beregn.core.exception.AldersjusteringLavereEnnLøpendeBidragException
 import no.nav.bidrag.beregn.core.exception.UgyldigInputException
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
@@ -89,6 +91,7 @@ class BeregnAldersjusteringService : BeregnService() {
 
             // Henter ut vedtak fra innsendt grunnlag
             val vedtak = hentVedtakFraGrunnlag(mottattGrunnlag, søknadsbarn.referanse)
+            val beløpshistorikkGrunnlagListe = mottattGrunnlag.beløpshistorikkListe.filter { it.gjelderBarnReferanse == søknadsbarn.referanse }
 
             // Mapper ut data som skal brukes i beregningene
             val aldersjusteringGrunnlag = mapAldersjusteringGrunnlagFraVedtak(
@@ -101,7 +104,8 @@ class BeregnAldersjusteringService : BeregnService() {
                 bidragsmottakerReferanse = bidragsmottakerReferanse,
                 bidragspliktigReferanse = bidragspliktigReferanse,
                 vedtak = vedtak,
-                sjablonGrunnlag = sjablonGrunnlag,
+                sjablonGrunnlagListe = sjablonGrunnlag,
+                beløpshistorikkGrunnlagListe = mottattGrunnlag.beløpshistorikkListe
             )
 
             // Oppretter kopi-objekter av objekter fra siste manuelle vedtak som inneholder data som skal brukes i beregningene
@@ -149,17 +153,31 @@ class BeregnAldersjusteringService : BeregnService() {
             )
 
             // Lager resultatperioder. Det vil bare være en resultatperiode, med åpen til-dato
-            val resultatPeriodeListe = lagResultatPerioder(endeligBidragResultatGrunnlagListe)
+            val resultatPeriodeListe = lagResultatPerioder(
+                delberegningEndeligBidragResultat = endeligBidragResultatGrunnlagListe,
+                beløpshistorikkReferanse = aldersjusteringGrunnlag.beløpshistorikk?.referanse
+            )
             beregnetBarnebidragResultat = BeregnetBarnebidragResultat(
                 beregnetBarnebidragPeriodeListe = resultatPeriodeListe,
                 grunnlagListe = (grunnlagFraVedtakListe + underholdskostnadResultatGrunnlagListe + samværsfradragResultatGrunnlagListe +
-                    endeligBidragResultatGrunnlagListe).distinct().sortedBy { it.referanse }
+                    endeligBidragResultatGrunnlagListe + beløpshistorikkGrunnlagListe).distinct().sortedBy { it.referanse }
             )
+
+            // Sjekker om beregnet beløp er lavere enn løpende beløp fra beløpshistorikken. I så fall kastes exception.
+            if (aldersjustertBeløpErLavereEnnLøpendeBeløp(
+                    beregnetBarnebidragResultat = beregnetBarnebidragResultat.beregnetBarnebidragPeriodeListe.first(),
+                    beløpshistorikk = aldersjusteringGrunnlag.beløpshistorikk,
+                    beregningsperiode = aldersjusteringGrunnlag.beregningsperiode
+                )
+            ) {
+                throw AldersjusteringLavereEnnLøpendeBidragException(
+                    melding = "Alderjustert beløp er lavere enn løpende beløp fra beløpshistorikken for søknadsbarn med referanse ${søknadsbarn.referanse}",
+                    data = beregnetBarnebidragResultat,
+                )
+            }
         }
 
         //TODO Håndtere flere søknadsbarn. Må returnere et nytt responsobjekt (liste)
-        //TODO Sjekke mot beløpshistorikk
-        //TODO Sjekke mot dokumentasjon/skisse
 
         return beregnetBarnebidragResultat
     }
@@ -178,9 +196,11 @@ class BeregnAldersjusteringService : BeregnService() {
             vedtakListe.isEmpty() -> {
                 throw UgyldigInputException("Aldersjustering: Ingen vedtak funnet for søknadsbarn med referanse $søknadsbarnReferanse")
             }
+
             vedtakListe.size > 1 -> {
                 throw UgyldigInputException("Aldersjustering: Flere vedtak funnet for søknadsbarn med referanse $søknadsbarnReferanse")
             }
+
             else -> return vedtakListe.first()
         }
     }
@@ -633,15 +653,30 @@ class BeregnAldersjusteringService : BeregnService() {
     }
 
     // Standardlogikk for å lage resultatperioder
-    private fun lagResultatPerioder(delberegningEndeligBidragResultat: List<GrunnlagDto>): List<ResultatPeriode> = delberegningEndeligBidragResultat
-        .filtrerOgKonverterBasertPåEgenReferanse<SluttberegningBarnebidragAldersjustering>(Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG_ALDERSJUSTERING)
-        .map {
-            ResultatPeriode(
-                periode = it.innhold.periode,
-                resultat = ResultatBeregning(
-                    beløp = it.innhold.resultatBeløp,
-                ),
-                grunnlagsreferanseListe = listOf(it.referanse),
-            )
-        }
+    private fun lagResultatPerioder(delberegningEndeligBidragResultat: List<GrunnlagDto>, beløpshistorikkReferanse: String?): List<ResultatPeriode> =
+        delberegningEndeligBidragResultat
+            .filtrerOgKonverterBasertPåEgenReferanse<SluttberegningBarnebidragAldersjustering>(Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG_ALDERSJUSTERING)
+            .map {
+                ResultatPeriode(
+                    periode = it.innhold.periode,
+                    resultat = ResultatBeregning(
+                        beløp = it.innhold.resultatBeløp,
+                    ),
+                    grunnlagsreferanseListe = listOfNotNull(it.referanse, beløpshistorikkReferanse),
+                )
+            }
+
+    // Sjekker om aldersjustert beløp er lavere enn løpende beløp fra beløpshistorikken
+    private fun aldersjustertBeløpErLavereEnnLøpendeBeløp(
+        beregnetBarnebidragResultat: ResultatPeriode,
+        beløpshistorikk: BeløpshistorikkPeriodeGrunnlag?,
+        beregningsperiode: ÅrMånedsperiode
+    ): Boolean {
+
+        val aldersjustertBeløp = beregnetBarnebidragResultat.resultat.beløp
+        val beløpshistorikkBeløp = beløpshistorikk?.beløpshistorikkPeriode?.beløpshistorikk
+            ?.firstOrNull { it.periode.inneholder(beregningsperiode) }?.beløp
+
+        return beløpshistorikkBeløp != null && aldersjustertBeløp != null && aldersjustertBeløp < beløpshistorikkBeløp
+    }
 }

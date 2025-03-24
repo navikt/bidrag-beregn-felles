@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.barnebidrag.api
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
+import no.nav.bidrag.beregn.core.exception.AldersjusteringLavereEnnLøpendeBidragException
 import no.nav.bidrag.beregn.core.exception.UgyldigInputException
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.beregning.Samværsklasse
@@ -9,6 +10,7 @@ import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.avrundetMedTiDesimaler
+import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlagAldersjustering
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsfradrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
@@ -74,6 +76,10 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
     // Sjablon samværsfradrag
     private val forventetSjablonverdiSamværsklasse: String = "02"
     private lateinit var forventetSjablonverdiBeløpSamværsfradrag: BigDecimal
+
+    // Exception
+    private var forventetExceptionAldersjusteringErLavereEnnLøpendeBidrag = false
+    private var forventetFeilmelding = ""
 
     @Mock
     private lateinit var api: BeregnBarnebidragApi
@@ -288,14 +294,53 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
         )
     }
 
+    @Test
+    @DisplayName("Aldersjustering - eksempel 14 - aldersjustert beløp er lavere enn løpende beløp - skal kaste exception")
+    fun testAldersjustering_Eksempel14() {
+        filnavn = "src/test/resources/testfiler/aldersjustering/aldersjustering_eksempel14.json"
+
+        forventetResultatbeløp = BigDecimal.valueOf(4930).setScale(0)
+        forventetBeregnetBeløp = BigDecimal.valueOf(4933.95).setScale(2)
+        forventetBpAndelBeløp = BigDecimal.valueOf(6400.95).setScale(2)
+
+        forventetForbruksutgift = BigDecimal.valueOf(6385).setScale(2)
+        forventetUnderholdskostnad = BigDecimal.valueOf(9471).setScale(2)
+
+        forventetSamværsfradragBeløp = BigDecimal.valueOf(1467).setScale(2)
+
+        forventetSjablonverdiAlderTom = 10
+        forventetSjablonverdiBeløpForbruk = BigDecimal.valueOf(6385).setScale(0)
+
+        forventetSjablonverdiBeløpSamværsfradrag = BigDecimal.valueOf(1467).setScale(0)
+
+        forventetExceptionAldersjusteringErLavereEnnLøpendeBidrag = true
+        forventetFeilmelding =
+            "Alderjustert beløp er lavere enn løpende beløp fra beløpshistorikken for søknadsbarn med referanse person_PERSON_SØKNADSBARN_20230901_47138"
+
+        utførBeregningerOgEvaluerResultatAldersjustering()
+    }
+
     private fun utførBeregningerOgEvaluerResultatAldersjustering() {
         val request = lesFilOgByggRequestAldersjustering(filnavn)
-        val aldersjusteringResultat = api.beregnAldersjustering(request)
+
+        val exception: RuntimeException
+        var feilmelding = ""
+        val aldersjusteringResultat: BeregnetBarnebidragResultat
+
+        if (forventetExceptionAldersjusteringErLavereEnnLøpendeBidrag == true) {
+            exception = assertThrows(AldersjusteringLavereEnnLøpendeBidragException::class.java) {
+                api.beregnAldersjustering(request)
+            }
+            aldersjusteringResultat = exception.data
+            feilmelding = exception.message!!
+        } else {
+            aldersjusteringResultat = api.beregnAldersjustering(request)
+        }
+
         printJson(aldersjusteringResultat)
 
         val aldersjusteringResultatGrunnlagListe = aldersjusteringResultat.grunnlagListe
         val alleReferanser = hentAlleReferanser(aldersjusteringResultatGrunnlagListe)
-        //TODO Bør personobjektene være med i grunnlagslista?
         val alleRefererteReferanser = hentAlleRefererteReferanser(aldersjusteringResultatGrunnlagListe)
             .filterNot { it.startsWith("person_PERSON") }
 
@@ -437,6 +482,9 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
             { assertThat(samværsfradragResultatListe).hasSize(1) },
             { assertThat(samværsfradragResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
             { assertThat(samværsfradragResultatListe[0].beløp).isEqualTo(forventetSamværsfradragBeløp) },
+
+            // Exception
+            { assertThat(feilmelding).isEqualTo(forventetFeilmelding) },
 
             // Grunnlag
             // Kopi delberegning underholdskostnad (fra vedtak)

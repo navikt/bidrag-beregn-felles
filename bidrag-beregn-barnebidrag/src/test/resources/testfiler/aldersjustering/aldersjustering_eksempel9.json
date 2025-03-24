@@ -61,8 +61,8 @@
         ]
       },
       "grunnlagsreferanseListe": [],
-      "gjelderReferanse": "Person_Bidragspliktig",
-      "gjelderBarnReferanse": "Person_Søknadsbarn"
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19960227_47139",
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20230901_47138"
     }
   ],
   "vedtakListe": [

@@ -23,6 +23,7 @@ data class AldersjusteringBeregningGrunnlag(
     val bpAndelFaktor: BigDecimal,
     val samværsklasse: Samværsklasse,
     val søknadsbarnAlder: Int,
+    val beløpshistorikk: BeløpshistorikkPeriodeGrunnlag?,
     var sjablonSjablontallPeriodeGrunnlagListe: List<SjablonSjablontallPeriodeGrunnlag>,
     var sjablonBarnetilsynPeriodeGrunnlagListe: List<SjablonBarnetilsynPeriodeGrunnlag>,
     var sjablonForbruksutgifterPeriodeGrunnlagListe: List<SjablonForbruksutgifterPeriodeGrunnlag>,
