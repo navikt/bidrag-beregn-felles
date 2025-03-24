@@ -19,7 +19,7 @@
         <jackson.version>2.18.3</jackson.version>
         <kotest.version>5.9.1</kotest.version>
         <swagger.version>2.2.28</swagger.version>
-        <bidrag-felles.version>2025.03.14.125946</bidrag-felles.version>
+        <bidrag-felles.version>2025.03.20.075258</bidrag-felles.version>
         <ktlint.version>1.5.0</ktlint.version>
         <spring-boot.version>3.4.3</spring-boot.version>
         <kotlin-logging-jvm.version>7.0.4</kotlin-logging-jvm.version>
@@ -28,7 +28,7 @@
         <wiremock.version>3.0.1</wiremock.version>
 
         <!-- plugins -->
-        <maven-compiler.version>3.13.0</maven-compiler.version>
+        <maven-compiler.version>3.14.0</maven-compiler.version>
         <maven-source.version>3.3.1</maven-source.version>
         <maven-surefire.version>3.5.2</maven-surefire.version>
         <maven-deploy.version>3.1.4</maven-deploy.version>
@@ -37,7 +37,7 @@
         <maven-release.version>3.1.1</maven-release.version>
         <maven-antrun.version>3.1.0</maven-antrun.version>
         <maven-jar.version>3.4.2</maven-jar.version>
-        <flatten-maven.version>1.6.0</flatten-maven.version>
+        <flatten-maven.version>1.7.0</flatten-maven.version>
         <build-helper-maven.version>3.6.0</build-helper-maven.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>

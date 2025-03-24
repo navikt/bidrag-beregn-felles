@@ -1,11 +1,13 @@
 package no.nav.bidrag.beregn.barnebidrag
 
 import no.nav.bidrag.beregn.barnebidrag.bo.BeregnEndeligBidragServiceRespons
+import no.nav.bidrag.beregn.barnebidrag.service.BeregnAldersjusteringService
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnebidragService
 import no.nav.bidrag.commons.service.sjablon.EnableSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlagAldersjustering
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
@@ -31,6 +33,7 @@ import java.math.BigDecimal
 @Service
 class BeregnBarnebidragApi {
     private val service = BeregnBarnebidragService()
+    private val aldersjusteringService = BeregnAldersjusteringService()
 
     fun beregnMånedsbeløpFaktiskeUtgifter(faktiskUtgift: BigDecimal, kostpenger: BigDecimal): BigDecimal? =
         service.beregnMånedsbeløpFaktiskUtgift(faktiskUtgift, kostpenger)
@@ -63,4 +66,7 @@ class BeregnBarnebidragApi {
     fun beregnEndringSjekkGrensePeriode(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnEndringSjekkGrensePeriode(beregnGrunnlag)
 
     fun beregnEndringSjekkGrense(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnEndringSjekkGrense(beregnGrunnlag)
+
+    fun beregnAldersjustering(beregnGrunnlag: BeregnGrunnlagAldersjustering): BeregnetBarnebidragResultat =
+        aldersjusteringService.beregnAldersjusteringBarnebidrag(beregnGrunnlag)
 }

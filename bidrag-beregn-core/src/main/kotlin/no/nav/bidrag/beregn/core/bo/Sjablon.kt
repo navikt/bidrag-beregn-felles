@@ -1,5 +1,8 @@
 package no.nav.bidrag.beregn.core.bo
 
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonBarnetilsynPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonForbruksutgifterPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSamværsfradragPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonTrinnvisSkattesatsPeriode
 import java.math.BigDecimal
@@ -38,3 +41,9 @@ data class SjablonSjablontallPeriodeGrunnlag(val referanse: String, val sjablonS
 data class SjablonSjablontallBeregningGrunnlag(val referanse: String, val type: String, val verdi: Double)
 
 data class SjablonTrinnvisSkattesatsPeriodeGrunnlag(val referanse: String, val sjablonTrinnvisSkattesatsPeriode: SjablonTrinnvisSkattesatsPeriode)
+
+data class SjablonBarnetilsynPeriodeGrunnlag(val referanse: String, val sjablonBarnetilsynPeriode: SjablonBarnetilsynPeriode)
+
+data class SjablonForbruksutgifterPeriodeGrunnlag(val referanse: String, val sjablonForbruksutgifterPeriode: SjablonForbruksutgifterPeriode)
+
+data class SjablonSamværsfradragPeriodeGrunnlag(val referanse: String, val sjablonSamværsfradragPeriode: SjablonSamværsfradragPeriode)

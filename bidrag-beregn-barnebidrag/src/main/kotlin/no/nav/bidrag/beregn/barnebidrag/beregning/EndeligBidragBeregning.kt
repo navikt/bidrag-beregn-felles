@@ -1,5 +1,7 @@
 package no.nav.bidrag.beregn.barnebidrag.beregning
 
+import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragBeregningAldersjusteringGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragBeregningAldersjusteringResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragBeregningResultat
 import no.nav.bidrag.domene.util.avrundetMedTiDesimaler
@@ -130,7 +132,7 @@ internal object EndeligBidragBeregning {
         bidragJustertNedTilEvne = (bidragsevne <= (foreløpigBeregnetBeløp + samværsfradrag)) && (bidragsevne <= sumInntekt25Prosent)
         bidragJustertNedTil25ProsentAvInntekt =
             (sumInntekt25Prosent <= (foreløpigBeregnetBeløp + samværsfradrag)) &&
-            (sumInntekt25Prosent <= bidragsevne)
+                (sumInntekt25Prosent <= bidragsevne)
         foreløpigBeregnetBeløp = bruttoBidragJustertForEvneOg25Prosent
 
         // Sjekker om det er begrenset revurdering
@@ -191,6 +193,23 @@ internal object EndeligBidragBeregning {
                 grunnlag.barnetilleggBPBeregningGrunnlag?.referanse,
                 grunnlag.barnetilleggBMBeregningGrunnlag?.referanse,
             ) + grunnlag.engangsreferanser,
+        )
+    }
+
+    fun beregnAldersjustering(grunnlag: EndeligBidragBeregningAldersjusteringGrunnlag): EndeligBidragBeregningAldersjusteringResultat {
+
+        val bpAndelBeløp = grunnlag.underholdskostnad.beløp.multiply(grunnlag.bpAndelFaktor.andelFaktor)
+        val beregnetBeløp = bpAndelBeløp.subtract(grunnlag.samværsfradrag.beløp)
+
+        return EndeligBidragBeregningAldersjusteringResultat(
+            beregnetBeløp = beregnetBeløp.avrundetMedToDesimaler,
+            resultatBeløp = beregnetBeløp.avrundetTilNærmesteTier,
+            bpAndelBeløp = bpAndelBeløp.avrundetMedToDesimaler,
+            grunnlagsreferanseListe = listOfNotNull(
+                grunnlag.underholdskostnad.referanse,
+                grunnlag.bpAndelFaktor.referanse,
+                grunnlag.samværsfradrag.referanse,
+            )
         )
     }
 

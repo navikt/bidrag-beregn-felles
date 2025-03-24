@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.POJONode
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import no.nav.bidrag.beregn.core.bo.SjablonForbruksutgifterPeriodeGrunnlag
+import no.nav.bidrag.beregn.core.bo.SjablonSamværsfradragPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.dto.AvvikCore
 import no.nav.bidrag.beregn.core.dto.InntektPeriodeCore
 import no.nav.bidrag.beregn.core.exception.UgyldigInputException
@@ -24,6 +26,8 @@ import no.nav.bidrag.commons.service.sjablon.Samværsfradrag
 import no.nav.bidrag.commons.service.sjablon.Sjablontall
 import no.nav.bidrag.commons.service.sjablon.TrinnvisSkattesats
 import no.nav.bidrag.commons.util.secureLogger
+import no.nav.bidrag.domene.enums.barnetilsyn.Skolealder
+import no.nav.bidrag.domene.enums.barnetilsyn.Tilsynstype
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.domene.enums.inntekt.Inntektstype
@@ -40,6 +44,9 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBase
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettSjablonreferanse
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.Period
+import java.time.YearMonth
 
 abstract class BeregnService {
     fun håndterAvvik(avvikListe: List<AvvikCore>, kontekst: String) {
@@ -290,6 +297,32 @@ abstract class BeregnService {
         return resultatGrunnlagListe
     }
 
+    fun mapDelberegningResultatGrunnlag(
+        grunnlagReferanseListe: List<String>,
+        mottattGrunnlag: List<GrunnlagDto>,
+        sjablonGrunnlag: List<GrunnlagDto>,
+    ): MutableList<GrunnlagDto> {
+        val resultatGrunnlagListe = mutableListOf<GrunnlagDto>()
+
+        // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
+        resultatGrunnlagListe.addAll(
+            mapGrunnlag(
+                grunnlagListe = mottattGrunnlag,
+                grunnlagReferanseListe = grunnlagReferanseListe,
+            ),
+        )
+
+        // Matcher sjablongrunnlag med grunnlag som er brukt i beregningen og mapper ut
+        resultatGrunnlagListe.addAll(
+            mapGrunnlag(
+                grunnlagListe = sjablonGrunnlag,
+                grunnlagReferanseListe = grunnlagReferanseListe,
+            ),
+        )
+
+        return resultatGrunnlagListe
+    }
+
     // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
     private fun mapGrunnlag(grunnlagListe: List<GrunnlagDto>, grunnlagReferanseListe: List<String>) = grunnlagListe
         .filter { grunnlagReferanseListe.contains(it.referanse) }
@@ -303,6 +336,42 @@ abstract class BeregnService {
                 gjelderBarnReferanse = it.gjelderBarnReferanse,
             )
         }
+
+    // Bestemmer tilsynskode for oppslag i sjablon barnetilsyn
+    protected fun bestemTilsynskode(tilsynstype: Tilsynstype?, skolealder: Skolealder?): String? {
+        return if (tilsynstype == null || skolealder == null) {
+            null
+        } else {
+            when (tilsynstype to skolealder) {
+                Tilsynstype.HELTID to Skolealder.UNDER -> "HU"
+                Tilsynstype.HELTID to Skolealder.OVER -> "HO"
+                Tilsynstype.DELTID to Skolealder.UNDER -> "DU"
+                Tilsynstype.DELTID to Skolealder.OVER -> "DO"
+                else -> null
+            }
+        }
+    }
+
+    // Finner barnets beregnede alder. Alder regnes som om barnet er født 1. juli i fødselsåret.
+    protected fun finnBarnetsAlder(fødselsdato: LocalDate, årMåned: YearMonth): Int =
+        Period.between(
+            fødselsdato.withMonth(7).withDayOfMonth(1),
+            årMåned.atDay(1),
+        ).years
+
+    // Lager liste over gyldige alderTom-verdier for sjablon forbruksutgifter
+    protected fun hentAlderTomListeForbruksutgifter(sjablonForbruksutgifterPerioder: List<SjablonForbruksutgifterPeriodeGrunnlag>): List<Int> =
+        sjablonForbruksutgifterPerioder
+            .map { it.sjablonForbruksutgifterPeriode.alderTom }
+            .distinct()
+            .sorted()
+
+    // Lager liste over gyldige alderTom-verdier for sjablon samværsfradrag
+    protected fun hentAlderTomListeSamværsfradrag(sjablonSamværsfradragPerioder: List<SjablonSamværsfradragPeriodeGrunnlag>): List<Int> =
+        sjablonSamværsfradragPerioder
+            .map { it.sjablonSamværsfradragPeriode.alderTom }
+            .distinct()
+            .sorted()
 
     fun tilJson(json: Any): String {
         val objectMapper = ObjectMapper()

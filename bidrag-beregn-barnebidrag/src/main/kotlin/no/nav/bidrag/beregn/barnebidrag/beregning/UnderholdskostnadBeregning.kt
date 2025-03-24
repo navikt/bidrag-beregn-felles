@@ -18,10 +18,25 @@ internal object UnderholdskostnadBeregning {
         // Henter sjablonverdier
         hentSjablonverdier(grunnlag)
 
-        val barnetrygdBeløp = when (barnetrygdType) {
-            BarnetrygdType.INGEN -> BigDecimal.ZERO
-            BarnetrygdType.ORDINÆR -> sjablonverdiOrdinærBarnetrygd
-            BarnetrygdType.FORHØYET -> sjablonverdiForhøyetBarnetrygd
+        val barnetrygdBeløp: BigDecimal
+
+        // Setter riktig barnetrygdbeløp og Fjerner sjabloner som ikke skal brukes
+        when (barnetrygdType) {
+            BarnetrygdType.INGEN -> {
+                barnetrygdBeløp = BigDecimal.ZERO
+                grunnlag.sjablonSjablontallBeregningGrunnlagListe.removeIf { it.type == SjablonTallNavn.ORDINÆR_BARNETRYGD_BELØP.navn }
+                grunnlag.sjablonSjablontallBeregningGrunnlagListe.removeIf { it.type == SjablonTallNavn.FORHØYET_BARNETRYGD_BELØP.navn }
+            }
+
+            BarnetrygdType.ORDINÆR -> {
+                barnetrygdBeløp = sjablonverdiOrdinærBarnetrygd
+                grunnlag.sjablonSjablontallBeregningGrunnlagListe.removeIf { it.type == SjablonTallNavn.FORHØYET_BARNETRYGD_BELØP.navn }
+            }
+
+            BarnetrygdType.FORHØYET -> {
+                barnetrygdBeløp = sjablonverdiForhøyetBarnetrygd
+                grunnlag.sjablonSjablontallBeregningGrunnlagListe.removeIf { it.type == SjablonTallNavn.ORDINÆR_BARNETRYGD_BELØP.navn }
+            }
         }
 
         val beregnetUnderholdskostnad = (

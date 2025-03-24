@@ -60,6 +60,12 @@ data class EndeligBidragBeregningGrunnlag(
     val engangsreferanser: List<String> = emptyList(),
 )
 
+data class EndeligBidragBeregningAldersjusteringGrunnlag(
+    val underholdskostnad: UnderholdskostnadDelberegningBeregningGrunnlag,
+    val bpAndelFaktor: KopiBpAndelUnderholdskostnadDelberegningBeregningGrunnlag,
+    val samværsfradrag: SamværsfradragDelberegningBeregningGrunnlag,
+)
+
 data class BidragsevneDelberegningBeregningGrunnlag(val referanse: String, val beløp: BigDecimal, val sumInntekt25Prosent: BigDecimal)
 
 data class UnderholdskostnadDelberegningBeregningGrunnlag(val referanse: String, val beløp: BigDecimal)
@@ -69,6 +75,11 @@ data class BpAndelUnderholdskostnadDelberegningBeregningGrunnlag(
     val andelBeløp: BigDecimal,
     val andelFaktor: BigDecimal,
     val barnetErSelvforsørget: Boolean,
+)
+
+data class KopiBpAndelUnderholdskostnadDelberegningBeregningGrunnlag(
+    val referanse: String,
+    val andelFaktor: BigDecimal,
 )
 
 data class SamværsfradragDelberegningBeregningGrunnlag(val referanse: String, val beløp: BigDecimal)
@@ -105,6 +116,13 @@ data class EndeligBidragBeregningResultat(
     val ikkeOmsorgForBarnet: Boolean = false,
     val beregnetBidragErLavereEnnLøpendeBidrag: Boolean = false,
     val løpendeForskuddMangler: Boolean = false,
+    val grunnlagsreferanseListe: List<String> = emptyList(),
+)
+
+data class EndeligBidragBeregningAldersjusteringResultat(
+    val beregnetBeløp: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
+    val resultatBeløp: BigDecimal = BigDecimal.ZERO.avrundetMedNullDesimaler,
+    val bpAndelBeløp: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
     val grunnlagsreferanseListe: List<String> = emptyList(),
 )
 

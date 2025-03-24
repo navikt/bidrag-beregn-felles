@@ -1,0 +1,336 @@
+{
+  "periode": {
+    "fom": "2024-07",
+    "til": "2024-08"
+  },
+  "personObjektListe": [
+    {
+      "referanse": "person_PERSON_BIDRAGSMOTTAKER_20021027_47137",
+      "type": "PERSON_BIDRAGSMOTTAKER",
+      "innhold": {
+        "navn": null,
+        "ident": "27100299499",
+        "fødselsdato": "2002-10-27"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "person_PERSON_BIDRAGSPLIKTIG_19960227_47139",
+      "type": "PERSON_BIDRAGSPLIKTIG",
+      "innhold": {
+        "navn": null,
+        "ident": "27029647999",
+        "fødselsdato": "1996-02-27"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "person_PERSON_SØKNADSBARN_20230901_47138",
+      "type": "PERSON_SØKNADSBARN",
+      "innhold": {
+        "navn": null,
+        "ident": "01092390999",
+        "fødselsdato": "2018-09-01"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    }
+  ],
+  "beløpshistorikkListe": [
+    {
+      "referanse": "Mottatt_BeløpshistorikkBidrag_202008",
+      "type": "BELØPSHISTORIKK_BIDRAG",
+      "innhold": {
+        "periode": {
+          "fom": "2024-01",
+          "til": null
+        },
+        "beløpshistorikk": [
+          {
+            "periode": {
+              "fom": "2024-01",
+              "til": null
+            },
+            "beløp": 2000
+          }
+        ]
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragspliktig",
+      "gjelderBarnReferanse": "Person_Søknadsbarn"
+    }
+  ],
+  "vedtakListe": [
+    {
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20230901_47138",
+      "vedtakId": 123456,
+      "vedtakInnhold": {
+        "kilde": "MANUELT",
+        "type": "ENDRING",
+        "opprettetAv": "X123456",
+        "opprettetAvNavn": "Tester, Test",
+        "kildeapplikasjon": "bidrag-behandling",
+        "vedtakstidspunkt": "2025-03-14T14:22:20.962829",
+        "enhetsnummer": "4812",
+        "innkrevingUtsattTilDato": "2025-03-17",
+        "fastsattILand": null,
+        "opprettetTidspunkt": "2025-03-14T14:22:21.732068",
+        "grunnlagListe": [
+          {
+            "referanse": "person_PERSON_BIDRAGSMOTTAKER_20021027_47137",
+            "type": "PERSON_BIDRAGSMOTTAKER",
+            "innhold": {
+              "navn": null,
+              "ident": "27100299499",
+              "fødselsdato": "2002-10-27"
+            },
+            "grunnlagsreferanseListe": [],
+            "gjelderReferanse": null,
+            "gjelderBarnReferanse": null
+          },
+          {
+            "referanse": "person_PERSON_BIDRAGSPLIKTIG_19960227_47139",
+            "type": "PERSON_BIDRAGSPLIKTIG",
+            "innhold": {
+              "navn": null,
+              "ident": "27029647999",
+              "fødselsdato": "1996-02-27"
+            },
+            "grunnlagsreferanseListe": [],
+            "gjelderReferanse": null,
+            "gjelderBarnReferanse": null
+          },
+          {
+            "referanse": "person_PERSON_SØKNADSBARN_20230901_47138",
+            "type": "PERSON_SØKNADSBARN",
+            "innhold": {
+              "navn": null,
+              "ident": "01092390999",
+              "fødselsdato": "2018-09-01"
+            },
+            "grunnlagsreferanseListe": [],
+            "gjelderReferanse": null,
+            "gjelderBarnReferanse": null
+          },
+          {
+            "referanse": "delberegning_DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL_person_PERSON_BIDRAGSPLIKTIG_19960227_47139_person_PERSON_SØKNADSBARN_20230901_47138_202405",
+            "type": "DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL",
+            "innhold": {
+              "periode": {
+                "fom": "2024-05",
+                "til": null
+              },
+              "andelBeløp": 4180.79,
+              "barnEndeligInntekt": 0,
+              "endeligAndelFaktor": 0.6758471615,
+              "beregnetAndelFaktor": 0.6758471615,
+              "barnetErSelvforsørget": false
+            },
+            "grunnlagsreferanseListe": [
+              "delberegning_DELBEREGNING_SUM_INNTEKT_person_PERSON_BIDRAGSMOTTAKER_20021027_47137_person_PERSON_SØKNADSBARN_20230901_47138_202405",
+              "delberegning_DELBEREGNING_SUM_INNTEKT_person_PERSON_BIDRAGSPLIKTIG_19960227_47139_person_PERSON_SØKNADSBARN_20230901_47138_202401",
+              "delberegning_DELBEREGNING_SUM_INNTEKT_person_PERSON_SØKNADSBARN_20230901_47138_person_PERSON_SØKNADSBARN_20230901_47138_202309",
+              "delberegning_DELBEREGNING_UNDERHOLDSKOSTNAD_person_PERSON_BIDRAGSMOTTAKER_20021027_47137_person_PERSON_SØKNADSBARN_20230901_47138_202310",
+              "sjablon_ForskuddssatsBeløp_202307_202407",
+              "sjablon_InnslagKapitalInntektBeløp_200301"
+            ],
+            "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19960227_47139",
+            "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20230901_47138"
+          },
+          {
+            "referanse": "delberegning_DELBEREGNING_UNDERHOLDSKOSTNAD_person_PERSON_BIDRAGSMOTTAKER_20021027_47137_person_PERSON_SØKNADSBARN_20230901_47138_202310",
+            "type": "DELBEREGNING_UNDERHOLDSKOSTNAD",
+            "innhold": {
+              "periode": {
+                "fom": "2023-10",
+                "til": null
+              },
+              "boutgift": 3198,
+              "barnetrygd": 1766,
+              "forbruksutgift": 4754,
+              "underholdskostnad": 6186,
+              "nettoTilsynsutgift": 1000,
+              "barnetilsynMedStønad": null
+            },
+            "grunnlagsreferanseListe": [
+              "sjablon_BoutgifterBidragsbarnBeløp_202307_202407",
+              "sjablon_ForhøyetBarnetrygdBeløp_202307_202407",
+              "sjablon_OrdinærBarnetrygdBeløp_202307_202407",
+              "sjablon_SJABLON_FORBRUKSUTGIFTER_202307_202407_5"
+            ],
+            "gjelderReferanse": "person_PERSON_BIDRAGSMOTTAKER_20021027_47137",
+            "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20230901_47138"
+          },
+          {
+            "referanse": "samvær_SAMVÆRSPERIODE_20230901_person_PERSON_SØKNADSBARN_20230901_47138",
+            "type": "SAMVÆRSPERIODE",
+            "innhold": {
+              "periode": {
+                "fom": "2023-09",
+                "til": null
+              },
+              "samværsklasse": "SAMVÆRSKLASSE_2",
+              "manueltRegistrert": true
+            },
+            "grunnlagsreferanseListe": [],
+            "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19960227_47139",
+            "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20230901_47138"
+          },
+          {
+            "referanse": "sluttberegning_person_PERSON_SØKNADSBARN_20230901_47138_202405_202407",
+            "type": "SLUTTBEREGNING_BARNEBIDRAG",
+            "innhold": {
+              "periode": {
+                "fom": "2024-05",
+                "til": null
+              },
+              "beregnetBeløp": 4180.79,
+              "løpendeBidrag": null,
+              "resultatBeløp": 4180,
+              "løpendeForskudd": null,
+              "ikkeOmsorgForBarnet": false,
+              "barnetErSelvforsørget": false,
+              "bidragJustertNedTilEvne": false,
+              "uminusNettoBarnetilleggBM": 6186,
+              "bidragJustertForDeltBosted": false,
+              "begrensetRevurderingUtført": false,
+              "bidragJustertTilForskuddssats": false,
+              "bpAndelAvUVedDeltBostedBeløp": 0,
+              "bpAndelAvUVedDeltBostedFaktor": 0,
+              "nettoBidragEtterBarnetilleggBM": 4180.79,
+              "bruttoBidragEtterBarnetilleggBM": 4180.79,
+              "bruttoBidragEtterBarnetilleggBP": 4180.79,
+              "nettoBidragEtterSamværsfradrag": 4180.79,
+              "bidragJustertForNettoBarnetilleggBM": false,
+              "bidragJustertForNettoBarnetilleggBP": false,
+              "bidragJustertNedTil25ProsentAvInntekt": false,
+              "bruttoBidragEtterBegrensetRevurdering": 4180.79,
+              "bruttoBidragJustertForEvneOg25Prosent": 4180.79
+            },
+            "grunnlagsreferanseListe": [
+              "bostatus_person_PERSON_SØKNADSBARN_20230901_47138_20230901",
+              "delberegning_DELBEREGNING_BIDRAGSEVNE_person_PERSON_BIDRAGSPLIKTIG_19960227_47139_person_PERSON_SØKNADSBARN_20230901_47138_202401",
+              "delberegning_DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL_person_PERSON_BIDRAGSPLIKTIG_19960227_47139_person_PERSON_SØKNADSBARN_20230901_47138_202405",
+              "delberegning_DELBEREGNING_SAMVÆRSFRADRAG_person_PERSON_BIDRAGSPLIKTIG_19960227_47139_person_PERSON_SØKNADSBARN_20230901_47138_202309",
+              "delberegning_DELBEREGNING_UNDERHOLDSKOSTNAD_person_PERSON_BIDRAGSMOTTAKER_20021027_47137_person_PERSON_SØKNADSBARN_20230901_47138_202310",
+              "person_PERSON_SØKNADSBARN_20230901_47138",
+              "samvær_SAMVÆRSPERIODE_20230901_person_PERSON_SØKNADSBARN_20230901_47138",
+              "søknad"
+            ],
+            "gjelderReferanse": null,
+            "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20230901_47138"
+          },
+          {
+            "referanse": "søknad",
+            "type": "SØKNAD",
+            "innhold": {
+              "søktAv": "NAV_BIDRAG",
+              "egetTiltak": true,
+              "mottattDato": "2024-11-13",
+              "søktFraDato": "2023-09-01",
+              "klageMottattDato": null,
+              "begrensetRevurdering": false,
+              "opprinneligVedtakstype": null
+            },
+            "grunnlagsreferanseListe": [],
+            "gjelderReferanse": null,
+            "gjelderBarnReferanse": null
+          }
+        ],
+        "stønadsendringListe": [
+          {
+            "type": "BIDRAG",
+            "sak": "2308515",
+            "skyldner": "27029647999",
+            "kravhaver": "01092390999",
+            "mottaker": "27100299499",
+            "førsteIndeksreguleringsår": 2026,
+            "innkreving": "UTEN_INNKREVING",
+            "beslutning": "ENDRING",
+            "omgjørVedtakId": null,
+            "eksternReferanse": null,
+            "grunnlagReferanseListe": [
+              "søknad",
+              "notat_VIRKNINGSTIDSPUNKT_kun_i_notat",
+              "notat_SAMVÆR_kun_i_notat_person_PERSON_SØKNADSBARN_20230901_47138",
+              "notat_UNDERHOLDSKOSTNAD_kun_i_notat_person_PERSON_SØKNADSBARN_20230901_47138",
+              "virkningstidspunkt_person_PERSON_SØKNADSBARN_20230901_47138"
+            ],
+            "periodeListe": [
+              {
+                "periode": {
+                  "fom": "2025-05",
+                  "til": null
+                },
+                "beløp": 4180,
+                "valutakode": "NOK",
+                "resultatkode": "BEREGNET_BIDRAG",
+                "delytelseId": null,
+                "grunnlagReferanseListe": [
+                  "sluttberegning_person_PERSON_SØKNADSBARN_20230901_47138_202405_202407"
+                ]
+              }
+            ]
+          }
+        ],
+        "engangsbeløpListe": [
+          {
+            "type": "GEBYR_SKYLDNER",
+            "sak": "2308515",
+            "skyldner": "27029647999",
+            "kravhaver": "NAV",
+            "mottaker": "NAV",
+            "beløp": 1314,
+            "valutakode": "NOK",
+            "resultatkode": "GEBYR_ILAGT",
+            "innkreving": "MED_INNKREVING",
+            "beslutning": "ENDRING",
+            "omgjørVedtakId": null,
+            "referanse": "6902fd57-3183-4340-be54-83e995a057a1",
+            "delytelseId": null,
+            "eksternReferanse": null,
+            "grunnlagReferanseListe": [
+              "SLUTTBEREGNING_GEBYR_person_PERSON_BIDRAGSPLIKTIG_19960227_47139"
+            ],
+            "betaltBeløp": null
+          },
+          {
+            "type": "GEBYR_MOTTAKER",
+            "sak": "2308515",
+            "skyldner": "27100299499",
+            "kravhaver": "NAV",
+            "mottaker": "NAV",
+            "beløp": 1314,
+            "valutakode": "NOK",
+            "resultatkode": "GEBYR_ILAGT",
+            "innkreving": "MED_INNKREVING",
+            "beslutning": "ENDRING",
+            "omgjørVedtakId": null,
+            "referanse": "968358e5-8d83-4794-8665-ec4906ebdd7c",
+            "delytelseId": null,
+            "eksternReferanse": null,
+            "grunnlagReferanseListe": [
+              "SLUTTBEREGNING_GEBYR_person_PERSON_BIDRAGSMOTTAKER_20021027_47137"
+            ],
+            "betaltBeløp": null
+          }
+        ],
+        "behandlingsreferanseListe": [
+          {
+            "kilde": "BEHANDLING_ID",
+            "referanse": "17942"
+          },
+          {
+            "kilde": "BISYS_SØKNAD",
+            "referanse": "56428278"
+          }
+        ]
+      }
+    }
+  ]
+}

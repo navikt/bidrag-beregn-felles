@@ -7,11 +7,11 @@ import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragPeriodeResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.SamværsklasseBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSamværsfradragBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSamværsfradragPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.mapper.SamværsfradragMapper.finnReferanseTilRolle
 import no.nav.bidrag.beregn.barnebidrag.mapper.SamværsfradragMapper.mapSamværsfradragGrunnlag
+import no.nav.bidrag.beregn.core.bo.SjablonSamværsfradragPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
 import no.nav.bidrag.domene.enums.beregning.Samværsklasse
@@ -115,7 +115,7 @@ internal object BeregnSamværsfradragService : BeregnService() {
     private fun lagAlderBruddPerioder(
         sjablonSamværsfradragPerioder: List<SjablonSamværsfradragPeriodeGrunnlag>,
         søknadsbarnPeriodeGrunnlag: SøknadsbarnPeriodeGrunnlag,
-    ): List<ÅrMånedsperiode> = hentAlderTomListe(sjablonSamværsfradragPerioder)
+    ): List<ÅrMånedsperiode> = hentAlderTomListeSamværsfradrag(sjablonSamværsfradragPerioder)
         .map {
             val alderBruddDato = søknadsbarnPeriodeGrunnlag.fødselsdato.withMonth(7).withDayOfMonth(1).plusYears(it.toLong())
             ÅrMånedsperiode(alderBruddDato, alderBruddDato)
@@ -127,7 +127,7 @@ internal object BeregnSamværsfradragService : BeregnService() {
         bruddPeriode: ÅrMånedsperiode,
     ): SamværsfradragBeregningGrunnlag {
         // Lager liste over gyldige alderTom-verdier
-        val alderTomListe = hentAlderTomListe(samværsfradragPeriodeGrunnlag.sjablonSamværsfradragPeriodeGrunnlagListe)
+        val alderTomListe = hentAlderTomListeSamværsfradrag(samværsfradragPeriodeGrunnlag.sjablonSamværsfradragPeriodeGrunnlagListe)
 
         // Finner barnets faktiske alder. Alder regnes som om barnet er født 1. juli i fødselsåret.
         val faktiskAlder = Period.between(
@@ -160,13 +160,6 @@ internal object BeregnSamværsfradragService : BeregnService() {
                 },
         )
     }
-
-    // Lager liste over gyldige alderTom-verdier
-    private fun hentAlderTomListe(sjablonSamværsfradragPerioder: List<SjablonSamværsfradragPeriodeGrunnlag>): List<Int> =
-        sjablonSamværsfradragPerioder
-            .map { it.sjablonSamværsfradragPeriode.alderTom }
-            .distinct()
-            .sorted()
 
     // Mapper ut DelberegningSamværsfradrag
     private fun mapDelberegningSamværsfradrag(

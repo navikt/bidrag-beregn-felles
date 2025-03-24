@@ -340,7 +340,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
             GrunnlagDto(
                 referanse = opprettSluttberegningreferanse(
                     barnreferanse = mottattGrunnlag.søknadsbarnReferanse,
-                    periode = ÅrMånedsperiode(fom = it.periode.fom, it.periode.til),
+                    periode = it.periode,
                 ),
                 type = Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG,
                 innhold = POJONode(

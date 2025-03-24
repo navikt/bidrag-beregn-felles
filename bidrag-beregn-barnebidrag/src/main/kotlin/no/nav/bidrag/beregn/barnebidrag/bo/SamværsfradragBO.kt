@@ -1,9 +1,9 @@
 package no.nav.bidrag.beregn.barnebidrag.bo
 
+import no.nav.bidrag.beregn.core.bo.SjablonSamværsfradragPeriodeGrunnlag
 import no.nav.bidrag.domene.enums.beregning.Samværsklasse
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SamværsklassePeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSamværsfradragPeriode
 import java.math.BigDecimal
 
 data class SamværsfradragPeriodeGrunnlag(
@@ -14,8 +14,6 @@ data class SamværsfradragPeriodeGrunnlag(
 )
 
 data class SamværsklassePeriodeGrunnlag(val referanse: String, val samværsklassePeriode: SamværsklassePeriode)
-
-data class SjablonSamværsfradragPeriodeGrunnlag(val referanse: String, val sjablonSamværsfradragPeriode: SjablonSamværsfradragPeriode)
 
 data class SamværsfradragPeriodeResultat(val periode: ÅrMånedsperiode, val resultat: SamværsfradragBeregningResultat)
 
