@@ -173,7 +173,8 @@ class BeregnAldersjusteringService : BeregnService() {
                 )
             ) {
                 throw AldersjusteringLavereEnnLøpendeBidragException(
-                    melding = "Alderjustert beløp er lavere enn løpende beløp fra beløpshistorikken for søknadsbarn med referanse ${søknadsbarn.referanse}",
+                    melding = "Alderjustert beløp er lavere enn løpende beløp fra beløpshistorikken for søknadsbarn med referanse " +
+                        søknadsbarn.referanse,
                     data = beregnetBarnebidragResultat,
                 )
             }
