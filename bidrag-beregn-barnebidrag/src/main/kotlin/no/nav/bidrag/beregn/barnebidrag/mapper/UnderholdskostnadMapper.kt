@@ -3,8 +3,6 @@ package no.nav.bidrag.beregn.barnebidrag.mapper
 import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilsynMedStønadPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.NettoTilsynsutgiftPeriode
 import no.nav.bidrag.beregn.barnebidrag.bo.NettoTilsynsutgiftPeriodeGrunnlagDto
-import no.nav.bidrag.beregn.barnebidrag.bo.SjablonBarnetilsynPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SjablonForbruksutgifterPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
@@ -16,8 +14,6 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningNettoTilsy
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
-import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonBarnetilsynPeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonForbruksutgifterPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 
 internal object UnderholdskostnadMapper : CoreMapper() {
@@ -85,42 +81,6 @@ internal object UnderholdskostnadMapper : CoreMapper() {
         } catch (e: Exception) {
             throw IllegalArgumentException(
                 "Ugyldig input ved beregning av underholdskostnad. Innhold i Grunnlagstype.NETTO_TILSYNSUTGIFT_PERIODE er ikke gyldig: " + e.message,
-            )
-        }
-    }
-
-    private fun mapSjablonBarnetilsyn(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonBarnetilsynPeriodeGrunnlag> {
-        try {
-            return sjablonGrunnlag
-                .filter { it.type == Grunnlagstype.SJABLON_BARNETILSYN }
-                .filtrerOgKonverterBasertPåEgenReferanse<SjablonBarnetilsynPeriode>()
-                .map {
-                    SjablonBarnetilsynPeriodeGrunnlag(
-                        referanse = it.referanse,
-                        sjablonBarnetilsynPeriode = it.innhold,
-                    )
-                }
-        } catch (e: Exception) {
-            throw IllegalArgumentException(
-                "Feil ved uthenting av sjablon Barnetilsyn: " + e.message,
-            )
-        }
-    }
-
-    private fun mapSjablonForbruksutgifter(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonForbruksutgifterPeriodeGrunnlag> {
-        try {
-            return sjablonGrunnlag
-                .filter { it.type == Grunnlagstype.SJABLON_FORBRUKSUTGIFTER }
-                .filtrerOgKonverterBasertPåEgenReferanse<SjablonForbruksutgifterPeriode>()
-                .map {
-                    SjablonForbruksutgifterPeriodeGrunnlag(
-                        referanse = it.referanse,
-                        sjablonForbruksutgifterPeriode = it.innhold,
-                    )
-                }
-        } catch (e: Exception) {
-            throw IllegalArgumentException(
-                "Feil ved uthenting av sjablon Forbruktsutgifter: " + e.message,
             )
         }
     }

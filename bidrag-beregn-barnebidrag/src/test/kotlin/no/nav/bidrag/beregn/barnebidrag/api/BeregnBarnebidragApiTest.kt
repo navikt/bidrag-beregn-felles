@@ -781,9 +781,6 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
         forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
         forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
 
-        // Sjabloner
-        forventetAntallSjablonSjablontall = 12
-
         // Grunnlag
         forventetAntallBarnetilleggBP = 0
         forventetAntallBarnetilleggBM = 0
@@ -985,6 +982,9 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
         forventetBpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO.setScale(10)
         forventetBpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO.setScale(2)
 
+        // Sjabloner
+        forventetAntallSjablonSjablontall = 10
+
         // Grunnlag
         forventetAntallBarnetilleggBP = 0
         forventetAntallBarnetilleggBM = 0
@@ -1042,6 +1042,9 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
         // Endring sjekk grense
         forventetEndringErOverGrense = true
 
+        // Sjabloner
+        forventetAntallSjablonSjablontall = 10
+
         // Grunnlag
         forventetAntallBarnetilleggBP = 0
         forventetAntallBarnetilleggBM = 0
@@ -1098,6 +1101,9 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
 
         // Endring sjekk grense
         forventetEndringErOverGrense = false
+
+        // Sjabloner
+        forventetAntallSjablonSjablontall = 10
 
         // Grunnlag
         forventetAntallBarnetilleggBP = 0

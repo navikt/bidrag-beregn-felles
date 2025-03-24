@@ -1,6 +1,9 @@
 package no.nav.bidrag.beregn.core.service.mapper
 
 import no.nav.bidrag.beregn.core.bo.Periode
+import no.nav.bidrag.beregn.core.bo.SjablonBarnetilsynPeriodeGrunnlag
+import no.nav.bidrag.beregn.core.bo.SjablonForbruksutgifterPeriodeGrunnlag
+import no.nav.bidrag.beregn.core.bo.SjablonSamværsfradragPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.bo.SjablonSjablontallPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.bo.SjablonTrinnvisSkattesatsPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.dto.BarnIHusstandenPeriodeCore
@@ -32,6 +35,9 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonBarnetilsynPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonForbruksutgifterPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSamværsfradragPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonTrinnvisSkattesatsPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
@@ -228,6 +234,60 @@ abstract class CoreMapper {
                 ),
             )
         }
+
+    fun mapSjablonBarnetilsyn(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonBarnetilsynPeriodeGrunnlag> {
+        try {
+            return sjablonGrunnlag
+                .filter { it.type == Grunnlagstype.SJABLON_BARNETILSYN }
+                .filtrerOgKonverterBasertPåEgenReferanse<SjablonBarnetilsynPeriode>()
+                .map {
+                    SjablonBarnetilsynPeriodeGrunnlag(
+                        referanse = it.referanse,
+                        sjablonBarnetilsynPeriode = it.innhold,
+                    )
+                }
+        } catch (e: Exception) {
+            throw IllegalArgumentException(
+                "Feil ved uthenting av sjablon Barnetilsyn: " + e.message,
+            )
+        }
+    }
+
+    fun mapSjablonForbruksutgifter(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonForbruksutgifterPeriodeGrunnlag> {
+        try {
+            return sjablonGrunnlag
+                .filter { it.type == Grunnlagstype.SJABLON_FORBRUKSUTGIFTER }
+                .filtrerOgKonverterBasertPåEgenReferanse<SjablonForbruksutgifterPeriode>()
+                .map {
+                    SjablonForbruksutgifterPeriodeGrunnlag(
+                        referanse = it.referanse,
+                        sjablonForbruksutgifterPeriode = it.innhold,
+                    )
+                }
+        } catch (e: Exception) {
+            throw IllegalArgumentException(
+                "Feil ved uthenting av sjablon Forbruktsutgifter: " + e.message,
+            )
+        }
+    }
+
+    fun mapSjablonSamværsfradrag(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonSamværsfradragPeriodeGrunnlag> {
+        try {
+            return sjablonGrunnlag
+                .filter { it.type == Grunnlagstype.SJABLON_SAMVARSFRADRAG }
+                .filtrerOgKonverterBasertPåEgenReferanse<SjablonSamværsfradragPeriode>()
+                .map {
+                    SjablonSamværsfradragPeriodeGrunnlag(
+                        referanse = it.referanse,
+                        sjablonSamværsfradragPeriode = it.innhold,
+                    )
+                }
+        } catch (e: Exception) {
+            throw IllegalArgumentException(
+                "Feil ved uthenting av sjablon for samværsfradrag: " + e.message,
+            )
+        }
+    }
 
     fun mapSjablonTrinnvisSkattesats(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonTrinnvisSkattesatsPeriodeGrunnlag> {
         try {

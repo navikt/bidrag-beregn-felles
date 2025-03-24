@@ -1,13 +1,13 @@
 package no.nav.bidrag.beregn.barnebidrag.bo
 
+import no.nav.bidrag.beregn.core.bo.SjablonBarnetilsynPeriodeGrunnlag
+import no.nav.bidrag.beregn.core.bo.SjablonForbruksutgifterPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.bo.SjablonSjablontallBeregningGrunnlag
 import no.nav.bidrag.beregn.core.bo.SjablonSjablontallPeriodeGrunnlag
 import no.nav.bidrag.domene.enums.barnetilsyn.Skolealder
 import no.nav.bidrag.domene.enums.barnetilsyn.Tilsynstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BarnetilsynMedStønadPeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonBarnetilsynPeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonForbruksutgifterPeriode
 import java.math.BigDecimal
 
 data class UnderholdskostnadPeriodeGrunnlag(
@@ -27,17 +27,13 @@ data class NettoTilsynsutgiftPeriodeGrunnlagDto(val referanse: String, val netto
 data class NettoTilsynsutgiftPeriode(val referanse: String, val periode: ÅrMånedsperiode, val nettoTilsynsutgift: BigDecimal)
 data class NettoTilsynsutgift(val referanse: String, val nettoTilsynsutgift: BigDecimal)
 
-data class SjablonBarnetilsynPeriodeGrunnlag(val referanse: String, val sjablonBarnetilsynPeriode: SjablonBarnetilsynPeriode)
-
-data class SjablonForbruksutgifterPeriodeGrunnlag(val referanse: String, val sjablonForbruksutgifterPeriode: SjablonForbruksutgifterPeriode)
-
 data class UnderholdskostnadPeriodeResultat(val periode: ÅrMånedsperiode, val resultat: UnderholdskostnadBeregningResultat)
 
 data class UnderholdskostnadBeregningGrunnlag(
     val søknadsbarn: SøknadsbarnBeregningGrunnlag,
     val barnetilsynMedStønad: BarnetilsynMedStønad?,
     val nettoTilsynsutgiftBeregningGrunnlag: NettoTilsynsutgift?,
-    val sjablonSjablontallBeregningGrunnlagListe: List<SjablonSjablontallBeregningGrunnlag>,
+    val sjablonSjablontallBeregningGrunnlagListe: MutableList<SjablonSjablontallBeregningGrunnlag>,
     val sjablonBarnetilsynBeregningGrunnlag: SjablonBarnetilsynBeregningGrunnlag?,
     val sjablonForbruksutgifterBeregningGrunnlag: SjablonForbruksutgifterBeregningGrunnlag,
 )
