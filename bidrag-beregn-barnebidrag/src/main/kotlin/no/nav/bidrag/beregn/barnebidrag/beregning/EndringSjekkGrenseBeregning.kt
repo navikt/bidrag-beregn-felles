@@ -13,13 +13,15 @@ internal object EndringSjekkGrenseBeregning {
         // at det er avslag i hele bergeningsperioden).
         // I alle andre tilfeller settes resultatet til false.
         val endringErOverGrense = grunnlag.any { it.endringErOverGrense } ||
-            (grunnlag.all { it.løpendeBidragBeløp == null } &&
-                grunnlag.all { it.beregnetBidragBeløp == null || it.beregnetBidragBeløp == BigDecimal.ZERO.avrundetMedToDesimaler })
+            (
+                grunnlag.all { it.løpendeBidragBeløp == null } &&
+                    grunnlag.all { it.beregnetBidragBeløp == null || it.beregnetBidragBeløp == BigDecimal.ZERO.avrundetMedToDesimaler }
+                )
 
         return EndringSjekkGrenseBeregningResultat(
             endringErOverGrense = endringErOverGrense,
             grunnlagsreferanseListe =
-                grunnlag.map { it.referanse },
+            grunnlag.map { it.referanse },
         )
     }
 }

@@ -60,7 +60,7 @@ internal object EndringSjekkGrensePeriodeBeregning {
                 faktiskEndringFaktor = BigDecimal.ONE
             }
             else -> {
-            // Hvis begge beløp er ulik 0 beregnes faktor
+                // Hvis begge beløp er ulik 0 beregnes faktor
                 faktiskEndringFaktor = beregnetBidragBeløp.divide(løpendeBidragBeløp, 10, RoundingMode.HALF_UP).minus(BigDecimal(1)).abs()
             }
         }

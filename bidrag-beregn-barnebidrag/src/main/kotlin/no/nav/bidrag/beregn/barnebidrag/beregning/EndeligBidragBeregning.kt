@@ -132,7 +132,7 @@ internal object EndeligBidragBeregning {
         bidragJustertNedTilEvne = (bidragsevne <= (foreløpigBeregnetBeløp + samværsfradrag)) && (bidragsevne <= sumInntekt25Prosent)
         bidragJustertNedTil25ProsentAvInntekt =
             (sumInntekt25Prosent <= (foreløpigBeregnetBeløp + samværsfradrag)) &&
-                (sumInntekt25Prosent <= bidragsevne)
+            (sumInntekt25Prosent <= bidragsevne)
         foreløpigBeregnetBeløp = bruttoBidragJustertForEvneOg25Prosent
 
         // Sjekker om det er begrenset revurdering
@@ -197,7 +197,6 @@ internal object EndeligBidragBeregning {
     }
 
     fun beregnAldersjustering(grunnlag: EndeligBidragBeregningAldersjusteringGrunnlag): EndeligBidragBeregningAldersjusteringResultat {
-
         val bpAndelBeløp = grunnlag.underholdskostnad.beløp.multiply(grunnlag.bpAndelFaktor.andelFaktor)
         val beregnetBeløp = bpAndelBeløp.subtract(grunnlag.samværsfradrag.beløp)
 
@@ -209,7 +208,7 @@ internal object EndeligBidragBeregning {
                 grunnlag.underholdskostnad.referanse,
                 grunnlag.bpAndelFaktor.referanse,
                 grunnlag.samværsfradrag.referanse,
-            )
+            ),
         )
     }
 

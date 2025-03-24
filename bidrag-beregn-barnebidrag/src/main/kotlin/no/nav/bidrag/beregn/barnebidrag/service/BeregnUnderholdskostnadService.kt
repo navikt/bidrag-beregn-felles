@@ -58,7 +58,7 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
         bruddPeriodeListe.forEach { bruddPeriode ->
             val underholdskostnadBeregningGrunnlag = lagUnderholdskostnadBeregningGrunnlag(
                 underholdskostnadPeriodeGrunnlag = underholdskostnadPeriodeGrunnlag,
-                bruddPeriode = bruddPeriode
+                bruddPeriode = bruddPeriode,
             )
 
             val barnetrygdType = when {
@@ -155,7 +155,7 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
         // Finner barnets beregnede alder. Alder regnes som om barnet er født 1. juli i fødselsåret.
         val beregnetAlder = finnBarnetsAlder(
             fødselsdato = underholdskostnadPeriodeGrunnlag.søknadsbarnPeriodeGrunnlag.fødselsdato,
-            årMåned = bruddPeriode.fom
+            årMåned = bruddPeriode.fom,
         )
 
         // Lager liste over gyldige alderTom-verdier
@@ -165,10 +165,14 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
         val alderTom = alderTomListe.firstOrNull { beregnetAlder <= it } ?: alderTomListe.last()
 
         val typeTilsyn =
-            if (barnetilsynMedStønad != null) bestemTilsynskode(
-                tilsynstype = barnetilsynMedStønad.tilsynstype,
-                skolealder = barnetilsynMedStønad.skolealder
-            ) else null
+            if (barnetilsynMedStønad != null) {
+                bestemTilsynskode(
+                    tilsynstype = barnetilsynMedStønad.tilsynstype,
+                    skolealder = barnetilsynMedStønad.skolealder,
+                )
+            } else {
+                null
+            }
 
         val resultat =
             UnderholdskostnadBeregningGrunnlag(
@@ -180,7 +184,7 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
                     .firstOrNull {
                         ÅrMånedsperiode(
                             fom = it.barnetilsynMedStønadPeriode.periode.fom,
-                            til = it.barnetilsynMedStønadPeriode.periode.til
+                            til = it.barnetilsynMedStønadPeriode.periode.til,
                         ).inneholder(bruddPeriode)
                     }
                     ?.let {

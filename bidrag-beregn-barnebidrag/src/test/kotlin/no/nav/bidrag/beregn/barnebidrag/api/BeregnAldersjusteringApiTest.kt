@@ -165,7 +165,7 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
             utførBeregningerOgEvaluerResultatAldersjustering()
         }
         assertThat(exception.message).isEqualTo(
-            "Aldersjustering: Ingen vedtak funnet for søknadsbarn med referanse person_PERSON_SØKNADSBARN_20230901_47138"
+            "Aldersjustering: Ingen vedtak funnet for søknadsbarn med referanse person_PERSON_SØKNADSBARN_20230901_47138",
         )
     }
 
@@ -178,7 +178,7 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
             utførBeregningerOgEvaluerResultatAldersjustering()
         }
         assertThat(exception.message).isEqualTo(
-            "Aldersjustering: Flere vedtak funnet for søknadsbarn med referanse person_PERSON_SØKNADSBARN_20230901_47138"
+            "Aldersjustering: Flere vedtak funnet for søknadsbarn med referanse person_PERSON_SØKNADSBARN_20230901_47138",
         )
     }
 
@@ -192,7 +192,7 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
         }
         assertThat(exception.message).isEqualTo(
             "Aldersjustering: Ingen stønadsendringer av type BIDRAG funnet for søknadsbarn med referanse person_PERSON_SØKNADSBARN_20230901_47138 " +
-                "og vedtak med id 123456"
+                "og vedtak med id 123456",
         )
     }
 
@@ -206,7 +206,7 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
         }
         assertThat(exception.message).isEqualTo(
             "Aldersjustering: Flere stønadsendringer av type BIDRAG funnet for søknadsbarn med referanse person_PERSON_SØKNADSBARN_20230901_47138 " +
-                "og vedtak med id 123456"
+                "og vedtak med id 123456",
         )
     }
 
@@ -220,7 +220,7 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
         }
         assertThat(exception.message).isEqualTo(
             "Aldersjustering: Stønadsendring av type BIDRAG inneholder ingen perioder som inneholder grunnlagsperiode for søknadsbarn " +
-                "med referanse person_PERSON_SØKNADSBARN_20230901_47138 og vedtak med id 123456"
+                "med referanse person_PERSON_SØKNADSBARN_20230901_47138 og vedtak med id 123456",
         )
     }
 
@@ -234,7 +234,7 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
         }
         assertThat(exception.message).isEqualTo(
             "Aldersjustering: Stønadsendring av type BIDRAG inneholder flere perioder som inneholder grunnlagsperiode for søknadsbarn " +
-                "med referanse person_PERSON_SØKNADSBARN_20230901_47138 og vedtak med id 123456"
+                "med referanse person_PERSON_SØKNADSBARN_20230901_47138 og vedtak med id 123456",
         )
     }
 
@@ -248,7 +248,7 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
         }
         assertThat(exception.message).isEqualTo(
             "Aldersjustering: Sluttberegning ikke funnet for søknadsbarn med referanse person_PERSON_SØKNADSBARN_20230901_47138 " +
-                "og vedtak med id 123456"
+                "og vedtak med id 123456",
         )
     }
 
@@ -262,7 +262,7 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
         }
         assertThat(exception.message).isEqualTo(
             "Aldersjustering: Delberegning underholdskostnad ikke funnet for søknadsbarn med referanse person_PERSON_SØKNADSBARN_20230901_47138 " +
-                "og vedtak med id 123456"
+                "og vedtak med id 123456",
         )
     }
 
@@ -276,7 +276,7 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
         }
         assertThat(exception.message).isEqualTo(
             "Aldersjustering: Delberegning bidragspliktiges andel ikke funnet for " +
-                "søknadsbarn med referanse person_PERSON_SØKNADSBARN_20230901_47138 og vedtak med id 123456"
+                "søknadsbarn med referanse person_PERSON_SØKNADSBARN_20230901_47138 og vedtak med id 123456",
         )
     }
 
@@ -290,7 +290,7 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
         }
         assertThat(exception.message).isEqualTo(
             "Aldersjustering: Samværsperiode ikke funnet for søknadsbarn med referanse person_PERSON_SØKNADSBARN_20230901_47138 " +
-                "og vedtak med id 123456"
+                "og vedtak med id 123456",
         )
     }
 
@@ -351,7 +351,7 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
                     periode = it.innhold.periode,
                     beregnetBeløp = it.innhold.beregnetBeløp,
                     resultatBeløp = it.innhold.resultatBeløp,
-                    bpAndelBeløp = it.innhold.bpAndelBeløp
+                    bpAndelBeløp = it.innhold.bpAndelBeløp,
                 )
             }
 

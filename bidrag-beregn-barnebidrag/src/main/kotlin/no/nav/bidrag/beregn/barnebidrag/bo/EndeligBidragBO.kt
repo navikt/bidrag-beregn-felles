@@ -77,10 +77,7 @@ data class BpAndelUnderholdskostnadDelberegningBeregningGrunnlag(
     val barnetErSelvforsørget: Boolean,
 )
 
-data class KopiBpAndelUnderholdskostnadDelberegningBeregningGrunnlag(
-    val referanse: String,
-    val andelFaktor: BigDecimal,
-)
+data class KopiBpAndelUnderholdskostnadDelberegningBeregningGrunnlag(val referanse: String, val andelFaktor: BigDecimal)
 
 data class SamværsfradragDelberegningBeregningGrunnlag(val referanse: String, val beløp: BigDecimal)
 
