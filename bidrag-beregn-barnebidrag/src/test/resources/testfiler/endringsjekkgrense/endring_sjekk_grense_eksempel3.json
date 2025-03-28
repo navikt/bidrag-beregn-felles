@@ -26,8 +26,8 @@
         },
         "løpendeBidragBeløp": null,
         "løpendeBidragFraPrivatAvtale": false,
-        "beregnetBidragBeløp": 0.00,
-        "faktiskEndringFaktor": 0.0150000000,
+        "beregnetBidragBeløp": null,
+        "faktiskEndringFaktor": null,
         "endringErOverGrense": false
       },
       "grunnlagsreferanseListe": [],
@@ -44,8 +44,8 @@
         },
         "løpendeBidragBeløp": null,
         "løpendeBidragFraPrivatAvtale": false,
-        "beregnetBidragBeløp": 0.00,
-        "faktiskEndringFaktor": 0.0588000000,
+        "beregnetBidragBeløp": null,
+        "faktiskEndringFaktor": null,
         "endringErOverGrense": false
       },
       "grunnlagsreferanseListe": [],
@@ -62,8 +62,8 @@
         },
         "løpendeBidragBeløp": null,
         "løpendeBidragFraPrivatAvtale": false,
-        "beregnetBidragBeløp": 0.00,
-        "faktiskEndringFaktor": 0.1000000000,
+        "beregnetBidragBeløp": null,
+        "faktiskEndringFaktor": null,
         "endringErOverGrense": false
       },
       "grunnlagsreferanseListe": [],

@@ -170,8 +170,8 @@ internal class BeregnEndringSjekkGrensePeriodeApiTest : FellesApiTest() {
         forventetBeregnetBidragBeløp = BigDecimal.ZERO.avrundetMedToDesimaler
         forventetLøpendeBidragBeløp = null
         forventetLøpendeBidragFraPrivatAvtale = false
-        forventetFaktiskEndringFaktor = null
-        forventetEndringErOverGrense = false
+        forventetFaktiskEndringFaktor = BigDecimal.ONE.avrundetMedTiDesimaler
+        forventetEndringErOverGrense = true
         forventetAntallLøpendeBidrag = 0
         forventetAntallLøpendeBidrag18År = 0
         utførBeregningerOgEvaluerResultat()
@@ -184,8 +184,8 @@ internal class BeregnEndringSjekkGrensePeriodeApiTest : FellesApiTest() {
         forventetBeregnetBidragBeløp = null
         forventetLøpendeBidragBeløp = BigDecimal.ZERO.avrundetMedNullDesimaler
         forventetLøpendeBidragFraPrivatAvtale = false
-        forventetFaktiskEndringFaktor = null
-        forventetEndringErOverGrense = false
+        forventetFaktiskEndringFaktor = BigDecimal.ONE.avrundetMedTiDesimaler
+        forventetEndringErOverGrense = true
         forventetAntallLøpendeBidrag18År = 0
         utførBeregningerOgEvaluerResultat()
     }
