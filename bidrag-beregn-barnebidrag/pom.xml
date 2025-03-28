@@ -84,6 +84,11 @@
       <artifactId>kotest-runner-junit5-jvm</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>no.nav.bidrag</groupId>
+      <artifactId>bidrag-vedtak</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
   </dependencies>
   <build>
     <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>

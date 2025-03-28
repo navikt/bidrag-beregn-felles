@@ -174,5 +174,6 @@ fun oppretteStønadsendring(
     omgjørVedtakId = omgjørVedtaksid,
     periodeListe = perioder,
     sak = saksnummer,
+    sisteVedtaksid = null,
     type = stønadstype,
 )

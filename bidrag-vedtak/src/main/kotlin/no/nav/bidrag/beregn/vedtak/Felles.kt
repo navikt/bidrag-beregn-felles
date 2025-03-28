@@ -9,7 +9,7 @@ data class Vedtaksdetaljer(var erOmgjort: Boolean = false, val vedtak: VedtakFor
 
 class Vedtaksiterator(vedtakssamling: Collection<Vedtaksdetaljer>) : Iterator<Vedtaksdetaljer> {
 
-    private val iterator: Iterator<Vedtaksdetaljer> = vedtakssamling.asSequence().sortedByDescending { it.periode.delytelseId }.iterator()
+    private val iterator: Iterator<Vedtaksdetaljer> = vedtakssamling.asSequence().sortedByDescending { it.vedtak.vedtakstidspunkt }.iterator()
     private var nesteVedtak: Vedtaksdetaljer? = null
     private var omgjorteVedtak = emptySet<Long>()
 
