@@ -30,42 +30,28 @@ internal object EndringSjekkGrensePeriodeBeregning {
             løpendeBidragBeløp = grunnlag.privatAvtaleBeregningGrunnlag.beløp
         }
 
-        when {
+        // Beregnet bidrag er null hvis barnet er selvforsørget eller søknadsbarnet bor hos BP (= avslag/opphør i perioden)
+        // Løpende bidrag er null hvis det ikke finnes løpende bidrag eller privat avtale å sammenligne mot eller at det er avslag/opphør i perioden
+        // Beregnet/løpende bidrag er 0 f.eks. hvis BP har manglende evne
+
+        faktiskEndringFaktor = when {
             // Hvis både løpende bidrag og beregnet bidrag er null settes faktor til null
-            løpendeBidragBeløp == null && beregnetBidragBeløp == null -> {
-                faktiskEndringFaktor = null
-            }
-            // Hvis løpende bidrag er null settes faktor til 1 hvis beregnet bidrag er ulik 0, ellers null
-            løpendeBidragBeløp == null -> {
-                faktiskEndringFaktor = if (beregnetBidragBeløp == BigDecimal.ZERO.avrundetMedToDesimaler) {
-                    null
-                } else {
-                    BigDecimal.ONE
-                }
-            }
-            // Hvis beregnet bidrag er null settes faktor til 1 hvis løpende bidrag er ulik 0, ellers null
-            beregnetBidragBeløp == null -> {
-                faktiskEndringFaktor = if (løpendeBidragBeløp == BigDecimal.ZERO) {
-                    null
-                } else {
-                    BigDecimal.ONE
-                }
-            }
+            løpendeBidragBeløp == null && beregnetBidragBeløp == null ->  null
+
+            // Hvis løpende bidrag eller beregnet bidrag er null (og underforstått at det andre beløpet ikke er null) settes faktor til 1
+            løpendeBidragBeløp == null || beregnetBidragBeløp == null -> BigDecimal.ONE
+
             // Hvis både løpende bidrag og beregnet bidrag er 0 settes faktor til 0
-            løpendeBidragBeløp == BigDecimal.ZERO && beregnetBidragBeløp == BigDecimal.ZERO.avrundetMedToDesimaler -> {
-                faktiskEndringFaktor = BigDecimal.ZERO
-            }
-            // Hvis både løpende bidrag eller beregnet bidrag er 0 (og underforstått at det andre beløpet er større enn 0) settes faktor til 0
-            løpendeBidragBeløp == BigDecimal.ZERO || beregnetBidragBeløp == BigDecimal.ZERO.avrundetMedToDesimaler -> {
-                faktiskEndringFaktor = BigDecimal.ONE
-            }
-            else -> {
-                // Hvis begge beløp er ulik 0 beregnes faktor
-                faktiskEndringFaktor = beregnetBidragBeløp.divide(løpendeBidragBeløp, 10, RoundingMode.HALF_UP).minus(BigDecimal(1)).abs()
-            }
+            løpendeBidragBeløp == BigDecimal.ZERO && beregnetBidragBeløp == BigDecimal.ZERO.avrundetMedToDesimaler -> BigDecimal.ZERO
+
+            // Hvis løpende bidrag eller beregnet bidrag er 0 (og underforstått at det andre beløpet er større enn 0) settes faktor til 1
+            løpendeBidragBeløp == BigDecimal.ZERO || beregnetBidragBeløp == BigDecimal.ZERO.avrundetMedToDesimaler -> BigDecimal.ONE
+
+            // Hvis begge beløp er ulik 0 beregnes faktor
+            else -> beregnetBidragBeløp.divide(løpendeBidragBeløp, 10, RoundingMode.HALF_UP).minus(BigDecimal(1)).abs()
         }
 
-        // Endring er over grense hvis fakktisk endring ikke er null og faktisk endring > sjablonverdi for endringsgrense
+        // Endring er over grense hvis faktisk endring ikke er null og faktisk endring > sjablonverdi for endringsgrense
         val endringErOverGrense = faktiskEndringFaktor != null && faktiskEndringFaktor > endringsgrenseFaktor
 
         return EndringSjekkGrensePeriodeBeregningResultat(
