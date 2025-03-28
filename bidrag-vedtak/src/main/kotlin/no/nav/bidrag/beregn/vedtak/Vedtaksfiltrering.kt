@@ -1,7 +1,7 @@
 package no.nav.bidrag.beregn.vedtak
 
 import no.nav.bidrag.commons.util.secureLogger
-import no.nav.bidrag.domene.enums.vedtak.Stønadstype
+import no.nav.bidrag.domene.enums.vedtak.Vedtakskilde
 import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
 import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakForStønad
@@ -10,17 +10,8 @@ import org.springframework.stereotype.Service
 
 @Service
 class Vedtaksfiltrering {
-
-    /**
-     * Finner vedtak som skal benyttes i evnevurdering fra en samling vedtak knyttet til en bestemt stønad. Returnerer null dersom metoden
-     * ikke finner relevant vedtak. Dette kan ansees som en unntaktstilstand.
-     *
-     * @param vedtak samling vedtak for stønad som sendes inn til metoden
-     * @param personidentSøknadsbarn personidenSøknadsbarn typisk fødselsnummer til søknadsbarnet stønaden og vedtakene gjelder for
-     * @return vedtak for evnevurdering for stønaden
-     */
     fun finneVedtakForEvnevurdering(vedtak: Collection<VedtakForStønad>, personidentSøknadsbarn: Personident): VedtakForStønad? {
-        val iterator = Vedtaksiterator(vedtak.filter { it.filtrereBortIrrelevanteVedtakBidrag() }.tilVedtaksdetaljer())
+        val iterator = Vedtaksiterator(vedtak.filter { it.filtrereBortIrrelevanteVedtak() }.tilVedtaksdetaljer())
 
         while (iterator.hasNext()) {
             val vedtaksdetaljer = iterator.next()
@@ -62,17 +53,24 @@ class Vedtaksfiltrering {
     }
 
     /**
-     * Finner vedtak siste manuelle vedtak for stønadstype
+     * Finner vedtak som skal benyttes i evnevurdering fra en samling vedtak knyttet til en bestemt stønad. Returnerer null dersom metoden
+     * ikke finner relevant vedtak. Dette kan ansees som en unntaktstilstand.
+     *
      * @param vedtak samling vedtak for stønad som sendes inn til metoden
      * @param personidentSøknadsbarn personidenSøknadsbarn typisk fødselsnummer til søknadsbarnet stønaden og vedtakene gjelder for
+     * @return vedtak for evnevurdering for stønaden
+     */
+    fun finneVedtakForEvnevurderingNy(vedtak: Collection<VedtakForStønad>, personidentSøknadsbarn: Personident): VedtakForStønad? =
+        finneSisteManuelleVedtak(vedtak)
+
+    /**
+     * Finner vedtak siste manuelle vedtak for stønadstype
+     * @param vedtak samling vedtak for stønad som sendes inn til metoden
      * @return Siste manuelle vedtak
      */
-    fun finneSisteManuelleVedtak(
-        vedtak: Collection<VedtakForStønad>,
-        personidentSøknadsbarn: Personident,
-        stønadstype: Stønadstype,
-    ): VedtakForStønad? {
-        val iterator = Vedtaksiterator(vedtak.filter { it.filtrereBortIrrelevanteVedtak(stønadstype) }.tilVedtaksdetaljer())
+    fun finneSisteManuelleVedtak(vedtak: Collection<VedtakForStønad>): VedtakForStønad? {
+        val iterator =
+            Vedtaksiterator(vedtak.filter { it.filtrereBortIrrelevanteVedtak() }.sortedByDescending { it.vedtakstidspunkt }.tilVedtaksdetaljer())
 
         while (iterator.hasNext()) {
             val vedtaksdetaljer = iterator.next()
@@ -85,20 +83,16 @@ class Vedtaksfiltrering {
             }
 
             // Hopp over indeksregulering
-            if (listOf(Vedtakstype.INDEKSREGULERING, Vedtakstype.ALDERSJUSTERING).contains(vedtaksdetaljer.vedtak.type)) {
+            if (vedtaksdetaljer.vedtak.kilde == Vedtakskilde.AUTOMATISK) {
                 continue
             }
 
             return vedtaksdetaljer.vedtak
         }
 
-        secureLogger.warn { "Fant ikke tidligere vedtak for barn med personident $personidentSøknadsbarn" }
+        secureLogger.warn { "Fant ikke tidligere vedtak for barn med personident ${vedtak.firstOrNull()?.stønadsendring?.kravhaver?.verdi}" }
         return null
     }
 
-    private fun VedtakForStønad.filtrereBortIrrelevanteVedtak(forStønad: Stønadstype): Boolean =
-        erInnkreving() && !erIkkeRelevant() && (stønadsendring.type == forStønad)
-
-    private fun VedtakForStønad.filtrereBortIrrelevanteVedtakBidrag(): Boolean =
-        erInnkreving() && !erIkkeRelevant() && (erBidrag() || er18årsbidrag() || erOppfostringsbidrag())
+    private fun VedtakForStønad.filtrereBortIrrelevanteVedtak(): Boolean = erInnkreving() && !erIkkeRelevant()
 }
