@@ -86,7 +86,15 @@ internal object BeregnSamværsfradragService : BeregnService() {
             ),
         )
 
-        return resultatGrunnlagListe.sortedBy { it.referanse }
+        // Mapper ut grunnlag for Person-objekter som er brukt
+        resultatGrunnlagListe.addAll(
+            mapPersonobjektGrunnlag(
+                resultatGrunnlagListe = resultatGrunnlagListe,
+                personobjektGrunnlagListe = mottattGrunnlag.grunnlagListe
+            )
+        )
+
+        return resultatGrunnlagListe.distinctBy { it.referanse }.sortedBy { it.referanse }
     }
 
     // Lager grunnlagsobjekter for sjabloner (ett objekt pr sjablonverdi som er innenfor perioden)

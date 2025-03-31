@@ -52,7 +52,15 @@ internal object BeregnEndringSjekkGrenseService : BeregnService() {
             ),
         )
 
-        return resultatGrunnlagListe.sortedBy { it.referanse }
+        // Mapper ut grunnlag for Person-objekter som er brukt
+        resultatGrunnlagListe.addAll(
+            mapPersonobjektGrunnlag(
+                resultatGrunnlagListe = resultatGrunnlagListe,
+                personobjektGrunnlagListe = mottattGrunnlag.grunnlagListe
+            )
+        )
+
+        return resultatGrunnlagListe.distinctBy { it.referanse }.sortedBy { it.referanse }
     }
 
     // Mapper ut DelberegningEndringSjekkGrense

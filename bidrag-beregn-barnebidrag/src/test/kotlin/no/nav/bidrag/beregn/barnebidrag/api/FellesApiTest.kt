@@ -54,13 +54,16 @@ internal open class FellesApiTest {
         .map { it.referanse }
         .distinct()
 
-    fun hentAlleRefererteReferanser(resultatGrunnlagListe: List<GrunnlagDto>) = resultatGrunnlagListe.flatMap { it.grunnlagsreferanseListe }
+    fun hentAlleRefererteReferanser(resultatGrunnlagListe: List<GrunnlagDto>) = resultatGrunnlagListe
+        .flatMap { it.grunnlagsreferanseListe + it.gjelderBarnReferanse + it.gjelderReferanse }
+        .filterNotNull()
         .distinct()
 
     fun hentAlleRefererteReferanser(resultatGrunnlagListe: List<GrunnlagDto>, barnebidragResultat: BeregnetBarnebidragResultat) = (
-        resultatGrunnlagListe.flatMap { it.grunnlagsreferanseListe } +
+        resultatGrunnlagListe.flatMap { it.grunnlagsreferanseListe + it.gjelderBarnReferanse + it.gjelderReferanse} +
             barnebidragResultat.beregnetBarnebidragPeriodeListe.flatMap { it.grunnlagsreferanseListe }
         )
+        .filterNotNull()
         .distinct()
 
     fun lesFilOgByggRequest(filnavn: String): BeregnGrunnlag {
@@ -75,12 +78,6 @@ internal open class FellesApiTest {
 
         // Lag request
         return ObjectMapper().findAndRegisterModules().readValue(json, BeregnGrunnlag::class.java)
-    }
-
-    fun lagBeregningPeriodeTil(opphørsdato: YearMonth) = if (opphørsdato.isAfter(YearMonth.now())) {
-        YearMonth.now().plusMonths(1)
-    } else {
-        opphørsdato
     }
 
     fun <T> printJson(json: T) {

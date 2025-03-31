@@ -586,7 +586,7 @@ internal class BeregnEndeligBidragApiTest : FellesApiTest() {
         printJson(endeligBidragResultat)
 
         val alleReferanser = hentAlleReferanser(endeligBidragResultat.grunnlagListe)
-        val alleRefererteReferanser = hentAlleRefererteReferanser(endeligBidragResultat.grunnlagListe).filter { it != "Person_Søknadsbarn" }
+        val alleRefererteReferanser = hentAlleRefererteReferanser(endeligBidragResultat.grunnlagListe)
 
         val endeligBidragResultatListe = hentSluttberegning(endeligBidragResultat.grunnlagListe)
         val feilmelding = endeligBidragResultat.feilmelding
@@ -704,7 +704,7 @@ internal class BeregnEndeligBidragApiTest : FellesApiTest() {
         printJson(endeligBidragResultat)
 
         val alleReferanser = hentAlleReferanser(endeligBidragResultat.grunnlagListe)
-        val alleRefererteReferanser = hentAlleRefererteReferanser(endeligBidragResultat.grunnlagListe).filter { it != "Person_Søknadsbarn" }
+        val alleRefererteReferanser = hentAlleRefererteReferanser(endeligBidragResultat.grunnlagListe)
 
         val endeligBidragResultatListe = hentSluttberegning(endeligBidragResultat.grunnlagListe)
 
@@ -1011,7 +1011,7 @@ internal class BeregnEndeligBidragApiTest : FellesApiTest() {
         printJson(endeligBidragResultat)
 
         val alleReferanser = hentAlleReferanser(endeligBidragResultat.grunnlagListe)
-        val alleRefererteReferanser = hentAlleRefererteReferanser(endeligBidragResultat.grunnlagListe).filter { it != "Person_Søknadsbarn" }
+        val alleRefererteReferanser = hentAlleRefererteReferanser(endeligBidragResultat.grunnlagListe)
 
         val endeligBidragResultatListe = hentSluttberegning(endeligBidragResultat.grunnlagListe)
         val feilmelding = endeligBidragResultat.feilmelding

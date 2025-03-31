@@ -150,6 +150,7 @@ class BeregnAldersjusteringService : BeregnService() {
                 grunnlagFraVedtakListe = grunnlagFraVedtakListe,
                 grunnlagFraDelberegningerListe = underholdskostnadResultatGrunnlagListe + samværsfradragResultatGrunnlagListe,
                 sjablonGrunnlag = sjablonGrunnlag,
+                personobjektGrunnlagListe = mottattGrunnlag.personObjektListe,
             )
 
             // Lager resultatperioder. Det vil bare være en resultatperiode, med åpen til-dato
@@ -170,7 +171,7 @@ class BeregnAldersjusteringService : BeregnService() {
                     beregnetBarnebidragResultat = beregnetBarnebidragResultat.beregnetBarnebidragPeriodeListe.first(),
                     beløpshistorikk = aldersjusteringGrunnlag.beløpshistorikk,
                     beregningsperiode = aldersjusteringGrunnlag.beregningsperiode,
-                )
+                  )
             ) {
                 throw AldersjusteringLavereEnnLøpendeBidragException(
                     melding = "Alderjustert beløp er lavere enn løpende beløp fra beløpshistorikken for søknadsbarn med referanse " +
@@ -228,30 +229,30 @@ class BeregnAldersjusteringService : BeregnService() {
                 alder = aldersjusteringGrunnlag.søknadsbarnAlder,
             ),
             barnetilsynMedStønad =
-            if (aldersjusteringGrunnlag.tilsynstype == null || aldersjusteringGrunnlag.skolealder == null) {
-                null
-            } else {
-                BarnetilsynMedStønad(
-                    referanse = grunnlagFraVedtakListe
-                        .filtrerOgKonverterBasertPåEgenReferanse<KopiBarnetilsynMedStønadPeriode>(Grunnlagstype.KOPI_BARNETILSYN_MED_STØNAD_PERIODE)
-                        .map { it.referanse }
-                        .firstOrNull() ?: "",
-                    tilsynstype = aldersjusteringGrunnlag.tilsynstype,
-                    skolealder = aldersjusteringGrunnlag.skolealder,
-                )
-            },
+                if (aldersjusteringGrunnlag.tilsynstype == null || aldersjusteringGrunnlag.skolealder == null) {
+                    null
+                } else {
+                    BarnetilsynMedStønad(
+                        referanse = grunnlagFraVedtakListe
+                            .filtrerOgKonverterBasertPåEgenReferanse<KopiBarnetilsynMedStønadPeriode>(Grunnlagstype.KOPI_BARNETILSYN_MED_STØNAD_PERIODE)
+                            .map { it.referanse }
+                            .firstOrNull() ?: "",
+                        tilsynstype = aldersjusteringGrunnlag.tilsynstype,
+                        skolealder = aldersjusteringGrunnlag.skolealder,
+                    )
+                },
             nettoTilsynsutgiftBeregningGrunnlag =
-            if (aldersjusteringGrunnlag.nettoTilsynsutgift == null) {
-                null
-            } else {
-                NettoTilsynsutgift(
-                    referanse = grunnlagFraVedtakListe
-                        .filtrerOgKonverterBasertPåEgenReferanse<KopiDelberegningUnderholdskostnad>(Grunnlagstype.KOPI_DELBEREGNING_UNDERHOLDSKOSTNAD)
-                        .map { it.referanse }
-                        .firstOrNull() ?: "",
-                    nettoTilsynsutgift = aldersjusteringGrunnlag.nettoTilsynsutgift,
-                )
-            },
+                if (aldersjusteringGrunnlag.nettoTilsynsutgift == null) {
+                    null
+                } else {
+                    NettoTilsynsutgift(
+                        referanse = grunnlagFraVedtakListe
+                            .filtrerOgKonverterBasertPåEgenReferanse<KopiDelberegningUnderholdskostnad>(Grunnlagstype.KOPI_DELBEREGNING_UNDERHOLDSKOSTNAD)
+                            .map { it.referanse }
+                            .firstOrNull() ?: "",
+                        nettoTilsynsutgift = aldersjusteringGrunnlag.nettoTilsynsutgift,
+                    )
+                },
             sjablonSjablontallBeregningGrunnlagListe = aldersjusteringGrunnlag.sjablonSjablontallPeriodeGrunnlagListe
                 .filter { it.sjablonSjablontallPeriode.periode.inneholder(aldersjusteringGrunnlag.beregningsperiode) }
                 .map {
@@ -262,23 +263,23 @@ class BeregnAldersjusteringService : BeregnService() {
                     )
                 }.toMutableList(),
             sjablonBarnetilsynBeregningGrunnlag =
-            if (tilsynskode != null) {
-                aldersjusteringGrunnlag.sjablonBarnetilsynPeriodeGrunnlagListe
-                    .asSequence()
-                    .filter { it.sjablonBarnetilsynPeriode.periode.inneholder(aldersjusteringGrunnlag.beregningsperiode) }
-                    .filter { it.sjablonBarnetilsynPeriode.typeStønad == "64" }
-                    .filter { it.sjablonBarnetilsynPeriode.typeTilsyn == tilsynskode }
-                    .map {
-                        SjablonBarnetilsynBeregningGrunnlag(
-                            referanse = it.referanse,
-                            typeStønad = it.sjablonBarnetilsynPeriode.typeStønad,
-                            typeTilsyn = it.sjablonBarnetilsynPeriode.typeTilsyn,
-                            beløpBarnetilsyn = it.sjablonBarnetilsynPeriode.beløpBarnetilsyn,
-                        )
-                    }.first()
-            } else {
-                null
-            },
+                if (tilsynskode != null) {
+                    aldersjusteringGrunnlag.sjablonBarnetilsynPeriodeGrunnlagListe
+                        .asSequence()
+                        .filter { it.sjablonBarnetilsynPeriode.periode.inneholder(aldersjusteringGrunnlag.beregningsperiode) }
+                        .filter { it.sjablonBarnetilsynPeriode.typeStønad == "64" }
+                        .filter { it.sjablonBarnetilsynPeriode.typeTilsyn == tilsynskode }
+                        .map {
+                            SjablonBarnetilsynBeregningGrunnlag(
+                                referanse = it.referanse,
+                                typeStønad = it.sjablonBarnetilsynPeriode.typeStønad,
+                                typeTilsyn = it.sjablonBarnetilsynPeriode.typeTilsyn,
+                                beløpBarnetilsyn = it.sjablonBarnetilsynPeriode.beløpBarnetilsyn,
+                            )
+                        }.first()
+                } else {
+                    null
+                },
             sjablonForbruksutgifterBeregningGrunnlag = aldersjusteringGrunnlag.sjablonForbruksutgifterPeriodeGrunnlagListe
                 .filter { it.sjablonForbruksutgifterPeriode.periode.inneholder(aldersjusteringGrunnlag.beregningsperiode) }
                 .filter { it.sjablonForbruksutgifterPeriode.alderTom == alderTom }
@@ -487,6 +488,7 @@ class BeregnAldersjusteringService : BeregnService() {
         grunnlagFraVedtakListe: List<GrunnlagDto>,
         grunnlagFraDelberegningerListe: List<GrunnlagDto>,
         sjablonGrunnlag: List<GrunnlagDto>,
+        personobjektGrunnlagListe: List<GrunnlagDto>
     ): List<GrunnlagDto> {
         // Mapper ut grunnlag som er brukt i endelig bidrag beregningen (mottatte grunnlag og sjabloner)
         val endeligBidragResultatGrunnlagListe = mapDelberegningResultatGrunnlag(
@@ -505,7 +507,15 @@ class BeregnAldersjusteringService : BeregnService() {
             ),
         )
 
-        return endeligBidragResultatGrunnlagListe
+        // Mapper ut grunnlag for Person-objekter som er brukt
+        endeligBidragResultatGrunnlagListe.addAll(
+            mapPersonobjektGrunnlag(
+                resultatGrunnlagListe = endeligBidragResultatGrunnlagListe,
+                personobjektGrunnlagListe = personobjektGrunnlagListe
+            )
+        )
+
+        return endeligBidragResultatGrunnlagListe.distinctBy { it.referanse }.sortedBy { it.referanse }
     }
 
     // Mapper ut DelberegningEndeligBidrag

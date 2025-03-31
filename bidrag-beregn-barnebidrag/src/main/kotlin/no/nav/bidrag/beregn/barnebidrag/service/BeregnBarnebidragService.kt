@@ -130,12 +130,19 @@ class BeregnBarnebidragService : BeregnService() {
                 delberegningEndringSjekkGrensePeriodeResultat +
                 delberegningIndeksreguleringPrivatAvtaleResultat
             )
-            .distinctBy { it.referanse }
-            .sortedBy { it.referanse }
+            .toMutableList()
+
+        // Mapper ut grunnlag for Person-objekter som er brukt
+        endeligResultatGrunnlagListe.addAll(
+            mapPersonobjektGrunnlag(
+                resultatGrunnlagListe = endeligResultatGrunnlagListe,
+                personobjektGrunnlagListe = mottattGrunnlag.grunnlagListe
+            )
+        )
 
         val beregnetBarnebidragResultat = BeregnetBarnebidragResultat(
             beregnetBarnebidragPeriodeListe = justerPerioderForOpphørsdato(resultatPeriodeListe, mottattGrunnlag.opphørsdato),
-            grunnlagListe = endeligResultatGrunnlagListe,
+            grunnlagListe = endeligResultatGrunnlagListe.distinctBy { it.referanse }.sortedBy { it.referanse },
         )
 
         // Kaster exception hvis det er utført begrenset revurdering og det er minst ett tilfelle hvor beregnet bidrag er lavere enn løpende bidrag
