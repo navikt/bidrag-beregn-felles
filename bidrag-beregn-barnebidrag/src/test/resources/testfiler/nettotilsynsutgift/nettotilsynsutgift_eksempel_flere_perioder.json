@@ -33,7 +33,7 @@
       "innhold" : {
         "ident" : null,
         "navn" : "Barn Over Tolv jr",
-        "fødselsdato" : "2005-01-12"
+        "fødselsdato" : "2005-02-12"
       },
       "grunnlagsreferanseListe" : [],
       "gjelderReferanse" : null
@@ -138,7 +138,7 @@
       "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {
-      "referanse": "Mottatt_Tilleggsstønad_202301_person_PERSON_BARN_BIDRAGSMOTTAKER_20051217_102",
+      "referanse": "Mottatt_Tilleggsstønad_202301_person_PERSON_BARN_BIDRAGSMOTTAKER_20050212_102",
       "type": "TILLEGGSSTØNAD_PERIODE",
       "innhold": {
         "periode": {
@@ -149,7 +149,7 @@
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
-      "gjelderBarnReferanse": "person_PERSON_BARN_BIDRAGSMOTTAKER_20051217_102",
+      "gjelderBarnReferanse": "person_PERSON_BARN_BIDRAGSMOTTAKER_20050212_102",
       "gjelderReferanse": "Person_Bidragsmottaker"
     }
   ]

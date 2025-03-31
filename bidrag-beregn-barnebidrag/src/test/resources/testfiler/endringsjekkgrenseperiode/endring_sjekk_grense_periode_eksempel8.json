@@ -17,6 +17,17 @@
       "gjelderReferanse": null
     },
     {
+      "referanse": "Person_Bidragspliktig",
+      "type": "PERSON_BIDRAGSPLIKTIG",
+      "innhold": {
+        "ident": "33333333333",
+        "navn": "Motvillig Bidragspliktig",
+        "fødselsdato": "1981-07-13"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
       "referanse": "sluttberegning_Person_Søknadsbarn_202408",
       "type": "SLUTTBEREGNING_BARNEBIDRAG",
       "innhold": {

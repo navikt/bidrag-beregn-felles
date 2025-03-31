@@ -323,6 +323,21 @@ abstract class BeregnService {
         return resultatGrunnlagListe
     }
 
+    // Mapper ut grunnlag for Person-objekter
+    fun mapPersonobjektGrunnlag(
+        resultatGrunnlagListe: List<GrunnlagDto>,
+        personobjektGrunnlagListe: List<GrunnlagDto>,
+    ): List<GrunnlagDto> {
+        val gjelderReferanseListe = resultatGrunnlagListe
+            .flatMap { listOfNotNull(it.gjelderReferanse, it.gjelderBarnReferanse) }
+            .distinct()
+
+        return mapGrunnlag(
+            grunnlagListe = personobjektGrunnlagListe,
+            grunnlagReferanseListe = gjelderReferanseListe
+        )
+    }
+
     // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen og mapper ut
     private fun mapGrunnlag(grunnlagListe: List<GrunnlagDto>, grunnlagReferanseListe: List<String>) = grunnlagListe
         .filter { grunnlagReferanseListe.contains(it.referanse) }

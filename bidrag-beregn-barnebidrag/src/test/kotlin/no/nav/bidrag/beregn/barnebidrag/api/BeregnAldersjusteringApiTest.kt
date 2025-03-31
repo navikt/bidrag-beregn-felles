@@ -342,7 +342,6 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
         val aldersjusteringResultatGrunnlagListe = aldersjusteringResultat.grunnlagListe
         val alleReferanser = hentAlleReferanser(aldersjusteringResultatGrunnlagListe)
         val alleRefererteReferanser = hentAlleRefererteReferanser(aldersjusteringResultatGrunnlagListe)
-            .filterNot { it.startsWith("person_PERSON") }
 
         val endeligBidragResultatListe = aldersjusteringResultatGrunnlagListe
             .filtrerOgKonverterBasertPåEgenReferanse<SluttberegningBarnebidragAldersjustering>(Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG_ALDERSJUSTERING)

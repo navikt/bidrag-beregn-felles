@@ -162,6 +162,14 @@ internal object BeregnEndeligBidragService : BeregnService() {
         resultatGrunnlagListe.addAll(delberegningNettoBarnetilleggBPResultat)
         resultatGrunnlagListe.addAll(delberegningNettoBarnetilleggBMResultat)
 
+        // Mapper ut grunnlag for Person-objekter som er brukt
+        resultatGrunnlagListe.addAll(
+            mapPersonobjektGrunnlag(
+                resultatGrunnlagListe = resultatGrunnlagListe,
+                personobjektGrunnlagListe = mottattGrunnlag.grunnlagListe
+            )
+        )
+
         val resultat = resultatGrunnlagListe.distinctBy { it.referanse }.sortedBy { it.referanse }
 
         feilmelding = if (skalKasteBegrensetRevurderingException) {

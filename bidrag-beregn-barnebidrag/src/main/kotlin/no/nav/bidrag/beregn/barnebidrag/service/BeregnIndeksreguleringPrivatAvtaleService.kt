@@ -116,9 +116,17 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
                 .distinct(),
             mottattGrunnlag = grunnlag,
             sjablonGrunnlag = sjablonListe,
-        ).toList()
+        ).toMutableList()
 
-        return resultatliste + resultatGrunnlagListe
+        // Mapper ut grunnlag for Person-objekter som er brukt
+        resultatGrunnlagListe.addAll(
+            mapPersonobjektGrunnlag(
+                resultatGrunnlagListe = resultatGrunnlagListe + resultatliste,
+                personobjektGrunnlagListe = grunnlag.grunnlagListe
+            )
+        )
+
+        return (resultatliste + resultatGrunnlagListe).distinctBy { it.referanse }.sortedBy { it.referanse }
     }
 
     // Lager en liste over alle bruddperioder med indikator for indeksregulering
@@ -254,7 +262,7 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
                     indeksreguleringFaktor = null,
                     beløp = grunnlag.privatAvtalePeriode.beløp.avrundetMedNullDesimaler,
 
-                )
+                    )
         }
 
         val resultat =
@@ -273,7 +281,7 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
                 gjelderBarnReferanse = grunnlag.søknadsbarnReferanse,
                 grunnlagsreferanseListe = grunnlag.referanseliste,
 
-            )
+                )
         return resultat
     }
 }

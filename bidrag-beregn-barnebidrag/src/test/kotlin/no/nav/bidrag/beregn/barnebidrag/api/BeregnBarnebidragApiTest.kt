@@ -2560,6 +2560,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
         // Fjerner referanser som ikke er med i inputen til beregning
         val alleRefererteReferanserFiltrert = alleRefererteReferanser
             .filterNot { it.contains("innhentet_husstandsmedlem") }
+            .filterNot { it.contains("innhentet_andre_barn") }
 
         val bidragsevneResultatListe = barnebidragResultatGrunnlagListe
             .filtrerOgKonverterBasertPåEgenReferanse<DelberegningBidragsevne>(Grunnlagstype.DELBEREGNING_BIDRAGSEVNE)
