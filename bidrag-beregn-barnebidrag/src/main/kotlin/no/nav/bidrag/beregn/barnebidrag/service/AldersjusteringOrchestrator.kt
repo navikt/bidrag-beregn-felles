@@ -44,10 +44,14 @@ enum class SkalAldersjusteresManueltBegrunnelse {
 }
 
 class SkalIkkeAldersjusteresException(vararg begrunnelse: SkalIkkeAldersjusteresBegrunnelse) :
-    RuntimeException("Skal ikke aldersjusteres med begrunnelse ${begrunnelse.joinToString(",")}")
+    RuntimeException("Skal ikke aldersjusteres med begrunnelse ${begrunnelse.joinToString(",")}") {
+    val begrunnelser: List<SkalIkkeAldersjusteresBegrunnelse> = begrunnelse.toList()
+}
 
 class AldersjusteresManueltException(begrunnelse: SkalAldersjusteresManueltBegrunnelse) :
-    RuntimeException("Skal aldersjusteres manuelt med begrunnelse $begrunnelse")
+    RuntimeException("Skal aldersjusteres manuelt med begrunnelse $begrunnelse") {
+    val begrunnelse: SkalAldersjusteresManueltBegrunnelse = begrunnelse
+}
 
 fun aldersjusteresManuelt(begrunnelse: SkalAldersjusteresManueltBegrunnelse): Nothing = throw AldersjusteresManueltException(begrunnelse)
 
@@ -74,11 +78,12 @@ class AldersjusteringOrchestrator(
 
         vedtakService
             .hentLøpendeStønad(stønad)
-            .validerSkalAldersjusteres(aldersjusteresForÅr, sak)
+            .validerSkalAldersjusteres(sak)
 
         val sisteManuelleVedtak = vedtakService.finnSisteManuelleVedtak(stønad)!!
 
         sisteManuelleVedtak.validerSkalAldersjusteres(stønad)
+
         val beregningInput = sisteManuelleVedtak.byggGrunnlagForBeregning(
             stønad,
             aldersjusteresForÅr,
@@ -110,6 +115,10 @@ class AldersjusteringOrchestrator(
                     Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG,
                     sistePeriode.grunnlagReferanseListe,
                 ).firstOrNull() ?: skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE)
+
+        if (sistePeriode.beløp == null) {
+            skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE)
+        }
 
         if (sluttberegning.innhold.bidragJustertForNettoBarnetilleggBM) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.JUSTERT_FOR_BARNETILLEGG_BM)
@@ -156,7 +165,7 @@ class AldersjusteringOrchestrator(
         )
     }
 
-    private fun StønadPeriodeDto?.validerSkalAldersjusteres(aldersjusteresForÅr: Int = YearMonth.now().year, sak: BidragssakDto) {
+    private fun StønadPeriodeDto?.validerSkalAldersjusteres(sak: BidragssakDto) {
         if (this == null) skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE)
         if (valutakode != "NOK") skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.LØPER_MED_UTENLANDSK_VALUTA)
         if (sak.eierfogd.verdi == enhet_utland) aldersjusteresManuelt(SkalAldersjusteresManueltBegrunnelse.UTENLANDSSAK_MED_NORSK_VALUTA)
