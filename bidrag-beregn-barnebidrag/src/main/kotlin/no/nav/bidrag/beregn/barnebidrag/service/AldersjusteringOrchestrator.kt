@@ -62,15 +62,13 @@ class AldersjusteringOrchestrator(
     private val personConsumer: BeregningPersonConsumer,
 ) {
     fun utførAldersjustering(stønad: Stønadsid, aldersjusteresForÅr: Int = YearMonth.now().year): BeregnetBarnebidragResultat {
-        // TODO: MDC
-        // TODO: Catch exception
         log.info { "Aldersjustering kjøres for stønadstype ${stønad.type} og sak ${stønad.sak} for årstall $aldersjusteresForÅr" }
         secureLogger.info { "Aldersjustering kjøres for stønad $stønad og årstall $aldersjusteresForÅr" }
         val sak = sakConsumer.hentSak(stønad.sak.verdi)
         val fødselsdatoBarn = personConsumer.hentFødselsdatoForPerson(stønad.kravhaver)
 
         if (!AldersjusteringUtils.skalAldersjusteres(fødselsdatoBarn, aldersjusteresForÅr)) {
-            log.warn { "Skal barn som er født $fødselsdatoBarn skal ikke alderjusteres for år $aldersjusteresForÅr" }
+            log.warn { "Barn som er født $fødselsdatoBarn skal ikke alderjusteres for år $aldersjusteresForÅr" }
             skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.IKKE_ALDERSGRUPPE_FOR_ALDERSJUSTERING)
         }
 
@@ -86,15 +84,11 @@ class AldersjusteringOrchestrator(
             aldersjusteresForÅr,
         )
         return barnebidragApi
-            .beregnAldersjustering(
-                beregningInput,
-            ).let {
+            .beregnAldersjustering(beregningInput).let {
                 secureLogger.info {
                     "Resultat av beregning av aldersjustering for stønad $stønad og år $aldersjusteresForÅr: ${it.beregnetBarnebidragPeriodeListe}"
                 }
-                it.copy(
-                    grunnlagListe = (it.grunnlagListe + beregningInput.personObjektListe).toSet().toList(),
-                )
+                it
             }
     }
 
