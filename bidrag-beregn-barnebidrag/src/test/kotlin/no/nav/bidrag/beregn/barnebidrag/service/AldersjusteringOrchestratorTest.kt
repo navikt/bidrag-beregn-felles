@@ -146,6 +146,8 @@ class AldersjusteringOrchestratorTest {
 
     @Test
     fun `skal beregne aldersjustering`() {
+        val fødselsdatoBarn = LocalDate.now().minusYears(11)
+        every { personConsumer.hentFødselsdatoForPerson(eq(Personident(personIdentSøknadsbarn1))) } returns fødselsdatoBarn
         every { beregningStønadConsumer.hentHistoriskeStønader(any()) } returns
             opprettStønadDto(
                 stønadstype = Stønadstype.BIDRAG,
@@ -165,7 +167,6 @@ class AldersjusteringOrchestratorTest {
                 skyldner = Personident(personIdentBidragspliktig),
                 sak = Saksnummer(saksnummer),
             ),
-            aldersjusteresForÅr = 2025,
         )
         resultat.shouldNotBeNull()
 
@@ -295,7 +296,7 @@ class AldersjusteringOrchestratorTest {
     }
 
     @Test
-    fun `skal kaste skal aldersjusteres manielt hvis utenlandsk vedtak`() {
+    fun `skal kaste skal aldersjusteres manuelt hvis utenlandsk vedtak`() {
         every { beregningStønadConsumer.hentHistoriskeStønader(any()) } returns
             opprettStønadDto(
                 stønadstype = Stønadstype.BIDRAG,
@@ -432,6 +433,38 @@ class AldersjusteringOrchestratorTest {
         exception.message shouldBe "Skal ikke aldersjusteres med begrunnelse INGEN_LØPENDE_PERIODE"
         exception.begrunnelser.shouldHaveSize(1)
         exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE
+    }
+
+    @Test
+    fun `skal kaste skal ikke aldersjusteringsfeil hvis bidrag løper med utenlandsk valuta`() {
+        every { beregningStønadConsumer.hentHistoriskeStønader(any()) } returns
+            opprettStønadDto(
+                stønadstype = Stønadstype.BIDRAG,
+                periodeListe =
+                listOf(
+                    opprettStønadPeriodeDto(
+                        ÅrMånedsperiode(LocalDate.now().withMonth(9).minusYears(1), null),
+                        beløp = BigDecimal("100"),
+                        vedtakId = vedtaksidBidrag,
+                        valutakode = "USD",
+                    ),
+                ),
+            )
+
+        val exception = shouldThrow<SkalIkkeAldersjusteresException> {
+            aldersjusteringOrchestrator.utførAldersjustering(
+                stønad = Stønadsid(
+                    type = Stønadstype.BIDRAG,
+                    kravhaver = Personident(personIdentSøknadsbarn1),
+                    skyldner = Personident(personIdentBidragspliktig),
+                    sak = Saksnummer(saksnummer),
+                ),
+                aldersjusteresForÅr = 2025,
+            )
+        }
+        exception.message shouldBe "Skal ikke aldersjusteres med begrunnelse LØPER_MED_UTENLANDSK_VALUTA"
+        exception.begrunnelser.shouldHaveSize(1)
+        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.LØPER_MED_UTENLANDSK_VALUTA
     }
 }
 
