@@ -37,7 +37,7 @@ arbeidsinntektFraKompensasjonsytelseUtbetaltAvNav:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2020
-    tom: 9999
+    tom: 2023
 avkortetFordelVedElektroniskKommunikasjon:
   - plussMinus: PLUSS
     sekkepost: NEI
@@ -122,6 +122,11 @@ nettoLoennsinntektFraArbeidINorge:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2022
+    tom: 9999
+omstillingsstoenad:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2024
     tom: 9999
 overgangsstoenadTilEnsligForelder:
   - plussMinus: PLUSS
@@ -357,6 +362,11 @@ skattefriLoennsinntektMedTrygdeavgiftspliktOgMedTrekkplikt:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2017
+    tom: 9999
+skattepliktigInntektVedSalgAvOverskuddsstroem:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2024
     tom: 9999
 skattepliktigTilfeldigInntektFraSpillLotteriMv:
   - plussMinus: PLUSS
