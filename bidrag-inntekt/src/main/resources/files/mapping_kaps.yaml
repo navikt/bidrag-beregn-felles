@@ -248,6 +248,11 @@ latentEllerRealisertGevinstPaaAnnetFinansproduktMvVedUtflytting:
     sekkepost: NEI
     fom: 2022
     tom: 9999
+latentEllerRealisertGevinstPaaOpsjonerIArbeidsforholdVedUtflytting:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2024
+    tom: 9999
 latentEllerRealisertTapPaaAksjeAndelMvVedUtflytting:
   - plussMinus: MINUS
     sekkepost: NEI
@@ -257,6 +262,41 @@ latentEllerRealisertTapPaaAksjeAnnetFinansproduktMvVedUtflytting:
   - plussMinus: MINUS
     sekkepost: NEI
     fom: 2022
+    tom: 9999
+latentEllerRealisertTapPaaOpsjonerIArbeidsforholdVedUtflytting:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2024
+    tom: 9999
+latentGevinstPaaAksjeAndelMvVedUtflyttingUtenUtsattBetalingAvSkatt:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2024
+    tom: 9999
+latentGevinstPaaAnnetFinansproduktMvVedUtflyttingUtenUtsattBetalingAvSkatt:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2024
+    tom: 9999
+latentGevinstPaaOpsjonIArbeidsforholdVedUtflyttingUtenUtsattBetalingAvSkatt:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2024
+    tom: 9999
+latentTapPaaAksjeAndelMvVedUtflyttingUtenUtsattBetalingAvSkatt:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2024
+    tom: 9999
+latentTapPaaAnnetFinansproduktMvVedUtflyttingUtenUtsattBetalingAvSkatt:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2024
+    tom: 9999
+latentTapPaaOpsjonIArbeidsforholdVedUtflyttingUtenUtsattBetalingAvSkatt:
+  - plussMinus: MINUS
+    sekkepost: NEI
+    fom: 2024
     tom: 9999
 livrenterIArbeidsforhold:
   - plussMinus: PLUSS
@@ -277,12 +317,12 @@ naeringsinntektFraKompensasjonsytelseUtbetaltAvNavInnenAnnenNaering:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2020
-    tom: 9999
+    tom: 2023
 naeringsinntektFraKompensasjonsytelseUtbetaltAvNavInnenBarnepassIBarnepasserensHjem:
   - plussMinus: PLUSS
     sekkepost: NEI
     fom: 2020
-    tom: 9999
+    tom: 2023
 naeringsinntektFraKompensasjonsytelseUtbetaltAvNavInnenFiskeOgFangst:
   - plussMinus: PLUSS
     sekkepost: NEI
