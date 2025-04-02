@@ -62,15 +62,19 @@
       "gjelderBarnReferanse": "Person_Søknadsbarn"
     },
     {
-      "referanse": "delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202408",
-      "type": "DELBEREGNING_PRIVAT_AVTALE_PERIODE",
+      "referanse": "delberegning_DELBEREGNING_PRIVAT_AVTALE_Person_Bidragspliktig_Person_Søknadsbarn_202408",
+      "type": "DELBEREGNING_PRIVAT_AVTALE",
       "innhold": {
-        "periode": {
-          "fom": "2024-08",
-          "til": null
-        },
-        "indeksreguleringFaktor": null,
-        "beløp": 4000
+        "perioder": [
+          {
+            "periode": {
+              "fom": "2024-08",
+              "til": null
+            },
+            "indeksreguleringFaktor": null,
+            "beløp": 4000
+          }
+        ]
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Bidragspliktig",

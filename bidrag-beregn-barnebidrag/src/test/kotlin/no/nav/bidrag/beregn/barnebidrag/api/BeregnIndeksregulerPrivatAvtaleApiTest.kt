@@ -4,7 +4,7 @@ import no.nav.bidrag.beregn.barnebidrag.BeregnIndeksreguleringPrivatAvtaleApi
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningPrivatAvtalePeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningPrivatAvtale
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
@@ -34,7 +34,7 @@ internal class BeregnIndeksregulerPrivatAvtaleApiTest : FellesApiTest() {
     @DisplayName("Privat avtale - uten indeksregulering")
     fun testIndeksreguleringPrivatAvtaleUtenIndeksregulering() {
         filnavn = "src/test/resources/testfiler/indeksreguleringprivatavtale/privat_avtale_uten_indeksregulering.json"
-        val resultat = utførBeregningerOgEvaluerResultatIndeksreguleringPrivatAvtale()
+        val resultat = utførBeregningerOgEvaluerResultatIndeksreguleringPrivatAvtale().perioder
 
         assertAll(
             { assertThat(resultat).hasSize(3) },
@@ -58,7 +58,7 @@ internal class BeregnIndeksregulerPrivatAvtaleApiTest : FellesApiTest() {
     @DisplayName("Privat avtale - med indeksregulering")
     fun testIndeksreguleringPrivatAvtaleMedIndeksregulering() {
         filnavn = "src/test/resources/testfiler/indeksreguleringprivatavtale/privat_avtale_med_indeksregulering.json"
-        val resultat = utførBeregningerOgEvaluerResultatIndeksreguleringPrivatAvtale()
+        val resultat = utførBeregningerOgEvaluerResultatIndeksreguleringPrivatAvtale().perioder
 
         assertAll(
             { assertThat(resultat).hasSize(4) },
@@ -86,7 +86,7 @@ internal class BeregnIndeksregulerPrivatAvtaleApiTest : FellesApiTest() {
     @DisplayName("Privat avtale - med indeksregulering der tildato er satt. Skal da returnere uten å indeksregulere. Skal egentlig ikke skje.")
     fun testIndeksreguleringPrivatAvtaleMedIndeksreguleringTildatoSatt() {
         filnavn = "src/test/resources/testfiler/indeksreguleringprivatavtale/privat_avtale_med_indeksregulering_siste_periode_med_satt_tildato.json"
-        val resultat = utførBeregningerOgEvaluerResultatIndeksreguleringPrivatAvtale()
+        val resultat = utførBeregningerOgEvaluerResultatIndeksreguleringPrivatAvtale().perioder
 
         assertAll(
             { assertThat(resultat).hasSize(2) },
@@ -106,7 +106,7 @@ internal class BeregnIndeksregulerPrivatAvtaleApiTest : FellesApiTest() {
     @DisplayName("Privat avtale - med indeksregulering Test periode hentes fra privatavtaleperioder")
     fun testIndeksreguleringPrivatAvtaleMedIndeksreguleringPerioderFraPrivatAvtalePerioder() {
         filnavn = "src/test/resources/testfiler/indeksreguleringprivatavtale/privat_avtale_med_indeksregulering_periode.json"
-        val resultat = utførBeregningerOgEvaluerResultatIndeksreguleringPrivatAvtale()
+        val resultat = utførBeregningerOgEvaluerResultatIndeksreguleringPrivatAvtale().perioder
 
         assertAll(
             { assertThat(resultat).hasSize(2) },
@@ -122,7 +122,7 @@ internal class BeregnIndeksregulerPrivatAvtaleApiTest : FellesApiTest() {
         )
     }
 
-    private fun utførBeregningerOgEvaluerResultatIndeksreguleringPrivatAvtale(): List<DelberegningPrivatAvtalePeriode> {
+    private fun utførBeregningerOgEvaluerResultatIndeksreguleringPrivatAvtale(): DelberegningPrivatAvtale {
         val request = lesFilOgByggRequest(filnavn)
         val resultat = api.beregnIndeksreguleringPrivatAvtale(request)
         printJson(resultat)
@@ -131,14 +131,8 @@ internal class BeregnIndeksregulerPrivatAvtaleApiTest : FellesApiTest() {
         val alleRefererteReferanser = hentAlleRefererteReferanser(resultat)
 
         val resultatListe = resultat
-            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningPrivatAvtalePeriode>(Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE_PERIODE)
-            .map {
-                DelberegningPrivatAvtalePeriode(
-                    periode = it.innhold.periode,
-                    beløp = it.innhold.beløp,
-                    indeksreguleringFaktor = it.innhold.indeksreguleringFaktor,
-                )
-            }
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningPrivatAvtale>(Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE)
+            .first().innhold
 
         assertAll(
             { assertThat(resultat).isNotNull },

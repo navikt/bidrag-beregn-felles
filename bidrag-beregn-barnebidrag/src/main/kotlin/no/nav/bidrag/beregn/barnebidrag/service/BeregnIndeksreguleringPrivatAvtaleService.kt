@@ -106,7 +106,7 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
             resultatliste.add(resultat)
         }
 
-        val dpgrunnlag = listOf(
+        val delberegningPrivatAvtaleGrunnlag = listOf(
             GrunnlagDto(
                 type = Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE,
                 referanse = opprettDelberegningreferanse(
@@ -130,7 +130,10 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
 
         // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
         val resultatGrunnlagListe = mapDelberegningResultatGrunnlag(
-            grunnlagReferanseListe = dpgrunnlag.map { it.referanse },
+            grunnlagReferanseListe =
+            delberegningPrivatAvtaleGrunnlag.map { it.referanse } +
+                privatAvtalePeriodeListe.map { it.referanse } +
+                privatAvtale.referanse,
             mottattGrunnlag = grunnlag,
             sjablonGrunnlag = sjablonListe,
         ).toMutableList()
@@ -138,12 +141,13 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
         // Mapper ut grunnlag for Person-objekter som er brukt
         resultatGrunnlagListe.addAll(
             mapPersonobjektGrunnlag(
-                resultatGrunnlagListe = resultatGrunnlagListe + dpgrunnlag,
+                resultatGrunnlagListe = resultatGrunnlagListe + delberegningPrivatAvtaleGrunnlag,
                 personobjektGrunnlagListe = grunnlag.grunnlagListe,
             ),
         )
 
-        return (dpgrunnlag + resultatGrunnlagListe).distinctBy { it.referanse }.sortedBy { it.referanse }
+        return (delberegningPrivatAvtaleGrunnlag + resultatGrunnlagListe)
+            .distinctBy { it.referanse }.sortedBy { it.referanse }
     }
 
     // Lager en liste over alle bruddperioder med indikator for indeksregulering

@@ -53,12 +53,12 @@ internal object EndringSjekkGrensePeriodeMapper : CoreMapper() {
 
     private fun mapPrivatAvtale(beregnGrunnlag: BeregnGrunnlag): List<PrivatAvtaleIndeksregulertPeriodeGrunnlag> = beregnGrunnlag.grunnlagListe
         .filtrerOgKonverterBasertPåEgenReferanse<DelberegningPrivatAvtale>(Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE)
-        .first().let { dp ->
-            dp.innhold.perioder.map {
+        .firstOrNull()?.let { dpa ->
+            dpa.innhold.perioder.map {
                 PrivatAvtaleIndeksregulertPeriodeGrunnlag(
-                    referanse = dp.referanse,
+                    referanse = dpa.referanse,
                     privatAvtaleIndeksregulertPeriode = it,
                 )
             }
-        }
+        } ?: emptyList()
 }

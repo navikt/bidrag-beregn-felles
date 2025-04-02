@@ -531,14 +531,14 @@ class BeregnBarnebidragService : BeregnService() {
         // Henter resultat av delberegning privat-avtale-periode
         val delberegningIndeksreguleringPrivatAvtalePeriodeGrunnlagListe = delberegningIndeksreguleringPrivatAvtalePeriodeResultat
             .filtrerOgKonverterBasertPåEgenReferanse<DelberegningPrivatAvtale>(Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE)
-            .first().let { db ->
-                db.innhold.perioder.map {
+            .firstOrNull()?.let { dpa ->
+                dpa.innhold.perioder.map {
                     PrivatAvtaleIndeksregulertPeriodeGrunnlag(
-                        referanse = db.referanse,
+                        referanse = dpa.referanse,
                         privatAvtaleIndeksregulertPeriode = it,
                     )
                 }
-            }
+            } ?: emptyList()
 
         // Bruker grunnlagslisten fra delberegning endring-sjekk-grense-periode som utgangspunkt for å lage resultatperioder
         return delberegningEndringSjekkGrensePeriodeGrunnlagListe
@@ -576,7 +576,10 @@ class BeregnBarnebidragService : BeregnService() {
         delberegningIndeksregPrivatAvtalePeriodeGrunnlagListe: List<PrivatAvtaleIndeksregulertPeriodeGrunnlag>,
     ): BigDecimal? {
         val privatAvtaleBeløp = delberegningIndeksregPrivatAvtalePeriodeGrunnlagListe
-            .filter { it.referanse in referanseListe }
+            .filter {
+                (periode.til == null || it.privatAvtaleIndeksregulertPeriode.periode.fom < periode.til) &&
+                    (it.privatAvtaleIndeksregulertPeriode.periode.til == null || it.privatAvtaleIndeksregulertPeriode.periode.til!! > periode.fom)
+            }
             .map { it.privatAvtaleIndeksregulertPeriode.beløp }
             .firstOrNull()
         val beløpshistorikkBeløp = beløpshistorikkPeriodeGrunnlag?.beløpshistorikkPeriode?.beløpshistorikk
