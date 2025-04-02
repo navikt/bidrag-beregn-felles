@@ -33,7 +33,7 @@ import no.nav.bidrag.transport.behandling.beregning.felles.valider
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndringSjekkGrense
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndringSjekkGrensePeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningPrivatAvtalePeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningPrivatAvtale
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
 import no.nav.bidrag.transport.behandling.felles.grunnlag.PrivatAvtaleGrunnlag
@@ -136,8 +136,8 @@ class BeregnBarnebidragService : BeregnService() {
         endeligResultatGrunnlagListe.addAll(
             mapPersonobjektGrunnlag(
                 resultatGrunnlagListe = endeligResultatGrunnlagListe,
-                personobjektGrunnlagListe = mottattGrunnlag.grunnlagListe
-            )
+                personobjektGrunnlagListe = mottattGrunnlag.grunnlagListe,
+            ),
         )
 
         val beregnetBarnebidragResultat = BeregnetBarnebidragResultat(
@@ -530,12 +530,14 @@ class BeregnBarnebidragService : BeregnService() {
 
         // Henter resultat av delberegning privat-avtale-periode
         val delberegningIndeksreguleringPrivatAvtalePeriodeGrunnlagListe = delberegningIndeksreguleringPrivatAvtalePeriodeResultat
-            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningPrivatAvtalePeriode>(Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE_PERIODE)
-            .map {
-                PrivatAvtaleIndeksregulertPeriodeGrunnlag(
-                    referanse = it.referanse,
-                    privatAvtaleIndeksregulertPeriode = it.innhold,
-                )
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningPrivatAvtale>(Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE)
+            .first().let { db ->
+                db.innhold.perioder.map {
+                    PrivatAvtaleIndeksregulertPeriodeGrunnlag(
+                        referanse = db.referanse,
+                        privatAvtaleIndeksregulertPeriode = it,
+                    )
+                }
             }
 
         // Bruker grunnlagslisten fra delberegning endring-sjekk-grense-periode som utgangspunkt for å lage resultatperioder

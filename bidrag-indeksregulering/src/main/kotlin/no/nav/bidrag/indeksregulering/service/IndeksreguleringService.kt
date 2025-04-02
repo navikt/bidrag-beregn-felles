@@ -12,13 +12,12 @@ import no.nav.bidrag.indeksregulering.bo.IndeksreguleringGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkPeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningIndeksreguleringPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningPrivatAvtale
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningPrivatAvtalePeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
-import no.nav.bidrag.transport.behandling.felles.grunnlag.innholdTilObjekt
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
 import java.math.BigDecimal
 import java.time.YearMonth
@@ -33,11 +32,11 @@ internal class IndeksreguleringService : BeregnService() {
             .map { it ->
                 Beløpshistorikk(
                     referanse = it.referanse,
-                    førsteIndeksreguleringsår = it.innhold.førsteIndeksreguleringsår,
+                    nesteIndeksreguleringsår = it.innhold.nesteIndeksreguleringsår,
                     skalIndeksreguleres = it.innhold.beløpshistorikk.any { it.beløp != null },
                     perioder = it.innhold.beløpshistorikk,
                 )
-            }.sortedBy { it.førsteIndeksreguleringsår }
+            }.sortedBy { it.nesteIndeksreguleringsår }
             .firstOrNull()
 
         val gjelderReferanse = grunnlag.grunnlagListe
@@ -67,7 +66,7 @@ internal class IndeksreguleringService : BeregnService() {
                 )
             }
 
-        val nesteIndeksregulering = YearMonth.of(beløpshistorikk.førsteIndeksreguleringsår!!, 7)
+        val nesteIndeksregulering = YearMonth.of(beløpshistorikk.nesteIndeksreguleringsår!!, 7)
 
         val periode = ÅrMånedsperiode(
             fom = YearMonth.of(nesteIndeksregulering.year, 7),
@@ -82,16 +81,16 @@ internal class IndeksreguleringService : BeregnService() {
         val sjablonIndeksreguleringFaktorListe = mapSjablonSjablontall(sjablonListe)
 
         // Lager liste over bruddperioder
-        val beregningsperiodeListe = lagBruddperiodeListe(
+        val (indeksregulerPeriode, beregningsperiodeListe) = lagBruddperiodeListe(
             nesteIndeksregulering = nesteIndeksregulering,
             beløpshistorikkPeriodeListe = perioder,
             beregningsperiode = periode,
         )
 
-        val resultatliste = mutableListOf<GrunnlagDto>()
+        val resultatliste = mutableListOf<DelberegningPrivatAvtalePeriode>()
+        val grunnlagsliste = mutableSetOf<String>()
 
         var beløpFraForrigeDelberegning: BigDecimal? = null
-        var referanseForrigeDelberegning: String? = null
 
         beregningsperiodeListe.forEach {
             val grunnlagBeregning = lagIndeksreguleringBeregningGrunnlag(
@@ -103,29 +102,48 @@ internal class IndeksreguleringService : BeregnService() {
                 perioder = perioder,
                 sjablonIndeksreguleringFaktorListe = sjablonIndeksreguleringFaktorListe,
                 beløpFraForrigeDelberegning = beløpFraForrigeDelberegning,
-                referanseForrigeDelberegning = referanseForrigeDelberegning,
             )
+            grunnlagsliste.addAll(grunnlagBeregning.referanseliste)
 
             val resultat = beregn(grunnlagBeregning)
 
             if (it.periodeSkalIndeksreguleres) {
-                beløpFraForrigeDelberegning = resultat.innholdTilObjekt<DelberegningPrivatAvtalePeriode>().beløp
-                referanseForrigeDelberegning = resultat.referanse
+                beløpFraForrigeDelberegning = resultat.beløp
             }
 
             resultatliste.add(resultat)
         }
 
+        val delberegninPrivatAvtale = listOf(
+            GrunnlagDto(
+                type = Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE,
+                referanse = opprettDelberegningreferanse(
+                    type = Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE,
+                    periode = grunnlag.periode,
+                    søknadsbarnReferanse = grunnlag.søknadsbarnReferanse,
+                    gjelderReferanse = gjelderReferanse,
+                ),
+                innhold = POJONode(
+                    DelberegningPrivatAvtale(
+                        nesteIndeksreguleringsår = indeksregulerPeriode.year.toBigDecimal(),
+                        perioder = resultatliste,
+                    ),
+                ),
+                gjelderReferanse = gjelderReferanse,
+                gjelderBarnReferanse = grunnlag.søknadsbarnReferanse,
+                grunnlagsreferanseListe = grunnlagsliste.toList(),
+
+            ),
+        )
+
         // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
         val resultatGrunnlagListe = mapDelberegningResultatGrunnlag(
-            grunnlagReferanseListe = resultatliste
-                .flatMap { it.grunnlagsreferanseListe }
-                .distinct(),
+            grunnlagReferanseListe = delberegninPrivatAvtale.map { it.referanse },
             mottattGrunnlag = grunnlag,
             sjablonGrunnlag = sjablonListe,
-        ).toList()
+        ).toMutableList()
 
-        return resultatliste + resultatGrunnlagListe
+        return delberegninPrivatAvtale + resultatGrunnlagListe
     }
 
     private fun mapSjablonSjablontall(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonSjablontallPeriodeGrunnlag> {
@@ -151,7 +169,7 @@ internal class IndeksreguleringService : BeregnService() {
         nesteIndeksregulering: YearMonth,
         beløpshistorikkPeriodeListe: List<Periode>,
         beregningsperiode: ÅrMånedsperiode,
-    ): List<Beregningsperiode> {
+    ): Pair<YearMonth, List<Beregningsperiode>> {
         var beregningsperiodeListe = mutableListOf<Beregningsperiode>()
 
         var indeksregulerPeriode = maxOf(
@@ -201,7 +219,7 @@ internal class IndeksreguleringService : BeregnService() {
                 beløpshistorikkPeriodeListe.asSequence().map { Beregningsperiode(periode = it.periode, periodeSkalIndeksreguleres = false) }.toList()
                     .toMutableList()
         }
-        return beregningsperiodeListe.sortedBy { it.periode.fom }
+        return indeksregulerPeriode to beregningsperiodeListe.sortedBy { it.periode.fom }
     }
 
     // Lager grunnlag for indeksregulering som ligger innenfor bruddPeriode
@@ -214,7 +232,6 @@ internal class IndeksreguleringService : BeregnService() {
         perioder: List<Periode>,
         sjablonIndeksreguleringFaktorListe: List<SjablonSjablontallPeriodeGrunnlag>,
         beløpFraForrigeDelberegning: BigDecimal?,
-        referanseForrigeDelberegning: String?,
     ): IndeksreguleringGrunnlag {
         val periode = perioder
             .firstOrNull { ÅrMånedsperiode(it.periode.fom, it.periode.til).inneholder(beregningsperiode) }
@@ -254,54 +271,26 @@ internal class IndeksreguleringService : BeregnService() {
             referanseliste = listOfNotNull(
                 beløpshistorikk.referanse,
                 sjablonIndeksreguleringFaktor?.referanse,
-                referanseForrigeDelberegning,
             ),
         )
     }
 
-    private fun beregn(grunnlag: IndeksreguleringGrunnlag): GrunnlagDto {
-        val delberegningResultat: DelberegningIndeksreguleringPeriode
+    private fun beregn(grunnlag: IndeksreguleringGrunnlag): DelberegningPrivatAvtalePeriode = if (grunnlag.periodeSkalIndeksreguleres) {
+        val indeksreguleringFaktor = BigDecimal.valueOf(grunnlag.sjablonIndeksreguleringFaktor!!.verdi).divide(BigDecimal(100)).setScale(4)
+        val beløp = grunnlag.beløpFraForrigeDelberegning ?: grunnlag.periode.beløp
+        val indeksregulertBeløp = beløp.plus(beløp.multiply(indeksreguleringFaktor)).avrundetTilNærmesteTier
+        DelberegningPrivatAvtalePeriode(
+            periode = grunnlag.beregningsperiode,
+            indeksreguleringFaktor = indeksreguleringFaktor,
+            beløp = indeksregulertBeløp,
+        )
+    } else {
+        DelberegningPrivatAvtalePeriode(
+            periode = grunnlag.beregningsperiode,
+            indeksreguleringFaktor = null,
+            beløp = grunnlag.periode.beløp,
 
-        if (grunnlag.periodeSkalIndeksreguleres) {
-            val indeksreguleringFaktor = BigDecimal.valueOf(grunnlag.sjablonIndeksreguleringFaktor!!.verdi).divide(BigDecimal(100)).setScale(4)
-            val beløp = grunnlag.beløpFraForrigeDelberegning ?: grunnlag.periode.beløp
-            val indeksregulertBeløp = beløp.plus(beløp.multiply(indeksreguleringFaktor)).avrundetTilNærmesteTier
-            delberegningResultat =
-                DelberegningIndeksreguleringPeriode(
-                    periode = grunnlag.beregningsperiode,
-                    indeksreguleringFaktor = indeksreguleringFaktor,
-                    valutakode = grunnlag.periode.valutakode,
-                    beløp = indeksregulertBeløp,
-                )
-        } else {
-            delberegningResultat =
-                DelberegningIndeksreguleringPeriode(
-                    periode = grunnlag.beregningsperiode,
-                    indeksreguleringFaktor = null,
-                    valutakode = grunnlag.periode.valutakode,
-                    beløp = grunnlag.periode.beløp,
-
-                )
-        }
-
-        val resultat =
-            GrunnlagDto(
-                type = Grunnlagstype.DELBEREGNING_INDEKSREGULERING_PERIODE,
-                referanse = opprettDelberegningreferanse(
-                    type = Grunnlagstype.DELBEREGNING_INDEKSREGULERING_PERIODE,
-                    periode = grunnlag.beregningsperiode,
-                    søknadsbarnReferanse = grunnlag.gjelderBarnReferanse,
-                    gjelderReferanse = grunnlag.referanseTilRolle,
-                ),
-                innhold = POJONode(
-                    delberegningResultat,
-                ),
-                gjelderReferanse = grunnlag.referanseTilRolle,
-                gjelderBarnReferanse = grunnlag.gjelderBarnReferanse,
-                grunnlagsreferanseListe = grunnlag.referanseliste,
-
-            )
-        return resultat
+        )
     }
 }
 
@@ -309,7 +298,7 @@ data class Beregningsperiode(val periode: ÅrMånedsperiode, val periodeSkalInde
 
 data class Beløpshistorikk(
     val referanse: String,
-    val førsteIndeksreguleringsår: Int?,
+    val nesteIndeksreguleringsår: Int?,
     val skalIndeksreguleres: Boolean,
     val perioder: List<BeløpshistorikkPeriode>,
 )
