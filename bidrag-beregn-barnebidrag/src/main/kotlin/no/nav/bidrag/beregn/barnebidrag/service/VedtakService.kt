@@ -123,7 +123,7 @@ private fun StønadDto?.tilGrunnlag(personer: List<GrunnlagDto>, stønadsid: St�
         POJONode(
             BeløpshistorikkGrunnlag(
                 tidspunktInnhentet = LocalDateTime.now(),
-                førsteIndeksreguleringsår = this?.førsteIndeksreguleringsår,
+                nesteIndeksreguleringsår = this?.nesteIndeksreguleringsår ?: this?.førsteIndeksreguleringsår,
                 beløpshistorikk =
                 this?.periodeListe?.map {
                     BeløpshistorikkPeriode(

@@ -15,7 +15,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspli
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBoforhold
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndringSjekkGrense
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndringSjekkGrensePeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningPrivatAvtalePeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningPrivatAvtale
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsfradrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSumInntekt
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
@@ -1147,21 +1147,15 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             }
 
         val delberegningPrivatAvtalePeriodeResultatListe = barnebidragResultatGrunnlagListe
-            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningPrivatAvtalePeriode>(Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE_PERIODE)
-            .map {
-                DelberegningPrivatAvtalePeriode(
-                    periode = it.innhold.periode,
-                    indeksreguleringFaktor = it.innhold.indeksreguleringFaktor,
-                    beløp = it.innhold.beløp,
-                )
-            }
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningPrivatAvtale>(Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE)
+            .flatMap { it.innhold.perioder }
 
         val beløpshistorikkGrunnlag = barnebidragResultatGrunnlagListe
             .filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(Grunnlagstype.BELØPSHISTORIKK_BIDRAG)
             .map {
                 BeløpshistorikkGrunnlag(
                     tidspunktInnhentet = it.innhold.tidspunktInnhentet,
-                    førsteIndeksreguleringsår = it.innhold.førsteIndeksreguleringsår,
+                    nesteIndeksreguleringsår = it.innhold.nesteIndeksreguleringsår,
                     beløpshistorikk = it.innhold.beløpshistorikk,
                 )
             }
@@ -1203,7 +1197,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].resultat.beløp).isEqualTo(BigDecimal.valueOf(4850)) },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].grunnlagsreferanseListe).contains("sluttberegning_Person_Søknadsbarn_202408_202501") },
-            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].grunnlagsreferanseListe).contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202408") },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].grunnlagsreferanseListe).contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_Person_Bidragspliktig_Person_Søknadsbarn_202408_202503") },
             {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].periode).isEqualTo(
                     ÅrMånedsperiode(
@@ -1214,7 +1208,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].resultat.beløp).isEqualTo(BigDecimal.valueOf(4850)) },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].grunnlagsreferanseListe).contains("sluttberegning_Person_Søknadsbarn_202501") },
-            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].grunnlagsreferanseListe).contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202408") },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].grunnlagsreferanseListe).contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_Person_Bidragspliktig_Person_Søknadsbarn_202408_202503") },
 
             // Endelig bidrag
             { assertThat(endeligBidragResultatListe).hasSize(2) },
@@ -1298,21 +1292,15 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             }
 
         val delberegningPrivatAvtalePeriodeResultatListe = barnebidragResultatGrunnlagListe
-            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningPrivatAvtalePeriode>(Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE_PERIODE)
-            .map {
-                DelberegningPrivatAvtalePeriode(
-                    periode = it.innhold.periode,
-                    indeksreguleringFaktor = it.innhold.indeksreguleringFaktor,
-                    beløp = it.innhold.beløp,
-                )
-            }
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningPrivatAvtale>(Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE)
+            .flatMap { it.innhold.perioder }
 
         val beløpshistorikkGrunnlag = barnebidragResultatGrunnlagListe
             .filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(Grunnlagstype.BELØPSHISTORIKK_BIDRAG)
             .map {
                 BeløpshistorikkGrunnlag(
                     tidspunktInnhentet = it.innhold.tidspunktInnhentet,
-                    førsteIndeksreguleringsår = it.innhold.førsteIndeksreguleringsår,
+                    nesteIndeksreguleringsår = it.innhold.nesteIndeksreguleringsår,
                     beløpshistorikk = it.innhold.beløpshistorikk,
                 )
             }
@@ -1354,7 +1342,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].resultat.beløp).isEqualTo(BigDecimal.valueOf(4800)) },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].grunnlagsreferanseListe).contains("sluttberegning_Person_Søknadsbarn_202408_202501") },
-            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].grunnlagsreferanseListe).contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202408") },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].grunnlagsreferanseListe).contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_Person_Bidragspliktig_Person_Søknadsbarn_202408_202503") },
             {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].periode).isEqualTo(
                     ÅrMånedsperiode(
@@ -1365,7 +1353,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].resultat.beløp).isEqualTo(BigDecimal.valueOf(4800)) },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].grunnlagsreferanseListe).contains("sluttberegning_Person_Søknadsbarn_202501") },
-            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].grunnlagsreferanseListe).contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202408") },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].grunnlagsreferanseListe).contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_Person_Bidragspliktig_Person_Søknadsbarn_202408_202503") },
 
             // Endelig bidrag
             { assertThat(endeligBidragResultatListe).hasSize(2) },
@@ -1449,21 +1437,15 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             }
 
         val delberegningPrivatAvtalePeriodeResultatListe = barnebidragResultatGrunnlagListe
-            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningPrivatAvtalePeriode>(Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE_PERIODE)
-            .map {
-                DelberegningPrivatAvtalePeriode(
-                    periode = it.innhold.periode,
-                    indeksreguleringFaktor = it.innhold.indeksreguleringFaktor,
-                    beløp = it.innhold.beløp,
-                )
-            }
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningPrivatAvtale>(Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE)
+            .flatMap { it.innhold.perioder }
 
         val beløpshistorikkGrunnlag = barnebidragResultatGrunnlagListe
             .filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(Grunnlagstype.BELØPSHISTORIKK_BIDRAG)
             .map {
                 BeløpshistorikkGrunnlag(
                     tidspunktInnhentet = it.innhold.tidspunktInnhentet,
-                    førsteIndeksreguleringsår = it.innhold.førsteIndeksreguleringsår,
+                    nesteIndeksreguleringsår = it.innhold.nesteIndeksreguleringsår,
                     beløpshistorikk = it.innhold.beløpshistorikk,
                 )
             }
@@ -1516,7 +1498,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].resultat.beløp).isEqualTo(BigDecimal.valueOf(4800)) },
             { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].grunnlagsreferanseListe).contains("sluttberegning_Person_Søknadsbarn_202501") },
-            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].grunnlagsreferanseListe).contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202408") },
+            { assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].grunnlagsreferanseListe).contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_Person_Bidragspliktig_Person_Søknadsbarn_202408_202503") },
 
             // Endelig bidrag
             { assertThat(endeligBidragResultatListe).hasSize(2) },
@@ -1609,21 +1591,15 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             }
 
         val delberegningPrivatAvtalePeriodeResultatListe = barnebidragResultatGrunnlagListe
-            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningPrivatAvtalePeriode>(Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE_PERIODE)
-            .map {
-                DelberegningPrivatAvtalePeriode(
-                    periode = it.innhold.periode,
-                    indeksreguleringFaktor = it.innhold.indeksreguleringFaktor,
-                    beløp = it.innhold.beløp,
-                )
-            }
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningPrivatAvtale>(Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE)
+            .flatMap { it.innhold.perioder }
 
         val beløpshistorikkGrunnlag = barnebidragResultatGrunnlagListe
             .filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(Grunnlagstype.BELØPSHISTORIKK_BIDRAG)
             .map {
                 BeløpshistorikkGrunnlag(
                     tidspunktInnhentet = it.innhold.tidspunktInnhentet,
-                    førsteIndeksreguleringsår = it.innhold.førsteIndeksreguleringsår,
+                    nesteIndeksreguleringsår = it.innhold.nesteIndeksreguleringsår,
                     beløpshistorikk = it.innhold.beløpshistorikk,
                 )
             }
@@ -1668,7 +1644,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             },
             {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].grunnlagsreferanseListe)
-                    .contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202101_202207")
+                    .contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_Person_Bidragspliktig_Person_Søknadsbarn_202101_202503")
             },
             {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].periode).isEqualTo(
@@ -1685,7 +1661,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             },
             {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].grunnlagsreferanseListe)
-                    .contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202101_202207")
+                    .contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_Person_Bidragspliktig_Person_Søknadsbarn_202101_202503")
             },
             {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[2].periode).isEqualTo(
@@ -1702,7 +1678,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             },
             {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[2].grunnlagsreferanseListe)
-                    .contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202101_202207")
+                    .contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_Person_Bidragspliktig_Person_Søknadsbarn_202101_202503")
             },
             {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[3].periode).isEqualTo(
@@ -1719,7 +1695,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             },
             {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[3].grunnlagsreferanseListe)
-                    .contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202207_202307")
+                    .contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_Person_Bidragspliktig_Person_Søknadsbarn_202101_202503")
             },
             {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[4].periode).isEqualTo(
@@ -2079,21 +2055,15 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             }
 
         val delberegningPrivatAvtalePeriodeResultatListe = barnebidragResultatGrunnlagListe
-            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningPrivatAvtalePeriode>(Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE_PERIODE)
-            .map {
-                DelberegningPrivatAvtalePeriode(
-                    periode = it.innhold.periode,
-                    indeksreguleringFaktor = it.innhold.indeksreguleringFaktor,
-                    beløp = it.innhold.beløp,
-                )
-            }
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningPrivatAvtale>(Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE)
+            .flatMap { it.innhold.perioder }
 
         val beløpshistorikkGrunnlag = barnebidragResultatGrunnlagListe
             .filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(Grunnlagstype.BELØPSHISTORIKK_BIDRAG)
             .map {
                 BeløpshistorikkGrunnlag(
                     tidspunktInnhentet = it.innhold.tidspunktInnhentet,
-                    førsteIndeksreguleringsår = it.innhold.førsteIndeksreguleringsår,
+                    nesteIndeksreguleringsår = it.innhold.nesteIndeksreguleringsår,
                     beløpshistorikk = it.innhold.beløpshistorikk,
                 )
             }
@@ -2138,7 +2108,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             },
             {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[0].grunnlagsreferanseListe)
-                    .contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202101_202207")
+                    .contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_Person_Bidragspliktig_Person_Søknadsbarn_202101_202503")
             },
             {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].periode).isEqualTo(
@@ -2155,7 +2125,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             },
             {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[1].grunnlagsreferanseListe)
-                    .contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202101_202207")
+                    .contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_Person_Bidragspliktig_Person_Søknadsbarn_202101_202503")
             },
             {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[2].periode).isEqualTo(
@@ -2172,7 +2142,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             },
             {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[2].grunnlagsreferanseListe)
-                    .contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202101_202207")
+                    .contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_Person_Bidragspliktig_Person_Søknadsbarn_202101_202503")
             },
             {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[3].periode).isEqualTo(
@@ -2189,7 +2159,7 @@ internal class BeregnBarnebidragApiTest : FellesApiTest() {
             },
             {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[3].grunnlagsreferanseListe)
-                    .contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_PERIODE_Person_Bidragspliktig_Person_Søknadsbarn_202207_202307")
+                    .contains("delberegning_DELBEREGNING_PRIVAT_AVTALE_Person_Bidragspliktig_Person_Søknadsbarn_202101_202503")
             },
             {
                 assertThat(barnebidragResultat.beregnetBarnebidragPeriodeListe[4].periode).isEqualTo(

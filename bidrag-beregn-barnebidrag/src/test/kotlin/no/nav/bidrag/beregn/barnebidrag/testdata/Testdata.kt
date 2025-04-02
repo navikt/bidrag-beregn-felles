@@ -54,6 +54,7 @@ fun opprettStønadDto(
     endretTidspunkt = null,
     stønadsid = 1,
     type = stønadstype,
+    nesteIndeksreguleringsår = 2025,
     periodeListe = periodeListe,
 )
 
