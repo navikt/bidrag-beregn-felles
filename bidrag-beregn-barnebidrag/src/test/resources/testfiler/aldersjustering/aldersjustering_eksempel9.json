@@ -143,30 +143,6 @@
             "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20230901_47138"
           },
           {
-            "referanse": "delberegning_DELBEREGNING_UNDERHOLDSKOSTNAD_person_PERSON_BIDRAGSMOTTAKER_20021027_47137_person_PERSON_SØKNADSBARN_20230901_47138_202310",
-            "type": "DELBEREGNING_UNDERHOLDSKOSTNAD",
-            "innhold": {
-              "periode": {
-                "fom": "2023-10",
-                "til": null
-              },
-              "boutgift": 3198,
-              "barnetrygd": 1766,
-              "forbruksutgift": 4754,
-              "underholdskostnad": 6186,
-              "nettoTilsynsutgift": 1000,
-              "barnetilsynMedStønad": null
-            },
-            "grunnlagsreferanseListe": [
-              "sjablon_BoutgifterBidragsbarnBeløp_202307_202407",
-              "sjablon_ForhøyetBarnetrygdBeløp_202307_202407",
-              "sjablon_OrdinærBarnetrygdBeløp_202307_202407",
-              "sjablon_SJABLON_FORBRUKSUTGIFTER_202307_202407_5"
-            ],
-            "gjelderReferanse": "person_PERSON_BIDRAGSMOTTAKER_20021027_47137",
-            "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20230901_47138"
-          },
-          {
             "referanse": "samvær_SAMVÆRSPERIODE_20230901_person_PERSON_SØKNADSBARN_20230901_47138",
             "type": "SAMVÆRSPERIODE",
             "innhold": {
@@ -266,19 +242,6 @@
                 "periode": {
                   "fom": "2024-05",
                   "til": null
-                },
-                "beløp": 4180,
-                "valutakode": "NOK",
-                "resultatkode": "BEREGNET_BIDRAG",
-                "delytelseId": null,
-                "grunnlagReferanseListe": [
-                  "sluttberegning_person_PERSON_SØKNADSBARN_20230901_47138_202405_202407"
-                ]
-              },
-              {
-                "periode": {
-                  "fom": "2024-05",
-                  "til": "2024-09"
                 },
                 "beløp": 4180,
                 "valutakode": "NOK",

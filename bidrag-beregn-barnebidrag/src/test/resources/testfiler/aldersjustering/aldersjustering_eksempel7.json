@@ -264,41 +264,7 @@
             "periodeListe": [
               {
                 "periode": {
-                  "fom": "2024-05",
-                  "til": null
-                },
-                "beløp": 4180,
-                "valutakode": "NOK",
-                "resultatkode": "BEREGNET_BIDRAG",
-                "delytelseId": null,
-                "grunnlagReferanseListe": [
-                  "sluttberegning_person_PERSON_SØKNADSBARN_20230901_47138_202405_202407"
-                ]
-              }
-            ]
-          },
-          {
-            "type": "BIDRAG",
-            "sak": "2308515",
-            "skyldner": "27029647999",
-            "kravhaver": "01092390999",
-            "mottaker": "27100299499",
-            "førsteIndeksreguleringsår": 2026,
-            "innkreving": "UTEN_INNKREVING",
-            "beslutning": "ENDRING",
-            "omgjørVedtakId": null,
-            "eksternReferanse": null,
-            "grunnlagReferanseListe": [
-              "søknad",
-              "notat_VIRKNINGSTIDSPUNKT_kun_i_notat",
-              "notat_SAMVÆR_kun_i_notat_person_PERSON_SØKNADSBARN_20230901_47138",
-              "notat_UNDERHOLDSKOSTNAD_kun_i_notat_person_PERSON_SØKNADSBARN_20230901_47138",
-              "virkningstidspunkt_person_PERSON_SØKNADSBARN_20230901_47138"
-            ],
-            "periodeListe": [
-              {
-                "periode": {
-                  "fom": "2024-05",
+                  "fom": "2025-05",
                   "til": null
                 },
                 "beløp": 4180,

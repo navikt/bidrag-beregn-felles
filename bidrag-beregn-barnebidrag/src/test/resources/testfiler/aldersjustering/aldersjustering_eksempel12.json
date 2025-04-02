@@ -56,7 +56,7 @@
               "fom": "2024-01",
               "til": null
             },
-            "beløp": 2000
+            "beløp": 10000
           }
         ]
       },
@@ -116,6 +116,31 @@
             "grunnlagsreferanseListe": [],
             "gjelderReferanse": null,
             "gjelderBarnReferanse": null
+          },
+          {
+            "referanse": "delberegning_DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL_person_PERSON_BIDRAGSPLIKTIG_19960227_47139_person_PERSON_SØKNADSBARN_20230901_47138_202405",
+            "type": "DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL",
+            "innhold": {
+              "periode": {
+                "fom": "2024-05",
+                "til": null
+              },
+              "andelBeløp": 4180.79,
+              "barnEndeligInntekt": 0,
+              "endeligAndelFaktor": 0.6758471615,
+              "beregnetAndelFaktor": 0.6758471615,
+              "barnetErSelvforsørget": false
+            },
+            "grunnlagsreferanseListe": [
+              "delberegning_DELBEREGNING_SUM_INNTEKT_person_PERSON_BIDRAGSMOTTAKER_20021027_47137_person_PERSON_SØKNADSBARN_20230901_47138_202405",
+              "delberegning_DELBEREGNING_SUM_INNTEKT_person_PERSON_BIDRAGSPLIKTIG_19960227_47139_person_PERSON_SØKNADSBARN_20230901_47138_202401",
+              "delberegning_DELBEREGNING_SUM_INNTEKT_person_PERSON_SØKNADSBARN_20230901_47138_person_PERSON_SØKNADSBARN_20230901_47138_202309",
+              "delberegning_DELBEREGNING_UNDERHOLDSKOSTNAD_person_PERSON_BIDRAGSMOTTAKER_20021027_47137_person_PERSON_SØKNADSBARN_20230901_47138_202310",
+              "sjablon_ForskuddssatsBeløp_202307_202407",
+              "sjablon_InnslagKapitalInntektBeløp_200301"
+            ],
+            "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19960227_47139",
+            "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20230901_47138"
           },
           {
             "referanse": "delberegning_DELBEREGNING_UNDERHOLDSKOSTNAD_person_PERSON_BIDRAGSMOTTAKER_20021027_47137_person_PERSON_SØKNADSBARN_20230901_47138_202310",

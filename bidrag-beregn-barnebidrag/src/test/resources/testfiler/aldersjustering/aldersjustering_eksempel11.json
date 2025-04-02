@@ -143,18 +143,27 @@
             "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20230901_47138"
           },
           {
-            "referanse": "samvær_SAMVÆRSPERIODE_20230901_person_PERSON_SØKNADSBARN_20230901_47138",
-            "type": "SAMVÆRSPERIODE",
+            "referanse": "delberegning_DELBEREGNING_UNDERHOLDSKOSTNAD_person_PERSON_BIDRAGSMOTTAKER_20021027_47137_person_PERSON_SØKNADSBARN_20230901_47138_202310",
+            "type": "DELBEREGNING_UNDERHOLDSKOSTNAD",
             "innhold": {
               "periode": {
-                "fom": "2023-09",
+                "fom": "2023-10",
                 "til": null
               },
-              "samværsklasse": "SAMVÆRSKLASSE_2",
-              "manueltRegistrert": true
+              "boutgift": 3198,
+              "barnetrygd": 1766,
+              "forbruksutgift": 4754,
+              "underholdskostnad": 6186,
+              "nettoTilsynsutgift": 1000,
+              "barnetilsynMedStønad": null
             },
-            "grunnlagsreferanseListe": [],
-            "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19960227_47139",
+            "grunnlagsreferanseListe": [
+              "sjablon_BoutgifterBidragsbarnBeløp_202307_202407",
+              "sjablon_ForhøyetBarnetrygdBeløp_202307_202407",
+              "sjablon_OrdinærBarnetrygdBeløp_202307_202407",
+              "sjablon_SJABLON_FORBRUKSUTGIFTER_202307_202407_5"
+            ],
+            "gjelderReferanse": "person_PERSON_BIDRAGSMOTTAKER_20021027_47137",
             "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20230901_47138"
           },
           {
