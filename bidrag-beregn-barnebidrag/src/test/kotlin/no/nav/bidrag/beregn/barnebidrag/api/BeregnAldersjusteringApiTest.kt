@@ -43,6 +43,9 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
     private lateinit var filnavn: String
     private val beregningsperiode = ÅrMånedsperiode(YearMonth.parse("2024-07"), YearMonth.parse("2024-08"))
 
+    // Vedtak
+    private var forventetVedtakId: Long = 123456L
+
     // Sluttberegning (endelig bidrag)
     private lateinit var forventetResultatbeløp: BigDecimal
     private lateinit var forventetBeregnetBeløp: BigDecimal
@@ -52,18 +55,19 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
     private lateinit var forventetForbruksutgift: BigDecimal
     private val forventetBoutgift: BigDecimal = BigDecimal(3596).setScale(2)
     private val forventetBarnetilsynMedStønad: BigDecimal? = null
-    private val forventetNettoTilsynsutgift: BigDecimal = BigDecimal(1000).setScale(2)
+    private var forventetNettoTilsynsutgift: BigDecimal = BigDecimal(1000).setScale(2)
     private val forventetBarnetrygd: BigDecimal = BigDecimal(1510).setScale(2)
     private lateinit var forventetUnderholdskostnad: BigDecimal
+    private var forventetAntallBarnetilsynMedStønad = 0
 
     // Delberegning samværsfradrag
     private lateinit var forventetSamværsfradragBeløp: BigDecimal
 
     // Kopi delberegning bidragspliktiges andel
-    private val forventetEndeligAndelFaktor: BigDecimal = BigDecimal(0.6758471615).avrundetMedTiDesimaler
+    private var forventetEndeligAndelFaktor: BigDecimal = BigDecimal(0.6758471615).avrundetMedTiDesimaler
 
     // Kopi samværsperiode
-    private val forventetSamværsklasse: Samværsklasse = Samværsklasse.SAMVÆRSKLASSE_2
+    private var forventetSamværsklasse: Samværsklasse = Samværsklasse.SAMVÆRSKLASSE_2
 
     // Sjablon sjablontall
     private val forventetSjablonverdiBoutgifter: BigDecimal = BigDecimal(3596).setScale(0)
@@ -74,7 +78,7 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
     private lateinit var forventetSjablonverdiBeløpForbruk: BigDecimal
 
     // Sjablon samværsfradrag
-    private val forventetSjablonverdiSamværsklasse: String = "02"
+    private var forventetSjablonverdiSamværsklasse: String = "02"
     private lateinit var forventetSjablonverdiBeløpSamværsfradrag: BigDecimal
 
     // Exception
@@ -190,14 +194,11 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
         val exception = assertThrows(UgyldigInputException::class.java) {
             utførBeregningerOgEvaluerResultatAldersjustering()
         }
-        assertThat(exception.message).isEqualTo(
-            "Aldersjustering: Ingen stønadsendringer av type BIDRAG funnet for søknadsbarn med referanse person_PERSON_SØKNADSBARN_20230901_47138 " +
-                "og vedtak med id 123456",
-        )
+        assertThat(exception.message).isEqualTo("Aldersjustering: Ingen stønadsendringer av type BIDRAG funnet for vedtak med id 123456")
     }
 
     @Test
-    @DisplayName("Aldersjustering - eksempel 7 - flere stønadsendringer av type BIDRAG funnet for søknadsbarn - skal kaste exception")
+    @DisplayName("Aldersjustering - eksempel 7 - stønadsendringen inneholder ingen perioder som matcher grunnlagsperioden - skal kaste exception")
     fun testAldersjustering_Eksempel07() {
         filnavn = "src/test/resources/testfiler/aldersjustering/aldersjustering_eksempel7.json"
 
@@ -205,43 +206,14 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
             utførBeregningerOgEvaluerResultatAldersjustering()
         }
         assertThat(exception.message).isEqualTo(
-            "Aldersjustering: Flere stønadsendringer av type BIDRAG funnet for søknadsbarn med referanse person_PERSON_SØKNADSBARN_20230901_47138 " +
-                "og vedtak med id 123456",
+            "Aldersjustering: Stønadsendring av type BIDRAG inneholder ingen perioder som inneholder grunnlagsperiode for vedtak med id 123456",
         )
     }
 
     @Test
-    @DisplayName("Aldersjustering - eksempel 8 - stønadsendringen inneholder ingen perioder som matcher grunnlagsperioden - skal kaste exception")
+    @DisplayName("Aldersjustering - eksempel 8 - stønadsendringen inneholder ikke sluttperiode - skal kaste exception")
     fun testAldersjustering_Eksempel08() {
         filnavn = "src/test/resources/testfiler/aldersjustering/aldersjustering_eksempel8.json"
-
-        val exception = assertThrows(UgyldigInputException::class.java) {
-            utførBeregningerOgEvaluerResultatAldersjustering()
-        }
-        assertThat(exception.message).isEqualTo(
-            "Aldersjustering: Stønadsendring av type BIDRAG inneholder ingen perioder som inneholder grunnlagsperiode for søknadsbarn " +
-                "med referanse person_PERSON_SØKNADSBARN_20230901_47138 og vedtak med id 123456",
-        )
-    }
-
-    @Test
-    @DisplayName("Aldersjustering - eksempel 9 - stønadsendringen inneholder flere perioder som matcher grunnlagsperioden - skal kaste exception")
-    fun testAldersjustering_Eksempel09() {
-        filnavn = "src/test/resources/testfiler/aldersjustering/aldersjustering_eksempel9.json"
-
-        val exception = assertThrows(UgyldigInputException::class.java) {
-            utførBeregningerOgEvaluerResultatAldersjustering()
-        }
-        assertThat(exception.message).isEqualTo(
-            "Aldersjustering: Stønadsendring av type BIDRAG inneholder flere perioder som inneholder grunnlagsperiode for søknadsbarn " +
-                "med referanse person_PERSON_SØKNADSBARN_20230901_47138 og vedtak med id 123456",
-        )
-    }
-
-    @Test
-    @DisplayName("Aldersjustering - eksempel 10 - stønadsendringen inneholder ikke sluttperiode - skal kaste exception")
-    fun testAldersjustering_Eksempel10() {
-        filnavn = "src/test/resources/testfiler/aldersjustering/aldersjustering_eksempel10.json"
 
         val exception = assertThrows(UgyldigInputException::class.java) {
             utførBeregningerOgEvaluerResultatAldersjustering()
@@ -253,9 +225,9 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
     }
 
     @Test
-    @DisplayName("Aldersjustering - eksempel 11 - stønadsendringen inneholder ikke delberegning underholdskostnad - skal kaste exception")
-    fun testAldersjustering_Eksempel11() {
-        filnavn = "src/test/resources/testfiler/aldersjustering/aldersjustering_eksempel11.json"
+    @DisplayName("Aldersjustering - eksempel 9 - stønadsendringen inneholder ikke delberegning underholdskostnad - skal kaste exception")
+    fun testAldersjustering_Eksempel09() {
+        filnavn = "src/test/resources/testfiler/aldersjustering/aldersjustering_eksempel9.json"
 
         val exception = assertThrows(UgyldigInputException::class.java) {
             utførBeregningerOgEvaluerResultatAldersjustering()
@@ -267,9 +239,9 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
     }
 
     @Test
-    @DisplayName("Aldersjustering - eksempel 12 - stønadsendringen inneholder ikke delberegning bidragspliktiges andel - skal kaste exception")
-    fun testAldersjustering_Eksempel12() {
-        filnavn = "src/test/resources/testfiler/aldersjustering/aldersjustering_eksempel12.json"
+    @DisplayName("Aldersjustering - eksempel 10 - stønadsendringen inneholder ikke delberegning bidragspliktiges andel - skal kaste exception")
+    fun testAldersjustering_Eksempel10() {
+        filnavn = "src/test/resources/testfiler/aldersjustering/aldersjustering_eksempel10.json"
 
         val exception = assertThrows(UgyldigInputException::class.java) {
             utførBeregningerOgEvaluerResultatAldersjustering()
@@ -281,9 +253,9 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
     }
 
     @Test
-    @DisplayName("Aldersjustering - eksempel 13 - stønadsendringen inneholder ikke samværsperiode - skal kaste exception")
-    fun testAldersjustering_Eksempel13() {
-        filnavn = "src/test/resources/testfiler/aldersjustering/aldersjustering_eksempel13.json"
+    @DisplayName("Aldersjustering - eksempel 11 - stønadsendringen inneholder ikke samværsperiode - skal kaste exception")
+    fun testAldersjustering_Eksempel11() {
+        filnavn = "src/test/resources/testfiler/aldersjustering/aldersjustering_eksempel11.json"
 
         val exception = assertThrows(UgyldigInputException::class.java) {
             utførBeregningerOgEvaluerResultatAldersjustering()
@@ -295,9 +267,9 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
     }
 
     @Test
-    @DisplayName("Aldersjustering - eksempel 14 - aldersjustert beløp er lavere enn løpende beløp - skal kaste exception")
-    fun testAldersjustering_Eksempel14() {
-        filnavn = "src/test/resources/testfiler/aldersjustering/aldersjustering_eksempel14.json"
+    @DisplayName("Aldersjustering - eksempel 12 - aldersjustert beløp er lavere enn løpende beløp - skal kaste exception")
+    fun testAldersjustering_Eksempel12() {
+        filnavn = "src/test/resources/testfiler/aldersjustering/aldersjustering_eksempel12.json"
 
         forventetResultatbeløp = BigDecimal.valueOf(4930).setScale(0)
         forventetBeregnetBeløp = BigDecimal.valueOf(4933.95).setScale(2)
@@ -316,6 +288,37 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
         forventetExceptionAldersjusteringErLavereEnnLøpendeBidrag = true
         forventetFeilmelding =
             "Alderjustert beløp er lavere enn løpende beløp fra beløpshistorikken for søknadsbarn med referanse person_PERSON_SØKNADSBARN_20230901_47138"
+
+        utførBeregningerOgEvaluerResultatAldersjustering()
+    }
+
+    @Test
+    @DisplayName("Aldersjustering - eksempel 13 - stønadsendringer for andre barn enn søknadsbarnet skal ignoreres")
+    fun testAldersjustering_Eksempel13() {
+        filnavn = "src/test/resources/testfiler/aldersjustering/aldersjustering_eksempel13.json"
+
+        forventetVedtakId = 1009748L
+
+        forventetResultatbeløp = BigDecimal.valueOf(5490).setScale(0)
+        forventetBeregnetBeløp = BigDecimal.valueOf(5488.13).setScale(2)
+        forventetBpAndelBeløp = BigDecimal.valueOf(6111.13).setScale(2)
+
+        forventetForbruksutgift = BigDecimal.valueOf(8692).setScale(2)
+        forventetNettoTilsynsutgift = BigDecimal.ZERO.setScale(2)
+        forventetUnderholdskostnad = BigDecimal.valueOf(10778).setScale(2)
+        forventetAntallBarnetilsynMedStønad = 1
+
+        forventetSamværsfradragBeløp = BigDecimal.valueOf(623).setScale(2)
+
+        forventetEndeligAndelFaktor = BigDecimal.valueOf(0.567).avrundetMedTiDesimaler
+
+        forventetSamværsklasse = Samværsklasse.SAMVÆRSKLASSE_1
+
+        forventetSjablonverdiAlderTom = 18
+        forventetSjablonverdiBeløpForbruk = BigDecimal.valueOf(8692).setScale(0)
+
+        forventetSjablonverdiBeløpSamværsfradrag = BigDecimal.valueOf(623).setScale(0)
+        forventetSjablonverdiSamværsklasse = "01"
 
         utførBeregningerOgEvaluerResultatAldersjustering()
     }
@@ -489,23 +492,23 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
             // Kopi delberegning underholdskostnad (fra vedtak)
             { assertThat(kopiDelberegningUnderholdskostnad).hasSize(1) },
             { assertThat(kopiDelberegningUnderholdskostnad[0].periode).isEqualTo(beregningsperiode) },
-            { assertThat(kopiDelberegningUnderholdskostnad[0].fraVedtakId).isEqualTo(123456) },
+            { assertThat(kopiDelberegningUnderholdskostnad[0].fraVedtakId).isEqualTo(forventetVedtakId) },
             { assertThat(kopiDelberegningUnderholdskostnad[0].nettoTilsynsutgift?.setScale(2)).isEqualTo(forventetNettoTilsynsutgift) },
 
             // Kopi delberegning bidragspliktiges andel (fra vedtak)
             { assertThat(kopiDelberegningBidragspliktigesAndel).hasSize(1) },
             { assertThat(kopiDelberegningBidragspliktigesAndel[0].periode).isEqualTo(beregningsperiode) },
-            { assertThat(kopiDelberegningBidragspliktigesAndel[0].fraVedtakId).isEqualTo(123456) },
-            { assertThat(kopiDelberegningBidragspliktigesAndel[0].endeligAndelFaktor).isEqualTo(forventetEndeligAndelFaktor) },
+            { assertThat(kopiDelberegningBidragspliktigesAndel[0].fraVedtakId).isEqualTo(forventetVedtakId) },
+            { assertThat(kopiDelberegningBidragspliktigesAndel[0].endeligAndelFaktor.avrundetMedTiDesimaler).isEqualTo(forventetEndeligAndelFaktor) },
 
             // Kopi samværsperiode (fra vedtak)
             { assertThat(kopiSamværsperiode).hasSize(1) },
             { assertThat(kopiSamværsperiode[0].periode).isEqualTo(beregningsperiode) },
-            { assertThat(kopiSamværsperiode[0].fraVedtakId).isEqualTo(123456) },
+            { assertThat(kopiSamværsperiode[0].fraVedtakId).isEqualTo(forventetVedtakId) },
             { assertThat(kopiSamværsperiode[0].samværsklasse).isEqualTo(forventetSamværsklasse) },
 
             // Kopi barnetilsyn med stønad (fra vedtak)
-            { assertThat(kopiBarnetilsynMedStønadPeriode).hasSize(0) },
+            { assertThat(kopiBarnetilsynMedStønadPeriode).hasSize(forventetAntallBarnetilsynMedStønad) },
 
             // Sjablon sjablontall
             { assertThat(sjablonSjablontallListe).hasSize(2) },

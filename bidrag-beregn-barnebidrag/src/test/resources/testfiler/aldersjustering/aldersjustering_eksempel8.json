@@ -182,7 +182,7 @@
             "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20230901_47138"
           },
           {
-            "referanse": "sluttberegning_person_PERSON_SØKNADSBARN_20230901_47138_202405_202407",
+            "referanse": "sluttberegning_person_PERSON_SØKNADSBARN_20230901_47138_202405_2024xx",
             "type": "SLUTTBEREGNING_BARNEBIDRAG",
             "innhold": {
               "periode": {
@@ -264,7 +264,7 @@
             "periodeListe": [
               {
                 "periode": {
-                  "fom": "2025-05",
+                  "fom": "2024-05",
                   "til": null
                 },
                 "beløp": 4180,
