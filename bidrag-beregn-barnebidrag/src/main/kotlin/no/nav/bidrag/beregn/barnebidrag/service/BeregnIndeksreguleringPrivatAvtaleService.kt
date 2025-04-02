@@ -158,10 +158,14 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
     ): Pair<YearMonth, List<Beregningsperiode>> {
         var beregningsperiodeListe = mutableListOf<Beregningsperiode>()
 
-        var indeksregulerPeriode = maxOf(
-            YearMonth.of(privatAvtale.avtaleInngåttDato.year, privatAvtale.avtaleInngåttDato.month.value),
-            privatAvtaleListe.last().periode.fom,
-        ).plusYears(1).withMonth(7)
+        var indeksregulerPeriode = if (privatAvtale.skalIndeksreguleres) {
+            maxOf(
+                YearMonth.of(privatAvtale.avtaleInngåttDato.year, privatAvtale.avtaleInngåttDato.month.value),
+                privatAvtaleListe.last().periode.fom,
+            ).plusYears(1).withMonth(7)
+        } else {
+            YearMonth.now().plusYears(1).withMonth(7)
+        }
 
         if (privatAvtale.skalIndeksreguleres && indeksregulerPeriode <= YearMonth.now() && privatAvtaleListe.last().periode.til == null) {
             privatAvtaleListe.forEach {
