@@ -33,6 +33,7 @@ internal class BeregnEndringSjekkGrensePeriodeApiTest : FellesApiTest() {
     private var forventetAntallSjablonSjablontall: Int = 1
     private var forventetAntallLøpendeBidrag: Int = 1
     private var forventetAntallLøpendeBidrag18År: Int = 1
+    private var forventetAntallPrivatAvtale: Int = 0
 
     @Mock
     private lateinit var api: BeregnBarnebidragApi
@@ -204,9 +205,9 @@ internal class BeregnEndringSjekkGrensePeriodeApiTest : FellesApiTest() {
     }
 
     @Test
-    @DisplayName("Endring sjekk grense periode - eksempel 8 - ordinært bidrag fra privat avtale - endring er over grense")
-    fun testEndringSjekkGrensePeriode_Eksempel08() {
-        filnavn = "src/test/resources/testfiler/endringsjekkgrenseperiode/endring_sjekk_grense_periode_eksempel8.json"
+    @DisplayName("Endring sjekk grense periode - eksempel 8A - ordinært bidrag fra privat avtale - endring er over grense")
+    fun testEndringSjekkGrensePeriode_Eksempel08A() {
+        filnavn = "src/test/resources/testfiler/endringsjekkgrenseperiode/endring_sjekk_grense_periode_eksempel8A.json"
         forventetBeregnetBidragBeløp = BigDecimal.valueOf(4500).avrundetMedToDesimaler
         forventetLøpendeBidragBeløp = BigDecimal.valueOf(4000).avrundetMedNullDesimaler
         forventetLøpendeBidragFraPrivatAvtale = true
@@ -214,6 +215,37 @@ internal class BeregnEndringSjekkGrensePeriodeApiTest : FellesApiTest() {
         forventetEndringErOverGrense = true
         forventetAntallLøpendeBidrag = 0
         forventetAntallLøpendeBidrag18År = 0
+        forventetAntallPrivatAvtale = 1
+        utførBeregningerOgEvaluerResultat()
+    }
+
+    @Test
+    @DisplayName("Endring sjekk grense periode - eksempel 8B - ordinært bidrag fra privat avtale og beløpshistorikk annen periode - endring er over grense")
+    fun testEndringSjekkGrensePeriode_Eksempel08B() {
+        filnavn = "src/test/resources/testfiler/endringsjekkgrenseperiode/endring_sjekk_grense_periode_eksempel8B.json"
+        forventetBeregnetBidragBeløp = BigDecimal.valueOf(4500).avrundetMedToDesimaler
+        forventetLøpendeBidragBeløp = BigDecimal.valueOf(4000).avrundetMedNullDesimaler
+        forventetLøpendeBidragFraPrivatAvtale = true
+        forventetFaktiskEndringFaktor = BigDecimal.valueOf(0.125).avrundetMedTiDesimaler
+        forventetEndringErOverGrense = true
+        forventetAntallLøpendeBidrag = 0
+        forventetAntallLøpendeBidrag18År = 0
+        forventetAntallPrivatAvtale = 1
+        utførBeregningerOgEvaluerResultat()
+    }
+
+    @Test
+    @DisplayName("Endring sjekk grense periode - eksempel 8C - ordinært bidrag fra beløpshistorikk og privat avtale i samme periode - endring er over grense")
+    fun testEndringSjekkGrensePeriode_Eksempel08C() {
+        filnavn = "src/test/resources/testfiler/endringsjekkgrenseperiode/endring_sjekk_grense_periode_eksempel8C.json"
+        forventetBeregnetBidragBeløp = BigDecimal.valueOf(4500).avrundetMedToDesimaler
+        forventetLøpendeBidragBeløp = BigDecimal.valueOf(4000).avrundetMedNullDesimaler
+        forventetLøpendeBidragFraPrivatAvtale = false
+        forventetFaktiskEndringFaktor = BigDecimal.valueOf(0.125).avrundetMedTiDesimaler
+        forventetEndringErOverGrense = true
+        forventetAntallLøpendeBidrag = 1
+        forventetAntallLøpendeBidrag18År = 0
+        forventetAntallPrivatAvtale = 0
         utførBeregningerOgEvaluerResultat()
     }
 
@@ -270,6 +302,10 @@ internal class BeregnEndringSjekkGrensePeriodeApiTest : FellesApiTest() {
             .filter { it.type == Grunnlagstype.BELØPSHISTORIKK_BIDRAG_18_ÅR }
             .size
 
+        val antallPrivatAvtale = endringSjekkGrensePeriodeResultat
+            .filter { it.type == Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE }
+            .size
+
         val antallSjablonSjablontall = endringSjekkGrensePeriodeResultat
             .filter { it.type == Grunnlagstype.SJABLON_SJABLONTALL }
             .size
@@ -293,6 +329,7 @@ internal class BeregnEndringSjekkGrensePeriodeApiTest : FellesApiTest() {
             { assertThat(antallSluttberegning).isEqualTo(1) },
             { assertThat(antallLøpendeBidrag).isEqualTo(forventetAntallLøpendeBidrag) },
             { assertThat(antallLøpendeBidrag18År).isEqualTo(forventetAntallLøpendeBidrag18År) },
+            { assertThat(antallPrivatAvtale).isEqualTo(forventetAntallPrivatAvtale) },
             { assertThat(antallSjablonSjablontall).isEqualTo(forventetAntallSjablonSjablontall) },
 
             // Referanser
@@ -327,6 +364,10 @@ internal class BeregnEndringSjekkGrensePeriodeApiTest : FellesApiTest() {
 
         val antallLøpendeBidrag = endringSjekkGrensePeriodeResultat
             .filter { it.type == Grunnlagstype.BELØPSHISTORIKK_BIDRAG }
+            .size
+
+        val antallPrivatAvtale = endringSjekkGrensePeriodeResultat
+            .filter { it.type == Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE }
             .size
 
         val antallSjablonSjablontall = endringSjekkGrensePeriodeResultat
@@ -377,6 +418,7 @@ internal class BeregnEndringSjekkGrensePeriodeApiTest : FellesApiTest() {
             // Grunnlag
             { assertThat(antallSluttberegning).isEqualTo(3) },
             { assertThat(antallLøpendeBidrag).isEqualTo(1) },
+            { assertThat(antallPrivatAvtale).isEqualTo(0) },
             { assertThat(antallSjablonSjablontall).isEqualTo(forventetAntallSjablonSjablontall) },
 
             // Referanser

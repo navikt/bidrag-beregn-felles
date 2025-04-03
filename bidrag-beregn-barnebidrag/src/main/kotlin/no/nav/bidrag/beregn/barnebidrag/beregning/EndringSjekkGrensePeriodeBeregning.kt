@@ -20,6 +20,7 @@ internal object EndringSjekkGrensePeriodeBeregning {
 
         var løpendeBidragFraPrivatAvtale = false
         var løpendeBidragBeløp: BigDecimal? = grunnlag.løpendeBidragBeregningGrunnlag?.beløp?.avrundetMedNullDesimaler
+        var løpendeBidragReferanse = grunnlag.løpendeBidragBeregningGrunnlag?.referanse
         val beregnetBidragBeløp = grunnlag.beregnetBidragBeregningGrunnlag.beløp?.avrundetMedToDesimaler
         val faktiskEndringFaktor: BigDecimal?
 
@@ -28,6 +29,7 @@ internal object EndringSjekkGrensePeriodeBeregning {
         if (grunnlag.løpendeBidragBeregningGrunnlag?.beløp == null && grunnlag.privatAvtaleBeregningGrunnlag?.beløp != null) {
             løpendeBidragFraPrivatAvtale = true
             løpendeBidragBeløp = grunnlag.privatAvtaleBeregningGrunnlag.beløp
+            løpendeBidragReferanse = grunnlag.privatAvtaleBeregningGrunnlag.referanse
         }
 
         // Beregnet bidrag er null hvis barnet er selvforsørget eller søknadsbarnet bor hos BP (= avslag/opphør i perioden)
@@ -62,8 +64,7 @@ internal object EndringSjekkGrensePeriodeBeregning {
             endringErOverGrense = endringErOverGrense,
             grunnlagsreferanseListe = listOfNotNull(
                 grunnlag.beregnetBidragBeregningGrunnlag.referanse,
-                grunnlag.løpendeBidragBeregningGrunnlag?.referanse,
-                grunnlag.privatAvtaleBeregningGrunnlag?.referanse,
+                løpendeBidragReferanse,
             ) +
                 grunnlag.sjablonSjablontallBeregningGrunnlagListe.map { it.referanse },
         )
