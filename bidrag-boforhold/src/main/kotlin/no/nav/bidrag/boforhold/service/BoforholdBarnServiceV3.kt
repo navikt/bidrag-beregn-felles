@@ -377,7 +377,9 @@ internal class BoforholdBarnServiceV3 {
     ): List<BoforholdResponseV2> {
         val listeJustertMotAttenårsdag = mutableListOf<BoforholdResponseV2>()
 
-        if (attenårFraDato.isAfter(LocalDate.now()) || (typeBehandling == TypeBehandling.BIDRAG_18_ÅR && erSøknadsbarn)) {
+        if (attenårFraDato.isAfter(LocalDate.now()) ||
+            ((typeBehandling == TypeBehandling.BIDRAG_18_ÅR || typeBehandling == TypeBehandling.BIDRAG) && erSøknadsbarn)
+        ) {
             // Barnet har ikke fyllt 18 eller barnet er søknadsbarn i en 18-årsbidragssak og bostatus skal ikke endres. Listen returneres uendret.
             return liste
         } else {
