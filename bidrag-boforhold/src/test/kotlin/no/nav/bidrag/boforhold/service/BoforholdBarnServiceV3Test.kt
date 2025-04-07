@@ -1335,11 +1335,11 @@ internal class BoforholdBarnServiceV3Test {
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
-            resultat.size shouldBe 1
+            resultat.size shouldBe 2
 
             resultat[0].periodeFom shouldBe LocalDate.of(2024, 5, 1)
-            resultat[0].periodeTom shouldBe null
-            resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
+            resultat[0].periodeTom shouldBe LocalDate.of(2024, 6, 30)
+            resultat[0].bostatus shouldBe Bostatuskode.REGNES_IKKE_SOM_BARN
             resultat[0].kilde shouldBe Kilde.OFFENTLIG
         }
     }
