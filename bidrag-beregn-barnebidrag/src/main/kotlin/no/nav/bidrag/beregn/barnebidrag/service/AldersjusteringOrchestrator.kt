@@ -42,6 +42,7 @@ enum class SkalIkkeAldersjusteresBegrunnelse {
 enum class SkalAldersjusteresManueltBegrunnelse {
     UTENLANDSSAK_MED_NORSK_VALUTA,
     MANGLER_GRUNNLAG,
+    FANT_INGEN_MANUELL_VEDTAK,
 }
 
 class SkalIkkeAldersjusteresException(vararg begrunnelse: SkalIkkeAldersjusteresBegrunnelse) :
@@ -85,7 +86,8 @@ class AldersjusteringOrchestrator(
                 .hentLøpendeStønad(stønad)
                 .validerSkalAldersjusteres(sak)
 
-            val sisteManuelleVedtak = vedtakService.finnSisteManuelleVedtak(stønad)!!
+            val sisteManuelleVedtak =
+                vedtakService.finnSisteManuelleVedtak(stønad) ?: aldersjusteresManuelt(SkalAldersjusteresManueltBegrunnelse.FANT_INGEN_MANUELL_VEDTAK)
 
             sisteManuelleVedtak.validerSkalAldersjusteres(stønad)
 
