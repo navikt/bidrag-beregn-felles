@@ -80,8 +80,8 @@ class VedtakService(
         val resultat =
             vedtakFilter.finneSisteManuelleVedtak(
                 forskuddVedtakISak.vedtakListe,
-            )
-        return vedtakConsumer.hentVedtak(resultat!!.vedtaksid.toInt())?.let {
+            ) ?: return null
+        return vedtakConsumer.hentVedtak(resultat.vedtaksid.toInt())?.let {
             SisteManuelleVedtak(resultat.vedtaksid.toInt(), it)
         }
     }
