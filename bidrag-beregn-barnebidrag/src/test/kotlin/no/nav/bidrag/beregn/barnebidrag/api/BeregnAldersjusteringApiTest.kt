@@ -2,7 +2,7 @@ package no.nav.bidrag.beregn.barnebidrag.api
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
-import no.nav.bidrag.beregn.core.exception.AldersjusteringLavereEnnLøpendeBidragException
+import no.nav.bidrag.beregn.core.exception.AldersjusteringLavereEnnEllerLikLøpendeBidragException
 import no.nav.bidrag.beregn.core.exception.UgyldigInputException
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.beregning.Samværsklasse
@@ -331,7 +331,7 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
         val aldersjusteringResultat: BeregnetBarnebidragResultat
 
         if (forventetExceptionAldersjusteringErLavereEnnLøpendeBidrag == true) {
-            exception = assertThrows(AldersjusteringLavereEnnLøpendeBidragException::class.java) {
+            exception = assertThrows(AldersjusteringLavereEnnEllerLikLøpendeBidragException::class.java) {
                 api.beregnAldersjustering(request)
             }
             aldersjusteringResultat = exception.data
