@@ -27,7 +27,7 @@ import no.nav.bidrag.beregn.barnebidrag.mapper.AldersjusteringMapper.mapAldersju
 import no.nav.bidrag.beregn.barnebidrag.mapper.AldersjusteringMapper.mapSøknadsbarnGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.mapper.UnderholdskostnadMapper.finnReferanseTilRolle
 import no.nav.bidrag.beregn.core.bo.SjablonSjablontallBeregningGrunnlag
-import no.nav.bidrag.beregn.core.exception.AldersjusteringLavereEnnLøpendeBidragException
+import no.nav.bidrag.beregn.core.exception.AldersjusteringLavereEnnEllerLikLøpendeBidragException
 import no.nav.bidrag.beregn.core.exception.UgyldigInputException
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
@@ -167,13 +167,13 @@ class BeregnAldersjusteringService : BeregnService() {
             )
 
             // Sjekker om beregnet beløp er lavere enn løpende beløp fra beløpshistorikken. I så fall kastes exception.
-            if (aldersjustertBeløpErLavereEnnLøpendeBeløp(
+            if (erAldersjustertBeløpLavereEnnEllerLikLøpendeBeløp(
                     beregnetBarnebidragResultat = beregnetBarnebidragResultat.beregnetBarnebidragPeriodeListe.first(),
                     beløpshistorikk = aldersjusteringGrunnlag.beløpshistorikk,
                     beregningsperiode = aldersjusteringGrunnlag.beregningsperiode,
                   )
             ) {
-                throw AldersjusteringLavereEnnLøpendeBidragException(
+                throw AldersjusteringLavereEnnEllerLikLøpendeBidragException(
                     melding = "Alderjustert beløp er lavere enn løpende beløp fra beløpshistorikken for søknadsbarn med referanse " +
                         søknadsbarn.referanse,
                     data = beregnetBarnebidragResultat,
@@ -678,7 +678,7 @@ class BeregnAldersjusteringService : BeregnService() {
             }
 
     // Sjekker om aldersjustert beløp er lavere enn løpende beløp fra beløpshistorikken
-    private fun aldersjustertBeløpErLavereEnnLøpendeBeløp(
+    private fun erAldersjustertBeløpLavereEnnEllerLikLøpendeBeløp(
         beregnetBarnebidragResultat: ResultatPeriode,
         beløpshistorikk: BeløpshistorikkPeriodeGrunnlag?,
         beregningsperiode: ÅrMånedsperiode,
@@ -687,6 +687,6 @@ class BeregnAldersjusteringService : BeregnService() {
         val beløpshistorikkBeløp = beløpshistorikk?.beløpshistorikkPeriode?.beløpshistorikk
             ?.firstOrNull { it.periode.inneholder(beregningsperiode) }?.beløp
 
-        return beløpshistorikkBeløp != null && aldersjustertBeløp != null && aldersjustertBeløp < beløpshistorikkBeløp
+        return beløpshistorikkBeløp != null && aldersjustertBeløp != null && aldersjustertBeløp <= beløpshistorikkBeløp
     }
 }
