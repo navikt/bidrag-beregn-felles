@@ -160,7 +160,7 @@ class AldersjusteringOrchestratorTest {
                     ),
                 ),
             )
-        val resultat = aldersjusteringOrchestrator.utførAldersjustering(
+        val (vedtaksid, resultat) = aldersjusteringOrchestrator.utførAldersjustering(
             stønad = Stønadsid(
                 type = Stønadstype.BIDRAG,
                 kravhaver = Personident(personIdentSøknadsbarn1),
@@ -183,7 +183,7 @@ class AldersjusteringOrchestratorTest {
         val fødselsdatoBarn = LocalDate.parse("2018-03-01")
         every { personConsumer.hentFødselsdatoForPerson(eq(Personident(personIdentSøknadsbarn1))) } returns fødselsdatoBarn
 
-        val resultat = aldersjusteringOrchestrator.utførAldersjustering(
+        val (vedtaksid, resultat) = aldersjusteringOrchestrator.utførAldersjustering(
             stønad = Stønadsid(
                 type = Stønadstype.BIDRAG,
                 kravhaver = Personident(personIdentSøknadsbarn1),
