@@ -1,5 +1,6 @@
 package no.nav.bidrag.beregn.vedtak
 
+import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.vedtak.BehandlingsrefKilde
 import no.nav.bidrag.domene.enums.vedtak.Beslutningstype
 import no.nav.bidrag.domene.enums.vedtak.Innkrevingstype
@@ -23,6 +24,9 @@ fun VedtakForStønad.erInnkreving() = stønadsendring.innkreving == Innkrevingst
 fun VedtakForStønad.erIkkeRelevant() = !stønadsendring.erEndring() || harIngenPerioder()
 
 fun VedtakForStønad.harIngenPerioder() = this.stønadsendring.periodeListe.isEmpty()
+
+fun VedtakForStønad.erResultatIngenEndringUnderGrense() =
+    this.stønadsendring.periodeListe.any { Resultatkode.fraKode(it.resultatkode) == Resultatkode.INGEN_ENDRING_UNDER_GRENSE }
 
 fun VedtakForStønad.erResultatFraAnnetVedtak() =
     this.stønadsendring.periodeListe.any { Beslutningsårsak.RESULTAT_FRA_ANNET_VEDTAK.kode == it.resultatkode }
