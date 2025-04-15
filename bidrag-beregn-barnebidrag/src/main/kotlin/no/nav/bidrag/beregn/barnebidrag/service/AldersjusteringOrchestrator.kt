@@ -7,6 +7,7 @@ import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningSakConsumer
 import no.nav.bidrag.beregn.barnebidrag.utils.AldersjusteringUtils
 import no.nav.bidrag.beregn.barnebidrag.utils.aldersjusteringAldersgrupper
 import no.nav.bidrag.beregn.barnebidrag.utils.hentSisteLøpendePeriode
+import no.nav.bidrag.beregn.core.exception.AldersjusteringLavereEnnEllerLikLøpendeBidragException
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.felles.enhet_utland
@@ -29,6 +30,7 @@ import java.time.YearMonth
 
 private val log = KotlinLogging.logger {}
 
+data class AldersjusteringResultat(val vedtaksid: Int, val beregning: BeregnetBarnebidragResultat)
 enum class SkalIkkeAldersjusteresBegrunnelse {
     INGEN_LØPENDE_PERIODE,
     IKKE_ALDERSGRUPPE_FOR_ALDERSJUSTERING,
@@ -36,12 +38,15 @@ enum class SkalIkkeAldersjusteresBegrunnelse {
     JUSTERT_FOR_BARNETILLEGG_BM,
     JUSTERT_FOR_BARNETILLEGG_BP,
     JUSTERT_PÅ_GRUNN_AV_EVNE,
+    ALDERSJUSTERT_BELØP_LAVERE_ELLER_LIK_LØPENDE_BIDRAG,
     JUSTERT_PÅ_GRUNN_AV_25_PROSENT,
+    SISTE_VEDTAK_ER_BEGRENSET_REVURDERING,
 }
 
 enum class SkalAldersjusteresManueltBegrunnelse {
     UTENLANDSSAK_MED_NORSK_VALUTA,
     MANGLER_GRUNNLAG,
+    FANT_INGEN_MANUELL_VEDTAK,
 }
 
 class SkalIkkeAldersjusteresException(vararg begrunnelse: SkalIkkeAldersjusteresBegrunnelse) :
@@ -66,7 +71,7 @@ class AldersjusteringOrchestrator(
     private val barnebidragApi: BeregnBarnebidragApi,
     private val personConsumer: BeregningPersonConsumer,
 ) {
-    fun utførAldersjustering(stønad: Stønadsid, aldersjusteresForÅr: Int = YearMonth.now().year): BeregnetBarnebidragResultat {
+    fun utførAldersjustering(stønad: Stønadsid, aldersjusteresForÅr: Int = YearMonth.now().year): AldersjusteringResultat {
         try {
             log.info { "Aldersjustering kjøres for stønadstype ${stønad.type} og sak ${stønad.sak} for årstall $aldersjusteresForÅr" }
             secureLogger.info { "Aldersjustering kjøres for stønad $stønad og årstall $aldersjusteresForÅr" }
@@ -85,7 +90,8 @@ class AldersjusteringOrchestrator(
                 .hentLøpendeStønad(stønad)
                 .validerSkalAldersjusteres(sak)
 
-            val sisteManuelleVedtak = vedtakService.finnSisteManuelleVedtak(stønad)!!
+            val sisteManuelleVedtak =
+                vedtakService.finnSisteManuelleVedtak(stønad) ?: aldersjusteresManuelt(SkalAldersjusteresManueltBegrunnelse.FANT_INGEN_MANUELL_VEDTAK)
 
             sisteManuelleVedtak.validerSkalAldersjusteres(stønad)
 
@@ -98,8 +104,12 @@ class AldersjusteringOrchestrator(
                     secureLogger.info {
                         "Resultat av beregning av aldersjustering for stønad $stønad og år $aldersjusteresForÅr: ${it.beregnetBarnebidragPeriodeListe}"
                     }
-                    it
+                    AldersjusteringResultat(sisteManuelleVedtak.vedtaksId, it)
                 }
+        } catch (e: AldersjusteringLavereEnnEllerLikLøpendeBidragException) {
+            SkalIkkeAldersjusteresException(
+                SkalIkkeAldersjusteresBegrunnelse.ALDERSJUSTERT_BELØP_LAVERE_ELLER_LIK_LØPENDE_BIDRAG,
+            ).loggOgKastFeil(stønad, aldersjusteresForÅr)
         } catch (e: Exception) {
             e.loggOgKastFeil(stønad, aldersjusteresForÅr)
         }
@@ -139,6 +149,10 @@ class AldersjusteringOrchestrator(
 
         if (sistePeriode.beløp == null) {
             skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE)
+        }
+
+        if (sluttberegning.innhold.begrensetRevurderingUtført) {
+            begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_BEGRENSET_REVURDERING)
         }
 
         if (sluttberegning.innhold.bidragJustertForNettoBarnetilleggBM) {
