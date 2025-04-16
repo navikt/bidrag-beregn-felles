@@ -10,6 +10,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBarnIHusst
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBoforhold
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningVoksneIHusstand
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
+import java.time.LocalDate
 
 @JvmName("barnIHusstandenTilGrunnlag")
 fun List<BarnIHusstandenPeriodeCore>.mapTilGrunnlag(bidragspliktigReferanse: String? = null) = map {
@@ -59,7 +60,7 @@ fun List<BoforholdPeriodeCore>.mapTilGrunnlag(bidragspliktigReferanse: String) =
 }
 
 fun BoforholdPeriodeCore.tilGrunnlag() = DelberegningBoforhold(
-    periode = ÅrMånedsperiode(fom = periode.datoFom, til = periode.datoTil),
+    periode = ÅrMånedsperiode(fom = periode.datoFom, til = if (periode.datoTil?.isAfter(LocalDate.now()) == true) null else periode.datoTil),
     antallBarn = antallBarn,
     borMedAndreVoksne = borMedAndreVoksne,
 )
