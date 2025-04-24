@@ -17,20 +17,24 @@ import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebid
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlagAldersjustering
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlagVedtak
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
+import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragsmottaker
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragspliktig
+import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.finnOgKonverterGrunnlagSomErReferertFraGrunnlagsreferanseListe
 import no.nav.bidrag.transport.behandling.felles.grunnlag.hentPersonMedIdent
 import no.nav.bidrag.transport.behandling.stonad.response.StønadPeriodeDto
+import no.nav.bidrag.transport.behandling.vedtak.response.VedtakDto
 import no.nav.bidrag.transport.sak.BidragssakDto
 import org.springframework.context.annotation.Import
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 import java.time.YearMonth
 
 private val log = KotlinLogging.logger {}
 
-data class AldersjusteringResultat(val vedtaksid: Int, val beregning: BeregnetBarnebidragResultat)
+data class AldersjusteringResultat(val vedtaksid: Int, val løpendeBeløp: BigDecimal?, val beregning: BeregnetBarnebidragResultat)
 enum class SkalIkkeAldersjusteresBegrunnelse {
     INGEN_LØPENDE_PERIODE,
     IKKE_ALDERSGRUPPE_FOR_ALDERSJUSTERING,
@@ -47,21 +51,24 @@ enum class SkalAldersjusteresManueltBegrunnelse {
     UTENLANDSSAK_MED_NORSK_VALUTA,
     MANGLER_GRUNNLAG,
     FANT_INGEN_MANUELL_VEDTAK,
+    DELT_BOSSTED_MED_BELØP_0,
 }
 
-class SkalIkkeAldersjusteresException(vararg begrunnelse: SkalIkkeAldersjusteresBegrunnelse) :
+class SkalIkkeAldersjusteresException(val vedtaksid: Int? = null, vararg begrunnelse: SkalIkkeAldersjusteresBegrunnelse) :
     RuntimeException("Skal ikke aldersjusteres med begrunnelse ${begrunnelse.joinToString(",")}") {
     val begrunnelser: List<SkalIkkeAldersjusteresBegrunnelse> = begrunnelse.toList()
 }
 
-class AldersjusteresManueltException(begrunnelse: SkalAldersjusteresManueltBegrunnelse) :
+class AldersjusteresManueltException(val vedtaksid: Int? = null, begrunnelse: SkalAldersjusteresManueltBegrunnelse) :
     RuntimeException("Skal aldersjusteres manuelt med begrunnelse $begrunnelse") {
     val begrunnelse: SkalAldersjusteresManueltBegrunnelse = begrunnelse
 }
 
-fun aldersjusteresManuelt(begrunnelse: SkalAldersjusteresManueltBegrunnelse): Nothing = throw AldersjusteresManueltException(begrunnelse)
+fun aldersjusteresManuelt(vedtaksid: Int? = null, begrunnelse: SkalAldersjusteresManueltBegrunnelse): Nothing =
+    throw AldersjusteresManueltException(vedtaksid, begrunnelse)
 
-fun skalIkkeAldersjusteres(vararg begrunnelse: SkalIkkeAldersjusteresBegrunnelse): Nothing = throw SkalIkkeAldersjusteresException(*begrunnelse)
+fun skalIkkeAldersjusteres(vedtaksid: Int?, vararg begrunnelse: SkalIkkeAldersjusteresBegrunnelse): Nothing =
+    throw SkalIkkeAldersjusteresException(vedtaksid, *begrunnelse)
 
 @Service
 @Import(BeregnBarnebidragApi::class, VedtakService::class)
@@ -83,7 +90,7 @@ class AldersjusteringOrchestrator(
                     "Barn som er født $fødselsdatoBarn skal ikke alderjusteres for år $aldersjusteresForÅr. " +
                         "Aldersgruppene for aldersjustering er $aldersjusteringAldersgrupper"
                 }
-                skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.IKKE_ALDERSGRUPPE_FOR_ALDERSJUSTERING)
+                skalIkkeAldersjusteres(null, SkalIkkeAldersjusteresBegrunnelse.IKKE_ALDERSGRUPPE_FOR_ALDERSJUSTERING)
             }
 
             vedtakService
@@ -91,29 +98,55 @@ class AldersjusteringOrchestrator(
                 .validerSkalAldersjusteres(sak)
 
             val sisteManuelleVedtak =
-                vedtakService.finnSisteManuelleVedtak(stønad) ?: aldersjusteresManuelt(SkalAldersjusteresManueltBegrunnelse.FANT_INGEN_MANUELL_VEDTAK)
+                vedtakService.finnSisteManuelleVedtak(stønad)
+                    ?: aldersjusteresManuelt(null, SkalAldersjusteresManueltBegrunnelse.FANT_INGEN_MANUELL_VEDTAK)
 
             sisteManuelleVedtak.validerSkalAldersjusteres(stønad)
 
-            val beregningInput = sisteManuelleVedtak.byggGrunnlagForBeregning(
-                stønad,
-                aldersjusteresForÅr,
-            )
-            return barnebidragApi
-                .beregnAldersjustering(beregningInput).let {
-                    secureLogger.info {
-                        "Resultat av beregning av aldersjustering for stønad $stønad og år $aldersjusteresForÅr: ${it.beregnetBarnebidragPeriodeListe}"
-                    }
-                    AldersjusteringResultat(sisteManuelleVedtak.vedtaksId, it)
-                }
-        } catch (e: AldersjusteringLavereEnnEllerLikLøpendeBidragException) {
-            SkalIkkeAldersjusteresException(
-                SkalIkkeAldersjusteresBegrunnelse.ALDERSJUSTERT_BELØP_LAVERE_ELLER_LIK_LØPENDE_BIDRAG,
-            ).loggOgKastFeil(stønad, aldersjusteresForÅr)
+            return sisteManuelleVedtak.utførOgBeregn(stønad, aldersjusteresForÅr)
         } catch (e: Exception) {
+            if (e is SkalIkkeAldersjusteresException || e is AldersjusteresManueltException) {
+                throw e
+            }
             e.loggOgKastFeil(stønad, aldersjusteresForÅr)
         }
     }
+
+    internal fun SisteManuelleVedtak.utførOgBeregn(stønad: Stønadsid, aldersjusteresForÅr: Int = YearMonth.now().year): AldersjusteringResultat =
+        try {
+            val beregningInput = byggGrunnlagForBeregning(
+                stønad,
+                aldersjusteresForÅr,
+            )
+            val søknadsbarn = vedtak.grunnlagListe.hentPersonMedIdent(stønad.kravhaver.verdi)!!
+            val stønadsendring = finnStønadsendring(stønad)
+            val sistePeriode = stønadsendring.periodeListe.hentSisteLøpendePeriode()!!
+            barnebidragApi
+                .beregnAldersjustering(beregningInput).let {
+                    val resultatMedGrunnlag = it.copy(
+                        grunnlagListe = it.grunnlagListe + listOf(
+                            vedtak.hentSøknad(),
+                            vedtak.hentVirkningstidspunkt(søknadsbarn.referanse),
+                        ),
+                    )
+                    secureLogger.info {
+                        "Resultat av beregning av aldersjustering for stønad $stønad og år $aldersjusteresForÅr: ${resultatMedGrunnlag.beregnetBarnebidragPeriodeListe}"
+                    }
+                    AldersjusteringResultat(vedtaksId, sistePeriode.beløp, resultatMedGrunnlag)
+                }
+        } catch (e: AldersjusteringLavereEnnEllerLikLøpendeBidragException) {
+            SkalIkkeAldersjusteresException(
+                vedtaksId,
+                SkalIkkeAldersjusteresBegrunnelse.ALDERSJUSTERT_BELØP_LAVERE_ELLER_LIK_LØPENDE_BIDRAG,
+            ).loggOgKastFeil(stønad, aldersjusteresForÅr)
+        }
+    internal fun VedtakDto.hentVirkningstidspunkt(gjelderBarnReferanse: Grunnlagsreferanse): GrunnlagDto = grunnlagListe
+        .filtrerBasertPåEgenReferanse(Grunnlagstype.VIRKNINGSTIDSPUNKT)
+        .find { it.gjelderBarnReferanse == gjelderBarnReferanse } as GrunnlagDto
+
+    internal fun VedtakDto.hentSøknad(): GrunnlagDto = grunnlagListe
+        .filtrerBasertPåEgenReferanse(Grunnlagstype.SØKNAD)
+        .first() as GrunnlagDto
 
     private fun Exception.loggOgKastFeil(stønad: Stønadsid, aldersjusteresForÅr: Int): Nothing {
         when (this) {
@@ -128,16 +161,16 @@ class AldersjusteringOrchestrator(
         }
         throw this
     }
+    private fun SisteManuelleVedtak.finnStønadsendring(stønad: Stønadsid) = vedtak.stønadsendringListe.find {
+        it.type == stønad.type &&
+            it.kravhaver == stønad.kravhaver
+    }!!
     private fun SisteManuelleVedtak.validerSkalAldersjusteres(stønad: Stønadsid) {
-        if (this.vedtak.grunnlagListe.isEmpty()) aldersjusteresManuelt(SkalAldersjusteresManueltBegrunnelse.MANGLER_GRUNNLAG)
+        if (this.vedtak.grunnlagListe.isEmpty()) aldersjusteresManuelt(vedtaksId, SkalAldersjusteresManueltBegrunnelse.MANGLER_GRUNNLAG)
         val begrunnelser: MutableSet<SkalIkkeAldersjusteresBegrunnelse> = mutableSetOf()
-        val stønadsendring =
-            vedtak.stønadsendringListe.find {
-                it.type == stønad.type &&
-                    it.kravhaver == stønad.kravhaver
-            }!!
+        val stønadsendring = finnStønadsendring(stønad)
 
-        if (stønadsendring.periodeListe.isEmpty()) skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE)
+        if (stønadsendring.periodeListe.isEmpty()) skalIkkeAldersjusteres(vedtaksId, SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE)
 
         val sistePeriode = stønadsendring.periodeListe.hentSisteLøpendePeriode()!!
         val sluttberegning =
@@ -145,10 +178,14 @@ class AldersjusteringOrchestrator(
                 .finnOgKonverterGrunnlagSomErReferertFraGrunnlagsreferanseListe<SluttberegningBarnebidrag>(
                     Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG,
                     sistePeriode.grunnlagReferanseListe,
-                ).firstOrNull() ?: skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE)
+                ).firstOrNull() ?: skalIkkeAldersjusteres(vedtaksId, SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE)
 
         if (sistePeriode.beløp == null) {
-            skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE)
+            skalIkkeAldersjusteres(vedtaksId, SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE)
+        }
+
+        if (sluttberegning.innhold.bidragJustertForDeltBosted && BigDecimal.ZERO.equals(sistePeriode.beløp)) {
+            aldersjusteresManuelt(vedtaksId, SkalAldersjusteresManueltBegrunnelse.DELT_BOSSTED_MED_BELØP_0)
         }
 
         if (sluttberegning.innhold.begrensetRevurderingUtført) {
@@ -158,6 +195,7 @@ class AldersjusteringOrchestrator(
         if (sluttberegning.innhold.bidragJustertForNettoBarnetilleggBM) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.JUSTERT_FOR_BARNETILLEGG_BM)
         }
+
         if (sluttberegning.innhold.bidragJustertForNettoBarnetilleggBP) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.JUSTERT_FOR_BARNETILLEGG_BP)
         }
@@ -170,7 +208,7 @@ class AldersjusteringOrchestrator(
 
         if (begrunnelser.isNotEmpty()) {
             secureLogger.warn { "Stønad ${stønad.toReferanse()} skal ikke aldersjusteres $begrunnelser" }
-            skalIkkeAldersjusteres(*begrunnelser.toTypedArray())
+            skalIkkeAldersjusteres(vedtaksId, *begrunnelser.toTypedArray())
         }
     }
 
@@ -201,8 +239,8 @@ class AldersjusteringOrchestrator(
     }
 
     private fun StønadPeriodeDto?.validerSkalAldersjusteres(sak: BidragssakDto) {
-        if (this == null) skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE)
-        if (valutakode != "NOK") skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.LØPER_MED_UTENLANDSK_VALUTA)
-        if (sak.eierfogd.verdi == enhet_utland) aldersjusteresManuelt(SkalAldersjusteresManueltBegrunnelse.UTENLANDSSAK_MED_NORSK_VALUTA)
+        if (this == null) skalIkkeAldersjusteres(null, SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE)
+        if (valutakode != "NOK") skalIkkeAldersjusteres(null, SkalIkkeAldersjusteresBegrunnelse.LØPER_MED_UTENLANDSK_VALUTA)
+        if (sak.eierfogd.verdi == enhet_utland) aldersjusteresManuelt(null, SkalAldersjusteresManueltBegrunnelse.UTENLANDSSAK_MED_NORSK_VALUTA)
     }
 }

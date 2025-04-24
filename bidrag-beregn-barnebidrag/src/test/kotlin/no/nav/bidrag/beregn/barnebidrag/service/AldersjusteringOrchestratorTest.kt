@@ -145,6 +145,21 @@ class AldersjusteringOrchestratorTest {
     }
 
     @Test
+    fun test() {
+        val periods = listOf(
+            ÅrMånedsperiode(YearMonth.of(2023, 1), YearMonth.of(2023, 3)),
+            ÅrMånedsperiode(YearMonth.of(2023, 4), null), // `til` is null here
+            ÅrMånedsperiode(YearMonth.of(2023, 6), YearMonth.of(2023, 8)),
+        )
+
+        val result = periods.map { period ->
+            period.til ?: YearMonth.now().plusYears(10000) // Handle null `til`
+        }
+
+        println(result)
+    }
+
+    @Test
     fun `skal beregne aldersjustering`() {
         val fødselsdatoBarn = LocalDate.now().minusYears(11)
         every { personConsumer.hentFødselsdatoForPerson(eq(Personident(personIdentSøknadsbarn1))) } returns fødselsdatoBarn
@@ -160,7 +175,7 @@ class AldersjusteringOrchestratorTest {
                     ),
                 ),
             )
-        val (vedtaksid, resultat) = aldersjusteringOrchestrator.utførAldersjustering(
+        val (vedtaksid, løpendeBeløp, resultat) = aldersjusteringOrchestrator.utførAldersjustering(
             stønad = Stønadsid(
                 type = Stønadstype.BIDRAG,
                 kravhaver = Personident(personIdentSøknadsbarn1),
@@ -183,7 +198,7 @@ class AldersjusteringOrchestratorTest {
         val fødselsdatoBarn = LocalDate.parse("2018-03-01")
         every { personConsumer.hentFødselsdatoForPerson(eq(Personident(personIdentSøknadsbarn1))) } returns fødselsdatoBarn
 
-        val (vedtaksid, resultat) = aldersjusteringOrchestrator.utførAldersjustering(
+        val (vedtaksid, løpendeBeløp, resultat) = aldersjusteringOrchestrator.utførAldersjustering(
             stønad = Stønadsid(
                 type = Stønadstype.BIDRAG,
                 kravhaver = Personident(personIdentSøknadsbarn1),
