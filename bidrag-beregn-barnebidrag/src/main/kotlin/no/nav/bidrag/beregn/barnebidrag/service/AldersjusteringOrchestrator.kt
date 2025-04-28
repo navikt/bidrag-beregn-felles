@@ -180,11 +180,10 @@ class AldersjusteringOrchestrator(
                     sistePeriode.grunnlagReferanseListe,
                 ).firstOrNull() ?: skalIkkeAldersjusteres(vedtaksId, SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE)
 
-        if (sistePeriode.beløp == null) {
-            skalIkkeAldersjusteres(vedtaksId, SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE)
-        }
+        val beløpSistePeriode = sistePeriode.beløp?.setScale(0)
+            ?: skalIkkeAldersjusteres(vedtaksId, SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE)
 
-        if (sluttberegning.innhold.bidragJustertForDeltBosted && BigDecimal.ZERO.equals(sistePeriode.beløp)) {
+        if (sluttberegning.innhold.bidragJustertForDeltBosted && BigDecimal.ZERO.equals(beløpSistePeriode)) {
             aldersjusteresManuelt(vedtaksId, SkalAldersjusteresManueltBegrunnelse.DELT_BOSSTED_MED_BELØP_0)
         }
 
