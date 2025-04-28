@@ -1,5 +1,6 @@
 package no.nav.bidrag.beregn.barnebidrag.service
 
+import com.fasterxml.jackson.databind.node.POJONode
 import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningPersonConsumer
@@ -14,16 +15,19 @@ import no.nav.bidrag.domene.felles.enhet_utland
 import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
+import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatPeriode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlagAldersjustering
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlagVedtak
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.VirkningstidspunktGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragsmottaker
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragspliktig
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.finnOgKonverterGrunnlagSomErReferertFraGrunnlagsreferanseListe
 import no.nav.bidrag.transport.behandling.felles.grunnlag.hentPersonMedIdent
+import no.nav.bidrag.transport.behandling.felles.grunnlag.innholdTilObjekt
 import no.nav.bidrag.transport.behandling.stonad.response.StønadPeriodeDto
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakDto
 import no.nav.bidrag.transport.sak.BidragssakDto
@@ -126,7 +130,7 @@ class AldersjusteringOrchestrator(
                     val resultatMedGrunnlag = it.copy(
                         grunnlagListe = it.grunnlagListe + listOf(
                             vedtak.hentSøknad(),
-                            vedtak.hentVirkningstidspunkt(søknadsbarn.referanse),
+                            vedtak.opprettVirkningstidspunktGrunnlag(søknadsbarn.referanse, it.beregnetBarnebidragPeriodeListe.first()),
                         ),
                     )
                     secureLogger.info {
@@ -140,9 +144,21 @@ class AldersjusteringOrchestrator(
                 SkalIkkeAldersjusteresBegrunnelse.ALDERSJUSTERT_BELØP_LAVERE_ELLER_LIK_LØPENDE_BIDRAG,
             ).loggOgKastFeil(stønad, aldersjusteresForÅr)
         }
-    internal fun VedtakDto.hentVirkningstidspunkt(gjelderBarnReferanse: Grunnlagsreferanse): GrunnlagDto = grunnlagListe
-        .filtrerBasertPåEgenReferanse(Grunnlagstype.VIRKNINGSTIDSPUNKT)
-        .find { it.gjelderBarnReferanse == gjelderBarnReferanse } as GrunnlagDto
+
+    internal fun VedtakDto.opprettVirkningstidspunktGrunnlag(gjelderBarnReferanse: Grunnlagsreferanse, resultat: ResultatPeriode): GrunnlagDto {
+        val virkningstidspunkt = grunnlagListe
+            .filtrerBasertPåEgenReferanse(Grunnlagstype.VIRKNINGSTIDSPUNKT)
+            .find { it.gjelderBarnReferanse == gjelderBarnReferanse } as GrunnlagDto
+
+        return virkningstidspunkt.copy(
+            innhold = POJONode(
+                virkningstidspunkt.innholdTilObjekt<VirkningstidspunktGrunnlag>()
+                    .copy(
+                        virkningstidspunkt = resultat.periode.fom.atDay(1),
+                    ),
+            ),
+        )
+    }
 
     internal fun VedtakDto.hentSøknad(): GrunnlagDto = grunnlagListe
         .filtrerBasertPåEgenReferanse(Grunnlagstype.SØKNAD)
@@ -180,11 +196,10 @@ class AldersjusteringOrchestrator(
                     sistePeriode.grunnlagReferanseListe,
                 ).firstOrNull() ?: skalIkkeAldersjusteres(vedtaksId, SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE)
 
-        if (sistePeriode.beløp == null) {
-            skalIkkeAldersjusteres(vedtaksId, SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE)
-        }
+        val beløpSistePeriode = sistePeriode.beløp?.setScale(0)
+            ?: skalIkkeAldersjusteres(vedtaksId, SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE)
 
-        if (sluttberegning.innhold.bidragJustertForDeltBosted && BigDecimal.ZERO.equals(sistePeriode.beløp)) {
+        if (sluttberegning.innhold.bidragJustertForDeltBosted && BigDecimal.ZERO.equals(beløpSistePeriode)) {
             aldersjusteresManuelt(vedtaksId, SkalAldersjusteresManueltBegrunnelse.DELT_BOSSTED_MED_BELØP_0)
         }
 
