@@ -198,7 +198,7 @@ internal object EndeligBidragBeregning {
 
     fun beregnAldersjustering(grunnlag: EndeligBidragBeregningAldersjusteringGrunnlag): EndeligBidragBeregningAldersjusteringResultat {
         val bpAndelBeløp = grunnlag.underholdskostnad.beløp.multiply(grunnlag.bpAndelFaktor.andelFaktor)
-        val beregnetBeløp = bpAndelBeløp.subtract(grunnlag.samværsfradrag.beløp)
+        val beregnetBeløp = maxOf((bpAndelBeløp - grunnlag.samværsfradrag.beløp), BigDecimal.ZERO)
 
         return EndeligBidragBeregningAldersjusteringResultat(
             beregnetBeløp = beregnetBeløp.avrundetMedToDesimaler,
