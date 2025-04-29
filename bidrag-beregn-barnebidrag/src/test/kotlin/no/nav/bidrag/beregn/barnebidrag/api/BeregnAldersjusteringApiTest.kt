@@ -50,6 +50,8 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
     private lateinit var forventetResultatbeløp: BigDecimal
     private lateinit var forventetBeregnetBeløp: BigDecimal
     private lateinit var forventetBpAndelBeløp: BigDecimal
+    private var forventetBpAndelFaktorVedDeltBosted: BigDecimal? = null
+    private var forventetDeltBosted: Boolean = false
 
     // Delberegning underholdskostnad
     private lateinit var forventetForbruksutgift: BigDecimal
@@ -78,6 +80,7 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
     private lateinit var forventetSjablonverdiBeløpForbruk: BigDecimal
 
     // Sjablon samværsfradrag
+    private var forventetAntallSjablonerSamværsfradrag: Int = 1
     private var forventetSjablonverdiSamværsklasse: String = "02"
     private lateinit var forventetSjablonverdiBeløpSamværsfradrag: BigDecimal
 
@@ -139,9 +142,9 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
     }
 
     @Test
-    @DisplayName("Aldersjustering - eksempel 3 - barnet blir 15 år")
-    fun testAldersjustering_Eksempel03() {
-        filnavn = "src/test/resources/testfiler/aldersjustering/aldersjustering_eksempel3.json"
+    @DisplayName("Aldersjustering - eksempel 3A - barnet blir 15 år")
+    fun testAldersjustering_Eksempel03A() {
+        filnavn = "src/test/resources/testfiler/aldersjustering/aldersjustering_eksempel3A.json"
 
         forventetResultatbeløp = BigDecimal.valueOf(5900).setScale(0)
         forventetBeregnetBeløp = BigDecimal.valueOf(5897.13).setScale(2)
@@ -156,6 +159,31 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
         forventetSjablonverdiBeløpForbruk = BigDecimal.valueOf(8692).setScale(0)
 
         forventetSjablonverdiBeløpSamværsfradrag = BigDecimal.valueOf(2063).setScale(0)
+
+        utførBeregningerOgEvaluerResultatAldersjustering()
+    }
+
+    @Test
+    @DisplayName("Aldersjustering - eksempel 3B - barnet blir 15 år - delt bosted")
+    fun testAldersjustering_Eksempel03B() {
+        filnavn = "src/test/resources/testfiler/aldersjustering/aldersjustering_eksempel3B.json"
+
+        forventetResultatbeløp = BigDecimal.valueOf(2070).setScale(0)
+        forventetBeregnetBeløp = BigDecimal.valueOf(2071.13).setScale(2)
+        forventetBpAndelBeløp = BigDecimal.valueOf(2071.13).setScale(2)
+        forventetBpAndelFaktorVedDeltBosted = BigDecimal.valueOf(0.1758471615).setScale(10)
+        forventetDeltBosted = true
+
+        forventetForbruksutgift = BigDecimal.valueOf(8692).setScale(2)
+        forventetUnderholdskostnad = BigDecimal.valueOf(11778).setScale(2)
+
+        forventetSamværsklasse = Samværsklasse.DELT_BOSTED
+        forventetSamværsfradragBeløp = BigDecimal.ZERO.setScale(2)
+
+        forventetSjablonverdiAlderTom = 18
+        forventetSjablonverdiBeløpForbruk = BigDecimal.valueOf(8692).setScale(0)
+
+        forventetAntallSjablonerSamværsfradrag = 0
 
         utførBeregningerOgEvaluerResultatAldersjustering()
     }
@@ -354,6 +382,8 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
                     beregnetBeløp = it.innhold.beregnetBeløp,
                     resultatBeløp = it.innhold.resultatBeløp,
                     bpAndelBeløp = it.innhold.bpAndelBeløp,
+                    bpAndelFaktorVedDeltBosted = it.innhold.bpAndelFaktorVedDeltBosted,
+                    deltBosted = it.innhold.deltBosted,
                 )
             }
 
@@ -418,6 +448,7 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
                     fraVedtakId = it.innhold.fraVedtakId,
                     tilsynstype = it.innhold.tilsynstype,
                     skolealder = it.innhold.skolealder,
+                    manueltRegistrert = it.innhold.manueltRegistrert
                 )
             }
 
@@ -469,6 +500,8 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
             { assertThat(endeligBidragResultatListe[0].beregnetBeløp).isEqualTo(forventetBeregnetBeløp) },
             { assertThat(endeligBidragResultatListe[0].resultatBeløp).isEqualTo(forventetResultatbeløp) },
             { assertThat(endeligBidragResultatListe[0].bpAndelBeløp).isEqualTo(forventetBpAndelBeløp) },
+            { assertThat(endeligBidragResultatListe[0].bpAndelFaktorVedDeltBosted).isEqualTo(forventetBpAndelFaktorVedDeltBosted) },
+            { assertThat(endeligBidragResultatListe[0].deltBosted).isEqualTo(forventetDeltBosted) },
 
             // Delberegning underholdskostnad
             { assertThat(underholdskostnadResultatListe).hasSize(1) },
@@ -526,11 +559,27 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
             { assertThat(sjablonForbruksutgifter[0].beløpForbruk).isEqualTo(forventetSjablonverdiBeløpForbruk) },
 
             // Sjablon samværsfradrag
-            { assertThat(sjablonSamværsfradrag).hasSize(1) },
-            { assertThat(sjablonSamværsfradrag[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
-            { assertThat(sjablonSamværsfradrag[0].samværsklasse).isEqualTo(forventetSjablonverdiSamværsklasse) },
-            { assertThat(sjablonSamværsfradrag[0].alderTom).isEqualTo(forventetSjablonverdiAlderTom) },
-            { assertThat(sjablonSamværsfradrag[0].beløpFradrag).isEqualTo(forventetSjablonverdiBeløpSamværsfradrag) },
+            { assertThat(sjablonSamværsfradrag).hasSize(forventetAntallSjablonerSamværsfradrag) },
+            {
+                if (sjablonSamværsfradrag.isNotEmpty()) {
+                    assertThat(sjablonSamværsfradrag[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null))
+                }
+            },
+            {
+                if (sjablonSamværsfradrag.isNotEmpty()) {
+                    assertThat(sjablonSamværsfradrag[0].samværsklasse).isEqualTo(forventetSjablonverdiSamværsklasse)
+                }
+            },
+            {
+                if (sjablonSamværsfradrag.isNotEmpty()) {
+                    assertThat(sjablonSamværsfradrag[0].alderTom).isEqualTo(forventetSjablonverdiAlderTom)
+                }
+            },
+            {
+                if (sjablonSamværsfradrag.isNotEmpty()) {
+                    assertThat(sjablonSamværsfradrag[0].beløpFradrag).isEqualTo(forventetSjablonverdiBeløpSamværsfradrag)
+                }
+            },
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },

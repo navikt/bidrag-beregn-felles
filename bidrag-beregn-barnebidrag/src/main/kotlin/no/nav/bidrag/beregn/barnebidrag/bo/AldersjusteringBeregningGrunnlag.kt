@@ -20,6 +20,7 @@ data class AldersjusteringBeregningGrunnlag(
     val nettoTilsynsutgift: BigDecimal?,
     val tilsynstype: Tilsynstype?,
     val skolealder: Skolealder?,
+    val barnetilsynMedStønadManueltRegistrert: Boolean?,
     val bpAndelFaktor: BigDecimal,
     val samværsklasse: Samværsklasse,
     val søknadsbarnAlder: Int,

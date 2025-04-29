@@ -64,6 +64,7 @@ data class EndeligBidragBeregningAldersjusteringGrunnlag(
     val underholdskostnad: UnderholdskostnadDelberegningBeregningGrunnlag,
     val bpAndelFaktor: KopiBpAndelUnderholdskostnadDelberegningBeregningGrunnlag,
     val samværsfradrag: SamværsfradragDelberegningBeregningGrunnlag,
+    val deltBosted: DeltBostedBeregningGrunnlag,
 )
 
 data class BidragsevneDelberegningBeregningGrunnlag(val referanse: String, val beløp: BigDecimal, val sumInntekt25Prosent: BigDecimal)
@@ -120,6 +121,8 @@ data class EndeligBidragBeregningAldersjusteringResultat(
     val beregnetBeløp: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
     val resultatBeløp: BigDecimal = BigDecimal.ZERO.avrundetMedNullDesimaler,
     val bpAndelBeløp: BigDecimal = BigDecimal.ZERO.avrundetMedToDesimaler,
+    val bpAndelFaktorVedDeltBosted: BigDecimal? = null,
+    val deltBosted: Boolean = false,
     val grunnlagsreferanseListe: List<String> = emptyList(),
 )
 
