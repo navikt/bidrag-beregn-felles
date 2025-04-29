@@ -197,17 +197,24 @@ internal object EndeligBidragBeregning {
     }
 
     fun beregnAldersjustering(grunnlag: EndeligBidragBeregningAldersjusteringGrunnlag): EndeligBidragBeregningAldersjusteringResultat {
-        val bpAndelBeløp = grunnlag.underholdskostnad.beløp.multiply(grunnlag.bpAndelFaktor.andelFaktor)
+        var bpAndelFaktor = grunnlag.bpAndelFaktor.andelFaktor
+        if (grunnlag.deltBosted.deltBosted) {
+            bpAndelFaktor = (grunnlag.bpAndelFaktor.andelFaktor - BigDecimal.valueOf(0.5)).coerceAtLeast(BigDecimal.ZERO)
+        }
+        val bpAndelBeløp = grunnlag.underholdskostnad.beløp.multiply(bpAndelFaktor)
         val beregnetBeløp = maxOf((bpAndelBeløp - grunnlag.samværsfradrag.beløp), BigDecimal.ZERO)
 
         return EndeligBidragBeregningAldersjusteringResultat(
             beregnetBeløp = beregnetBeløp.avrundetMedToDesimaler,
             resultatBeløp = beregnetBeløp.avrundetTilNærmesteTier,
             bpAndelBeløp = bpAndelBeløp.avrundetMedToDesimaler,
+            bpAndelFaktorVedDeltBosted = if (grunnlag.deltBosted.deltBosted) bpAndelFaktor.avrundetMedTiDesimaler else null,
+            deltBosted = grunnlag.deltBosted.deltBosted,
             grunnlagsreferanseListe = listOfNotNull(
                 grunnlag.underholdskostnad.referanse,
                 grunnlag.bpAndelFaktor.referanse,
                 grunnlag.samværsfradrag.referanse,
+                grunnlag.deltBosted.referanse,
             ),
         )
     }

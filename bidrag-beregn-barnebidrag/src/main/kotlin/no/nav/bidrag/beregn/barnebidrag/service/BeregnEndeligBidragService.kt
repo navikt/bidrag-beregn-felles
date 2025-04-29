@@ -271,7 +271,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
             ?.let {
                 DeltBostedBeregningGrunnlag(
                     referanse = it.referanse,
-                    deltBosted = it.samværsklassePeriode.samværsklasse == Samværsklasse.DELT_BOSTED,
+                        deltBosted = it.samværsklassePeriode.samværsklasse == Samværsklasse.DELT_BOSTED,
                 )
             }
             ?: throw IllegalArgumentException("Delt bosted grunnlag mangler for periode $bruddPeriode")

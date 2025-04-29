@@ -86,6 +86,11 @@ internal object AldersjusteringMapper : CoreMapper() {
             .map { it.innhold.skolealder }
             .firstOrNull()
 
+        val barnetilsynMedStønadManueltRegistrert = grunnlagListeSluttberegningSistePeriode
+            .filtrerOgKonverterBasertPåEgenReferanse<BarnetilsynMedStønadPeriode>(Grunnlagstype.BARNETILSYN_MED_STØNAD_PERIODE)
+            .map { it.innhold.manueltRegistrert }
+            .firstOrNull()
+
         val bpAndelFaktor = (
             grunnlagListeSluttberegningSistePeriode
                 .filtrerOgKonverterBasertPåEgenReferanse<DelberegningBidragspliktigesAndel>(Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL)
@@ -138,6 +143,7 @@ internal object AldersjusteringMapper : CoreMapper() {
             nettoTilsynsutgift = nettoTilsynsutgift,
             tilsynstype = tilsynstype,
             skolealder = skolealder,
+            barnetilsynMedStønadManueltRegistrert = barnetilsynMedStønadManueltRegistrert,
             bpAndelFaktor = bpAndelFaktor,
             samværsklasse = samværsklasse,
             søknadsbarnAlder = søknadsbarnAlder,

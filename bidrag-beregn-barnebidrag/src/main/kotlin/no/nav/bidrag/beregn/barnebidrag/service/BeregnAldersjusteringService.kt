@@ -8,6 +8,7 @@ import no.nav.bidrag.beregn.barnebidrag.bo.AldersjusteringBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilsynMedStønad
 import no.nav.bidrag.beregn.barnebidrag.bo.BarnetrygdType
 import no.nav.bidrag.beregn.barnebidrag.bo.BeløpshistorikkPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.DeltBostedBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragBeregningAldersjusteringGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragBeregningAldersjusteringResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.KopiBpAndelUnderholdskostnadDelberegningBeregningGrunnlag
@@ -171,7 +172,7 @@ class BeregnAldersjusteringService : BeregnService() {
                     beregnetBarnebidragResultat = beregnetBarnebidragResultat.beregnetBarnebidragPeriodeListe.first(),
                     beløpshistorikk = aldersjusteringGrunnlag.beløpshistorikk,
                     beregningsperiode = aldersjusteringGrunnlag.beregningsperiode,
-                  )
+                )
             ) {
                 throw AldersjusteringLavereEnnEllerLikLøpendeBidragException(
                     melding = "Alderjustert beløp er lavere enn løpende beløp fra beløpshistorikken for søknadsbarn med referanse " +
@@ -476,6 +477,13 @@ class BeregnAldersjusteringService : BeregnService() {
                     .firstOrNull() ?: "",
                 beløp = samværsfradragBeregningResultat.beløpFradrag,
             ),
+            deltBosted = DeltBostedBeregningGrunnlag(
+                referanse = grunnlagFraVedtakListe
+                    .filtrerOgKonverterBasertPåEgenReferanse<KopiSamværsperiodeGrunnlag>(Grunnlagstype.KOPI_SAMVÆRSPERIODE)
+                    .map { it.referanse }
+                    .firstOrNull() ?: "",
+                deltBosted = aldersjusteringGrunnlag.samværsklasse == Samværsklasse.DELT_BOSTED,
+            )
         )
 
         return EndeligBidragBeregning.beregnAldersjustering(grunnlag)
@@ -534,6 +542,8 @@ class BeregnAldersjusteringService : BeregnService() {
                 beregnetBeløp = endeligBidragBeregningResultat.beregnetBeløp,
                 resultatBeløp = endeligBidragBeregningResultat.resultatBeløp,
                 bpAndelBeløp = endeligBidragBeregningResultat.bpAndelBeløp,
+                bpAndelFaktorVedDeltBosted = endeligBidragBeregningResultat.bpAndelFaktorVedDeltBosted,
+                deltBosted = endeligBidragBeregningResultat.deltBosted,
             ),
         ),
         grunnlagsreferanseListe = endeligBidragBeregningResultat.grunnlagsreferanseListe.distinct().sorted(),
@@ -607,6 +617,7 @@ class BeregnAldersjusteringService : BeregnService() {
                             fraVedtakId = aldersjusteringGrunnlag.vedtakId,
                             tilsynstype = aldersjusteringGrunnlag.tilsynstype,
                             skolealder = aldersjusteringGrunnlag.skolealder,
+                            manueltRegistrert = aldersjusteringGrunnlag.barnetilsynMedStønadManueltRegistrert ?: false,
                         ),
                     ),
                     grunnlagsreferanseListe = emptyList(),
