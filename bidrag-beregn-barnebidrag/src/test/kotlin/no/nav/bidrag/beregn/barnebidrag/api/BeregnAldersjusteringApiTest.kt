@@ -524,19 +524,19 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
             // Grunnlag
             // Kopi delberegning underholdskostnad (fra vedtak)
             { assertThat(kopiDelberegningUnderholdskostnad).hasSize(1) },
-            { assertThat(kopiDelberegningUnderholdskostnad[0].periode).isEqualTo(beregningsperiode) },
+            { assertThat(kopiDelberegningUnderholdskostnad[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
             { assertThat(kopiDelberegningUnderholdskostnad[0].fraVedtakId).isEqualTo(forventetVedtakId) },
             { assertThat(kopiDelberegningUnderholdskostnad[0].nettoTilsynsutgift?.setScale(2)).isEqualTo(forventetNettoTilsynsutgift) },
 
             // Kopi delberegning bidragspliktiges andel (fra vedtak)
             { assertThat(kopiDelberegningBidragspliktigesAndel).hasSize(1) },
-            { assertThat(kopiDelberegningBidragspliktigesAndel[0].periode).isEqualTo(beregningsperiode) },
+            { assertThat(kopiDelberegningBidragspliktigesAndel[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
             { assertThat(kopiDelberegningBidragspliktigesAndel[0].fraVedtakId).isEqualTo(forventetVedtakId) },
             { assertThat(kopiDelberegningBidragspliktigesAndel[0].endeligAndelFaktor.avrundetMedTiDesimaler).isEqualTo(forventetEndeligAndelFaktor) },
 
             // Kopi samværsperiode (fra vedtak)
             { assertThat(kopiSamværsperiode).hasSize(1) },
-            { assertThat(kopiSamværsperiode[0].periode).isEqualTo(beregningsperiode) },
+            { assertThat(kopiSamværsperiode[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
             { assertThat(kopiSamværsperiode[0].fraVedtakId).isEqualTo(forventetVedtakId) },
             { assertThat(kopiSamværsperiode[0].samværsklasse).isEqualTo(forventetSamværsklasse) },
 

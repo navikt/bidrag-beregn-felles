@@ -568,7 +568,7 @@ class BeregnAldersjusteringService : BeregnService() {
                 type = Grunnlagstype.KOPI_DELBEREGNING_UNDERHOLDSKOSTNAD,
                 innhold = POJONode(
                     KopiDelberegningUnderholdskostnad(
-                        periode = aldersjusteringGrunnlag.beregningsperiode,
+                        periode = ÅrMånedsperiode(fom = aldersjusteringGrunnlag.beregningsperiode.fom, til = null),
                         fraVedtakId = aldersjusteringGrunnlag.vedtakId,
                         nettoTilsynsutgift = aldersjusteringGrunnlag.nettoTilsynsutgift,
                     ),
@@ -590,7 +590,7 @@ class BeregnAldersjusteringService : BeregnService() {
                 type = Grunnlagstype.KOPI_DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL,
                 innhold = POJONode(
                     KopiDelberegningBidragspliktigesAndel(
-                        periode = mottattGrunnlag.periode,
+                        periode = ÅrMånedsperiode(fom = aldersjusteringGrunnlag.beregningsperiode.fom, til = null),
                         fraVedtakId = aldersjusteringGrunnlag.vedtakId,
                         endeligAndelFaktor = aldersjusteringGrunnlag.bpAndelFaktor,
                     ),
@@ -613,7 +613,7 @@ class BeregnAldersjusteringService : BeregnService() {
                     type = Grunnlagstype.KOPI_BARNETILSYN_MED_STØNAD_PERIODE,
                     innhold = POJONode(
                         KopiBarnetilsynMedStønadPeriode(
-                            periode = mottattGrunnlag.periode,
+                            periode = ÅrMånedsperiode(fom = aldersjusteringGrunnlag.beregningsperiode.fom, til = null),
                             fraVedtakId = aldersjusteringGrunnlag.vedtakId,
                             tilsynstype = aldersjusteringGrunnlag.tilsynstype,
                             skolealder = aldersjusteringGrunnlag.skolealder,
@@ -638,7 +638,7 @@ class BeregnAldersjusteringService : BeregnService() {
                 type = Grunnlagstype.KOPI_SAMVÆRSPERIODE,
                 innhold = POJONode(
                     KopiSamværsperiodeGrunnlag(
-                        periode = mottattGrunnlag.periode,
+                        periode = ÅrMånedsperiode(fom = aldersjusteringGrunnlag.beregningsperiode.fom, til = null),
                         fraVedtakId = aldersjusteringGrunnlag.vedtakId,
                         samværsklasse = aldersjusteringGrunnlag.samværsklasse,
                     ),
