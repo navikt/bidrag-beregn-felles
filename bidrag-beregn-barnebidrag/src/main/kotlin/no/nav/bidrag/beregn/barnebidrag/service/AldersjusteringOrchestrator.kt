@@ -42,6 +42,7 @@ data class AldersjusteringResultat(val vedtaksid: Int, val løpendeBeløp: BigDe
 enum class SkalIkkeAldersjusteresBegrunnelse {
     INGEN_LØPENDE_PERIODE,
     IKKE_ALDERSGRUPPE_FOR_ALDERSJUSTERING,
+    BARN_MANGLER_FØDSESLDATO,
     LØPER_MED_UTENLANDSK_VALUTA,
     JUSTERT_FOR_BARNETILLEGG_BM,
     JUSTERT_FOR_BARNETILLEGG_BP,
@@ -87,7 +88,10 @@ class AldersjusteringOrchestrator(
             log.info { "Aldersjustering kjøres for stønadstype ${stønad.type} og sak ${stønad.sak} for årstall $aldersjusteresForÅr" }
             secureLogger.info { "Aldersjustering kjøres for stønad $stønad og årstall $aldersjusteresForÅr" }
             val sak = sakConsumer.hentSak(stønad.sak.verdi)
-            val fødselsdatoBarn = personConsumer.hentFødselsdatoForPerson(stønad.kravhaver)
+            val fødselsdatoBarn = personConsumer.hentFødselsdatoForPerson(stønad.kravhaver) ?: skalIkkeAldersjusteres(
+                null,
+                SkalIkkeAldersjusteresBegrunnelse.BARN_MANGLER_FØDSESLDATO,
+            )
 
             if (!AldersjusteringUtils.skalAldersjusteres(fødselsdatoBarn, aldersjusteresForÅr)) {
                 log.warn {
