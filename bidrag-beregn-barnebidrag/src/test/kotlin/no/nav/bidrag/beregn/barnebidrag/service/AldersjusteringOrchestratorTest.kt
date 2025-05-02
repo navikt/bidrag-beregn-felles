@@ -370,7 +370,7 @@ class AldersjusteringOrchestratorTest {
             grunnlagListe = emptyList(),
         )
 
-        val exception = shouldThrow<AldersjusteresManueltException> {
+        val exception = shouldThrow<RuntimeException> {
             aldersjusteringOrchestrator.utførAldersjustering(
                 stønad = Stønadsid(
                     type = Stønadstype.BIDRAG,
@@ -381,8 +381,7 @@ class AldersjusteringOrchestratorTest {
                 aldersjusteresForÅr = 2025,
             )
         }
-        exception.message shouldBe "Skal aldersjusteres manuelt med begrunnelse MANGLER_GRUNNLAG"
-        exception.begrunnelse shouldBe SkalAldersjusteresManueltBegrunnelse.MANGLER_GRUNNLAG
+        exception.message shouldBe "Aldersjustering kunne ikke utføres fordi vedtak 2 mangler grunnlag"
     }
 
     @Test
