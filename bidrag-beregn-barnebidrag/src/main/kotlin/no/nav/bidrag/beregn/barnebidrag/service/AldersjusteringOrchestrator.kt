@@ -69,6 +69,8 @@ class AldersjusteresManueltException(val vedtaksid: Int? = null, begrunnelse: Sk
     val begrunnelse: SkalAldersjusteresManueltBegrunnelse = begrunnelse
 }
 
+fun aldersjusteringFeilet(begrunnelse: String): Nothing = throw RuntimeException(begrunnelse)
+
 fun aldersjusteresManuelt(vedtaksid: Int? = null, begrunnelse: SkalAldersjusteresManueltBegrunnelse): Nothing =
     throw AldersjusteresManueltException(vedtaksid, begrunnelse)
 
@@ -186,7 +188,7 @@ class AldersjusteringOrchestrator(
             it.kravhaver == stønad.kravhaver
     }!!
     private fun SisteManuelleVedtak.validerSkalAldersjusteres(stønad: Stønadsid) {
-        if (this.vedtak.grunnlagListe.isEmpty()) aldersjusteresManuelt(vedtaksId, SkalAldersjusteresManueltBegrunnelse.MANGLER_GRUNNLAG)
+        if (this.vedtak.grunnlagListe.isEmpty()) aldersjusteringFeilet("Aldersjustering kunne ikke utføres fordi vedtak $vedtaksId mangler grunnlag")
         val begrunnelser: MutableSet<SkalIkkeAldersjusteresBegrunnelse> = mutableSetOf()
         val stønadsendring = finnStønadsendring(stønad)
 
