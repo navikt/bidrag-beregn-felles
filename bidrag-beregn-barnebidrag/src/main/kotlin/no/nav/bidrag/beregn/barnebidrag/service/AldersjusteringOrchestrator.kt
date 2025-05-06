@@ -15,25 +15,22 @@ import no.nav.bidrag.domene.felles.enhet_utland
 import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
-import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatPeriode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlagAldersjustering
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlagVedtak
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
-import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.VirkningstidspunktGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragsmottaker
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragspliktig
-import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.finnOgKonverterGrunnlagSomErReferertFraGrunnlagsreferanseListe
 import no.nav.bidrag.transport.behandling.felles.grunnlag.hentPersonMedIdent
-import no.nav.bidrag.transport.behandling.felles.grunnlag.innholdTilObjekt
 import no.nav.bidrag.transport.behandling.stonad.response.StønadPeriodeDto
-import no.nav.bidrag.transport.behandling.vedtak.response.VedtakDto
 import no.nav.bidrag.transport.sak.BidragssakDto
 import org.springframework.context.annotation.Import
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.YearMonth
 
 private val log = KotlinLogging.logger {}
@@ -104,7 +101,7 @@ class AldersjusteringOrchestrator(
             }
 
             vedtakService
-                .hentLøpendeStønad(stønad)
+                .hentLøpendeStønad(stønad, LocalDateTime.now().withYear(aldersjusteresForÅr))
                 .validerSkalAldersjusteres(sak)
 
             val sisteManuelleVedtak =
@@ -135,8 +132,7 @@ class AldersjusteringOrchestrator(
                 .beregnAldersjustering(beregningInput).let {
                     val resultatMedGrunnlag = it.copy(
                         grunnlagListe = it.grunnlagListe + listOf(
-                            vedtak.hentSøknad(),
-                            vedtak.opprettVirkningstidspunktGrunnlag(søknadsbarn.referanse, it.beregnetBarnebidragPeriodeListe.first()),
+                            opprettVirkningstidspunktGrunnlag(søknadsbarn.referanse, it.beregnetBarnebidragPeriodeListe.first().periode.fom.atDay(1)),
                         ),
                     )
                     secureLogger.info {
@@ -151,24 +147,15 @@ class AldersjusteringOrchestrator(
             ).loggOgKastFeil(stønad, aldersjusteresForÅr)
         }
 
-    internal fun VedtakDto.opprettVirkningstidspunktGrunnlag(gjelderBarnReferanse: Grunnlagsreferanse, resultat: ResultatPeriode): GrunnlagDto {
-        val virkningstidspunkt = grunnlagListe
-            .filtrerBasertPåEgenReferanse(Grunnlagstype.VIRKNINGSTIDSPUNKT)
-            .find { it.gjelderBarnReferanse == gjelderBarnReferanse } as GrunnlagDto
-
-        return virkningstidspunkt.copy(
-            innhold = POJONode(
-                virkningstidspunkt.innholdTilObjekt<VirkningstidspunktGrunnlag>()
-                    .copy(
-                        virkningstidspunkt = resultat.periode.fom.atDay(1),
-                    ),
+    internal fun opprettVirkningstidspunktGrunnlag(referanseBarn: String, virkningstidspunkt: LocalDate): GrunnlagDto = GrunnlagDto(
+        referanse = "virkningstidspunkt_$referanseBarn",
+        type = Grunnlagstype.VIRKNINGSTIDSPUNKT,
+        innhold = POJONode(
+            VirkningstidspunktGrunnlag(
+                virkningstidspunkt = virkningstidspunkt,
             ),
-        )
-    }
-
-    internal fun VedtakDto.hentSøknad(): GrunnlagDto = grunnlagListe
-        .filtrerBasertPåEgenReferanse(Grunnlagstype.SØKNAD)
-        .first() as GrunnlagDto
+        ),
+    )
 
     private fun Exception.loggOgKastFeil(stønad: Stønadsid, aldersjusteresForÅr: Int): Nothing {
         when (this) {
@@ -255,7 +242,9 @@ class AldersjusteringOrchestrator(
                     vedtakInnhold = vedtak,
                 ),
             ),
-            beløpshistorikkListe = listOf(vedtakService.hentBeløpshistorikk(stønad, personobjekter)),
+            beløpshistorikkListe = listOf(
+                vedtakService.hentBeløpshistorikk(stønad, personobjekter, LocalDateTime.now().withYear(aldersjusteresForÅr)),
+            ),
         )
     }
 
