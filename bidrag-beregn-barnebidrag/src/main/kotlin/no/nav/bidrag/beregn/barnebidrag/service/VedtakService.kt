@@ -8,7 +8,6 @@ import no.nav.bidrag.beregn.vedtak.Vedtaksfiltrering
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.vedtak.Stønadstype
-import no.nav.bidrag.domene.felles.personidentNav
 import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkPeriode
@@ -34,16 +33,17 @@ class VedtakService(
     private val stønadConsumer: BeregningStønadConsumer,
     private val vedtakFilter: Vedtaksfiltrering,
 ) {
-    fun hentBeløpshistorikk(stønadsid: Stønadsid, personer: List<GrunnlagDto>): GrunnlagDto = stønadConsumer
-        .hentHistoriskeStønader(
-            HentStønadHistoriskRequest(
-                type = stønadsid.type,
-                sak = stønadsid.sak,
-                skyldner = personidentNav,
-                kravhaver = stønadsid.kravhaver,
-                gyldigTidspunkt = LocalDateTime.now(),
-            ),
-        ).tilGrunnlag(personer, stønadsid)
+    fun hentBeløpshistorikk(stønadsid: Stønadsid, personer: List<GrunnlagDto>, tidspunkt: LocalDateTime = LocalDateTime.now()): GrunnlagDto =
+        stønadConsumer
+            .hentHistoriskeStønader(
+                HentStønadHistoriskRequest(
+                    type = stønadsid.type,
+                    sak = stønadsid.sak,
+                    skyldner = stønadsid.skyldner,
+                    kravhaver = stønadsid.kravhaver,
+                    gyldigTidspunkt = LocalDateTime.now(),
+                ),
+            ).tilGrunnlag(personer, stønadsid)
 
     fun hentLøpendeStønad(stønadsid: Stønadsid, tidspunkt: LocalDateTime = LocalDateTime.now()): StønadPeriodeDto? {
         val stønad =
