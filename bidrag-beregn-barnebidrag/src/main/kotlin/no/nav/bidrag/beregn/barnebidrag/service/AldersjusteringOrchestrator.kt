@@ -51,7 +51,6 @@ enum class SkalIkkeAldersjusteresBegrunnelse {
 
 enum class SkalAldersjusteresManueltBegrunnelse {
     UTENLANDSSAK_MED_NORSK_VALUTA,
-    MANGLER_GRUNNLAG,
     FANT_INGEN_MANUELL_VEDTAK,
     DELT_BOSSTED_MED_BELØP_0,
 }
