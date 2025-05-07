@@ -52,7 +52,7 @@ enum class SkalIkkeAldersjusteresBegrunnelse {
 enum class SkalAldersjusteresManueltBegrunnelse {
     UTENLANDSSAK_MED_NORSK_VALUTA,
     FANT_INGEN_MANUELL_VEDTAK,
-    DELT_BOSSTED_MED_BELØP_0,
+    DELT_BOSTED_MED_BELØP_0,
 }
 
 class SkalIkkeAldersjusteresException(val vedtaksid: Int? = null, vararg begrunnelse: SkalIkkeAldersjusteresBegrunnelse) :
@@ -192,7 +192,7 @@ class AldersjusteringOrchestrator(
             ?: skalIkkeAldersjusteres(vedtaksId, SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE)
 
         if (sluttberegning.innhold.bidragJustertForDeltBosted && BigDecimal.ZERO.equals(beløpSistePeriode)) {
-            aldersjusteresManuelt(vedtaksId, SkalAldersjusteresManueltBegrunnelse.DELT_BOSSTED_MED_BELØP_0)
+            aldersjusteresManuelt(vedtaksId, SkalAldersjusteresManueltBegrunnelse.DELT_BOSTED_MED_BELØP_0)
         }
 
         if (sluttberegning.innhold.begrensetRevurderingUtført) {
