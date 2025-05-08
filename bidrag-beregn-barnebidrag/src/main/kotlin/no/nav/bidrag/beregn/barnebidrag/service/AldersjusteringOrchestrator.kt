@@ -38,6 +38,7 @@ private val log = KotlinLogging.logger {}
 data class AldersjusteringResultat(val vedtaksid: Int, val løpendeBeløp: BigDecimal?, val beregning: BeregnetBarnebidragResultat)
 enum class SkalIkkeAldersjusteresBegrunnelse {
     INGEN_LØPENDE_PERIODE,
+    LØPENDE_PERIODE_FRA_OG_MED_DATO_ER_LIK_ELLER_ETTER_ALDERSJUSTERING,
     IKKE_ALDERSGRUPPE_FOR_ALDERSJUSTERING,
     BARN_MANGLER_FØDSESLDATO,
     LØPER_MED_UTENLANDSK_VALUTA,
@@ -173,7 +174,7 @@ class AldersjusteringOrchestrator(
         it.type == stønad.type &&
             it.kravhaver == stønad.kravhaver
     }!!
-    private fun SisteManuelleVedtak.validerSkalAldersjusteres(stønad: Stønadsid) {
+    private fun SisteManuelleVedtak.validerSkalAldersjusteres(stønad: Stønadsid, aldersjusteresForÅr: Int = YearMonth.now().year) {
         if (this.vedtak.grunnlagListe.isEmpty()) aldersjusteringFeilet("Aldersjustering kunne ikke utføres fordi vedtak $vedtaksId mangler grunnlag")
         val begrunnelser: MutableSet<SkalIkkeAldersjusteresBegrunnelse> = mutableSetOf()
         val stønadsendring = finnStønadsendring(stønad)
@@ -190,6 +191,10 @@ class AldersjusteringOrchestrator(
 
         val beløpSistePeriode = sistePeriode.beløp?.setScale(0)
             ?: skalIkkeAldersjusteres(vedtaksId, SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE)
+
+        if (sistePeriode.periode.fom >= YearMonth.of(aldersjusteresForÅr, 7)) {
+            begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.LØPENDE_PERIODE_FRA_OG_MED_DATO_ER_LIK_ELLER_ETTER_ALDERSJUSTERING)
+        }
 
         if (sluttberegning.innhold.bidragJustertForDeltBosted && BigDecimal.ZERO.equals(beløpSistePeriode)) {
             aldersjusteresManuelt(vedtaksId, SkalAldersjusteresManueltBegrunnelse.DELT_BOSTED_MED_BELØP_0)
