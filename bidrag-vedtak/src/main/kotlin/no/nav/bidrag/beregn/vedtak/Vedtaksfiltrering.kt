@@ -83,7 +83,7 @@ class Vedtaksfiltrering {
             }
 
             // Hopp over indeksregulering
-            if (vedtaksdetaljer.vedtak.kilde == Vedtakskilde.AUTOMATISK) {
+            if (vedtaksdetaljer.vedtak.erOpprettetAvBatchEllerAldersjusteringIndeksregulering()) {
                 continue
             }
 
@@ -94,5 +94,7 @@ class Vedtaksfiltrering {
         return null
     }
 
+    private fun VedtakForStønad.erOpprettetAvBatchEllerAldersjusteringIndeksregulering(): Boolean =
+        kilde == Vedtakskilde.AUTOMATISK || type == Vedtakstype.INDEKSREGULERING || type == Vedtakstype.ALDERSJUSTERING
     private fun VedtakForStønad.filtrereBortIrrelevanteVedtak(): Boolean = erInnkreving() && !erIkkeRelevant()
 }
