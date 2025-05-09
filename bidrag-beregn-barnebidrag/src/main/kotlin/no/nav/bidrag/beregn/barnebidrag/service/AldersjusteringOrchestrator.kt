@@ -54,6 +54,7 @@ enum class SkalAldersjusteresManueltBegrunnelse {
     UTENLANDSSAK_MED_NORSK_VALUTA,
     FANT_INGEN_MANUELL_VEDTAK,
     DELT_BOSTED_MED_BELØP_0,
+    SISTE_VEDTAK_ER_INNVILGET_VEDTAK,
 }
 
 class SkalIkkeAldersjusteresException(val vedtaksid: Int? = null, vararg begrunnelse: SkalIkkeAldersjusteresBegrunnelse) :
@@ -182,6 +183,7 @@ class AldersjusteringOrchestrator(
         if (stønadsendring.periodeListe.isEmpty()) skalIkkeAldersjusteres(vedtaksId, SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE)
 
         val sistePeriode = stønadsendring.periodeListe.hentSisteLøpendePeriode()!!
+        if (sistePeriode.resultatkode == "IV") aldersjusteresManuelt(vedtaksId, SkalAldersjusteresManueltBegrunnelse.SISTE_VEDTAK_ER_INNVILGET_VEDTAK)
         val sluttberegning =
             vedtak.grunnlagListe
                 .finnOgKonverterGrunnlagSomErReferertFraGrunnlagsreferanseListe<SluttberegningBarnebidrag>(
