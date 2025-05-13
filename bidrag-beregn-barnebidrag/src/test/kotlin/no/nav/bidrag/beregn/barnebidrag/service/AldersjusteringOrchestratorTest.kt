@@ -31,6 +31,7 @@ import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.commons.web.mock.stubSjablonService
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.rolle.Rolletype
+import no.nav.bidrag.domene.enums.sak.Sakskategori
 import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.enums.vedtak.Vedtakskilde
 import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
@@ -329,6 +330,7 @@ class AldersjusteringOrchestratorTest {
             opprettSakRespons()
                 .copy(
                     eierfogd = Enhetsnummer(enhet_utland),
+                    kategori = Sakskategori.U,
                     roller =
                     listOf(
                         RolleDto(
@@ -349,7 +351,7 @@ class AldersjusteringOrchestratorTest {
                         ),
                     ),
                 )
-        val exception = shouldThrow<AldersjusteresManueltException> {
+        val exception = shouldThrow<SkalIkkeAldersjusteresException> {
             aldersjusteringOrchestrator.utførAldersjustering(
                 stønad = Stønadsid(
                     type = Stønadstype.BIDRAG,
@@ -360,8 +362,8 @@ class AldersjusteringOrchestratorTest {
                 aldersjusteresForÅr = 2025,
             )
         }
-        exception.message shouldBe "Skal aldersjusteres manuelt med begrunnelse UTENLANDSSAK_MED_NORSK_VALUTA"
-        exception.begrunnelse shouldBe SkalAldersjusteresManueltBegrunnelse.UTENLANDSSAK_MED_NORSK_VALUTA
+        exception.message shouldBe "Skal ikke aldersjusteres med begrunnelse UTENLANDSSAK"
+        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.UTENLANDSSAK
     }
 
     @Test
