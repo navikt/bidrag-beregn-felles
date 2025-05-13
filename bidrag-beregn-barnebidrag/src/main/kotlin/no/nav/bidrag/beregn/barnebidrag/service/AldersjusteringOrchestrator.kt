@@ -131,22 +131,21 @@ class AldersjusteringOrchestrator(
         }
     }
 
-    internal fun SisteManuelleVedtak.utførOgBeregn(stønad: Stønadsid, aldersjusteresForÅr: Int = YearMonth.now().year): AldersjusteringResultat =
-        try {
-            val beregningInput = byggGrunnlagForBeregning(
-                stønad,
-                aldersjusteresForÅr,
-            )
-            val søknadsbarn = vedtak.grunnlagListe.hentPersonMedIdent(stønad.kravhaver.verdi)!!
-            val stønadsendring = finnStønadsendring(stønad)
-            val sistePeriode = stønadsendring.periodeListe.hentSisteLøpendePeriode()!!
-            val sluttberegningSistePeriode = vedtak.grunnlagListe.finnSluttberegningIReferanser(sistePeriode.grunnlagReferanseListe)
-                ?.innholdTilObjekt<SluttberegningBarnebidrag>()
-            val resultatSistePeriode = when (sistePeriode.resultatkode == Resultatkode.INGEN_ENDRING_UNDER_GRENSE.name) {
-                true -> Resultatkode.INGEN_ENDRING_UNDER_GRENSE.visningsnavn.intern
-                false -> sluttberegningSistePeriode?.resultatVisningsnavn?.intern
-            }
-
+    internal fun SisteManuelleVedtak.utførOgBeregn(stønad: Stønadsid, aldersjusteresForÅr: Int = YearMonth.now().year): AldersjusteringResultat {
+        val beregningInput = byggGrunnlagForBeregning(
+            stønad,
+            aldersjusteresForÅr,
+        )
+        val søknadsbarn = vedtak.grunnlagListe.hentPersonMedIdent(stønad.kravhaver.verdi)!!
+        val stønadsendring = finnStønadsendring(stønad)
+        val sistePeriode = stønadsendring.periodeListe.hentSisteLøpendePeriode()!!
+        val sluttberegningSistePeriode = vedtak.grunnlagListe.finnSluttberegningIReferanser(sistePeriode.grunnlagReferanseListe)
+            ?.innholdTilObjekt<SluttberegningBarnebidrag>()
+        val resultatSistePeriode = when (sistePeriode.resultatkode == Resultatkode.INGEN_ENDRING_UNDER_GRENSE.name) {
+            true -> Resultatkode.INGEN_ENDRING_UNDER_GRENSE.visningsnavn.intern
+            false -> sluttberegningSistePeriode?.resultatVisningsnavn?.intern
+        }
+        return try {
             barnebidragApi
                 .beregnAldersjustering(beregningInput).let {
                     val resultatMedGrunnlag = it.copy(
@@ -168,8 +167,10 @@ class AldersjusteringOrchestrator(
             SkalIkkeAldersjusteresException(
                 SkalIkkeAldersjusteresBegrunnelse.ALDERSJUSTERT_BELØP_LAVERE_ELLER_LIK_LØPENDE_BIDRAG,
                 vedtaksid = vedtaksId,
+                resultat = resultatSistePeriode,
             ).loggOgKastFeil(stønad, aldersjusteresForÅr)
         }
+    }
 
     internal fun opprettVirkningstidspunktGrunnlag(referanseBarn: String, virkningstidspunkt: LocalDate): GrunnlagDto = GrunnlagDto(
         referanse = "virkningstidspunkt_$referanseBarn",
