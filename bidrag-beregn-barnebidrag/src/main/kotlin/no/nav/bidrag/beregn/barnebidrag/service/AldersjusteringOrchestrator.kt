@@ -58,6 +58,7 @@ enum class SkalIkkeAldersjusteresBegrunnelse {
     ALDERSJUSTERT_BELØP_LAVERE_ELLER_LIK_LØPENDE_BIDRAG,
     JUSTERT_PÅ_GRUNN_AV_25_PROSENT,
     SISTE_VEDTAK_ER_BEGRENSET_REVURDERING,
+    SISTE_VEDTAK_ER_SKJØNNSFASTSATT_AV_UTLAND,
     UTENLANDSSAK,
 }
 
@@ -143,7 +144,7 @@ class AldersjusteringOrchestrator(
         val sistePeriode = stønadsendring.periodeListe.hentSisteLøpendePeriode()!!
         val sluttberegningSistePeriode = vedtak.grunnlagListe.finnSluttberegningIReferanser(sistePeriode.grunnlagReferanseListe)
             ?.innholdTilObjekt<SluttberegningBarnebidrag>()
-        val resultatSistePeriode = when (sistePeriode.resultatkode == Resultatkode.INGEN_ENDRING_UNDER_GRENSE.name) {
+        val resultatSistePeriode = when (Resultatkode.fraKode(sistePeriode.resultatkode) == Resultatkode.INGEN_ENDRING_UNDER_GRENSE) {
             true -> Resultatkode.INGEN_ENDRING_UNDER_GRENSE.visningsnavn.intern
             false -> sluttberegningSistePeriode?.resultatVisningsnavn?.intern
         }
@@ -276,13 +277,22 @@ class AldersjusteringOrchestrator(
             resultat = resultatSistePeriode,
             vedtaksid = vedtaksId,
         )
+        "11B" -> skalIkkeAldersjusteres(
+            SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_SKJØNNSFASTSATT_AV_UTLAND,
+            resultat = resultatSistePeriode,
+            vedtaksid = vedtaksId,
+        )
         "VX" -> aldersjusteresManuelt(
             SkalAldersjusteresManueltBegrunnelse.SISTE_VEDTAK_ER_PRIVAT_AVTALE,
             resultat = resultatSistePeriode,
             vedtaksid = vedtaksId,
         )
         Resultatkode.OPPHØR.name, Resultatkode.OPPHØR.bisysKode.firstOrNull()?.resultatKode,
-        -> skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.BIDRAGET_HAR_OPPHØRT)
+        -> skalIkkeAldersjusteres(
+            SkalIkkeAldersjusteresBegrunnelse.BIDRAGET_HAR_OPPHØRT,
+            resultat = resultatSistePeriode,
+            vedtaksid = vedtaksId,
+        )
 
         else -> null
     }
