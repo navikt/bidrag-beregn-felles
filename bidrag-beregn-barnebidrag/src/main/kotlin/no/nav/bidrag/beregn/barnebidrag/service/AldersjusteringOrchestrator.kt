@@ -64,6 +64,7 @@ enum class SkalAldersjusteresManueltBegrunnelse {
     FANT_INGEN_MANUELL_VEDTAK,
     DELT_BOSTED_MED_BELØP_0,
     SISTE_VEDTAK_ER_INNVILGET_VEDTAK,
+    SISTE_VEDTAK_ER_PRIVAT_AVTALE,
 }
 
 class SkalIkkeAldersjusteresException(
@@ -214,28 +215,20 @@ class AldersjusteringOrchestrator(
         val sistePeriode = stønadsendring.periodeListe.hentSisteLøpendePeriode()!!
         val sluttberegningSistePeriode = vedtak.grunnlagListe.finnSluttberegningIReferanser(sistePeriode.grunnlagReferanseListe)
             ?.innholdTilObjekt<SluttberegningBarnebidrag>()
-        val resultatSistePeriode = when (sistePeriode.resultatkode == Resultatkode.INGEN_ENDRING_UNDER_GRENSE.name) {
-            true -> Resultatkode.INGEN_ENDRING_UNDER_GRENSE.visningsnavn.intern
-            false -> sluttberegningSistePeriode?.resultatVisningsnavn?.intern
+        val resultatSistePeriode = when {
+            sistePeriode.resultatkode == Resultatkode.INGEN_ENDRING_UNDER_GRENSE.name -> Resultatkode.INGEN_ENDRING_UNDER_GRENSE.visningsnavn.intern
+            else -> sluttberegningSistePeriode?.resultatVisningsnavn?.intern
         }
-        if (sistePeriode.resultatkode == "IV") {
-            aldersjusteresManuelt(
-                SkalAldersjusteresManueltBegrunnelse.SISTE_VEDTAK_ER_INNVILGET_VEDTAK,
-                resultat = resultatSistePeriode,
-                vedtaksid = vedtaksId,
-            )
-        }
+
+        sistePeriode.resultatkode.validerResultatkkode(resultatSistePeriode, vedtaksId)
+
         val sluttberegning =
             vedtak.grunnlagListe
                 .finnOgKonverterGrunnlagSomErReferertFraGrunnlagsreferanseListe<SluttberegningBarnebidrag>(
                     Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG,
                     sistePeriode.grunnlagReferanseListe,
                 ).firstOrNull()
-                ?: skalIkkeAldersjusteres(
-                    SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE,
-                    resultat = resultatSistePeriode,
-                    vedtaksid = vedtaksId,
-                )
+                ?: aldersjusteringFeilet("Fant ingen sluttberegning i vedtak $vedtaksId for siste periode")
 
         val beløpSistePeriode = sistePeriode.beløp?.setScale(0)
             ?: skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE, resultat = resultatSistePeriode, vedtaksid = vedtaksId)
@@ -274,6 +267,21 @@ class AldersjusteringOrchestrator(
             secureLogger.warn { "Stønad ${stønad.toReferanse()} skal ikke aldersjusteres $begrunnelser" }
             skalIkkeAldersjusteres(*begrunnelser.toTypedArray(), resultat = resultatSistePeriode, vedtaksid = vedtaksId)
         }
+    }
+
+    private fun String.validerResultatkkode(resultatSistePeriode: String?, vedtaksId: Int?) = when (this) {
+        "IV" -> aldersjusteresManuelt(
+            SkalAldersjusteresManueltBegrunnelse.SISTE_VEDTAK_ER_INNVILGET_VEDTAK,
+            resultat = resultatSistePeriode,
+            vedtaksid = vedtaksId,
+        )
+        "VX" -> aldersjusteresManuelt(
+            SkalAldersjusteresManueltBegrunnelse.SISTE_VEDTAK_ER_PRIVAT_AVTALE,
+            resultat = resultatSistePeriode,
+            vedtaksid = vedtaksId,
+        )
+
+        else -> null
     }
 
     private fun SisteManuelleVedtak.byggGrunnlagForBeregning(stønad: Stønadsid, aldersjusteresForÅr: Int): BeregnGrunnlagAldersjustering {
