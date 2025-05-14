@@ -47,6 +47,7 @@ data class AldersjusteringResultat(
 )
 enum class SkalIkkeAldersjusteresBegrunnelse {
     INGEN_LØPENDE_PERIODE,
+    BIDRAGET_HAR_OPPHØRT,
     LØPENDE_PERIODE_FRA_OG_MED_DATO_ER_LIK_ELLER_ETTER_ALDERSJUSTERING,
     IKKE_ALDERSGRUPPE_FOR_ALDERSJUSTERING,
     BARN_MANGLER_FØDSELSDATO,
@@ -280,6 +281,8 @@ class AldersjusteringOrchestrator(
             resultat = resultatSistePeriode,
             vedtaksid = vedtaksId,
         )
+        Resultatkode.OPPHØR.name, Resultatkode.OPPHØR.bisysKode.firstOrNull()?.resultatKode,
+        -> skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.BIDRAGET_HAR_OPPHØRT)
 
         else -> null
     }

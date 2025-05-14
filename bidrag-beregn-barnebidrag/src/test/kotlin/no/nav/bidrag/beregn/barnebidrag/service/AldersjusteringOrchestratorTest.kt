@@ -446,9 +446,9 @@ class AldersjusteringOrchestratorTest {
                 aldersjusteresForÅr = 2025,
             )
         }
-        exception.message shouldBe "Skal ikke aldersjusteres med begrunnelse INGEN_LØPENDE_PERIODE"
+        exception.message shouldBe "Skal ikke aldersjusteres med begrunnelse BIDRAGET_HAR_OPPHØRT"
         exception.begrunnelser.shouldHaveSize(1)
-        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE
+        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.BIDRAGET_HAR_OPPHØRT
     }
 
     @Test
