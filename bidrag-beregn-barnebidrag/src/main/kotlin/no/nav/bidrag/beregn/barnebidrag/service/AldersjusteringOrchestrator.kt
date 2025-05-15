@@ -57,7 +57,7 @@ enum class SkalIkkeAldersjusteresBegrunnelse {
     JUSTERT_PÅ_GRUNN_AV_EVNE,
     ALDERSJUSTERT_BELØP_LAVERE_ELLER_LIK_LØPENDE_BIDRAG,
     JUSTERT_PÅ_GRUNN_AV_25_PROSENT,
-    SISTE_VEDTAK_ER_BEGRENSET_REVURDERING,
+    SISTE_VEDTAK_ER_BEGRENSET_REVURDERING_JUSTERT_OPP_TIL_FORSKUDDSATS,
     SISTE_VEDTAK_ER_SKJØNNSFASTSATT_AV_UTLAND,
     UTENLANDSSAK,
 }
@@ -218,7 +218,8 @@ class AldersjusteringOrchestrator(
         val sluttberegningSistePeriode = vedtak.grunnlagListe.finnSluttberegningIReferanser(sistePeriode.grunnlagReferanseListe)
             ?.innholdTilObjekt<SluttberegningBarnebidrag>()
         val resultatSistePeriode = when {
-            sistePeriode.resultatkode == Resultatkode.INGEN_ENDRING_UNDER_GRENSE.name -> Resultatkode.INGEN_ENDRING_UNDER_GRENSE.visningsnavn.intern
+            Resultatkode.fraKode(sistePeriode.resultatkode)
+                == Resultatkode.INGEN_ENDRING_UNDER_GRENSE -> Resultatkode.INGEN_ENDRING_UNDER_GRENSE.visningsnavn.intern
             else -> sluttberegningSistePeriode?.resultatVisningsnavn?.intern
         }
 
@@ -247,8 +248,8 @@ class AldersjusteringOrchestrator(
             )
         }
 
-        if (sluttberegning.innhold.begrensetRevurderingUtført) {
-            begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_BEGRENSET_REVURDERING)
+        if (sluttberegning.innhold.begrensetRevurderingUtført && sluttberegning.innhold.bidragJustertTilForskuddssats) {
+            begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_BEGRENSET_REVURDERING_JUSTERT_OPP_TIL_FORSKUDDSATS)
         }
 
         if (sluttberegning.innhold.bidragJustertForNettoBarnetilleggBM) {
