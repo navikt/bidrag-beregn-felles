@@ -218,7 +218,8 @@ class AldersjusteringOrchestrator(
         val sluttberegningSistePeriode = vedtak.grunnlagListe.finnSluttberegningIReferanser(sistePeriode.grunnlagReferanseListe)
             ?.innholdTilObjekt<SluttberegningBarnebidrag>()
         val resultatSistePeriode = when {
-            sistePeriode.resultatkode == Resultatkode.INGEN_ENDRING_UNDER_GRENSE.name -> Resultatkode.INGEN_ENDRING_UNDER_GRENSE.visningsnavn.intern
+            Resultatkode.fraKode(sistePeriode.resultatkode)
+                == Resultatkode.INGEN_ENDRING_UNDER_GRENSE -> Resultatkode.INGEN_ENDRING_UNDER_GRENSE.visningsnavn.intern
             else -> sluttberegningSistePeriode?.resultatVisningsnavn?.intern
         }
 
