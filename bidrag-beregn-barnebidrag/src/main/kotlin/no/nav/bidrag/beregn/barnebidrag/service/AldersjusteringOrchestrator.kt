@@ -64,7 +64,7 @@ enum class SkalIkkeAldersjusteresBegrunnelse {
 
 enum class SkalAldersjusteresManueltBegrunnelse {
     FANT_INGEN_MANUELL_VEDTAK,
-    DELT_BOSTED_MED_BELØP_0,
+    SISTE_VEDTAK_HAR_RESULTAT_DELT_BOSTED_MED_BELØP_0,
     SISTE_VEDTAK_ER_INNVILGET_VEDTAK,
     SISTE_VEDTAK_ER_PRIVAT_AVTALE,
 }
@@ -242,7 +242,7 @@ class AldersjusteringOrchestrator(
 
         if (sluttberegning.innhold.bidragJustertForDeltBosted && BigDecimal.ZERO.equals(beløpSistePeriode)) {
             aldersjusteresManuelt(
-                SkalAldersjusteresManueltBegrunnelse.DELT_BOSTED_MED_BELØP_0,
+                SkalAldersjusteresManueltBegrunnelse.SISTE_VEDTAK_HAR_RESULTAT_DELT_BOSTED_MED_BELØP_0,
                 resultat = resultatSistePeriode,
                 vedtaksid = vedtaksId,
             )
