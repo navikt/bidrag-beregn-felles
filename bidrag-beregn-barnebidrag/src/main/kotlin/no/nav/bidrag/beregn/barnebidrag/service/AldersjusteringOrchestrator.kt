@@ -60,13 +60,13 @@ enum class SkalIkkeAldersjusteresBegrunnelse {
     SISTE_VEDTAK_ER_BEGRENSET_REVURDERING_JUSTERT_OPP_TIL_FORSKUDDSATS,
     SISTE_VEDTAK_ER_SKJØNNSFASTSATT_AV_UTLAND,
     UTENLANDSSAK,
+    SISTE_VEDTAK_ER_PRIVAT_AVTALE,
 }
 
 enum class SkalAldersjusteresManueltBegrunnelse {
     FANT_INGEN_MANUELL_VEDTAK,
     SISTE_VEDTAK_HAR_RESULTAT_DELT_BOSTED_MED_BELØP_0,
     SISTE_VEDTAK_ER_INNVILGET_VEDTAK,
-    SISTE_VEDTAK_ER_PRIVAT_AVTALE,
 }
 
 class SkalIkkeAldersjusteresException(
@@ -219,6 +219,8 @@ class AldersjusteringOrchestrator(
             ?.innholdTilObjekt<SluttberegningBarnebidrag>()
         val resultatSistePeriode = when {
             Resultatkode.fraKode(sistePeriode.resultatkode)
+                == Resultatkode.INNVILGET_VEDTAK -> Resultatkode.INNVILGET_VEDTAK.visningsnavn.intern
+            Resultatkode.fraKode(sistePeriode.resultatkode)
                 == Resultatkode.INGEN_ENDRING_UNDER_GRENSE -> Resultatkode.INGEN_ENDRING_UNDER_GRENSE.visningsnavn.intern
             else -> sluttberegningSistePeriode?.resultatVisningsnavn?.intern
         }
@@ -273,18 +275,18 @@ class AldersjusteringOrchestrator(
     }
 
     private fun String.validerResultatkkode(resultatSistePeriode: String?, vedtaksId: Int?) = when (this) {
-        "IV" -> aldersjusteresManuelt(
+        Resultatkode.INNVILGET_VEDTAK.bisysKode.first().resultatKode -> aldersjusteresManuelt(
             SkalAldersjusteresManueltBegrunnelse.SISTE_VEDTAK_ER_INNVILGET_VEDTAK,
             resultat = resultatSistePeriode,
             vedtaksid = vedtaksId,
         )
-        "11B" -> skalIkkeAldersjusteres(
+        Resultatkode.SKJØNN_UTLANDET.bisysKode.first().resultatKode -> skalIkkeAldersjusteres(
             SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_SKJØNNSFASTSATT_AV_UTLAND,
             resultat = resultatSistePeriode,
             vedtaksid = vedtaksId,
         )
-        "VX" -> aldersjusteresManuelt(
-            SkalAldersjusteresManueltBegrunnelse.SISTE_VEDTAK_ER_PRIVAT_AVTALE,
+        Resultatkode.PRIVAT_AVTALE.bisysKode.first().resultatKode -> skalIkkeAldersjusteres(
+            SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_PRIVAT_AVTALE,
             resultat = resultatSistePeriode,
             vedtaksid = vedtaksId,
         )
@@ -302,6 +304,8 @@ class AldersjusteringOrchestrator(
         val grunnlagsliste = vedtak.grunnlagListe
 
         val søknadsbarn = grunnlagsliste.hentPersonMedIdent(stønad.kravhaver.verdi)!!
+        val stønadsendring = finnStønadsendring(stønad)
+        val sistePeriode = stønadsendring.periodeListe.hentSisteLøpendePeriode()!!
 
         val personobjekter =
             listOf(
@@ -309,8 +313,16 @@ class AldersjusteringOrchestrator(
                 grunnlagsliste.bidragsmottaker!!,
                 grunnlagsliste.bidragspliktig!!,
             ) as List<GrunnlagDto>
+        val fomPeriode = YearMonth.of(aldersjusteresForÅr, 7)
+        val tilPeriode = if (sistePeriode.periode.til != null &&
+            sistePeriode.periode.til!!.isAfter(fomPeriode)
+        ) {
+            sistePeriode.periode.til
+        } else {
+            YearMonth.of(aldersjusteresForÅr, 8)
+        }
         return BeregnGrunnlagAldersjustering(
-            periode = ÅrMånedsperiode(YearMonth.of(aldersjusteresForÅr, 7), YearMonth.of(aldersjusteresForÅr, 8)),
+            periode = ÅrMånedsperiode(fomPeriode, tilPeriode),
             personObjektListe = personobjekter,
             vedtakListe =
             listOf(
