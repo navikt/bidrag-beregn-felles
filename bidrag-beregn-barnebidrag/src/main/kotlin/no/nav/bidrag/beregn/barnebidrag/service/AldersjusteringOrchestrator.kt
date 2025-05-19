@@ -141,6 +141,8 @@ class AldersjusteringOrchestrator(
         )
         val søknadsbarn = vedtak.grunnlagListe.hentPersonMedIdent(stønad.kravhaver.verdi)!!
         val stønadsendring = finnStønadsendring(stønad)
+        val løpendeStønad = vedtakService
+            .hentLøpendeStønad(stønad, LocalDateTime.now().withYear(aldersjusteresForÅr))
         val sistePeriode = stønadsendring.periodeListe.hentSisteLøpendePeriode()!!
         val sluttberegningSistePeriode = vedtak.grunnlagListe.finnSluttberegningIReferanser(sistePeriode.grunnlagReferanseListe)
             ?.innholdTilObjekt<SluttberegningBarnebidrag>()
@@ -151,7 +153,14 @@ class AldersjusteringOrchestrator(
         return try {
             barnebidragApi
                 .beregnAldersjustering(beregningInput).let {
+                    val beregnetPeriode = it.beregnetBarnebidragPeriodeListe.first()
+                    val opphørsdato = løpendeStønad?.periode?.til
                     val resultatMedGrunnlag = it.copy(
+                        beregnetBarnebidragPeriodeListe = listOf(
+                            beregnetPeriode.copy(
+                                periode = ÅrMånedsperiode(beregnetPeriode.periode.fom, opphørsdato),
+                            ),
+                        ),
                         grunnlagListe = it.grunnlagListe + listOf(
                             opprettVirkningstidspunktGrunnlag(søknadsbarn.referanse, it.beregnetBarnebidragPeriodeListe.first().periode.fom.atDay(1)),
                         ),
@@ -304,8 +313,6 @@ class AldersjusteringOrchestrator(
         val grunnlagsliste = vedtak.grunnlagListe
 
         val søknadsbarn = grunnlagsliste.hentPersonMedIdent(stønad.kravhaver.verdi)!!
-        val stønadsendring = finnStønadsendring(stønad)
-        val sistePeriode = stønadsendring.periodeListe.hentSisteLøpendePeriode()!!
 
         val personobjekter =
             listOf(
@@ -313,16 +320,8 @@ class AldersjusteringOrchestrator(
                 grunnlagsliste.bidragsmottaker!!,
                 grunnlagsliste.bidragspliktig!!,
             ) as List<GrunnlagDto>
-        val fomPeriode = YearMonth.of(aldersjusteresForÅr, 7)
-        val tilPeriode = if (sistePeriode.periode.til != null &&
-            sistePeriode.periode.til!!.isAfter(fomPeriode)
-        ) {
-            sistePeriode.periode.til
-        } else {
-            YearMonth.of(aldersjusteresForÅr, 8)
-        }
         return BeregnGrunnlagAldersjustering(
-            periode = ÅrMånedsperiode(fomPeriode, tilPeriode),
+            periode = ÅrMånedsperiode(YearMonth.of(aldersjusteresForÅr, 7), YearMonth.of(aldersjusteresForÅr, 8)),
             personObjektListe = personobjekter,
             vedtakListe =
             listOf(
