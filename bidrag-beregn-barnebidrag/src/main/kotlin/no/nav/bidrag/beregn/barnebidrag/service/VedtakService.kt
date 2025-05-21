@@ -3,8 +3,10 @@ package no.nav.bidrag.beregn.barnebidrag.service
 import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningStønadConsumer
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningVedtakConsumer
+import no.nav.bidrag.beregn.barnebidrag.utils.hentPersonForNyesteIdent
 import no.nav.bidrag.beregn.barnebidrag.utils.hentSisteLøpendePeriode
 import no.nav.bidrag.beregn.vedtak.Vedtaksfiltrering
+import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.vedtak.Stønadstype
@@ -32,6 +34,7 @@ class VedtakService(
     private val vedtakConsumer: BeregningVedtakConsumer,
     private val stønadConsumer: BeregningStønadConsumer,
     private val vedtakFilter: Vedtaksfiltrering,
+    private val identUtils: IdentUtils,
 ) {
     fun hentBeløpshistorikk(stønadsid: Stønadsid, personer: List<GrunnlagDto>, tidspunkt: LocalDateTime = LocalDateTime.now()): GrunnlagDto =
         stønadConsumer
@@ -97,43 +100,46 @@ class VedtakService(
         ).vedtakListe
         .maxBy { it.vedtakstidspunkt }
         .vedtaksid
-}
-private fun StønadDto?.tilGrunnlag(personer: List<GrunnlagDto>, stønadsid: Stønadsid): GrunnlagDto {
-    val grunnlagstype =
-        when (stønadsid.type) {
-            Stønadstype.BIDRAG -> Grunnlagstype.BELØPSHISTORIKK_BIDRAG
-            Stønadstype.BIDRAG18AAR -> Grunnlagstype.BELØPSHISTORIKK_BIDRAG_18_ÅR
-            Stønadstype.FORSKUDD -> Grunnlagstype.BELØPSHISTORIKK_FORSKUDD
-            else -> throw IllegalArgumentException("Ukjent stønadstype")
-        }
 
-    return GrunnlagDto(
-        referanse =
-        "${grunnlagstype}_${stønadsid.sak}_${stønadsid.kravhaver.verdi}_${stønadsid.skyldner.verdi}" +
-            "_${this?.opprettetTidspunkt?.toCompactString() ?: LocalDate.now().toCompactString()}",
-        type = grunnlagstype,
-        gjelderReferanse =
-        when {
-            stønadsid.type == Stønadstype.BIDRAG -> personer.bidragspliktig!!.referanse
-            stønadsid.type == Stønadstype.BIDRAG18AAR -> personer.bidragspliktig!!.referanse
-            else -> personer.bidragsmottaker!!.referanse
-        },
-        gjelderBarnReferanse = personer.hentPersonMedIdent(stønadsid.kravhaver.verdi)!!.referanse,
-        innhold =
-        POJONode(
-            BeløpshistorikkGrunnlag(
-                tidspunktInnhentet = LocalDateTime.now(),
-                nesteIndeksreguleringsår = this?.nesteIndeksreguleringsår ?: this?.førsteIndeksreguleringsår,
-                beløpshistorikk =
-                this?.periodeListe?.map {
-                    BeløpshistorikkPeriode(
-                        periode = it.periode,
-                        beløp = it.beløp,
-                        valutakode = it.valutakode,
-                        vedtaksid = it.vedtaksid,
-                    )
-                } ?: emptyList(),
+    private fun StønadDto?.tilGrunnlag(personer: List<GrunnlagDto>, stønadsid: Stønadsid): GrunnlagDto {
+        val grunnlagstype =
+            when (stønadsid.type) {
+                Stønadstype.BIDRAG -> Grunnlagstype.BELØPSHISTORIKK_BIDRAG
+                Stønadstype.BIDRAG18AAR -> Grunnlagstype.BELØPSHISTORIKK_BIDRAG_18_ÅR
+                Stønadstype.FORSKUDD -> Grunnlagstype.BELØPSHISTORIKK_FORSKUDD
+                else -> throw IllegalArgumentException("Ukjent stønadstype")
+            }
+
+        return GrunnlagDto(
+            referanse =
+            "${grunnlagstype}_${stønadsid.sak}_${stønadsid.kravhaver.verdi}_${stønadsid.skyldner.verdi}" +
+                "_${this?.opprettetTidspunkt?.toCompactString() ?: LocalDate.now().toCompactString()}",
+            type = grunnlagstype,
+            gjelderReferanse =
+            when {
+                stønadsid.type == Stønadstype.BIDRAG -> personer.bidragspliktig!!.referanse
+                stønadsid.type == Stønadstype.BIDRAG18AAR -> personer.bidragspliktig!!.referanse
+                else -> personer.bidragsmottaker!!.referanse
+            },
+            gjelderBarnReferanse =
+            personer.hentPersonMedIdent(stønadsid.kravhaver.verdi)?.referanse
+                ?: personer.hentPersonForNyesteIdent(identUtils, stønadsid.kravhaver)?.referanse,
+            innhold =
+            POJONode(
+                BeløpshistorikkGrunnlag(
+                    tidspunktInnhentet = LocalDateTime.now(),
+                    nesteIndeksreguleringsår = this?.nesteIndeksreguleringsår ?: this?.førsteIndeksreguleringsår,
+                    beløpshistorikk =
+                    this?.periodeListe?.map {
+                        BeløpshistorikkPeriode(
+                            periode = it.periode,
+                            beløp = it.beløp,
+                            valutakode = it.valutakode,
+                            vedtaksid = it.vedtaksid,
+                        )
+                    } ?: emptyList(),
+                ),
             ),
-        ),
-    )
+        )
+    }
 }

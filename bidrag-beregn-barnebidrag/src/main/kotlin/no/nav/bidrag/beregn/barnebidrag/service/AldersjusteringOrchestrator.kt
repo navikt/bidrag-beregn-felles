@@ -7,6 +7,7 @@ import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningPersonConsumer
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningSakConsumer
 import no.nav.bidrag.beregn.barnebidrag.utils.AldersjusteringUtils
 import no.nav.bidrag.beregn.barnebidrag.utils.aldersjusteringAldersgrupper
+import no.nav.bidrag.beregn.barnebidrag.utils.hentPersonForNyesteIdent
 import no.nav.bidrag.beregn.barnebidrag.utils.hentSisteLøpendePeriode
 import no.nav.bidrag.beregn.core.exception.AldersjusteringLavereEnnEllerLikLøpendeBidragException
 import no.nav.bidrag.commons.util.IdentUtils
@@ -14,7 +15,6 @@ import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.sak.Sakskategori
-import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.visningsnavn
@@ -28,10 +28,8 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragsmottaker
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragspliktig
 import no.nav.bidrag.transport.behandling.felles.grunnlag.finnOgKonverterGrunnlagSomErReferertFraGrunnlagsreferanseListe
 import no.nav.bidrag.transport.behandling.felles.grunnlag.finnSluttberegningIReferanser
-import no.nav.bidrag.transport.behandling.felles.grunnlag.hentAllePersoner
 import no.nav.bidrag.transport.behandling.felles.grunnlag.hentPersonMedIdent
 import no.nav.bidrag.transport.behandling.felles.grunnlag.innholdTilObjekt
-import no.nav.bidrag.transport.behandling.felles.grunnlag.personIdent
 import no.nav.bidrag.transport.behandling.stonad.response.StønadPeriodeDto
 import no.nav.bidrag.transport.sak.BidragssakDto
 import org.springframework.context.annotation.Import
@@ -144,7 +142,10 @@ class AldersjusteringOrchestrator(
             stønad,
             aldersjusteresForÅr,
         )
-        val søknadsbarn = vedtak.grunnlagListe.hentPersonMedIdent(stønad.kravhaver.verdi)!!
+        val søknadsbarn =
+            vedtak.grunnlagListe.hentPersonMedIdent(stønad.kravhaver.verdi)
+                ?: vedtak.grunnlagListe.hentPersonForNyesteIdent(identUtils, stønad.kravhaver)
+                ?: aldersjusteringFeilet("Fant ikke person ${stønad.kravhaver.verdi} i grunnlaget")
         val stønadsendring = finnStønadsendring(stønad)
         val løpendeStønad = vedtakService
             .hentLøpendeStønad(stønad, LocalDateTime.now().withYear(aldersjusteresForÅr))
@@ -319,13 +320,8 @@ class AldersjusteringOrchestrator(
 
         val søknadsbarn =
             grunnlagsliste.hentPersonMedIdent(stønad.kravhaver.verdi)
-                ?: run {
-                    val kravhaverNyesteIdent = identUtils.hentNyesteIdent(stønad.kravhaver)
-                    grunnlagsliste.hentAllePersoner().find {
-                        val personNyesteIdent = identUtils.hentNyesteIdent(Personident(it.personIdent!!))
-                        personNyesteIdent.verdi == kravhaverNyesteIdent.verdi
-                    }
-                } ?: aldersjusteringFeilet("Fant ikke person ${stønad.kravhaver.verdi} i grunnlaget")
+                ?: grunnlagsliste.hentPersonForNyesteIdent(identUtils, stønad.kravhaver)
+                ?: aldersjusteringFeilet("Fant ikke person ${stønad.kravhaver.verdi} i grunnlaget")
 
         val personobjekter =
             listOf(
