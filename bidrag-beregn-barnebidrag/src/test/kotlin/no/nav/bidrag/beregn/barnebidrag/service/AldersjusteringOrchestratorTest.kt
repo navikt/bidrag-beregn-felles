@@ -87,6 +87,7 @@ class AldersjusteringOrchestratorTest {
             vedtakConsumer = beregningVedtakConsumer,
             stønadConsumer = beregningStønadConsumer,
             vedtakFilter = Vedtaksfiltrering(),
+            identUtils = identUtils,
         )
         aldersjusteringOrchestrator = AldersjusteringOrchestrator(
             vedtakService = bidragVedtakService,
