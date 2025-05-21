@@ -26,6 +26,7 @@ import no.nav.bidrag.beregn.barnebidrag.testdata.personIdentSøknadsbarn1
 import no.nav.bidrag.beregn.barnebidrag.testdata.personIdentSøknadsbarn2
 import no.nav.bidrag.beregn.barnebidrag.testdata.saksnummer
 import no.nav.bidrag.beregn.vedtak.Vedtaksfiltrering
+import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.commons.web.mock.hentFil
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.commons.web.mock.stubSjablonService
@@ -72,6 +73,9 @@ class AldersjusteringOrchestratorTest {
     @MockK
     lateinit var personConsumer: BeregningPersonConsumer
 
+    @MockK
+    lateinit var identUtils: IdentUtils
+
     lateinit var bidragVedtakService: VedtakService
     lateinit var aldersjusteringOrchestrator: AldersjusteringOrchestrator
 
@@ -89,6 +93,7 @@ class AldersjusteringOrchestratorTest {
             sakConsumer = bidragSakConsumer,
             personConsumer = personConsumer,
             barnebidragApi = BeregnBarnebidragApi(),
+            identUtils = identUtils,
         )
         every { beregningVedtakConsumer.hentVedtak(eq(vedtaksidBidrag)) } returns konverterVedtakFraFil()
         every { personConsumer.hentFødselsdatoForPerson(any()) } returns LocalDate.now().minusYears(11)
