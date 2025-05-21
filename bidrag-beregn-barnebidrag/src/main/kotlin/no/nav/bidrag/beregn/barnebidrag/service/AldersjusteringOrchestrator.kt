@@ -9,10 +9,12 @@ import no.nav.bidrag.beregn.barnebidrag.utils.AldersjusteringUtils
 import no.nav.bidrag.beregn.barnebidrag.utils.aldersjusteringAldersgrupper
 import no.nav.bidrag.beregn.barnebidrag.utils.hentSisteLøpendePeriode
 import no.nav.bidrag.beregn.core.exception.AldersjusteringLavereEnnEllerLikLøpendeBidragException
+import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.sak.Sakskategori
+import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.visningsnavn
@@ -26,8 +28,10 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragsmottaker
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragspliktig
 import no.nav.bidrag.transport.behandling.felles.grunnlag.finnOgKonverterGrunnlagSomErReferertFraGrunnlagsreferanseListe
 import no.nav.bidrag.transport.behandling.felles.grunnlag.finnSluttberegningIReferanser
+import no.nav.bidrag.transport.behandling.felles.grunnlag.hentAllePersoner
 import no.nav.bidrag.transport.behandling.felles.grunnlag.hentPersonMedIdent
 import no.nav.bidrag.transport.behandling.felles.grunnlag.innholdTilObjekt
+import no.nav.bidrag.transport.behandling.felles.grunnlag.personIdent
 import no.nav.bidrag.transport.behandling.stonad.response.StønadPeriodeDto
 import no.nav.bidrag.transport.sak.BidragssakDto
 import org.springframework.context.annotation.Import
@@ -97,6 +101,7 @@ class AldersjusteringOrchestrator(
     private val sakConsumer: BeregningSakConsumer,
     private val barnebidragApi: BeregnBarnebidragApi,
     private val personConsumer: BeregningPersonConsumer,
+    private val identUtils: IdentUtils,
 ) {
     fun utførAldersjustering(stønad: Stønadsid, aldersjusteresForÅr: Int = YearMonth.now().year): AldersjusteringResultat {
         try {
@@ -312,13 +317,21 @@ class AldersjusteringOrchestrator(
     private fun SisteManuelleVedtak.byggGrunnlagForBeregning(stønad: Stønadsid, aldersjusteresForÅr: Int): BeregnGrunnlagAldersjustering {
         val grunnlagsliste = vedtak.grunnlagListe
 
-        val søknadsbarn = grunnlagsliste.hentPersonMedIdent(stønad.kravhaver.verdi)!!
+        val søknadsbarn =
+            grunnlagsliste.hentPersonMedIdent(stønad.kravhaver.verdi)
+                ?: run {
+                    val kravhaverNyesteIdent = identUtils.hentNyesteIdent(stønad.kravhaver)
+                    grunnlagsliste.hentAllePersoner().find {
+                        val personNyesteIdent = identUtils.hentNyesteIdent(Personident(it.personIdent!!))
+                        personNyesteIdent.verdi == kravhaverNyesteIdent.verdi
+                    }
+                } ?: aldersjusteringFeilet("Fant ikke person ${stønad.kravhaver.verdi} i grunnlaget")
 
         val personobjekter =
             listOf(
                 søknadsbarn,
-                grunnlagsliste.bidragsmottaker!!,
-                grunnlagsliste.bidragspliktig!!,
+                grunnlagsliste.bidragsmottaker ?: aldersjusteringFeilet("Fant ikke bidragsmottaker i grunnlaget"),
+                grunnlagsliste.bidragspliktig ?: aldersjusteringFeilet("Fant ikke bidragspliktig i grunnlaget"),
             ) as List<GrunnlagDto>
         return BeregnGrunnlagAldersjustering(
             periode = ÅrMånedsperiode(YearMonth.of(aldersjusteresForÅr, 7), YearMonth.of(aldersjusteresForÅr, 8)),
