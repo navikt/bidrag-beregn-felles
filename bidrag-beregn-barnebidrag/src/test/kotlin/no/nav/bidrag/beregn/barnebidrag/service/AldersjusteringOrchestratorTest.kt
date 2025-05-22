@@ -273,7 +273,7 @@ class AldersjusteringOrchestratorTest {
                 aldersjusteresForÅr = 2025,
             )
         }
-        exception.message shouldBe "Skal ikke aldersjusteres med begrunnelse JUSTERT_PÅ_GRUNN_AV_EVNE"
+        exception.message shouldBe "Skal ikke aldersjusteres med begrunnelse SISTE_VEDTAK_ER_JUSTERT_NED_TIL_EVNE"
         exception.begrunnelser.shouldHaveSize(1)
         exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_NED_TIL_EVNE
     }
@@ -309,7 +309,7 @@ class AldersjusteringOrchestratorTest {
                 aldersjusteresForÅr = 2025,
             )
         }
-        exception.message shouldBe "Skal ikke aldersjusteres med begrunnelse JUSTERT_FOR_BARNETILLEGG_BM,JUSTERT_FOR_BARNETILLEGG_BP,JUSTERT_PÅ_GRUNN_AV_EVNE,JUSTERT_PÅ_GRUNN_AV_25_PROSENT"
+        exception.message shouldBe "Skal ikke aldersjusteres med begrunnelse SISTE_VEDTAK_ER_JUSTERT_FOR_BARNETILLEGG_BM,SISTE_VEDTAK_ER_JUSTERT_FOR_BARNETILLEGG_BP,SISTE_VEDTAK_ER_JUSTERT_NED_TIL_EVNE,SISTE_VEDTAK_ER_JUSTERT_NED_TIL_25_PROSENT_AV_INNTEKT"
         exception.begrunnelser.shouldHaveSize(4)
         exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_NED_TIL_EVNE
         exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_NED_TIL_25_PROSENT_AV_INNTEKT
@@ -484,7 +484,7 @@ class AldersjusteringOrchestratorTest {
                 aldersjusteresForÅr = 2025,
             )
         }
-        exception.message shouldBe "Skal ikke aldersjusteres med begrunnelse LØPER_MED_UTENLANDSK_VALUTA"
+        exception.message shouldBe "Skal ikke aldersjusteres med begrunnelse BIDRAG_LØPER_MED_UTENLANDSK_VALUTA"
         exception.begrunnelser.shouldHaveSize(1)
         exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.BIDRAG_LØPER_MED_UTENLANDSK_VALUTA
     }
