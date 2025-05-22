@@ -53,16 +53,16 @@ enum class SkalIkkeAldersjusteresBegrunnelse {
     LØPENDE_PERIODE_FRA_OG_MED_DATO_ER_LIK_ELLER_ETTER_ALDERSJUSTERING,
     IKKE_ALDERSGRUPPE_FOR_ALDERSJUSTERING,
     BARN_MANGLER_FØDSELSDATO,
-    LØPER_MED_UTENLANDSK_VALUTA,
-    JUSTERT_FOR_BARNETILLEGG_BM,
-    JUSTERT_FOR_BARNETILLEGG_BP,
-    JUSTERT_PÅ_GRUNN_AV_EVNE,
-    ALDERSJUSTERT_BELØP_LAVERE_ELLER_LIK_LØPENDE_BIDRAG,
-    JUSTERT_PÅ_GRUNN_AV_25_PROSENT,
+    BIDRAG_LØPER_MED_UTENLANDSK_VALUTA,
+    SISTE_VEDTAK_ER_JUSTERT_FOR_BARNETILLEGG_BM,
+    SISTE_VEDTAK_ER_JUSTERT_FOR_BARNETILLEGG_BP,
+    SISTE_VEDTAK_ER_JUSTERT_NED_TIL_EVNE,
+    SISTE_VEDTAK_ER_JUSTERT_NED_TIL_25_PROSENT_AV_INNTEKT,
     SISTE_VEDTAK_ER_BEGRENSET_REVURDERING_JUSTERT_OPP_TIL_FORSKUDDSATS,
     SISTE_VEDTAK_ER_SKJØNNSFASTSATT_AV_UTLAND,
-    UTENLANDSSAK,
     SISTE_VEDTAK_ER_PRIVAT_AVTALE,
+    ALDERSJUSTERT_BELØP_LAVERE_ELLER_LIK_LØPENDE_BIDRAG,
+    UTENLANDSSAK,
 }
 
 enum class SkalAldersjusteresManueltBegrunnelse {
@@ -270,17 +270,17 @@ class AldersjusteringOrchestrator(
         }
 
         if (sluttberegning.innhold.bidragJustertForNettoBarnetilleggBM) {
-            begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.JUSTERT_FOR_BARNETILLEGG_BM)
+            begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_FOR_BARNETILLEGG_BM)
         }
 
         if (sluttberegning.innhold.bidragJustertForNettoBarnetilleggBP) {
-            begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.JUSTERT_FOR_BARNETILLEGG_BP)
+            begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_FOR_BARNETILLEGG_BP)
         }
         if (sluttberegning.innhold.bidragJustertNedTilEvne) {
-            begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.JUSTERT_PÅ_GRUNN_AV_EVNE)
+            begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_NED_TIL_EVNE)
         }
         if (sluttberegning.innhold.bidragJustertNedTil25ProsentAvInntekt) {
-            begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.JUSTERT_PÅ_GRUNN_AV_25_PROSENT)
+            begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_NED_TIL_25_PROSENT_AV_INNTEKT)
         }
 
         if (begrunnelser.isNotEmpty()) {
@@ -348,7 +348,7 @@ class AldersjusteringOrchestrator(
 
     private fun StønadPeriodeDto?.validerSkalAldersjusteres(sak: BidragssakDto) {
         if (this == null) skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE)
-        if (valutakode != "NOK") skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.LØPER_MED_UTENLANDSK_VALUTA)
+        if (valutakode != "NOK") skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.BIDRAG_LØPER_MED_UTENLANDSK_VALUTA)
         if (sak.kategori == Sakskategori.U) skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.UTENLANDSSAK)
     }
 }

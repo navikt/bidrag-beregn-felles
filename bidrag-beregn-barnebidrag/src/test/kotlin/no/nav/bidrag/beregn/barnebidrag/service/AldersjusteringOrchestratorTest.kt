@@ -275,7 +275,7 @@ class AldersjusteringOrchestratorTest {
         }
         exception.message shouldBe "Skal ikke aldersjusteres med begrunnelse JUSTERT_PÅ_GRUNN_AV_EVNE"
         exception.begrunnelser.shouldHaveSize(1)
-        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.JUSTERT_PÅ_GRUNN_AV_EVNE
+        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_NED_TIL_EVNE
     }
 
     @Test
@@ -311,10 +311,10 @@ class AldersjusteringOrchestratorTest {
         }
         exception.message shouldBe "Skal ikke aldersjusteres med begrunnelse JUSTERT_FOR_BARNETILLEGG_BM,JUSTERT_FOR_BARNETILLEGG_BP,JUSTERT_PÅ_GRUNN_AV_EVNE,JUSTERT_PÅ_GRUNN_AV_25_PROSENT"
         exception.begrunnelser.shouldHaveSize(4)
-        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.JUSTERT_PÅ_GRUNN_AV_EVNE
-        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.JUSTERT_PÅ_GRUNN_AV_25_PROSENT
-        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.JUSTERT_FOR_BARNETILLEGG_BP
-        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.JUSTERT_FOR_BARNETILLEGG_BM
+        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_NED_TIL_EVNE
+        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_NED_TIL_25_PROSENT_AV_INNTEKT
+        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_FOR_BARNETILLEGG_BP
+        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_FOR_BARNETILLEGG_BM
     }
 
     @Test
@@ -486,7 +486,7 @@ class AldersjusteringOrchestratorTest {
         }
         exception.message shouldBe "Skal ikke aldersjusteres med begrunnelse LØPER_MED_UTENLANDSK_VALUTA"
         exception.begrunnelser.shouldHaveSize(1)
-        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.LØPER_MED_UTENLANDSK_VALUTA
+        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.BIDRAG_LØPER_MED_UTENLANDSK_VALUTA
     }
 }
 
