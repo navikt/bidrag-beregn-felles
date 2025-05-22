@@ -368,8 +368,8 @@ class AldersjusteringOrchestratorTest {
                 aldersjusteresForÅr = 2025,
             )
         }
-        exception.message shouldBe "Skal ikke aldersjusteres med begrunnelse UTENLANDSSAK"
-        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.UTENLANDSSAK
+        exception.message shouldBe "Skal ikke aldersjusteres med begrunnelse SAKEN_TILHØRER_UTLAND"
+        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.SAKEN_TILHØRER_UTLAND
     }
 
     @Test

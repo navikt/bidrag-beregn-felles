@@ -62,7 +62,7 @@ enum class SkalIkkeAldersjusteresBegrunnelse {
     SISTE_VEDTAK_ER_SKJØNNSFASTSATT_AV_UTLAND,
     SISTE_VEDTAK_ER_PRIVAT_AVTALE,
     ALDERSJUSTERT_BELØP_LAVERE_ELLER_LIK_LØPENDE_BIDRAG,
-    UTENLANDSSAK,
+    SAKEN_TILHØRER_UTLAND,
 }
 
 enum class SkalAldersjusteresManueltBegrunnelse {
@@ -349,6 +349,6 @@ class AldersjusteringOrchestrator(
     private fun StønadPeriodeDto?.validerSkalAldersjusteres(sak: BidragssakDto) {
         if (this == null) skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE)
         if (valutakode != "NOK") skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.BIDRAG_LØPER_MED_UTENLANDSK_VALUTA)
-        if (sak.kategori == Sakskategori.U) skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.UTENLANDSSAK)
+        if (sak.kategori == Sakskategori.U) skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.SAKEN_TILHØRER_UTLAND)
     }
 }
