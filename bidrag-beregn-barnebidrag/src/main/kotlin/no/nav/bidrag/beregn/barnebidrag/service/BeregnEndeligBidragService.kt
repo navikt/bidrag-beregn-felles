@@ -166,8 +166,8 @@ internal object BeregnEndeligBidragService : BeregnService() {
         resultatGrunnlagListe.addAll(
             mapPersonobjektGrunnlag(
                 resultatGrunnlagListe = resultatGrunnlagListe,
-                personobjektGrunnlagListe = mottattGrunnlag.grunnlagListe
-            )
+                personobjektGrunnlagListe = mottattGrunnlag.grunnlagListe,
+            ),
         )
 
         val resultat = resultatGrunnlagListe.distinctBy { it.referanse }.sortedBy { it.referanse }
@@ -271,7 +271,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
             ?.let {
                 DeltBostedBeregningGrunnlag(
                     referanse = it.referanse,
-                        deltBosted = it.samværsklassePeriode.samværsklasse == Samværsklasse.DELT_BOSTED,
+                    deltBosted = it.samværsklassePeriode.samværsklasse == Samværsklasse.DELT_BOSTED,
                 )
             }
             ?: throw IllegalArgumentException("Delt bosted grunnlag mangler for periode $bruddPeriode")

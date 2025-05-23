@@ -9,7 +9,6 @@ import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlagVedtak
-import no.nav.bidrag.transport.behandling.felles.grunnlag.BarnetilsynMedStønadPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
@@ -44,7 +43,7 @@ internal object AldersjusteringMapper : CoreMapper() {
         val periodeListe = hentPeriodeListeFraStønadsendringListe(
             stønadsendringListe = stønadsendringBidragListe,
             grunnlagsperiode = grunnlagsperiode,
-            vedtakId = vedtak.vedtakId
+            vedtakId = vedtak.vedtakId,
         )
 
         // Henter ut sluttberegningsobjekt fra stønadsendringen. Hvis sluttberegning ikke finnes kastes exception.
@@ -66,30 +65,17 @@ internal object AldersjusteringMapper : CoreMapper() {
             grunnlagListeFraVedtak.filter { it.referanse in grunnlagReferanseListeSluttberegning }
 
         // Henter ut data fra grunnlagsobjektene som skal brukes i beregningen
-        val nettoTilsynsutgift = (
-            grunnlagListeSluttberegningSistePeriode
-                .filtrerOgKonverterBasertPåEgenReferanse<DelberegningUnderholdskostnad>(Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD)
-                .firstOrNull()
-                ?: throw UgyldigInputException(
-                    "Aldersjustering: Delberegning underholdskostnad ikke funnet for søknadsbarn med referanse ${søknadsbarn.referanse} " +
-                        "og vedtak med id ${vedtak.vedtakId}",
-                )
-            ).innhold.nettoTilsynsutgift
-
-        val tilsynstype = grunnlagListeSluttberegningSistePeriode
-            .filtrerOgKonverterBasertPåEgenReferanse<BarnetilsynMedStønadPeriode>(Grunnlagstype.BARNETILSYN_MED_STØNAD_PERIODE)
-            .map { it.innhold.tilsynstype }
+        val underholdskostnadSistePeriode = grunnlagListeSluttberegningSistePeriode
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningUnderholdskostnad>(Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD)
             .firstOrNull()
+            ?: throw UgyldigInputException(
+                "Aldersjustering: Delberegning underholdskostnad ikke funnet for søknadsbarn med referanse ${søknadsbarn.referanse} " +
+                    "og vedtak med id ${vedtak.vedtakId}",
+            )
 
-        val skolealder = grunnlagListeSluttberegningSistePeriode
-            .filtrerOgKonverterBasertPåEgenReferanse<BarnetilsynMedStønadPeriode>(Grunnlagstype.BARNETILSYN_MED_STØNAD_PERIODE)
-            .map { it.innhold.skolealder }
-            .firstOrNull()
+        val nettoTilsynsutgift = underholdskostnadSistePeriode.innhold.nettoTilsynsutgift
 
-        val barnetilsynMedStønadManueltRegistrert = grunnlagListeSluttberegningSistePeriode
-            .filtrerOgKonverterBasertPåEgenReferanse<BarnetilsynMedStønadPeriode>(Grunnlagstype.BARNETILSYN_MED_STØNAD_PERIODE)
-            .map { it.innhold.manueltRegistrert }
-            .firstOrNull()
+        val barnetilsynMedStønad = underholdskostnadSistePeriode.innhold.barnetilsynMedStønad
 
         val bpAndelFaktor = (
             grunnlagListeSluttberegningSistePeriode
@@ -141,9 +127,7 @@ internal object AldersjusteringMapper : CoreMapper() {
             søknadsbarnPeriodeGrunnlag = søknadsbarn,
             vedtakId = vedtak.vedtakId,
             nettoTilsynsutgift = nettoTilsynsutgift,
-            tilsynstype = tilsynstype,
-            skolealder = skolealder,
-            barnetilsynMedStønadManueltRegistrert = barnetilsynMedStønadManueltRegistrert,
+            barnetilsynMedStønad = barnetilsynMedStønad,
             bpAndelFaktor = bpAndelFaktor,
             samværsklasse = samværsklasse,
             søknadsbarnAlder = søknadsbarnAlder,
@@ -174,7 +158,9 @@ internal object AldersjusteringMapper : CoreMapper() {
             throw UgyldigInputException(
                 "Aldersjustering: Ingen stønadsendringer av type BIDRAG funnet for vedtak med id ${vedtak.vedtakId}",
             )
-        } else return stønadsendringBidragListe
+        } else {
+            return stønadsendringBidragListe
+        }
     }
 
     // Henter ut alle perioder fra stønadsendringslisten som matcher med grunnlagsperioden
@@ -192,7 +178,9 @@ internal object AldersjusteringMapper : CoreMapper() {
                 "Aldersjustering: Stønadsendring av type BIDRAG inneholder ingen perioder som inneholder grunnlagsperiode for " +
                     "vedtak med id $vedtakId",
             )
-        } else return periodeListe
+        } else {
+            return periodeListe
+        }
     }
 
     // Henter sluttberegningsobjekt fra grunnlagsreferanseliste. Hvis det finnes flere som matcher hentes det første.
@@ -202,14 +190,12 @@ internal object AldersjusteringMapper : CoreMapper() {
         grunnlagReferanseListe: List<String>,
         vedtakId: Long,
         søknadsbarnReferanse: String,
-    ): GrunnlagDto {
-        return grunnlagListeFraVedtak
-            .filter { it.gjelderBarnReferanse == søknadsbarnReferanse }
-            .finnSluttberegningIReferanser(grunnlagReferanseListe)
-            ?: throw UgyldigInputException(
-                "Aldersjustering: Sluttberegning ikke funnet for søknadsbarn med referanse $søknadsbarnReferanse og vedtak med id $vedtakId",
-            )
-    }
+    ): GrunnlagDto = grunnlagListeFraVedtak
+        .filter { it.gjelderBarnReferanse == søknadsbarnReferanse }
+        .finnSluttberegningIReferanser(grunnlagReferanseListe)
+        ?: throw UgyldigInputException(
+            "Aldersjustering: Sluttberegning ikke funnet for søknadsbarn med referanse $søknadsbarnReferanse og vedtak med id $vedtakId",
+        )
 
     // Rekursiv funksjon som finner alle grunnlagsreferanser som refereres til fra toppnivået og nedover
     private fun traverserGrunnlagRekursivt(
@@ -227,7 +213,7 @@ internal object AldersjusteringMapper : CoreMapper() {
                 traverserGrunnlagRekursivt(
                     grunnlagListe = grunnlagListe,
                     startGrunnlag = it,
-                    innsamledeReferanser = innsamledeReferanser
+                    innsamledeReferanser = innsamledeReferanser,
                 )
             }
 

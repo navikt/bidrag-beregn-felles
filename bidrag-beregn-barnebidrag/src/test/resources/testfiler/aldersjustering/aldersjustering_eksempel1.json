@@ -155,7 +155,7 @@
               "forbruksutgift": 4754,
               "underholdskostnad": 6186,
               "nettoTilsynsutgift": 1000,
-              "barnetilsynMedStønad": null
+              "barnetilsynMedStønad": 500
             },
             "grunnlagsreferanseListe": [
               "sjablon_BoutgifterBidragsbarnBeløp_202307_202407",

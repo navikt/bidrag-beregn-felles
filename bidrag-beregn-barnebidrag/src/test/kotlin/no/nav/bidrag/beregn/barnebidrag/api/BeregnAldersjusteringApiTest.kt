@@ -14,7 +14,6 @@ import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebid
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlagAldersjustering
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsfradrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
-import no.nav.bidrag.transport.behandling.felles.grunnlag.KopiBarnetilsynMedStønadPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.KopiDelberegningBidragspliktigesAndel
 import no.nav.bidrag.transport.behandling.felles.grunnlag.KopiDelberegningUnderholdskostnad
 import no.nav.bidrag.transport.behandling.felles.grunnlag.KopiSamværsperiodeGrunnlag
@@ -41,7 +40,6 @@ import java.time.YearMonth
 @ExtendWith(MockitoExtension::class)
 internal class BeregnAldersjusteringApiTest : FellesApiTest() {
     private lateinit var filnavn: String
-    private val beregningsperiode = ÅrMånedsperiode(YearMonth.parse("2024-07"), YearMonth.parse("2024-08"))
 
     // Vedtak
     private var forventetVedtakId: Long = 123456L
@@ -56,11 +54,10 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
     // Delberegning underholdskostnad
     private lateinit var forventetForbruksutgift: BigDecimal
     private val forventetBoutgift: BigDecimal = BigDecimal(3596).setScale(2)
-    private val forventetBarnetilsynMedStønad: BigDecimal? = null
+    private var forventetBarnetilsynMedStønad: BigDecimal? = null
     private var forventetNettoTilsynsutgift: BigDecimal = BigDecimal(1000).setScale(2)
     private val forventetBarnetrygd: BigDecimal = BigDecimal(1510).setScale(2)
     private lateinit var forventetUnderholdskostnad: BigDecimal
-    private var forventetAntallBarnetilsynMedStønad = 0
 
     // Delberegning samværsfradrag
     private lateinit var forventetSamværsfradragBeløp: BigDecimal
@@ -102,12 +99,13 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
     fun testAldersjustering_Eksempel01() {
         filnavn = "src/test/resources/testfiler/aldersjustering/aldersjustering_eksempel1.json"
 
-        forventetResultatbeløp = BigDecimal.valueOf(4930).setScale(0)
-        forventetBeregnetBeløp = BigDecimal.valueOf(4933.95).setScale(2)
-        forventetBpAndelBeløp = BigDecimal.valueOf(6400.95).setScale(2)
+        forventetResultatbeløp = BigDecimal.valueOf(5270).setScale(0)
+        forventetBeregnetBeløp = BigDecimal.valueOf(5271.87).setScale(2)
+        forventetBpAndelBeløp = BigDecimal.valueOf(6738.87).setScale(2)
 
         forventetForbruksutgift = BigDecimal.valueOf(6385).setScale(2)
-        forventetUnderholdskostnad = BigDecimal.valueOf(9471).setScale(2)
+        forventetBarnetilsynMedStønad = BigDecimal.valueOf(500).setScale(2)
+        forventetUnderholdskostnad = BigDecimal.valueOf(9971).setScale(2)
 
         forventetSamværsfradragBeløp = BigDecimal.valueOf(1467).setScale(2)
 
@@ -334,7 +332,7 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
         forventetForbruksutgift = BigDecimal.valueOf(8692).setScale(2)
         forventetNettoTilsynsutgift = BigDecimal.ZERO.setScale(2)
         forventetUnderholdskostnad = BigDecimal.valueOf(10778).setScale(2)
-        forventetAntallBarnetilsynMedStønad = 1
+        forventetBarnetilsynMedStønad = BigDecimal.ZERO.setScale(2)
 
         forventetSamværsfradragBeløp = BigDecimal.valueOf(623).setScale(2)
 
@@ -417,6 +415,7 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
                     periode = it.innhold.periode,
                     fraVedtakId = it.innhold.fraVedtakId,
                     nettoTilsynsutgift = it.innhold.nettoTilsynsutgift,
+                    barnetilsynMedStønad = it.innhold.barnetilsynMedStønad,
                 )
             }
 
@@ -437,18 +436,6 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
                     periode = it.innhold.periode,
                     fraVedtakId = it.innhold.fraVedtakId,
                     samværsklasse = it.innhold.samværsklasse,
-                )
-            }
-
-        val kopiBarnetilsynMedStønadPeriode = aldersjusteringResultatGrunnlagListe
-            .filtrerOgKonverterBasertPåEgenReferanse<KopiBarnetilsynMedStønadPeriode>(Grunnlagstype.KOPI_BARNETILSYN_MED_STØNAD_PERIODE)
-            .map {
-                KopiBarnetilsynMedStønadPeriode(
-                    periode = it.innhold.periode,
-                    fraVedtakId = it.innhold.fraVedtakId,
-                    tilsynstype = it.innhold.tilsynstype,
-                    skolealder = it.innhold.skolealder,
-                    manueltRegistrert = it.innhold.manueltRegistrert
                 )
             }
 
@@ -527,6 +514,7 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
             { assertThat(kopiDelberegningUnderholdskostnad[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
             { assertThat(kopiDelberegningUnderholdskostnad[0].fraVedtakId).isEqualTo(forventetVedtakId) },
             { assertThat(kopiDelberegningUnderholdskostnad[0].nettoTilsynsutgift?.setScale(2)).isEqualTo(forventetNettoTilsynsutgift) },
+            { assertThat(kopiDelberegningUnderholdskostnad[0].barnetilsynMedStønad?.setScale(2)).isEqualTo(forventetBarnetilsynMedStønad) },
 
             // Kopi delberegning bidragspliktiges andel (fra vedtak)
             { assertThat(kopiDelberegningBidragspliktigesAndel).hasSize(1) },
@@ -539,9 +527,6 @@ internal class BeregnAldersjusteringApiTest : FellesApiTest() {
             { assertThat(kopiSamværsperiode[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
             { assertThat(kopiSamværsperiode[0].fraVedtakId).isEqualTo(forventetVedtakId) },
             { assertThat(kopiSamværsperiode[0].samværsklasse).isEqualTo(forventetSamværsklasse) },
-
-            // Kopi barnetilsyn med stønad (fra vedtak)
-            { assertThat(kopiBarnetilsynMedStønadPeriode).hasSize(forventetAntallBarnetilsynMedStønad) },
 
             // Sjablon sjablontall
             { assertThat(sjablonSjablontallListe).hasSize(2) },

@@ -21,7 +21,7 @@ data class UnderholdskostnadPeriodeGrunnlag(
 )
 
 data class BarnetilsynMedStønadPeriodeGrunnlag(val referanse: String, val barnetilsynMedStønadPeriode: BarnetilsynMedStønadPeriode)
-data class BarnetilsynMedStønad(val referanse: String, val tilsynstype: Tilsynstype, val skolealder: Skolealder)
+data class BarnetilsynMedStønad(val referanse: String, val tilsynstype: Tilsynstype?, val skolealder: Skolealder?, val beløp: BigDecimal? = null)
 
 data class NettoTilsynsutgiftPeriodeGrunnlagDto(val referanse: String, val nettoTilsynsutgiftPeriodeGrunnlag: NettoTilsynsutgiftPeriode)
 data class NettoTilsynsutgiftPeriode(val referanse: String, val periode: ÅrMånedsperiode, val nettoTilsynsutgift: BigDecimal)
