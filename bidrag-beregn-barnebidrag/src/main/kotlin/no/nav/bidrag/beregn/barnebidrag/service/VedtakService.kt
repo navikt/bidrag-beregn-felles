@@ -98,8 +98,8 @@ class VedtakService(
                 stønadsid.kravhaver,
             ),
         ).vedtakListe
-        .maxBy { it.vedtakstidspunkt }
-        .vedtaksid
+        .maxByOrNull { it.vedtakstidspunkt }
+        ?.vedtaksid
 
     private fun StønadDto?.tilGrunnlag(personer: List<GrunnlagDto>, stønadsid: Stønadsid): GrunnlagDto {
         val grunnlagstype =
