@@ -17,7 +17,6 @@ import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragBeregningResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragDelberegningBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SamværsklasseBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.SjablonBarnetilsynBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonForbruksutgifterBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSamværsfradragBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnBeregningGrunnlag
@@ -46,7 +45,6 @@ import no.nav.bidrag.transport.behandling.beregning.felles.valider
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsfradrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
-import no.nav.bidrag.transport.behandling.felles.grunnlag.KopiBarnetilsynMedStønadPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.KopiDelberegningBidragspliktigesAndel
 import no.nav.bidrag.transport.behandling.felles.grunnlag.KopiDelberegningUnderholdskostnad
 import no.nav.bidrag.transport.behandling.felles.grunnlag.KopiSamværsperiodeGrunnlag
@@ -83,7 +81,7 @@ class BeregnAldersjusteringService : BeregnService() {
             grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
         )
 
-        var beregnetBarnebidragResultat = BeregnetBarnebidragResultat(emptyList(), emptyList())
+        var beregnetBarnebidragResultat = BeregnetBarnebidragResultat(beregnetBarnebidragPeriodeListe = emptyList(), grunnlagListe = emptyList())
 
         // Utfører aldersjustering for hvert søknadsbarn. Forutsetter at kontroll på om barnet skal aldersjusteres er gjort på utsiden og at alle
         // kriterier er oppfylt. Siste manuelle vedtak (som aldersjusteringen skal bygge på) skal være vedlagt i grunnlaget. Hvis det ikke finnes
@@ -110,7 +108,7 @@ class BeregnAldersjusteringService : BeregnService() {
             )
 
             // Oppretter kopi-objekter av objekter fra siste manuelle vedtak som inneholder data som skal brukes i beregningene
-            val grunnlagFraVedtakListe = opprettKopiObjekter(aldersjusteringGrunnlag = aldersjusteringGrunnlag, mottattGrunnlag = mottattGrunnlag)
+            val grunnlagFraVedtakListe = opprettKopiObjekter(aldersjusteringGrunnlag)
 
             // Beregner ny underholdskostnad og mapper ut resultat + grunnlag
             val underholdskostnadBeregningResultat = beregnNyUnderholdskostnad(
@@ -215,7 +213,6 @@ class BeregnAldersjusteringService : BeregnService() {
         aldersjusteringGrunnlag: AldersjusteringBeregningGrunnlag,
         grunnlagFraVedtakListe: List<GrunnlagDto>,
     ): UnderholdskostnadBeregningResultat {
-        val tilsynskode = bestemTilsynskode(tilsynstype = aldersjusteringGrunnlag.tilsynstype, skolealder = aldersjusteringGrunnlag.skolealder)
         val beregnetAlder = finnBarnetsAlder(
             fødselsdato = aldersjusteringGrunnlag.søknadsbarnPeriodeGrunnlag.fødselsdato,
             årMåned = aldersjusteringGrunnlag.beregningsperiode.fom,
@@ -230,30 +227,35 @@ class BeregnAldersjusteringService : BeregnService() {
                 alder = aldersjusteringGrunnlag.søknadsbarnAlder,
             ),
             barnetilsynMedStønad =
-                if (aldersjusteringGrunnlag.tilsynstype == null || aldersjusteringGrunnlag.skolealder == null) {
-                    null
-                } else {
-                    BarnetilsynMedStønad(
-                        referanse = grunnlagFraVedtakListe
-                            .filtrerOgKonverterBasertPåEgenReferanse<KopiBarnetilsynMedStønadPeriode>(Grunnlagstype.KOPI_BARNETILSYN_MED_STØNAD_PERIODE)
-                            .map { it.referanse }
-                            .firstOrNull() ?: "",
-                        tilsynstype = aldersjusteringGrunnlag.tilsynstype,
-                        skolealder = aldersjusteringGrunnlag.skolealder,
-                    )
-                },
+            if (aldersjusteringGrunnlag.barnetilsynMedStønad == null) {
+                null
+            } else {
+                BarnetilsynMedStønad(
+                    referanse = grunnlagFraVedtakListe
+                        .filtrerOgKonverterBasertPåEgenReferanse<KopiDelberegningUnderholdskostnad>(
+                            Grunnlagstype.KOPI_DELBEREGNING_UNDERHOLDSKOSTNAD,
+                        )
+                        .map { it.referanse }
+                        .firstOrNull() ?: "",
+                    tilsynstype = null,
+                    skolealder = null,
+                    beløp = aldersjusteringGrunnlag.barnetilsynMedStønad,
+                )
+            },
             nettoTilsynsutgiftBeregningGrunnlag =
-                if (aldersjusteringGrunnlag.nettoTilsynsutgift == null) {
-                    null
-                } else {
-                    NettoTilsynsutgift(
-                        referanse = grunnlagFraVedtakListe
-                            .filtrerOgKonverterBasertPåEgenReferanse<KopiDelberegningUnderholdskostnad>(Grunnlagstype.KOPI_DELBEREGNING_UNDERHOLDSKOSTNAD)
-                            .map { it.referanse }
-                            .firstOrNull() ?: "",
-                        nettoTilsynsutgift = aldersjusteringGrunnlag.nettoTilsynsutgift,
-                    )
-                },
+            if (aldersjusteringGrunnlag.nettoTilsynsutgift == null) {
+                null
+            } else {
+                NettoTilsynsutgift(
+                    referanse = grunnlagFraVedtakListe
+                        .filtrerOgKonverterBasertPåEgenReferanse<KopiDelberegningUnderholdskostnad>(
+                            Grunnlagstype.KOPI_DELBEREGNING_UNDERHOLDSKOSTNAD,
+                        )
+                        .map { it.referanse }
+                        .firstOrNull() ?: "",
+                    nettoTilsynsutgift = aldersjusteringGrunnlag.nettoTilsynsutgift,
+                )
+            },
             sjablonSjablontallBeregningGrunnlagListe = aldersjusteringGrunnlag.sjablonSjablontallPeriodeGrunnlagListe
                 .filter { it.sjablonSjablontallPeriode.periode.inneholder(aldersjusteringGrunnlag.beregningsperiode) }
                 .map {
@@ -263,24 +265,7 @@ class BeregnAldersjusteringService : BeregnService() {
                         verdi = it.sjablonSjablontallPeriode.verdi.toDouble(),
                     )
                 }.toMutableList(),
-            sjablonBarnetilsynBeregningGrunnlag =
-                if (tilsynskode != null) {
-                    aldersjusteringGrunnlag.sjablonBarnetilsynPeriodeGrunnlagListe
-                        .asSequence()
-                        .filter { it.sjablonBarnetilsynPeriode.periode.inneholder(aldersjusteringGrunnlag.beregningsperiode) }
-                        .filter { it.sjablonBarnetilsynPeriode.typeStønad == "64" }
-                        .filter { it.sjablonBarnetilsynPeriode.typeTilsyn == tilsynskode }
-                        .map {
-                            SjablonBarnetilsynBeregningGrunnlag(
-                                referanse = it.referanse,
-                                typeStønad = it.sjablonBarnetilsynPeriode.typeStønad,
-                                typeTilsyn = it.sjablonBarnetilsynPeriode.typeTilsyn,
-                                beløpBarnetilsyn = it.sjablonBarnetilsynPeriode.beløpBarnetilsyn,
-                            )
-                        }.first()
-                } else {
-                    null
-                },
+            sjablonBarnetilsynBeregningGrunnlag = null,
             sjablonForbruksutgifterBeregningGrunnlag = aldersjusteringGrunnlag.sjablonForbruksutgifterPeriodeGrunnlagListe
                 .filter { it.sjablonForbruksutgifterPeriode.periode.inneholder(aldersjusteringGrunnlag.beregningsperiode) }
                 .filter { it.sjablonForbruksutgifterPeriode.alderTom == alderTom }
@@ -483,7 +468,7 @@ class BeregnAldersjusteringService : BeregnService() {
                     .map { it.referanse }
                     .firstOrNull() ?: "",
                 deltBosted = aldersjusteringGrunnlag.samværsklasse == Samværsklasse.DELT_BOSTED,
-            )
+            ),
         )
 
         return EndeligBidragBeregning.beregnAldersjustering(grunnlag)
@@ -496,7 +481,7 @@ class BeregnAldersjusteringService : BeregnService() {
         grunnlagFraVedtakListe: List<GrunnlagDto>,
         grunnlagFraDelberegningerListe: List<GrunnlagDto>,
         sjablonGrunnlag: List<GrunnlagDto>,
-        personobjektGrunnlagListe: List<GrunnlagDto>
+        personobjektGrunnlagListe: List<GrunnlagDto>,
     ): List<GrunnlagDto> {
         // Mapper ut grunnlag som er brukt i endelig bidrag beregningen (mottatte grunnlag og sjabloner)
         val endeligBidragResultatGrunnlagListe = mapDelberegningResultatGrunnlag(
@@ -519,8 +504,8 @@ class BeregnAldersjusteringService : BeregnService() {
         endeligBidragResultatGrunnlagListe.addAll(
             mapPersonobjektGrunnlag(
                 resultatGrunnlagListe = endeligBidragResultatGrunnlagListe,
-                personobjektGrunnlagListe = personobjektGrunnlagListe
-            )
+                personobjektGrunnlagListe = personobjektGrunnlagListe,
+            ),
         )
 
         return endeligBidragResultatGrunnlagListe.distinctBy { it.referanse }.sortedBy { it.referanse }
@@ -551,10 +536,7 @@ class BeregnAldersjusteringService : BeregnService() {
     )
 
     // Oppretter kopiobjekter for grunnlag fra vedtak
-    private fun opprettKopiObjekter(
-        aldersjusteringGrunnlag: AldersjusteringBeregningGrunnlag,
-        mottattGrunnlag: BeregnGrunnlagAldersjustering,
-    ): List<GrunnlagDto> {
+    private fun opprettKopiObjekter(aldersjusteringGrunnlag: AldersjusteringBeregningGrunnlag): List<GrunnlagDto> {
         val grunnlagListe = mutableListOf<GrunnlagDto>()
 
         grunnlagListe.add(
@@ -571,6 +553,7 @@ class BeregnAldersjusteringService : BeregnService() {
                         periode = ÅrMånedsperiode(fom = aldersjusteringGrunnlag.beregningsperiode.fom, til = null),
                         fraVedtakId = aldersjusteringGrunnlag.vedtakId,
                         nettoTilsynsutgift = aldersjusteringGrunnlag.nettoTilsynsutgift,
+                        barnetilsynMedStønad = aldersjusteringGrunnlag.barnetilsynMedStønad,
                     ),
                 ),
                 grunnlagsreferanseListe = emptyList(),
@@ -600,32 +583,6 @@ class BeregnAldersjusteringService : BeregnService() {
                 gjelderBarnReferanse = aldersjusteringGrunnlag.søknadsbarnPeriodeGrunnlag.referanse,
             ),
         )
-
-        if (aldersjusteringGrunnlag.tilsynstype != null && aldersjusteringGrunnlag.skolealder != null) {
-            grunnlagListe.add(
-                GrunnlagDto(
-                    referanse = opprettDelberegningreferanse(
-                        type = Grunnlagstype.KOPI_BARNETILSYN_MED_STØNAD_PERIODE,
-                        periode = ÅrMånedsperiode(fom = aldersjusteringGrunnlag.beregningsperiode.fom, til = null),
-                        søknadsbarnReferanse = aldersjusteringGrunnlag.søknadsbarnPeriodeGrunnlag.referanse,
-                        gjelderReferanse = aldersjusteringGrunnlag.bidragsmottakerReferanse,
-                    ),
-                    type = Grunnlagstype.KOPI_BARNETILSYN_MED_STØNAD_PERIODE,
-                    innhold = POJONode(
-                        KopiBarnetilsynMedStønadPeriode(
-                            periode = ÅrMånedsperiode(fom = aldersjusteringGrunnlag.beregningsperiode.fom, til = null),
-                            fraVedtakId = aldersjusteringGrunnlag.vedtakId,
-                            tilsynstype = aldersjusteringGrunnlag.tilsynstype,
-                            skolealder = aldersjusteringGrunnlag.skolealder,
-                            manueltRegistrert = aldersjusteringGrunnlag.barnetilsynMedStønadManueltRegistrert ?: false,
-                        ),
-                    ),
-                    grunnlagsreferanseListe = emptyList(),
-                    gjelderReferanse = aldersjusteringGrunnlag.bidragsmottakerReferanse,
-                    gjelderBarnReferanse = aldersjusteringGrunnlag.søknadsbarnPeriodeGrunnlag.referanse,
-                ),
-            )
-        }
 
         grunnlagListe.add(
             GrunnlagDto(

@@ -90,7 +90,9 @@ internal object UnderholdskostnadBeregning {
             )
             .toBigDecimal()
 
-        sjablonverdiBarnetilsynBeløp = grunnlag.sjablonBarnetilsynBeregningGrunnlag?.beløpBarnetilsyn
+        // Hvis alderjustering hentes beløp fra siste vedtak og ikke fra sjablon
+        sjablonverdiBarnetilsynBeløp = grunnlag.barnetilsynMedStønad?.beløp ?: grunnlag.sjablonBarnetilsynBeregningGrunnlag?.beløpBarnetilsyn
+
         sjablonverdiForbruksutgifterBeløp = grunnlag.sjablonForbruksutgifterBeregningGrunnlag.beløpForbrukTotalt
     }
 }

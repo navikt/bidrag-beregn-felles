@@ -324,17 +324,14 @@ abstract class BeregnService {
     }
 
     // Mapper ut grunnlag for Person-objekter
-    fun mapPersonobjektGrunnlag(
-        resultatGrunnlagListe: List<GrunnlagDto>,
-        personobjektGrunnlagListe: List<GrunnlagDto>,
-    ): List<GrunnlagDto> {
+    fun mapPersonobjektGrunnlag(resultatGrunnlagListe: List<GrunnlagDto>, personobjektGrunnlagListe: List<GrunnlagDto>): List<GrunnlagDto> {
         val gjelderReferanseListe = resultatGrunnlagListe
             .flatMap { listOfNotNull(it.gjelderReferanse, it.gjelderBarnReferanse) }
             .distinct()
 
         return mapGrunnlag(
             grunnlagListe = personobjektGrunnlagListe,
-            grunnlagReferanseListe = gjelderReferanseListe
+            grunnlagReferanseListe = gjelderReferanseListe,
         )
     }
 
@@ -353,26 +350,23 @@ abstract class BeregnService {
         }
 
     // Bestemmer tilsynskode for oppslag i sjablon barnetilsyn
-    protected fun bestemTilsynskode(tilsynstype: Tilsynstype?, skolealder: Skolealder?): String? {
-        return if (tilsynstype == null || skolealder == null) {
-            null
-        } else {
-            when (tilsynstype to skolealder) {
-                Tilsynstype.HELTID to Skolealder.UNDER -> "HU"
-                Tilsynstype.HELTID to Skolealder.OVER -> "HO"
-                Tilsynstype.DELTID to Skolealder.UNDER -> "DU"
-                Tilsynstype.DELTID to Skolealder.OVER -> "DO"
-                else -> null
-            }
+    protected fun bestemTilsynskode(tilsynstype: Tilsynstype?, skolealder: Skolealder?): String? = if (tilsynstype == null || skolealder == null) {
+        null
+    } else {
+        when (tilsynstype to skolealder) {
+            Tilsynstype.HELTID to Skolealder.UNDER -> "HU"
+            Tilsynstype.HELTID to Skolealder.OVER -> "HO"
+            Tilsynstype.DELTID to Skolealder.UNDER -> "DU"
+            Tilsynstype.DELTID to Skolealder.OVER -> "DO"
+            else -> null
         }
     }
 
     // Finner barnets beregnede alder. Alder regnes som om barnet er født 1. juli i fødselsåret.
-    protected fun finnBarnetsAlder(fødselsdato: LocalDate, årMåned: YearMonth): Int =
-        Period.between(
-            fødselsdato.withMonth(7).withDayOfMonth(1),
-            årMåned.atDay(1),
-        ).years
+    protected fun finnBarnetsAlder(fødselsdato: LocalDate, årMåned: YearMonth): Int = Period.between(
+        fødselsdato.withMonth(7).withDayOfMonth(1),
+        årMåned.atDay(1),
+    ).years
 
     // Lager liste over gyldige alderTom-verdier for sjablon forbruksutgifter
     protected fun hentAlderTomListeForbruksutgifter(sjablonForbruksutgifterPerioder: List<SjablonForbruksutgifterPeriodeGrunnlag>): List<Int> =
