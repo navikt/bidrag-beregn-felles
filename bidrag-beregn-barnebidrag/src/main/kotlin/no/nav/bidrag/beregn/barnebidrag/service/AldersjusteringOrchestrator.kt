@@ -3,6 +3,7 @@ package no.nav.bidrag.beregn.barnebidrag.service
 import com.fasterxml.jackson.databind.node.POJONode
 import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
+import no.nav.bidrag.beregn.barnebidrag.service.BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BP
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningPersonConsumer
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningSakConsumer
 import no.nav.bidrag.beregn.barnebidrag.utils.AldersjusteringUtils
@@ -276,7 +277,7 @@ class AldersjusteringOrchestrator(
         if (sluttberegning.innhold.bidragJustertForNettoBarnetilleggBP) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_FOR_BARNETILLEGG_BP)
         }
-        if (sluttberegning.innhold.bidragJustertNedTilEvne) {
+        if (sluttberegning.innhold.bidragJustertNedTilEvne || sistePeriode.resultatkode == LAVERE_ENN_INNT_EVNE_BP) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_NED_TIL_EVNE)
         }
         if (sluttberegning.innhold.bidragJustertNedTil25ProsentAvInntekt) {
@@ -351,4 +352,11 @@ class AldersjusteringOrchestrator(
         if (valutakode != "NOK") skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.BIDRAG_LØPER_MED_UTENLANDSK_VALUTA)
         if (sak.kategori == Sakskategori.U) skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.SAKEN_TILHØRER_UTLAND)
     }
+}
+
+object BisysResultatkoder {
+    const val LAVERE_ENN_INNT_EVNE_BEGGE_PARTER = "4E"
+    const val LAVERE_ENN_INNT_EVNE_BP = "4E1"
+    const val MANGL_DOK_AV_INNT_BP = "4D1"
+    const val MANGL_DOK_AV_INNT_BEGGE_PARTER = "4D"
 }
