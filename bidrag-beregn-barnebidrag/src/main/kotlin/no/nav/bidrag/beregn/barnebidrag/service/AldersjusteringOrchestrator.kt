@@ -3,6 +3,7 @@ package no.nav.bidrag.beregn.barnebidrag.service
 import com.fasterxml.jackson.databind.node.POJONode
 import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
+import no.nav.bidrag.beregn.barnebidrag.service.BisysResultatkoder.MAKS_25_AV_INNTEKT
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningPersonConsumer
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningSakConsumer
 import no.nav.bidrag.beregn.barnebidrag.utils.AldersjusteringUtils
@@ -276,7 +277,9 @@ class AldersjusteringOrchestrator(
         if (sluttberegning.innhold.bidragJustertForNettoBarnetilleggBP) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_FOR_BARNETILLEGG_BP)
         }
-        if (sluttberegning.innhold.bidragJustertNedTilEvne) {
+        // Sjekk om at det ikke er resultat 25% av inntekt pga bug i grunnlagsoverføring hvor bidragJustertNedTilEvne er true selv om det er bare 25% av inntekt.
+        // Fjern dette når det er fikset
+        if (sluttberegning.innhold.bidragJustertNedTilEvne && sistePeriode.resultatkode != MAKS_25_AV_INNTEKT) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_NED_TIL_EVNE)
         }
         if (sluttberegning.innhold.bidragJustertNedTil25ProsentAvInntekt) {
@@ -357,5 +360,7 @@ object BisysResultatkoder {
     const val LAVERE_ENN_INNT_EVNE_BEGGE_PARTER = "4E"
     const val LAVERE_ENN_INNT_EVNE_BP = "4E1"
     const val MANGL_DOK_AV_INNT_BP = "4D1"
+    const val MAKS_25_AV_INNTEKT = "7M"
+    const val MANGLENDE_BIDRAGSEVNE = "6MB"
     const val MANGL_DOK_AV_INNT_BEGGE_PARTER = "4D"
 }
