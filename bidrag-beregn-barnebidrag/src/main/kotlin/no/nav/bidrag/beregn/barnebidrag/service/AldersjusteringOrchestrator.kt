@@ -3,7 +3,6 @@ package no.nav.bidrag.beregn.barnebidrag.service
 import com.fasterxml.jackson.databind.node.POJONode
 import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
-import no.nav.bidrag.beregn.barnebidrag.service.BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BP
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningPersonConsumer
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningSakConsumer
 import no.nav.bidrag.beregn.barnebidrag.utils.AldersjusteringUtils
@@ -277,7 +276,7 @@ class AldersjusteringOrchestrator(
         if (sluttberegning.innhold.bidragJustertForNettoBarnetilleggBP) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_FOR_BARNETILLEGG_BP)
         }
-        if (sluttberegning.innhold.bidragJustertNedTilEvne || sistePeriode.resultatkode == LAVERE_ENN_INNT_EVNE_BP) {
+        if (sluttberegning.innhold.bidragJustertNedTilEvne) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_NED_TIL_EVNE)
         }
         if (sluttberegning.innhold.bidragJustertNedTil25ProsentAvInntekt) {
