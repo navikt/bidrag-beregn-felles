@@ -3,7 +3,6 @@ package no.nav.bidrag.beregn.barnebidrag.service
 import com.fasterxml.jackson.databind.node.POJONode
 import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
-import no.nav.bidrag.beregn.barnebidrag.service.BisysResultatkoder.KOSTNADSBEREGNET_BIDRAG
 import no.nav.bidrag.beregn.barnebidrag.service.BisysResultatkoder.MAKS_25_AV_INNTEKT
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningPersonConsumer
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningSakConsumer
@@ -271,11 +270,11 @@ class AldersjusteringOrchestrator(
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_BEGRENSET_REVURDERING_JUSTERT_OPP_TIL_FORSKUDDSATS)
         }
 
-        if (sluttberegning.innhold.bidragJustertForNettoBarnetilleggBM && sistePeriode.resultatkode != KOSTNADSBEREGNET_BIDRAG) {
+        if (sluttberegning.innhold.bidragJustertForNettoBarnetilleggBM) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_FOR_BARNETILLEGG_BM)
         }
 
-        if (sluttberegning.innhold.bidragJustertForNettoBarnetilleggBP && sistePeriode.resultatkode != KOSTNADSBEREGNET_BIDRAG) {
+        if (sluttberegning.innhold.bidragJustertForNettoBarnetilleggBP) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_FOR_BARNETILLEGG_BP)
         }
         // Sjekk om at det ikke er resultat 25% av inntekt pga bug i grunnlagsoverføring hvor bidragJustertNedTilEvne er true selv om det er bare 25% av inntekt.
