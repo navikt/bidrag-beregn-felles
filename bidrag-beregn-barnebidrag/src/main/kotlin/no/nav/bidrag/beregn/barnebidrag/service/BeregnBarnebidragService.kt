@@ -47,7 +47,7 @@ class BeregnBarnebidragService : BeregnService() {
 
     // Komplett beregning av barnebidrag
     fun beregnBarnebidrag(mottattGrunnlag: BeregnGrunnlag): BeregnetBarnebidragResultat {
-        secureLogger.debug { "Beregning av barnebidrag - følgende request mottatt: ${tilJson(mottattGrunnlag)}" }
+        secureLogger.info { "Beregning av barnebidrag - følgende request mottatt: ${tilJson(mottattGrunnlag)}" }
 
         // Kontroll av inputdata
         try {
@@ -163,7 +163,7 @@ class BeregnBarnebidragService : BeregnService() {
             }
         }
 
-        secureLogger.debug { "Beregning av barnebidrag - følgende respons returnert: ${tilJson(beregnetBarnebidragResultat)}" }
+        secureLogger.info { "Beregning av barnebidrag - følgende respons returnert: ${tilJson(beregnetBarnebidragResultat)}" }
         return beregnetBarnebidragResultat
     }
 
@@ -220,7 +220,7 @@ class BeregnBarnebidragService : BeregnService() {
 
     // Beregning av underholdskostnad
     fun beregnUnderholdskostnad(mottattGrunnlag: BeregnGrunnlag): List<GrunnlagDto> {
-        secureLogger.debug { "Beregning av underholdskostnad - følgende request mottatt: ${tilJson(mottattGrunnlag)}" }
+        secureLogger.info { "Beregning av underholdskostnad - følgende request mottatt: ${tilJson(mottattGrunnlag)}" }
 
         // Kontroll av inputdata
         try {
@@ -231,6 +231,7 @@ class BeregnBarnebidragService : BeregnService() {
 
         val delberegningUnderholdskostnadResultat = delberegningUnderholdskostnad(mottattGrunnlag)
 
+        secureLogger.info { "Beregning av underholdskostnad - følgende respons returnert: ${tilJson(delberegningUnderholdskostnadResultat)}" }
         return delberegningUnderholdskostnadResultat
     }
 

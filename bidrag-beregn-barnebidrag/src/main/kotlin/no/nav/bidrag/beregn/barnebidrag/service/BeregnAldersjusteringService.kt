@@ -59,7 +59,7 @@ class BeregnAldersjusteringService : BeregnService() {
 
     // Beregning av aldersjustering barnebidrag
     fun beregnAldersjusteringBarnebidrag(mottattGrunnlag: BeregnGrunnlagAldersjustering): BeregnetBarnebidragResultat {
-        secureLogger.debug { "Beregning av aldersjustering barnebidrag - følgende request mottatt: ${tilJson(mottattGrunnlag)}" }
+        secureLogger.info { "Beregning av aldersjustering barnebidrag - følgende request mottatt: ${tilJson(mottattGrunnlag)}" }
 
         // Kontroll av inputdata
         try {
@@ -182,6 +182,7 @@ class BeregnAldersjusteringService : BeregnService() {
 
         // TODO Håndtere flere søknadsbarn. Må returnere et nytt responsobjekt (liste)
 
+        secureLogger.info { "Beregning av aldersjustering barnebidrag - følgende respons returnert: ${tilJson(beregnetBarnebidragResultat)}" }
         return beregnetBarnebidragResultat
     }
 
