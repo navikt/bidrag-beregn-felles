@@ -252,7 +252,14 @@ class AldersjusteringOrchestrator(
                 ?: aldersjusteringFeilet("Fant ingen sluttberegning i vedtak $vedtaksId for siste periode")
 
         val beløpSistePeriode = sistePeriode.beløp?.setScale(0)
-            ?: skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE, resultat = resultatSistePeriode, vedtaksid = vedtaksId)
+            ?: run {
+                if (sistePeriode.periode.fom.isBefore(YearMonth.of(aldersjusteresForÅr, 7))) null else BigDecimal.ZERO
+            }
+            ?: skalIkkeAldersjusteres(
+                SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE,
+                resultat = resultatSistePeriode,
+                vedtaksid = vedtaksId,
+            )
 
         if (sistePeriode.periode.fom >= YearMonth.of(aldersjusteresForÅr, 7)) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.LØPENDE_PERIODE_FRA_OG_MED_DATO_ER_LIK_ELLER_ETTER_ALDERSJUSTERING)
