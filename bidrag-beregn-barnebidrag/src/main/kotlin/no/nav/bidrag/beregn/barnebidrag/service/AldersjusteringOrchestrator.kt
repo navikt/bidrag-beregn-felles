@@ -294,10 +294,10 @@ class AldersjusteringOrchestrator(
         }
         // Sjekk om at det ikke er resultat 25% av inntekt pga bug i grunnlagsoverføring hvor bidragJustertNedTilEvne er true selv om det er bare 25% av inntekt.
         // Fjern dette når det er fikset
-        if (sluttberegning.innhold.bidragJustertNedTilEvne && !ignorerResultatkoderRedusertEvne.contains(sistePeriode.resultatkode)) {
+        if (sluttberegning.innhold.bidragJustertNedTilEvne && !ignorerResultatkoderForRedusertEvne.contains(sistePeriode.resultatkode)) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_NED_TIL_EVNE)
         }
-        if (sluttberegning.innhold.bidragJustertNedTil25ProsentAvInntekt) {
+        if (sluttberegning.innhold.bidragJustertNedTil25ProsentAvInntekt && !ignorerResultatkoderFor25Prosent.contains(sistePeriode.resultatkode)) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_NED_TIL_25_PROSENT_AV_INNTEKT)
         }
 
@@ -370,8 +370,16 @@ class AldersjusteringOrchestrator(
         if (sak.kategori == Sakskategori.U) skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.SAKEN_TILHØRER_UTLAND)
     }
 }
-
-val ignorerResultatkoderRedusertEvne =
+val ignorerResultatkoderFor25Prosent =
+    listOf(
+        BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BEGGE_PARTER,
+        BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BP,
+        BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BM,
+        BisysResultatkoder.MANGL_DOK_AV_INNT_BEGGE_PARTER,
+        BisysResultatkoder.MANGL_DOK_AV_INNT_BP,
+        BisysResultatkoder.KOSTNADSBEREGNET_BIDRAG,
+    )
+val ignorerResultatkoderForRedusertEvne =
     listOf(
         BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BEGGE_PARTER,
         BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BP,
