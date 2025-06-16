@@ -176,7 +176,7 @@ internal class ForskuddPeriodeTest {
 
         assertAll(
             { assertThat(avvikListe).isNotEmpty() },
-            { assertThat(avvikListe).hasSize(4) },
+            { assertThat(avvikListe).hasSize(3) },
             { assertThat(avvikListe[0].avvikTekst).isEqualTo("beregnDatoTil må være etter beregnDatoFom") },
             { assertThat(avvikListe[0].avvikType).isEqualTo(Avvikstype.DATO_FOM_ETTER_DATO_TIL) },
             {
@@ -186,14 +186,9 @@ internal class ForskuddPeriodeTest {
             { assertThat(avvikListe[1].avvikType).isEqualTo(Avvikstype.PERIODER_OVERLAPPER) },
             {
                 assertThat(avvikListe[2].avvikTekst)
-                    .isEqualTo("datoTil kan ikke være null i søknadsbarnBostatusPeriodeListe: datoFom=2018-09-01, datoTil=null")
-            },
-            { assertThat(avvikListe[2].avvikType).isEqualTo(Avvikstype.NULL_VERDI_I_DATO) },
-            {
-                assertThat(avvikListe[3].avvikTekst)
                     .isEqualTo("datoTil må være etter datoFom i bidragMottakerBarnPeriodeListe: datoFom=2019-04-01, datoTil=2018-07-01")
             },
-            { assertThat(avvikListe[3].avvikType).isEqualTo(Avvikstype.DATO_FOM_ETTER_DATO_TIL) },
+            { assertThat(avvikListe[2].avvikType).isEqualTo(Avvikstype.DATO_FOM_ETTER_DATO_TIL) },
         )
 
         printAvvikListe(avvikListe)
