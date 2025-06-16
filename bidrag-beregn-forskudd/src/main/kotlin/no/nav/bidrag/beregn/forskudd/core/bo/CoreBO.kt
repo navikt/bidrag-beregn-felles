@@ -20,6 +20,7 @@ data class BeregnForskuddGrunnlag(
     val sivilstandPeriodeListe: List<SivilstandPeriode>,
     val barnIHusstandenPeriodeListe: List<BarnIHusstandenPeriode>,
     val sjablonPeriodeListe: List<SjablonPeriode>,
+    val åpenSluttperiode: Boolean = true,
 )
 
 data class Søknadsbarn(val referanse: String, val fødselsdato: LocalDate)

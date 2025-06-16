@@ -21,10 +21,13 @@ import no.nav.bidrag.transport.behandling.beregning.forskudd.BeregnetForskuddRes
 import no.nav.bidrag.transport.behandling.beregning.forskudd.ResultatBeregning
 import no.nav.bidrag.transport.behandling.beregning.forskudd.ResultatPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
+import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningForskudd
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragsmottaker
+import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettSluttberegningreferanse
+import java.time.YearMonth
 
 private val logger = KotlinLogging.logger {}
 
@@ -39,6 +42,11 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
             throw IllegalArgumentException("Ugyldig input ved beregning av forskudd: " + e.message)
         }
 
+        // Sjekker om søknadsbarnet fyller 18 år i beregningsperioden
+        val utvidetGrunnlagJustert = justerTilPeriodeHvisBarnetBlir18ÅrIBeregningsperioden(grunnlag)
+        val utvidetGrunnlag = utvidetGrunnlagJustert.beregnGrunnlag
+        val åpenSluttperiode = utvidetGrunnlagJustert.åpenSluttperiode
+
         // Henter sjabloner
         val sjablontallListe: List<Sjablontall> = SjablonProvider.hentSjablontall().sortedWith(compareBy({ it.typeSjablon }, { it.datoFom }))
 
@@ -50,8 +58,9 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
         // Lager input-grunnlag til core-modulen
         val grunnlagTilCore =
             ForskuddCoreMapper.mapGrunnlagTilCore(
-                beregnForskuddGrunnlag = grunnlag,
+                beregnForskuddGrunnlag = utvidetGrunnlag,
                 sjablontallListe = sjablontallListe,
+                åpenSluttperiode = åpenSluttperiode,
             )
 
         secureLogger.debug { "Forskuddsberegning - grunnlag for beregning: ${tilJson(grunnlagTilCore)}" }
@@ -239,4 +248,29 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
 
         return resultatGrunnlagListe
     }
+
+    // Sjekker om søknadsbarnet fyller 18 år i beregningsperioden. Justerer i så fall til-periode.
+    private fun justerTilPeriodeHvisBarnetBlir18ÅrIBeregningsperioden(mottattGrunnlag: BeregnGrunnlag): BeregnGrunnlagJustert {
+        val periodeSøknadsbarnetFyller18År = mottattGrunnlag.grunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<Person>(Grunnlagstype.PERSON_SØKNADSBARN)
+            .map { YearMonth.from(it.innhold.fødselsdato.plusYears(18)) }
+            .first()
+
+        return if (periodeSøknadsbarnetFyller18År.isBefore(mottattGrunnlag.periode.til)) {
+            BeregnGrunnlagJustert(
+                beregnGrunnlag = mottattGrunnlag.copy(
+                    periode = mottattGrunnlag.periode.copy(til = periodeSøknadsbarnetFyller18År.plusMonths(1)),
+                ),
+                åpenSluttperiode = false,
+            )
+        } else {
+            BeregnGrunnlagJustert(
+                beregnGrunnlag = mottattGrunnlag,
+                åpenSluttperiode =
+                mottattGrunnlag.opphørsdato == null || mottattGrunnlag.opphørsdato!!.isAfter(YearMonth.now()),
+            )
+        }
+    }
+
+    data class BeregnGrunnlagJustert(val beregnGrunnlag: BeregnGrunnlag, val åpenSluttperiode: Boolean)
 }

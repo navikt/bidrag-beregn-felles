@@ -91,7 +91,6 @@ abstract class CoreMapper {
         innslagKapitalinntektSjablonverdi: BigDecimal,
         erSærbidrag: Boolean = false,
         åpenSluttperiode: Boolean = false,
-        erForskudd: Boolean = false,
     ): List<InntektPeriodeCore> {
         try {
             val inntektGrunnlagListe =
@@ -159,7 +158,6 @@ abstract class CoreMapper {
                     gjelderReferanse = referanseTilRolle,
                     clazz = InntektPeriodeCore::class.java,
                     beregningsperiode = beregnGrunnlag.periode,
-                    erForskudd = erForskudd,
                 ).toMutableList()
             }
 
@@ -354,42 +352,27 @@ abstract class CoreMapper {
         gjelderReferanse: String,
         clazz: Class<T>,
         beregningsperiode: ÅrMånedsperiode = ÅrMånedsperiode(fom = LocalDate.MIN, til = LocalDate.MAX),
-        erForskudd: Boolean = false,
     ): List<T> {
-        // TODO Logikken bør være lik for forskudd, særbidrag og bidrag. Splittet opp ifbm. at beregningsperiode blir justert hvis barnet fyller 18 år
-        // TODO i perioden. Dette medførte feil i forskuddstestene. Holder derfor logikken adskilt for nå.
         val periodeListe: List<Periode>
-
-        if (erForskudd) {
-            // Lager unik, sortert liste over alle bruddatoer og legger evt. null-forekomst bakerst
-            periodeListe = grunnlagListe
-                .flatMap { listOf(it.periode.datoFom, it.periode.datoTil) }
-                .distinct()
-                .sortedBy { it }
-                .sortedWith(compareBy { it == null })
-                .zipWithNext()
-                .map { Periode(it.first!!, it.second) }
-        } else {
-            // Legger til beregningsperiode i bruddato-listen
-            val bruddatoListe = grunnlagListe
-                .flatMap { listOf(it.periode.datoFom, it.periode.datoTil) }
-                .toMutableList()
-            if (beregningsperiode.fom != YearMonth.from(LocalDate.MIN)) {
-                bruddatoListe.add(beregningsperiode.fom.atDay(1))
-                bruddatoListe.add(beregningsperiode.til?.atDay(1))
-            }
-
-            // Lager unik, sortert liste over alle bruddatoer og legger evt. null-forekomst bakerst og slår sammen brudddatoer til en liste med
-            // perioder (fom-/til-dato)
-            periodeListe = bruddatoListe
-                .distinct()
-                .filter { it == null || beregningsperiode.inneholder(YearMonth.from(it)) } // Filtrerer ut datoer utenfor beregningsperiode
-                .filter { it != null || (beregningsperiode.til == null) } // Filtrerer ut null hvis beregningsperiode.til ikke er null
-                .sortedBy { it }
-                .sortedWith(compareBy { it == null })
-                .zipWithNext()
-                .map { Periode(it.first!!, it.second) }
+        // Legger til beregningsperiode i bruddato-listen
+        val bruddatoListe = grunnlagListe
+            .flatMap { listOf(it.periode.datoFom, it.periode.datoTil) }
+            .toMutableList()
+        if (beregningsperiode.fom != YearMonth.from(LocalDate.MIN)) {
+            bruddatoListe.add(beregningsperiode.fom.atDay(1))
+            bruddatoListe.add(beregningsperiode.til?.atDay(1))
         }
+
+        // Lager unik, sortert liste over alle bruddatoer og legger evt. null-forekomst bakerst og slår sammen brudddatoer til en liste med
+        // perioder (fom-/til-dato)
+        periodeListe = bruddatoListe
+            .distinct()
+            .filter { it == null || beregningsperiode.inneholder(YearMonth.from(it)) } // Filtrerer ut datoer utenfor beregningsperiode
+            .filter { it != null || (beregningsperiode.til == null) } // Filtrerer ut null hvis beregningsperiode.til ikke er null
+            .sortedBy { it }
+            .sortedWith(compareBy { it == null })
+            .zipWithNext()
+            .map { Periode(it.first!!, it.second) }
 
         // Returnerer en gruppert og akkumulert liste, med en liste over tilhørende grunnlagsreferanser, pr bruddperiode
         return when (clazz) {
