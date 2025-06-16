@@ -57,6 +57,7 @@ enum class SkalIkkeAldersjusteresBegrunnelse {
     SISTE_VEDTAK_ER_JUSTERT_FOR_BARNETILLEGG_BM,
     SISTE_VEDTAK_ER_JUSTERT_FOR_BARNETILLEGG_BP,
     SISTE_VEDTAK_ER_JUSTERT_NED_TIL_EVNE,
+
     SISTE_VEDTAK_ER_JUSTERT_NED_TIL_25_PROSENT_AV_INNTEKT,
     SISTE_VEDTAK_ER_BEGRENSET_REVURDERING_JUSTERT_OPP_TIL_FORSKUDDSATS,
     SISTE_VEDTAK_ER_SKJØNNSFASTSATT_AV_UTLAND,
@@ -68,6 +69,9 @@ enum class SkalIkkeAldersjusteresBegrunnelse {
 enum class SkalAldersjusteresManueltBegrunnelse {
     FANT_INGEN_MANUELL_VEDTAK,
     SISTE_VEDTAK_HAR_RESULTAT_DELT_BOSTED_MED_BELØP_0,
+    SISTE_VEDTAK_HAR_RESULTAT_LAVERE_ENN_INNTEKTSEVNE,
+    SISTE_VEDTAK_HAR_RESULTAT_MANGLENDE_DOKUMENTASJON_AV_INNTEKT,
+    SISTE_VEDTAK_HAR_RESULTAT_INGEN_ENDRING_UNDER_GRENSE,
     SISTE_VEDTAK_ER_INNVILGET_VEDTAK,
 }
 
@@ -231,16 +235,17 @@ class AldersjusteringOrchestrator(
         }
 
         val sistePeriode = stønadsendring.periodeListe.hentSisteLøpendePeriode()!!
-        if (sistePeriode.resultatkode == BisysResultatkoder.INGEN_ENDRING_UNDER_GRENSE) {
-            vedtakService.finnSisteManuelleVedtak(stønad, this.vedtaksId)?.validerSkalAldersjusteres(stønad, aldersjusteresForÅr)
-            return
-        }
+//        if (sistePeriode.resultatkode == BisysResultatkoder.INGEN_ENDRING_UNDER_GRENSE) {
+//            vedtakService.finnSisteManuelleVedtak(stønad, this.vedtaksId)?.validerSkalAldersjusteres(stønad, aldersjusteresForÅr)
+//            return
+//        }
         val sluttberegningSistePeriode = vedtak.grunnlagListe.finnSluttberegningIReferanser(sistePeriode.grunnlagReferanseListe)
             ?.innholdTilObjekt<SluttberegningBarnebidrag>()
         val resultatSistePeriode = when {
             BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BM == sistePeriode.resultatkode -> "Lavere enn inntektsevne for bidragsmottaker"
             BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BP == sistePeriode.resultatkode -> "Lavere enn inntektsevne for bidragspliktig"
             BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BEGGE_PARTER == sistePeriode.resultatkode -> " Lavere enn inntektsevne for begge parter"
+            BisysResultatkoder.MANGL_DOK_AV_INNT_BM == sistePeriode.resultatkode -> "Mangler dokumentasjon av inntekt for bidragsmottaker"
             BisysResultatkoder.MANGL_DOK_AV_INNT_BP == sistePeriode.resultatkode -> "Mangler dokumentasjon av inntekt for bidragspliktig"
             BisysResultatkoder.MANGL_DOK_AV_INNT_BEGGE_PARTER == sistePeriode.resultatkode -> "Mangler dokumentasjon av inntekt for begge parter"
             Resultatkode.fraKode(sistePeriode.resultatkode)
@@ -298,10 +303,40 @@ class AldersjusteringOrchestrator(
         }
         // Sjekk om at det ikke er resultat 25% av inntekt pga bug i grunnlagsoverføring hvor bidragJustertNedTilEvne er true selv om det er bare 25% av inntekt.
         // Fjern dette når det er fikset
-        if (sluttberegning.innhold.bidragJustertNedTilEvne && !ignorerResultatkoderForRedusertEvne.contains(sistePeriode.resultatkode)) {
+
+        // Lag manuell oppgave hvis 4E og 4D og flagget er satt
+
+        if ((sluttberegning.innhold.bidragJustertNedTilEvne || sluttberegning.innhold.bidragJustertNedTil25ProsentAvInntekt) &&
+            reskoder4D.contains(sistePeriode.resultatkode)
+        ) {
+            aldersjusteresManuelt(
+                SkalAldersjusteresManueltBegrunnelse.SISTE_VEDTAK_HAR_RESULTAT_MANGLENDE_DOKUMENTASJON_AV_INNTEKT,
+                resultat = resultatSistePeriode,
+                vedtaksid = vedtaksId,
+            )
+        } else if ((sluttberegning.innhold.bidragJustertNedTilEvne || sluttberegning.innhold.bidragJustertNedTil25ProsentAvInntekt) &&
+            reskoder4E.contains(sistePeriode.resultatkode)
+        ) {
+            aldersjusteresManuelt(
+                SkalAldersjusteresManueltBegrunnelse.SISTE_VEDTAK_HAR_RESULTAT_LAVERE_ENN_INNTEKTSEVNE,
+                resultat = resultatSistePeriode,
+                vedtaksid = vedtaksId,
+            )
+        } else if ((sluttberegning.innhold.bidragJustertNedTilEvne || sluttberegning.innhold.bidragJustertNedTil25ProsentAvInntekt) &&
+            sistePeriode.resultatkode == BisysResultatkoder.INGEN_ENDRING_UNDER_GRENSE
+        ) {
+            aldersjusteresManuelt(
+                SkalAldersjusteresManueltBegrunnelse.SISTE_VEDTAK_HAR_RESULTAT_INGEN_ENDRING_UNDER_GRENSE,
+                resultat = resultatSistePeriode,
+                vedtaksid = vedtaksId,
+            )
+        }
+
+        if (sluttberegning.innhold.bidragJustertNedTilEvne && sistePeriode.resultatkode != BisysResultatkoder.MAKS_25_AV_INNTEKT) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_NED_TIL_EVNE)
         }
-        if (sluttberegning.innhold.bidragJustertNedTil25ProsentAvInntekt && !ignorerResultatkoderFor25Prosent.contains(sistePeriode.resultatkode)) {
+
+        if (sluttberegning.innhold.bidragJustertNedTil25ProsentAvInntekt) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_NED_TIL_25_PROSENT_AV_INNTEKT)
         }
 
@@ -374,6 +409,16 @@ class AldersjusteringOrchestrator(
         if (sak.kategori == Sakskategori.U) skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.SAKEN_TILHØRER_UTLAND)
     }
 }
+val reskoder4D = listOf(
+    BisysResultatkoder.MANGL_DOK_AV_INNT_BEGGE_PARTER,
+    BisysResultatkoder.MANGL_DOK_AV_INNT_BP,
+    BisysResultatkoder.MANGL_DOK_AV_INNT_BM,
+)
+val reskoder4E = listOf(
+    BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BEGGE_PARTER,
+    BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BP,
+    BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BM,
+)
 val ignorerResultatkoderFor25Prosent =
     listOf(
         BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BEGGE_PARTER,
