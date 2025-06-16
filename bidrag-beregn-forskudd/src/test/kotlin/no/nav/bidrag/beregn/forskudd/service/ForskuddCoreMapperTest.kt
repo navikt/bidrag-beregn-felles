@@ -48,7 +48,13 @@ internal class ForskuddCoreMapperTest {
             )
 
         assertThatExceptionOfType(IllegalArgumentException::class.java)
-            .isThrownBy { ForskuddCoreMapper.mapGrunnlagTilCore(beregnForskuddGrunnlag = beregnForskuddGrunnlag, sjablontallListe = emptyList()) }
+            .isThrownBy {
+                ForskuddCoreMapper.mapGrunnlagTilCore(
+                    beregnForskuddGrunnlag = beregnForskuddGrunnlag,
+                    sjablontallListe = emptyList(),
+                    åpenSluttperiode = true,
+                )
+            }
             .withMessageContaining("Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.PERSON_SØKNADSBARN er ikke gyldig")
     }
 
@@ -88,7 +94,13 @@ internal class ForskuddCoreMapperTest {
             )
 
         assertThatExceptionOfType(IllegalArgumentException::class.java)
-            .isThrownBy { ForskuddCoreMapper.mapGrunnlagTilCore(beregnForskuddGrunnlag = beregnForskuddGrunnlag, sjablontallListe = emptyList()) }
+            .isThrownBy {
+                ForskuddCoreMapper.mapGrunnlagTilCore(
+                    beregnForskuddGrunnlag = beregnForskuddGrunnlag,
+                    sjablontallListe = emptyList(),
+                    åpenSluttperiode = true,
+                )
+            }
             .withMessageContaining("Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.BOSTATUS_PERIODE er ikke gyldig")
     }
 
@@ -136,7 +148,13 @@ internal class ForskuddCoreMapperTest {
             )
 
         assertThatExceptionOfType(IllegalArgumentException::class.java)
-            .isThrownBy { ForskuddCoreMapper.mapGrunnlagTilCore(beregnForskuddGrunnlag = beregnForskuddGrunnlag, sjablontallListe = emptyList()) }
+            .isThrownBy {
+                ForskuddCoreMapper.mapGrunnlagTilCore(
+                    beregnForskuddGrunnlag = beregnForskuddGrunnlag,
+                    sjablontallListe = emptyList(),
+                    åpenSluttperiode = true,
+                )
+            }
             .withMessageContaining(
                 "Ugyldig input ved beregning. Innhold i Grunnlagstype.INNTEKT_RAPPORTERING_PERIODE er ikke gyldig",
             )
@@ -194,7 +212,13 @@ internal class ForskuddCoreMapperTest {
             )
 
         assertThatExceptionOfType(IllegalArgumentException::class.java)
-            .isThrownBy { ForskuddCoreMapper.mapGrunnlagTilCore(beregnForskuddGrunnlag = beregnForskuddGrunnlag, sjablontallListe = emptyList()) }
+            .isThrownBy {
+                ForskuddCoreMapper.mapGrunnlagTilCore(
+                    beregnForskuddGrunnlag = beregnForskuddGrunnlag,
+                    sjablontallListe = emptyList(),
+                    åpenSluttperiode = true,
+                )
+            }
             .withMessageContaining("Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.SIVILSTAND_PERIODE er ikke gyldig")
     }
 

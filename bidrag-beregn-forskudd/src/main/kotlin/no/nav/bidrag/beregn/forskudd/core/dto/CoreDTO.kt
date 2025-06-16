@@ -21,6 +21,7 @@ data class BeregnForskuddGrunnlagCore(
     val sivilstandPeriodeListe: List<SivilstandPeriodeCore>,
     val barnIHusstandenPeriodeListe: List<BarnIHusstandenPeriodeCore>,
     var sjablonPeriodeListe: List<SjablonPeriodeCore>,
+    val åpenSluttperiode: Boolean = true,
 )
 
 data class SøknadsbarnCore(val referanse: String, val fødselsdato: LocalDate)

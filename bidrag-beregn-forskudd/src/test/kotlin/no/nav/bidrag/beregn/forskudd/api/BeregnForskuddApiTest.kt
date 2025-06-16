@@ -1,5 +1,6 @@
 package no.nav.bidrag.beregn.forskudd.api
 
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.beregn.forskudd.TestUtil
 import no.nav.bidrag.beregn.forskudd.service.BeregnForskuddService
@@ -18,6 +19,7 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.time.YearMonth
 
 @ExtendWith(MockitoExtension::class)
 internal class BeregnForskuddApiTest {
@@ -27,6 +29,7 @@ internal class BeregnForskuddApiTest {
     private lateinit var forventetForskuddResultatkode: Resultatkode
     private lateinit var forventetForskuddRegel: String
     private var forventetAntallDelberegningReferanser: Int = 2
+    private var forventetPeriodeTil: YearMonth? = null
 
     @Mock
     private lateinit var beregnForskuddService: BeregnForskuddService
@@ -118,6 +121,19 @@ internal class BeregnForskuddApiTest {
         forventetForskuddBeløp = 2090
         forventetForskuddResultatkode = Resultatkode.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT
         forventetForskuddRegel = "REGEL 5"
+        utførBeregningerOgEvaluerResultat()
+    }
+
+    @Test
+    @DisplayName("skal kalle core og returnere et resultat - eksempel 1A")
+    fun skalKalleCoreOgReturnereEtResultat_Eksempel01A() {
+        // Barnet blir 18 år i perioden. Skal ikke ha åpen sluttperiode.
+        // Forhøyet forskudd ved 11 år: SB alder > 11 år; BM inntekt 290000; BM antall barn egen husstand 1; BM sivilstatus gift
+        filnavn = "src/test/resources/testfiler/forskudd_eksempel1A.json"
+        forventetForskuddBeløp = 2090
+        forventetForskuddResultatkode = Resultatkode.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT
+        forventetForskuddRegel = "REGEL 5"
+        forventetPeriodeTil = YearMonth.of(2021, 2)
         utførBeregningerOgEvaluerResultat()
     }
 
@@ -390,6 +406,7 @@ internal class BeregnForskuddApiTest {
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[0].resultat.belop.intValueExact()).isEqualTo(forventetForskuddBeløp) },
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[0].resultat.kode).isEqualTo(forventetForskuddResultatkode) },
             { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[0].resultat.regel).isEqualTo(forventetForskuddRegel) },
+            { assertThat(forskuddResultat.beregnetForskuddPeriodeListe[0].periode.til).isEqualTo(forventetPeriodeTil) },
             {
                 assertThat(forskuddResultat.beregnetForskuddPeriodeListe[0].grunnlagsreferanseListe).hasSize(1)
             },
@@ -514,6 +531,9 @@ internal class BeregnForskuddApiTest {
         }
 
         // Lag request
-        return ObjectMapper().findAndRegisterModules().readValue(json, BeregnGrunnlag::class.java)
+        return ObjectMapper()
+            .findAndRegisterModules()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            .readValue(json, BeregnGrunnlag::class.java)
     }
 }

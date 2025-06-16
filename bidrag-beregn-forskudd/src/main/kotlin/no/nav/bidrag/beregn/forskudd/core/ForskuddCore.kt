@@ -57,6 +57,7 @@ internal class ForskuddCore(private val forskuddPeriode: ForskuddPeriode = Forsk
         sivilstandPeriodeListe = mapSivilstandPeriodeListe(grunnlag.sivilstandPeriodeListe),
         barnIHusstandenPeriodeListe = mapBarnIHusstandenPeriodeListe(grunnlag.barnIHusstandenPeriodeListe),
         sjablonPeriodeListe = mapSjablonPeriodeListe(grunnlag.sjablonPeriodeListe),
+        åpenSluttperiode = grunnlag.åpenSluttperiode,
     )
 
     private fun mapFraBusinessObject(avvikListe: List<Avvik>, resultat: BeregnForskuddResultat) = BeregnetForskuddResultatCore(

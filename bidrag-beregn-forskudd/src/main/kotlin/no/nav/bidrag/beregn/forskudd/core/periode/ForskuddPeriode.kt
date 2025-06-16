@@ -79,7 +79,7 @@ internal class ForskuddPeriode(private val forskuddBeregning: ForskuddBeregning 
                 val nyPeriode =
                     Periode(
                         datoFom = grunnlagTilBeregning.bruddPeriodeListe[bruddPeriodeListeAntallElementer - 2].datoFom,
-                        datoTil = null,
+                        datoTil = if (periodeGrunnlag.åpenSluttperiode) null else periodeGrunnlag.beregnDatoTil,
                     )
                 grunnlagTilBeregning.bruddPeriodeListe.removeAt(bruddPeriodeListeAntallElementer - 1)
                 grunnlagTilBeregning.bruddPeriodeListe.removeAt(bruddPeriodeListeAntallElementer - 2)

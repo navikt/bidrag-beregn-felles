@@ -22,7 +22,11 @@ import java.math.BigDecimal
 
 internal object ForskuddCoreMapper : CoreMapper() {
 
-    fun mapGrunnlagTilCore(beregnForskuddGrunnlag: BeregnGrunnlag, sjablontallListe: List<Sjablontall>): BeregnForskuddGrunnlagCore {
+    fun mapGrunnlagTilCore(
+        beregnForskuddGrunnlag: BeregnGrunnlag,
+        sjablontallListe: List<Sjablontall>,
+        åpenSluttperiode: Boolean,
+    ): BeregnForskuddGrunnlagCore {
         // Lager en map for sjablontall (id og navn)
         val sjablontallMap = HashMap<String, SjablonTallNavn>()
         SjablonTallNavn.entries.forEach {
@@ -41,8 +45,7 @@ internal object ForskuddCoreMapper : CoreMapper() {
             beregnGrunnlag = beregnForskuddGrunnlag,
             referanseTilRolle = referanseBidragsmottaker,
             innslagKapitalinntektSjablonverdi = finnInnslagKapitalinntektFraSjablontallListe(sjablontallListe)?.verdi ?: BigDecimal.ZERO,
-            åpenSluttperiode = true,
-            erForskudd = true,
+            åpenSluttperiode = åpenSluttperiode,
         )
         val sivilstandPeriodeCoreListe = mapSivilstand(beregnForskuddGrunnlag)
         val barnIHusstandenPeriodeCoreListe = mapBarnIHusstanden(beregnForskuddGrunnlag, referanseBidragsmottaker)
@@ -73,6 +76,7 @@ internal object ForskuddCoreMapper : CoreMapper() {
             sivilstandPeriodeListe = sivilstandPeriodeCoreListe,
             barnIHusstandenPeriodeListe = barnIHusstandenPeriodeCoreListe,
             sjablonPeriodeListe = sjablonPeriodeCoreListe,
+            åpenSluttperiode = åpenSluttperiode,
         )
     }
 
@@ -174,7 +178,7 @@ internal object ForskuddCoreMapper : CoreMapper() {
                 søknadsbarnreferanse = beregnForskuddGrunnlag.søknadsbarnReferanse,
                 gjelderReferanse = referanseBidragsmottaker,
                 clazz = BarnIHusstandenPeriodeCore::class.java,
-                erForskudd = true,
+                beregningsperiode = beregnForskuddGrunnlag.periode,
             )
         } catch (e: Exception) {
             throw IllegalArgumentException(
