@@ -231,6 +231,10 @@ class AldersjusteringOrchestrator(
         }
 
         val sistePeriode = stønadsendring.periodeListe.hentSisteLøpendePeriode()!!
+        if (sistePeriode.resultatkode == BisysResultatkoder.INGEN_ENDRING_UNDER_GRENSE) {
+            vedtakService.finnSisteManuelleVedtak(stønad, this.vedtaksId)?.validerSkalAldersjusteres(stønad, aldersjusteresForÅr)
+            return
+        }
         val sluttberegningSistePeriode = vedtak.grunnlagListe.finnSluttberegningIReferanser(sistePeriode.grunnlagReferanseListe)
             ?.innholdTilObjekt<SluttberegningBarnebidrag>()
         val resultatSistePeriode = when {
@@ -397,5 +401,6 @@ object BisysResultatkoder {
     const val KOSTNADSBEREGNET_BIDRAG = "KBB"
     const val MAKS_25_AV_INNTEKT = "7M"
     const val MANGLENDE_BIDRAGSEVNE = "6MB"
+    const val INGEN_ENDRING_UNDER_GRENSE = "VO"
     const val MANGL_DOK_AV_INNT_BEGGE_PARTER = "4D"
 }
