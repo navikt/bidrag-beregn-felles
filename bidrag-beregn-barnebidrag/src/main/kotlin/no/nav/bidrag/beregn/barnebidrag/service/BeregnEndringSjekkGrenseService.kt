@@ -56,8 +56,8 @@ internal object BeregnEndringSjekkGrenseService : BeregnService() {
         resultatGrunnlagListe.addAll(
             mapPersonobjektGrunnlag(
                 resultatGrunnlagListe = resultatGrunnlagListe,
-                personobjektGrunnlagListe = mottattGrunnlag.grunnlagListe
-            )
+                personobjektGrunnlagListe = mottattGrunnlag.grunnlagListe,
+            ),
         )
 
         return resultatGrunnlagListe.distinctBy { it.referanse }.sortedBy { it.referanse }

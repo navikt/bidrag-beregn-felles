@@ -60,7 +60,7 @@ internal open class FellesApiTest {
         .distinct()
 
     fun hentAlleRefererteReferanser(resultatGrunnlagListe: List<GrunnlagDto>, barnebidragResultat: BeregnetBarnebidragResultat) = (
-        resultatGrunnlagListe.flatMap { it.grunnlagsreferanseListe + it.gjelderBarnReferanse + it.gjelderReferanse} +
+        resultatGrunnlagListe.flatMap { it.grunnlagsreferanseListe + it.gjelderBarnReferanse + it.gjelderReferanse } +
             barnebidragResultat.beregnetBarnebidragPeriodeListe.flatMap { it.grunnlagsreferanseListe }
         )
         .filterNotNull()
