@@ -95,8 +95,7 @@ internal class BoforholdBarnServiceV3 {
             val sistePeriode = indeks == filterteOffentligePerioder.size - 1
             // Sjekker om beregnet tildato er etter dagens dato. Hvis ikke er det siste periode og tildato settes til null
             val periodeTom =
-                if (bostatus.periodeTom == null || bostatus.periodeTom.plusMonths(1)?.withDayOfMonth(1)!!.isAfter(LocalDate.now()) && sistePeriode
-                ) {
+                if (bostatus.periodeTom == null || bostatus.periodeTom.plusMonths(1)?.withDayOfMonth(1)!!.isAfter(LocalDate.now()) && sistePeriode) {
                     null
                 } else {
                     bostatus.periodeTom.plusMonths(1)?.withDayOfMonth(1)?.minusDays(1)
@@ -930,8 +929,7 @@ internal class BoforholdBarnServiceV3 {
                     // Hvis nyBostatus dekker hele perioden til originalBostatus så må det sjekkes om det finnes en periode etter originalBostatus.
                     // PeriodeFom må i så fall endres på denne til å bli lik nyBostatus' periodeTom pluss én dag. Perioder som helt dekkes av nyBostatus
                     // skal ikke skrives til endredePerioder.
-                    if (nyBostatus.periodeTom != null && nyBostatus.periodeTom.isAfter(originalBostatus.periodeTom)
-                    ) {
+                    if (nyBostatus.periodeTom != null && nyBostatus.periodeTom.isAfter(originalBostatus.periodeTom)) {
                         val indeksMatch = finnIndeksMatch(originalBostatus, behandledeOpplysninger)
 
                         for (indeks in behandledeOpplysninger.sortedBy { it.periodeFom }.indices) {

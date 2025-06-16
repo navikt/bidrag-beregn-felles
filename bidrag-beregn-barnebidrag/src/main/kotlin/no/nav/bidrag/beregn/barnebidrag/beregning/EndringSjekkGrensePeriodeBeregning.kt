@@ -38,7 +38,7 @@ internal object EndringSjekkGrensePeriodeBeregning {
 
         faktiskEndringFaktor = when {
             // Hvis både løpende bidrag og beregnet bidrag er null settes faktor til null
-            løpendeBidragBeløp == null && beregnetBidragBeløp == null ->  null
+            løpendeBidragBeløp == null && beregnetBidragBeløp == null -> null
 
             // Hvis løpende bidrag eller beregnet bidrag er null (og underforstått at det andre beløpet ikke er null) settes faktor til 1
             løpendeBidragBeløp == null || beregnetBidragBeløp == null -> BigDecimal.ONE

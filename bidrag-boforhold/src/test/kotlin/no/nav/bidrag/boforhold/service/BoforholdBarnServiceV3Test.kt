@@ -7,7 +7,6 @@ import no.nav.bidrag.domene.enums.behandling.TypeBehandling
 import no.nav.bidrag.domene.enums.diverse.Kilde
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
@@ -1392,7 +1391,6 @@ internal class BoforholdBarnServiceV3Test {
     }
 
     @Test
-    @Disabled
     fun `Test at fremtidige perioder filtreres bort `() {
         boforholdBarnServiceV3 = BoforholdBarnServiceV3()
         val mottatteBoforhold = TestUtil.filtererBortFremtidigePerioder()
@@ -1404,7 +1402,7 @@ internal class BoforholdBarnServiceV3Test {
             resultat.size shouldBe 2
 
             resultat[0].periodeFom shouldBe LocalDate.of(2025, 2, 1)
-            resultat[0].periodeTom shouldBe LocalDate.of(2025, 2, 28)
+            resultat[0].periodeTom shouldBe LocalDate.now().minusMonths(2).withDayOfMonth(1).minusDays(1)
             resultat[0].bostatus shouldBe Bostatuskode.IKKE_MED_FORELDER
             resultat[0].kilde shouldBe Kilde.OFFENTLIG
         }
