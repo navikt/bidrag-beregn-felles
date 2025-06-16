@@ -70,7 +70,7 @@ class VedtakService(
         }
     }
 
-    fun finnSisteManuelleVedtak(stønadsid: Stønadsid): SisteManuelleVedtak? {
+    fun finnSisteManuelleVedtak(stønadsid: Stønadsid, ignorerVedtaksId: Int? = null): SisteManuelleVedtak? {
         val forskuddVedtakISak =
             vedtakConsumer.hentVedtakForStønad(
                 HentVedtakForStønadRequest(
@@ -82,7 +82,7 @@ class VedtakService(
             )
         val resultat =
             vedtakFilter.finneSisteManuelleVedtak(
-                forskuddVedtakISak.vedtakListe,
+                forskuddVedtakISak.vedtakListe.filter { ignorerVedtaksId == null || it.vedtaksid.toInt() != ignorerVedtaksId },
             ) ?: return null
         return vedtakConsumer.hentVedtak(resultat.vedtaksid.toInt())?.let {
             SisteManuelleVedtak(resultat.vedtaksid.toInt(), it)
