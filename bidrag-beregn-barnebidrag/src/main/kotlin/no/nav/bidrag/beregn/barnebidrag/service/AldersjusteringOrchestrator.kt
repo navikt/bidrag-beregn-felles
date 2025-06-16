@@ -68,6 +68,7 @@ enum class SkalIkkeAldersjusteresBegrunnelse {
 
 enum class SkalAldersjusteresManueltBegrunnelse {
     FANT_INGEN_MANUELL_VEDTAK,
+    SISTE_VEDTAK_HAR_PERIODE_MED_FOM_DATO_ETTER_ALDERSJUSTERINGEN,
     SISTE_VEDTAK_HAR_RESULTAT_DELT_BOSTED_MED_BELØP_0,
     SISTE_VEDTAK_HAR_RESULTAT_LAVERE_ENN_INNTEKTSEVNE,
     SISTE_VEDTAK_HAR_RESULTAT_MANGLENDE_DOKUMENTASJON_AV_INNTEKT,
@@ -235,10 +236,7 @@ class AldersjusteringOrchestrator(
         }
 
         val sistePeriode = stønadsendring.periodeListe.hentSisteLøpendePeriode()!!
-//        if (sistePeriode.resultatkode == BisysResultatkoder.INGEN_ENDRING_UNDER_GRENSE) {
-//            vedtakService.finnSisteManuelleVedtak(stønad, this.vedtaksId)?.validerSkalAldersjusteres(stønad, aldersjusteresForÅr)
-//            return
-//        }
+
         val sluttberegningSistePeriode = vedtak.grunnlagListe.finnSluttberegningIReferanser(sistePeriode.grunnlagReferanseListe)
             ?.innholdTilObjekt<SluttberegningBarnebidrag>()
         val resultatSistePeriode = when {
@@ -248,14 +246,22 @@ class AldersjusteringOrchestrator(
             BisysResultatkoder.MANGL_DOK_AV_INNT_BM == sistePeriode.resultatkode -> "Mangler dokumentasjon av inntekt for bidragsmottaker"
             BisysResultatkoder.MANGL_DOK_AV_INNT_BP == sistePeriode.resultatkode -> "Mangler dokumentasjon av inntekt for bidragspliktig"
             BisysResultatkoder.MANGL_DOK_AV_INNT_BEGGE_PARTER == sistePeriode.resultatkode -> "Mangler dokumentasjon av inntekt for begge parter"
-            Resultatkode.fraKode(sistePeriode.resultatkode)
-                == Resultatkode.INNVILGET_VEDTAK -> Resultatkode.INNVILGET_VEDTAK.visningsnavn.intern
+            BisysResultatkoder.INNTIL_1_ÅR_TILBAKE == sistePeriode.resultatkode -> "Inntil 1 år tilbake"
+            Resultatkode.fraKode(sistePeriode.resultatkode) == Resultatkode.INNVILGET_VEDTAK -> Resultatkode.INNVILGET_VEDTAK.visningsnavn.intern
             Resultatkode.fraKode(sistePeriode.resultatkode)
                 == Resultatkode.INGEN_ENDRING_UNDER_GRENSE -> Resultatkode.INGEN_ENDRING_UNDER_GRENSE.visningsnavn.intern
             else -> sluttberegningSistePeriode?.resultatVisningsnavn?.intern
         }
 
         sistePeriode.resultatkode.validerResultatkkode(resultatSistePeriode, vedtaksId)
+
+        if (sistePeriode.periode.fom.isAfter(aldersjusteringDato)) {
+            aldersjusteresManuelt(
+                SkalAldersjusteresManueltBegrunnelse.SISTE_VEDTAK_HAR_PERIODE_MED_FOM_DATO_ETTER_ALDERSJUSTERINGEN,
+                resultat = resultatSistePeriode,
+                vedtaksid = vedtaksId,
+            )
+        }
 
         val sluttberegning =
             vedtak.grunnlagListe
@@ -352,7 +358,7 @@ class AldersjusteringOrchestrator(
     }
 
     private fun String.validerResultatkkode(resultatSistePeriode: String?, vedtaksId: Int?) = when (this) {
-        Resultatkode.INNVILGET_VEDTAK.bisysKode.first().resultatKode -> aldersjusteresManuelt(
+        BisysResultatkoder.INNTIL_1_ÅR_TILBAKE, Resultatkode.INNVILGET_VEDTAK.bisysKode.first().resultatKode -> aldersjusteresManuelt(
             SkalAldersjusteresManueltBegrunnelse.SISTE_VEDTAK_ER_INNVILGET_VEDTAK,
             resultat = resultatSistePeriode,
             vedtaksid = vedtaksId,
@@ -450,6 +456,7 @@ object BisysResultatkoder {
     const val LAVERE_ENN_INNT_EVNE_BP = "4E1"
     const val LAVERE_ENN_INNT_EVNE_BM = "4E2"
     const val MANGL_DOK_AV_INNT_BEGGE_PARTER = "4D"
+    const val INNTIL_1_ÅR_TILBAKE = "VT"
     const val MANGL_DOK_AV_INNT_BP = "4D1"
     const val MANGL_DOK_AV_INNT_BM = "4D2"
     const val KOSTNADSBEREGNET_BIDRAG = "KBB"
