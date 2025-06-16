@@ -381,6 +381,7 @@ val ignorerResultatkoderFor25Prosent =
         BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BM,
         BisysResultatkoder.MANGL_DOK_AV_INNT_BEGGE_PARTER,
         BisysResultatkoder.MANGL_DOK_AV_INNT_BP,
+        BisysResultatkoder.MANGL_DOK_AV_INNT_BM,
         BisysResultatkoder.KOSTNADSBEREGNET_BIDRAG,
     )
 val ignorerResultatkoderForRedusertEvne =
@@ -390,6 +391,7 @@ val ignorerResultatkoderForRedusertEvne =
         BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BM,
         BisysResultatkoder.MANGL_DOK_AV_INNT_BEGGE_PARTER,
         BisysResultatkoder.MANGL_DOK_AV_INNT_BP,
+        BisysResultatkoder.MANGL_DOK_AV_INNT_BM,
         BisysResultatkoder.MAKS_25_AV_INNTEKT,
         BisysResultatkoder.KOSTNADSBEREGNET_BIDRAG,
     )
@@ -397,10 +399,11 @@ object BisysResultatkoder {
     const val LAVERE_ENN_INNT_EVNE_BEGGE_PARTER = "4E"
     const val LAVERE_ENN_INNT_EVNE_BP = "4E1"
     const val LAVERE_ENN_INNT_EVNE_BM = "4E2"
+    const val MANGL_DOK_AV_INNT_BEGGE_PARTER = "4D"
     const val MANGL_DOK_AV_INNT_BP = "4D1"
+    const val MANGL_DOK_AV_INNT_BM = "4D2"
     const val KOSTNADSBEREGNET_BIDRAG = "KBB"
     const val MAKS_25_AV_INNTEKT = "7M"
     const val MANGLENDE_BIDRAGSEVNE = "6MB"
     const val INGEN_ENDRING_UNDER_GRENSE = "VO"
-    const val MANGL_DOK_AV_INNT_BEGGE_PARTER = "4D"
 }
