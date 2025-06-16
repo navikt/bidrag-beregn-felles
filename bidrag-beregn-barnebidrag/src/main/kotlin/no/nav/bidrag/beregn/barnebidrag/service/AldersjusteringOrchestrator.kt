@@ -290,6 +290,11 @@ class AldersjusteringOrchestrator(
             )
         }
 
+        if (sistePeriode.resultatkode == BisysResultatkoder.KOSTNADSBEREGNET_BIDRAG) {
+            secureLogger.info { "Resultat siste periode er KBB for vedtak $vedtaksId og stønad $stønad. Ignorer sjekk på sluttberegning" }
+            return
+        }
+
         if (sluttberegning.innhold.begrensetRevurderingUtført && sluttberegning.innhold.bidragJustertTilForskuddssats) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_BEGRENSET_REVURDERING_JUSTERT_OPP_TIL_FORSKUDDSATS)
         }
