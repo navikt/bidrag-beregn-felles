@@ -242,7 +242,7 @@ class AldersjusteringOrchestrator(
         val resultatSistePeriode = when {
             BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BM == sistePeriode.resultatkode -> "Lavere enn inntektsevne for bidragsmottaker"
             BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BP == sistePeriode.resultatkode -> "Lavere enn inntektsevne for bidragspliktig"
-            BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BEGGE_PARTER == sistePeriode.resultatkode -> " Lavere enn inntektsevne for begge parter"
+            BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BEGGE_PARTER == sistePeriode.resultatkode -> "Lavere enn inntektsevne for begge parter"
             BisysResultatkoder.MANGL_DOK_AV_INNT_BM == sistePeriode.resultatkode -> "Mangler dokumentasjon av inntekt for bidragsmottaker"
             BisysResultatkoder.MANGL_DOK_AV_INNT_BP == sistePeriode.resultatkode -> "Mangler dokumentasjon av inntekt for bidragspliktig"
             BisysResultatkoder.MANGL_DOK_AV_INNT_BEGGE_PARTER == sistePeriode.resultatkode -> "Mangler dokumentasjon av inntekt for begge parter"
@@ -296,11 +296,6 @@ class AldersjusteringOrchestrator(
             )
         }
 
-        if (sistePeriode.resultatkode == BisysResultatkoder.KOSTNADSBEREGNET_BIDRAG) {
-            secureLogger.info { "Resultat siste periode er KBB for vedtak $vedtaksId og stønad $stønad. Ignorer sjekk på sluttberegning" }
-            return
-        }
-
         if (sluttberegning.innhold.begrensetRevurderingUtført && sluttberegning.innhold.bidragJustertTilForskuddssats) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_BEGRENSET_REVURDERING_JUSTERT_OPP_TIL_FORSKUDDSATS)
         }
@@ -316,7 +311,6 @@ class AldersjusteringOrchestrator(
         // Fjern dette når det er fikset
 
         // Lag manuell oppgave hvis 4E og 4D og flagget er satt
-
         if ((sluttberegning.innhold.bidragJustertNedTilEvne || sluttberegning.innhold.bidragJustertNedTil25ProsentAvInntekt) &&
             reskoder4D.contains(sistePeriode.resultatkode)
         ) {
