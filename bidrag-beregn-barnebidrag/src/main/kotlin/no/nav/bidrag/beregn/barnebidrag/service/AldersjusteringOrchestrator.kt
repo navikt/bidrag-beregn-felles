@@ -242,7 +242,7 @@ class AldersjusteringOrchestrator(
         val resultatSistePeriode = when {
             BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BM == sistePeriode.resultatkode -> "Lavere enn inntektsevne for bidragsmottaker"
             BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BP == sistePeriode.resultatkode -> "Lavere enn inntektsevne for bidragspliktig"
-            BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BEGGE_PARTER == sistePeriode.resultatkode -> " Lavere enn inntektsevne for begge parter"
+            BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BEGGE_PARTER == sistePeriode.resultatkode -> "Lavere enn inntektsevne for begge parter"
             BisysResultatkoder.MANGL_DOK_AV_INNT_BM == sistePeriode.resultatkode -> "Mangler dokumentasjon av inntekt for bidragsmottaker"
             BisysResultatkoder.MANGL_DOK_AV_INNT_BP == sistePeriode.resultatkode -> "Mangler dokumentasjon av inntekt for bidragspliktig"
             BisysResultatkoder.MANGL_DOK_AV_INNT_BEGGE_PARTER == sistePeriode.resultatkode -> "Mangler dokumentasjon av inntekt for begge parter"
@@ -296,11 +296,6 @@ class AldersjusteringOrchestrator(
             )
         }
 
-        if (sistePeriode.resultatkode == BisysResultatkoder.KOSTNADSBEREGNET_BIDRAG) {
-            secureLogger.info { "Resultat siste periode er KBB for vedtak $vedtaksId og stønad $stønad. Ignorer sjekk på sluttberegning" }
-            return
-        }
-
         if (sluttberegning.innhold.begrensetRevurderingUtført && sluttberegning.innhold.bidragJustertTilForskuddssats) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_BEGRENSET_REVURDERING_JUSTERT_OPP_TIL_FORSKUDDSATS)
         }
@@ -315,33 +310,32 @@ class AldersjusteringOrchestrator(
         // Sjekk om at det ikke er resultat 25% av inntekt pga bug i grunnlagsoverføring hvor bidragJustertNedTilEvne er true selv om det er bare 25% av inntekt.
         // Fjern dette når det er fikset
 
-        // Lag manuell oppgave hvis 4E og 4D og flagget er satt
-
-        if ((sluttberegning.innhold.bidragJustertNedTilEvne || sluttberegning.innhold.bidragJustertNedTil25ProsentAvInntekt) &&
-            reskoder4D.contains(sistePeriode.resultatkode)
-        ) {
-            aldersjusteresManuelt(
-                SkalAldersjusteresManueltBegrunnelse.SISTE_VEDTAK_HAR_RESULTAT_MANGLENDE_DOKUMENTASJON_AV_INNTEKT,
-                resultat = resultatSistePeriode,
-                vedtaksid = vedtaksId,
-            )
-        } else if ((sluttberegning.innhold.bidragJustertNedTilEvne || sluttberegning.innhold.bidragJustertNedTil25ProsentAvInntekt) &&
-            reskoder4E.contains(sistePeriode.resultatkode)
-        ) {
-            aldersjusteresManuelt(
-                SkalAldersjusteresManueltBegrunnelse.SISTE_VEDTAK_HAR_RESULTAT_LAVERE_ENN_INNTEKTSEVNE,
-                resultat = resultatSistePeriode,
-                vedtaksid = vedtaksId,
-            )
-        } else if ((sluttberegning.innhold.bidragJustertNedTilEvne || sluttberegning.innhold.bidragJustertNedTil25ProsentAvInntekt) &&
-            sistePeriode.resultatkode == BisysResultatkoder.INGEN_ENDRING_UNDER_GRENSE
-        ) {
-            aldersjusteresManuelt(
-                SkalAldersjusteresManueltBegrunnelse.SISTE_VEDTAK_HAR_RESULTAT_INGEN_ENDRING_UNDER_GRENSE,
-                resultat = resultatSistePeriode,
-                vedtaksid = vedtaksId,
-            )
-        }
+//        // Lag manuell oppgave hvis 4E og 4D og flagget er satt
+//        if ((sluttberegning.innhold.bidragJustertNedTilEvne || sluttberegning.innhold.bidragJustertNedTil25ProsentAvInntekt) &&
+//            reskoder4D.contains(sistePeriode.resultatkode)
+//        ) {
+//            aldersjusteresManuelt(
+//                SkalAldersjusteresManueltBegrunnelse.SISTE_VEDTAK_HAR_RESULTAT_MANGLENDE_DOKUMENTASJON_AV_INNTEKT,
+//                resultat = resultatSistePeriode,
+//                vedtaksid = vedtaksId,
+//            )
+//        } else if ((sluttberegning.innhold.bidragJustertNedTilEvne || sluttberegning.innhold.bidragJustertNedTil25ProsentAvInntekt) &&
+//            reskoder4E.contains(sistePeriode.resultatkode)
+//        ) {
+//            aldersjusteresManuelt(
+//                SkalAldersjusteresManueltBegrunnelse.SISTE_VEDTAK_HAR_RESULTAT_LAVERE_ENN_INNTEKTSEVNE,
+//                resultat = resultatSistePeriode,
+//                vedtaksid = vedtaksId,
+//            )
+//        } else if ((sluttberegning.innhold.bidragJustertNedTilEvne || sluttberegning.innhold.bidragJustertNedTil25ProsentAvInntekt) &&
+//            sistePeriode.resultatkode == BisysResultatkoder.INGEN_ENDRING_UNDER_GRENSE
+//        ) {
+//            aldersjusteresManuelt(
+//                SkalAldersjusteresManueltBegrunnelse.SISTE_VEDTAK_HAR_RESULTAT_INGEN_ENDRING_UNDER_GRENSE,
+//                resultat = resultatSistePeriode,
+//                vedtaksid = vedtaksId,
+//            )
+//        }
 
         if (sluttberegning.innhold.bidragJustertNedTilEvne && sistePeriode.resultatkode != BisysResultatkoder.MAKS_25_AV_INNTEKT) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_NED_TIL_EVNE)
