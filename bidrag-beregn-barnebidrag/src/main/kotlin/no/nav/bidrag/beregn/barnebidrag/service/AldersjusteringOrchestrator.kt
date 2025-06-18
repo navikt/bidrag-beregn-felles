@@ -181,7 +181,7 @@ class AldersjusteringOrchestrator(
                     }
                     AldersjusteringResultat(
                         vedtaksId,
-                        sistePeriode.beløp,
+                        løpendeStønad?.beløp,
                         resultatMedGrunnlag,
                         resultatSistePeriode,
                     )
