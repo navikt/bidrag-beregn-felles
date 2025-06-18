@@ -290,8 +290,8 @@ class AldersjusteringOrchestrator(
                 }
             }
 
-        val forpleinging = underholdskostnad?.forpleining?.setScale(0) ?: BigDecimal.ZERO
-        if (forpleinging > BigDecimal.ZERO) {
+        val forpleining = underholdskostnad?.forpleining?.setScale(0) ?: BigDecimal.ZERO
+        if (forpleining > BigDecimal.ZERO) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_INNEHOLDER_UNDERHOLDSKOSTNAD_MED_FORPLEINING)
         }
 
