@@ -21,7 +21,9 @@ import no.nav.bidrag.domene.util.visningsnavn
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlagAldersjustering
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlagVedtak
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
+import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.VirkningstidspunktGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragsmottaker
@@ -59,6 +61,7 @@ enum class SkalIkkeAldersjusteresBegrunnelse {
     SISTE_VEDTAK_ER_JUSTERT_NED_TIL_EVNE,
 
     SISTE_VEDTAK_ER_JUSTERT_NED_TIL_25_PROSENT_AV_INNTEKT,
+    SISTE_VEDTAK_INNEHOLDER_UNDERHOLDSKOSTNAD_MED_FORPLEINING,
     SISTE_VEDTAK_ER_BEGRENSET_REVURDERING_JUSTERT_OPP_TIL_FORSKUDDSATS,
     SISTE_VEDTAK_ER_SKJØNNSFASTSATT_AV_UTLAND,
     SISTE_VEDTAK_ER_PRIVAT_AVTALE,
@@ -239,6 +242,9 @@ class AldersjusteringOrchestrator(
 
         val sluttberegningSistePeriode = vedtak.grunnlagListe.finnSluttberegningIReferanser(sistePeriode.grunnlagReferanseListe)
             ?.innholdTilObjekt<SluttberegningBarnebidrag>()
+
+        val underholdskostnad = vedtak.grunnlagListe.finnDelberegningUnderholdskostnad(sistePeriode.grunnlagReferanseListe)
+
         val resultatSistePeriode = when {
             BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BM == sistePeriode.resultatkode -> "Lavere enn inntektsevne for bidragsmottaker"
             BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BP == sistePeriode.resultatkode -> "Lavere enn inntektsevne for bidragspliktig"
@@ -284,6 +290,11 @@ class AldersjusteringOrchestrator(
                 }
             }
 
+        val forpleinging = underholdskostnad?.forpleining?.setScale(0) ?: BigDecimal.ZERO
+        if (forpleinging > BigDecimal.ZERO) {
+            begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_INNEHOLDER_UNDERHOLDSKOSTNAD_MED_FORPLEINING)
+        }
+
         if (sistePeriode.periode.fom >= aldersjusteringDato && sistePeriode.beløp != null) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.LØPENDE_PERIODE_FRA_OG_MED_DATO_ER_LIK_ELLER_ETTER_ALDERSJUSTERING)
         }
@@ -307,35 +318,6 @@ class AldersjusteringOrchestrator(
         if (sluttberegning.innhold.bidragJustertForNettoBarnetilleggBP) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_FOR_BARNETILLEGG_BP)
         }
-        // Sjekk om at det ikke er resultat 25% av inntekt pga bug i grunnlagsoverføring hvor bidragJustertNedTilEvne er true selv om det er bare 25% av inntekt.
-        // Fjern dette når det er fikset
-
-//        // Lag manuell oppgave hvis 4E og 4D og flagget er satt
-//        if ((sluttberegning.innhold.bidragJustertNedTilEvne || sluttberegning.innhold.bidragJustertNedTil25ProsentAvInntekt) &&
-//            reskoder4D.contains(sistePeriode.resultatkode)
-//        ) {
-//            aldersjusteresManuelt(
-//                SkalAldersjusteresManueltBegrunnelse.SISTE_VEDTAK_HAR_RESULTAT_MANGLENDE_DOKUMENTASJON_AV_INNTEKT,
-//                resultat = resultatSistePeriode,
-//                vedtaksid = vedtaksId,
-//            )
-//        } else if ((sluttberegning.innhold.bidragJustertNedTilEvne || sluttberegning.innhold.bidragJustertNedTil25ProsentAvInntekt) &&
-//            reskoder4E.contains(sistePeriode.resultatkode)
-//        ) {
-//            aldersjusteresManuelt(
-//                SkalAldersjusteresManueltBegrunnelse.SISTE_VEDTAK_HAR_RESULTAT_LAVERE_ENN_INNTEKTSEVNE,
-//                resultat = resultatSistePeriode,
-//                vedtaksid = vedtaksId,
-//            )
-//        } else if ((sluttberegning.innhold.bidragJustertNedTilEvne || sluttberegning.innhold.bidragJustertNedTil25ProsentAvInntekt) &&
-//            sistePeriode.resultatkode == BisysResultatkoder.INGEN_ENDRING_UNDER_GRENSE
-//        ) {
-//            aldersjusteresManuelt(
-//                SkalAldersjusteresManueltBegrunnelse.SISTE_VEDTAK_HAR_RESULTAT_INGEN_ENDRING_UNDER_GRENSE,
-//                resultat = resultatSistePeriode,
-//                vedtaksid = vedtaksId,
-//            )
-//        }
 
         if (sluttberegning.innhold.bidragJustertNedTilEvne && sistePeriode.resultatkode != BisysResultatkoder.MAKS_25_AV_INNTEKT) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_NED_TIL_EVNE)
@@ -412,6 +394,18 @@ class AldersjusteringOrchestrator(
         if (this == null) skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE)
         if (valutakode != "NOK") skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.BIDRAG_LØPER_MED_UTENLANDSK_VALUTA)
         if (sak.kategori == Sakskategori.U) skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.SAKEN_TILHØRER_UTLAND)
+    }
+
+    fun List<GrunnlagDto>.finnDelberegningUnderholdskostnad(grunnlagsreferanseListe: List<Grunnlagsreferanse>): DelberegningUnderholdskostnad? {
+        val sluttberegning = finnSluttberegningIReferanser(grunnlagsreferanseListe) ?: return null
+        val delberegningUnderholdskostnad =
+            find {
+                it.type == Grunnlagstype.DELBEREGNING_UNDERHOLDSKOSTNAD &&
+                    sluttberegning.grunnlagsreferanseListe.contains(
+                        it.referanse,
+                    )
+            } ?: return null
+        return delberegningUnderholdskostnad.innholdTilObjekt<DelberegningUnderholdskostnad>()
     }
 }
 val reskoder4D = listOf(
