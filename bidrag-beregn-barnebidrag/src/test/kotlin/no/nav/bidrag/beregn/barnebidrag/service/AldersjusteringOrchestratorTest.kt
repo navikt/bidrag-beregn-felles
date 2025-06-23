@@ -83,6 +83,10 @@ class AldersjusteringOrchestratorTest {
     fun init() {
         stubSjablonService()
         stubSjablonProvider()
+        every { identUtils.hentNyesteIdent(any()) }.answers {
+            val ident = firstArg<Personident>()
+            ident
+        }
         bidragVedtakService = VedtakService(
             vedtakConsumer = beregningVedtakConsumer,
             stønadConsumer = beregningStønadConsumer,
