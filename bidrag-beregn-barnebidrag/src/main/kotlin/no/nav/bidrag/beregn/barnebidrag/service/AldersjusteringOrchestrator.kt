@@ -223,7 +223,7 @@ class AldersjusteringOrchestrator(
     }
     private fun SisteManuelleVedtak.finnStønadsendring(stønad: Stønadsid) = vedtak.stønadsendringListe.find {
         it.type == stønad.type &&
-            it.kravhaver == stønad.kravhaver
+            identUtils.hentNyesteIdent(it.kravhaver) == identUtils.hentNyesteIdent(stønad.kravhaver)
     }!!
     private fun SisteManuelleVedtak.validerSkalAldersjusteres(stønad: Stønadsid, aldersjusteresForÅr: Int = YearMonth.now().year) {
         val aldersjusteringDato = YearMonth.of(aldersjusteresForÅr, 7)
