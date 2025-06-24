@@ -97,6 +97,7 @@ fun opprettVedtakForStønad(
             },
         ),
     ),
+    kildeapplikasjon = "",
     stønadsendring =
     StønadsendringDto(
         type = stønadstype,
