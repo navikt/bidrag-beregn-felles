@@ -40,8 +40,7 @@ class Vedtaksfiltrering {
                 continue
             }
 
-            // Hopp over indeksregulering
-            if (Vedtakstype.INDEKSREGULERING == vedtaksdetaljer.vedtak.type) {
+            if (vedtaksdetaljer.vedtak.erOpprettetAvBatchEllerAldersjusteringIndeksregulering()) {
                 continue
             }
 
@@ -70,7 +69,20 @@ class Vedtaksfiltrering {
      */
     fun finneSisteManuelleVedtak(vedtak: Collection<VedtakForStønad>): VedtakForStønad? {
         val iterator =
-            Vedtaksiterator(vedtak.filter { it.filtrereBortIrrelevanteVedtak() }.sortedByDescending { it.vedtakstidspunkt }.tilVedtaksdetaljer())
+            Vedtaksiterator(
+                vedtak.filter { it.filtrereBortIrrelevanteVedtak() }
+                    .map {
+                        if (it.kildeapplikasjon == "bisys") {
+                            it.copy(
+                                // Når Bisys oppretter vedtak så sender den vedtakstidspunkt som er 2 timer tidligere enn det som er faktiske vedtakstidspunkt. Kompenserer for dette her.
+                                vedtakstidspunkt = it.vedtakstidspunkt.plusHours(2),
+                            )
+                        } else {
+                            it
+                        }
+                    }
+                    .sortedByDescending { it.vedtakstidspunkt }.tilVedtaksdetaljer(),
+            )
 
         while (iterator.hasNext()) {
             val vedtaksdetaljer = iterator.next()

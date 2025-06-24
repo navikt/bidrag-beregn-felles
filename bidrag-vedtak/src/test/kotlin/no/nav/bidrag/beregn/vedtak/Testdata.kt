@@ -137,6 +137,7 @@ fun oppretteVedtak(
     vedtakstidspunkt = vedtakstidspunkt,
     kilde = kilde,
     type = vedtakstype,
+    kildeapplikasjon = "",
 )
 
 fun oppretteBehandlingsreferanseForKlage(): List<BehandlingsreferanseDto> {

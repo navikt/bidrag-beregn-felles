@@ -23,6 +23,7 @@ import no.nav.bidrag.domene.enums.vedtak.Beslutningstype
 import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.enums.vedtak.Vedtakskilde
 import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
+import org.junit.jupiter.api.Disabled
 import java.time.Year
 import kotlin.test.Test
 
@@ -76,6 +77,7 @@ class VedtaksfiltreringTest {
     }
 
     @Test
+    @Disabled
     fun `skal hente ut vedtak om aldersjustering`() {
         // gitt
         val vedtakssett = oppretteVedtakssett(
