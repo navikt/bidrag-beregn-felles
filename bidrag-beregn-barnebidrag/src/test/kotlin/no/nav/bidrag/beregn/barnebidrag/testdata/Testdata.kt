@@ -15,8 +15,8 @@ import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.organisasjon.Enhetsnummer
 import no.nav.bidrag.domene.sak.Saksnummer
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
-import no.nav.bidrag.transport.behandling.stonad.response.StønadDto
-import no.nav.bidrag.transport.behandling.stonad.response.StønadPeriodeDto
+import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
+import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadPeriodeDto
 import no.nav.bidrag.transport.behandling.vedtak.response.BehandlingsreferanseDto
 import no.nav.bidrag.transport.behandling.vedtak.response.StønadsendringDto
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakDto

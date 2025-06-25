@@ -13,11 +13,13 @@ import no.nav.bidrag.beregn.core.exception.AldersjusteringLavereEnnEllerLikLøpe
 import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
+import no.nav.bidrag.domene.enums.beregning.Resultatkode.Companion.tilBisysResultatkode
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.sak.Sakskategori
 import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.visningsnavn
+import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadPeriodeDto
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlagAldersjustering
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlagVedtak
@@ -32,7 +34,6 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.finnOgKonverterGrunnla
 import no.nav.bidrag.transport.behandling.felles.grunnlag.finnSluttberegningIReferanser
 import no.nav.bidrag.transport.behandling.felles.grunnlag.hentPersonMedIdent
 import no.nav.bidrag.transport.behandling.felles.grunnlag.innholdTilObjekt
-import no.nav.bidrag.transport.behandling.stonad.response.StønadPeriodeDto
 import no.nav.bidrag.transport.sak.BidragssakDto
 import org.springframework.context.annotation.Import
 import org.springframework.stereotype.Service
@@ -73,9 +74,6 @@ enum class SkalAldersjusteresManueltBegrunnelse {
     FANT_INGEN_MANUELL_VEDTAK,
     SISTE_VEDTAK_HAR_PERIODE_MED_FOM_DATO_ETTER_ALDERSJUSTERINGEN,
     SISTE_VEDTAK_HAR_RESULTAT_DELT_BOSTED_MED_BELØP_0,
-    SISTE_VEDTAK_HAR_RESULTAT_LAVERE_ENN_INNTEKTSEVNE,
-    SISTE_VEDTAK_HAR_RESULTAT_MANGLENDE_DOKUMENTASJON_AV_INNTEKT,
-    SISTE_VEDTAK_HAR_RESULTAT_INGEN_ENDRING_UNDER_GRENSE,
     SISTE_VEDTAK_ER_INNVILGET_VEDTAK,
 }
 
@@ -109,7 +107,11 @@ class AldersjusteringOrchestrator(
     private val personConsumer: BeregningPersonConsumer,
     private val identUtils: IdentUtils,
 ) {
-    fun utførAldersjustering(stønad: Stønadsid, aldersjusteresForÅr: Int = YearMonth.now().year): AldersjusteringResultat {
+    fun utførAldersjustering(
+        stønad: Stønadsid,
+        aldersjusteresForÅr: Int = YearMonth.now().year,
+        beregnBasertPåVedtak: Int? = null,
+    ): AldersjusteringResultat {
         try {
             log.info { "Aldersjustering kjøres for stønadstype ${stønad.type} og sak ${stønad.sak} for årstall $aldersjusteresForÅr" }
             secureLogger.info { "Aldersjustering kjøres for stønad $stønad og årstall $aldersjusteresForÅr" }
@@ -130,9 +132,9 @@ class AldersjusteringOrchestrator(
                 .hentLøpendeStønad(stønad, LocalDateTime.now().withYear(aldersjusteresForÅr))
                 .validerSkalAldersjusteres(sak)
 
-            val sisteManuelleVedtak =
-                vedtakService.finnSisteManuelleVedtak(stønad)
-                    ?: aldersjusteresManuelt(SkalAldersjusteresManueltBegrunnelse.FANT_INGEN_MANUELL_VEDTAK)
+            val sisteManuelleVedtak = beregnBasertPåVedtak?.let { SisteManuelleVedtak(it, vedtakService.hentVedtak(it)!!) }
+                ?: vedtakService.finnSisteManuelleVedtak(stønad)
+                ?: aldersjusteresManuelt(SkalAldersjusteresManueltBegrunnelse.FANT_INGEN_MANUELL_VEDTAK)
 
             sisteManuelleVedtak.validerSkalAldersjusteres(stønad)
 
@@ -245,19 +247,23 @@ class AldersjusteringOrchestrator(
 
         val underholdskostnad = vedtak.grunnlagListe.finnDelberegningUnderholdskostnad(sistePeriode.grunnlagReferanseListe)
 
-        val resultatSistePeriode = when {
-            BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BM == sistePeriode.resultatkode -> "Lavere enn inntektsevne for bidragsmottaker"
-            BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BP == sistePeriode.resultatkode -> "Lavere enn inntektsevne for bidragspliktig"
-            BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BEGGE_PARTER == sistePeriode.resultatkode -> "Lavere enn inntektsevne for begge parter"
-            BisysResultatkoder.MANGL_DOK_AV_INNT_BM == sistePeriode.resultatkode -> "Mangler dokumentasjon av inntekt for bidragsmottaker"
-            BisysResultatkoder.MANGL_DOK_AV_INNT_BP == sistePeriode.resultatkode -> "Mangler dokumentasjon av inntekt for bidragspliktig"
-            BisysResultatkoder.MANGL_DOK_AV_INNT_BEGGE_PARTER == sistePeriode.resultatkode -> "Mangler dokumentasjon av inntekt for begge parter"
-            BisysResultatkoder.INNTIL_1_ÅR_TILBAKE == sistePeriode.resultatkode -> "Inntil 1 år tilbake"
-            Resultatkode.fraKode(sistePeriode.resultatkode) == Resultatkode.INNVILGET_VEDTAK -> Resultatkode.INNVILGET_VEDTAK.visningsnavn.intern
-            Resultatkode.fraKode(sistePeriode.resultatkode)
-                == Resultatkode.INGEN_ENDRING_UNDER_GRENSE -> Resultatkode.INGEN_ENDRING_UNDER_GRENSE.visningsnavn.intern
-            else -> sluttberegningSistePeriode?.resultatVisningsnavn?.intern
-        }
+        val resultatSistePeriode =
+            when (Resultatkode.fraKode(sistePeriode.resultatkode)) {
+                Resultatkode.INGEN_ENDRING_UNDER_GRENSE,
+                Resultatkode.LAVERE_ENN_INNTEKTSEVNE_BEGGE_PARTER,
+                Resultatkode.LAVERE_ENN_INNTEKTSEVNE_BIDRAGSPLIKTIG,
+                Resultatkode.LAVERE_ENN_INNTEKTSEVNE_BIDRAGSMOTTAKER,
+                Resultatkode.MANGLER_DOKUMENTASJON_AV_INNTEKT_BEGGE_PARTER,
+                Resultatkode.MANGLER_DOKUMENTASJON_AV_INNTEKT_BIDRAGSMOTTAKER,
+                Resultatkode.MANGLER_DOKUMENTASJON_AV_INNTEKT_BIDRAGSPLIKTIG,
+                Resultatkode.INNTIL_1_ÅR_TILBAKE,
+                Resultatkode.INNVILGET_VEDTAK,
+                -> Resultatkode.fraKode(sistePeriode.resultatkode)!!.visningsnavn.intern
+                else ->
+                    sluttberegningSistePeriode?.resultatVisningsnavn?.intern
+                        ?: Resultatkode.fraKode(sistePeriode.resultatkode)?.visningsnavn?.intern
+                        ?: sistePeriode.resultatkode
+            }
 
         sistePeriode.resultatkode.validerResultatkkode(resultatSistePeriode, vedtaksId)
 
@@ -319,7 +325,9 @@ class AldersjusteringOrchestrator(
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_FOR_BARNETILLEGG_BP)
         }
 
-        if (sluttberegning.innhold.bidragJustertNedTilEvne && sistePeriode.resultatkode != BisysResultatkoder.MAKS_25_AV_INNTEKT) {
+        if (sluttberegning.innhold.bidragJustertNedTilEvne &&
+            sistePeriode.resultatkode != Resultatkode.MAKS_25_PROSENT_AV_INNTEKT.tilBisysResultatkode()
+        ) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_NED_TIL_EVNE)
         }
 
@@ -334,7 +342,7 @@ class AldersjusteringOrchestrator(
     }
 
     private fun String.validerResultatkkode(resultatSistePeriode: String?, vedtaksId: Int?) = when (this) {
-        BisysResultatkoder.INNTIL_1_ÅR_TILBAKE, Resultatkode.INNVILGET_VEDTAK.bisysKode.first().resultatKode -> aldersjusteresManuelt(
+        Resultatkode.INNTIL_1_ÅR_TILBAKE.tilBisysResultatkode(), Resultatkode.INNVILGET_VEDTAK.tilBisysResultatkode() -> aldersjusteresManuelt(
             SkalAldersjusteresManueltBegrunnelse.SISTE_VEDTAK_ER_INNVILGET_VEDTAK,
             resultat = resultatSistePeriode,
             vedtaksid = vedtaksId,
@@ -407,48 +415,4 @@ class AldersjusteringOrchestrator(
             } ?: return null
         return delberegningUnderholdskostnad.innholdTilObjekt<DelberegningUnderholdskostnad>()
     }
-}
-val reskoder4D = listOf(
-    BisysResultatkoder.MANGL_DOK_AV_INNT_BEGGE_PARTER,
-    BisysResultatkoder.MANGL_DOK_AV_INNT_BP,
-    BisysResultatkoder.MANGL_DOK_AV_INNT_BM,
-)
-val reskoder4E = listOf(
-    BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BEGGE_PARTER,
-    BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BP,
-    BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BM,
-)
-val ignorerResultatkoderFor25Prosent =
-    listOf(
-        BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BEGGE_PARTER,
-        BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BP,
-        BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BM,
-        BisysResultatkoder.MANGL_DOK_AV_INNT_BEGGE_PARTER,
-        BisysResultatkoder.MANGL_DOK_AV_INNT_BP,
-        BisysResultatkoder.MANGL_DOK_AV_INNT_BM,
-        BisysResultatkoder.KOSTNADSBEREGNET_BIDRAG,
-    )
-val ignorerResultatkoderForRedusertEvne =
-    listOf(
-        BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BEGGE_PARTER,
-        BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BP,
-        BisysResultatkoder.LAVERE_ENN_INNT_EVNE_BM,
-        BisysResultatkoder.MANGL_DOK_AV_INNT_BEGGE_PARTER,
-        BisysResultatkoder.MANGL_DOK_AV_INNT_BP,
-        BisysResultatkoder.MANGL_DOK_AV_INNT_BM,
-        BisysResultatkoder.MAKS_25_AV_INNTEKT,
-        BisysResultatkoder.KOSTNADSBEREGNET_BIDRAG,
-    )
-object BisysResultatkoder {
-    const val LAVERE_ENN_INNT_EVNE_BEGGE_PARTER = "4E"
-    const val LAVERE_ENN_INNT_EVNE_BP = "4E1"
-    const val LAVERE_ENN_INNT_EVNE_BM = "4E2"
-    const val MANGL_DOK_AV_INNT_BEGGE_PARTER = "4D"
-    const val INNTIL_1_ÅR_TILBAKE = "VT"
-    const val MANGL_DOK_AV_INNT_BP = "4D1"
-    const val MANGL_DOK_AV_INNT_BM = "4D2"
-    const val KOSTNADSBEREGNET_BIDRAG = "KBB"
-    const val MAKS_25_AV_INNTEKT = "7M"
-    const val MANGLENDE_BIDRAGSEVNE = "6MB"
-    const val INGEN_ENDRING_UNDER_GRENSE = "VO"
 }
