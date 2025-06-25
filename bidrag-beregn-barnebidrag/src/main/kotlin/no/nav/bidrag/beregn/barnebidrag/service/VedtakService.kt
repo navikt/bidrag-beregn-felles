@@ -11,15 +11,15 @@ import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.sak.Stønadsid
+import no.nav.bidrag.transport.behandling.belopshistorikk.request.HentStønadHistoriskRequest
+import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
+import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadPeriodeDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragsmottaker
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragspliktig
 import no.nav.bidrag.transport.behandling.felles.grunnlag.hentPersonMedIdent
-import no.nav.bidrag.transport.behandling.stonad.request.HentStønadHistoriskRequest
-import no.nav.bidrag.transport.behandling.stonad.response.StønadDto
-import no.nav.bidrag.transport.behandling.stonad.response.StønadPeriodeDto
 import no.nav.bidrag.transport.behandling.vedtak.request.HentVedtakForStønadRequest
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakDto
 import no.nav.bidrag.transport.felles.toCompactString
@@ -87,6 +87,7 @@ class VedtakService(
         }
     }
 
+    @Suppress("unused")
     fun finnSisteVedtaksid(stønadsid: Stønadsid) = vedtakConsumer
         .hentVedtakForStønad(
             HentVedtakForStønadRequest(
@@ -98,6 +99,8 @@ class VedtakService(
         ).vedtakListe
         .maxByOrNull { it.vedtakstidspunkt }
         ?.vedtaksid
+
+    fun hentVedtak(vedtaksId: Int) = vedtakConsumer.hentVedtak(vedtaksId)
 
     private fun StønadDto?.tilGrunnlag(personer: List<GrunnlagDto>, stønadsid: Stønadsid): GrunnlagDto {
         val grunnlagstype =
