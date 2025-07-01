@@ -277,9 +277,9 @@ class AldersjusteringOrchestratorTest {
                 aldersjusteresForÅr = 2025,
             )
         }
-        exception.message shouldBe "Skal ikke aldersjusteres med begrunnelse SISTE_VEDTAK_ER_JUSTERT_NED_TIL_EVNE"
+        exception.message shouldBe "Skal ikke aldersjusteres med begrunnelse VEDTAK_GRUNNLAG_HENTES_FRA_ER_JUSTERT_NED_TIL_EVNE"
         exception.begrunnelser.shouldHaveSize(1)
-        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_NED_TIL_EVNE
+        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.VEDTAK_GRUNNLAG_HENTES_FRA_ER_JUSTERT_NED_TIL_EVNE
     }
 
     @Test
@@ -313,12 +313,12 @@ class AldersjusteringOrchestratorTest {
                 aldersjusteresForÅr = 2025,
             )
         }
-        exception.message shouldBe "Skal ikke aldersjusteres med begrunnelse SISTE_VEDTAK_ER_JUSTERT_FOR_BARNETILLEGG_BM,SISTE_VEDTAK_ER_JUSTERT_FOR_BARNETILLEGG_BP,SISTE_VEDTAK_ER_JUSTERT_NED_TIL_EVNE,SISTE_VEDTAK_ER_JUSTERT_NED_TIL_25_PROSENT_AV_INNTEKT"
+        exception.message shouldBe "Skal ikke aldersjusteres med begrunnelse VEDTAK_GRUNNLAG_HENTES_FRA_ER_JUSTERT_FOR_BARNETILLEGG_BM,VEDTAK_GRUNNLAG_HENTES_FRA_ER_JUSTERT_FOR_BARNETILLEGG_BP,VEDTAK_GRUNNLAG_HENTES_FRA_ER_JUSTERT_NED_TIL_EVNE,VEDTAK_GRUNNLAG_HENTES_FRA_ER_JUSTERT_NED_TIL_25_PROSENT_AV_INNTEKT"
         exception.begrunnelser.shouldHaveSize(4)
-        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_NED_TIL_EVNE
-        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_NED_TIL_25_PROSENT_AV_INNTEKT
-        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_FOR_BARNETILLEGG_BP
-        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_FOR_BARNETILLEGG_BM
+        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.VEDTAK_GRUNNLAG_HENTES_FRA_ER_JUSTERT_NED_TIL_EVNE
+        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.VEDTAK_GRUNNLAG_HENTES_FRA_ER_JUSTERT_NED_TIL_25_PROSENT_AV_INNTEKT
+        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.VEDTAK_GRUNNLAG_HENTES_FRA_ER_JUSTERT_FOR_BARNETILLEGG_BP
+        exception.begrunnelser shouldContain SkalIkkeAldersjusteresBegrunnelse.VEDTAK_GRUNNLAG_HENTES_FRA_ER_JUSTERT_FOR_BARNETILLEGG_BM
     }
 
     @Test
