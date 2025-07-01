@@ -61,7 +61,7 @@ internal class BeregnIndeksregulerPrivatAvtaleApiTest : FellesApiTest() {
         val resultat = utførBeregningerOgEvaluerResultatIndeksreguleringPrivatAvtale().perioder
 
         assertAll(
-            { assertThat(resultat).hasSize(4) },
+            { assertThat(resultat).hasSize(5) },
 
             // Resultat
             { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode("2021-01", "2022-01")) },
@@ -76,7 +76,7 @@ internal class BeregnIndeksregulerPrivatAvtaleApiTest : FellesApiTest() {
             { assertThat(resultat[2].beløp.compareTo(BigDecimal.valueOf(1070.00))).isEqualTo(0) },
             { assertThat(resultat[2].indeksreguleringFaktor?.compareTo(BigDecimal.valueOf(0.0700))).isEqualTo(0) },
 
-            { assertThat(resultat[3].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
+            { assertThat(resultat[3].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), YearMonth.parse("2025-07"))) },
             { assertThat(resultat[3].beløp.compareTo(BigDecimal.valueOf(1120.00))).isEqualTo(0) },
             { assertThat(resultat[3].indeksreguleringFaktor?.compareTo(BigDecimal.valueOf(0.0470))).isEqualTo(0) },
         )
@@ -109,14 +109,14 @@ internal class BeregnIndeksregulerPrivatAvtaleApiTest : FellesApiTest() {
         val resultat = utførBeregningerOgEvaluerResultatIndeksreguleringPrivatAvtale().perioder
 
         assertAll(
-            { assertThat(resultat).hasSize(2) },
+            { assertThat(resultat).hasSize(3) },
 
             // Resultat
             { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode("2023-06", "2024-07")) },
             { assertThat(resultat[0].beløp.compareTo(BigDecimal.valueOf(2000.00))).isEqualTo(0) },
             { assertThat(resultat[0].indeksreguleringFaktor).isNull() },
 
-            { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
+            { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), YearMonth.parse("2025-07"))) },
             { assertThat(resultat[1].beløp.compareTo(BigDecimal.valueOf(2090.00))).isEqualTo(0) },
             { assertThat(resultat[1].indeksreguleringFaktor?.compareTo(BigDecimal.valueOf(0.0470))).isEqualTo(0) },
         )
