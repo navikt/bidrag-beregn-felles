@@ -191,7 +191,7 @@ internal object AldersjusteringMapper : CoreMapper() {
         vedtakId: Long,
         søknadsbarnReferanse: String,
     ): GrunnlagDto = grunnlagListeFraVedtak
-        .filter { it.gjelderBarnReferanse == søknadsbarnReferanse }
+        .filter { it.gjelderBarnReferanse == søknadsbarnReferanse || it.grunnlagsreferanseListe.contains(søknadsbarnReferanse) }
         .finnSluttberegningIReferanser(grunnlagReferanseListe)
         ?: throw UgyldigInputException(
             "Aldersjustering: Sluttberegning ikke funnet for søknadsbarn med referanse $søknadsbarnReferanse og vedtak med id $vedtakId",

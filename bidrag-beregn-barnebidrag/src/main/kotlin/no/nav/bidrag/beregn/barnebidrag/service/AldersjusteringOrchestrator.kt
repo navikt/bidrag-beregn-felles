@@ -57,24 +57,24 @@ enum class SkalIkkeAldersjusteresBegrunnelse {
     IKKE_ALDERSGRUPPE_FOR_ALDERSJUSTERING,
     BARN_MANGLER_FØDSELSDATO,
     BIDRAG_LØPER_MED_UTENLANDSK_VALUTA,
-    SISTE_VEDTAK_ER_JUSTERT_FOR_BARNETILLEGG_BM,
-    SISTE_VEDTAK_ER_JUSTERT_FOR_BARNETILLEGG_BP,
-    SISTE_VEDTAK_ER_JUSTERT_NED_TIL_EVNE,
+    VEDTAK_GRUNNLAG_HENTES_FRA_ER_JUSTERT_FOR_BARNETILLEGG_BM,
+    VEDTAK_GRUNNLAG_HENTES_FRA_ER_JUSTERT_FOR_BARNETILLEGG_BP,
+    VEDTAK_GRUNNLAG_HENTES_FRA_ER_JUSTERT_NED_TIL_EVNE,
 
-    SISTE_VEDTAK_ER_JUSTERT_NED_TIL_25_PROSENT_AV_INNTEKT,
-    SISTE_VEDTAK_INNEHOLDER_UNDERHOLDSKOSTNAD_MED_FORPLEINING,
-    SISTE_VEDTAK_ER_BEGRENSET_REVURDERING_JUSTERT_OPP_TIL_FORSKUDDSATS,
-    SISTE_VEDTAK_ER_SKJØNNSFASTSATT_AV_UTLAND,
-    SISTE_VEDTAK_ER_PRIVAT_AVTALE,
+    VEDTAK_GRUNNLAG_HENTES_FRA_ER_JUSTERT_NED_TIL_25_PROSENT_AV_INNTEKT,
+    VEDTAK_GRUNNLAG_HENTES_FRA_INNEHOLDER_UNDERHOLDSKOSTNAD_MED_FORPLEINING,
+    VEDTAK_GRUNNLAG_HENTES_FRA_ER_BEGRENSET_REVURDERING_JUSTERT_OPP_TIL_FORSKUDDSATS,
+    VEDTAK_GRUNNLAG_HENTES_FRA_ER_SKJØNNSFASTSATT_AV_UTLAND,
+    VEDTAK_GRUNNLAG_HENTES_FRA_ER_PRIVAT_AVTALE,
     ALDERSJUSTERT_BELØP_LAVERE_ELLER_LIK_LØPENDE_BIDRAG,
     SAKEN_TILHØRER_UTLAND,
 }
 
 enum class SkalAldersjusteresManueltBegrunnelse {
     FANT_INGEN_MANUELL_VEDTAK,
-    SISTE_VEDTAK_HAR_PERIODE_MED_FOM_DATO_ETTER_ALDERSJUSTERINGEN,
-    SISTE_VEDTAK_HAR_RESULTAT_DELT_BOSTED_MED_BELØP_0,
-    SISTE_VEDTAK_ER_INNVILGET_VEDTAK,
+    VEDTAK_GRUNNLAG_HENTES_FRA_HAR_PERIODE_MED_FOM_DATO_ETTER_ALDERSJUSTERINGEN,
+    VEDTAK_GRUNNLAG_HENTES_FRA_HAR_RESULTAT_DELT_BOSTED_MED_BELØP_0,
+    VEDTAK_GRUNNLAG_HENTES_FRA_ER_INNVILGET_VEDTAK,
 }
 
 class SkalIkkeAldersjusteresException(
@@ -269,7 +269,7 @@ class AldersjusteringOrchestrator(
 
         if (sistePeriode.periode.fom.isAfter(aldersjusteringDato)) {
             aldersjusteresManuelt(
-                SkalAldersjusteresManueltBegrunnelse.SISTE_VEDTAK_HAR_PERIODE_MED_FOM_DATO_ETTER_ALDERSJUSTERINGEN,
+                SkalAldersjusteresManueltBegrunnelse.VEDTAK_GRUNNLAG_HENTES_FRA_HAR_PERIODE_MED_FOM_DATO_ETTER_ALDERSJUSTERINGEN,
                 resultat = resultatSistePeriode,
                 vedtaksid = vedtaksId,
             )
@@ -298,7 +298,7 @@ class AldersjusteringOrchestrator(
 
         val forpleining = underholdskostnad?.forpleining?.setScale(0) ?: BigDecimal.ZERO
         if (forpleining > BigDecimal.ZERO) {
-            begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_INNEHOLDER_UNDERHOLDSKOSTNAD_MED_FORPLEINING)
+            begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.VEDTAK_GRUNNLAG_HENTES_FRA_INNEHOLDER_UNDERHOLDSKOSTNAD_MED_FORPLEINING)
         }
 
         if (sistePeriode.periode.fom >= aldersjusteringDato && sistePeriode.beløp != null) {
@@ -307,32 +307,32 @@ class AldersjusteringOrchestrator(
 
         if (sluttberegning.innhold.bidragJustertForDeltBosted && BigDecimal.ZERO.equals(beløpSistePeriode)) {
             aldersjusteresManuelt(
-                SkalAldersjusteresManueltBegrunnelse.SISTE_VEDTAK_HAR_RESULTAT_DELT_BOSTED_MED_BELØP_0,
+                SkalAldersjusteresManueltBegrunnelse.VEDTAK_GRUNNLAG_HENTES_FRA_HAR_RESULTAT_DELT_BOSTED_MED_BELØP_0,
                 resultat = resultatSistePeriode,
                 vedtaksid = vedtaksId,
             )
         }
 
         if (sluttberegning.innhold.begrensetRevurderingUtført && sluttberegning.innhold.bidragJustertTilForskuddssats) {
-            begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_BEGRENSET_REVURDERING_JUSTERT_OPP_TIL_FORSKUDDSATS)
+            begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.VEDTAK_GRUNNLAG_HENTES_FRA_ER_BEGRENSET_REVURDERING_JUSTERT_OPP_TIL_FORSKUDDSATS)
         }
 
         if (sluttberegning.innhold.bidragJustertForNettoBarnetilleggBM) {
-            begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_FOR_BARNETILLEGG_BM)
+            begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.VEDTAK_GRUNNLAG_HENTES_FRA_ER_JUSTERT_FOR_BARNETILLEGG_BM)
         }
 
         if (sluttberegning.innhold.bidragJustertForNettoBarnetilleggBP) {
-            begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_FOR_BARNETILLEGG_BP)
+            begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.VEDTAK_GRUNNLAG_HENTES_FRA_ER_JUSTERT_FOR_BARNETILLEGG_BP)
         }
 
         if (sluttberegning.innhold.bidragJustertNedTilEvne &&
             sistePeriode.resultatkode != Resultatkode.MAKS_25_PROSENT_AV_INNTEKT.tilBisysResultatkode()
         ) {
-            begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_NED_TIL_EVNE)
+            begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.VEDTAK_GRUNNLAG_HENTES_FRA_ER_JUSTERT_NED_TIL_EVNE)
         }
 
         if (sluttberegning.innhold.bidragJustertNedTil25ProsentAvInntekt) {
-            begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_JUSTERT_NED_TIL_25_PROSENT_AV_INNTEKT)
+            begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.VEDTAK_GRUNNLAG_HENTES_FRA_ER_JUSTERT_NED_TIL_25_PROSENT_AV_INNTEKT)
         }
 
         if (begrunnelser.isNotEmpty()) {
@@ -343,17 +343,17 @@ class AldersjusteringOrchestrator(
 
     private fun String.validerResultatkkode(resultatSistePeriode: String?, vedtaksId: Int?) = when (this) {
         Resultatkode.INNTIL_1_ÅR_TILBAKE.tilBisysResultatkode(), Resultatkode.INNVILGET_VEDTAK.tilBisysResultatkode() -> aldersjusteresManuelt(
-            SkalAldersjusteresManueltBegrunnelse.SISTE_VEDTAK_ER_INNVILGET_VEDTAK,
+            SkalAldersjusteresManueltBegrunnelse.VEDTAK_GRUNNLAG_HENTES_FRA_ER_INNVILGET_VEDTAK,
             resultat = resultatSistePeriode,
             vedtaksid = vedtaksId,
         )
         Resultatkode.SKJØNN_UTLANDET.bisysKode.first().resultatKode -> skalIkkeAldersjusteres(
-            SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_SKJØNNSFASTSATT_AV_UTLAND,
+            SkalIkkeAldersjusteresBegrunnelse.VEDTAK_GRUNNLAG_HENTES_FRA_ER_SKJØNNSFASTSATT_AV_UTLAND,
             resultat = resultatSistePeriode,
             vedtaksid = vedtaksId,
         )
         Resultatkode.PRIVAT_AVTALE.bisysKode.first().resultatKode -> skalIkkeAldersjusteres(
-            SkalIkkeAldersjusteresBegrunnelse.SISTE_VEDTAK_ER_PRIVAT_AVTALE,
+            SkalIkkeAldersjusteresBegrunnelse.VEDTAK_GRUNNLAG_HENTES_FRA_ER_PRIVAT_AVTALE,
             resultat = resultatSistePeriode,
             vedtaksid = vedtaksId,
         )
