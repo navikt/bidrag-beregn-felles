@@ -16,6 +16,7 @@ import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.beregning.Resultatkode.Companion.tilBisysResultatkode
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.sak.Sakskategori
+import no.nav.bidrag.domene.enums.vedtak.VirkningstidspunktÅrsakstype
 import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.visningsnavn
@@ -111,6 +112,7 @@ class AldersjusteringOrchestrator(
         stønad: Stønadsid,
         aldersjusteresForÅr: Int = YearMonth.now().year,
         beregnBasertPåVedtak: Int? = null,
+        opphørsdato: YearMonth? = null,
     ): AldersjusteringResultat {
         try {
             log.info { "Aldersjustering kjøres for stønadstype ${stønad.type} og sak ${stønad.sak} for årstall $aldersjusteresForÅr" }
@@ -138,7 +140,7 @@ class AldersjusteringOrchestrator(
 
             sisteManuelleVedtak.validerSkalAldersjusteres(stønad)
 
-            return sisteManuelleVedtak.utførOgBeregn(stønad, aldersjusteresForÅr)
+            return sisteManuelleVedtak.utførOgBeregn(stønad, aldersjusteresForÅr, opphørsdato)
         } catch (e: Exception) {
             if (e is SkalIkkeAldersjusteresException || e is AldersjusteresManueltException) {
                 throw e
@@ -147,7 +149,11 @@ class AldersjusteringOrchestrator(
         }
     }
 
-    internal fun SisteManuelleVedtak.utførOgBeregn(stønad: Stønadsid, aldersjusteresForÅr: Int = YearMonth.now().year): AldersjusteringResultat {
+    internal fun SisteManuelleVedtak.utførOgBeregn(
+        stønad: Stønadsid,
+        aldersjusteresForÅr: Int = YearMonth.now().year,
+        opphørPåDato: YearMonth?,
+    ): AldersjusteringResultat {
         val beregningInput = byggGrunnlagForBeregning(
             stønad,
             aldersjusteresForÅr,
@@ -170,7 +176,14 @@ class AldersjusteringOrchestrator(
             barnebidragApi
                 .beregnAldersjustering(beregningInput).let {
                     val beregnetPeriode = it.beregnetBarnebidragPeriodeListe.first()
-                    val opphørsdato = løpendeStønad?.periode?.til
+                    val opphørsdato = opphørPåDato ?: løpendeStønad?.periode?.til
+                    if (opphørsdato != null && beregnetPeriode.periode.fom.isAfter(opphørsdato)) {
+                        skalIkkeAldersjusteres(
+                            SkalIkkeAldersjusteresBegrunnelse.BIDRAGET_HAR_OPPHØRT,
+                            resultat = resultatSistePeriode,
+                            vedtaksid = vedtaksId,
+                        )
+                    }
                     val resultatMedGrunnlag = it.copy(
                         beregnetBarnebidragPeriodeListe = listOf(
                             beregnetPeriode.copy(
@@ -178,7 +191,11 @@ class AldersjusteringOrchestrator(
                             ),
                         ),
                         grunnlagListe = it.grunnlagListe + listOf(
-                            opprettVirkningstidspunktGrunnlag(søknadsbarn.referanse, it.beregnetBarnebidragPeriodeListe.first().periode.fom.atDay(1)),
+                            opprettVirkningstidspunktGrunnlag(
+                                søknadsbarn.referanse,
+                                it.beregnetBarnebidragPeriodeListe.first().periode.fom.atDay(1),
+                                opphørsdato,
+                            ),
                         ),
                     )
                     secureLogger.info {
@@ -200,16 +217,19 @@ class AldersjusteringOrchestrator(
         }
     }
 
-    internal fun opprettVirkningstidspunktGrunnlag(referanseBarn: String, virkningstidspunkt: LocalDate): GrunnlagDto = GrunnlagDto(
-        referanse = "virkningstidspunkt_$referanseBarn",
-        type = Grunnlagstype.VIRKNINGSTIDSPUNKT,
-        gjelderBarnReferanse = referanseBarn,
-        innhold = POJONode(
-            VirkningstidspunktGrunnlag(
-                virkningstidspunkt = virkningstidspunkt,
+    internal fun opprettVirkningstidspunktGrunnlag(referanseBarn: String, virkningstidspunkt: LocalDate, opphørsdato: YearMonth?): GrunnlagDto =
+        GrunnlagDto(
+            referanse = "virkningstidspunkt_$referanseBarn",
+            type = Grunnlagstype.VIRKNINGSTIDSPUNKT,
+            gjelderBarnReferanse = referanseBarn,
+            innhold = POJONode(
+                VirkningstidspunktGrunnlag(
+                    virkningstidspunkt = virkningstidspunkt,
+                    opphørsdato = opphørsdato?.atDay(1),
+                    årsak = VirkningstidspunktÅrsakstype.AUTOMATISK_JUSTERING,
+                ),
             ),
-        ),
-    )
+        )
 
     private fun Exception.loggOgKastFeil(stønad: Stønadsid, aldersjusteresForÅr: Int): Nothing {
         when (this) {
