@@ -111,6 +111,7 @@ class AldersjusteringOrchestrator(
         stønad: Stønadsid,
         aldersjusteresForÅr: Int = YearMonth.now().year,
         beregnBasertPåVedtak: Int? = null,
+        opphørsdato: YearMonth? = null,
     ): AldersjusteringResultat {
         try {
             log.info { "Aldersjustering kjøres for stønadstype ${stønad.type} og sak ${stønad.sak} for årstall $aldersjusteresForÅr" }
@@ -138,7 +139,7 @@ class AldersjusteringOrchestrator(
 
             sisteManuelleVedtak.validerSkalAldersjusteres(stønad)
 
-            return sisteManuelleVedtak.utførOgBeregn(stønad, aldersjusteresForÅr)
+            return sisteManuelleVedtak.utførOgBeregn(stønad, aldersjusteresForÅr, opphørsdato)
         } catch (e: Exception) {
             if (e is SkalIkkeAldersjusteresException || e is AldersjusteresManueltException) {
                 throw e
@@ -147,7 +148,11 @@ class AldersjusteringOrchestrator(
         }
     }
 
-    internal fun SisteManuelleVedtak.utførOgBeregn(stønad: Stønadsid, aldersjusteresForÅr: Int = YearMonth.now().year): AldersjusteringResultat {
+    internal fun SisteManuelleVedtak.utførOgBeregn(
+        stønad: Stønadsid,
+        aldersjusteresForÅr: Int = YearMonth.now().year,
+        opphørPåDato: YearMonth?,
+    ): AldersjusteringResultat {
         val beregningInput = byggGrunnlagForBeregning(
             stønad,
             aldersjusteresForÅr,
@@ -170,7 +175,14 @@ class AldersjusteringOrchestrator(
             barnebidragApi
                 .beregnAldersjustering(beregningInput).let {
                     val beregnetPeriode = it.beregnetBarnebidragPeriodeListe.first()
-                    val opphørsdato = løpendeStønad?.periode?.til
+                    val opphørsdato = opphørPåDato ?: løpendeStønad?.periode?.til
+                    if (opphørsdato != null && beregnetPeriode.periode.fom.isAfter(opphørsdato)) {
+                        skalIkkeAldersjusteres(
+                            SkalIkkeAldersjusteresBegrunnelse.BIDRAGET_HAR_OPPHØRT,
+                            resultat = resultatSistePeriode,
+                            vedtaksid = vedtaksId,
+                        )
+                    }
                     val resultatMedGrunnlag = it.copy(
                         beregnetBarnebidragPeriodeListe = listOf(
                             beregnetPeriode.copy(
