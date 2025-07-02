@@ -16,6 +16,7 @@ import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.beregning.Resultatkode.Companion.tilBisysResultatkode
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.sak.Sakskategori
+import no.nav.bidrag.domene.enums.vedtak.VirkningstidspunktÅrsakstype
 import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.visningsnavn
@@ -190,7 +191,11 @@ class AldersjusteringOrchestrator(
                             ),
                         ),
                         grunnlagListe = it.grunnlagListe + listOf(
-                            opprettVirkningstidspunktGrunnlag(søknadsbarn.referanse, it.beregnetBarnebidragPeriodeListe.first().periode.fom.atDay(1)),
+                            opprettVirkningstidspunktGrunnlag(
+                                søknadsbarn.referanse,
+                                it.beregnetBarnebidragPeriodeListe.first().periode.fom.atDay(1),
+                                opphørsdato,
+                            ),
                         ),
                     )
                     secureLogger.info {
@@ -212,16 +217,19 @@ class AldersjusteringOrchestrator(
         }
     }
 
-    internal fun opprettVirkningstidspunktGrunnlag(referanseBarn: String, virkningstidspunkt: LocalDate): GrunnlagDto = GrunnlagDto(
-        referanse = "virkningstidspunkt_$referanseBarn",
-        type = Grunnlagstype.VIRKNINGSTIDSPUNKT,
-        gjelderBarnReferanse = referanseBarn,
-        innhold = POJONode(
-            VirkningstidspunktGrunnlag(
-                virkningstidspunkt = virkningstidspunkt,
+    internal fun opprettVirkningstidspunktGrunnlag(referanseBarn: String, virkningstidspunkt: LocalDate, opphørsdato: YearMonth?): GrunnlagDto =
+        GrunnlagDto(
+            referanse = "virkningstidspunkt_$referanseBarn",
+            type = Grunnlagstype.VIRKNINGSTIDSPUNKT,
+            gjelderBarnReferanse = referanseBarn,
+            innhold = POJONode(
+                VirkningstidspunktGrunnlag(
+                    virkningstidspunkt = virkningstidspunkt,
+                    opphørsdato = opphørsdato?.atDay(1),
+                    årsak = VirkningstidspunktÅrsakstype.AUTOMATISK_JUSTERING,
+                ),
             ),
-        ),
-    )
+        )
 
     private fun Exception.loggOgKastFeil(stønad: Stønadsid, aldersjusteresForÅr: Int): Nothing {
         when (this) {
