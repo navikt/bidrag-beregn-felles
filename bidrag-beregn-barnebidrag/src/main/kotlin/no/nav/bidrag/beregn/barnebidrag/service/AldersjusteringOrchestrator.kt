@@ -203,6 +203,7 @@ class AldersjusteringOrchestrator(
     internal fun opprettVirkningstidspunktGrunnlag(referanseBarn: String, virkningstidspunkt: LocalDate): GrunnlagDto = GrunnlagDto(
         referanse = "virkningstidspunkt_$referanseBarn",
         type = Grunnlagstype.VIRKNINGSTIDSPUNKT,
+        gjelderBarnReferanse = referanseBarn,
         innhold = POJONode(
             VirkningstidspunktGrunnlag(
                 virkningstidspunkt = virkningstidspunkt,
