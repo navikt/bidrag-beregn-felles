@@ -294,7 +294,7 @@ class AldersjusteringOrchestrator(
 
         sistePeriode.resultatkode.validerResultatkkode(resultatSistePeriode, vedtaksId)
 
-        if (sistePeriode.periode.fom.isAfter(aldersjusteringDato) && !erManuellJustering) {
+        if (sistePeriode.periode.fom.isAfter(aldersjusteringDato)) {
             aldersjusteresManuelt(
                 SkalAldersjusteresManueltBegrunnelse.VEDTAK_GRUNNLAG_HENTES_FRA_HAR_PERIODE_MED_FOM_DATO_ETTER_ALDERSJUSTERINGEN,
                 resultat = resultatSistePeriode,
@@ -328,7 +328,7 @@ class AldersjusteringOrchestrator(
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.VEDTAK_GRUNNLAG_HENTES_FRA_INNEHOLDER_UNDERHOLDSKOSTNAD_MED_FORPLEINING)
         }
 
-        if (sistePeriode.periode.fom >= aldersjusteringDato && sistePeriode.beløp != null) {
+        if (sistePeriode.periode.fom >= aldersjusteringDato && sistePeriode.beløp != null && !erManuellJustering) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.LØPENDE_PERIODE_FRA_OG_MED_DATO_ER_LIK_ELLER_ETTER_ALDERSJUSTERING)
         }
 
