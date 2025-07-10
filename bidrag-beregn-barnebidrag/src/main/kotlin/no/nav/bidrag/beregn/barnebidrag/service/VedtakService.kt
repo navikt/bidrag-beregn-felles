@@ -1,7 +1,7 @@
 package no.nav.bidrag.beregn.barnebidrag.service
 
 import com.fasterxml.jackson.databind.node.POJONode
-import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningStønadConsumer
+import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningBeløpshistorikkConsumer
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningVedtakConsumer
 import no.nav.bidrag.beregn.barnebidrag.utils.hentPersonForNyesteIdent
 import no.nav.bidrag.beregn.barnebidrag.utils.hentSisteLøpendePeriode
@@ -32,7 +32,7 @@ data class SisteManuelleVedtak(val vedtaksId: Int, val vedtak: VedtakDto)
 @Service
 class VedtakService(
     private val vedtakConsumer: BeregningVedtakConsumer,
-    private val stønadConsumer: BeregningStønadConsumer,
+    private val stønadConsumer: BeregningBeløpshistorikkConsumer,
     private val vedtakFilter: Vedtaksfiltrering,
     private val identUtils: IdentUtils,
 ) {
@@ -44,7 +44,7 @@ class VedtakService(
                     sak = stønadsid.sak,
                     skyldner = stønadsid.skyldner,
                     kravhaver = stønadsid.kravhaver,
-                    gyldigTidspunkt = LocalDateTime.now(),
+                    gyldigTidspunkt = tidspunkt,
                 ),
             ).tilGrunnlag(personer, stønadsid)
 

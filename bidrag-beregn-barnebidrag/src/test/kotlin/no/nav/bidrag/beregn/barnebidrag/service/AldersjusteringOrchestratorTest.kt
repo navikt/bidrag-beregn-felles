@@ -12,9 +12,9 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
+import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningBeløpshistorikkConsumer
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningPersonConsumer
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningSakConsumer
-import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningStønadConsumer
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningVedtakConsumer
 import no.nav.bidrag.beregn.barnebidrag.testdata.opprettSakRespons
 import no.nav.bidrag.beregn.barnebidrag.testdata.opprettStønadDto
@@ -68,7 +68,7 @@ class AldersjusteringOrchestratorTest {
     lateinit var beregningVedtakConsumer: BeregningVedtakConsumer
 
     @MockK
-    lateinit var beregningStønadConsumer: BeregningStønadConsumer
+    lateinit var beregningBeløpshistorikkConsumer: BeregningBeløpshistorikkConsumer
 
     @MockK
     lateinit var personConsumer: BeregningPersonConsumer
@@ -89,7 +89,7 @@ class AldersjusteringOrchestratorTest {
         }
         bidragVedtakService = VedtakService(
             vedtakConsumer = beregningVedtakConsumer,
-            stønadConsumer = beregningStønadConsumer,
+            stønadConsumer = beregningBeløpshistorikkConsumer,
             vedtakFilter = Vedtaksfiltrering(),
             identUtils = identUtils,
         )
@@ -117,7 +117,7 @@ class AldersjusteringOrchestratorTest {
                     ),
                 ),
             )
-        every { beregningStønadConsumer.hentHistoriskeStønader(any()) } returns
+        every { beregningBeløpshistorikkConsumer.hentHistoriskeStønader(any()) } returns
             opprettStønadDto(
                 stønadstype = Stønadstype.BIDRAG,
                 periodeListe =
@@ -174,7 +174,7 @@ class AldersjusteringOrchestratorTest {
     fun `skal beregne aldersjustering`() {
         val fødselsdatoBarn = LocalDate.now().minusYears(11)
         every { personConsumer.hentFødselsdatoForPerson(eq(Personident(personIdentSøknadsbarn1))) } returns fødselsdatoBarn
-        every { beregningStønadConsumer.hentHistoriskeStønader(any()) } returns
+        every { beregningBeløpshistorikkConsumer.hentHistoriskeStønader(any()) } returns
             opprettStønadDto(
                 stønadstype = Stønadstype.BIDRAG,
                 periodeListe =
@@ -323,7 +323,7 @@ class AldersjusteringOrchestratorTest {
 
     @Test
     fun `skal kaste skal aldersjusteres manuelt hvis utenlandsk vedtak`() {
-        every { beregningStønadConsumer.hentHistoriskeStønader(any()) } returns
+        every { beregningBeløpshistorikkConsumer.hentHistoriskeStønader(any()) } returns
             opprettStønadDto(
                 stønadstype = Stønadstype.BIDRAG,
                 periodeListe =
@@ -463,7 +463,7 @@ class AldersjusteringOrchestratorTest {
 
     @Test
     fun `skal kaste skal ikke aldersjusteringsfeil hvis bidrag løper med utenlandsk valuta`() {
-        every { beregningStønadConsumer.hentHistoriskeStønader(any()) } returns
+        every { beregningBeløpshistorikkConsumer.hentHistoriskeStønader(any()) } returns
             opprettStønadDto(
                 stønadstype = Stønadstype.BIDRAG,
                 periodeListe =
