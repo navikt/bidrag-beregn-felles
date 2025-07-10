@@ -1,13 +1,13 @@
 package no.nav.bidrag.beregn.barnebidrag.service
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.vedtak.Stønadstype
-import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
+import no.nav.bidrag.transport.behandling.beregning.barnebidrag.KlageOrkestratorGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatBeregning
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatPeriode
+import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatVedtak
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakDto
 import no.nav.bidrag.transport.behandling.vedtak.response.virkningstidspunkt
@@ -15,21 +15,17 @@ import org.springframework.context.annotation.Import
 import org.springframework.stereotype.Service
 import java.time.YearMonth
 
-private val log = KotlinLogging.logger {}
-
-data class ResultatVedtak(val resultat: BeregnetBarnebidragResultat, val delvedtak: Boolean, val klagevedtak: Boolean)
-
 @Service
 @Import(VedtakService::class)
 class KlageOrkestrator(private val vedtakService: VedtakService) {
 
-    fun utførKlageEndelig(
-        stønad: Stønadsid,
-        klageBeregning: BeregnetBarnebidragResultat,
-        klagePeriode: ÅrMånedsperiode,
-        påklagetVedtakId: Int,
-    ): List<ResultatVedtak> {
+    fun utførKlageEndelig(grunnlag: KlageOrkestratorGrunnlag): List<ResultatVedtak> {
         try {
+            val stønad = grunnlag.stønad
+            val klageberegningResultat = grunnlag.klageberegningResultat
+            val klageperiode = grunnlag.klageperiode
+            val påklagetVedtakId = grunnlag.påklagetVedtakId
+
             secureLogger.info { "Komplett klageberegning kjøres for stønad $stønad og påklaget vedtak $påklagetVedtakId" }
 
             val løpendeStønad = vedtakService.hentLøpendeStønad(stønad)
@@ -41,37 +37,37 @@ class KlageOrkestrator(private val vedtakService: VedtakService) {
                 ?: throw IllegalArgumentException("Påklaget vedtak med id $påklagetVedtakId har ikke vedtakstidspunkt")
 
             // TODO Sjekk om nytt virkningstidspunkt kan være tidligere enn originalt virkningstidspunkt
-            val nyVirkningErEtterOpprinneligVirkning = klagePeriode.fom.isAfter(
+            val nyVirkningErEtterOpprinneligVirkning = klageperiode.fom.isAfter(
                 YearMonth.of(påklagetVedtakVirkningstidspunkt.year, påklagetVedtakVirkningstidspunkt.monthValue),
             )
 
-            val klagePeriodeTilErLikOpprinneligVedtakstidspunkt = klagePeriode.til!!.minusMonths(1) ==
+            val klageperiodeTilErLikOpprinneligVedtakstidspunkt = klageperiode.til!!.minusMonths(1) ==
                 YearMonth.of(påklagetVedtakVedtakstidspunkt.year, påklagetVedtakVedtakstidspunkt.monthValue)
 
-            val klagePeriodeTilErLikInneværendePeriode = klagePeriode.til!!.minusMonths(1) == YearMonth.now()
+            val klageperiodeTilErLikInneværendePeriode = klageperiode.til!!.minusMonths(1) == YearMonth.now()
 
             // Scenario 1: Klagevedtak dekker perioden fra opprinnelig virkningstidspunkt til inneværende periode - skal overstyre alt
-            if (!nyVirkningErEtterOpprinneligVirkning && klagePeriodeTilErLikInneværendePeriode) {
+            if (!nyVirkningErEtterOpprinneligVirkning && klageperiodeTilErLikInneværendePeriode) {
                 return listOf(
-                    ResultatVedtak(resultat = klageBeregning, delvedtak = true, klagevedtak = true),
-                    ResultatVedtak(resultat = klageBeregning, delvedtak = false, klagevedtak = false),
-                )
+                    ResultatVedtak(resultat = klageberegningResultat, delvedtak = true, klagevedtak = true),
+                    ResultatVedtak(resultat = klageberegningResultat, delvedtak = false, klagevedtak = false),
+                ).sortedByDescending { it.delvedtak }
             }
 
             // Scenario 2: Klagevedtak dekker opprinnelig beregningsperiode for det påklagede vedtaket - legg til evt etterfølgende vedtak og kjør
             // evt ny indeksregulering/aldersjustering
-            if (!nyVirkningErEtterOpprinneligVirkning && klagePeriodeTilErLikOpprinneligVedtakstidspunkt) {
+            if (!nyVirkningErEtterOpprinneligVirkning && klageperiodeTilErLikOpprinneligVedtakstidspunkt) {
                 val etterfølgendeVedtakListe: List<Int> =
                     if (løpendeStønad == null || løpendeStønad.periodeListe.isEmpty()) {
                         emptyList()
                     } else {
                         løpendeStønad.periodeListe
-                            .filter { !it.periode.fom.isBefore(klagePeriode.til!!.minusMonths(1)) }
+                            .filter { !it.periode.fom.isBefore(klageperiode.til!!.minusMonths(1)) }
                             .map { it.vedtaksid }
                     }
                 // TODO Sjekke om det må kjøres ny indeksregulering/aldersjustering
                 val delvedtakListe = buildList {
-                    add(ResultatVedtak(resultat = klageBeregning, delvedtak = true, klagevedtak = true))
+                    add(ResultatVedtak(resultat = klageberegningResultat, delvedtak = true, klagevedtak = true))
                     addAll(
                         lagBeregnetBarnebidragResultatFraVedtak(vedtakListe = etterfølgendeVedtakListe, stønadstype = stønad.type)
                             .map { ResultatVedtak(resultat = it, delvedtak = true, klagevedtak = false) },
@@ -80,7 +76,7 @@ class KlageOrkestrator(private val vedtakService: VedtakService) {
 
                 val sammenslåttVedtak = ResultatVedtak(resultat = slåSammenVedtak(delvedtakListe), delvedtak = false, klagevedtak = false)
 
-                return delvedtakListe + sammenslåttVedtak
+                return (delvedtakListe + sammenslåttVedtak).sortedByDescending { it.delvedtak }
             }
 
             return emptyList()
