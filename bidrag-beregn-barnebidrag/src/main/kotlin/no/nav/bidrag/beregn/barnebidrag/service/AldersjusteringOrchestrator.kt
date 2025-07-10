@@ -117,6 +117,8 @@ class AldersjusteringOrchestrator(
         try {
             log.info { "Aldersjustering kjøres for stønadstype ${stønad.type} og sak ${stønad.sak} for årstall $aldersjusteresForÅr" }
             secureLogger.info { "Aldersjustering kjøres for stønad $stønad og årstall $aldersjusteresForÅr" }
+            // Antar at hvis beregnBasertPåVedtak er satt så er det utført manuell justering. Endre på dette hvis det ikke stemmer lenger
+            val erManuellJustering = beregnBasertPåVedtak != null
             val sak = sakConsumer.hentSak(stønad.sak.verdi)
             val fødselsdatoBarn = personConsumer.hentFødselsdatoForPerson(stønad.kravhaver) ?: skalIkkeAldersjusteres(
                 SkalIkkeAldersjusteresBegrunnelse.BARN_MANGLER_FØDSELSDATO,
@@ -138,7 +140,7 @@ class AldersjusteringOrchestrator(
                 ?: vedtakService.finnSisteManuelleVedtak(stønad)
                 ?: aldersjusteresManuelt(SkalAldersjusteresManueltBegrunnelse.FANT_INGEN_MANUELL_VEDTAK)
 
-            sisteManuelleVedtak.validerSkalAldersjusteres(stønad)
+            sisteManuelleVedtak.validerSkalAldersjusteres(stønad, erManuellJustering = erManuellJustering)
 
             return sisteManuelleVedtak.utførOgBeregn(stønad, aldersjusteresForÅr, opphørsdato)
         } catch (e: Exception) {
@@ -248,7 +250,11 @@ class AldersjusteringOrchestrator(
         it.type == stønad.type &&
             identUtils.hentNyesteIdent(it.kravhaver) == identUtils.hentNyesteIdent(stønad.kravhaver)
     }!!
-    private fun SisteManuelleVedtak.validerSkalAldersjusteres(stønad: Stønadsid, aldersjusteresForÅr: Int = YearMonth.now().year) {
+    private fun SisteManuelleVedtak.validerSkalAldersjusteres(
+        stønad: Stønadsid,
+        aldersjusteresForÅr: Int = YearMonth.now().year,
+        erManuellJustering: Boolean = false,
+    ) {
         val aldersjusteringDato = YearMonth.of(aldersjusteresForÅr, 7)
         if (this.vedtak.grunnlagListe.isEmpty()) aldersjusteringFeilet("Aldersjustering kunne ikke utføres fordi vedtak $vedtaksId mangler grunnlag")
         val begrunnelser: MutableSet<SkalIkkeAldersjusteresBegrunnelse> = mutableSetOf()
@@ -322,7 +328,7 @@ class AldersjusteringOrchestrator(
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.VEDTAK_GRUNNLAG_HENTES_FRA_INNEHOLDER_UNDERHOLDSKOSTNAD_MED_FORPLEINING)
         }
 
-        if (sistePeriode.periode.fom >= aldersjusteringDato && sistePeriode.beløp != null) {
+        if (sistePeriode.periode.fom >= aldersjusteringDato && sistePeriode.beløp != null && !erManuellJustering) {
             begrunnelser.add(SkalIkkeAldersjusteresBegrunnelse.LØPENDE_PERIODE_FRA_OG_MED_DATO_ER_LIK_ELLER_ETTER_ALDERSJUSTERING)
         }
 

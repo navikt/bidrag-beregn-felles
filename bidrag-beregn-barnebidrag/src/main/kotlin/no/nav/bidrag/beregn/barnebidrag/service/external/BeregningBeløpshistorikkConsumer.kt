@@ -4,7 +4,7 @@ import no.nav.bidrag.transport.behandling.belopshistorikk.request.HentStønadHis
 import no.nav.bidrag.transport.behandling.belopshistorikk.request.HentStønadRequest
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
 
-interface BeregningStønadConsumer {
+interface BeregningBeløpshistorikkConsumer {
     fun hentHistoriskeStønader(hentStønadHistoriskRequest: HentStønadHistoriskRequest): StønadDto?
     fun hentLøpendeStønad(hentStønadRequest: HentStønadRequest): StønadDto?
 }
