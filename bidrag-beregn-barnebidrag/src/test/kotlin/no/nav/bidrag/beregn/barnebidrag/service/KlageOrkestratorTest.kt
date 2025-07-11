@@ -7,6 +7,7 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import no.nav.bidrag.beregn.barnebidrag.felles.FellesTest
+import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Saksnummer
@@ -15,6 +16,7 @@ import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.KlageOrkestratorGrunnlag
+import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatVedtak
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakDto
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -75,6 +77,9 @@ internal class KlageOrkestratorTest : FellesTest() {
             it[1].klagevedtak shouldBe false
             it[1].resultat shouldBe klageberegningResultat
         }
+
+        // Sjekk at alle referanser er med i resultatet
+        sjekkReferanser(klageResultat)
     }
 
     @Test
@@ -114,17 +119,39 @@ internal class KlageOrkestratorTest : FellesTest() {
 
         assertSoftly(klageResultat) {
             it shouldHaveSize 4
+
             it[0].delvedtak shouldBe true
             it[0].klagevedtak shouldBe true
             it[0].resultat shouldBe klageberegningResultat
+            it[0].resultat.beregnetBarnebidragPeriodeListe shouldHaveSize 1
+            it[0].resultat.beregnetBarnebidragPeriodeListe[0].periode shouldBe ÅrMånedsperiode(YearMonth.of(2024, 8), null)
+
             it[1].delvedtak shouldBe true
             it[1].klagevedtak shouldBe false
+            it[1].resultat.beregnetBarnebidragPeriodeListe shouldHaveSize 1
+            it[1].resultat.beregnetBarnebidragPeriodeListe[0].periode shouldBe ÅrMånedsperiode(YearMonth.of(2025, 2), null)
+            it[1].resultat.beregnetBarnebidragPeriodeListe[0].grunnlagsreferanseListe shouldHaveSize 1
+            it[1].resultat.grunnlagListe shouldHaveSize 1
+            it[1].resultat.grunnlagListe[0].type shouldBe Grunnlagstype.RESULTAT_FRA_VEDTAK
+
             it[2].delvedtak shouldBe true
             it[2].klagevedtak shouldBe false
+            it[2].resultat.beregnetBarnebidragPeriodeListe shouldHaveSize 1
+            it[2].resultat.beregnetBarnebidragPeriodeListe[0].periode shouldBe ÅrMånedsperiode(YearMonth.of(2025, 6), null)
+            it[1].resultat.beregnetBarnebidragPeriodeListe[0].grunnlagsreferanseListe shouldHaveSize 1
+            it[1].resultat.grunnlagListe shouldHaveSize 1
+            it[1].resultat.grunnlagListe[0].type shouldBe Grunnlagstype.RESULTAT_FRA_VEDTAK
+
             it[3].delvedtak shouldBe false
             it[3].klagevedtak shouldBe false
             it[3].resultat.beregnetBarnebidragPeriodeListe shouldHaveSize 3
+            it[3].resultat.beregnetBarnebidragPeriodeListe[0].periode shouldBe ÅrMånedsperiode(YearMonth.of(2024, 8), YearMonth.of(2025, 2))
+            it[3].resultat.beregnetBarnebidragPeriodeListe[1].periode shouldBe ÅrMånedsperiode(YearMonth.of(2025, 2), YearMonth.of(2025, 6))
+            it[3].resultat.beregnetBarnebidragPeriodeListe[2].periode shouldBe ÅrMånedsperiode(YearMonth.of(2025, 6), null)
         }
+
+        // Sjekk at alle referanser er med i resultatet
+        sjekkReferanser(klageResultat)
     }
 
     @Test
@@ -155,13 +182,39 @@ internal class KlageOrkestratorTest : FellesTest() {
 
         assertSoftly(klageResultat) {
             it shouldHaveSize 3
+
             it[0].delvedtak shouldBe true
             it[0].klagevedtak shouldBe false
+            it[0].resultat.beregnetBarnebidragPeriodeListe shouldHaveSize 1
+            it[0].resultat.beregnetBarnebidragPeriodeListe[0].periode shouldBe ÅrMånedsperiode(YearMonth.of(2024, 8), YearMonth.of(2024, 12))
+            it[0].resultat.beregnetBarnebidragPeriodeListe[0].resultat.beløp shouldBe null
+            it[0].resultat.grunnlagListe shouldHaveSize 0
+
             it[1].delvedtak shouldBe true
             it[1].klagevedtak shouldBe true
             it[1].resultat shouldBe klageberegningResultat
+
             it[2].delvedtak shouldBe false
             it[2].klagevedtak shouldBe false
+            it[2].resultat.beregnetBarnebidragPeriodeListe shouldHaveSize 2
+            it[2].resultat.beregnetBarnebidragPeriodeListe[0].periode shouldBe ÅrMånedsperiode(YearMonth.of(2024, 8), YearMonth.of(2024, 12))
+            it[2].resultat.beregnetBarnebidragPeriodeListe[1].periode shouldBe ÅrMånedsperiode(YearMonth.of(2024, 12), null)
+        }
+
+        // Sjekk at alle referanser er med i resultatet
+        sjekkReferanser(klageResultat)
+    }
+
+    private fun sjekkReferanser(klageResultat: List<ResultatVedtak>) {
+        val alleReferanser = hentAlleReferanser(klageResultat.last().resultat.grunnlagListe)
+        val alleRefererteReferanser = hentAlleRefererteReferanser(
+            resultatGrunnlagListe = klageResultat.last().resultat.grunnlagListe,
+            barnebidragResultat = klageResultat.last().resultat,
+        )
+
+        assertSoftly {
+            alleReferanser.containsAll(alleRefererteReferanser)
+            alleRefererteReferanser.containsAll(alleReferanser)
         }
     }
 }

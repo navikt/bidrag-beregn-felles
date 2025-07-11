@@ -1,6 +1,8 @@
 package no.nav.bidrag.beregn.barnebidrag.service
 
+import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.commons.util.secureLogger
+import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
@@ -9,6 +11,7 @@ import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatBeregnin
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatPeriode
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatVedtak
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
+import no.nav.bidrag.transport.behandling.felles.grunnlag.ResultatFraVedtakGrunnlag
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakDto
 import no.nav.bidrag.transport.behandling.vedtak.response.virkningstidspunkt
 import org.springframework.context.annotation.Import
@@ -69,7 +72,7 @@ class KlageOrkestrator(private val vedtakService: VedtakService) {
                 val delvedtakListe = buildList {
                     add(ResultatVedtak(resultat = klageberegningResultat, delvedtak = true, klagevedtak = true))
                     addAll(
-                        lagBeregnetBarnebidragResultatFraVedtak(vedtakListe = etterfølgendeVedtakListe, stønadstype = stønad.type)
+                        lagBeregnetBarnebidragResultatFraEksisterendeVedtak(vedtakListe = etterfølgendeVedtakListe, stønadstype = stønad.type)
                             .map { ResultatVedtak(resultat = it, delvedtak = true, klagevedtak = false) },
                     )
                 }
@@ -108,15 +111,31 @@ class KlageOrkestrator(private val vedtakService: VedtakService) {
         }
     }
 
-    // Lager BeregnetBarnebidragResultat (simulert resultat fra beregningen) for alle vedtak i vedtakListe
-    private fun lagBeregnetBarnebidragResultatFraVedtak(vedtakListe: List<Int>, stønadstype: Stønadstype): List<BeregnetBarnebidragResultat> {
+    // Lager BeregnetBarnebidragResultat (simulert resultat fra beregningen) for alle (eksisterende) vedtak i vedtakListe
+    private fun lagBeregnetBarnebidragResultatFraEksisterendeVedtak(
+        vedtakListe: List<Int>,
+        stønadstype: Stønadstype,
+    ): List<BeregnetBarnebidragResultat> {
         val beregnetBarnebidragResultatListe = mutableListOf<BeregnetBarnebidragResultat>()
         vedtakListe.forEach {
             val komplettVedtak = vedtakService.hentVedtak(it)
             if (komplettVedtak != null) {
+                val referanse = "resultatFraVedtak_${komplettVedtak.vedtaksid}"
                 beregnetBarnebidragResultatListe.add(
-                    // TODO Filtrere grunnlagene
-                    BeregnetBarnebidragResultat(komplettVedtak.hentBeregningsperioder(stønadstype), komplettVedtak.grunnlagListe),
+                    BeregnetBarnebidragResultat(
+                        beregnetBarnebidragPeriodeListe = komplettVedtak.hentBeregningsperioder(stønadstype, referanse),
+                        grunnlagListe = listOf(
+                            GrunnlagDto(
+                                referanse = referanse,
+                                type = Grunnlagstype.RESULTAT_FRA_VEDTAK,
+                                innhold = POJONode(
+                                    ResultatFraVedtakGrunnlag(
+                                        vedtaksid = komplettVedtak.vedtaksid,
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
                 )
             }
         }
@@ -124,14 +143,14 @@ class KlageOrkestrator(private val vedtakService: VedtakService) {
     }
 
     // Extension fuction for å hente beregningsperioder for et vedtak med en gitt stønadstype
-    private fun VedtakDto.hentBeregningsperioder(stønadstype: Stønadstype): List<ResultatPeriode> = stønadsendringListe
+    private fun VedtakDto.hentBeregningsperioder(stønadstype: Stønadstype, referanse: String? = null): List<ResultatPeriode> = stønadsendringListe
         .first { it.type == stønadstype }
         .periodeListe
         .map {
             ResultatPeriode(
                 periode = it.periode,
                 resultat = ResultatBeregning(it.beløp),
-                grunnlagsreferanseListe = it.grunnlagReferanseListe,
+                grunnlagsreferanseListe = if (referanse != null) listOf(referanse) else it.grunnlagReferanseListe,
             )
         }
 
