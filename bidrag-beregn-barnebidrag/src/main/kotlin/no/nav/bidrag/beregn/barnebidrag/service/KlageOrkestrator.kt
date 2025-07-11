@@ -13,16 +13,16 @@ import no.nav.bidrag.transport.behandling.vedtak.response.VedtakDto
 import no.nav.bidrag.transport.behandling.vedtak.response.virkningstidspunkt
 import org.springframework.context.annotation.Import
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 import java.time.YearMonth
 
 @Service
 @Import(VedtakService::class)
 class KlageOrkestrator(private val vedtakService: VedtakService) {
 
-    fun utførKlageEndelig(grunnlag: KlageOrkestratorGrunnlag): List<ResultatVedtak> {
+    fun utførKlageEndelig(klageberegningResultat: BeregnetBarnebidragResultat, grunnlag: KlageOrkestratorGrunnlag): List<ResultatVedtak> {
         try {
             val stønad = grunnlag.stønad
-            val klageberegningResultat = grunnlag.klageberegningResultat
             val klageperiode = grunnlag.klageperiode
             val påklagetVedtakId = grunnlag.påklagetVedtakId
 
@@ -76,7 +76,29 @@ class KlageOrkestrator(private val vedtakService: VedtakService) {
 
                 val sammenslåttVedtak = ResultatVedtak(resultat = slåSammenVedtak(delvedtakListe), delvedtak = false, klagevedtak = false)
 
-                return (delvedtakListe + sammenslåttVedtak).sortedByDescending { it.delvedtak }
+                return (delvedtakListe + sammenslåttVedtak).sorterListe()
+            }
+
+            // Scenario 3: Fra-perioden i klagevedtaket er flyttet fram ifht. påklaget vedtak. Til-perioden i klagevedtaket er lik inneværende
+            // periode. Det eksisterer ingen vedtak før påklaget vedtak. Perioden fra opprinnelig vedtakstidspunkt til ny fra-periode må nulles ut.
+            if (nyVirkningErEtterOpprinneligVirkning && klageperiodeTilErLikInneværendePeriode) {
+                val delvedtakListe = buildList {
+                    add(
+                        ResultatVedtak(
+                            resultat = lagOpphørsvedtak(
+                                klageperiode = klageperiode,
+                                påklagetVedtakVirkningstidspunkt = påklagetVedtakVirkningstidspunkt,
+                            ),
+                            delvedtak = true,
+                            klagevedtak = false,
+                        ),
+                    )
+                    add(ResultatVedtak(resultat = klageberegningResultat, delvedtak = true, klagevedtak = true))
+                }
+
+                val sammenslåttVedtak = ResultatVedtak(resultat = slåSammenVedtak(delvedtakListe), delvedtak = false, klagevedtak = false)
+
+                return (delvedtakListe + sammenslåttVedtak).sorterListe()
             }
 
             return emptyList()
@@ -142,4 +164,28 @@ class KlageOrkestrator(private val vedtakService: VedtakService) {
             )
         }
     }
+
+    // Lager opphørsvedtak, dvs. et vedtak med null i beløp og ingen tilknyttede grunnlag
+    private fun lagOpphørsvedtak(klageperiode: ÅrMånedsperiode, påklagetVedtakVirkningstidspunkt: LocalDate): BeregnetBarnebidragResultat =
+        BeregnetBarnebidragResultat(
+            beregnetBarnebidragPeriodeListe = listOf(
+                ResultatPeriode(
+                    periode = ÅrMånedsperiode(
+                        fom = YearMonth.of(påklagetVedtakVirkningstidspunkt.year, påklagetVedtakVirkningstidspunkt.monthValue),
+                        til = klageperiode.fom,
+                    ),
+                    resultat = ResultatBeregning(beløp = null),
+                    grunnlagsreferanseListe = emptyList(),
+                ),
+            ),
+            grunnlagListe = emptyList(),
+        )
+
+    // Extension function for å sortere på delvedtak (delvedtak = false kommer før delvedtak = true) og deretter periode.fom
+    private fun List<ResultatVedtak>.sorterListe(): List<ResultatVedtak> = this.sortedWith(
+        compareBy<ResultatVedtak> { !it.delvedtak }
+            .thenBy {
+                it.resultat.beregnetBarnebidragPeriodeListe.minOfOrNull { periode -> periode.periode.fom }
+            },
+    )
 }

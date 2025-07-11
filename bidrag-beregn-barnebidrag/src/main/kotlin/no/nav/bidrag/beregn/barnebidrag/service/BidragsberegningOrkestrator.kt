@@ -18,7 +18,7 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
             Beregningstype.BIDRAG -> {
                 secureLogger.info { "Utfører bidragsberegning for request: $request" }
                 val beregningResultat = barnebidragApi.beregn(
-                    request.beregnGrunnlag ?: throw IllegalArgumentException("beregnGrunnlag må være angitt"),
+                    beregnGrunnlag = request.beregnGrunnlag,
                 )
                 return BidragsberegningOrkestratorResponse(
                     listOf(ResultatVedtak(resultat = beregningResultat, delvedtak = false, klagevedtak = false)),
@@ -27,7 +27,7 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
             Beregningstype.KLAGE -> {
                 secureLogger.info { "Utfører klageberegning for request: $request" }
                 val klageberegningResultat = barnebidragApi.beregn(
-                    request.beregnGrunnlag ?: throw IllegalArgumentException("beregnGrunnlag må være angitt"),
+                    beregnGrunnlag = request.beregnGrunnlag,
                 )
                 return BidragsberegningOrkestratorResponse(
                     listOf(ResultatVedtak(resultat = klageberegningResultat, delvedtak = true, klagevedtak = true)),
@@ -35,8 +35,12 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
             }
             Beregningstype.KLAGE_ENDELIG -> {
                 secureLogger.info { "Utfører endelig klageberegning for request: $request" }
+                val klageberegningResultat = barnebidragApi.beregn(
+                    beregnGrunnlag = request.beregnGrunnlag,
+                )
                 val endeligKlageberegningResultat = klageOrkestrator.utførKlageEndelig(
-                    request.klageOrkestratorGrunnlag ?: throw IllegalArgumentException("klageOrkestratorGrunnlag må være angitt"),
+                    klageberegningResultat = klageberegningResultat,
+                    grunnlag = request.klageOrkestratorGrunnlag ?: throw IllegalArgumentException("klageOrkestratorGrunnlag må være angitt"),
                 )
                 return BidragsberegningOrkestratorResponse(endeligKlageberegningResultat)
             }
