@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.barnebidrag.api
 
 import io.kotest.matchers.comparables.shouldBeGreaterThanOrEqualTo
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
+import no.nav.bidrag.beregn.barnebidrag.felles.FellesTest
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
@@ -22,7 +23,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 @ExtendWith(MockitoExtension::class)
-internal class BeregnNettoTilsynsutgiftOgUnderholdskostnadApiTest : FellesApiTest() {
+internal class BeregnNettoTilsynsutgiftOgUnderholdskostnadTest : FellesTest() {
     private lateinit var filnavn: String
 
     @Mock

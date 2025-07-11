@@ -1,7 +1,8 @@
-package no.nav.bidrag.beregn.barnebidrag.api
+package no.nav.bidrag.beregn.barnebidrag.felles
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.kotest.matchers.shouldBe
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -18,7 +19,7 @@ import java.nio.file.Paths
 import java.text.SimpleDateFormat
 import java.time.YearMonth
 
-internal open class FellesApiTest {
+internal open class FellesTest {
 
     fun hentSluttberegning(resultatGrunnlagListe: List<GrunnlagDto>) = resultatGrunnlagListe
         .filtrerOgKonverterBasertPåEgenReferanse<SluttberegningBarnebidrag>(Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG)
@@ -66,19 +67,17 @@ internal open class FellesApiTest {
         .filterNotNull()
         .distinct()
 
-    fun lesFilOgByggRequest(filnavn: String): BeregnGrunnlag {
-        var json = ""
-
-        // Les inn fil med request-data (json)
-        try {
-            json = Files.readString(Paths.get(filnavn))
+    inline fun <reified T> lesFilOgByggRequest(filnavn: String): T {
+        val json = try {
+            Files.readString(Paths.get(filnavn))
         } catch (e: Exception) {
-            fail("Klarte ikke å lese fil: $filnavn")
+            fail("Klarte ikke å lese fil: $filnavn", e)
         }
-
-        // Lag request
-        return ObjectMapper().findAndRegisterModules().readValue(json, BeregnGrunnlag::class.java)
+        return jacksonObjectMapper().findAndRegisterModules().readValue(json, T::class.java)
     }
+
+    // Overload for BeregnGrunnlag
+    fun lesFilOgByggRequest(filnavn: String): BeregnGrunnlag = lesFilOgByggRequest<BeregnGrunnlag>(filnavn)
 
     fun <T> printJson(json: T) {
         val objectMapper = ObjectMapper()
