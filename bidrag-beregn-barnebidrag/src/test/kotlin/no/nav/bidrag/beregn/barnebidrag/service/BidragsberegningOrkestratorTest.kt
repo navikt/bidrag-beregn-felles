@@ -15,7 +15,6 @@ import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Saksnummer
 import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
-import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BidragsberegningOrkestratorRequest
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.KlageOrkestratorGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
@@ -29,20 +28,18 @@ import java.time.YearMonth
 @ExtendWith(MockKExtension::class)
 internal class BidragsberegningOrkestratorTest : FellesTest() {
     private lateinit var filnavnBeregnGrunnlag: String
-    private lateinit var filnavnKlageberegningResultat: String
     private lateinit var filnavnPåklagetVedtak: String
-
-    @MockK(relaxed = true)
-    private lateinit var barnebidragApi: BeregnBarnebidragApi
 
     @MockK(relaxed = true)
     private lateinit var vedtakService: VedtakService
 
+    private lateinit var barnebidragApi: BeregnBarnebidragApi
     private lateinit var klageOrkestrator: KlageOrkestrator
     private lateinit var bidragsberegningOrkestrator: BidragsberegningOrkestrator
 
     @BeforeEach
     fun initMock() {
+        barnebidragApi = BeregnBarnebidragApi()
         klageOrkestrator = KlageOrkestrator(vedtakService)
         bidragsberegningOrkestrator = BidragsberegningOrkestrator(
             barnebidragApi = barnebidragApi,
@@ -59,6 +56,7 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
         val request = BidragsberegningOrkestratorRequest(beregnGrunnlag = beregnGrunnlag, beregningstype = Beregningstype.BIDRAG)
 
         val beregningResultat = bidragsberegningOrkestrator.utførBidragsberegning(request)
+        printJson(beregningResultat)
 
         assertSoftly(beregningResultat) {
             resultatVedtakListe shouldHaveSize 1
@@ -75,6 +73,7 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
         val request = BidragsberegningOrkestratorRequest(beregnGrunnlag = beregnGrunnlag, beregningstype = Beregningstype.KLAGE)
 
         val beregningResultat = bidragsberegningOrkestrator.utførBidragsberegning(request)
+        printJson(beregningResultat)
 
         assertSoftly(beregningResultat) {
             resultatVedtakListe shouldHaveSize 1
@@ -87,13 +86,10 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
     @DisplayName("Beregn klage endelig")
     fun test03_BeregnKlageEndelig() {
         filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/klage_beregning.json"
-        filnavnKlageberegningResultat = "src/test/resources/testfiler/bidragsberegning_orkestrator/klage_beregning_resultat.json"
         filnavnPåklagetVedtak = "src/test/resources/testfiler/bidragsberegning_orkestrator/påklaget_vedtak.json"
         val beregnGrunnlag: BeregnGrunnlag = lesFilOgByggRequest(filnavnBeregnGrunnlag)
-        val klageberegningResultat = lesFilOgByggRequest<BeregnetBarnebidragResultat>(filnavnKlageberegningResultat)
         val påklagetVedtak = lesFilOgByggRequest<VedtakDto>(filnavnPåklagetVedtak)
 
-        every { barnebidragApi.beregn(any()) } returns klageberegningResultat
         every { vedtakService.hentVedtak(påklagetVedtak.vedtaksid.toInt()) } returns påklagetVedtak
 
         val stønad = Stønadsid(
@@ -117,6 +113,7 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
             )
 
         val beregningResultat = bidragsberegningOrkestrator.utførBidragsberegning(request)
+        printJson(beregningResultat)
 
         assertSoftly(beregningResultat) {
             resultatVedtakListe shouldHaveSize 2

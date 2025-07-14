@@ -20,18 +20,22 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
                 val beregningResultat = barnebidragApi.beregn(
                     beregnGrunnlag = request.beregnGrunnlag,
                 )
-                return BidragsberegningOrkestratorResponse(
+                val respons = BidragsberegningOrkestratorResponse(
                     listOf(ResultatVedtak(resultat = beregningResultat, delvedtak = false, klagevedtak = false)),
                 )
+                secureLogger.info { "Resultat av bidragsberegning: $respons" }
+                return respons
             }
             Beregningstype.KLAGE -> {
                 secureLogger.info { "Utfører klageberegning for request: $request" }
                 val klageberegningResultat = barnebidragApi.beregn(
                     beregnGrunnlag = request.beregnGrunnlag,
                 )
-                return BidragsberegningOrkestratorResponse(
+                val respons = BidragsberegningOrkestratorResponse(
                     listOf(ResultatVedtak(resultat = klageberegningResultat, delvedtak = true, klagevedtak = true)),
                 )
+                secureLogger.info { "Resultat av klageberegning: $respons" }
+                return respons
             }
             Beregningstype.KLAGE_ENDELIG -> {
                 secureLogger.info { "Utfører endelig klageberegning for request: $request" }
@@ -42,7 +46,9 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
                     klageberegningResultat = klageberegningResultat,
                     grunnlag = request.klageOrkestratorGrunnlag ?: throw IllegalArgumentException("klageOrkestratorGrunnlag må være angitt"),
                 )
-                return BidragsberegningOrkestratorResponse(endeligKlageberegningResultat)
+                val respons = BidragsberegningOrkestratorResponse(endeligKlageberegningResultat)
+                secureLogger.info { "Resultat av endelig klageberegning: $respons" }
+                return respons
             }
         }
     }

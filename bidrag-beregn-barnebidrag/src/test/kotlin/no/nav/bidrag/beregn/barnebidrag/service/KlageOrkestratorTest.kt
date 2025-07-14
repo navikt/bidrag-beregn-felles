@@ -68,6 +68,8 @@ internal class KlageOrkestratorTest : FellesTest() {
             ),
         )
 
+        printJson(klageResultat)
+
         assertSoftly(klageResultat) {
             it shouldHaveSize 2
             it[0].delvedtak shouldBe true
@@ -116,6 +118,8 @@ internal class KlageOrkestratorTest : FellesTest() {
                 påklagetVedtakId = påklagetVedtak.vedtaksid.toInt(),
             ),
         )
+
+        printJson(klageResultat)
 
         assertSoftly(klageResultat) {
             it shouldHaveSize 4
@@ -179,6 +183,8 @@ internal class KlageOrkestratorTest : FellesTest() {
                 påklagetVedtakId = påklagetVedtak.vedtaksid.toInt(),
             ),
         )
+
+        printJson(klageResultat)
 
         assertSoftly(klageResultat) {
             it shouldHaveSize 3

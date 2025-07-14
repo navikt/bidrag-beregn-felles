@@ -65,8 +65,9 @@ class KlageOrkestrator(private val vedtakService: VedtakService) {
                         emptyList()
                     } else {
                         løpendeStønad.periodeListe
-                            .filter { !it.periode.fom.isBefore(klageperiode.til!!.minusMonths(1)) }
+                            .filter { it.vedtaksid != påklagetVedtakId && (it.periode.til == null || it.periode.til!!.isAfter(klageperiode.til!!)) }
                             .map { it.vedtaksid }
+                            .distinct()
                     }
                 // TODO Sjekke om det må kjøres ny indeksregulering/aldersjustering
                 val delvedtakListe = buildList {
