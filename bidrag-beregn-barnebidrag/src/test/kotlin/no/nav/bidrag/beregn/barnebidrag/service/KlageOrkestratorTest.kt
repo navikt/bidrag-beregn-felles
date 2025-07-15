@@ -45,8 +45,8 @@ internal class KlageOrkestratorTest : FellesTest() {
     @Test
     @DisplayName("Klagevedtak dekker perioden fra opprinnelig virkningstidspunkt til inneværende periode - skal overstyre alt")
     fun test01_KlagevedtakFraOpprinneligVedtakstidspunktTilInneværendePeriode() {
-        filnavnKlageberegningResultat = "src/test/resources/testfiler/klage_orkestrator/test01_klageberegningResultat.json"
-        filnavnPåklagetVedtak = "src/test/resources/testfiler/klage_orkestrator/test01_påklagetVedtak.json"
+        filnavnKlageberegningResultat = "src/test/resources/testfiler/klage_orkestrator/test01_klage_beregning_resultat.json"
+        filnavnPåklagetVedtak = "src/test/resources/testfiler/klage_orkestrator/test01_påklaget_vedtak.json"
         val klageberegningResultat = lesFilOgByggRequest<BeregnetBarnebidragResultat>(filnavnKlageberegningResultat)
         val påklagetVedtak = lesFilOgByggRequest<VedtakDto>(filnavnPåklagetVedtak)
 
@@ -61,9 +61,9 @@ internal class KlageOrkestratorTest : FellesTest() {
 
         val klageResultat = orkestrator.utførKlageEndelig(
             klageberegningResultat = klageberegningResultat,
+            klageperiode = ÅrMånedsperiode(YearMonth.of(2024, 8), YearMonth.of(2025, 8)),
             grunnlag = KlageOrkestratorGrunnlag(
                 stønad = stønad,
-                klageperiode = ÅrMånedsperiode(YearMonth.of(2024, 8), YearMonth.of(2025, 8)),
                 påklagetVedtakId = påklagetVedtak.vedtaksid.toInt(),
             ),
         )
@@ -87,11 +87,11 @@ internal class KlageOrkestratorTest : FellesTest() {
     @Test
     @DisplayName("Klagevedtak dekker opprinnelig beregningsperiode for påklaget vedtak - legge til etterfølgende vedtak")
     fun test02_KlagevedtakDekkerOpprinneligBeregningsperiodeLeggTilEtterfølgendeVedtak() {
-        filnavnKlageberegningResultat = "src/test/resources/testfiler/klage_orkestrator/test02_klageberegningResultat.json"
-        filnavnPåklagetVedtak = "src/test/resources/testfiler/klage_orkestrator/test02_påklagetVedtak.json"
-        filnavnLøpendeStønad = "src/test/resources/testfiler/klage_orkestrator/test02_løpendeStønad.json"
-        filnavnEtterfølgendeVedtak1 = "src/test/resources/testfiler/klage_orkestrator/test02_etterfølgendeVedtak1.json"
-        filnavnEtterfølgendeVedtak2 = "src/test/resources/testfiler/klage_orkestrator/test02_etterfølgendeVedtak2.json"
+        filnavnKlageberegningResultat = "src/test/resources/testfiler/klage_orkestrator/test02_klage_beregning_resultat.json"
+        filnavnPåklagetVedtak = "src/test/resources/testfiler/klage_orkestrator/test02_påklaget_vedtak.json"
+        filnavnLøpendeStønad = "src/test/resources/testfiler/klage_orkestrator/test02_løpende_stønad.json"
+        filnavnEtterfølgendeVedtak1 = "src/test/resources/testfiler/klage_orkestrator/test02_etterfølgende_vedtak_1.json"
+        filnavnEtterfølgendeVedtak2 = "src/test/resources/testfiler/klage_orkestrator/test02_etterfølgende_vedtak_2.json"
         val klageberegningResultat = lesFilOgByggRequest<BeregnetBarnebidragResultat>(filnavnKlageberegningResultat)
         val påklagetVedtak = lesFilOgByggRequest<VedtakDto>(filnavnPåklagetVedtak)
         val løpendeStønad = lesFilOgByggRequest<StønadDto>(filnavnLøpendeStønad)
@@ -112,9 +112,9 @@ internal class KlageOrkestratorTest : FellesTest() {
 
         val klageResultat = orkestrator.utførKlageEndelig(
             klageberegningResultat = klageberegningResultat,
+            klageperiode = ÅrMånedsperiode(YearMonth.of(2024, 8), YearMonth.of(2025, 3)),
             grunnlag = KlageOrkestratorGrunnlag(
                 stønad = stønad,
-                klageperiode = ÅrMånedsperiode(YearMonth.of(2024, 8), YearMonth.of(2025, 3)),
                 påklagetVedtakId = påklagetVedtak.vedtaksid.toInt(),
             ),
         )
@@ -161,8 +161,8 @@ internal class KlageOrkestratorTest : FellesTest() {
     @Test
     @DisplayName("Virkningstidspunkt for klage er flyttet fram - skal opphøre tidligere perioder")
     fun test03_VirkningstidspunktForKlageErFlyttetFramSkalOpphøreTidligerePerioder() {
-        filnavnKlageberegningResultat = "src/test/resources/testfiler/klage_orkestrator/test03_klageberegningResultat.json"
-        filnavnPåklagetVedtak = "src/test/resources/testfiler/klage_orkestrator/test03_påklagetVedtak.json"
+        filnavnKlageberegningResultat = "src/test/resources/testfiler/klage_orkestrator/test03_klage_beregning_resultat.json"
+        filnavnPåklagetVedtak = "src/test/resources/testfiler/klage_orkestrator/test03_påklaget_vedtak.json"
         val klageberegningResultat = lesFilOgByggRequest<BeregnetBarnebidragResultat>(filnavnKlageberegningResultat)
         val påklagetVedtak = lesFilOgByggRequest<VedtakDto>(filnavnPåklagetVedtak)
 
@@ -177,9 +177,9 @@ internal class KlageOrkestratorTest : FellesTest() {
 
         val klageResultat = orkestrator.utførKlageEndelig(
             klageberegningResultat = klageberegningResultat,
+            klageperiode = ÅrMånedsperiode(YearMonth.of(2024, 12), YearMonth.of(2025, 8)),
             grunnlag = KlageOrkestratorGrunnlag(
                 stønad = stønad,
-                klageperiode = ÅrMånedsperiode(YearMonth.of(2024, 12), YearMonth.of(2025, 8)),
                 påklagetVedtakId = påklagetVedtak.vedtaksid.toInt(),
             ),
         )

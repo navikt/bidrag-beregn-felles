@@ -14,7 +14,7 @@ import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Saksnummer
 import no.nav.bidrag.domene.sak.Stønadsid
-import no.nav.bidrag.domene.tid.ÅrMånedsperiode
+import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BidragsberegningOrkestratorRequest
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.KlageOrkestratorGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
@@ -23,7 +23,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import java.time.YearMonth
 
 @ExtendWith(MockKExtension::class)
 internal class BidragsberegningOrkestratorTest : FellesTest() {
@@ -51,7 +50,7 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
     @Test
     @DisplayName("Beregn bidrag")
     fun test01_BeregnBidrag() {
-        filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/barnebidrag_beregning.json"
+        filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/test01_barnebidrag_beregning.json"
         val beregnGrunnlag: BeregnGrunnlag = lesFilOgByggRequest(filnavnBeregnGrunnlag)
         val request = BidragsberegningOrkestratorRequest(beregnGrunnlag = beregnGrunnlag, beregningstype = Beregningstype.BIDRAG)
 
@@ -68,7 +67,7 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
     @Test
     @DisplayName("Beregn klage")
     fun test02_BeregnKlage() {
-        filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/klage_beregning.json"
+        filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/test02_klage_beregning.json"
         val beregnGrunnlag: BeregnGrunnlag = lesFilOgByggRequest(filnavnBeregnGrunnlag)
         val request = BidragsberegningOrkestratorRequest(beregnGrunnlag = beregnGrunnlag, beregningstype = Beregningstype.KLAGE)
 
@@ -85,23 +84,28 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
     @Test
     @DisplayName("Beregn klage endelig")
     fun test03_BeregnKlageEndelig() {
-        filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/klage_beregning.json"
-        filnavnPåklagetVedtak = "src/test/resources/testfiler/bidragsberegning_orkestrator/påklaget_vedtak.json"
+        filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/test03_klage_beregning.json"
+        filnavnPåklagetVedtak = "src/test/resources/testfiler/bidragsberegning_orkestrator/test03_påklaget_vedtak.json"
+        val filnavnLøpendeStønad = "src/test/resources/testfiler/bidragsberegning_orkestrator/test03_løpende_stønad.json"
+        val filnavnEtterfølgendeVedtak = "src/test/resources/testfiler/bidragsberegning_orkestrator/test03_etterfølgende_vedtak.json"
         val beregnGrunnlag: BeregnGrunnlag = lesFilOgByggRequest(filnavnBeregnGrunnlag)
         val påklagetVedtak = lesFilOgByggRequest<VedtakDto>(filnavnPåklagetVedtak)
-
-        every { vedtakService.hentVedtak(påklagetVedtak.vedtaksid.toInt()) } returns påklagetVedtak
+        val løpendeStønad = lesFilOgByggRequest<StønadDto>(filnavnLøpendeStønad)
+        val etterfølgendeVedtak = lesFilOgByggRequest<VedtakDto>(filnavnEtterfølgendeVedtak)
 
         val stønad = Stønadsid(
             type = Stønadstype.BIDRAG,
             kravhaver = Personident("33333333333"),
             skyldner = Personident("11111111111"),
-            sak = Saksnummer("2500292"),
+            sak = Saksnummer("1912673"),
         )
+
+        every { vedtakService.hentVedtak(påklagetVedtak.vedtaksid.toInt()) } returns påklagetVedtak
+        every { vedtakService.hentVedtak(4934258) } returns etterfølgendeVedtak
+        every { vedtakService.hentLøpendeStønad(stønad) } returns løpendeStønad
 
         val klageOrkestratorGrunnlag = KlageOrkestratorGrunnlag(
             stønad = stønad,
-            klageperiode = ÅrMånedsperiode(YearMonth.of(2024, 8), YearMonth.of(2025, 8)),
             påklagetVedtakId = påklagetVedtak.vedtaksid.toInt(),
         )
 
@@ -116,11 +120,13 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
         printJson(beregningResultat)
 
         assertSoftly(beregningResultat) {
-            resultatVedtakListe shouldHaveSize 2
+            resultatVedtakListe shouldHaveSize 3
             resultatVedtakListe[0].delvedtak shouldBe true
             resultatVedtakListe[0].klagevedtak shouldBe true
-            resultatVedtakListe[1].delvedtak shouldBe false
+            resultatVedtakListe[1].delvedtak shouldBe true
             resultatVedtakListe[1].klagevedtak shouldBe false
+            resultatVedtakListe[2].delvedtak shouldBe false
+            resultatVedtakListe[2].klagevedtak shouldBe false
         }
     }
 }

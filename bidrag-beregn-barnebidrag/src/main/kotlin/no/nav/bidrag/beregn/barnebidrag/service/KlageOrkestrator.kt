@@ -23,10 +23,13 @@ import java.time.YearMonth
 @Import(VedtakService::class)
 class KlageOrkestrator(private val vedtakService: VedtakService) {
 
-    fun utførKlageEndelig(klageberegningResultat: BeregnetBarnebidragResultat, grunnlag: KlageOrkestratorGrunnlag): List<ResultatVedtak> {
+    fun utførKlageEndelig(
+        klageberegningResultat: BeregnetBarnebidragResultat,
+        klageperiode: ÅrMånedsperiode,
+        grunnlag: KlageOrkestratorGrunnlag,
+    ): List<ResultatVedtak> {
         try {
             val stønad = grunnlag.stønad
-            val klageperiode = grunnlag.klageperiode
             val påklagetVedtakId = grunnlag.påklagetVedtakId
 
             secureLogger.info { "Komplett klageberegning kjøres for stønad $stønad og påklaget vedtak $påklagetVedtakId" }
