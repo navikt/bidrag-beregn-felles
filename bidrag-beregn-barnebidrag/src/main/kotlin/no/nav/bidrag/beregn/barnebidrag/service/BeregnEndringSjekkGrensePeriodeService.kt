@@ -29,9 +29,7 @@ internal object BeregnEndringSjekkGrensePeriodeService : BeregnService() {
 
         // Hvis det er 18-års-bidrag skal BELØPSHISTORIKK_BIDRAG_18_ÅR benyttes
         val grunnlagstype =
-            if (mottattGrunnlag.stønadstype ==
-                Stønadstype.BIDRAG18AAR
-            ) {
+            if (mottattGrunnlag.stønadstype == Stønadstype.BIDRAG18AAR) {
                 Grunnlagstype.BELØPSHISTORIKK_BIDRAG_18_ÅR
             } else {
                 Grunnlagstype.BELØPSHISTORIKK_BIDRAG

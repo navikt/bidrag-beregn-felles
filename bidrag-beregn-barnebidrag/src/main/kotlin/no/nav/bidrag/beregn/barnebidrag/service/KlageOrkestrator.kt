@@ -5,6 +5,7 @@ import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
+import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.KlageOrkestratorGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatBeregning
@@ -34,13 +35,20 @@ class KlageOrkestrator(private val vedtakService: VedtakService) {
 
             secureLogger.info { "Komplett klageberegning kjøres for stønad $stønad og påklaget vedtak $påklagetVedtakId" }
 
-            val løpendeStønad = vedtakService.hentLøpendeStønad(stønad)
             val påklagetVedtak = vedtakService.hentVedtak(påklagetVedtakId)
                 ?: throw IllegalArgumentException("Fant ikke påklaget vedtak med id $påklagetVedtakId")
             val påklagetVedtakVirkningstidspunkt = påklagetVedtak.virkningstidspunkt
                 ?: throw IllegalArgumentException("Påklaget vedtak med id $påklagetVedtakId har ikke virkningstidspunkt")
             val påklagetVedtakVedtakstidspunkt = påklagetVedtak.vedtakstidspunkt
                 ?: throw IllegalArgumentException("Påklaget vedtak med id $påklagetVedtakId har ikke vedtakstidspunkt")
+            val løpendeStønadGjeldende = vedtakService.hentLøpendeStønad(stønad)
+                ?: throw IllegalArgumentException("Fant ikke løpende stønad for $stønad")
+            val løpendeStønadFørPåklagetVedtak =
+                vedtakService.hentLøpendeStønadHistoriskAllePerioder(stønadsid = stønad, tidspunkt = påklagetVedtakVedtakstidspunkt.minusSeconds(1))
+                    ?: throw IllegalArgumentException("Fant ikke historisk løpende stønad for $stønad")
+
+            // Sjekk minimumsgrense for endring (aka 12%-regel)
+            // TODO Kalle BeregnEndringSjekkGrenseService
 
             // TODO Sjekk om nytt virkningstidspunkt kan være tidligere enn originalt virkningstidspunkt
             val nyVirkningErEtterOpprinneligVirkning = klageperiode.fom.isAfter(
@@ -52,67 +60,101 @@ class KlageOrkestrator(private val vedtakService: VedtakService) {
 
             val klageperiodeTilErLikInneværendePeriode = klageperiode.til!!.minusMonths(1) == YearMonth.now()
 
-            // Scenario 1: Klagevedtak dekker perioden fra opprinnelig virkningstidspunkt til inneværende periode - skal overstyre alt
-            if (!nyVirkningErEtterOpprinneligVirkning && klageperiodeTilErLikInneværendePeriode) {
-                return listOf(
-                    ResultatVedtak(resultat = klageberegningResultat, delvedtak = true, klagevedtak = true),
-                    ResultatVedtak(resultat = klageberegningResultat, delvedtak = false, klagevedtak = false),
-                ).sortedByDescending { it.delvedtak }
-            }
+            val foreløpigVedtak = when {
+                // Scenario 1: Klagevedtak dekker perioden fra opprinnelig virkningstidspunkt til inneværende periode - skal overstyre alt
+                !nyVirkningErEtterOpprinneligVirkning && klageperiodeTilErLikInneværendePeriode ->
+                    klageScenario1(klageberegningResultat = klageberegningResultat)
 
-            // Scenario 2: Klagevedtak dekker opprinnelig beregningsperiode for det påklagede vedtaket - legg til evt etterfølgende vedtak og kjør
-            // evt ny indeksregulering/aldersjustering
-            if (!nyVirkningErEtterOpprinneligVirkning && klageperiodeTilErLikOpprinneligVedtakstidspunkt) {
-                val etterfølgendeVedtakListe: List<Int> =
-                    if (løpendeStønad == null || løpendeStønad.periodeListe.isEmpty()) {
-                        emptyList()
-                    } else {
-                        løpendeStønad.periodeListe
-                            .filter { it.vedtaksid != påklagetVedtakId && (it.periode.til == null || it.periode.til!!.isAfter(klageperiode.til!!)) }
-                            .map { it.vedtaksid }
-                            .distinct()
-                    }
-                // TODO Sjekke om det må kjøres ny indeksregulering/aldersjustering
-                val delvedtakListe = buildList {
-                    add(ResultatVedtak(resultat = klageberegningResultat, delvedtak = true, klagevedtak = true))
-                    addAll(
-                        lagBeregnetBarnebidragResultatFraEksisterendeVedtak(vedtakListe = etterfølgendeVedtakListe, stønadstype = stønad.type)
-                            .map { ResultatVedtak(resultat = it, delvedtak = true, klagevedtak = false) },
+                // Scenario 2: Klagevedtak dekker opprinnelig beregningsperiode for det påklagede vedtaket - legg til evt etterfølgende vedtak og
+                // kjør evt ny indeksregulering/aldersjustering
+                !nyVirkningErEtterOpprinneligVirkning && klageperiodeTilErLikOpprinneligVedtakstidspunkt ->
+                    klageScenario2(
+                        klageberegningResultat = klageberegningResultat,
+                        klageperiode = klageperiode,
+                        løpendeStønad = løpendeStønadGjeldende,
+                        påklagetVedtakId = påklagetVedtakId,
+                        stønadstype = stønad.type,
                     )
-                }
 
-                val sammenslåttVedtak = ResultatVedtak(resultat = slåSammenVedtak(delvedtakListe), delvedtak = false, klagevedtak = false)
-
-                return (delvedtakListe + sammenslåttVedtak).sorterListe()
-            }
-
-            // Scenario 3: Fra-perioden i klagevedtaket er flyttet fram ifht. påklaget vedtak. Til-perioden i klagevedtaket er lik inneværende
-            // periode. Det eksisterer ingen vedtak før påklaget vedtak. Perioden fra opprinnelig vedtakstidspunkt til ny fra-periode må nulles ut.
-            if (nyVirkningErEtterOpprinneligVirkning && klageperiodeTilErLikInneværendePeriode) {
-                val delvedtakListe = buildList {
-                    add(
-                        ResultatVedtak(
-                            resultat = lagOpphørsvedtak(
-                                klageperiode = klageperiode,
-                                påklagetVedtakVirkningstidspunkt = påklagetVedtakVirkningstidspunkt,
-                            ),
-                            delvedtak = true,
-                            klagevedtak = false,
-                        ),
+                // Scenario 3: Fra-perioden i klagevedtaket er flyttet fram ifht. påklaget vedtak. Til-perioden i klagevedtaket er lik inneværende
+                // periode. Det eksisterer ingen vedtak før påklaget vedtak. Perioden fra opprinnelig vedtakstidspunkt til ny fra-periode må nulles
+                // ut.
+                nyVirkningErEtterOpprinneligVirkning && klageperiodeTilErLikInneværendePeriode ->
+                    klageScenario3(
+                        klageperiode = klageperiode,
+                        påklagetVedtakVirkningstidspunkt = påklagetVedtakVirkningstidspunkt,
+                        klageberegningResultat = klageberegningResultat,
                     )
-                    add(ResultatVedtak(resultat = klageberegningResultat, delvedtak = true, klagevedtak = true))
-                }
 
-                val sammenslåttVedtak = ResultatVedtak(resultat = slåSammenVedtak(delvedtakListe), delvedtak = false, klagevedtak = false)
-
-                return (delvedtakListe + sammenslåttVedtak).sorterListe()
+                else -> emptyList()
             }
 
-            return emptyList()
+            return foreløpigVedtak
         } catch (e: Exception) {
             // TODO
             throw e
         }
+    }
+
+    // Scenario 1: Klagevedtak dekker perioden fra opprinnelig virkningstidspunkt til inneværende periode - skal overstyre alt
+    private fun klageScenario1(klageberegningResultat: BeregnetBarnebidragResultat): List<ResultatVedtak> = listOf(
+        ResultatVedtak(resultat = klageberegningResultat, delvedtak = true, klagevedtak = true),
+        ResultatVedtak(resultat = klageberegningResultat, delvedtak = false, klagevedtak = false),
+    ).sortedByDescending { it.delvedtak }
+
+    // Scenario 2: Klagevedtak dekker opprinnelig beregningsperiode for det påklagede vedtaket - legg til evt etterfølgende vedtak og kjør
+    // evt ny indeksregulering/aldersjustering
+    private fun klageScenario2(
+        klageberegningResultat: BeregnetBarnebidragResultat,
+        klageperiode: ÅrMånedsperiode,
+        løpendeStønad: StønadDto?,
+        påklagetVedtakId: Int,
+        stønadstype: Stønadstype,
+    ): List<ResultatVedtak> {
+        val etterfølgendeVedtakListe: List<Int> =
+            if (løpendeStønad == null || løpendeStønad.periodeListe.isEmpty()) {
+                emptyList()
+            } else {
+                løpendeStønad.periodeListe
+                    .filter { it.vedtaksid != påklagetVedtakId && (it.periode.til == null || it.periode.til!!.isAfter(klageperiode.til!!)) }
+                    .map { it.vedtaksid }
+                    .distinct()
+            }
+
+        val delvedtakListe = buildList {
+            add(ResultatVedtak(resultat = klageberegningResultat, delvedtak = true, klagevedtak = true))
+            addAll(
+                lagBeregnetBarnebidragResultatFraEksisterendeVedtak(vedtakListe = etterfølgendeVedtakListe, stønadstype = stønadstype)
+                    .map { ResultatVedtak(resultat = it, delvedtak = true, klagevedtak = false) },
+            )
+        }
+
+        val sammenslåttVedtak = ResultatVedtak(resultat = slåSammenVedtak(delvedtakListe), delvedtak = false, klagevedtak = false)
+
+        return (delvedtakListe + sammenslåttVedtak).sorterListe()
+    }
+
+    // Scenario 3: Fra-perioden i klagevedtaket er flyttet fram ifht. påklaget vedtak. Til-perioden i klagevedtaket er lik inneværende
+    // periode. Det eksisterer ingen vedtak før påklaget vedtak. Perioden fra opprinnelig vedtakstidspunkt til ny fra-periode må nulles ut.
+    private fun klageScenario3(
+        klageperiode: ÅrMånedsperiode,
+        påklagetVedtakVirkningstidspunkt: LocalDate,
+        klageberegningResultat: BeregnetBarnebidragResultat,
+    ): List<ResultatVedtak> {
+        val delvedtakListe = buildList {
+            add(
+                ResultatVedtak(
+                    resultat = lagOpphørsvedtak(klageperiode = klageperiode, påklagetVedtakVirkningstidspunkt = påklagetVedtakVirkningstidspunkt),
+                    delvedtak = true,
+                    klagevedtak = false,
+                ),
+            )
+            add(ResultatVedtak(resultat = klageberegningResultat, delvedtak = true, klagevedtak = true))
+        }
+
+        val sammenslåttVedtak = ResultatVedtak(resultat = slåSammenVedtak(delvedtakListe), delvedtak = false, klagevedtak = false)
+
+        return (delvedtakListe + sammenslåttVedtak).sorterListe()
     }
 
     // Lager BeregnetBarnebidragResultat (simulert resultat fra beregningen) for alle (eksisterende) vedtak i vedtakListe

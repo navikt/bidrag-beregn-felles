@@ -28,6 +28,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 internal class BidragsberegningOrkestratorTest : FellesTest() {
     private lateinit var filnavnBeregnGrunnlag: String
     private lateinit var filnavnPåklagetVedtak: String
+    private lateinit var filnavnLøpendeStønad: String
+    private lateinit var filnavnEtterfølgendeVedtak: String
 
     @MockK(relaxed = true)
     private lateinit var vedtakService: VedtakService
@@ -50,7 +52,7 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
     @Test
     @DisplayName("Beregn bidrag")
     fun test01_BeregnBidrag() {
-        filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/test01_barnebidrag_beregning.json"
+        filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/test01_barnebidrag_beregning_grunnlag.json"
         val beregnGrunnlag: BeregnGrunnlag = lesFilOgByggRequest(filnavnBeregnGrunnlag)
         val request = BidragsberegningOrkestratorRequest(beregnGrunnlag = beregnGrunnlag, beregningstype = Beregningstype.BIDRAG)
 
@@ -67,7 +69,7 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
     @Test
     @DisplayName("Beregn klage")
     fun test02_BeregnKlage() {
-        filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/test02_klage_beregning.json"
+        filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/test02_klage_beregning_grunnlag.json"
         val beregnGrunnlag: BeregnGrunnlag = lesFilOgByggRequest(filnavnBeregnGrunnlag)
         val request = BidragsberegningOrkestratorRequest(beregnGrunnlag = beregnGrunnlag, beregningstype = Beregningstype.KLAGE)
 
@@ -82,12 +84,12 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
     }
 
     @Test
-    @DisplayName("Beregn klage endelig")
-    fun test03_BeregnKlageEndelig() {
-        filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/test03_klage_beregning.json"
-        filnavnPåklagetVedtak = "src/test/resources/testfiler/bidragsberegning_orkestrator/test03_påklaget_vedtak.json"
-        val filnavnLøpendeStønad = "src/test/resources/testfiler/bidragsberegning_orkestrator/test03_løpende_stønad.json"
-        val filnavnEtterfølgendeVedtak = "src/test/resources/testfiler/bidragsberegning_orkestrator/test03_etterfølgende_vedtak.json"
+    @DisplayName("Beregn klage endelig A")
+    fun test03A_BeregnKlageEndelig() {
+        filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/test03A_klage_beregning_grunnlag.json"
+        filnavnPåklagetVedtak = "src/test/resources/testfiler/bidragsberegning_orkestrator/test03A_påklaget_vedtak.json"
+        filnavnLøpendeStønad = "src/test/resources/testfiler/bidragsberegning_orkestrator/test03A_løpende_stønad.json"
+        filnavnEtterfølgendeVedtak = "src/test/resources/testfiler/bidragsberegning_orkestrator/test03A_etterfølgende_vedtak.json"
         val beregnGrunnlag: BeregnGrunnlag = lesFilOgByggRequest(filnavnBeregnGrunnlag)
         val påklagetVedtak = lesFilOgByggRequest<VedtakDto>(filnavnPåklagetVedtak)
         val løpendeStønad = lesFilOgByggRequest<StønadDto>(filnavnLøpendeStønad)
@@ -127,6 +129,50 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
             resultatVedtakListe[1].klagevedtak shouldBe false
             resultatVedtakListe[2].delvedtak shouldBe false
             resultatVedtakListe[2].klagevedtak shouldBe false
+        }
+    }
+
+    @Test
+    @DisplayName("Beregn klage endelig B")
+    fun test03B_BeregnKlageEndelig() {
+        filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/test03B_klage_beregning_grunnlag.json"
+        filnavnPåklagetVedtak = "src/test/resources/testfiler/bidragsberegning_orkestrator/test03B_påklaget_vedtak.json"
+        filnavnLøpendeStønad = "src/test/resources/testfiler/bidragsberegning_orkestrator/test03B_løpende_stønad.json"
+        val beregnGrunnlag: BeregnGrunnlag = lesFilOgByggRequest(filnavnBeregnGrunnlag)
+        val påklagetVedtak = lesFilOgByggRequest<VedtakDto>(filnavnPåklagetVedtak)
+        val løpendeStønad = lesFilOgByggRequest<StønadDto>(filnavnLøpendeStønad)
+
+        val stønad = Stønadsid(
+            type = Stønadstype.BIDRAG,
+            kravhaver = Personident("33333333333"),
+            skyldner = Personident("11111111111"),
+            sak = Saksnummer("2300960"),
+        )
+
+        every { vedtakService.hentVedtak(påklagetVedtak.vedtaksid.toInt()) } returns påklagetVedtak
+        every { vedtakService.hentLøpendeStønad(stønad) } returns løpendeStønad
+
+        val klageOrkestratorGrunnlag = KlageOrkestratorGrunnlag(
+            stønad = stønad,
+            påklagetVedtakId = påklagetVedtak.vedtaksid.toInt(),
+        )
+
+        val request =
+            BidragsberegningOrkestratorRequest(
+                beregnGrunnlag = beregnGrunnlag,
+                klageOrkestratorGrunnlag = klageOrkestratorGrunnlag,
+                beregningstype = Beregningstype.KLAGE_ENDELIG,
+            )
+
+        val beregningResultat = bidragsberegningOrkestrator.utførBidragsberegning(request)
+        printJson(beregningResultat)
+
+        assertSoftly(beregningResultat) {
+            resultatVedtakListe shouldHaveSize 2
+            resultatVedtakListe[0].delvedtak shouldBe true
+            resultatVedtakListe[0].klagevedtak shouldBe true
+            resultatVedtakListe[1].delvedtak shouldBe false
+            resultatVedtakListe[1].klagevedtak shouldBe false
         }
     }
 }

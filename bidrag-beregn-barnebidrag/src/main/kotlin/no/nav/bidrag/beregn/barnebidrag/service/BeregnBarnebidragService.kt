@@ -448,10 +448,10 @@ class BeregnBarnebidragService : BeregnService() {
         )
     }
 
-    // Sjekk mot minimumsgrense for endring ("12%-regelen") skal bare utføres hvis det ikke er eget tiltak
+    // Sjekk mot minimumsgrense for endring ("12%-regelen") skal bare utføres hvis det ikke er eget tiltak og det ikke er klage
     private fun skalSjekkeMotMinimumsgrenseForEndring(mottattGrunnlag: BeregnGrunnlag): Boolean = mottattGrunnlag.grunnlagListe
         .filtrerOgKonverterBasertPåEgenReferanse<SøknadGrunnlag>(Grunnlagstype.SØKNAD)
-        .map { !it.innhold.egetTiltak }
+        .map { !it.innhold.egetTiltak && it.innhold.klageMottattDato == null }
         .firstOrNull() ?: true
 
     // Henter ut verdi fra delberegning for endring sjekk av grense (her skal det være kun en forekomst)

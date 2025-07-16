@@ -65,7 +65,7 @@ class VedtakService(
         return stønad
     }
 
-    fun hentLøpendeStønadHistorisk(stønadsid: Stønadsid, tidspunkt: LocalDateTime = LocalDateTime.now()): StønadPeriodeDto? {
+    fun hentLøpendeStønadHistoriskSistePeriode(stønadsid: Stønadsid, tidspunkt: LocalDateTime = LocalDateTime.now()): StønadPeriodeDto? {
         val stønad =
             stønadConsumer.hentHistoriskeStønader(
                 HentStønadHistoriskRequest(
@@ -76,7 +76,7 @@ class VedtakService(
                     gyldigTidspunkt = tidspunkt,
                 ),
             ) ?: run {
-                secureLogger.info { "Fant ingen løpende ${stønadsid.type} for $stønadsid" }
+                secureLogger.info { "Fant ingen løpende historisk ${stønadsid.type} for $stønadsid" }
                 return null
             }
         return stønad.periodeListe.hentSisteLøpendePeriode() ?: run {
@@ -85,6 +85,23 @@ class VedtakService(
             }
             null
         }
+    }
+
+    fun hentLøpendeStønadHistoriskAllePerioder(stønadsid: Stønadsid, tidspunkt: LocalDateTime = LocalDateTime.now()): StønadDto? {
+        val stønad =
+            stønadConsumer.hentHistoriskeStønader(
+                HentStønadHistoriskRequest(
+                    type = stønadsid.type,
+                    sak = stønadsid.sak,
+                    skyldner = stønadsid.skyldner,
+                    kravhaver = stønadsid.kravhaver,
+                    gyldigTidspunkt = tidspunkt,
+                ),
+            ) ?: run {
+                secureLogger.info { "Fant ingen løpende historisk ${stønadsid.type} for $stønadsid" }
+                return null
+            }
+        return stønad
     }
 
     fun finnSisteManuelleVedtak(stønadsid: Stønadsid): SisteManuelleVedtak? {
