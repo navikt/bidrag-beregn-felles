@@ -1,0 +1,62 @@
+{
+  "stønadsid": 800596,
+  "type": "BIDRAG",
+  "sak": "2500292",
+  "skyldner": "11111111111",
+  "kravhaver": "33333333333",
+  "mottaker": "22222222222",
+  "førsteIndeksreguleringsår": null,
+  "nesteIndeksreguleringsår": null,
+  "innkreving": "MED_INNKREVING",
+  "opprettetAv": "Z994977",
+  "opprettetTidspunkt": "2025-06-20T08:17:58.348295",
+  "endretAv": "Z994977",
+  "endretTidspunkt": "2025-06-20T08:17:58.513817",
+  "periodeListe": [
+    {
+      "periodeid": 10874414,
+      "periode": {
+        "fom": "2024-08",
+        "til": "2025-02"
+      },
+      "stønadsid": 800596,
+      "vedtaksid": 4703678,
+      "gyldigFra": "2025-04-27T19:42:21.311158",
+      "gyldigTil": null,
+      "periodeGjortUgyldigAvVedtaksid": null,
+      "beløp": 6850,
+      "valutakode": "NOK",
+      "resultatkode": "BEREGNET_BIDRAG"
+    },
+    {
+      "periodeid": 10874415,
+      "periode": {
+        "fom": "2025-02",
+        "til": "2025-06"
+      },
+      "stønadsid": 800596,
+      "vedtaksid": 4703679,
+      "gyldigFra": "2025-04-27T19:42:21.311158",
+      "gyldigTil": null,
+      "periodeGjortUgyldigAvVedtaksid": null,
+      "beløp": 6950,
+      "valutakode": "NOK",
+      "resultatkode": "BEREGNET_BIDRAG"
+    },
+    {
+      "periodeid": 10874418,
+      "periode": {
+        "fom": "2025-06",
+        "til": null
+      },
+      "stønadsid": 800596,
+      "vedtaksid": 4703680,
+      "gyldigFra": "2025-04-27T19:43:25.545048",
+      "gyldigTil": null,
+      "periodeGjortUgyldigAvVedtaksid": null,
+      "beløp": 8060,
+      "valutakode": "NOK",
+      "resultatkode": "BEREGNET_BIDRAG"
+    }
+  ]
+}

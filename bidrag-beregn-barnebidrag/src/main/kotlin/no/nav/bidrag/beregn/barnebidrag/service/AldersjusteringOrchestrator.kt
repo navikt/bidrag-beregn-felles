@@ -133,7 +133,7 @@ class AldersjusteringOrchestrator(
             }
 
             vedtakService
-                .hentLøpendeStønad(stønad, LocalDateTime.now().withYear(aldersjusteresForÅr))
+                .hentBeløpshistorikkSistePeriode(stønad, LocalDateTime.now().withYear(aldersjusteresForÅr))
                 .validerSkalAldersjusteres(sak)
 
             val sisteManuelleVedtak = beregnBasertPåVedtak?.let { SisteManuelleVedtak(it, vedtakService.hentVedtak(it)!!) }
@@ -166,7 +166,7 @@ class AldersjusteringOrchestrator(
                 ?: aldersjusteringFeilet("Fant ikke person ${stønad.kravhaver.verdi} i grunnlaget")
         val stønadsendring = finnStønadsendring(stønad)
         val løpendeStønad = vedtakService
-            .hentLøpendeStønad(stønad, LocalDateTime.now().withYear(aldersjusteresForÅr))
+            .hentBeløpshistorikkSistePeriode(stønad, LocalDateTime.now().withYear(aldersjusteresForÅr))
         val sistePeriode = stønadsendring.periodeListe.hentSisteLøpendePeriode()!!
         val sluttberegningSistePeriode = vedtak.grunnlagListe.finnSluttberegningIReferanser(sistePeriode.grunnlagReferanseListe)
             ?.innholdTilObjekt<SluttberegningBarnebidrag>()
@@ -420,7 +420,7 @@ class AldersjusteringOrchestrator(
                 ),
             ),
             beløpshistorikkListe = listOf(
-                vedtakService.hentBeløpshistorikk(stønad, personobjekter, LocalDateTime.now().withYear(aldersjusteresForÅr)),
+                vedtakService.hentBeløpshistorikkTilGrunnlag(stønad, personobjekter, LocalDateTime.now().withYear(aldersjusteresForÅr)),
             ),
         )
     }

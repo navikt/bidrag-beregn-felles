@@ -31,7 +31,6 @@ import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatPeriode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.felles.valider
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnlag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndringSjekkGrense
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndringSjekkGrensePeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningPrivatAvtale
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
@@ -93,7 +92,7 @@ class BeregnBarnebidragService : BeregnService() {
         var delberegningEndringSjekkGrenseResultat = emptyList<GrunnlagDto>()
         var delberegningIndeksreguleringPrivatAvtaleResultat = emptyList<GrunnlagDto>()
 
-        // Skal sjekke mot minimumsgrense for endring ("12%-regelen") hvis egetTiltak er false
+        // Skal sjekke mot minimumsgrense for endring ("12%-regelen") hvis egetTiltak er false og det ikke er klageberegning
         if (skalSjekkeMotMinimumsgrenseForEndring(mottattGrunnlag)) {
             val sjekkMotMinimumsgrenseForEndringResultat = sjekkMotMinimumsgrenseForEndring(
                 mottattGrunnlag = mottattGrunnlag,
@@ -448,16 +447,10 @@ class BeregnBarnebidragService : BeregnService() {
         )
     }
 
-    // Sjekk mot minimumsgrense for endring ("12%-regelen") skal bare utføres hvis det ikke er eget tiltak
+    // Sjekk mot minimumsgrense for endring ("12%-regelen") skal bare utføres hvis det ikke er eget tiltak og det ikke er klage
     private fun skalSjekkeMotMinimumsgrenseForEndring(mottattGrunnlag: BeregnGrunnlag): Boolean = mottattGrunnlag.grunnlagListe
         .filtrerOgKonverterBasertPåEgenReferanse<SøknadGrunnlag>(Grunnlagstype.SØKNAD)
-        .map { !it.innhold.egetTiltak }
-        .firstOrNull() ?: true
-
-    // Henter ut verdi fra delberegning for endring sjekk av grense (her skal det være kun en forekomst)
-    private fun erOverMinimumsgrenseForEndring(endringSjekkGrenseGrunnlagliste: List<GrunnlagDto>): Boolean = endringSjekkGrenseGrunnlagliste
-        .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndringSjekkGrense>(grunnlagType = Grunnlagstype.DELBEREGNING_ENDRING_SJEKK_GRENSE)
-        .map { it.innhold.endringErOverGrense }
+        .map { !it.innhold.egetTiltak && it.innhold.klageMottattDato == null }
         .firstOrNull() ?: true
 
     private fun filtrerBeløpshistorikkGrunnlag(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> =

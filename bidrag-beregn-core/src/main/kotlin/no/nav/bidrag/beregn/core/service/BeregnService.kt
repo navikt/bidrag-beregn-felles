@@ -35,6 +35,7 @@ import no.nav.bidrag.domene.enums.inntekt.Inntektstype.Companion.inngårIInntekt
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndringSjekkGrense
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSumInntekt
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
@@ -381,6 +382,12 @@ abstract class BeregnService {
             .map { it.sjablonSamværsfradragPeriode.alderTom }
             .distinct()
             .sorted()
+
+    // Henter ut verdi fra delberegning for endring sjekk av grense (her skal det være kun en forekomst)
+    fun erOverMinimumsgrenseForEndring(endringSjekkGrenseGrunnlagliste: List<GrunnlagDto>): Boolean = endringSjekkGrenseGrunnlagliste
+        .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndringSjekkGrense>(grunnlagType = Grunnlagstype.DELBEREGNING_ENDRING_SJEKK_GRENSE)
+        .map { it.innhold.endringErOverGrense }
+        .firstOrNull() ?: true
 
     fun tilJson(json: Any): String {
         val objectMapper = ObjectMapper()

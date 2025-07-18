@@ -1,0 +1,77 @@
+{
+  "stønadsid": 217310,
+  "type": "BIDRAG",
+  "sak": "2300960",
+  "skyldner": "11111111111",
+  "kravhaver": "33333333333",
+  "mottaker": "22222222222",
+  "førsteIndeksreguleringsår": null,
+  "nesteIndeksreguleringsår": 2025,
+  "innkreving": "MED_INNKREVING",
+  "opprettetAv": "H103913",
+  "opprettetTidspunkt": "2025-06-18T05:42:30.061861",
+  "endretAv": "G125005",
+  "endretTidspunkt": "2025-06-18T05:42:30.779174",
+  "periodeListe": [
+    {
+      "periodeid": 2676671,
+      "periode": {
+        "fom": "2023-02",
+        "til": "2024-06"
+      },
+      "stønadsid": 217310,
+      "vedtaksid": 1100779,
+      "gyldigFra": "2024-09-27T09:51:13.000492",
+      "gyldigTil": null,
+      "periodeGjortUgyldigAvVedtaksid": null,
+      "beløp": 0,
+      "valutakode": "NOK",
+      "resultatkode": "8DN"
+    },
+    {
+      "periodeid": 2676672,
+      "periode": {
+        "fom": "2024-06",
+        "til": "2024-07"
+      },
+      "stønadsid": 217310,
+      "vedtaksid": 1100801,
+      "gyldigFra": "2024-09-27T09:51:13.000492",
+      "gyldigTil": null,
+      "periodeGjortUgyldigAvVedtaksid": null,
+      "beløp": 490,
+      "valutakode": "NOK",
+      "resultatkode": "8DN"
+    },
+    {
+      "periodeid": 2676673,
+      "periode": {
+        "fom": "2024-07",
+        "til": "2024-08"
+      },
+      "stønadsid": 217310,
+      "vedtaksid": 1100801,
+      "gyldigFra": "2024-09-27T09:51:13.000492",
+      "gyldigTil": null,
+      "periodeGjortUgyldigAvVedtaksid": null,
+      "beløp": 570,
+      "valutakode": "NOK",
+      "resultatkode": "8DN"
+    },
+    {
+      "periodeid": 2676674,
+      "periode": {
+        "fom": "2024-08",
+        "til": null
+      },
+      "stønadsid": 217310,
+      "vedtaksid": 1100801,
+      "gyldigFra": "2024-09-27T09:51:13.000492",
+      "gyldigTil": null,
+      "periodeGjortUgyldigAvVedtaksid": null,
+      "beløp": 1090,
+      "valutakode": "NOK",
+      "resultatkode": "8DN"
+    }
+  ]
+}
