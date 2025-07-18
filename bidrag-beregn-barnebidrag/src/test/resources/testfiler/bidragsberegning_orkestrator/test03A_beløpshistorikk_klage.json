@@ -1,0 +1,212 @@
+{
+  "stønadsid": 77353,
+  "type": "BIDRAG",
+  "sak": "1912673",
+  "skyldner": "11111111111",
+  "kravhaver": "33333333333",
+  "mottaker": "22222222222",
+  "førsteIndeksreguleringsår": null,
+  "nesteIndeksreguleringsår": 2026,
+  "innkreving": "MED_INNKREVING",
+  "opprettetAv": "N151534",
+  "opprettetTidspunkt": "2025-06-17T22:00:38.886757",
+  "endretAv": "Z994977",
+  "endretTidspunkt": "2025-07-14T12:37:02.188842",
+  "periodeListe": [
+    {
+      "periodeid": 939734,
+      "periode": {
+        "fom": "2019-12",
+        "til": "2020-01"
+      },
+      "stønadsid": 77353,
+      "vedtaksid": 355589,
+      "gyldigFra": "2020-06-30T06:59:07.00017",
+      "gyldigTil": null,
+      "periodeGjortUgyldigAvVedtaksid": null,
+      "beløp": 0,
+      "valutakode": "NOK",
+      "resultatkode": "8DN"
+    },
+    {
+      "periodeid": 939735,
+      "periode": {
+        "fom": "2020-01",
+        "til": "2020-03"
+      },
+      "stønadsid": 77353,
+      "vedtaksid": 355589,
+      "gyldigFra": "2020-06-30T06:59:07.00017",
+      "gyldigTil": null,
+      "periodeGjortUgyldigAvVedtaksid": null,
+      "beløp": 720,
+      "valutakode": "NOK",
+      "resultatkode": "8DN"
+    },
+    {
+      "periodeid": 939736,
+      "periode": {
+        "fom": "2020-03",
+        "til": "2020-05"
+      },
+      "stønadsid": 77353,
+      "vedtaksid": 355589,
+      "gyldigFra": "2020-06-30T06:59:07.00017",
+      "gyldigTil": null,
+      "periodeGjortUgyldigAvVedtaksid": null,
+      "beløp": 1090,
+      "valutakode": "NOK",
+      "resultatkode": "8DN"
+    },
+    {
+      "periodeid": 939737,
+      "periode": {
+        "fom": "2020-05",
+        "til": "2020-06"
+      },
+      "stønadsid": 77353,
+      "vedtaksid": 355589,
+      "gyldigFra": "2020-06-30T06:59:07.00017",
+      "gyldigTil": null,
+      "periodeGjortUgyldigAvVedtaksid": null,
+      "beløp": 790,
+      "valutakode": "NOK",
+      "resultatkode": "8DN"
+    },
+    {
+      "periodeid": 939744,
+      "periode": {
+        "fom": "2020-06",
+        "til": "2021-07"
+      },
+      "stønadsid": 77353,
+      "vedtaksid": 355589,
+      "gyldigFra": "2021-05-16T08:20:57",
+      "gyldigTil": null,
+      "periodeGjortUgyldigAvVedtaksid": null,
+      "beløp": 1090,
+      "valutakode": "NOK",
+      "resultatkode": "8DN"
+    },
+    {
+      "periodeid": 939778,
+      "periode": {
+        "fom": "2021-07",
+        "til": "2022-07"
+      },
+      "stønadsid": 77353,
+      "vedtaksid": 355594,
+      "gyldigFra": "2022-05-16T21:08:45",
+      "gyldigTil": null,
+      "periodeGjortUgyldigAvVedtaksid": null,
+      "beløp": 1120,
+      "valutakode": "NOK",
+      "resultatkode": "IREG"
+    },
+    {
+      "periodeid": 939801,
+      "periode": {
+        "fom": "2022-07",
+        "til": "2022-11"
+      },
+      "stønadsid": 77353,
+      "vedtaksid": 355609,
+      "gyldigFra": "2023-02-01T12:27:05.000445",
+      "gyldigTil": null,
+      "periodeGjortUgyldigAvVedtaksid": null,
+      "beløp": 1160,
+      "valutakode": "NOK",
+      "resultatkode": "IREG"
+    },
+    {
+      "periodeid": 939879,
+      "periode": {
+        "fom": "2022-11",
+        "til": "2023-06"
+      },
+      "stønadsid": 77353,
+      "vedtaksid": 355620,
+      "gyldigFra": "2023-10-18T11:12:33.000874",
+      "gyldigTil": null,
+      "periodeGjortUgyldigAvVedtaksid": null,
+      "beløp": 1320,
+      "valutakode": "NOK",
+      "resultatkode": "RFO"
+    },
+    {
+      "periodeid": 939903,
+      "periode": {
+        "fom": "2023-06",
+        "til": "2023-07"
+      },
+      "stønadsid": 77353,
+      "vedtaksid": 355654,
+      "gyldigFra": "2024-01-26T08:12:14.000059",
+      "gyldigTil": null,
+      "periodeGjortUgyldigAvVedtaksid": null,
+      "beløp": 520,
+      "valutakode": "NOK",
+      "resultatkode": "8DN"
+    },
+    {
+      "periodeid": 939904,
+      "periode": {
+        "fom": "2023-07",
+        "til": "2023-09"
+      },
+      "stønadsid": 77353,
+      "vedtaksid": 355654,
+      "gyldigFra": "2024-01-26T08:12:14.000059",
+      "gyldigTil": null,
+      "periodeGjortUgyldigAvVedtaksid": null,
+      "beløp": 620,
+      "valutakode": "NOK",
+      "resultatkode": "8DN"
+    },
+    {
+      "periodeid": 939905,
+      "periode": {
+        "fom": "2023-09",
+        "til": "2023-10"
+      },
+      "stønadsid": 77353,
+      "vedtaksid": 355654,
+      "gyldigFra": "2024-01-26T08:12:14.000059",
+      "gyldigTil": null,
+      "periodeGjortUgyldigAvVedtaksid": null,
+      "beløp": 1970,
+      "valutakode": "NOK",
+      "resultatkode": "KBB"
+    },
+    {
+      "periodeid": 939941,
+      "periode": {
+        "fom": "2023-10",
+        "til": "2024-07"
+      },
+      "stønadsid": 77353,
+      "vedtaksid": 355654,
+      "gyldigFra": "2024-05-11T22:00:00",
+      "gyldigTil": null,
+      "periodeGjortUgyldigAvVedtaksid": null,
+      "beløp": 2030,
+      "valutakode": "NOK",
+      "resultatkode": "KBB"
+    },
+    {
+      "periodeid": 939942,
+      "periode": {
+        "fom": "2024-07",
+        "til": null
+      },
+      "stønadsid": 77353,
+      "vedtaksid": 355668,
+      "gyldigFra": "2024-05-11T22:00:00",
+      "gyldigTil": "2024-12-12T13:30:47.0007",
+      "periodeGjortUgyldigAvVedtaksid": 355693,
+      "beløp": 2130,
+      "valutakode": "NOK",
+      "resultatkode": "IREG"
+    }
+  ]
+}

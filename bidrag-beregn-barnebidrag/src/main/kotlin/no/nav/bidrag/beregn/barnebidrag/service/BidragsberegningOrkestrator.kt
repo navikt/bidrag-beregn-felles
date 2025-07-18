@@ -44,8 +44,9 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
                 )
                 val endeligKlageberegningResultat = klageOrkestrator.utførKlageEndelig(
                     klageberegningResultat = klageberegningResultat,
-                    klageperiode = request.beregnGrunnlag.periode,
-                    grunnlag = request.klageOrkestratorGrunnlag ?: throw IllegalArgumentException("klageOrkestratorGrunnlag må være angitt"),
+                    klageberegningGrunnlag = request.beregnGrunnlag,
+                    klageOrkestratorGrunnlag =
+                    request.klageOrkestratorGrunnlag ?: throw IllegalArgumentException("klageOrkestratorGrunnlag må være angitt"),
                 )
                 val respons = BidragsberegningOrkestratorResponse(endeligKlageberegningResultat)
                 secureLogger.info { "Resultat av endelig klageberegning: $respons" }

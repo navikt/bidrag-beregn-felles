@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.shouldBe
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
+import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatVedtak
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagBeregningPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
@@ -66,6 +68,19 @@ internal open class FellesTest {
         )
         .filterNotNull()
         .distinct()
+
+    fun sjekkReferanser(resultatVedtakListe: List<ResultatVedtak>) {
+        val alleReferanser = hentAlleReferanser(resultatVedtakListe.last().resultat.grunnlagListe)
+        val alleRefererteReferanser = hentAlleRefererteReferanser(
+            resultatGrunnlagListe = resultatVedtakListe.last().resultat.grunnlagListe,
+            barnebidragResultat = resultatVedtakListe.last().resultat,
+        )
+
+        assertSoftly {
+            alleReferanser.containsAll(alleRefererteReferanser)
+            alleRefererteReferanser.containsAll(alleReferanser)
+        }
+    }
 
     inline fun <reified T> lesFilOgByggRequest(filnavn: String): T {
         val json = try {
