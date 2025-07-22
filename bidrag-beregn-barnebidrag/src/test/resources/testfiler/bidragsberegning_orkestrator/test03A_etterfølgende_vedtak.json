@@ -1,0 +1,1414 @@
+{
+  "vedtaksid": 4934258,
+  "kilde": "MANUELT",
+  "type": "ENDRING",
+  "opprettetAv": "Z994977",
+  "opprettetAvNavn": "F_Z994977 E_Z994977",
+  "kildeapplikasjon": "bidrag-behandling-q1",
+  "vedtakstidspunkt": "2025-07-14T12:36:56.957464",
+  "unikReferanse": "behandling_1328_20250714123526",
+  "enhetsnummer": "4806",
+  "innkrevingUtsattTilDato": "2025-07-17",
+  "fastsattILand": null,
+  "opprettetTidspunkt": "2025-07-14T12:36:58.62426",
+  "grunnlagListe": [
+    {
+      "referanse": "person_PERSON_BIDRAGSMOTTAKER_19780604_3923",
+      "type": "PERSON_BIDRAGSMOTTAKER",
+      "innhold": {
+        "navn": null,
+        "ident": "22222222222",
+        "fødselsdato": "1978-06-04"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "person_PERSON_BIDRAGSPLIKTIG_19780407_3925",
+      "type": "PERSON_BIDRAGSPLIKTIG",
+      "innhold": {
+        "navn": null,
+        "ident": "11111111111",
+        "fødselsdato": "1978-04-07"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "person_PERSON_SØKNADSBARN_20080722_3924",
+      "type": "PERSON_SØKNADSBARN",
+      "innhold": {
+        "navn": null,
+        "ident": "33333333333",
+        "fødselsdato": "2008-07-22"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "bostatus_person_PERSON_SØKNADSBARN_20080722_3924_20250501",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2025-05",
+          "til": null
+        },
+        "bostatus": "IKKE_MED_FORELDER",
+        "relatertTilPart": "person_PERSON_BIDRAGSPLIKTIG_19780407_3925",
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [
+        "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924"
+      ],
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19780407_3925",
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20080722_3924"
+    },
+    {
+      "referanse": "bostatus_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_20250501",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2025-05",
+          "til": null
+        },
+        "bostatus": "BOR_IKKE_MED_ANDRE_VOKSNE",
+        "relatertTilPart": "person_PERSON_BIDRAGSPLIKTIG_19780407_3925",
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [
+        "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_BIDRAGSPLIKTIG_19780407_3925"
+      ],
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19780407_3925",
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "inntekt_LØNN_MANUELT_BEREGNET_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_20250501_3121",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "valgt": true,
+        "beløp": 30000000,
+        "periode": {
+          "fom": "2025-05",
+          "til": null
+        },
+        "versjon": null,
+        "gjelderBarn": null,
+        "inntektspostListe": [],
+        "manueltRegistrert": true,
+        "opprinneligPeriode": null,
+        "inntektsrapportering": "LØNN_MANUELT_BEREGNET"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19780407_3925",
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "inntekt_LØNN_MANUELT_BEREGNET_person_PERSON_BIDRAGSMOTTAKER_19780604_3923_20250501_3120",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "valgt": true,
+        "beløp": 2000000,
+        "periode": {
+          "fom": "2025-05",
+          "til": null
+        },
+        "versjon": null,
+        "gjelderBarn": null,
+        "inntektspostListe": [],
+        "manueltRegistrert": true,
+        "opprinneligPeriode": null,
+        "inntektsrapportering": "LØNN_MANUELT_BEREGNET"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "person_PERSON_BIDRAGSMOTTAKER_19780604_3923",
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_BIDRAGSPLIKTIG_19780407_3925",
+      "type": "INNHENTET_ANDRE_VOKSNE_I_HUSSTANDEN",
+      "innhold": [],
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19780407_3925",
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "innhentet_husstandsmedlem_person_PERSON_BIDRAGSMOTTAKER_19780604_3923_person_PERSON_SØKNADSBARN_20080722_3924",
+      "type": "INNHENTET_HUSSTANDSMEDLEM",
+      "innhold": {
+        "grunnlag": {
+          "navn": "Okyqøg Qume Qyxpdl-Test",
+          "perioder": [],
+          "relasjon": "BARN",
+          "fødselsdato": "2008-07-22",
+          "gjelderPerson": "person_PERSON_SØKNADSBARN_20080722_3924"
+        },
+        "datakilde": "PDL",
+        "hentetTidspunkt": "2025-07-14T12:35:35.011209"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "person_PERSON_BIDRAGSMOTTAKER_19780604_3923",
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "innhentet_husstandsmedlem_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924",
+      "type": "INNHENTET_HUSSTANDSMEDLEM",
+      "innhold": {
+        "grunnlag": {
+          "navn": null,
+          "perioder": [],
+          "relasjon": "BARN",
+          "fødselsdato": "2008-07-22",
+          "gjelderPerson": "person_PERSON_SØKNADSBARN_20080722_3924"
+        },
+        "datakilde": "PDL",
+        "hentetTidspunkt": "2025-07-14T12:36:56.94699563"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19780407_3925",
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "BELØPSHISTORIKK_BIDRAG_1912673_33333333333_11111111111_20250714",
+      "type": "BELØPSHISTORIKK_BIDRAG",
+      "innhold": {
+        "beløpshistorikk": [
+          {
+            "beløp": 0,
+            "periode": {
+              "fom": "2019-12",
+              "til": "2020-01"
+            },
+            "vedtaksid": 355589,
+            "valutakode": "NOK"
+          },
+          {
+            "beløp": 720,
+            "periode": {
+              "fom": "2020-01",
+              "til": "2020-03"
+            },
+            "vedtaksid": 355589,
+            "valutakode": "NOK"
+          },
+          {
+            "beløp": 1090,
+            "periode": {
+              "fom": "2020-03",
+              "til": "2020-05"
+            },
+            "vedtaksid": 355589,
+            "valutakode": "NOK"
+          },
+          {
+            "beløp": 790,
+            "periode": {
+              "fom": "2020-05",
+              "til": "2020-06"
+            },
+            "vedtaksid": 355589,
+            "valutakode": "NOK"
+          },
+          {
+            "beløp": 1090,
+            "periode": {
+              "fom": "2020-06",
+              "til": "2021-07"
+            },
+            "vedtaksid": 355589,
+            "valutakode": "NOK"
+          },
+          {
+            "beløp": 1120,
+            "periode": {
+              "fom": "2021-07",
+              "til": "2022-07"
+            },
+            "vedtaksid": 355594,
+            "valutakode": "NOK"
+          },
+          {
+            "beløp": 1160,
+            "periode": {
+              "fom": "2022-07",
+              "til": "2022-11"
+            },
+            "vedtaksid": 355609,
+            "valutakode": "NOK"
+          },
+          {
+            "beløp": 1320,
+            "periode": {
+              "fom": "2022-11",
+              "til": "2023-06"
+            },
+            "vedtaksid": 355620,
+            "valutakode": "NOK"
+          },
+          {
+            "beløp": 520,
+            "periode": {
+              "fom": "2023-06",
+              "til": "2023-07"
+            },
+            "vedtaksid": 355654,
+            "valutakode": "NOK"
+          },
+          {
+            "beløp": 620,
+            "periode": {
+              "fom": "2023-07",
+              "til": "2023-09"
+            },
+            "vedtaksid": 355654,
+            "valutakode": "NOK"
+          },
+          {
+            "beløp": 1970,
+            "periode": {
+              "fom": "2023-09",
+              "til": "2023-10"
+            },
+            "vedtaksid": 355654,
+            "valutakode": "NOK"
+          },
+          {
+            "beløp": 2030,
+            "periode": {
+              "fom": "2023-10",
+              "til": "2024-07"
+            },
+            "vedtaksid": 355654,
+            "valutakode": "NOK"
+          },
+          {
+            "beløp": 2130,
+            "periode": {
+              "fom": "2024-07",
+              "til": "2024-08"
+            },
+            "vedtaksid": 355668,
+            "valutakode": "NOK"
+          },
+          {
+            "beløp": 1400,
+            "periode": {
+              "fom": "2024-08",
+              "til": "2024-09"
+            },
+            "vedtaksid": 355693,
+            "valutakode": "NOK"
+          },
+          {
+            "beløp": 2050,
+            "periode": {
+              "fom": "2024-09",
+              "til": null
+            },
+            "vedtaksid": 355693,
+            "valutakode": "NOK"
+          }
+        ],
+        "tidspunktInnhentet": "2025-07-14T12:36:56.893689851",
+        "nesteIndeksreguleringsår": 2025
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19780407_3925",
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20080722_3924"
+    },
+    {
+      "referanse": "delberegning_DELBEREGNING_BARN_I_HUSSTAND_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+      "type": "DELBEREGNING_BARN_I_HUSSTAND",
+      "innhold": {
+        "periode": {
+          "fom": "2025-05",
+          "til": null
+        },
+        "antallBarn": 0
+      },
+      "grunnlagsreferanseListe": [
+        "bostatus_person_PERSON_SØKNADSBARN_20080722_3924_20250501"
+      ],
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19780407_3925",
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "delberegning_DELBEREGNING_BIDRAGSEVNE_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+      "type": "DELBEREGNING_BIDRAGSEVNE",
+      "innhold": {
+        "skatt": {
+          "sumSkatt": 14060872,
+          "trinnskatt": 5189262,
+          "trygdeavgift": 2310000,
+          "minstefradrag": 86250,
+          "sumSkattFaktor": 0.4686957333,
+          "skattAlminneligInntekt": 6561610
+        },
+        "beløp": 1304918.67,
+        "periode": {
+          "fom": "2025-05",
+          "til": "2025-07"
+        },
+        "sumInntekt25Prosent": 625000,
+        "underholdBarnEgenHusstand": 0
+      },
+      "grunnlagsreferanseListe": [
+        "delberegning_DELBEREGNING_BOFORHOLD_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+        "delberegning_DELBEREGNING_SUM_INNTEKT_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+        "sjablon_InnslagKapitalInntektBeløp_200301",
+        "sjablon_MinstefradragInntektBeløp_202307_202507",
+        "sjablon_MinstefradragInntektProsent_202201",
+        "sjablon_PersonfradragKlasse1Beløp_202407_202507",
+        "sjablon_SJABLON_BIDRAGSEVNE_202407_202507_EN",
+        "sjablon_SJABLON_TRINNVIS_SKATTESATS_202501",
+        "sjablon_SkattesatsAlminneligInntektProsent_201901",
+        "sjablon_TrygdeavgiftProsent_202501",
+        "sjablon_UnderholdEgneBarnIHusstandBeløp_202407_202507"
+      ],
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19780407_3925",
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "delberegning_DELBEREGNING_BIDRAGSEVNE_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924_202507",
+      "type": "DELBEREGNING_BIDRAGSEVNE",
+      "innhold": {
+        "skatt": {
+          "sumSkatt": 14059288,
+          "trinnskatt": 5189262,
+          "trygdeavgift": 2310000,
+          "minstefradrag": 73150,
+          "sumSkattFaktor": 0.4686429333,
+          "skattAlminneligInntekt": 6560026
+        },
+        "beløp": 1304513.67,
+        "periode": {
+          "fom": "2025-07",
+          "til": null
+        },
+        "sumInntekt25Prosent": 625000,
+        "underholdBarnEgenHusstand": 0
+      },
+      "grunnlagsreferanseListe": [
+        "delberegning_DELBEREGNING_BOFORHOLD_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+        "delberegning_DELBEREGNING_SUM_INNTEKT_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+        "sjablon_InnslagKapitalInntektBeløp_200301",
+        "sjablon_MinstefradragInntektBeløp_202507",
+        "sjablon_MinstefradragInntektProsent_202201",
+        "sjablon_PersonfradragKlasse1Beløp_202507",
+        "sjablon_SJABLON_BIDRAGSEVNE_202507_EN",
+        "sjablon_SJABLON_TRINNVIS_SKATTESATS_202501",
+        "sjablon_SkattesatsAlminneligInntektProsent_201901",
+        "sjablon_TrygdeavgiftProsent_202501",
+        "sjablon_UnderholdEgneBarnIHusstandBeløp_202507"
+      ],
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19780407_3925",
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "delberegning_DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+      "type": "DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL",
+      "innhold": {
+        "periode": {
+          "fom": "2025-05",
+          "til": "2025-07"
+        },
+        "andelBeløp": 8981.67,
+        "barnEndeligInntekt": 0,
+        "endeligAndelFaktor": 0.8333333333,
+        "beregnetAndelFaktor": 0.9375,
+        "barnetErSelvforsørget": false
+      },
+      "grunnlagsreferanseListe": [
+        "delberegning_DELBEREGNING_SUM_INNTEKT_person_PERSON_BIDRAGSMOTTAKER_19780604_3923_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+        "delberegning_DELBEREGNING_SUM_INNTEKT_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+        "delberegning_DELBEREGNING_SUM_INNTEKT_person_PERSON_SØKNADSBARN_20080722_3924_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+        "delberegning_DELBEREGNING_UNDERHOLDSKOSTNAD_person_PERSON_BIDRAGSMOTTAKER_19780604_3923_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+        "sjablon_ForskuddssatsBeløp_202407_202507",
+        "sjablon_InnslagKapitalInntektBeløp_200301"
+      ],
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19780407_3925",
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20080722_3924"
+    },
+    {
+      "referanse": "delberegning_DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924_202507",
+      "type": "DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL",
+      "innhold": {
+        "periode": {
+          "fom": "2025-07",
+          "til": null
+        },
+        "andelBeløp": 9094.17,
+        "barnEndeligInntekt": 0,
+        "endeligAndelFaktor": 0.8333333333,
+        "beregnetAndelFaktor": 0.9375,
+        "barnetErSelvforsørget": false
+      },
+      "grunnlagsreferanseListe": [
+        "delberegning_DELBEREGNING_SUM_INNTEKT_person_PERSON_BIDRAGSMOTTAKER_19780604_3923_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+        "delberegning_DELBEREGNING_SUM_INNTEKT_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+        "delberegning_DELBEREGNING_SUM_INNTEKT_person_PERSON_SØKNADSBARN_20080722_3924_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+        "delberegning_DELBEREGNING_UNDERHOLDSKOSTNAD_person_PERSON_BIDRAGSMOTTAKER_19780604_3923_person_PERSON_SØKNADSBARN_20080722_3924_202507",
+        "sjablon_ForskuddssatsBeløp_202507",
+        "sjablon_InnslagKapitalInntektBeløp_200301"
+      ],
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19780407_3925",
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20080722_3924"
+    },
+    {
+      "referanse": "delberegning_DELBEREGNING_BOFORHOLD_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+      "type": "DELBEREGNING_BOFORHOLD",
+      "innhold": {
+        "periode": {
+          "fom": "2025-05",
+          "til": null
+        },
+        "antallBarn": 0,
+        "borMedAndreVoksne": false
+      },
+      "grunnlagsreferanseListe": [
+        "delberegning_DELBEREGNING_BARN_I_HUSSTAND_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+        "delberegning_DELBEREGNING_VOKSNE_I_HUSSTAND_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924_202505"
+      ],
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19780407_3925",
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_PERIODE_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+      "type": "DELBEREGNING_ENDRING_SJEKK_GRENSE_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2025-05",
+          "til": "2025-07"
+        },
+        "endringErOverGrense": true,
+        "beregnetBidragBeløp": 8981.67,
+        "faktiskEndringFaktor": 3.381302439,
+        "løpendeBidragBeløp": 2050,
+        "løpendeBidragFraPrivatAvtale": false
+      },
+      "grunnlagsreferanseListe": [
+        "sluttberegning_person_PERSON_SØKNADSBARN_20080722_3924_202505_202507",
+        "BELØPSHISTORIKK_BIDRAG_1912673_33333333333_11111111111_20250714",
+        "sjablon_EndringBidragGrenseProsent_200901"
+      ],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20080722_3924"
+    },
+    {
+      "referanse": "delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_PERIODE_person_PERSON_SØKNADSBARN_20080722_3924_202507",
+      "type": "DELBEREGNING_ENDRING_SJEKK_GRENSE_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2025-07",
+          "til": null
+        },
+        "endringErOverGrense": true,
+        "beregnetBidragBeløp": 9094.17,
+        "faktiskEndringFaktor": 3.4361804878,
+        "løpendeBidragBeløp": 2050,
+        "løpendeBidragFraPrivatAvtale": false
+      },
+      "grunnlagsreferanseListe": [
+        "sluttberegning_person_PERSON_SØKNADSBARN_20080722_3924_202507",
+        "BELØPSHISTORIKK_BIDRAG_1912673_33333333333_11111111111_20250714",
+        "sjablon_EndringBidragGrenseProsent_200901"
+      ],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20080722_3924"
+    },
+    {
+      "referanse": "delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+      "type": "DELBEREGNING_ENDRING_SJEKK_GRENSE",
+      "innhold": {
+        "periode": {
+          "fom": "2025-05",
+          "til": null
+        },
+        "endringErOverGrense": true
+      },
+      "grunnlagsreferanseListe": [
+        "delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_PERIODE_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+        "delberegning_DELBEREGNING_ENDRING_SJEKK_GRENSE_PERIODE_person_PERSON_SØKNADSBARN_20080722_3924_202507"
+      ],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20080722_3924"
+    },
+    {
+      "referanse": "delberegning_DELBEREGNING_SAMVÆRSFRADRAG_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+      "type": "DELBEREGNING_SAMVÆRSFRADRAG",
+      "innhold": {
+        "beløp": 0,
+        "periode": {
+          "fom": "2025-05",
+          "til": "2025-07"
+        }
+      },
+      "grunnlagsreferanseListe": [
+        "person_PERSON_SØKNADSBARN_20080722_3924",
+        "samvær_SAMVÆRSPERIODE_20250501_person_PERSON_SØKNADSBARN_20080722_3924",
+        "sjablon_SJABLON_SAMVARSFRADRAG_201307_00_99"
+      ],
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19780407_3925",
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20080722_3924"
+    },
+    {
+      "referanse": "delberegning_DELBEREGNING_SAMVÆRSFRADRAG_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924_202507",
+      "type": "DELBEREGNING_SAMVÆRSFRADRAG",
+      "innhold": {
+        "beløp": 0,
+        "periode": {
+          "fom": "2025-07",
+          "til": null
+        }
+      },
+      "grunnlagsreferanseListe": [
+        "person_PERSON_SØKNADSBARN_20080722_3924",
+        "samvær_SAMVÆRSPERIODE_20250501_person_PERSON_SØKNADSBARN_20080722_3924",
+        "sjablon_SJABLON_SAMVARSFRADRAG_201307_00_99"
+      ],
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19780407_3925",
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20080722_3924"
+    },
+    {
+      "referanse": "delberegning_DELBEREGNING_SUM_INNTEKT_person_PERSON_BIDRAGSMOTTAKER_19780604_3923_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+      "type": "DELBEREGNING_SUM_INNTEKT",
+      "innhold": {
+        "periode": {
+          "fom": "2025-05",
+          "til": null
+        },
+        "barnetillegg": null,
+        "totalinntekt": 2000000,
+        "kontantstøtte": null,
+        "småbarnstillegg": null,
+        "utvidetBarnetrygd": null,
+        "skattepliktigInntekt": 2000000
+      },
+      "grunnlagsreferanseListe": [
+        "inntekt_LØNN_MANUELT_BEREGNET_person_PERSON_BIDRAGSMOTTAKER_19780604_3923_20250501_3120"
+      ],
+      "gjelderReferanse": "person_PERSON_BIDRAGSMOTTAKER_19780604_3923",
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "delberegning_DELBEREGNING_SUM_INNTEKT_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+      "type": "DELBEREGNING_SUM_INNTEKT",
+      "innhold": {
+        "periode": {
+          "fom": "2025-05",
+          "til": null
+        },
+        "barnetillegg": null,
+        "totalinntekt": 30000000,
+        "kontantstøtte": null,
+        "småbarnstillegg": null,
+        "utvidetBarnetrygd": null,
+        "skattepliktigInntekt": 30000000
+      },
+      "grunnlagsreferanseListe": [
+        "inntekt_LØNN_MANUELT_BEREGNET_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_20250501_3121"
+      ],
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19780407_3925",
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "delberegning_DELBEREGNING_SUM_INNTEKT_person_PERSON_SØKNADSBARN_20080722_3924_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+      "type": "DELBEREGNING_SUM_INNTEKT",
+      "innhold": {
+        "periode": {
+          "fom": "2025-05",
+          "til": null
+        },
+        "barnetillegg": null,
+        "totalinntekt": 0,
+        "kontantstøtte": null,
+        "småbarnstillegg": null,
+        "utvidetBarnetrygd": null,
+        "skattepliktigInntekt": null
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "person_PERSON_SØKNADSBARN_20080722_3924",
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "delberegning_DELBEREGNING_UNDERHOLDSKOSTNAD_person_PERSON_BIDRAGSMOTTAKER_19780604_3923_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+      "type": "DELBEREGNING_UNDERHOLDSKOSTNAD",
+      "innhold": {
+        "periode": {
+          "fom": "2025-05",
+          "til": "2025-07"
+        },
+        "boutgift": 3596,
+        "barnetrygd": 1510,
+        "forpleining": null,
+        "forbruksutgift": 8692,
+        "underholdskostnad": 10778,
+        "nettoTilsynsutgift": null,
+        "barnetilsynMedStønad": null
+      },
+      "grunnlagsreferanseListe": [
+        "sjablon_BoutgifterBidragsbarnBeløp_202407_202507",
+        "sjablon_OrdinærBarnetrygdBeløp_202407_202507",
+        "sjablon_SJABLON_FORBRUKSUTGIFTER_202407_202507_18"
+      ],
+      "gjelderReferanse": "person_PERSON_BIDRAGSMOTTAKER_19780604_3923",
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20080722_3924"
+    },
+    {
+      "referanse": "delberegning_DELBEREGNING_UNDERHOLDSKOSTNAD_person_PERSON_BIDRAGSMOTTAKER_19780604_3923_person_PERSON_SØKNADSBARN_20080722_3924_202507",
+      "type": "DELBEREGNING_UNDERHOLDSKOSTNAD",
+      "innhold": {
+        "periode": {
+          "fom": "2025-07",
+          "til": null
+        },
+        "boutgift": 3679,
+        "barnetrygd": 1968,
+        "forpleining": null,
+        "forbruksutgift": 9202,
+        "underholdskostnad": 10913,
+        "nettoTilsynsutgift": null,
+        "barnetilsynMedStønad": null
+      },
+      "grunnlagsreferanseListe": [
+        "sjablon_BoutgifterBidragsbarnBeløp_202507",
+        "sjablon_OrdinærBarnetrygdBeløp_202507",
+        "sjablon_SJABLON_FORBRUKSUTGIFTER_202507_18"
+      ],
+      "gjelderReferanse": "person_PERSON_BIDRAGSMOTTAKER_19780604_3923",
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20080722_3924"
+    },
+    {
+      "referanse": "delberegning_DELBEREGNING_VOKSNE_I_HUSSTAND_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+      "type": "DELBEREGNING_VOKSNE_I_HUSSTAND",
+      "innhold": {
+        "periode": {
+          "fom": "2025-05",
+          "til": null
+        },
+        "borMedAndreVoksne": false
+      },
+      "grunnlagsreferanseListe": [
+        "bostatus_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_20250501"
+      ],
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19780407_3925",
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "samvær_SAMVÆRSPERIODE_20250501_person_PERSON_SØKNADSBARN_20080722_3924",
+      "type": "SAMVÆRSPERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2025-05",
+          "til": null
+        },
+        "samværsklasse": "SAMVÆRSKLASSE_0",
+        "manueltRegistrert": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19780407_3925",
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20080722_3924"
+    },
+    {
+      "referanse": "sjablon_BoutgifterBidragsbarnBeløp_202407_202507",
+      "type": "SJABLON_SJABLONTALL",
+      "innhold": {
+        "verdi": 3596,
+        "periode": {
+          "fom": "2024-07",
+          "til": "2025-07"
+        },
+        "sjablon": "BOUTGIFTER_BIDRAGSBARN_BELØP"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "sjablon_BoutgifterBidragsbarnBeløp_202507",
+      "type": "SJABLON_SJABLONTALL",
+      "innhold": {
+        "verdi": 3679,
+        "periode": {
+          "fom": "2025-07",
+          "til": null
+        },
+        "sjablon": "BOUTGIFTER_BIDRAGSBARN_BELØP"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "sjablon_EndringBidragGrenseProsent_200901",
+      "type": "SJABLON_SJABLONTALL",
+      "innhold": {
+        "verdi": 12,
+        "periode": {
+          "fom": "2009-01",
+          "til": null
+        },
+        "sjablon": "ENDRING_BIDRAG_GRENSE_PROSENT"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "sjablon_ForskuddssatsBeløp_202407_202507",
+      "type": "SJABLON_SJABLONTALL",
+      "innhold": {
+        "verdi": 1970,
+        "periode": {
+          "fom": "2024-07",
+          "til": "2025-07"
+        },
+        "sjablon": "FORSKUDDSSATS_BELØP"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "sjablon_ForskuddssatsBeløp_202507",
+      "type": "SJABLON_SJABLONTALL",
+      "innhold": {
+        "verdi": 2010,
+        "periode": {
+          "fom": "2025-07",
+          "til": null
+        },
+        "sjablon": "FORSKUDDSSATS_BELØP"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "sjablon_InnslagKapitalInntektBeløp_200301",
+      "type": "SJABLON_SJABLONTALL",
+      "innhold": {
+        "verdi": 10000,
+        "periode": {
+          "fom": "2003-01",
+          "til": null
+        },
+        "sjablon": "INNSLAG_KAPITALINNTEKT_BELØP"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "sjablon_MinstefradragInntektBeløp_202307_202507",
+      "type": "SJABLON_SJABLONTALL",
+      "innhold": {
+        "verdi": 86250,
+        "periode": {
+          "fom": "2023-07",
+          "til": "2025-07"
+        },
+        "sjablon": "MINSTEFRADRAG_INNTEKT_BELØP"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "sjablon_MinstefradragInntektBeløp_202507",
+      "type": "SJABLON_SJABLONTALL",
+      "innhold": {
+        "verdi": 73150,
+        "periode": {
+          "fom": "2025-07",
+          "til": null
+        },
+        "sjablon": "MINSTEFRADRAG_INNTEKT_BELØP"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "sjablon_MinstefradragInntektProsent_202201",
+      "type": "SJABLON_SJABLONTALL",
+      "innhold": {
+        "verdi": 40,
+        "periode": {
+          "fom": "2022-01",
+          "til": null
+        },
+        "sjablon": "MINSTEFRADRAG_INNTEKT_PROSENT"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "sjablon_OrdinærBarnetrygdBeløp_202407_202507",
+      "type": "SJABLON_SJABLONTALL",
+      "innhold": {
+        "verdi": 1510,
+        "periode": {
+          "fom": "2024-07",
+          "til": "2025-07"
+        },
+        "sjablon": "ORDINÆR_BARNETRYGD_BELØP"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "sjablon_OrdinærBarnetrygdBeløp_202507",
+      "type": "SJABLON_SJABLONTALL",
+      "innhold": {
+        "verdi": 1968,
+        "periode": {
+          "fom": "2025-07",
+          "til": null
+        },
+        "sjablon": "ORDINÆR_BARNETRYGD_BELØP"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "sjablon_PersonfradragKlasse1Beløp_202407_202507",
+      "type": "SJABLON_SJABLONTALL",
+      "innhold": {
+        "verdi": 88250,
+        "periode": {
+          "fom": "2024-07",
+          "til": "2025-07"
+        },
+        "sjablon": "PERSONFRADRAG_KLASSE1_BELØP"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "sjablon_PersonfradragKlasse1Beløp_202507",
+      "type": "SJABLON_SJABLONTALL",
+      "innhold": {
+        "verdi": 108550,
+        "periode": {
+          "fom": "2025-07",
+          "til": null
+        },
+        "sjablon": "PERSONFRADRAG_KLASSE1_BELØP"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "sjablon_SJABLON_BIDRAGSEVNE_202407_202507_EN",
+      "type": "SJABLON_BIDRAGSEVNE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-07",
+          "til": "2025-07"
+        },
+        "bostatus": "EN",
+        "boutgiftBeløp": 11708,
+        "underholdBeløp": 11634
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "sjablon_SJABLON_BIDRAGSEVNE_202507_EN",
+      "type": "SJABLON_BIDRAGSEVNE",
+      "innhold": {
+        "periode": {
+          "fom": "2025-07",
+          "til": null
+        },
+        "bostatus": "EN",
+        "boutgiftBeløp": 11977,
+        "underholdBeløp": 11902
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "sjablon_SJABLON_FORBRUKSUTGIFTER_202407_202507_18",
+      "type": "SJABLON_FORBRUKSUTGIFTER",
+      "innhold": {
+        "periode": {
+          "fom": "2024-07",
+          "til": "2025-07"
+        },
+        "alderTom": 18,
+        "beløpForbruk": 8692
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "sjablon_SJABLON_FORBRUKSUTGIFTER_202507_18",
+      "type": "SJABLON_FORBRUKSUTGIFTER",
+      "innhold": {
+        "periode": {
+          "fom": "2025-07",
+          "til": null
+        },
+        "alderTom": 18,
+        "beløpForbruk": 9202
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "sjablon_SJABLON_SAMVARSFRADRAG_201307_00_99",
+      "type": "SJABLON_SAMVARSFRADRAG",
+      "innhold": {
+        "periode": {
+          "fom": "2013-07",
+          "til": null
+        },
+        "alderTom": 99,
+        "beløpFradrag": 0,
+        "antallDagerTom": 1,
+        "samværsklasse": "00",
+        "antallNetterTom": 1
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "sjablon_SJABLON_TRINNVIS_SKATTESATS_202501",
+      "type": "SJABLON_TRINNVIS_SKATTESATS",
+      "innhold": {
+        "periode": {
+          "fom": "2025-01",
+          "til": null
+        },
+        "trinnliste": [
+          {
+            "sats": 1.7,
+            "inntektsgrense": 217400
+          },
+          {
+            "sats": 4,
+            "inntektsgrense": 306050
+          },
+          {
+            "sats": 13.7,
+            "inntektsgrense": 697150
+          },
+          {
+            "sats": 16.7,
+            "inntektsgrense": 942400
+          },
+          {
+            "sats": 17.7,
+            "inntektsgrense": 1410750
+          }
+        ]
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "sjablon_SkattesatsAlminneligInntektProsent_201901",
+      "type": "SJABLON_SJABLONTALL",
+      "innhold": {
+        "verdi": 22,
+        "periode": {
+          "fom": "2019-01",
+          "til": null
+        },
+        "sjablon": "SKATTESATS_ALMINNELIG_INNTEKT_PROSENT"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "sjablon_TrygdeavgiftProsent_202501",
+      "type": "SJABLON_SJABLONTALL",
+      "innhold": {
+        "verdi": 7.7,
+        "periode": {
+          "fom": "2025-01",
+          "til": null
+        },
+        "sjablon": "TRYGDEAVGIFT_PROSENT"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "sjablon_UnderholdEgneBarnIHusstandBeløp_202407_202507",
+      "type": "SJABLON_SJABLONTALL",
+      "innhold": {
+        "verdi": 4253,
+        "periode": {
+          "fom": "2024-07",
+          "til": "2025-07"
+        },
+        "sjablon": "UNDERHOLD_EGNE_BARN_I_HUSSTAND_BELØP"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "sjablon_UnderholdEgneBarnIHusstandBeløp_202507",
+      "type": "SJABLON_SJABLONTALL",
+      "innhold": {
+        "verdi": 4315,
+        "periode": {
+          "fom": "2025-07",
+          "til": null
+        },
+        "sjablon": "UNDERHOLD_EGNE_BARN_I_HUSSTAND_BELØP"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "sluttberegning_person_PERSON_SØKNADSBARN_20080722_3924_202505_202507",
+      "type": "SLUTTBEREGNING_BARNEBIDRAG",
+      "innhold": {
+        "periode": {
+          "fom": "2025-05",
+          "til": "2025-07"
+        },
+        "bpSumAndelAvU": null,
+        "beregnetBeløp": 8981.67,
+        "løpendeBidrag": null,
+        "resultatBeløp": 8980,
+        "tilleggsbidrag": null,
+        "løpendeForskudd": null,
+        "ikkeOmsorgForBarnet": false,
+        "barnetErSelvforsørget": false,
+        "forsvaretsBarnetillegg": null,
+        "bidragJustertNedTilEvne": false,
+        "uminusNettoBarnetilleggBM": 10778,
+        "bidragJustertForDeltBosted": false,
+        "begrensetRevurderingUtført": false,
+        "bidragJustertTilForskuddssats": false,
+        "bpAndelAvUVedDeltBostedBeløp": 0,
+        "bpAndelAvUVedDeltBostedFaktor": 0,
+        "nettoBidragEtterBarnetilleggBM": 8981.67,
+        "bruttoBidragEtterBarnetilleggBM": 8981.67,
+        "bruttoBidragEtterBarnetilleggBP": 8981.67,
+        "nettoBidragEtterSamværsfradrag": 8981.67,
+        "bpEvneVedForholdsmessigFordeling": null,
+        "bidragJustertForNettoBarnetilleggBM": false,
+        "bidragJustertForNettoBarnetilleggBP": false,
+        "bidragJustertManueltTilForskuddssats": false,
+        "bidragJustertNedTil25ProsentAvInntekt": false,
+        "bruttoBidragEtterBegrensetRevurdering": 8981.67,
+        "bruttoBidragJustertForEvneOg25Prosent": 8981.67,
+        "bpAndelAvUVedForholdsmessigFordelingFaktor": null
+      },
+      "grunnlagsreferanseListe": [
+        "bostatus_person_PERSON_SØKNADSBARN_20080722_3924_20250501",
+        "delberegning_DELBEREGNING_BIDRAGSEVNE_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+        "delberegning_DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+        "delberegning_DELBEREGNING_SAMVÆRSFRADRAG_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+        "delberegning_DELBEREGNING_UNDERHOLDSKOSTNAD_person_PERSON_BIDRAGSMOTTAKER_19780604_3923_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+        "person_PERSON_SØKNADSBARN_20080722_3924",
+        "samvær_SAMVÆRSPERIODE_20250501_person_PERSON_SØKNADSBARN_20080722_3924",
+        "søknad"
+      ],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20080722_3924"
+    },
+    {
+      "referanse": "sluttberegning_person_PERSON_SØKNADSBARN_20080722_3924_202507",
+      "type": "SLUTTBEREGNING_BARNEBIDRAG",
+      "innhold": {
+        "periode": {
+          "fom": "2025-07",
+          "til": null
+        },
+        "bpSumAndelAvU": null,
+        "beregnetBeløp": 9094.17,
+        "løpendeBidrag": null,
+        "resultatBeløp": 9090,
+        "tilleggsbidrag": null,
+        "løpendeForskudd": null,
+        "ikkeOmsorgForBarnet": false,
+        "barnetErSelvforsørget": false,
+        "forsvaretsBarnetillegg": null,
+        "bidragJustertNedTilEvne": false,
+        "uminusNettoBarnetilleggBM": 10913,
+        "bidragJustertForDeltBosted": false,
+        "begrensetRevurderingUtført": false,
+        "bidragJustertTilForskuddssats": false,
+        "bpAndelAvUVedDeltBostedBeløp": 0,
+        "bpAndelAvUVedDeltBostedFaktor": 0,
+        "nettoBidragEtterBarnetilleggBM": 9094.17,
+        "bruttoBidragEtterBarnetilleggBM": 9094.17,
+        "bruttoBidragEtterBarnetilleggBP": 9094.17,
+        "nettoBidragEtterSamværsfradrag": 9094.17,
+        "bpEvneVedForholdsmessigFordeling": null,
+        "bidragJustertForNettoBarnetilleggBM": false,
+        "bidragJustertForNettoBarnetilleggBP": false,
+        "bidragJustertManueltTilForskuddssats": false,
+        "bidragJustertNedTil25ProsentAvInntekt": false,
+        "bruttoBidragEtterBegrensetRevurdering": 9094.17,
+        "bruttoBidragJustertForEvneOg25Prosent": 9094.17,
+        "bpAndelAvUVedForholdsmessigFordelingFaktor": null
+      },
+      "grunnlagsreferanseListe": [
+        "bostatus_person_PERSON_SØKNADSBARN_20080722_3924_20250501",
+        "delberegning_DELBEREGNING_BIDRAGSEVNE_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924_202507",
+        "delberegning_DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924_202507",
+        "delberegning_DELBEREGNING_SAMVÆRSFRADRAG_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924_202507",
+        "delberegning_DELBEREGNING_UNDERHOLDSKOSTNAD_person_PERSON_BIDRAGSMOTTAKER_19780604_3923_person_PERSON_SØKNADSBARN_20080722_3924_202507",
+        "person_PERSON_SØKNADSBARN_20080722_3924",
+        "samvær_SAMVÆRSPERIODE_20250501_person_PERSON_SØKNADSBARN_20080722_3924",
+        "søknad"
+      ],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20080722_3924"
+    },
+    {
+      "referanse": "søknad",
+      "type": "SØKNAD",
+      "innhold": {
+        "søktAv": "BIDRAGSMOTTAKER",
+        "egetTiltak": false,
+        "mottattDato": "2025-07-01",
+        "privatAvtale": false,
+        "søktFraDato": "2025-05-01",
+        "klageMottattDato": null,
+        "begrensetRevurdering": false,
+        "opprinneligVedtakstype": null
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "notat_SAMVÆR_kun_i_notat_person_PERSON_SØKNADSBARN_20080722_3924",
+      "type": "NOTAT",
+      "innhold": {
+        "type": "SAMVÆR",
+        "innhold": "<p>asd</p>",
+        "erMedIVedtaksdokumentet": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "person_PERSON_SØKNADSBARN_20080722_3924",
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "SLUTTBEREGNING_GEBYR_person_PERSON_BIDRAGSPLIKTIG_19780407_3925",
+      "type": "SLUTTBEREGNING_GEBYR",
+      "innhold": {
+        "ilagtGebyr": true
+      },
+      "grunnlagsreferanseListe": [
+        "DELBEREGNING_INNTEKTSBASERT_GEBYR_person_PERSON_BIDRAGSPLIKTIG_19780407_3925",
+        "sjablon_FastsettelsesgebyrBeløp_202501"
+      ],
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19780407_3925",
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "sjablon_FastsettelsesgebyrBeløp_202501",
+      "type": "SJABLON_SJABLONTALL",
+      "innhold": {
+        "verdi": 1314,
+        "periode": {
+          "fom": "2025-01",
+          "til": null
+        },
+        "sjablon": "FASTSETTELSESGEBYR_BELØP"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "DELBEREGNING_INNTEKTSBASERT_GEBYR_person_PERSON_BIDRAGSPLIKTIG_19780407_3925",
+      "type": "DELBEREGNING_INNTEKTSBASERT_GEBYR",
+      "innhold": {
+        "sumInntekt": 30000000,
+        "ileggesGebyr": true
+      },
+      "grunnlagsreferanseListe": [
+        "delberegning_DELBEREGNING_SUM_INNTEKT_person_PERSON_BIDRAGSPLIKTIG_19780407_3925_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+        "sjablon_NedreInntektsgrenseGebyrBeløp_202507"
+      ],
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19780407_3925",
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "sjablon_NedreInntektsgrenseGebyrBeløp_202507",
+      "type": "SJABLON_SJABLONTALL",
+      "innhold": {
+        "verdi": 355800,
+        "periode": {
+          "fom": "2025-07",
+          "til": null
+        },
+        "sjablon": "NEDRE_INNTEKTSGRENSE_GEBYR_BELØP"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "SLUTTBEREGNING_GEBYR_person_PERSON_BIDRAGSMOTTAKER_19780604_3923",
+      "type": "SLUTTBEREGNING_GEBYR",
+      "innhold": {
+        "ilagtGebyr": true
+      },
+      "grunnlagsreferanseListe": [
+        "DELBEREGNING_INNTEKTSBASERT_GEBYR_person_PERSON_BIDRAGSMOTTAKER_19780604_3923",
+        "sjablon_FastsettelsesgebyrBeløp_202501"
+      ],
+      "gjelderReferanse": "person_PERSON_BIDRAGSMOTTAKER_19780604_3923",
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "DELBEREGNING_INNTEKTSBASERT_GEBYR_person_PERSON_BIDRAGSMOTTAKER_19780604_3923",
+      "type": "DELBEREGNING_INNTEKTSBASERT_GEBYR",
+      "innhold": {
+        "sumInntekt": 2000000,
+        "ileggesGebyr": true
+      },
+      "grunnlagsreferanseListe": [
+        "delberegning_DELBEREGNING_SUM_INNTEKT_person_PERSON_BIDRAGSMOTTAKER_19780604_3923_person_PERSON_SØKNADSBARN_20080722_3924_202505",
+        "sjablon_NedreInntektsgrenseGebyrBeløp_202507"
+      ],
+      "gjelderReferanse": "person_PERSON_BIDRAGSMOTTAKER_19780604_3923",
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "virkningstidspunkt_person_PERSON_SØKNADSBARN_20080722_3924",
+      "type": "VIRKNINGSTIDSPUNKT",
+      "innhold": {
+        "avslag": null,
+        "årsak": "FRA_SØKNADSTIDSPUNKT",
+        "opphørsdato": null,
+        "virkningstidspunkt": "2025-05-01",
+        "opprinneligVirkningstidspunkt": null
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20080722_3924"
+    }
+  ],
+  "stønadsendringListe": [
+    {
+      "type": "BIDRAG",
+      "sak": "1912673",
+      "skyldner": "11111111111",
+      "kravhaver": "33333333333",
+      "mottaker": "22222222222",
+      "sisteVedtaksid": null,
+      "førsteIndeksreguleringsår": 2026,
+      "innkreving": "MED_INNKREVING",
+      "beslutning": "ENDRING",
+      "omgjørVedtakId": null,
+      "eksternReferanse": null,
+      "grunnlagReferanseListe": [
+        "søknad",
+        "notat_SAMVÆR_kun_i_notat_person_PERSON_SØKNADSBARN_20080722_3924",
+        "virkningstidspunkt_person_PERSON_SØKNADSBARN_20080722_3924"
+      ],
+      "periodeListe": [
+        {
+          "periode": {
+            "fom": "2025-05",
+            "til": "2025-07"
+          },
+          "beløp": 8980,
+          "valutakode": "NOK",
+          "resultatkode": "BEREGNET_BIDRAG",
+          "delytelseId": null,
+          "grunnlagReferanseListe": [
+            "BELØPSHISTORIKK_BIDRAG_1912673_33333333333_11111111111_20250714",
+            "sluttberegning_person_PERSON_SØKNADSBARN_20080722_3924_202505_202507"
+          ]
+        },
+        {
+          "periode": {
+            "fom": "2025-07",
+            "til": null
+          },
+          "beløp": 9090,
+          "valutakode": "NOK",
+          "resultatkode": "BEREGNET_BIDRAG",
+          "delytelseId": null,
+          "grunnlagReferanseListe": [
+            "BELØPSHISTORIKK_BIDRAG_1912673_33333333333_11111111111_20250714",
+            "sluttberegning_person_PERSON_SØKNADSBARN_20080722_3924_202507"
+          ]
+        }
+      ]
+    }
+  ],
+  "engangsbeløpListe": [
+    {
+      "type": "GEBYR_SKYLDNER",
+      "sak": "1912673",
+      "skyldner": "11111111111",
+      "kravhaver": "NAV",
+      "mottaker": "NAV",
+      "beløp": 1314,
+      "valutakode": "NOK",
+      "resultatkode": "GEBYR_ILAGT",
+      "innkreving": "MED_INNKREVING",
+      "beslutning": "ENDRING",
+      "omgjørVedtakId": null,
+      "referanse": "behandling_1328_20250714123526_GEBYR_SKYLDNER",
+      "delytelseId": null,
+      "eksternReferanse": null,
+      "grunnlagReferanseListe": [
+        "SLUTTBEREGNING_GEBYR_person_PERSON_BIDRAGSPLIKTIG_19780407_3925"
+      ],
+      "betaltBeløp": null
+    },
+    {
+      "type": "GEBYR_MOTTAKER",
+      "sak": "1912673",
+      "skyldner": "22222222222",
+      "kravhaver": "NAV",
+      "mottaker": "NAV",
+      "beløp": 1314,
+      "valutakode": "NOK",
+      "resultatkode": "GEBYR_ILAGT",
+      "innkreving": "MED_INNKREVING",
+      "beslutning": "ENDRING",
+      "omgjørVedtakId": null,
+      "referanse": "behandling_1328_20250714123526_GEBYR_MOTTAKER",
+      "delytelseId": null,
+      "eksternReferanse": null,
+      "grunnlagReferanseListe": [
+        "SLUTTBEREGNING_GEBYR_person_PERSON_BIDRAGSMOTTAKER_19780604_3923"
+      ],
+      "betaltBeløp": null
+    }
+  ],
+  "behandlingsreferanseListe": [
+    {
+      "kilde": "BEHANDLING_ID",
+      "referanse": "1328"
+    },
+    {
+      "kilde": "BISYS_SØKNAD",
+      "referanse": "56460942"
+    }
+  ]
+}

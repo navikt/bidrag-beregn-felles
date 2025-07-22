@@ -12,6 +12,7 @@ import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.transport.behandling.belopshistorikk.request.HentStønadHistoriskRequest
+import no.nav.bidrag.transport.behandling.belopshistorikk.request.HentStønadRequest
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadPeriodeDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnlag
@@ -36,19 +37,37 @@ class VedtakService(
     private val vedtakFilter: Vedtaksfiltrering,
     private val identUtils: IdentUtils,
 ) {
-    fun hentBeløpshistorikk(stønadsid: Stønadsid, personer: List<GrunnlagDto>, tidspunkt: LocalDateTime = LocalDateTime.now()): GrunnlagDto =
-        stønadConsumer
-            .hentHistoriskeStønader(
-                HentStønadHistoriskRequest(
+    fun hentBeløpshistorikkTilGrunnlag(
+        stønadsid: Stønadsid,
+        personer: List<GrunnlagDto>,
+        tidspunkt: LocalDateTime = LocalDateTime.now(),
+    ): GrunnlagDto = stønadConsumer.hentHistoriskeStønader(
+        HentStønadHistoriskRequest(
+            type = stønadsid.type,
+            sak = stønadsid.sak,
+            skyldner = stønadsid.skyldner,
+            kravhaver = stønadsid.kravhaver,
+            gyldigTidspunkt = tidspunkt,
+        ),
+    ).tilGrunnlag(personer, stønadsid)
+
+    fun hentLøpendeStønad(stønadsid: Stønadsid): StønadDto? {
+        val stønad =
+            stønadConsumer.hentLøpendeStønad(
+                HentStønadRequest(
                     type = stønadsid.type,
                     sak = stønadsid.sak,
                     skyldner = stønadsid.skyldner,
                     kravhaver = stønadsid.kravhaver,
-                    gyldigTidspunkt = tidspunkt,
                 ),
-            ).tilGrunnlag(personer, stønadsid)
+            ) ?: run {
+                secureLogger.info { "Fant ingen løpende ${stønadsid.type} for $stønadsid" }
+                return null
+            }
+        return stønad
+    }
 
-    fun hentLøpendeStønad(stønadsid: Stønadsid, tidspunkt: LocalDateTime = LocalDateTime.now()): StønadPeriodeDto? {
+    fun hentBeløpshistorikkSistePeriode(stønadsid: Stønadsid, tidspunkt: LocalDateTime = LocalDateTime.now()): StønadPeriodeDto? {
         val stønad =
             stønadConsumer.hentHistoriskeStønader(
                 HentStønadHistoriskRequest(
@@ -59,7 +78,7 @@ class VedtakService(
                     gyldigTidspunkt = tidspunkt,
                 ),
             ) ?: run {
-                secureLogger.info { "Fant ingen løpende ${stønadsid.type} for $stønadsid" }
+                secureLogger.info { "Fant ingen løpende historisk ${stønadsid.type} for $stønadsid" }
                 return null
             }
         return stønad.periodeListe.hentSisteLøpendePeriode() ?: run {

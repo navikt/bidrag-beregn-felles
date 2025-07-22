@@ -2,6 +2,8 @@ package no.nav.bidrag.beregn.barnebidrag.api
 
 import io.kotest.matchers.shouldBe
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
+import no.nav.bidrag.beregn.barnebidrag.felles.FellesTest
+import no.nav.bidrag.beregn.barnebidrag.felles.validerSistePeriodeErLikDato
 import no.nav.bidrag.beregn.core.exception.BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException
 import no.nav.bidrag.beregn.core.exception.BegrensetRevurderingLøpendeForskuddManglerException
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
@@ -36,7 +38,7 @@ import java.math.BigDecimal
 import java.time.YearMonth
 
 @ExtendWith(MockitoExtension::class)
-internal class BeregnBarnebidragApiTest : FellesApiTest() {
+internal class BeregnBarnebidragTest : FellesTest() {
     private lateinit var filnavn: String
 
     // Beregningsperiode
