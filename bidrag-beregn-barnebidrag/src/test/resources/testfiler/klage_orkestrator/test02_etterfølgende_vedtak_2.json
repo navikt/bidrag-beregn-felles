@@ -1,0 +1,603 @@
+{
+  "vedtaksid": 4703680,
+  "kilde": "MANUELT",
+  "type": "ENDRING",
+  "opprettetAv": "Z994977",
+  "opprettetAvNavn": "F_Z994977 E_Z994977",
+  "kildeapplikasjon": "bidrag-behandling-q1",
+  "vedtakstidspunkt": "2025-02-27T19:43:25.545048",
+  "unikReferanse": "behandling_511_20250427194259",
+  "enhetsnummer": "4806",
+  "innkrevingUtsattTilDato": "2025-04-30",
+  "fastsattILand": null,
+  "opprettetTidspunkt": "2025-04-27T19:43:25.856961",
+  "grunnlagListe": [
+    {
+      "referanse": "søknad",
+      "type": "SØKNAD",
+      "innhold": {
+        "søktAv": "BIDRAGSMOTTAKER",
+        "egetTiltak": false,
+        "mottattDato": "2025-01-10",
+        "søktFraDato": "2024-06-01",
+        "klageMottattDato": null,
+        "begrensetRevurdering": false,
+        "opprinneligVedtakstype": null
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "person_PERSON_BIDRAGSMOTTAKER_19840914_1475",
+      "type": "PERSON_BIDRAGSMOTTAKER",
+      "innhold": {
+        "navn": null,
+        "ident": "11111111111",
+        "fødselsdato": "1984-09-14"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "person_PERSON_BIDRAGSPLIKTIG_19760113_1474",
+      "type": "PERSON_BIDRAGSPLIKTIG",
+      "innhold": {
+        "navn": null,
+        "ident": "22222222222",
+        "fødselsdato": "1976-01-13"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "person_PERSON_SØKNADSBARN_20130731_1473",
+      "type": "PERSON_SØKNADSBARN",
+      "innhold": {
+        "navn": null,
+        "ident": "33333333333",
+        "fødselsdato": "2013-07-31"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "SLUTTBEREGNING_GEBYR_person_PERSON_BIDRAGSPLIKTIG_19760113_1474",
+      "type": "SLUTTBEREGNING_GEBYR",
+      "innhold": {
+        "ilagtGebyr": false
+      },
+      "grunnlagsreferanseListe": [
+        "sjablon_FastsettelsesgebyrBeløp_202501"
+      ],
+      "gjelderReferanse": "person_PERSON_BIDRAGSPLIKTIG_19760113_1474",
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "sjablon_FastsettelsesgebyrBeløp_202501",
+      "type": "SJABLON_SJABLONTALL",
+      "innhold": {
+        "verdi": 1314,
+        "periode": {
+          "fom": "2025-01",
+          "til": null
+        },
+        "sjablon": "FASTSETTELSESGEBYR_BELØP"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "SLUTTBEREGNING_GEBYR_person_PERSON_BIDRAGSMOTTAKER_19840914_1475",
+      "type": "SLUTTBEREGNING_GEBYR",
+      "innhold": {
+        "ilagtGebyr": false
+      },
+      "grunnlagsreferanseListe": [
+        "sjablon_FastsettelsesgebyrBeløp_202501"
+      ],
+      "gjelderReferanse": "person_PERSON_BIDRAGSMOTTAKER_19840914_1475",
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "inntekt_AINNTEKT_BEREGNET_12MND_person_PERSON_BIDRAGSMOTTAKER_19840914_1475_20240401_20250331_2628",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "valgt": false,
+        "beløp": 347000,
+        "periode": {
+          "fom": "2024-04",
+          "til": null
+        },
+        "versjon": "2025.04.11.110215_27b1b03b",
+        "gjelderBarn": null,
+        "inntektspostListe": [
+          {
+            "kode": "sykepenger",
+            "beløp": 5000,
+            "inntektstype": null
+          },
+          {
+            "kode": "fastloenn",
+            "beløp": 340000,
+            "inntektstype": null
+          },
+          {
+            "kode": "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere",
+            "beløp": 2000,
+            "inntektstype": null
+          }
+        ],
+        "manueltRegistrert": false,
+        "opprinneligPeriode": {
+          "fom": "2024-04",
+          "til": "2025-04"
+        },
+        "inntektsrapportering": "AINNTEKT_BEREGNET_12MND"
+      },
+      "grunnlagsreferanseListe": [
+        "innhentet_ainntekt_person_PERSON_BIDRAGSMOTTAKER_19840914_1475"
+      ],
+      "gjelderReferanse": "person_PERSON_BIDRAGSMOTTAKER_19840914_1475",
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "innhentet_ainntekt_person_PERSON_BIDRAGSMOTTAKER_19840914_1475",
+      "type": "INNHENTET_INNTEKT_AINNTEKT",
+      "innhold": {
+        "grunnlag": [
+          {
+            "periode": {
+              "fom": "2024-01-01",
+              "til": "2024-02-01"
+            },
+            "ainntektspostListe": [
+              {
+                "beløp": 60000,
+                "kategori": "LOENNSINNTEKT",
+                "fordelType": "kontantytelse",
+                "beskrivelse": "fastloenn",
+                "virksomhetId": "896929119",
+                "utbetalingsperiode": "2024-01",
+                "opplysningspliktigId": "963743254",
+                "opptjeningsperiodeFra": null,
+                "opptjeningsperiodeTil": null,
+                "etterbetalingsperiodeFra": null,
+                "etterbetalingsperiodeTil": null
+              },
+              {
+                "beløp": 3111,
+                "kategori": "YTELSE_FRA_OFFENTLIGE",
+                "fordelType": "kontantytelse",
+                "beskrivelse": "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere",
+                "virksomhetId": "896929119",
+                "utbetalingsperiode": "2024-01",
+                "opplysningspliktigId": "963743254",
+                "opptjeningsperiodeFra": null,
+                "opptjeningsperiodeTil": null,
+                "etterbetalingsperiodeFra": null,
+                "etterbetalingsperiodeTil": null
+              },
+              {
+                "beløp": 3000,
+                "kategori": "YTELSE_FRA_OFFENTLIGE",
+                "fordelType": "kontantytelse",
+                "beskrivelse": "sykepenger",
+                "virksomhetId": "972674818",
+                "utbetalingsperiode": "2024-01",
+                "opplysningspliktigId": "963743254",
+                "opptjeningsperiodeFra": null,
+                "opptjeningsperiodeTil": null,
+                "etterbetalingsperiodeFra": null,
+                "etterbetalingsperiodeTil": null
+              }
+            ]
+          },
+          {
+            "periode": {
+              "fom": "2024-02-01",
+              "til": "2024-03-01"
+            },
+            "ainntektspostListe": [
+              {
+                "beløp": 2000,
+                "kategori": "YTELSE_FRA_OFFENTLIGE",
+                "fordelType": "kontantytelse",
+                "beskrivelse": "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere",
+                "virksomhetId": "896929119",
+                "utbetalingsperiode": "2024-02",
+                "opplysningspliktigId": "963743254",
+                "opptjeningsperiodeFra": null,
+                "opptjeningsperiodeTil": null,
+                "etterbetalingsperiodeFra": null,
+                "etterbetalingsperiodeTil": null
+              },
+              {
+                "beløp": 3000,
+                "kategori": "YTELSE_FRA_OFFENTLIGE",
+                "fordelType": "kontantytelse",
+                "beskrivelse": "sykepenger",
+                "virksomhetId": "972674818",
+                "utbetalingsperiode": "2024-02",
+                "opplysningspliktigId": "963743254",
+                "opptjeningsperiodeFra": null,
+                "opptjeningsperiodeTil": null,
+                "etterbetalingsperiodeFra": null,
+                "etterbetalingsperiodeTil": null
+              }
+            ]
+          },
+          {
+            "periode": {
+              "fom": "2024-03-01",
+              "til": "2024-04-01"
+            },
+            "ainntektspostListe": [
+              {
+                "beløp": 2000,
+                "kategori": "YTELSE_FRA_OFFENTLIGE",
+                "fordelType": "kontantytelse",
+                "beskrivelse": "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere",
+                "virksomhetId": "896929119",
+                "utbetalingsperiode": "2024-03",
+                "opplysningspliktigId": "963743254",
+                "opptjeningsperiodeFra": null,
+                "opptjeningsperiodeTil": null,
+                "etterbetalingsperiodeFra": null,
+                "etterbetalingsperiodeTil": null
+              },
+              {
+                "beløp": 35000,
+                "kategori": "LOENNSINNTEKT",
+                "fordelType": "kontantytelse",
+                "beskrivelse": "fastloenn",
+                "virksomhetId": "896929119",
+                "utbetalingsperiode": "2024-03",
+                "opplysningspliktigId": "963743254",
+                "opptjeningsperiodeFra": null,
+                "opptjeningsperiodeTil": null,
+                "etterbetalingsperiodeFra": null,
+                "etterbetalingsperiodeTil": null
+              }
+            ]
+          },
+          {
+            "periode": {
+              "fom": "2024-04-01",
+              "til": "2024-05-01"
+            },
+            "ainntektspostListe": [
+              {
+                "beløp": 2000,
+                "kategori": "YTELSE_FRA_OFFENTLIGE",
+                "fordelType": "kontantytelse",
+                "beskrivelse": "overgangsstoenadTilEnsligMorEllerFarSomBegynteAaLoepe1April2014EllerSenere",
+                "virksomhetId": "896929119",
+                "utbetalingsperiode": "2024-04",
+                "opplysningspliktigId": "963743254",
+                "opptjeningsperiodeFra": null,
+                "opptjeningsperiodeTil": null,
+                "etterbetalingsperiodeFra": null,
+                "etterbetalingsperiodeTil": null
+              },
+              {
+                "beløp": 35000,
+                "kategori": "LOENNSINNTEKT",
+                "fordelType": "kontantytelse",
+                "beskrivelse": "fastloenn",
+                "virksomhetId": "896929119",
+                "utbetalingsperiode": "2024-04",
+                "opplysningspliktigId": "963743254",
+                "opptjeningsperiodeFra": null,
+                "opptjeningsperiodeTil": null,
+                "etterbetalingsperiodeFra": null,
+                "etterbetalingsperiodeTil": null
+              }
+            ]
+          },
+          {
+            "periode": {
+              "fom": "2024-05-01",
+              "til": "2024-06-01"
+            },
+            "ainntektspostListe": [
+              {
+                "beløp": 35000,
+                "kategori": "LOENNSINNTEKT",
+                "fordelType": "kontantytelse",
+                "beskrivelse": "fastloenn",
+                "virksomhetId": "896929119",
+                "utbetalingsperiode": "2024-05",
+                "opplysningspliktigId": "963743254",
+                "opptjeningsperiodeFra": null,
+                "opptjeningsperiodeTil": null,
+                "etterbetalingsperiodeFra": null,
+                "etterbetalingsperiodeTil": null
+              }
+            ]
+          },
+          {
+            "periode": {
+              "fom": "2024-06-01",
+              "til": "2024-07-01"
+            },
+            "ainntektspostListe": [
+              {
+                "beløp": 35000,
+                "kategori": "LOENNSINNTEKT",
+                "fordelType": "kontantytelse",
+                "beskrivelse": "fastloenn",
+                "virksomhetId": "896929119",
+                "utbetalingsperiode": "2024-06",
+                "opplysningspliktigId": "963743254",
+                "opptjeningsperiodeFra": null,
+                "opptjeningsperiodeTil": null,
+                "etterbetalingsperiodeFra": null,
+                "etterbetalingsperiodeTil": null
+              }
+            ]
+          },
+          {
+            "periode": {
+              "fom": "2024-07-01",
+              "til": "2024-08-01"
+            },
+            "ainntektspostListe": [
+              {
+                "beløp": 35000,
+                "kategori": "LOENNSINNTEKT",
+                "fordelType": "kontantytelse",
+                "beskrivelse": "fastloenn",
+                "virksomhetId": "896929119",
+                "utbetalingsperiode": "2024-07",
+                "opplysningspliktigId": "963743254",
+                "opptjeningsperiodeFra": null,
+                "opptjeningsperiodeTil": null,
+                "etterbetalingsperiodeFra": null,
+                "etterbetalingsperiodeTil": null
+              }
+            ]
+          },
+          {
+            "periode": {
+              "fom": "2024-08-01",
+              "til": "2024-09-01"
+            },
+            "ainntektspostListe": [
+              {
+                "beløp": 35000,
+                "kategori": "LOENNSINNTEKT",
+                "fordelType": "kontantytelse",
+                "beskrivelse": "fastloenn",
+                "virksomhetId": "896929119",
+                "utbetalingsperiode": "2024-08",
+                "opplysningspliktigId": "963743254",
+                "opptjeningsperiodeFra": null,
+                "opptjeningsperiodeTil": null,
+                "etterbetalingsperiodeFra": null,
+                "etterbetalingsperiodeTil": null
+              },
+              {
+                "beløp": 5000,
+                "kategori": "YTELSE_FRA_OFFENTLIGE",
+                "fordelType": "kontantytelse",
+                "beskrivelse": "sykepenger",
+                "virksomhetId": "896929119",
+                "utbetalingsperiode": "2024-08",
+                "opplysningspliktigId": "963743254",
+                "opptjeningsperiodeFra": null,
+                "opptjeningsperiodeTil": null,
+                "etterbetalingsperiodeFra": null,
+                "etterbetalingsperiodeTil": null
+              }
+            ]
+          },
+          {
+            "periode": {
+              "fom": "2024-09-01",
+              "til": "2024-10-01"
+            },
+            "ainntektspostListe": [
+              {
+                "beløp": 35000,
+                "kategori": "LOENNSINNTEKT",
+                "fordelType": "kontantytelse",
+                "beskrivelse": "fastloenn",
+                "virksomhetId": "896929119",
+                "utbetalingsperiode": "2024-09",
+                "opplysningspliktigId": "963743254",
+                "opptjeningsperiodeFra": null,
+                "opptjeningsperiodeTil": null,
+                "etterbetalingsperiodeFra": null,
+                "etterbetalingsperiodeTil": null
+              }
+            ]
+          },
+          {
+            "periode": {
+              "fom": "2024-10-01",
+              "til": "2024-11-01"
+            },
+            "ainntektspostListe": [
+              {
+                "beløp": 35000,
+                "kategori": "LOENNSINNTEKT",
+                "fordelType": "kontantytelse",
+                "beskrivelse": "fastloenn",
+                "virksomhetId": "896929119",
+                "utbetalingsperiode": "2024-10",
+                "opplysningspliktigId": "963743254",
+                "opptjeningsperiodeFra": null,
+                "opptjeningsperiodeTil": null,
+                "etterbetalingsperiodeFra": null,
+                "etterbetalingsperiodeTil": null
+              }
+            ]
+          },
+          {
+            "periode": {
+              "fom": "2024-11-01",
+              "til": "2024-12-01"
+            },
+            "ainntektspostListe": [
+              {
+                "beløp": 35000,
+                "kategori": "LOENNSINNTEKT",
+                "fordelType": "kontantytelse",
+                "beskrivelse": "fastloenn",
+                "virksomhetId": "896929119",
+                "utbetalingsperiode": "2024-11",
+                "opplysningspliktigId": "963743254",
+                "opptjeningsperiodeFra": null,
+                "opptjeningsperiodeTil": null,
+                "etterbetalingsperiodeFra": null,
+                "etterbetalingsperiodeTil": null
+              }
+            ]
+          },
+          {
+            "periode": {
+              "fom": "2024-12-01",
+              "til": "2025-01-01"
+            },
+            "ainntektspostListe": [
+              {
+                "beløp": 35000,
+                "kategori": "LOENNSINNTEKT",
+                "fordelType": "kontantytelse",
+                "beskrivelse": "fastloenn",
+                "virksomhetId": "896929119",
+                "utbetalingsperiode": "2024-12",
+                "opplysningspliktigId": "963743254",
+                "opptjeningsperiodeFra": null,
+                "opptjeningsperiodeTil": null,
+                "etterbetalingsperiodeFra": null,
+                "etterbetalingsperiodeTil": null
+              },
+              {
+                "beløp": 25000,
+                "kategori": "LOENNSINNTEKT",
+                "fordelType": "kontantytelse",
+                "beskrivelse": "fastloenn",
+                "virksomhetId": "896929119",
+                "utbetalingsperiode": "2024-12",
+                "opplysningspliktigId": "963743254",
+                "opptjeningsperiodeFra": null,
+                "opptjeningsperiodeTil": null,
+                "etterbetalingsperiodeFra": null,
+                "etterbetalingsperiodeTil": null
+              }
+            ]
+          }
+        ],
+        "datakilde": "INNTEKSKOMPONENTEN",
+        "hentetTidspunkt": "2025-04-27T19:43:00.426236"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "person_PERSON_BIDRAGSMOTTAKER_19840914_1475",
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "virkningstidspunkt_person_PERSON_SØKNADSBARN_20130731_1473",
+      "type": "VIRKNINGSTIDSPUNKT",
+      "innhold": {
+        "avslag": null,
+        "årsak": null,
+        "opphørsdato": null,
+        "virkningstidspunkt": "2025-06-01"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null,
+      "gjelderBarnReferanse": "person_PERSON_SØKNADSBARN_20130731_1473"
+    }
+  ],
+  "stønadsendringListe": [
+    {
+      "type": "BIDRAG",
+      "sak": "2500292",
+      "skyldner": "11111111111",
+      "kravhaver": "33333333333",
+      "mottaker": "22222222222",
+      "sisteVedtaksid": null,
+      "førsteIndeksreguleringsår": null,
+      "innkreving": "MED_INNKREVING",
+      "beslutning": "ENDRING",
+      "omgjørVedtakId": null,
+      "eksternReferanse": null,
+      "grunnlagReferanseListe": [
+        "søknad",
+        "virkningstidspunkt_person_PERSON_SØKNADSBARN_20130731_1473"
+      ],
+      "periodeListe": [
+        {
+          "periode": {
+            "fom": "2025-06",
+            "til": null
+          },
+          "beløp": 8060,
+          "valutakode": "NOK",
+          "resultatkode": "BEREGNET_BIDRAG",
+          "delytelseId": null,
+          "grunnlagReferanseListe": []
+        }
+      ]
+    }
+  ],
+  "engangsbeløpListe": [
+    {
+      "type": "GEBYR_SKYLDNER",
+      "sak": "2500292",
+      "skyldner": "11111111111",
+      "kravhaver": "NAV",
+      "mottaker": "NAV",
+      "beløp": null,
+      "valutakode": null,
+      "resultatkode": "GEBYR_FRITATT",
+      "innkreving": "MED_INNKREVING",
+      "beslutning": "ENDRING",
+      "omgjørVedtakId": null,
+      "referanse": "behandling_511_20250427194259_GEBYR_SKYLDNER",
+      "delytelseId": null,
+      "eksternReferanse": null,
+      "grunnlagReferanseListe": [
+        "SLUTTBEREGNING_GEBYR_person_PERSON_BIDRAGSPLIKTIG_19760113_1474"
+      ],
+      "betaltBeløp": null
+    },
+    {
+      "type": "GEBYR_MOTTAKER",
+      "sak": "2500292",
+      "skyldner": "22222222222",
+      "kravhaver": "NAV",
+      "mottaker": "NAV",
+      "beløp": null,
+      "valutakode": null,
+      "resultatkode": "GEBYR_FRITATT",
+      "innkreving": "MED_INNKREVING",
+      "beslutning": "ENDRING",
+      "omgjørVedtakId": null,
+      "referanse": "behandling_511_20250427194259_GEBYR_MOTTAKER",
+      "delytelseId": null,
+      "eksternReferanse": null,
+      "grunnlagReferanseListe": [
+        "SLUTTBEREGNING_GEBYR_person_PERSON_BIDRAGSMOTTAKER_19840914_1475",
+        "inntekt_AINNTEKT_BEREGNET_12MND_person_PERSON_BIDRAGSMOTTAKER_19840914_1475_20240401_20250331_2628"
+      ],
+      "betaltBeløp": null
+    }
+  ],
+  "behandlingsreferanseListe": [
+    {
+      "kilde": "BEHANDLING_ID",
+      "referanse": "511"
+    },
+    {
+      "kilde": "BISYS_SØKNAD",
+      "referanse": "56453948"
+    }
+  ]
+}

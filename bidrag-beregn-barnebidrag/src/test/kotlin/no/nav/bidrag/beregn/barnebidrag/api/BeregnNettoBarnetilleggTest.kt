@@ -1,6 +1,7 @@
 package no.nav.bidrag.beregn.barnebidrag.api
 
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
+import no.nav.bidrag.beregn.barnebidrag.felles.FellesTest
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.inntekt.Inntektstype
@@ -19,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 import java.math.BigDecimal
 
 @ExtendWith(MockitoExtension::class)
-internal class BeregnNettoBarnetilleggApiTest : FellesApiTest() {
+internal class BeregnNettoBarnetilleggTest : FellesTest() {
     private lateinit var filnavn: String
 
     @Mock
