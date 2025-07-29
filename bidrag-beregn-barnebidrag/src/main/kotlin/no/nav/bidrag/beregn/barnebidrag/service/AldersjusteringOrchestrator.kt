@@ -9,6 +9,7 @@ import no.nav.bidrag.beregn.barnebidrag.utils.AldersjusteringUtils
 import no.nav.bidrag.beregn.barnebidrag.utils.aldersjusteringAldersgrupper
 import no.nav.bidrag.beregn.barnebidrag.utils.hentPersonForNyesteIdent
 import no.nav.bidrag.beregn.barnebidrag.utils.hentSisteLøpendePeriode
+import no.nav.bidrag.beregn.barnebidrag.utils.tilGrunnlag
 import no.nav.bidrag.beregn.core.exception.AldersjusteringLavereEnnEllerLikLøpendeBidragException
 import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.commons.util.secureLogger
@@ -17,9 +18,11 @@ import no.nav.bidrag.domene.enums.beregning.Resultatkode.Companion.tilBisysResul
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.sak.Sakskategori
 import no.nav.bidrag.domene.enums.vedtak.VirkningstidspunktÅrsakstype
+import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.visningsnavn
+import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadPeriodeDto
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlagAldersjustering
@@ -27,6 +30,7 @@ import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlagVedtak
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
+import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.VirkningstidspunktGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragsmottaker
@@ -35,6 +39,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.finnOgKonverterGrunnla
 import no.nav.bidrag.transport.behandling.felles.grunnlag.finnSluttberegningIReferanser
 import no.nav.bidrag.transport.behandling.felles.grunnlag.hentPersonMedIdent
 import no.nav.bidrag.transport.behandling.felles.grunnlag.innholdTilObjekt
+import no.nav.bidrag.transport.behandling.vedtak.response.VedtakDto
 import no.nav.bidrag.transport.sak.BidragssakDto
 import org.springframework.context.annotation.Import
 import org.springframework.stereotype.Service
@@ -99,6 +104,8 @@ fun aldersjusteresManuelt(begrunnelse: SkalAldersjusteresManueltBegrunnelse, res
 fun skalIkkeAldersjusteres(vararg begrunnelse: SkalIkkeAldersjusteresBegrunnelse, resultat: String? = null, vedtaksid: Int? = null): Nothing =
     throw SkalIkkeAldersjusteresException(*begrunnelse, resultat = resultat, vedtaksid = vedtaksid)
 
+data class BeregnBasertPåVedtak(val vedtaksid: Int? = null, val vedtakDto: VedtakDto? = null)
+
 @Service
 @Import(BeregnBarnebidragApi::class, VedtakService::class)
 class AldersjusteringOrchestrator(
@@ -111,8 +118,9 @@ class AldersjusteringOrchestrator(
     fun utførAldersjustering(
         stønad: Stønadsid,
         aldersjusteresForÅr: Int = YearMonth.now().year,
-        beregnBasertPåVedtak: Int? = null,
+        beregnBasertPåVedtak: BeregnBasertPåVedtak? = null,
         opphørsdato: YearMonth? = null,
+        beløpshistorikkStønad: StønadDto? = null,
     ): AldersjusteringResultat {
         try {
             log.info { "Aldersjustering kjøres for stønadstype ${stønad.type} og sak ${stønad.sak} for årstall $aldersjusteresForÅr" }
@@ -132,17 +140,19 @@ class AldersjusteringOrchestrator(
                 skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.IKKE_ALDERSGRUPPE_FOR_ALDERSJUSTERING)
             }
 
-            vedtakService
+            val beløpshistorikk = beløpshistorikkStønad?.periodeListe?.hentSisteLøpendePeriode() ?: vedtakService
                 .hentBeløpshistorikkSistePeriode(stønad, LocalDateTime.now().withYear(aldersjusteresForÅr))
-                .validerSkalAldersjusteres(sak)
 
-            val sisteManuelleVedtak = beregnBasertPåVedtak?.let { SisteManuelleVedtak(it, vedtakService.hentVedtak(it)!!) }
-                ?: vedtakService.finnSisteManuelleVedtak(stønad)
-                ?: aldersjusteresManuelt(SkalAldersjusteresManueltBegrunnelse.FANT_INGEN_MANUELL_VEDTAK)
+            beløpshistorikk.validerSkalAldersjusteres(sak)
+
+            val sisteManuelleVedtak =
+                beregnBasertPåVedtak?.let { SisteManuelleVedtak(it.vedtaksid ?: -1, it.vedtakDto ?: vedtakService.hentVedtak(it.vedtaksid!!)!!) }
+                    ?: vedtakService.finnSisteManuelleVedtak(stønad)
+                    ?: aldersjusteresManuelt(SkalAldersjusteresManueltBegrunnelse.FANT_INGEN_MANUELL_VEDTAK)
 
             sisteManuelleVedtak.validerSkalAldersjusteres(stønad, erManuellJustering = erManuellJustering)
 
-            return sisteManuelleVedtak.utførOgBeregn(stønad, aldersjusteresForÅr, opphørsdato)
+            return sisteManuelleVedtak.utførOgBeregn(stønad, aldersjusteresForÅr, opphørsdato, beløpshistorikkStønad)
         } catch (e: Exception) {
             if (e is SkalIkkeAldersjusteresException || e is AldersjusteresManueltException) {
                 throw e
@@ -155,10 +165,12 @@ class AldersjusteringOrchestrator(
         stønad: Stønadsid,
         aldersjusteresForÅr: Int = YearMonth.now().year,
         opphørPåDato: YearMonth?,
+        beløpshistorikkStønad: StønadDto?,
     ): AldersjusteringResultat {
         val beregningInput = byggGrunnlagForBeregning(
             stønad,
             aldersjusteresForÅr,
+            beløpshistorikkStønad,
         )
         val søknadsbarn =
             vedtak.grunnlagListe.hentPersonMedIdent(stønad.kravhaver.verdi)
@@ -394,7 +406,11 @@ class AldersjusteringOrchestrator(
         else -> null
     }
 
-    private fun SisteManuelleVedtak.byggGrunnlagForBeregning(stønad: Stønadsid, aldersjusteresForÅr: Int): BeregnGrunnlagAldersjustering {
+    private fun SisteManuelleVedtak.byggGrunnlagForBeregning(
+        stønad: Stønadsid,
+        aldersjusteresForÅr: Int,
+        beløpshistorikkStønad: StønadDto? = null,
+    ): BeregnGrunnlagAldersjustering {
         val grunnlagsliste = vedtak.grunnlagListe
 
         val søknadsbarn =
@@ -420,7 +436,8 @@ class AldersjusteringOrchestrator(
                 ),
             ),
             beløpshistorikkListe = listOf(
-                vedtakService.hentBeløpshistorikkTilGrunnlag(stønad, personobjekter, LocalDateTime.now().withYear(aldersjusteresForÅr)),
+                beløpshistorikkStønad?.tilGrunnlag(personobjekter, stønad, identUtils)
+                    ?: vedtakService.hentBeløpshistorikkTilGrunnlag(stønad, personobjekter, LocalDateTime.now().withYear(aldersjusteresForÅr)),
             ),
         )
     }

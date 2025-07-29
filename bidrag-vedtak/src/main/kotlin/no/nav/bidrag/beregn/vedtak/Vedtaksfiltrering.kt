@@ -1,5 +1,6 @@
 package no.nav.bidrag.beregn.vedtak
 
+import no.nav.bidrag.beregn.core.util.justerVedtakstidspunkt
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.vedtak.Vedtakskilde
 import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
@@ -71,16 +72,7 @@ class Vedtaksfiltrering {
         val iterator =
             Vedtaksiterator(
                 vedtak.filter { it.filtrereBortIrrelevanteVedtak() }
-                    .map {
-                        if (it.kildeapplikasjon == "bisys") {
-                            it.copy(
-                                // Når Bisys oppretter vedtak så sender den vedtakstidspunkt som er 2 timer tidligere enn det som er faktiske vedtakstidspunkt. Kompenserer for dette her.
-                                vedtakstidspunkt = it.vedtakstidspunkt.plusHours(2),
-                            )
-                        } else {
-                            it
-                        }
-                    }
+                    .map(VedtakForStønad::justerVedtakstidspunkt)
                     .sortedByDescending { it.vedtakstidspunkt }.tilVedtaksdetaljer(),
             )
 

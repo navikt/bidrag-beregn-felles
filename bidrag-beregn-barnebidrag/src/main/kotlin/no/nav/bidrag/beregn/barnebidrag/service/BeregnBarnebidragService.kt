@@ -38,6 +38,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
 import no.nav.bidrag.transport.behandling.felles.grunnlag.PrivatAvtaleGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SøknadGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.VirkningstidspunktGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import java.math.BigDecimal
 import java.time.YearMonth
@@ -48,6 +49,26 @@ class BeregnBarnebidragService : BeregnService() {
     fun beregnBarnebidrag(mottattGrunnlag: BeregnGrunnlag): BeregnetBarnebidragResultat {
         secureLogger.info { "Beregning av barnebidrag - følgende request mottatt: ${tilJson(mottattGrunnlag)}" }
 
+        val virkningstidspunkt = mottattGrunnlag.grunnlagListe.filtrerOgKonverterBasertPåEgenReferanse<VirkningstidspunktGrunnlag>(
+            Grunnlagstype.VIRKNINGSTIDSPUNKT,
+        ).firstOrNull()
+
+        if (virkningstidspunkt != null && virkningstidspunkt.innhold.avslag != null) {
+            return BeregnetBarnebidragResultat(
+                beregnetBarnebidragPeriodeListe =
+                listOf(
+                    ResultatPeriode(
+                        grunnlagsreferanseListe = listOf(virkningstidspunkt.referanse),
+                        periode = ÅrMånedsperiode(mottattGrunnlag.periode.fom, null),
+                        resultat =
+                        ResultatBeregning(
+                            beløp = null,
+                        ),
+                    ),
+                ),
+                grunnlagListe = listOf(virkningstidspunkt.grunnlag as GrunnlagDto),
+            )
+        }
         // Kontroll av inputdata
         try {
             mottattGrunnlag.valider()
