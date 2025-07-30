@@ -25,7 +25,7 @@ class Vedtaksfiltrering {
             // Dersom vedtaket gjelder klage, skal det hoppes til det påklagde vedtaket.
             if (vedtaksdetaljer.vedtak.erKlage()) {
                 // Hopp til påklaget vedtak
-                vedtaksdetaljer.vedtak.omgjørVedtaksid()?.let { iterator.hoppeTilOmgjortVedtak(it.toLong()) }
+                vedtaksdetaljer.vedtak.omgjørVedtaksid()?.let { iterator.hoppeTilOmgjortVedtak(it) }
                     ?: iterator.hoppeTilPåklagetVedtak(vedtaksdetaljer.vedtak.søknadKlageRefId!!)
                 continue
             } else if (vedtaksdetaljer.vedtak.erOmgjøring()) {
