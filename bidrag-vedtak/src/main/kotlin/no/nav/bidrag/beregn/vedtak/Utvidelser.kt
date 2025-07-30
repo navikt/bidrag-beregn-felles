@@ -42,7 +42,7 @@ fun VedtakForStønad.erOmgjøring() = Vedtakstype.ENDRING == type &&
         BehandlingsrefKilde.BISYS_KLAGE_REF_SØKNAD == it.kilde
     }
 
-fun VedtakForStønad.idTilOmgjortVedtak() = stønadsendring.omgjørVedtakId?.toLong()
+fun VedtakForStønad.idTilOmgjortVedtak() = stønadsendring.omgjørVedtakId
 
 fun StønadsendringDto.omgjørVedtak() = omgjørVedtakId != null
 

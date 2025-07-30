@@ -22,7 +22,7 @@ object AldersjusteringUtils {
         aldersjustert: Boolean = true,
         stønad: Stønadsid,
         begrunnelser: List<String>? = null,
-        vedtaksidBeregning: Long? = null,
+        vedtaksidBeregning: Int? = null,
     ) = GrunnlagDto(
         referanse = "${no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype.ALDERSJUSTERING_DETALJER}_${stønad.toReferanse()}",
         type = no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype.ALDERSJUSTERING_DETALJER,

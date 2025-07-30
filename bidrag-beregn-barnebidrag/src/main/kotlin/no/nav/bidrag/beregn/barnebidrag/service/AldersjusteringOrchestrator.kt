@@ -431,7 +431,7 @@ class AldersjusteringOrchestrator(
             listOf(
                 BeregnGrunnlagVedtak(
                     gjelderBarnReferanse = søknadsbarn.referanse,
-                    vedtakId = vedtaksId.toLong(),
+                    vedtakId = vedtaksId,
                     vedtakInnhold = vedtak,
                 ),
             ),
