@@ -139,6 +139,7 @@ class KlageOrkestrator(
                 nyVirkningErEtterOpprinneligVirkning,
                 klageberegningResultat,
                 klageperiode,
+                klageberegningGrunnlag.opphørsdato,
                 løpendeStønadGjeldende,
                 påklagetVedtakVirkningstidspunkt,
                 klageOrkestratorGrunnlag,
@@ -162,6 +163,7 @@ class KlageOrkestrator(
                 nyVirkningErEtterOpprinneligVirkning,
                 klageberegningResultatEtterSjekkMinGrenseForEndring,
                 klageperiode,
+                klageberegningGrunnlag.opphørsdato,
                 løpendeStønadGjeldende,
                 påklagetVedtakVirkningstidspunkt,
                 klageOrkestratorGrunnlag,
@@ -188,6 +190,7 @@ class KlageOrkestrator(
         nyVirkningErEtterOpprinneligVirkning: Boolean,
         klageberegningResultatEtterSjekkMinGrenseForEndring: BeregnetBarnebidragResultat,
         klageperiode: ÅrMånedsperiode,
+        opphørsdato: YearMonth?,
         løpendeStønadGjeldende: StønadDto,
         påklagetVedtakVirkningstidspunkt: LocalDate,
         klageOrkestratorGrunnlag: KlageOrkestratorGrunnlag,
@@ -199,6 +202,7 @@ class KlageOrkestrator(
             klageScenarioVirkningFørEllerLikOpprinneligVirkning(
                 klageberegningResultat = klageberegningResultatEtterSjekkMinGrenseForEndring,
                 klageperiode = klageperiode,
+                opphørsdato = opphørsdato,
                 løpendeStønad = løpendeStønadGjeldende,
                 påklagetVedtakVirkningstidspunkt = påklagetVedtakVirkningstidspunkt,
                 klageOrkestratorGrunnlag = klageOrkestratorGrunnlag,
@@ -212,6 +216,7 @@ class KlageOrkestrator(
             klageScenarioVirkningEtterOpprinneligVirkning(
                 klageberegningResultat = klageberegningResultatEtterSjekkMinGrenseForEndring,
                 klageperiode = klageperiode,
+                opphørsdato = opphørsdato,
                 løpendeStønad = løpendeStønadGjeldende,
                 påklagetVedtakVirkningstidspunkt = påklagetVedtakVirkningstidspunkt,
                 klageOrkestratorGrunnlag = klageOrkestratorGrunnlag,
@@ -231,9 +236,10 @@ class KlageOrkestrator(
         påklagetVedtakVirkningstidspunkt: LocalDate,
         klageOrkestratorGrunnlag: KlageOrkestratorGrunnlag,
         beløpshistorikkFørPåklagetVedtak: BeløpshistorikkGrunnlag,
+        opphørsdato: YearMonth?,
     ): List<ResultatVedtak> {
         val (_, påklagetVedtakId) = klageOrkestratorGrunnlag
-        val etterfølgendeVedtakListe: List<Int> = løpendeStønad.hentEtterfølgendeVedtaksliste(klageperiode, påklagetVedtakId)
+        val etterfølgendeVedtakListe: List<Int> = løpendeStønad.hentEtterfølgendeVedtaksliste(klageperiode, påklagetVedtakId, opphørsdato)
         val periodeSomSkalOpphøres =
             finnPeriodeSomSkalOpphøres(klageperiode, påklagetVedtakVirkningstidspunkt, beløpshistorikkFørPåklagetVedtak)
 
@@ -257,6 +263,7 @@ class KlageOrkestrator(
                     delvedtak = this,
                     klageOrkestratorGrunnlag = klageOrkestratorGrunnlag,
                     beløpshistorikkFørPåklagetVedtak = beløpshistorikkFørPåklagetVedtak,
+                    påklagetVedtakVirkningstidspunkt = påklagetVedtakVirkningstidspunkt,
 
                 )
                     .map {
@@ -286,6 +293,7 @@ class KlageOrkestrator(
         påklagetVedtakVirkningstidspunkt: LocalDate,
         klageOrkestratorGrunnlag: KlageOrkestratorGrunnlag,
         beløpshistorikkFørPåklagetVedtak: BeløpshistorikkGrunnlag,
+        opphørsdato: YearMonth?,
     ): List<ResultatVedtak> {
         val (_, påklagetVedtakId) = klageOrkestratorGrunnlag
         val vedtakIderMellomPåklagetVirkningOgNyVirkning =
@@ -321,6 +329,7 @@ class KlageOrkestrator(
                     delvedtak = this,
                     klageOrkestratorGrunnlag = klageOrkestratorGrunnlag,
                     beløpshistorikkFørPåklagetVedtak = beløpshistorikkFørPåklagetVedtak,
+                    påklagetVedtakVirkningstidspunkt = påklagetVedtakVirkningstidspunkt,
                 )
                     .map {
                         ResultatVedtak(
@@ -334,7 +343,7 @@ class KlageOrkestrator(
             )
         }
 
-        val etterfølgendeVedtakListe: List<Int> = løpendeStønad.hentEtterfølgendeVedtaksliste(klageperiode, påklagetVedtakId)
+        val etterfølgendeVedtakListe: List<Int> = løpendeStønad.hentEtterfølgendeVedtaksliste(klageperiode, påklagetVedtakId, opphørsdato)
         val delvedtakListe = buildList {
             addAll(delvedtakListeFør)
             add(ResultatVedtak(resultat = klageberegningResultat, delvedtak = true, klagevedtak = true, vedtakstype = Vedtakstype.KLAGE))
@@ -345,6 +354,7 @@ class KlageOrkestrator(
                     delvedtak = this,
                     klageOrkestratorGrunnlag = klageOrkestratorGrunnlag,
                     beløpshistorikkFørPåklagetVedtak = beløpshistorikkFørPåklagetVedtak,
+                    påklagetVedtakVirkningstidspunkt = påklagetVedtakVirkningstidspunkt,
                 )
                     .map {
                         ResultatVedtak(
@@ -377,7 +387,7 @@ class KlageOrkestrator(
 
         vedtakMellom.ifEmpty {
             beløpshistorikkFørPåklagetVedtak.beløpshistorikk
-                .filter { it.periode.til == null }
+                .filter { it.periode.fom.isBefore(klageperiode.fom) }
                 .maxByOrNull { it.periode.fom }
                 ?.vedtaksid?.let { listOf(it) } ?: emptyList()
         }
@@ -427,6 +437,7 @@ class KlageOrkestrator(
         delvedtak: List<ResultatVedtak>,
         klageOrkestratorGrunnlag: KlageOrkestratorGrunnlag,
         beløpshistorikkFørPåklagetVedtak: BeløpshistorikkGrunnlag,
+        påklagetVedtakVirkningstidspunkt: LocalDate,
     ): List<BeregnetBarnebidragResultatIntern> {
         val (stønad) = klageOrkestratorGrunnlag
         val historikk = delvedtak.map {
@@ -461,7 +472,7 @@ class KlageOrkestrator(
                             historikk.add(it)
                         }
                         val referanse = "resultatFraVedtak_${komplettVedtak.vedtaksid}"
-                        val perioder = komplettVedtak.hentBeregningsperioder(stønad.type, referanse, klageResultat)
+                        val perioder = komplettVedtak.hentBeregningsperioder(stønad.type, referanse, klageResultat, påklagetVedtakVirkningstidspunkt)
                         BeregnetBarnebidragResultatIntern(
                             resultat = BeregnetBarnebidragResultat(
                                 beregnetBarnebidragPeriodeListe = perioder,
@@ -555,6 +566,7 @@ class KlageOrkestrator(
         stønadstype: Stønadstype,
         referanse: String? = null,
         klageResultat: BeregnetBarnebidragResultat,
+        påklagetVedtakVirkningstidspunkt: LocalDate,
     ): List<ResultatPeriode> {
         val førstePeriode = stønadsendringListe.first { it.type == stønadstype }.periodeListe.minOf { it.periode.fom }
         val vedtakKommerFørKlagevedtak = førstePeriode.isBefore(klageResultat.beregnetFraDato.toYearMonth())
@@ -563,7 +575,8 @@ class KlageOrkestrator(
             .periodeListe
             .filter {
                 !vedtakKommerFørKlagevedtak ||
-                    it.periode.fom.isBefore(klageResultat.beregnetFraDato.toYearMonth())
+                    it.periode.fom <= klageResultat.beregnetFraDato.toYearMonth() &&
+                    it.periode.fom >= påklagetVedtakVirkningstidspunkt.toYearMonth()
             }
             .map {
                 ResultatPeriode(
@@ -861,7 +874,7 @@ class KlageOrkestrator(
 
     private fun klageFeilet(begrunnelse: String): Nothing = throw RuntimeException(begrunnelse)
 
-    private fun StønadDto?.hentEtterfølgendeVedtaksliste(klageperiode: ÅrMånedsperiode, påklagetVedtakId: Int) =
+    private fun StønadDto?.hentEtterfølgendeVedtaksliste(klageperiode: ÅrMånedsperiode, påklagetVedtakId: Int, opphørsdato: YearMonth?) =
         if (this == null || this.periodeListe.isEmpty()) {
             emptyList()
         } else {
@@ -871,8 +884,8 @@ class KlageOrkestrator(
                         (
                             it.periode.fom.isAfter(klageperiode.til) &&
                                 (
-                                    it.periode.til == null && klageperiode.til == null ||
-                                        klageperiode.til != null && it.periode.til != null && it.periode.til!!.isAfter(klageperiode.til!!)
+                                    it.periode.til == null && opphørsdato == null ||
+                                        opphørsdato != null && it.periode.til != null && it.periode.til!!.isAfter(opphørsdato)
                                     )
                             )
                 }
