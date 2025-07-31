@@ -583,11 +583,14 @@ class KlageOrkestrator private constructor(
         val løpendePeriode = stønadDto.periodeListe.hentSisteLøpendePeriode() ?: return null
         val erKlagevedtak = klageVedtak.finnStønadsendring(stønad)!!.periodeListe.any { it.periode.fom == løpendePeriode.periode.fom }
 
+        val klageVedtakLøpendePeriode = klageVedtak.finnStønadsendring(stønad)!!.periodeListe.hentSisteLøpendePeriode()
+        val erKlageVedtakOpphør = klageVedtakLøpendePeriode!!.beløp == null
         val vedtakFraGrunnlag = if (erKlagevedtak) {
             klageVedtak
         } else {
             null
         }
+        if (erKlagevedtak && erKlageVedtakOpphør) return null
         val resultatAldersjustering =
             utførAldersjustering(
                 vedtakFraGrunnlag,
