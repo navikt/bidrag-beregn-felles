@@ -8,6 +8,7 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import no.nav.bidrag.beregn.barnebidrag.felles.FellesTest
+import no.nav.bidrag.beregn.barnebidrag.utils.KlageOrkestratorHelpers
 import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -55,7 +56,8 @@ internal class KlageOrkestratorTest : FellesTest() {
 
     @BeforeEach
     fun init() {
-        orkestrator = KlageOrkestrator(vedtakService, aldersjusteringOrchestrator, beregnIndeksreguleringApi, identUtils)
+        val klageOrkestratorHelpers = KlageOrkestratorHelpers(vedtakService, identUtils)
+        orkestrator = KlageOrkestrator(vedtakService, aldersjusteringOrchestrator, beregnIndeksreguleringApi, identUtils, klageOrkestratorHelpers)
         stubSjablonProvider()
     }
 

@@ -279,7 +279,10 @@ class AldersjusteringOrchestrator(
             )
         }
 
-        val sistePeriode = stønadsendring.periodeListe.hentSisteLøpendePeriode()!!
+        val sistePeriode = stønadsendring.periodeListe.hentSisteLøpendePeriode() ?: skalIkkeAldersjusteres(
+            SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE,
+            vedtaksid = vedtaksId,
+        )
 
         val sluttberegningSistePeriode = vedtak.grunnlagListe.finnSluttberegningIReferanser(sistePeriode.grunnlagReferanseListe)
             ?.innholdTilObjekt<SluttberegningBarnebidrag>()

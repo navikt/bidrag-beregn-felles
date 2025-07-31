@@ -10,6 +10,7 @@ import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
 import no.nav.bidrag.beregn.barnebidrag.felles.FellesTest
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningBeløpshistorikkConsumer
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningVedtakConsumer
+import no.nav.bidrag.beregn.barnebidrag.utils.KlageOrkestratorHelpers
 import no.nav.bidrag.beregn.vedtak.Vedtaksfiltrering
 import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
@@ -71,6 +72,7 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
             val ident = firstArg<Personident>()
             ident
         }
+        val klageOrkestratorHelpers = KlageOrkestratorHelpers(vedtakService, identUtils)
         barnebidragApi = BeregnBarnebidragApi()
         vedtakService = VedtakService(
             vedtakConsumer = vedtakConsumer,
@@ -78,7 +80,7 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
             vedtakFilter = Vedtaksfiltrering(),
             identUtils = identUtils,
         )
-        klageOrkestrator = KlageOrkestrator(vedtakService, aldersjusteringOrchestrator, beregnIndeksreguleringApi, identUtils)
+        klageOrkestrator = KlageOrkestrator(vedtakService, aldersjusteringOrchestrator, beregnIndeksreguleringApi, identUtils, klageOrkestratorHelpers)
         bidragsberegningOrkestrator = BidragsberegningOrkestrator(
             barnebidragApi = barnebidragApi,
             klageOrkestrator = klageOrkestrator,
