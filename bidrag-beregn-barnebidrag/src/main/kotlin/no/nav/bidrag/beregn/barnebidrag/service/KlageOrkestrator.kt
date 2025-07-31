@@ -88,7 +88,7 @@ internal data class BeløpshistorikkPeriodeInternal(
 
 @Service
 @Import(VedtakService::class, AldersjusteringOrchestrator::class, BeregnIndeksreguleringApi::class, IdentUtils::class, KlageOrkestratorHelpers::class)
-class KlageOrkestrator private constructor(
+class KlageOrkestrator(
     private val vedtakService: VedtakService,
     private val aldersjusteringOrchestrator: AldersjusteringOrchestrator,
     private val beregnIndeksreguleringApi: BeregnIndeksreguleringApi,
