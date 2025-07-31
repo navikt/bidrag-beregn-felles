@@ -12,7 +12,9 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkPeriod
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragsmottaker
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragspliktig
+import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.hentPersonMedIdent
+import no.nav.bidrag.transport.behandling.vedtak.response.VedtakDto
 import no.nav.bidrag.transport.felles.toCompactString
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -25,7 +27,16 @@ fun BaseGrunnlag.tilDto() = GrunnlagDto(
     gjelderReferanse,
     gjelderBarnReferanse,
 )
-
+fun VedtakDto.finnBeløpshistorikkGrunnlag(stønad: Stønadsid, identUtils: IdentUtils): BeløpshistorikkGrunnlag? {
+    val grunnlagstype = when (stønad.type) {
+        Stønadstype.BIDRAG18AAR -> Grunnlagstype.BELØPSHISTORIKK_BIDRAG_18_ÅR
+        Stønadstype.FORSKUDD -> Grunnlagstype.BELØPSHISTORIKK_FORSKUDD
+        else -> Grunnlagstype.BELØPSHISTORIKK_BIDRAG
+    }
+    val søknadsbarn = grunnlagListe.hentPersonForNyesteIdent(identUtils, stønad.kravhaver)!!
+    return grunnlagListe.filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(grunnlagType = grunnlagstype)
+        .firstOrNull { it.gjelderBarnReferanse == søknadsbarn.referanse }?.innhold
+}
 fun StønadDto?.tilGrunnlag(personer: List<GrunnlagDto>, stønadsid: Stønadsid, identUtils: IdentUtils): GrunnlagDto {
     val grunnlagstype =
         when (stønadsid.type) {
