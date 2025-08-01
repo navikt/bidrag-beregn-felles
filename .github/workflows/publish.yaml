@@ -3,6 +3,7 @@ on:
   release:
     types: [published]
 
+
 env:
   VERSION: ${{ github.event.release.tag_name }}
 
@@ -16,7 +17,7 @@ jobs:
     name: Build and release package
     uses: navikt/bidrag-workflow/.github/workflows/maven_publish.yaml@main
     with:
-      version: ${{env.VERSION}}
+      version: ${{ env.VERSION }}
     secrets: inherit
 
   commit-version-file:
