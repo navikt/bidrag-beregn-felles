@@ -121,6 +121,7 @@ class AldersjusteringOrchestrator(
         beregnBasertPåVedtak: BeregnBasertPåVedtak? = null,
         opphørsdato: YearMonth? = null,
         beløpshistorikkStønad: StønadDto? = null,
+        personobjekter: List<GrunnlagDto> = emptyList(),
     ): AldersjusteringResultat {
         try {
             log.info { "Aldersjustering kjøres for stønadstype ${stønad.type} og sak ${stønad.sak} for årstall $aldersjusteresForÅr" }
@@ -152,7 +153,7 @@ class AldersjusteringOrchestrator(
 
             sisteManuelleVedtak.validerSkalAldersjusteres(stønad, erManuellJustering = erManuellJustering)
 
-            return sisteManuelleVedtak.utførOgBeregn(stønad, aldersjusteresForÅr, opphørsdato, beløpshistorikkStønad)
+            return sisteManuelleVedtak.utførOgBeregn(stønad, aldersjusteresForÅr, opphørsdato, beløpshistorikkStønad, personobjekter)
         } catch (e: Exception) {
             if (e is SkalIkkeAldersjusteresException || e is AldersjusteresManueltException) {
                 throw e
@@ -166,14 +167,17 @@ class AldersjusteringOrchestrator(
         aldersjusteresForÅr: Int = YearMonth.now().year,
         opphørPåDato: YearMonth?,
         beløpshistorikkStønad: StønadDto?,
+        personobjekter: List<GrunnlagDto> = emptyList(),
     ): AldersjusteringResultat {
         val beregningInput = byggGrunnlagForBeregning(
             stønad,
             aldersjusteresForÅr,
             beløpshistorikkStønad,
+            personobjekter,
         )
         val søknadsbarn =
-            vedtak.grunnlagListe.hentPersonMedIdent(stønad.kravhaver.verdi)
+            personobjekter.hentPersonForNyesteIdent(identUtils, stønad.kravhaver)
+                ?: vedtak.grunnlagListe.hentPersonMedIdent(stønad.kravhaver.verdi)
                 ?: vedtak.grunnlagListe.hentPersonForNyesteIdent(identUtils, stønad.kravhaver)
                 ?: aldersjusteringFeilet("Fant ikke person ${stønad.kravhaver.verdi} i grunnlaget")
         val stønadsendring = finnStønadsendring(stønad)
@@ -413,11 +417,13 @@ class AldersjusteringOrchestrator(
         stønad: Stønadsid,
         aldersjusteresForÅr: Int,
         beløpshistorikkStønad: StønadDto? = null,
+        personobjekter: List<GrunnlagDto> = emptyList(),
     ): BeregnGrunnlagAldersjustering {
         val grunnlagsliste = vedtak.grunnlagListe
 
         val søknadsbarn =
-            grunnlagsliste.hentPersonMedIdent(stønad.kravhaver.verdi)
+            personobjekter.hentPersonForNyesteIdent(identUtils, stønad.kravhaver)
+                ?: grunnlagsliste.hentPersonMedIdent(stønad.kravhaver.verdi)
                 ?: grunnlagsliste.hentPersonForNyesteIdent(identUtils, stønad.kravhaver)
                 ?: aldersjusteringFeilet("Fant ikke person ${stønad.kravhaver.verdi} i grunnlaget")
 

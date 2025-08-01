@@ -49,6 +49,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebid
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragsmottaker
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragspliktig
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
+import no.nav.bidrag.transport.behandling.felles.grunnlag.hentAllePersoner
 import no.nav.bidrag.transport.behandling.felles.grunnlag.hentPersonMedIdent
 import no.nav.bidrag.transport.behandling.felles.grunnlag.innholdTilObjekt
 import no.nav.bidrag.transport.behandling.felles.grunnlag.søknadsbarn
@@ -256,7 +257,6 @@ class KlageOrkestrator(
                     delvedtak = this,
                     klageOrkestratorGrunnlag = klageOrkestratorGrunnlag,
                     beløpshistorikkFørPåklagetVedtak = beløpshistorikkFørPåklagetVedtak,
-                    påklagetVedtakVirkningstidspunkt = påklagetVedtakVirkningstidspunkt,
 
                 )
                     .map {
@@ -323,7 +323,6 @@ class KlageOrkestrator(
                     delvedtak = this,
                     klageOrkestratorGrunnlag = klageOrkestratorGrunnlag,
                     beløpshistorikkFørPåklagetVedtak = beløpshistorikkFørPåklagetVedtak,
-                    påklagetVedtakVirkningstidspunkt = påklagetVedtakVirkningstidspunkt,
                     gjenopprettetBeløpshistorikk = true,
                 )
                     .map {
@@ -350,7 +349,6 @@ class KlageOrkestrator(
                     delvedtak = this,
                     klageOrkestratorGrunnlag = klageOrkestratorGrunnlag,
                     beløpshistorikkFørPåklagetVedtak = beløpshistorikkFørPåklagetVedtak,
-                    påklagetVedtakVirkningstidspunkt = påklagetVedtakVirkningstidspunkt,
                 )
                     .map {
                         ResultatVedtak(
@@ -484,7 +482,6 @@ class KlageOrkestrator(
         delvedtak: List<ResultatVedtak>,
         klageOrkestratorGrunnlag: KlageOrkestratorGrunnlag,
         beløpshistorikkFørPåklagetVedtak: BeløpshistorikkGrunnlag,
-        påklagetVedtakVirkningstidspunkt: LocalDate,
         gjenopprettetBeløpshistorikk: Boolean = false,
     ): List<BeregnetBarnebidragResultatIntern> {
         val (stønad) = klageOrkestratorGrunnlag
@@ -516,17 +513,34 @@ class KlageOrkestrator(
 
                 komplettVedtak != null && komplettVedtak.erAldersjustering() && forrigeVedtakErKlagevedtak && historikk.isNotEmpty() &&
                     !gjenopprettetBeløpshistorikk -> {
-                    utførAldersjustering(
+                    utførAldersjusteringEllerIndeksreguleringHvisNødvendig(
                         klageResultat.tilVedtakDto(stønad),
-                        komplettVedtak.vedtakstidspunkt!!.year,
                         historikk,
+                        stønad,
                         klageOrkestratorGrunnlag,
                         beløpshistorikkFørPåklagetVedtak,
+                        komplettVedtak.vedtakstidspunkt!!.year,
                     )
+//                    utførAldersjustering(
+//                        klageResultat.tilVedtakDto(stønad),
+//                        komplettVedtak.vedtakstidspunkt!!.year,
+//                        historikk,
+//                        klageOrkestratorGrunnlag,
+//                        beløpshistorikkFørPåklagetVedtak,
+//                        klageResultat.grunnlagListe.hentAllePersoner() as List<GrunnlagDto>,
+//                    )
                 }
 
                 komplettVedtak != null && komplettVedtak.erIndeksregulering() && historikk.isNotEmpty() && !gjenopprettetBeløpshistorikk ->
-                    utførIndeksregulering(stønad, historikk, beløpshistorikkFørPåklagetVedtak)
+                    utførAldersjusteringEllerIndeksreguleringHvisNødvendig(
+                        klageResultat.tilVedtakDto(stønad),
+                        historikk,
+                        stønad,
+                        klageOrkestratorGrunnlag,
+                        beløpshistorikkFørPåklagetVedtak,
+                        komplettVedtak.vedtakstidspunkt!!.year,
+                    )
+//                    utførIndeksregulering(stønad, historikk, beløpshistorikkFørPåklagetVedtak)
 
                 komplettVedtak != null -> {
                     val referanse = "resultatFraVedtak_${komplettVedtak.vedtaksid}"
@@ -584,7 +598,7 @@ class KlageOrkestrator(
         val erKlagevedtak = klageVedtak.finnStønadsendring(stønad)!!.periodeListe.any { it.periode.fom == løpendePeriode.periode.fom }
 
         val klageVedtakLøpendePeriode = klageVedtak.finnStønadsendring(stønad)!!.periodeListe.hentSisteLøpendePeriode()
-        val erKlageVedtakOpphør = klageVedtakLøpendePeriode!!.beløp == null
+        val erKlageVedtakOpphør = klageVedtakLøpendePeriode == null || klageVedtakLøpendePeriode.beløp == null
         val vedtakFraGrunnlag = if (erKlagevedtak) {
             klageVedtak
         } else {
@@ -598,6 +612,7 @@ class KlageOrkestrator(
                 historikk,
                 klageOrkestratorGrunnlag,
                 beløpshistorikkFørPåklagetVedtak,
+                klageVedtak.grunnlagListe.hentAllePersoner() as List<GrunnlagDto>,
             )
         val detaljer = resultatAldersjustering.resultat.grunnlagListe.filtrerOgKonverterBasertPåEgenReferanse<AldersjusteringDetaljerGrunnlag>(
             Grunnlagstype.ALDERSJUSTERING_DETALJER,
@@ -670,17 +685,6 @@ class KlageOrkestrator(
                 periode = ÅrMånedsperiode(fom = resultatPeriode.periode.fom, til = nesteFom ?: resultatPeriode.periode.til),
                 resultat = resultatPeriode.resultat,
                 grunnlagsreferanseListe = resultatPeriode.grunnlagsreferanseListe,
-            )
-        }
-    }
-
-    private fun List<StønadPeriodeDto>.sorterOgJusterPerioder2(): List<StønadPeriodeDto> {
-        val sortert = sortedBy { it.periode.fom }
-
-        return sortert.mapIndexed { indeks, resultatPeriode ->
-            val nesteFom = sortert.getOrNull(indeks + 1)?.periode?.fom
-            resultatPeriode.copy(
-                periode = ÅrMånedsperiode(fom = resultatPeriode.periode.fom, til = nesteFom ?: resultatPeriode.periode.til),
             )
         }
     }
@@ -931,10 +935,7 @@ class KlageOrkestrator(
                     it.vedtaksid != påklagetVedtakId &&
                         (
                             it.periode.fom.isAfter(klageperiode.til) &&
-                                (
-                                    it.periode.til == null && opphørsdato == null ||
-                                        opphørsdato != null && it.periode.til != null && it.periode.til!!.isAfter(opphørsdato)
-                                    )
+                                (opphørsdato == null || it.periode.fom.isBefore(opphørsdato))
                             )
                 }
                 .map {
@@ -993,6 +994,7 @@ class KlageOrkestrator(
         historikk: MutableList<BeregnetBarnebidragResultatIntern>,
         klageOrkestratorGrunnlag: KlageOrkestratorGrunnlag,
         beløpshistorikkFørPåklagetVedtak: BeløpshistorikkGrunnlag,
+        personobjekter: List<GrunnlagDto> = emptyList(),
     ): BeregnetBarnebidragResultatIntern {
         val (stønad) = klageOrkestratorGrunnlag
         val (_, _, stønadDto) = klageOrkestratorHelpers.byggBeløpshistorikk(
@@ -1018,6 +1020,7 @@ class KlageOrkestrator(
                     if (manuellAldersjustering?.grunnlagFraVedtak != null) null else beregnBasertPåVedtak,
                 ),
                 beløpshistorikkStønad = stønadDto,
+                personobjekter = personobjekter,
             )
             val aldersjusteringGrunnlag = opprettAldersjusteringDetaljerGrunnlag(
                 søknadsbarnReferanse = søknadsbarn.referanse,
@@ -1059,7 +1062,9 @@ class KlageOrkestrator(
                     aldersjusteresForÅr = aldersjusteresForÅr,
                     stønad = stønad,
                     aldersjustert = false,
-                    aldersjusteresManuelt = true,
+                    aldersjusteresManuelt = !listOf(
+                        SkalAldersjusteresManueltBegrunnelse.VEDTAK_GRUNNLAG_HENTES_FRA_HAR_RESULTAT_DELT_BOSTED_MED_BELØP_0,
+                    ).contains(e.begrunnelse),
                     vedtaksidBeregning = null,
                     begrunnelser = listOf(e.begrunnelse.name),
                 )
