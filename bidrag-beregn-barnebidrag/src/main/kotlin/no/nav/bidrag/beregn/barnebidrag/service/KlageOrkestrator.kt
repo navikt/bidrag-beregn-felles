@@ -612,7 +612,6 @@ class KlageOrkestrator(
                 historikk,
                 klageOrkestratorGrunnlag,
                 beløpshistorikkFørPåklagetVedtak,
-                klageVedtak.grunnlagListe.hentAllePersoner() as List<GrunnlagDto>,
             )
         val detaljer = resultatAldersjustering.resultat.grunnlagListe.filtrerOgKonverterBasertPåEgenReferanse<AldersjusteringDetaljerGrunnlag>(
             Grunnlagstype.ALDERSJUSTERING_DETALJER,
