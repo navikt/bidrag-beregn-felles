@@ -46,6 +46,30 @@ class VedtakService(
         ),
     ).tilGrunnlag(personer, stønadsid, identUtils)
 
+    // Finner alle vedtaksider som er relatert til et påklaget vedtak.
+    // Feks hvis det er opprettet klage på en vedtak som er klage på opprinnelig vedtak så vil også det vedtaket inkluderes
+    fun hentAlleVedtaksiderRelatertTilPåklagetVedtak(stønadsid: Stønadsid, påklagetVedtaksid: Int): Set<Int> {
+        val vedtakForStønad =
+            vedtakConsumer.hentVedtakForStønad(
+                HentVedtakForStønadRequest(
+                    stønadsid.sak,
+                    stønadsid.type,
+                    stønadsid.skyldner,
+                    stønadsid.kravhaver,
+                ),
+            )
+        val vedtakslisteJustert = vedtakForStønad.vedtakListe.map { it.justerVedtakstidspunkt() }
+        return vedtakslisteJustert.fold(emptyList<Int>()) { acc, stønad ->
+            if (stønad.vedtaksid == påklagetVedtaksid) {
+                acc + stønad.vedtaksid
+            } else if (vedtakslisteJustert.hentOpprinneligPåklagetVedtak(stønad) == påklagetVedtaksid) {
+                acc + vedtakslisteJustert.hentPåklagetVedtakListe(stønad).map { it.vedtaksid }
+            } else {
+                acc
+            }
+        }.toSet()
+    }
+
     fun hentAlleVedtakForStønad(stønadsid: Stønadsid, fraPeriode: YearMonth? = null, ignorerVedtaksid: Int? = null): List<VedtakForStønad> {
         val vedtakForStønad =
             vedtakConsumer.hentVedtakForStønad(
@@ -63,46 +87,50 @@ class VedtakService(
                 vedtakslisteJustert.hentOpprinneligPåklagetVedtak(it) != ignorerVedtaksid
         }
             .filter { it.stønadsendring.periodeListe.isNotEmpty() }
-            .sortedBy { it.stønadsendring.periodeListe.maxBy { p -> p.periode.fom }.periode.fom }
+            .groupBy { vedtak ->
+                val perioder = vedtak.stønadsendring.periodeListe
+                perioder.minOf { it.periode.fom } to perioder.maxOf { it.periode.fom }
+            }
+            .mapNotNull { (_, vedtakGruppe) ->
+                vedtakGruppe.maxByOrNull { it.vedtakstidspunkt }
+            }
+            .sortedBy { it.vedtakstidspunkt }
+            .fold(mutableListOf<VedtakForStønad>()) { acc, vedtak ->
+                val sisteVedtak = acc.lastOrNull()
+                if (sisteVedtak == null) {
+                    (acc + vedtak).toMutableList()
+                } else {
+                    val nesteVedtakFom = vedtak.stønadsendring.periodeListe.minOf { it.periode.fom }
+                    val nesteVedtakTil = vedtak.stønadsendring.periodeListe.maxOf { it.periode.til ?: YearMonth.of(9999, 12) }
+
+                    val sisteVedtakFom = sisteVedtak.stønadsendring.periodeListe.minOf { it.periode.fom }
+                    val sisteVedtakTil = sisteVedtak.stønadsendring.periodeListe.maxOf { it.periode.til ?: YearMonth.of(9999, 12) }
+
+                    // Sjekk siste periode til i tilfelle det har blitt fattet opphør men startet vedtak på nytt
+                    val nesteVedtakOverskriverSisteVedtak = nesteVedtakFom <= sisteVedtakFom // && nesteVedtakTil <= sisteVedtakTil
+                    if (nesteVedtakOverskriverSisteVedtak) {
+                        acc.remove(sisteVedtak)
+                    }
+                    (acc + vedtak).toMutableList()
+                }
+            }
 
         if (fraPeriode == null) {
             return vedtakListe
         }
 
-        val filtrertVedtakListe = vedtakListe.fold(emptyList<VedtakForStønad>()) { acc, vedtak ->
-            val sistePeriodeFom = vedtak.stønadsendring.periodeListe.maxBy { it.periode.fom }.periode.fom
-            if (sistePeriodeFom > fraPeriode) {
-                val forrigeVedtak = acc.lastOrNull()
-                if (forrigeVedtak != null) {
-                    acc
-                } else {
-                    val forrigeVedtakFraOriginalListe = vedtakListe.getOrNull(vedtakListe.indexOf(vedtak) - 1)
-                    if (forrigeVedtakFraOriginalListe != null) {
-                        listOf(forrigeVedtakFraOriginalListe, vedtak)
-                    } else {
-                        listOf(vedtak)
-                    }
-                }
-            } else {
-                acc
-            }
-        }.toMutableList()
-
-        val førstePeriode = filtrertVedtakListe.minByOrNull {
-            it.stønadsendring.periodeListe.minBy { it.periode.fom }.periode.fom
-        }?.stønadsendring?.periodeListe?.maxByOrNull { it.periode.fom }
-
-        if (førstePeriode?.periode?.fom?.isAfter(fraPeriode) ?: false) {
-            // Legg til siste løpende periode som kommer før fraPeriode
-            vedtakListe.lastOrNull {
-                it.stønadsendring.periodeListe.maxBy { it.periode.fom }.periode.fom < fraPeriode
-            }?.let { sisteVedtak ->
-                val harLøpendePeriode = sisteVedtak.stønadsendring.periodeListe.any { it.periode.til == null }
-                if (harLøpendePeriode) filtrertVedtakListe.add(sisteVedtak)
-            }
+        val filtrertVedtakListe = vedtakListe.filter { vedtak ->
+            vedtak.stønadsendring.periodeListe.maxBy { it.periode.fom }.periode.fom >= fraPeriode
         }
 
-        return filtrertVedtakListe
+        if (filtrertVedtakListe.isNotEmpty()) {
+            return filtrertVedtakListe
+        }
+
+        // Hvis ingen vedtak er funnet etter filtrering, finn det siste vedtaket med en løpende periode
+        return vedtakListe.lastOrNull { vedtak ->
+            vedtak.stønadsendring.periodeListe.any { it.periode.til == null }
+        }?.let { listOf(it) } ?: emptyList()
     }
 
     private fun List<VedtakForStønad>.hentOpprinneligPåklagetVedtak(vedtak: VedtakForStønad): Int? = hentPåklagetVedtakListe(vedtak).minBy {
