@@ -62,6 +62,8 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.YearMonth
+import kotlin.sequences.mapIndexed
+import kotlin.text.compareTo
 
 fun VedtakDto.erAldersjustering() = type == Vedtakstype.ALDERSJUSTERING
 fun VedtakDto.erIndeksregulering() = type == Vedtakstype.INDEKSREGULERING
@@ -447,17 +449,24 @@ class KlageOrkestrator(
                 it.vedtaksid,
             )
         }.distinct()
+            .ifEmpty {
+                beløpshistorikkFørPåklagetVedtak.beløpshistorikk
+                    .filter { it.periode.fom.isBefore(klageperiode.fom) }
+                    .maxByOrNull { it.periode.fom }?.let { listOf(it) }?.map {
+                        BeløpshistorikkPeriodeInternal(
+                            ÅrMånedsperiode(maxOf(påklagetVedtakVirkningstidspunkt.toYearMonth(), it.periode.fom), it.periode.til),
+                            it.beløp,
+                            it.vedtaksid,
+                        )
+                    } ?: emptyList()
+            }
 
-        vedtakMellom.ifEmpty {
-            beløpshistorikkFørPåklagetVedtak.beløpshistorikk
-                .filter { it.periode.fom.isBefore(klageperiode.fom) }
-                .maxByOrNull { it.periode.fom }?.let { listOf(it) }?.map {
-                    BeløpshistorikkPeriodeInternal(
-                        ÅrMånedsperiode(maxOf(påklagetVedtakVirkningstidspunkt.toYearMonth(), it.periode.fom), it.periode.til),
-                        it.beløp,
-                        it.vedtaksid,
-                    )
-                } ?: emptyList()
+        vedtakMellom.mapIndexed { index, periode ->
+            if (index == vedtakMellom.lastIndex && (periode.periode.til != null && periode.periode.til!! > klageperiode.fom)) {
+                periode.copy(periode = periode.periode.copy(til = klageperiode.fom))
+            } else {
+                periode
+            }
         }
     } else if (løpendeStønad == null || løpendeStønad.periodeListe.isEmpty()) {
         emptyList()
