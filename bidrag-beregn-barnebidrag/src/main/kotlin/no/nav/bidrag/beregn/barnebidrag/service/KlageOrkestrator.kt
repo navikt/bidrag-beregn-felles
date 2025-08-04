@@ -442,7 +442,7 @@ class KlageOrkestrator(
                     )
         }.map {
             BeløpshistorikkPeriodeInternal(
-                it.periode,
+                ÅrMånedsperiode(maxOf(påklagetVedtakVirkningstidspunkt.toYearMonth(), it.periode.fom), it.periode.til),
                 it.beløp,
                 it.vedtaksid,
             )
@@ -453,7 +453,7 @@ class KlageOrkestrator(
                 .filter { it.periode.fom.isBefore(klageperiode.fom) }
                 .maxByOrNull { it.periode.fom }?.let { listOf(it) }?.map {
                     BeløpshistorikkPeriodeInternal(
-                        it.periode,
+                        ÅrMånedsperiode(maxOf(påklagetVedtakVirkningstidspunkt.toYearMonth(), it.periode.fom), it.periode.til),
                         it.beløp,
                         it.vedtaksid,
                     )
