@@ -945,7 +945,7 @@ class KlageOrkestrator(
             it.vedtakstidspunkt
         }.filter {
             val sistePeriodeFom = it.stønadsendring.periodeListe.maxOf { it.periode.fom }
-            sistePeriodeFom.isAfter(klageperiode.fom) || (opphørsdato == null || sistePeriodeFom.isBefore(opphørsdato))
+            sistePeriodeFom >= klageperiode.til && (opphørsdato == null || sistePeriodeFom.isBefore(opphørsdato))
         }
             .map {
                 val løpendePeriode = it.stønadsendring.periodeListe.maxBy { it.periode.fom }

@@ -120,7 +120,8 @@ class VedtakService(
         }
 
         val filtrertVedtakListe = vedtakListe.filter { vedtak ->
-            vedtak.stønadsendring.periodeListe.maxBy { it.periode.fom }.periode.fom >= fraPeriode
+            val sistePeriodeFom = vedtak.stønadsendring.periodeListe.maxOf { it.periode.fom }
+            sistePeriodeFom >= fraPeriode
         }
 
         if (filtrertVedtakListe.isNotEmpty()) {
