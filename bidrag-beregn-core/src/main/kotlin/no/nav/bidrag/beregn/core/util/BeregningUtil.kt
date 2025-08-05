@@ -5,7 +5,6 @@ import no.nav.bidrag.transport.behandling.vedtak.response.VedtakForStønad
 import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode
-import kotlin.collections.map
 
 fun BigDecimal.årsbeløpTilMåndesbeløp() = divide(BigDecimal(12), MathContext(10, RoundingMode.HALF_UP))
 fun BigDecimal.avrund(antallDesimaler: Int) = setScale(antallDesimaler, RoundingMode.HALF_UP)
@@ -18,7 +17,7 @@ val BigDecimal.nærmesteTier get() = divide(
 )
 val BigDecimal.avrundetTilToDesimaler get() = avrund(2)
 
-fun VedtakDto.justerVedtakstidspunkt(): VedtakDto = if (this.kildeapplikasjon == "bisys") {
+fun VedtakDto.justerVedtakstidspunkt2(): VedtakDto = if (this.kildeapplikasjon == "bisys") {
     this.copy(
         // Når Bisys oppretter vedtak så sender den vedtakstidspunkt som er 2 timer tidligere enn det som er faktiske vedtakstidspunkt. Kompenserer for dette her.
         vedtakstidspunkt = this.vedtakstidspunkt!!.plusHours(2),
@@ -28,9 +27,15 @@ fun VedtakDto.justerVedtakstidspunkt(): VedtakDto = if (this.kildeapplikasjon ==
 }
 
 fun VedtakForStønad.justerVedtakstidspunkt(): VedtakForStønad = if (this.kildeapplikasjon == "bisys") {
+    val osloZoneId = java.time.ZoneId.of("Europe/Oslo")
+    val zonedDateTime = this.vedtakstidspunkt.atZone(osloZoneId)
+    val erSommertid = osloZoneId.rules.isDaylightSavings(zonedDateTime.toInstant())
+
+    val justerMedAntallTimer = if (erSommertid) 2L else 1L
+
     this.copy(
-        // Når Bisys oppretter vedtak så sender den vedtakstidspunkt som er 2 timer tidligere enn det som er faktiske vedtakstidspunkt. Kompenserer for dette her.
-        vedtakstidspunkt = this.vedtakstidspunkt.plusHours(2),
+        // Når Bisys oppretter vedtak så sender den vedtakstidspunkt som er 1 eller 2 timer tidligere enn det som er faktiske vedtakstidspunkt. Kompenserer for dette her.
+        vedtakstidspunkt = this.vedtakstidspunkt.plusHours(justerMedAntallTimer),
     )
 } else {
     this

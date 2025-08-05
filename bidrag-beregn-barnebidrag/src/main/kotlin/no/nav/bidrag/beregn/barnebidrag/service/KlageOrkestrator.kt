@@ -11,6 +11,7 @@ import no.nav.bidrag.beregn.barnebidrag.service.BeregnEndringSjekkGrenseService.
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnIndeksreguleringPrivatAvtaleService.delberegningPrivatAvtalePeriode
 import no.nav.bidrag.beregn.barnebidrag.utils.AldersjusteringUtils.opprettAldersjusteringDetaljerGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.utils.KlageOrkestratorHelpers
+import no.nav.bidrag.beregn.barnebidrag.utils.beregnetFraDato
 import no.nav.bidrag.beregn.barnebidrag.utils.finnBeløpshistorikkGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.utils.hentSisteLøpendePeriode
 import no.nav.bidrag.beregn.barnebidrag.utils.tilDto
@@ -62,17 +63,28 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.YearMonth
-import kotlin.sequences.mapIndexed
-import kotlin.text.compareTo
 
 fun VedtakDto.erAldersjustering() = type == Vedtakstype.ALDERSJUSTERING
 fun VedtakDto.erIndeksregulering() = type == Vedtakstype.INDEKSREGULERING
-internal data class BeregnetBarnebidragResultatIntern(
+
+internal data class BeregningDataInternal(
+    val nyVirkningErEtterOpprinneligVirkning: Boolean,
+    val klageberegningResultat: BeregnetBarnebidragResultat,
+    val klageperiode: ÅrMånedsperiode,
+    val opphørsdato: YearMonth?,
+    val løpendeStønadGjeldende: StønadDto,
+    val påklagetVedtakVirkningstidspunkt: LocalDate,
+    val klageOrkestratorGrunnlag: KlageOrkestratorGrunnlag,
+    val beløpshistorikkFørPåklagetVedtak: BeløpshistorikkGrunnlag,
+    val stønad: Stønadsid,
+    val vedtakslisteRelatertTilPåklagetVedtak: Set<Int>,
+)
+internal data class BeregnetBarnebidragResultatInternal(
     val resultat: BeregnetBarnebidragResultat,
     val vedtakstype: Vedtakstype,
     val beregnetFraDato: LocalDate,
     val klagevedtak: Boolean = false,
-    val gjenopprettetBeløpshistorikk: Boolean = false,
+    val beregnet: Boolean = false,
 )
 
 internal data class ByggetBeløpshistorikk(
@@ -139,6 +151,18 @@ class KlageOrkestrator(
             val nyVirkningErEtterOpprinneligVirkning = klageperiode.fom.isAfter(påklagetVedtakVirkningstidspunkt.toYearMonth())
 
             val vedtakslisteRelatertTilPåklagetVedtak = vedtakService.hentAlleVedtaksiderRelatertTilPåklagetVedtak(stønad, påklagetVedtakId)
+            val data = BeregningDataInternal(
+                nyVirkningErEtterOpprinneligVirkning,
+                klageberegningResultat,
+                klageperiode,
+                klageberegningGrunnlag.opphørsdato,
+                løpendeStønadGjeldende,
+                påklagetVedtakVirkningstidspunkt,
+                klageOrkestratorGrunnlag,
+                beløpshistorikkFørPåklagetVedtak,
+                stønad,
+                vedtakslisteRelatertTilPåklagetVedtak,
+            )
             val foreløpigVedtak = byggVedtak(
                 nyVirkningErEtterOpprinneligVirkning,
                 klageberegningResultat,
@@ -277,7 +301,7 @@ class KlageOrkestrator(
                             delvedtak = true,
                             klagevedtak = false,
                             vedtakstype = it.vedtakstype,
-                            gjenopprettetBeløpshistorikk = it.gjenopprettetBeløpshistorikk,
+                            beregnet = it.beregnet,
                             beregnetFraDato = it.beregnetFraDato,
                         )
                     },
@@ -306,6 +330,7 @@ class KlageOrkestrator(
         val (_, påklagetVedtakId) = klageOrkestratorGrunnlag
         val vedtakIderMellomPåklagetVirkningOgNyVirkning =
             finnVedtakIderMellomPåklagetVirkningOgNyVirkning(
+                stønad,
                 klageperiode,
                 påklagetVedtakVirkningstidspunkt,
                 påklagetVedtakId,
@@ -325,7 +350,7 @@ class KlageOrkestrator(
                         resultat = lagOpphørsvedtak(periodeSomSkalOpphøres),
                         delvedtak = true,
                         klagevedtak = false,
-                        gjenopprettetBeløpshistorikk = true,
+                        beregnet = true,
                         vedtakstype = Vedtakstype.OPPHØR,
                     ),
                 )
@@ -347,7 +372,7 @@ class KlageOrkestrator(
                             resultat = it.resultat,
                             delvedtak = true,
                             klagevedtak = false,
-                            gjenopprettetBeløpshistorikk = true,
+                            beregnet = it.beregnet,
                             vedtakstype = it.vedtakstype,
                             beregnetFraDato = it.beregnetFraDato,
                         )
@@ -373,7 +398,7 @@ class KlageOrkestrator(
                             resultat = it.resultat,
                             delvedtak = true,
                             klagevedtak = false,
-                            gjenopprettetBeløpshistorikk = it.gjenopprettetBeløpshistorikk,
+                            beregnet = it.beregnet,
                             vedtakstype = it.vedtakstype,
                             beregnetFraDato = it.beregnetFraDato,
                         )
@@ -430,62 +455,65 @@ class KlageOrkestrator(
     }
 
     private fun finnVedtakIderMellomPåklagetVirkningOgNyVirkning(
+        stønad1: Stønadsid,
         klageperiode: ÅrMånedsperiode,
         påklagetVedtakVirkningstidspunkt: LocalDate,
         påklagetVedtakId: Int,
         løpendeStønad: StønadDto?,
         beløpshistorikkFørPåklagetVedtak: BeløpshistorikkGrunnlag,
-    ): List<BeløpshistorikkPeriodeInternal> = if (klageperiode.fom > påklagetVedtakVirkningstidspunkt.toYearMonth()) {
-        val vedtakMellom = beløpshistorikkFørPåklagetVedtak.beløpshistorikk.filter {
-            it.periode.fom.isBefore(klageperiode.fom) &&
-                (
-                    it.periode.fom.isAfter(påklagetVedtakVirkningstidspunkt.toYearMonth()) ||
-                        it.periode.til != null && it.periode.til!!.isAfter(påklagetVedtakVirkningstidspunkt.toYearMonth())
-                    )
-        }.map {
-            BeløpshistorikkPeriodeInternal(
-                ÅrMånedsperiode(maxOf(påklagetVedtakVirkningstidspunkt.toYearMonth(), it.periode.fom), it.periode.til),
-                it.beløp,
-                it.vedtaksid,
-            )
-        }.distinct()
-            .ifEmpty {
-                beløpshistorikkFørPåklagetVedtak.beløpshistorikk
-                    .filter { it.periode.fom.isBefore(klageperiode.fom) }
-                    .maxByOrNull { it.periode.fom }?.let { listOf(it) }?.map {
-                        BeløpshistorikkPeriodeInternal(
-                            ÅrMånedsperiode(maxOf(påklagetVedtakVirkningstidspunkt.toYearMonth(), it.periode.fom), it.periode.til),
-                            it.beløp,
-                            it.vedtaksid,
+    ): List<BeløpshistorikkPeriodeInternal> = (
+        if (klageperiode.fom > påklagetVedtakVirkningstidspunkt.toYearMonth()) {
+            val vedtakMellom = beløpshistorikkFørPåklagetVedtak.beløpshistorikk.filter {
+                it.periode.fom.isBefore(klageperiode.fom) &&
+                    (
+                        it.periode.fom.isAfter(påklagetVedtakVirkningstidspunkt.toYearMonth()) ||
+                            it.periode.til != null && it.periode.til!!.isAfter(påklagetVedtakVirkningstidspunkt.toYearMonth())
                         )
-                    } ?: emptyList()
-            }
-
-        vedtakMellom.mapIndexed { index, periode ->
-            if (index == vedtakMellom.lastIndex && (periode.periode.til != null && periode.periode.til!! > klageperiode.fom)) {
-                periode.copy(periode = periode.periode.copy(til = klageperiode.fom))
-            } else {
-                periode
-            }
-        }
-    } else if (løpendeStønad == null || løpendeStønad.periodeListe.isEmpty()) {
-        emptyList()
-    } else {
-        løpendeStønad.periodeListe
-            .filter {
-                it.vedtaksid != påklagetVedtakId &&
-                    it.periode.fom >= påklagetVedtakVirkningstidspunkt.toYearMonth()
-                it.periode.til != null && it.periode.til!!.isBefore(klageperiode.til!!)
-            }
-            .map {
+            }.map {
                 BeløpshistorikkPeriodeInternal(
-                    it.periode,
+                    ÅrMånedsperiode(maxOf(påklagetVedtakVirkningstidspunkt.toYearMonth(), it.periode.fom), it.periode.til),
                     it.beløp,
                     it.vedtaksid,
                 )
+            }.distinct()
+                .ifEmpty {
+                    beløpshistorikkFørPåklagetVedtak.beløpshistorikk
+                        .filter { it.periode.fom.isBefore(klageperiode.fom) }
+                        .maxByOrNull { it.periode.fom }?.let { listOf(it) }?.map {
+                            BeløpshistorikkPeriodeInternal(
+                                ÅrMånedsperiode(maxOf(påklagetVedtakVirkningstidspunkt.toYearMonth(), it.periode.fom), it.periode.til),
+                                it.beløp,
+                                it.vedtaksid,
+                            )
+                        } ?: emptyList()
+                }
+
+            vedtakMellom.mapIndexed { index, periode ->
+                if (index == vedtakMellom.lastIndex && (periode.periode.til != null && periode.periode.til!! > klageperiode.fom)) {
+                    periode.copy(periode = periode.periode.copy(til = klageperiode.fom))
+                } else {
+                    periode
+                }
             }
-            .distinct()
-    }.fyllPåPerioderForAldersjusteringEllerIndeksregulering(klageperiode)
+        } else if (løpendeStønad == null || løpendeStønad.periodeListe.isEmpty()) {
+            emptyList()
+        } else {
+            løpendeStønad.periodeListe
+                .filter {
+                    it.vedtaksid != påklagetVedtakId &&
+                        it.periode.fom >= påklagetVedtakVirkningstidspunkt.toYearMonth()
+                    it.periode.til != null && it.periode.til!!.isBefore(klageperiode.til!!)
+                }
+                .map {
+                    BeløpshistorikkPeriodeInternal(
+                        it.periode,
+                        it.beløp,
+                        it.vedtaksid,
+                    )
+                }
+                .distinct()
+        }
+        ).fyllPåPerioderForAldersjusteringEllerIndeksregulering(klageperiode)
 
     private fun finnPeriodeSomSkalOpphøres(
         klageperiode: ÅrMånedsperiode,
@@ -522,12 +550,12 @@ class KlageOrkestrator(
         beløpshistorikkFørPåklagetVedtak: BeløpshistorikkGrunnlag,
         gjenopprettetBeløpshistorikk: Boolean = false,
         vedtakslisteRelatertTilPåklagetVedtak: Set<Int>,
-    ): List<BeregnetBarnebidragResultatIntern> {
+    ): List<BeregnetBarnebidragResultatInternal> {
         val (stønad) = klageOrkestratorGrunnlag
         val historikk = delvedtak.map {
-            BeregnetBarnebidragResultatIntern(it.resultat, it.vedtakstype, it.beregnetFraDato, it.klagevedtak)
+            BeregnetBarnebidragResultatInternal(it.resultat, it.vedtakstype, it.beregnetFraDato, it.klagevedtak)
         }.toMutableList()
-        val beregnetBarnebidragResultatListe = mutableListOf<BeregnetBarnebidragResultatIntern>()
+        val beregnetBarnebidragResultatListe = mutableListOf<BeregnetBarnebidragResultatInternal>()
         beløpshistorikk.groupBy { it.vedtaksid }.forEach { vedtaksid, it ->
             val komplettVedtak = vedtaksid?.let { vedtakService.hentVedtak(vedtaksid) }
             val forrigeVedtakErKlagevedtak = historikk.maxByOrNull { it.beregnetFraDato }?.klagevedtak == true
@@ -559,8 +587,7 @@ class KlageOrkestrator(
 
                 komplettVedtak != null && komplettVedtak.erAldersjustering() &&
                     (forrigeVedtakErKlagevedtak || erAldersjusteringBasertPåPåklagetVedtak) &&
-                    historikk.isNotEmpty() &&
-                    !gjenopprettetBeløpshistorikk -> {
+                    historikk.isNotEmpty() && !gjenopprettetBeløpshistorikk -> {
                     utførAldersjusteringEllerIndeksreguleringHvisNødvendig(
                         klageResultat.tilVedtakDto(stønad),
                         historikk,
@@ -589,7 +616,7 @@ class KlageOrkestrator(
                             listOf(referanse),
                         )
                     }.sortedBy { it.periode.fom }
-                    BeregnetBarnebidragResultatIntern(
+                    BeregnetBarnebidragResultatInternal(
                         resultat = BeregnetBarnebidragResultat(
                             beregnetBarnebidragPeriodeListe = perioder,
                             grunnlagListe = listOf(
@@ -599,14 +626,14 @@ class KlageOrkestrator(
                                     innhold = POJONode(
                                         ResultatFraVedtakGrunnlag(
                                             vedtaksid = komplettVedtak.vedtaksid,
-                                            gjenopprettetBeløpshistorikk = true,
+                                            beregnet = false,
                                         ),
                                     ),
                                 ),
                             ),
                         ),
                         vedtakstype = komplettVedtak.type,
-                        gjenopprettetBeløpshistorikk = true,
+                        beregnet = true,
                         beregnetFraDato = perioder.minOf { it.periode.fom }.atDay(1),
                     )
                 }
@@ -622,12 +649,12 @@ class KlageOrkestrator(
 
     private fun utførAldersjusteringEllerIndeksreguleringHvisNødvendig(
         klageVedtak: VedtakDto,
-        historikk: MutableList<BeregnetBarnebidragResultatIntern>,
+        historikk: MutableList<BeregnetBarnebidragResultatInternal>,
         stønad: Stønadsid,
         klageOrkestratorGrunnlag: KlageOrkestratorGrunnlag,
         beløpshistorikkFørPåklagetVedtak: BeløpshistorikkGrunnlag,
         aldersjusteresForÅr: Int,
-    ): BeregnetBarnebidragResultatIntern? {
+    ): BeregnetBarnebidragResultatInternal? {
         val (_, _, stønadDto) = klageOrkestratorHelpers.byggBeløpshistorikk(
             historikk.map { it.resultat },
             stønad,
@@ -641,7 +668,7 @@ class KlageOrkestrator(
         val vedtakFraGrunnlag = if (erKlagevedtak) {
             klageVedtak
         } else {
-            null
+            null // stønadDto.periodeListe.filter { it.vedtaksid != 1 }.maxByOrNull { it.periode.fom }
         }
         if (erKlagevedtak && erKlageVedtakOpphør) return null
         val resultatAldersjustering =
@@ -958,34 +985,11 @@ class KlageOrkestrator(
         return vedtakEtterPåklagetVedtak
     }
 
-    private fun StønadDto?.hentEtterfølgendeVedtaksliste(klageperiode: ÅrMånedsperiode, påklagetVedtakId: Int, opphørsdato: YearMonth?) =
-
-        if (this == null || this.periodeListe.isEmpty()) {
-            emptyList()
-        } else {
-            this.periodeListe
-                .filter {
-                    it.vedtaksid != påklagetVedtakId &&
-                        (
-                            it.periode.fom.isAfter(klageperiode.til) &&
-                                (opphørsdato == null || it.periode.fom.isBefore(opphørsdato))
-                            )
-                }
-                .map {
-                    BeløpshistorikkPeriodeInternal(
-                        it.periode,
-                        it.beløp,
-                        it.vedtaksid,
-                    )
-                }
-                .distinct()
-        }.fyllPåPerioderForAldersjusteringEllerIndeksregulering(klageperiode, true)
-
     private fun utførIndeksregulering(
         stønad: Stønadsid,
-        historikk: List<BeregnetBarnebidragResultatIntern>,
+        historikk: List<BeregnetBarnebidragResultatInternal>,
         beløpshistorikkFørPåklagetVedtak: BeløpshistorikkGrunnlag,
-    ): BeregnetBarnebidragResultatIntern {
+    ): BeregnetBarnebidragResultatInternal {
         val (nesteIndeksår, grunnlagsliste) = klageOrkestratorHelpers.byggBeløpshistorikk(
             historikk.map { it.resultat },
             stønad,
@@ -1006,7 +1010,7 @@ class KlageOrkestrator(
             Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE,
         ).first()
         val førstePeriode = privatavtale.innhold.perioder.minBy { it.periode.fom }
-        return BeregnetBarnebidragResultatIntern(
+        return BeregnetBarnebidragResultatInternal(
             BeregnetBarnebidragResultat(
                 grunnlagListe = (indeksresultat + grunnlagsliste).toSet().toList(),
                 beregnetBarnebidragPeriodeListe = listOf(
@@ -1024,11 +1028,11 @@ class KlageOrkestrator(
     private fun utførAldersjustering(
         beregnBasertPåVedtak: VedtakDto?,
         aldersjusteresForÅr: Int,
-        historikk: MutableList<BeregnetBarnebidragResultatIntern>,
+        historikk: MutableList<BeregnetBarnebidragResultatInternal>,
         klageOrkestratorGrunnlag: KlageOrkestratorGrunnlag,
         beløpshistorikkFørPåklagetVedtak: BeløpshistorikkGrunnlag,
         personobjekter: List<GrunnlagDto> = emptyList(),
-    ): BeregnetBarnebidragResultatIntern {
+    ): BeregnetBarnebidragResultatInternal {
         val (stønad) = klageOrkestratorGrunnlag
         val (_, _, stønadDto) = klageOrkestratorHelpers.byggBeløpshistorikk(
             historikk.map { it.resultat },
@@ -1051,7 +1055,7 @@ class KlageOrkestrator(
                 BeregnBasertPåVedtak(
                     manuellAldersjustering?.grunnlagFraVedtak,
                     if (manuellAldersjustering?.grunnlagFraVedtak != null) null else beregnBasertPåVedtak,
-                ),
+                ).takeIf { it.vedtaksid != null || it.vedtakDto != null },
                 beløpshistorikkStønad = stønadDto,
                 personobjekter = personobjekter,
             )
@@ -1062,12 +1066,12 @@ class KlageOrkestrator(
                 aldersjustert = true,
                 stønad = stønad,
             )
-            return BeregnetBarnebidragResultatIntern(
+            return BeregnetBarnebidragResultatInternal(
                 resultat = BeregnetBarnebidragResultat(
                     beregnetBarnebidragPeriodeListe = aldersjustering.beregning.beregnetBarnebidragPeriodeListe,
                     grunnlagListe = aldersjustering.beregning.grunnlagListe + listOf(aldersjusteringGrunnlag),
                 ),
-                gjenopprettetBeløpshistorikk = false,
+                beregnet = true,
                 vedtakstype = Vedtakstype.ALDERSJUSTERING,
                 beregnetFraDato = LocalDate.of(aldersjusteresForÅr, 7, 1),
             )
@@ -1081,13 +1085,13 @@ class KlageOrkestrator(
                     begrunnelser = e.begrunnelser.map { it.name },
                     vedtaksidBeregning = null,
                 )
-            return BeregnetBarnebidragResultatIntern(
+            return BeregnetBarnebidragResultatInternal(
                 resultat = BeregnetBarnebidragResultat(
                     grunnlagListe = listOf(søknadsbarn, aldersjusteringGrunnlag),
                     beregnetBarnebidragPeriodeListe = emptyList(),
                 ),
                 vedtakstype = Vedtakstype.ALDERSJUSTERING,
-                gjenopprettetBeløpshistorikk = false,
+                beregnet = true,
                 beregnetFraDato = LocalDate.of(aldersjusteresForÅr, 7, 1),
             )
         } catch (e: AldersjusteresManueltException) {
@@ -1103,12 +1107,12 @@ class KlageOrkestrator(
                     vedtaksidBeregning = null,
                     begrunnelser = listOf(e.begrunnelse.name),
                 )
-            return BeregnetBarnebidragResultatIntern(
+            return BeregnetBarnebidragResultatInternal(
                 resultat = BeregnetBarnebidragResultat(
                     grunnlagListe = listOf(søknadsbarn, aldersjusteringGrunnlag),
                     beregnetBarnebidragPeriodeListe = emptyList(),
                 ),
-                gjenopprettetBeløpshistorikk = false,
+                beregnet = true,
                 vedtakstype = Vedtakstype.ALDERSJUSTERING,
                 beregnetFraDato = LocalDate.of(aldersjusteresForÅr, 7, 1),
             )
