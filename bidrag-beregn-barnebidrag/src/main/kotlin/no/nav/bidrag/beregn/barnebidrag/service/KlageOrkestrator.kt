@@ -280,7 +280,7 @@ class KlageOrkestrator(
                         resultat = lagOpphørsvedtak(it),
                         delvedtak = true,
                         klagevedtak = false,
-                        beregnet = true,
+                        beregnet = false,
                         vedtakstype = Vedtakstype.OPPHØR,
                     ),
                 )
@@ -359,7 +359,7 @@ class KlageOrkestrator(
                         resultat = lagOpphørsvedtak(periodeSomSkalOpphøres),
                         delvedtak = true,
                         klagevedtak = false,
-                        beregnet = true,
+                        beregnet = false,
                         vedtakstype = Vedtakstype.OPPHØR,
                     ),
                 )
