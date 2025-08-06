@@ -42,7 +42,7 @@
       "referanse": "Beløpshistorikk_Grunnlag_Person_Bidragsmottaker_Person_Søknadsbarn_202101",
       "type": "BELØPSHISTORIKK_BIDRAG",
       "innhold": {
-        "førsteIndeksreguleringsår": 2022,
+        "nesteIndeksreguleringsår": 2022,
         "beløpshistorikk": [
           {
             "periode": {

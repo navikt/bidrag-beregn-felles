@@ -6,7 +6,7 @@ import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import org.springframework.stereotype.Service
 
 /**
- * IndeksreguleringdApi eksponerer api for å indeksregulere stønad.
+ * BeregnIndeksreguleringApi eksponerer api for å indeksregulere stønad.
  *
  */
 @EnableSjablonProvider

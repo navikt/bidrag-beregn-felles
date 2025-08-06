@@ -5,27 +5,31 @@ import no.nav.bidrag.beregn.core.bo.SjablonSjablontallBeregningGrunnlag
 import no.nav.bidrag.beregn.core.bo.SjablonSjablontallPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
+import no.nav.bidrag.domene.beløp.Beløp
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
+import no.nav.bidrag.domene.enums.samhandler.Valutakode
+import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.avrundetTilNærmesteTier
+import no.nav.bidrag.indeksregulering.bo.BeregnIndeksreguleringGrunnlag
 import no.nav.bidrag.indeksregulering.bo.IndeksreguleringGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkPeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningPrivatAvtale
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningPrivatAvtalePeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningIndeksregulering
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
-import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
+import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettSluttberegningreferanse
 import java.math.BigDecimal
+import java.time.Year
 import java.time.YearMonth
 
 internal class IndeksreguleringService : BeregnService() {
 
-    fun beregn(grunnlag: BeregnGrunnlag): List<GrunnlagDto> {
-        val beløpshistorikk = grunnlag.grunnlagListe
+    fun beregn(grunnlag: BeregnIndeksreguleringGrunnlag): List<GrunnlagDto> {
+        val beløpshistorikk = grunnlag.beløpshistorikkListe
             .filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(
                 grunnlagType = Grunnlagstype.BELØPSHISTORIKK_BIDRAG,
             )
@@ -36,29 +40,37 @@ internal class IndeksreguleringService : BeregnService() {
                     skalIndeksreguleres = it.innhold.beløpshistorikk.any { it.beløp != null },
                     perioder = it.innhold.beløpshistorikk,
                 )
-            }.sortedBy { it.nesteIndeksreguleringsår }
-            .firstOrNull()
+            }.firstOrNull()
 
-        val gjelderReferanse = grunnlag.grunnlagListe
+        val gjelderReferanse = grunnlag.personobjektListe
             .filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(
                 grunnlagType = Grunnlagstype.BELØPSHISTORIKK_BIDRAG,
             ).first().gjelderReferanse
 
-        val gjelderBarnReferanse = grunnlag.grunnlagListe
+        val gjelderBarnReferanse = grunnlag.personobjektListe
             .filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(
                 grunnlagType = Grunnlagstype.BELØPSHISTORIKK_BIDRAG,
             ).first().gjelderBarnReferanse
 
         if (beløpshistorikk == null ||
-            beløpshistorikk.perioder.isEmpty() ||
-            gjelderReferanse == null ||
-            gjelderBarnReferanse == null
+            beløpshistorikk.perioder.isEmpty()
         ) {
-            throw IllegalArgumentException("Manglende informasjon i grunnlag til indeksregulering")
+            // hent beløpshistorikk fra vedtakservice
+            //TODO: Implementer logikk for å hente beløpshistorikk fra vedtakservice
+
         }
 
-        val perioder = beløpshistorikk.perioder
-            .map {
+
+        if (gjelderReferanse == null ||
+            gjelderBarnReferanse == null ||
+            (grunnlag.stønadsid.type != Stønadstype.BIDRAG && grunnlag.stønadsid.type != Stønadstype.BIDRAG18AAR &&
+            grunnlag.stønadsid.type != Stønadstype.OPPFOSTRINGSBIDRAG)
+        ) {
+            throw IllegalArgumentException("Feil i grunnlaget til indeksregulering")
+        }
+
+        val perioder = beløpshistorikk?.perioder
+            ?.map {
                 Periode(
                     periode = it.periode,
                     beløp = it.beløp!!,
@@ -69,7 +81,7 @@ internal class IndeksreguleringService : BeregnService() {
         val nesteIndeksregulering = YearMonth.of(beløpshistorikk.nesteIndeksreguleringsår!!, 7)
 
         val periode = ÅrMånedsperiode(
-            fom = YearMonth.of(nesteIndeksregulering.year, 7),
+            fom = nesteIndeksregulering,
             til = null,
         )
 
@@ -87,7 +99,7 @@ internal class IndeksreguleringService : BeregnService() {
             beregningsperiode = periode,
         )
 
-        val resultatliste = mutableListOf<DelberegningPrivatAvtalePeriode>()
+        val resultatliste = mutableListOf<GrunnlagDto>()
         val grunnlagsliste = mutableSetOf<String>()
 
         var beløpFraForrigeDelberegning: BigDecimal? = null
@@ -105,45 +117,49 @@ internal class IndeksreguleringService : BeregnService() {
             )
             grunnlagsliste.addAll(grunnlagBeregning.referanseliste)
 
-            val resultat = beregn(grunnlagBeregning)
+            val resultat = beregnPeriode(grunnlagBeregning)
 
             if (it.periodeSkalIndeksreguleres) {
-                beløpFraForrigeDelberegning = resultat.beløp
+                beløpFraForrigeDelberegning = resultat.beløp.verdi
             }
 
-            resultatliste.add(resultat)
+            resultatliste.add(
+                GrunnlagDto(
+                    type = Grunnlagstype.SLUTTBEREGNING_INDEKSREGULERING,
+                    referanse = opprettSluttberegningreferanse(
+                        barnreferanse = grunnlag.søknadsbarnReferanse,
+                        periode = resultat.periode,
+                    ),
+                    innhold = POJONode(resultat),
+                    gjelderReferanse = gjelderReferanse,
+                    gjelderBarnReferanse = gjelderBarnReferanse,
+                    grunnlagsreferanseListe = grunnlagBeregning.referanseliste,
+                ),
+            )
         }
 
-        val delberegninPrivatAvtale = listOf(
-            GrunnlagDto(
-                type = Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE,
-                referanse = opprettDelberegningreferanse(
-                    type = Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE,
-                    periode = grunnlag.periode,
-                    søknadsbarnReferanse = grunnlag.søknadsbarnReferanse,
-                    gjelderReferanse = gjelderReferanse,
-                ),
-                innhold = POJONode(
-                    DelberegningPrivatAvtale(
-                        nesteIndeksreguleringsår = indeksregulerPeriode.year.toBigDecimal(),
-                        perioder = resultatliste,
-                    ),
-                ),
-                gjelderReferanse = gjelderReferanse,
-                gjelderBarnReferanse = grunnlag.søknadsbarnReferanse,
-                grunnlagsreferanseListe = grunnlagsliste.toList(),
-
-            ),
-        )
+//        val sluttberegningIndeksreguleringListe = resultatliste.map {
+//            GrunnlagDto(
+//                type = Grunnlagstype.SLUTTBEREGNING_INDEKSREGULERING,
+//                referanse = opprettSluttberegningreferanse(
+//                    barnreferanse = grunnlag.søknadsbarnReferanse,
+//                    periode = it.periode,
+//                ),
+//                innhold = POJONode(it),
+//                gjelderReferanse = gjelderReferanse,
+//                gjelderBarnReferanse = grunnlag.søknadsbarnReferanse,
+//                grunnlagsreferanseListe = grunnlagsliste.toList(),
+//            )
+//        }
 
         // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
         val resultatGrunnlagListe = mapDelberegningResultatGrunnlag(
-            grunnlagReferanseListe = delberegninPrivatAvtale.map { it.referanse },
+            grunnlagReferanseListe = resultatliste.map { it.grunnlagsreferanseListe }.flatten().distinct(),
             mottattGrunnlag = grunnlag,
             sjablonGrunnlag = sjablonListe,
         ).toMutableList()
 
-        return delberegninPrivatAvtale + resultatGrunnlagListe
+        return resultatliste + resultatGrunnlagListe
     }
 
     private fun mapSjablonSjablontall(sjablonGrunnlag: List<GrunnlagDto>): List<SjablonSjablontallPeriodeGrunnlag> {
@@ -246,7 +262,7 @@ internal class IndeksreguleringService : BeregnService() {
 
         val sjablonIndeksreguleringFaktor = if (periodeSkalIndeksreguleres) {
             sjablonIndeksreguleringFaktorListe
-                .firstOrNull { it.sjablonSjablontallPeriode.periode.inneholder(beregningsperiode) }
+                .firstOrNull { it.sjablonSjablontallPeriode.periode.fom == beregningsperiode.fom }
                 ?.let {
                     SjablonSjablontallBeregningGrunnlag(
                         referanse = it.referanse,
@@ -275,22 +291,25 @@ internal class IndeksreguleringService : BeregnService() {
         )
     }
 
-    private fun beregn(grunnlag: IndeksreguleringGrunnlag): DelberegningPrivatAvtalePeriode = if (grunnlag.periodeSkalIndeksreguleres) {
+    private fun beregnPeriode(grunnlag: IndeksreguleringGrunnlag): SluttberegningIndeksregulering = if (grunnlag.periodeSkalIndeksreguleres) {
         val indeksreguleringFaktor = BigDecimal.valueOf(grunnlag.sjablonIndeksreguleringFaktor!!.verdi).divide(BigDecimal(100)).setScale(4)
         val beløp = grunnlag.beløpFraForrigeDelberegning ?: grunnlag.periode.beløp
         val indeksregulertBeløp = beløp.plus(beløp.multiply(indeksreguleringFaktor)).avrundetTilNærmesteTier
-        DelberegningPrivatAvtalePeriode(
+        SluttberegningIndeksregulering(
             periode = grunnlag.beregningsperiode,
-            indeksreguleringFaktor = indeksreguleringFaktor,
-            beløp = indeksregulertBeløp,
-        )
-    } else {
-        DelberegningPrivatAvtalePeriode(
-            periode = grunnlag.beregningsperiode,
-            indeksreguleringFaktor = null,
-            beløp = grunnlag.periode.beløp,
+            beløp = Beløp(indeksregulertBeløp, Valutakode.valueOf(grunnlag.periode.valutakode)),
+            originaltBeløp = Beløp(grunnlag.periode.beløp, Valutakode.valueOf(grunnlag.periode.valutakode)),
+            nesteIndeksreguleringsår = Year.of(grunnlag.beregningsperiode.fom.year.plus(1)),
 
-        )
+            )
+    } else {
+        SluttberegningIndeksregulering(
+            periode = grunnlag.beregningsperiode,
+            beløp = Beløp(grunnlag.periode.beløp, Valutakode.valueOf(grunnlag.periode.valutakode)),
+            originaltBeløp = Beløp(grunnlag.periode.beløp, Valutakode.valueOf(grunnlag.periode.valutakode)),
+            nesteIndeksreguleringsår = Year.of(grunnlag.beregningsperiode.fom.year.plus(1)),
+
+            )
     }
 }
 
