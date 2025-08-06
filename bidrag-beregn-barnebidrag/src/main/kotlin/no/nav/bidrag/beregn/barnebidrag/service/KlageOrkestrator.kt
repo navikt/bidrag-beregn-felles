@@ -280,12 +280,21 @@ class KlageOrkestrator(
                         resultat = lagOpphørsvedtak(it),
                         delvedtak = true,
                         klagevedtak = false,
+                        beregnet = true,
                         vedtakstype = Vedtakstype.OPPHØR,
                     ),
                 )
             }
 
-            add(ResultatVedtak(resultat = klageberegningResultat, delvedtak = true, klagevedtak = true, vedtakstype = Vedtakstype.KLAGE))
+            add(
+                ResultatVedtak(
+                    resultat = klageberegningResultat,
+                    delvedtak = true,
+                    beregnet = true,
+                    klagevedtak = true,
+                    vedtakstype = Vedtakstype.KLAGE,
+                ),
+            )
             addAll(
                 lagBeregnetBarnebidragResultatFraEksisterendeVedtak(
                     beløpshistorikk = etterfølgendeVedtakListe,
@@ -383,7 +392,15 @@ class KlageOrkestrator(
         val etterfølgendeVedtakListe = hentEtterfølgendeVedtakslisteFraVedtak(klageperiode, påklagetVedtakId, opphørsdato, stønad)
         val delvedtakListe = buildList {
             addAll(delvedtakListeFør)
-            add(ResultatVedtak(resultat = klageberegningResultat, delvedtak = true, klagevedtak = true, vedtakstype = Vedtakstype.KLAGE))
+            add(
+                ResultatVedtak(
+                    resultat = klageberegningResultat,
+                    delvedtak = true,
+                    beregnet = true,
+                    klagevedtak = true,
+                    vedtakstype = Vedtakstype.KLAGE,
+                ),
+            )
             addAll(
                 lagBeregnetBarnebidragResultatFraEksisterendeVedtak(
                     beløpshistorikk = etterfølgendeVedtakListe,
@@ -633,7 +650,7 @@ class KlageOrkestrator(
                             ),
                         ),
                         vedtakstype = komplettVedtak.type,
-                        beregnet = true,
+                        beregnet = false,
                         beregnetFraDato = perioder.minOf { it.periode.fom }.atDay(1),
                     )
                 }
