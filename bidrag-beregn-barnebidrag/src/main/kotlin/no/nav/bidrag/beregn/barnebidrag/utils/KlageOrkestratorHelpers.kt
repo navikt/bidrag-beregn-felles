@@ -29,7 +29,8 @@ import no.nav.bidrag.transport.behandling.vedtak.response.finnStønadsendring
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.YearMonth
-
+internal val vedtaksidBeregnetBeløpshistorikk = 1
+internal val vedtaksidAutomatiskJobb = 2
 class KlageOrkestratorHelpers(private val vedtakService: VedtakService, private val identUtils: IdentUtils) {
     internal fun List<StønadPeriodeDto>.justerSistePeriodeTilÅBliLøpende() = mapIndexed { index, periode ->
         if (index == this.size - 1) {
@@ -61,7 +62,7 @@ class KlageOrkestratorHelpers(private val vedtakService: VedtakService, private 
                     beløp = it.resultat.beløp,
                     stønadsid = 1,
                     valutakode = "NOK",
-                    vedtaksid = 1,
+                    vedtaksid = vedtaksidBeregnetBeløpshistorikk,
                     gyldigFra = LocalDateTime.now(),
                     gyldigTil = null,
                     periodeGjortUgyldigAvVedtaksid = null,
@@ -89,7 +90,10 @@ class KlageOrkestratorHelpers(private val vedtakService: VedtakService, private 
                     beløp = it.beløp,
                     stønadsid = 1,
                     valutakode = "NOK",
-                    vedtaksid = it.vedtaksid!!,
+                    vedtaksid = when {
+                        listOf(Vedtakstype.INDEKSREGULERING, Vedtakstype.ALDERSJUSTERING).contains(vedtak.type) -> vedtaksidAutomatiskJobb
+                        else -> it.vedtaksid!!
+                    },
                     gyldigFra = LocalDateTime.now(),
                     gyldigTil = null,
                     periodeGjortUgyldigAvVedtaksid = null,
