@@ -7,7 +7,7 @@ import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.indeksregulering.BeregnIndeksreguleringApi
-import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.indeksregulering.bo.BeregnIndeksreguleringGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningIndeksregulering
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
@@ -46,23 +46,9 @@ internal class BeregnIndeksreguleringApiTest {
         val resultat = utførBeregningerOgEvaluerResultatIndeksregulering()
 
         assertAll(
-            { assertThat(resultat).hasSize(4) },
 
-            // Resultat
-/*            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode("2021-01", "2021-07")) },
-            { assertThat(resultat[0].beløp.verdi.compareTo(BigDecimal.valueOf(1000.00))).isEqualTo(0) },
-
-            { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode("2021-07", "2022-07")) },
-            { assertThat(resultat[1].beløp.verdi.compareTo(BigDecimal.valueOf(1200.00))).isEqualTo(0) },*/
-
-            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode("2022-07", "2023-07")) },
-            { assertThat(resultat[0].beløp.verdi.compareTo(BigDecimal.valueOf(1240.00))).isEqualTo(0) },
-
-            { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode("2023-07", "2024-07")) },
-            { assertThat(resultat[1].beløp.verdi.compareTo(BigDecimal.valueOf(1330.00))).isEqualTo(0) },
-
-            { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
-            { assertThat(resultat[2].beløp.verdi.compareTo(BigDecimal.valueOf(1390.00))).isEqualTo(0) },
+            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2025-07"), null)) },
+            { assertThat(resultat[0].beløp.verdi.compareTo(BigDecimal.valueOf(1230.00))).isEqualTo(0) },
         )
     }
 
@@ -100,7 +86,7 @@ internal class BeregnIndeksreguleringApiTest {
         .flatMap { it.grunnlagsreferanseListe }
         .distinct()
 
-    private fun lesFilOgByggRequest(filnavn: String): BeregnGrunnlag {
+    private fun lesFilOgByggRequest(filnavn: String): BeregnIndeksreguleringGrunnlag {
         var json = ""
 
         // Les inn fil med request-data (json)
@@ -111,7 +97,7 @@ internal class BeregnIndeksreguleringApiTest {
         }
 
         // Lag request
-        return ObjectMapper().findAndRegisterModules().readValue(json, BeregnGrunnlag::class.java)
+        return ObjectMapper().findAndRegisterModules().readValue(json, BeregnIndeksreguleringGrunnlag::class.java)
     }
 
     private fun <T> printJson(json: T) {

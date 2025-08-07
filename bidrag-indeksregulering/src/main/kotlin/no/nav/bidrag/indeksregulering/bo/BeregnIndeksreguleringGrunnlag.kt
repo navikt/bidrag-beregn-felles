@@ -6,7 +6,7 @@ import java.time.Year
 
 data class BeregnIndeksreguleringGrunnlag(
     val indeksregulerÅr: Year,
-    val personobjektListe: List<GrunnlagDto>,
     val stønadsid: Stønadsid,
+    val personobjektListe: List<GrunnlagDto>,
     val beløpshistorikkListe: List<GrunnlagDto>,
 )

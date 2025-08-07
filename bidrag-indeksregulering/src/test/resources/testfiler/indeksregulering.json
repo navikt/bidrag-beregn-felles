@@ -1,10 +1,6 @@
 {
-  "periode": {
-    "fom": "2021-07",
-    "til": "2025-06"
-  },
-  "søknadsbarnReferanse": "Person_Søknadsbarn",
-  "grunnlagListe": [
+  "indeksregulerÅr": "2025",
+  "personobjektListe": [
     {
       "referanse": "Person_Søknadsbarn",
       "type": "PERSON_SØKNADSBARN",
@@ -37,24 +33,32 @@
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": null
-    },
+    }
+  ],
+  "stønadsid": {
+    "type": "BIDRAG",
+    "kravhaver": "Trengende Søknadsbarn",
+    "skyldner": "Skyldneren",
+    "sak": "0123456"
+  },
+  "beløpshistorikkListe": [
     {
       "referanse": "Beløpshistorikk_Grunnlag_Person_Bidragsmottaker_Person_Søknadsbarn_202101",
       "type": "BELØPSHISTORIKK_BIDRAG",
       "innhold": {
-        "nesteIndeksreguleringsår": 2022,
+        "nesteIndeksreguleringsår": 2025,
         "beløpshistorikk": [
           {
             "periode": {
-              "fom": "2021-01",
-              "til": "2021-07"
+              "fom": "2023-07",
+              "til": "2024-07"
             },
             "beløp": 1000.00,
             "valutakode": "NOK"
           },
           {
             "periode": {
-              "fom": "2021-07"
+              "fom": "2024-07"
             },
             "beløp": 1200.00,
             "valutakode": "NOK"
