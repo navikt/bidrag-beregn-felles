@@ -167,7 +167,7 @@ internal object AldersjusteringMapper : CoreMapper() {
     private fun hentPeriodeListeFraStønadsendringListe(
         stønadsendringListe: List<StønadsendringDto>,
         grunnlagsperiode: ÅrMånedsperiode,
-        vedtakId: Long,
+        vedtakId: Int,
     ): List<VedtakPeriodeDto> {
         val periodeListe = stønadsendringListe
             .flatMap { it.periodeListe }
@@ -188,7 +188,7 @@ internal object AldersjusteringMapper : CoreMapper() {
     private fun hentSluttberegningFraGrunnlag(
         grunnlagListeFraVedtak: List<GrunnlagDto>,
         grunnlagReferanseListe: List<String>,
-        vedtakId: Long,
+        vedtakId: Int,
         søknadsbarnReferanse: String,
     ): GrunnlagDto = grunnlagListeFraVedtak
         .filter { it.gjelderBarnReferanse == søknadsbarnReferanse || it.grunnlagsreferanseListe.contains(søknadsbarnReferanse) }

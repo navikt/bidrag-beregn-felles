@@ -1,11 +1,14 @@
-package no.nav.bidrag.beregn.barnebidrag.api
+package no.nav.bidrag.beregn.barnebidrag.felles
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.shouldBe
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
+import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatVedtak
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagBeregningPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
@@ -18,7 +21,7 @@ import java.nio.file.Paths
 import java.text.SimpleDateFormat
 import java.time.YearMonth
 
-internal open class FellesApiTest {
+internal open class FellesTest {
 
     fun hentSluttberegning(resultatGrunnlagListe: List<GrunnlagDto>) = resultatGrunnlagListe
         .filtrerOgKonverterBasertPåEgenReferanse<SluttberegningBarnebidrag>(Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG)
@@ -66,19 +69,30 @@ internal open class FellesApiTest {
         .filterNotNull()
         .distinct()
 
-    fun lesFilOgByggRequest(filnavn: String): BeregnGrunnlag {
-        var json = ""
+    fun sjekkReferanser(resultatVedtakListe: List<ResultatVedtak>) {
+        val alleReferanser = hentAlleReferanser(resultatVedtakListe.last().resultat.grunnlagListe)
+        val alleRefererteReferanser = hentAlleRefererteReferanser(
+            resultatGrunnlagListe = resultatVedtakListe.last().resultat.grunnlagListe,
+            barnebidragResultat = resultatVedtakListe.last().resultat,
+        )
 
-        // Les inn fil med request-data (json)
-        try {
-            json = Files.readString(Paths.get(filnavn))
-        } catch (e: Exception) {
-            fail("Klarte ikke å lese fil: $filnavn")
+        assertSoftly {
+            alleReferanser.containsAll(alleRefererteReferanser)
+            alleRefererteReferanser.containsAll(alleReferanser)
         }
-
-        // Lag request
-        return ObjectMapper().findAndRegisterModules().readValue(json, BeregnGrunnlag::class.java)
     }
+
+    inline fun <reified T> lesFilOgByggRequest(filnavn: String): T {
+        val json = try {
+            Files.readString(Paths.get(filnavn))
+        } catch (e: Exception) {
+            fail("Klarte ikke å lese fil: $filnavn", e)
+        }
+        return jacksonObjectMapper().findAndRegisterModules().readValue(json, T::class.java)
+    }
+
+    // Overload for BeregnGrunnlag
+    fun lesFilOgByggRequest(filnavn: String): BeregnGrunnlag = lesFilOgByggRequest<BeregnGrunnlag>(filnavn)
 
     fun <T> printJson(json: T) {
         val objectMapper = ObjectMapper()

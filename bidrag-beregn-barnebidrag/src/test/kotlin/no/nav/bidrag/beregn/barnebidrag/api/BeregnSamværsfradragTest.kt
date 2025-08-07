@@ -1,6 +1,7 @@
 package no.nav.bidrag.beregn.barnebidrag.api
 
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
+import no.nav.bidrag.beregn.barnebidrag.felles.FellesTest
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
@@ -19,7 +20,7 @@ import java.math.BigDecimal
 import java.time.YearMonth
 
 @ExtendWith(MockitoExtension::class)
-internal class BeregnSamværsfradragApiTest : FellesApiTest() {
+internal class BeregnSamværsfradragTest : FellesTest() {
     private lateinit var filnavn: String
     private lateinit var forventetSamværsfradrag: BigDecimal
     private var forventetAntallSjablonSamværsfradrag: Int = 1

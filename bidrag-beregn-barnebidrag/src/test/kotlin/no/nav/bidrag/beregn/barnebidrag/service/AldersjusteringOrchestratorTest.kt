@@ -112,7 +112,7 @@ class AldersjusteringOrchestratorTest {
                         kilde = Vedtakskilde.AUTOMATISK,
                     ),
                     opprettVedtakForStønad(personIdentBidragspliktig, stønadstype = Stønadstype.FORSKUDD).copy(
-                        vedtaksid = vedtaksidBidrag.toLong(),
+                        vedtaksid = vedtaksidBidrag,
                         type = Vedtakstype.ENDRING,
                     ),
                 ),

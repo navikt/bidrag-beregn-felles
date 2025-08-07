@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.barnebidrag.api
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
+import no.nav.bidrag.beregn.barnebidrag.felles.FellesTest
 import no.nav.bidrag.beregn.core.exception.AldersjusteringLavereEnnEllerLikLøpendeBidragException
 import no.nav.bidrag.beregn.core.exception.UgyldigInputException
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
@@ -38,7 +39,7 @@ import java.nio.file.Paths
 import java.time.YearMonth
 
 @ExtendWith(MockitoExtension::class)
-internal class BeregnAldersjusteringApiTest : FellesApiTest() {
+internal class BeregnAldersjusteringTest : FellesTest() {
     private lateinit var filnavn: String
 
     // Vedtak

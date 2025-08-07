@@ -1,33 +1,29 @@
 package no.nav.bidrag.beregn.barnebidrag.service
 
-import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningBeløpshistorikkConsumer
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningVedtakConsumer
-import no.nav.bidrag.beregn.barnebidrag.utils.hentPersonForNyesteIdent
 import no.nav.bidrag.beregn.barnebidrag.utils.hentSisteLøpendePeriode
+import no.nav.bidrag.beregn.barnebidrag.utils.tilGrunnlag
+import no.nav.bidrag.beregn.core.util.justerVedtakstidspunkt
 import no.nav.bidrag.beregn.vedtak.Vedtaksfiltrering
 import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.commons.util.secureLogger
-import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
-import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.transport.behandling.belopshistorikk.request.HentStønadHistoriskRequest
+import no.nav.bidrag.transport.behandling.belopshistorikk.request.HentStønadRequest
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadPeriodeDto
-import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnlag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
-import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragsmottaker
-import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragspliktig
-import no.nav.bidrag.transport.behandling.felles.grunnlag.hentPersonMedIdent
 import no.nav.bidrag.transport.behandling.vedtak.request.HentVedtakForStønadRequest
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakDto
-import no.nav.bidrag.transport.felles.toCompactString
+import no.nav.bidrag.transport.behandling.vedtak.response.VedtakForStønad
 import org.springframework.stereotype.Service
-import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.YearMonth
 
 data class SisteManuelleVedtak(val vedtaksId: Int, val vedtak: VedtakDto)
+
+internal data class PåklagetVedtak(val vedtaksid: Int, val vedtakstidspunkt: LocalDateTime)
 
 @Service
 class VedtakService(
@@ -36,19 +32,140 @@ class VedtakService(
     private val vedtakFilter: Vedtaksfiltrering,
     private val identUtils: IdentUtils,
 ) {
-    fun hentBeløpshistorikk(stønadsid: Stønadsid, personer: List<GrunnlagDto>, tidspunkt: LocalDateTime = LocalDateTime.now()): GrunnlagDto =
-        stønadConsumer
-            .hentHistoriskeStønader(
-                HentStønadHistoriskRequest(
+    fun hentBeløpshistorikkTilGrunnlag(
+        stønadsid: Stønadsid,
+        personer: List<GrunnlagDto>,
+        tidspunkt: LocalDateTime = LocalDateTime.now(),
+    ): GrunnlagDto = stønadConsumer.hentHistoriskeStønader(
+        HentStønadHistoriskRequest(
+            type = stønadsid.type,
+            sak = stønadsid.sak,
+            skyldner = stønadsid.skyldner,
+            kravhaver = stønadsid.kravhaver,
+            gyldigTidspunkt = tidspunkt,
+        ),
+    ).tilGrunnlag(personer, stønadsid, identUtils)
+
+    // Finner alle vedtaksider som er relatert til et påklaget vedtak.
+    // Feks hvis det er opprettet klage på en vedtak som er klage på opprinnelig vedtak så vil også det vedtaket inkluderes
+    fun hentAlleVedtaksiderRelatertTilPåklagetVedtak(stønadsid: Stønadsid, påklagetVedtaksid: Int): Set<Int> {
+        val vedtakForStønad =
+            vedtakConsumer.hentVedtakForStønad(
+                HentVedtakForStønadRequest(
+                    stønadsid.sak,
+                    stønadsid.type,
+                    stønadsid.skyldner,
+                    stønadsid.kravhaver,
+                ),
+            )
+        val vedtakslisteJustert = vedtakForStønad.vedtakListe.map { it.justerVedtakstidspunkt() }
+        return vedtakslisteJustert.fold(emptyList<Int>()) { acc, stønad ->
+            if (stønad.vedtaksid == påklagetVedtaksid) {
+                acc + stønad.vedtaksid
+            } else if (vedtakslisteJustert.hentOpprinneligPåklagetVedtak(stønad) == påklagetVedtaksid) {
+                acc + vedtakslisteJustert.hentPåklagetVedtakListe(stønad).map { it.vedtaksid }
+            } else {
+                acc
+            }
+        }.toSet()
+    }
+
+    fun hentAlleVedtakForStønad(stønadsid: Stønadsid, fraPeriode: YearMonth? = null, ignorerVedtaksid: Int? = null): List<VedtakForStønad> {
+        val vedtakForStønad =
+            vedtakConsumer.hentVedtakForStønad(
+                HentVedtakForStønadRequest(
+                    stønadsid.sak,
+                    stønadsid.type,
+                    stønadsid.skyldner,
+                    stønadsid.kravhaver,
+                ),
+            )
+        val vedtakslisteJustert = vedtakForStønad.vedtakListe.map { it.justerVedtakstidspunkt() }
+        val vedtakListe = vedtakslisteJustert.filter {
+            ignorerVedtaksid == null ||
+                it.vedtaksid != ignorerVedtaksid &&
+                vedtakslisteJustert.hentOpprinneligPåklagetVedtak(it) != ignorerVedtaksid
+        }
+            .filter { it.stønadsendring.periodeListe.isNotEmpty() }
+            .groupBy { vedtak ->
+                val perioder = vedtak.stønadsendring.periodeListe
+                perioder.minOf { it.periode.fom } to perioder.maxOf { it.periode.fom }
+            }
+            .mapNotNull { (_, vedtakGruppe) ->
+                vedtakGruppe.maxByOrNull { it.vedtakstidspunkt }
+            }
+            .sortedBy { it.vedtakstidspunkt }
+            .fold(mutableListOf<VedtakForStønad>()) { acc, vedtak ->
+                val sisteVedtak = acc.lastOrNull()
+                if (sisteVedtak == null) {
+                    (acc + vedtak).toMutableList()
+                } else {
+                    val nesteVedtakFom = vedtak.stønadsendring.periodeListe.minOf { it.periode.fom }
+                    val nesteVedtakTil = vedtak.stønadsendring.periodeListe.maxOf { it.periode.til ?: YearMonth.of(9999, 12) }
+
+                    val sisteVedtakFom = sisteVedtak.stønadsendring.periodeListe.minOf { it.periode.fom }
+                    val sisteVedtakTil = sisteVedtak.stønadsendring.periodeListe.maxOf { it.periode.til ?: YearMonth.of(9999, 12) }
+
+                    // Sjekk siste periode til i tilfelle det har blitt fattet opphør men startet vedtak på nytt
+                    val nesteVedtakOverskriverSisteVedtak = nesteVedtakFom <= sisteVedtakFom // && nesteVedtakTil <= sisteVedtakTil
+                    if (nesteVedtakOverskriverSisteVedtak) {
+                        acc.remove(sisteVedtak)
+                    }
+                    (acc + vedtak).toMutableList()
+                }
+            }
+
+        if (fraPeriode == null) {
+            return vedtakListe
+        }
+
+        val filtrertVedtakListe = vedtakListe.filter { vedtak ->
+            val sistePeriodeFom = vedtak.stønadsendring.periodeListe.maxOf { it.periode.fom }
+            sistePeriodeFom >= fraPeriode
+        }
+
+        if (filtrertVedtakListe.isNotEmpty()) {
+            return filtrertVedtakListe
+        }
+
+        // Hvis ingen vedtak er funnet etter filtrering, finn det siste vedtaket med en løpende periode
+        return vedtakListe.lastOrNull { vedtak ->
+            vedtak.stønadsendring.periodeListe.any { it.periode.til == null }
+        }?.let { listOf(it) } ?: emptyList()
+    }
+
+    private fun List<VedtakForStønad>.hentOpprinneligPåklagetVedtak(vedtak: VedtakForStønad): Int? = hentPåklagetVedtakListe(vedtak).minBy {
+        it.vedtakstidspunkt
+    }.vedtaksid
+    private fun List<VedtakForStønad>.hentPåklagetVedtakListe(vedtak: VedtakForStønad): Set<PåklagetVedtak> {
+        val refererTilVedtakId = setOfNotNull(vedtak.stønadsendring.omgjørVedtakId)
+        if (refererTilVedtakId.isNotEmpty()) {
+            return refererTilVedtakId
+                .flatMap { vedtaksid ->
+                    val opprinneligVedtak = find { it.vedtaksid == vedtaksid }!!
+                    hentPåklagetVedtakListe(opprinneligVedtak)
+                }.toSet() + setOf(PåklagetVedtak(vedtak.vedtaksid, vedtak.vedtakstidspunkt))
+        }
+        return setOf(PåklagetVedtak(vedtak.vedtaksid, vedtak.vedtakstidspunkt))
+    }
+
+    fun hentLøpendeStønad(stønadsid: Stønadsid): StønadDto? {
+        val stønad =
+            stønadConsumer.hentLøpendeStønad(
+                HentStønadRequest(
                     type = stønadsid.type,
                     sak = stønadsid.sak,
                     skyldner = stønadsid.skyldner,
                     kravhaver = stønadsid.kravhaver,
-                    gyldigTidspunkt = tidspunkt,
                 ),
-            ).tilGrunnlag(personer, stønadsid)
+            ) ?: run {
+                secureLogger.info { "Fant ingen løpende ${stønadsid.type} for $stønadsid" }
+                return null
+            }
+        return stønad
+    }
 
-    fun hentLøpendeStønad(stønadsid: Stønadsid, tidspunkt: LocalDateTime = LocalDateTime.now()): StønadPeriodeDto? {
+    fun hentBeløpshistorikkSistePeriode(stønadsid: Stønadsid, tidspunkt: LocalDateTime = LocalDateTime.now()): StønadPeriodeDto? {
         val stønad =
             stønadConsumer.hentHistoriskeStønader(
                 HentStønadHistoriskRequest(
@@ -59,7 +176,7 @@ class VedtakService(
                     gyldigTidspunkt = tidspunkt,
                 ),
             ) ?: run {
-                secureLogger.info { "Fant ingen løpende ${stønadsid.type} for $stønadsid" }
+                secureLogger.info { "Fant ingen løpende historisk ${stønadsid.type} for $stønadsid" }
                 return null
             }
         return stønad.periodeListe.hentSisteLøpendePeriode() ?: run {
@@ -101,46 +218,4 @@ class VedtakService(
         ?.vedtaksid
 
     fun hentVedtak(vedtaksId: Int) = vedtakConsumer.hentVedtak(vedtaksId)
-
-    private fun StønadDto?.tilGrunnlag(personer: List<GrunnlagDto>, stønadsid: Stønadsid): GrunnlagDto {
-        val grunnlagstype =
-            when (stønadsid.type) {
-                Stønadstype.BIDRAG -> Grunnlagstype.BELØPSHISTORIKK_BIDRAG
-                Stønadstype.BIDRAG18AAR -> Grunnlagstype.BELØPSHISTORIKK_BIDRAG_18_ÅR
-                Stønadstype.FORSKUDD -> Grunnlagstype.BELØPSHISTORIKK_FORSKUDD
-                else -> throw IllegalArgumentException("Ukjent stønadstype")
-            }
-
-        return GrunnlagDto(
-            referanse =
-            "${grunnlagstype}_${stønadsid.sak}_${stønadsid.kravhaver.verdi}_${stønadsid.skyldner.verdi}" +
-                "_${this?.opprettetTidspunkt?.toCompactString() ?: LocalDate.now().toCompactString()}",
-            type = grunnlagstype,
-            gjelderReferanse =
-            when {
-                stønadsid.type == Stønadstype.BIDRAG -> personer.bidragspliktig!!.referanse
-                stønadsid.type == Stønadstype.BIDRAG18AAR -> personer.bidragspliktig!!.referanse
-                else -> personer.bidragsmottaker!!.referanse
-            },
-            gjelderBarnReferanse =
-            personer.hentPersonMedIdent(stønadsid.kravhaver.verdi)?.referanse
-                ?: personer.hentPersonForNyesteIdent(identUtils, stønadsid.kravhaver)?.referanse,
-            innhold =
-            POJONode(
-                BeløpshistorikkGrunnlag(
-                    tidspunktInnhentet = LocalDateTime.now(),
-                    nesteIndeksreguleringsår = this?.nesteIndeksreguleringsår ?: this?.førsteIndeksreguleringsår,
-                    beløpshistorikk =
-                    this?.periodeListe?.map {
-                        BeløpshistorikkPeriode(
-                            periode = it.periode,
-                            beløp = it.beløp,
-                            valutakode = it.valutakode,
-                            vedtaksid = it.vedtaksid,
-                        )
-                    } ?: emptyList(),
-                ),
-            ),
-        )
-    }
 }

@@ -25,8 +25,8 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           export GIT_COMMIT_HASH=$(git log -n 1 --pretty=format:'%h')
           export APP_VERSION=(${{ inputs.version }}_$GIT_COMMIT_HASH)
-          echo $APP_VERSION > ${{env.versionfile_path}}
+          echo $APP_VERSION > ${{ env.versionfile_path }}
           echo ⚙️ Opprettet versjonfil med versjon $APP_VERSION
-          git add ${{env.versionfile_path}}
+          git add ${{ env.versionfile_path }}
           git commit -m "Oppdater versjonfil til $APP_VERSION"
           git push --force origin HEAD:main

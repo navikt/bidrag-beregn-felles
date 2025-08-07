@@ -14,7 +14,7 @@ data class AldersjusteringBeregningGrunnlag(
     val bidragsmottakerReferanse: String,
     val bidragspliktigReferanse: String,
     val søknadsbarnPeriodeGrunnlag: SøknadsbarnPeriodeGrunnlag,
-    val vedtakId: Long,
+    val vedtakId: Int,
     val nettoTilsynsutgift: BigDecimal?,
     val barnetilsynMedStønad: BigDecimal?,
     val bpAndelFaktor: BigDecimal,

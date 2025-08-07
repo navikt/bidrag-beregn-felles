@@ -32,6 +32,11 @@
       <version>${project.parent.version}</version>
     </dependency>
     <dependency>
+      <groupId>no.nav.bidrag</groupId>
+      <artifactId>bidrag-indeksregulering</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+    <dependency>
       <groupId>io.github.oshai</groupId>
       <artifactId>kotlin-logging-jvm</artifactId>
     </dependency>

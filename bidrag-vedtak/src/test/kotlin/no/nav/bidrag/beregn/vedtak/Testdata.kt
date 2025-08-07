@@ -72,7 +72,7 @@ enum class Beløp(val verdi: BigDecimal) {
 }
 
 fun oppretteVedtakssett(requests: Set<OppretteVedtakRequest>): Set<VedtakForStønad> {
-    var vedtaksid: Long = 1
+    var vedtaksid: Int = 1
     var delytelsesid = 10000
 
     return requests.map { request ->
@@ -125,7 +125,7 @@ fun oppretteVedtaksperiode(
 )
 
 fun oppretteVedtak(
-    id: Long,
+    id: Int,
     stønadsendring: StønadsendringDto,
     vedtakstidspunkt: LocalDateTime,
     vedtakstype: Vedtakstype = Vedtakstype.FASTSETTELSE,
