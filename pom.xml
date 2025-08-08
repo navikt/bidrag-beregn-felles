@@ -13,14 +13,14 @@
     <properties>
         <revision>1.0-SNAPSHOT</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kotlin.version>2.1.21</kotlin.version>
+        <kotlin.version>2.2.0</kotlin.version>
         <java.version>21</java.version>
         <kotlin.code.style>official</kotlin.code.style>
         <jackson.version>2.19.2</jackson.version>
         <kotest.version>5.9.1</kotest.version>
         <swagger.version>2.2.34</swagger.version>
-        <bidrag-felles.version>2025.08.05.155336</bidrag-felles.version>
-        <ktlint.version>1.6.0</ktlint.version>
+        <bidrag-felles.version>2025.08.08.074624</bidrag-felles.version>
+        <ktlint.version>1.7.1</ktlint.version>
         <spring-boot.version>3.5.4</spring-boot.version>
         <kotlin-logging-jvm.version>7.0.7</kotlin-logging-jvm.version>
         <mockito-kotlin.version>5.4.0</mockito-kotlin.version>
@@ -178,7 +178,21 @@
         </dependencies>
     </dependencyManagement>
 
-    <profiles>
+  <dependencies>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-stdlib-jdk8</artifactId>
+      <version>${kotlin.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-test</artifactId>
+      <version>${kotlin.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <profiles>
         <profile>
             <id>OSX</id>
             <activation>
@@ -309,8 +323,6 @@
 
 
     <build>
-        <sourceDirectory>bidrag-boforhold/src/main/kotlin</sourceDirectory>
-        <testSourceDirectory>bidrag-boforhold/src/test/kotlin</testSourceDirectory>
         <pluginManagement>
             <plugins>
                 <plugin>

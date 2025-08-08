@@ -7,15 +7,14 @@ import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.indeksregulering.BeregnIndeksreguleringApi
-import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningIndeksreguleringPeriode
+import no.nav.bidrag.indeksregulering.bo.BeregnIndeksreguleringGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningIndeksregulering
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -41,39 +40,19 @@ internal class BeregnIndeksreguleringApiTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("Test indeksregulering")
     fun testIndeksregulering() {
-        filnavn = "src/test/resources/testfiler/indeksregulering/indeksregulering.json"
+        filnavn = "src/test/resources/testfiler/indeksregulering.json"
         val resultat = utførBeregningerOgEvaluerResultatIndeksregulering()
 
         assertAll(
-            { assertThat(resultat).hasSize(4) },
 
-            // Resultat
-            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode("2021-01", "2021-07")) },
-            { assertThat(resultat[0].beløp.compareTo(BigDecimal.valueOf(1000.00))).isEqualTo(0) },
-            { assertThat(resultat[0].indeksreguleringFaktor).isNull() },
-
-            { assertThat(resultat[1].periode).isEqualTo(ÅrMånedsperiode("2021-07", "2022-07")) },
-            { assertThat(resultat[1].beløp.compareTo(BigDecimal.valueOf(1200.00))).isEqualTo(0) },
-            { assertThat(resultat[1].indeksreguleringFaktor).isNull() },
-
-            { assertThat(resultat[2].periode).isEqualTo(ÅrMånedsperiode("2022-07", "2023-07")) },
-            { assertThat(resultat[2].beløp.compareTo(BigDecimal.valueOf(1240.00))).isEqualTo(0) },
-            { assertThat(resultat[2].indeksreguleringFaktor?.compareTo(BigDecimal.valueOf(0.0320))).isEqualTo(0) },
-
-            { assertThat(resultat[3].periode).isEqualTo(ÅrMånedsperiode("2023-07", "2024-07")) },
-            { assertThat(resultat[3].beløp.compareTo(BigDecimal.valueOf(1330.00))).isEqualTo(0) },
-            { assertThat(resultat[3].indeksreguleringFaktor?.compareTo(BigDecimal.valueOf(0.0700))).isEqualTo(0) },
-
-            { assertThat(resultat[4].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-07"), null)) },
-            { assertThat(resultat[4].beløp.compareTo(BigDecimal.valueOf(1390.00))).isEqualTo(0) },
-            { assertThat(resultat[4].indeksreguleringFaktor?.compareTo(BigDecimal.valueOf(0.0470))).isEqualTo(0) },
+            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2025-07"), null)) },
+            { assertThat(resultat[0].beløp.verdi.compareTo(BigDecimal.valueOf(1230.00))).isEqualTo(0) },
         )
     }
 
-    private fun utførBeregningerOgEvaluerResultatIndeksregulering(): List<DelberegningIndeksreguleringPeriode> {
+    private fun utførBeregningerOgEvaluerResultatIndeksregulering(): List<SluttberegningIndeksregulering> {
         val request = lesFilOgByggRequest(filnavn)
         val resultat = api.beregnIndeksregulering(request)
         printJson(resultat)
@@ -82,13 +61,13 @@ internal class BeregnIndeksreguleringApiTest {
         val alleRefererteReferanser = hentAlleRefererteReferanser(resultat)
 
         val resultatListe = resultat
-            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningIndeksreguleringPeriode>(Grunnlagstype.DELBEREGNING_INDEKSREGULERING_PERIODE)
+            .filtrerOgKonverterBasertPåEgenReferanse<SluttberegningIndeksregulering>(Grunnlagstype.SLUTTBEREGNING_INDEKSREGULERING)
             .map {
-                DelberegningIndeksreguleringPeriode(
+                SluttberegningIndeksregulering(
                     periode = it.innhold.periode,
                     beløp = it.innhold.beløp,
-                    valutakode = it.innhold.valutakode,
-                    indeksreguleringFaktor = it.innhold.indeksreguleringFaktor,
+                    originaltBeløp = it.innhold.originaltBeløp,
+                    nesteIndeksreguleringsår = it.innhold.nesteIndeksreguleringsår,
                 )
             }
 
@@ -107,7 +86,7 @@ internal class BeregnIndeksreguleringApiTest {
         .flatMap { it.grunnlagsreferanseListe }
         .distinct()
 
-    private fun lesFilOgByggRequest(filnavn: String): BeregnGrunnlag {
+    private fun lesFilOgByggRequest(filnavn: String): BeregnIndeksreguleringGrunnlag {
         var json = ""
 
         // Les inn fil med request-data (json)
@@ -118,7 +97,7 @@ internal class BeregnIndeksreguleringApiTest {
         }
 
         // Lag request
-        return ObjectMapper().findAndRegisterModules().readValue(json, BeregnGrunnlag::class.java)
+        return ObjectMapper().findAndRegisterModules().readValue(json, BeregnIndeksreguleringGrunnlag::class.java)
     }
 
     private fun <T> printJson(json: T) {
