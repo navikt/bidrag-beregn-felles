@@ -11,7 +11,7 @@ class Vedtaksiterator(vedtakssamling: Collection<Vedtaksdetaljer>) : Iterator<Ve
 
     private val iterator: Iterator<Vedtaksdetaljer> = vedtakssamling.asSequence().sortedByDescending { it.vedtak.vedtakstidspunkt }.iterator()
     private var nesteVedtak: Vedtaksdetaljer? = null
-    private var omgjorteVedtak = emptySet<Long>()
+    private var omgjorteVedtak = emptySet<Int>()
 
     init {
         forberedeNeste()
@@ -59,7 +59,7 @@ class Vedtaksiterator(vedtakssamling: Collection<Vedtaksdetaljer>) : Iterator<Ve
         return beløpB != null && beløpA.compareTo(beløpB) == 0
     }
 
-    fun hoppeTilOmgjortVedtak(idTilOmgjortVedtak: Long) {
+    fun hoppeTilOmgjortVedtak(idTilOmgjortVedtak: Int) {
         while (nesteVedtak != null && nesteVedtak!!.vedtak.vedtaksid != idTilOmgjortVedtak) {
             forberedeNeste()
         }

@@ -1,6 +1,7 @@
 package no.nav.bidrag.beregn.barnebidrag.api
 
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
+import no.nav.bidrag.beregn.barnebidrag.felles.FellesTest
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndringSjekkGrense
@@ -16,7 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 import java.time.YearMonth
 
 @ExtendWith(MockitoExtension::class)
-internal class BeregnEndringSjekkGrenseApiTest : FellesApiTest() {
+internal class BeregnEndringSjekkGrenseTest : FellesTest() {
     private lateinit var filnavn: String
     private var forventetEndringErOverGrense: Boolean = false
 

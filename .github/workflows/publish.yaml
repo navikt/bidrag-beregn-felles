@@ -2,8 +2,6 @@ name: Publish artifacts
 on:
   release:
     types: [published]
-env:
-  VERSION: ${{ github.event.release.tag_name }}
 
 permissions:
   contents: "write"
@@ -15,7 +13,7 @@ jobs:
     name: Build and release package
     uses: navikt/bidrag-workflow/.github/workflows/maven_publish.yaml@main
     with:
-      version: ${{env.VERSION}}
+      version: ${{ github.event.release.tag_name }}
     secrets: inherit
 
   commit-version-file:

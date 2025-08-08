@@ -31,7 +31,6 @@ import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatPeriode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.felles.valider
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnlag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndringSjekkGrense
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndringSjekkGrensePeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningPrivatAvtale
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
@@ -39,6 +38,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
 import no.nav.bidrag.transport.behandling.felles.grunnlag.PrivatAvtaleGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SøknadGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.VirkningstidspunktGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import java.math.BigDecimal
 import java.time.YearMonth
@@ -49,6 +49,26 @@ class BeregnBarnebidragService : BeregnService() {
     fun beregnBarnebidrag(mottattGrunnlag: BeregnGrunnlag): BeregnetBarnebidragResultat {
         secureLogger.info { "Beregning av barnebidrag - følgende request mottatt: ${tilJson(mottattGrunnlag)}" }
 
+        val virkningstidspunkt = mottattGrunnlag.grunnlagListe.filtrerOgKonverterBasertPåEgenReferanse<VirkningstidspunktGrunnlag>(
+            Grunnlagstype.VIRKNINGSTIDSPUNKT,
+        ).firstOrNull()
+
+        if (virkningstidspunkt != null && virkningstidspunkt.innhold.avslag != null) {
+            return BeregnetBarnebidragResultat(
+                beregnetBarnebidragPeriodeListe =
+                listOf(
+                    ResultatPeriode(
+                        grunnlagsreferanseListe = listOf(virkningstidspunkt.referanse),
+                        periode = ÅrMånedsperiode(mottattGrunnlag.periode.fom, null),
+                        resultat =
+                        ResultatBeregning(
+                            beløp = null,
+                        ),
+                    ),
+                ),
+                grunnlagListe = listOf(virkningstidspunkt.grunnlag as GrunnlagDto),
+            )
+        }
         // Kontroll av inputdata
         try {
             mottattGrunnlag.valider()
@@ -93,7 +113,7 @@ class BeregnBarnebidragService : BeregnService() {
         var delberegningEndringSjekkGrenseResultat = emptyList<GrunnlagDto>()
         var delberegningIndeksreguleringPrivatAvtaleResultat = emptyList<GrunnlagDto>()
 
-        // Skal sjekke mot minimumsgrense for endring ("12%-regelen") hvis egetTiltak er false
+        // Skal sjekke mot minimumsgrense for endring ("12%-regelen") hvis egetTiltak er false og det ikke er klageberegning
         if (skalSjekkeMotMinimumsgrenseForEndring(mottattGrunnlag)) {
             val sjekkMotMinimumsgrenseForEndringResultat = sjekkMotMinimumsgrenseForEndring(
                 mottattGrunnlag = mottattGrunnlag,
@@ -448,16 +468,10 @@ class BeregnBarnebidragService : BeregnService() {
         )
     }
 
-    // Sjekk mot minimumsgrense for endring ("12%-regelen") skal bare utføres hvis det ikke er eget tiltak
+    // Sjekk mot minimumsgrense for endring ("12%-regelen") skal bare utføres hvis det ikke er eget tiltak og det ikke er klage
     private fun skalSjekkeMotMinimumsgrenseForEndring(mottattGrunnlag: BeregnGrunnlag): Boolean = mottattGrunnlag.grunnlagListe
         .filtrerOgKonverterBasertPåEgenReferanse<SøknadGrunnlag>(Grunnlagstype.SØKNAD)
-        .map { !it.innhold.egetTiltak }
-        .firstOrNull() ?: true
-
-    // Henter ut verdi fra delberegning for endring sjekk av grense (her skal det være kun en forekomst)
-    private fun erOverMinimumsgrenseForEndring(endringSjekkGrenseGrunnlagliste: List<GrunnlagDto>): Boolean = endringSjekkGrenseGrunnlagliste
-        .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndringSjekkGrense>(grunnlagType = Grunnlagstype.DELBEREGNING_ENDRING_SJEKK_GRENSE)
-        .map { it.innhold.endringErOverGrense }
+        .map { !it.innhold.egetTiltak && it.innhold.klageMottattDato == null }
         .firstOrNull() ?: true
 
     private fun filtrerBeløpshistorikkGrunnlag(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> =
