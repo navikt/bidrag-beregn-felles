@@ -105,7 +105,6 @@ class KlageOrkestratorHelpers(private val vedtakService: VedtakService, private 
             .lastOrNull { it.resultatkode != Resultatkode.INGEN_ENDRING_UNDER_GRENSE.name }
         val nesteIndeksår = when {
             sisteRelevantePeriode == null -> sistePeriode?.periode?.til?.year ?: sistePeriode?.periode?.fom?.year ?: YearMonth.now().year
-            sisteRelevantePeriode.periode.fom.monthValue < 7 -> sisteRelevantePeriode.periode.fom.year
             else -> sisteRelevantePeriode.periode.fom.year + 1
         }
         val stønadDto = StønadDto(

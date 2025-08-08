@@ -481,7 +481,7 @@ class KlageOrkestrator(
             BeregnetBarnebidragResultatInternal(it.resultat, it.vedtakstype, it.beregnetFraDato, it.klagevedtak)
         }.toMutableList()
         val beregnetBarnebidragResultatListe = mutableListOf<BeregnetBarnebidragResultatInternal>()
-        beløpshistorikk.groupBy { it.vedtaksid }.forEach { vedtaksid, it ->
+        beløpshistorikk.groupBy { it.vedtaksid }.entries.sortedWith(compareBy(nullsLast()) { it.key }).forEach { (vedtaksid, it) ->
             val komplettVedtak = vedtaksid?.let { vedtakService.hentVedtak(vedtaksid) }
             val forrigeVedtakErKlagevedtak = historikk.maxByOrNull { it.beregnetFraDato }?.klagevedtak == true
             val erAldersjusteringBasertPåPåklagetVedtak = if (komplettVedtak?.type == Vedtakstype.ALDERSJUSTERING) {
@@ -718,7 +718,7 @@ class KlageOrkestrator(
         stønad: Stønadsid,
         klageOrkestratorGrunnlag: KlageOrkestratorGrunnlag,
         beløpshistorikkFørPåklagetVedtak: BeløpshistorikkGrunnlag,
-        aldersjusteresForÅr: Int,
+        aldersjusteresIndeksreguleresForÅr: Int,
     ): BeregnetBarnebidragResultatInternal? {
         val (_, _, stønadDto) = klageOrkestratorHelpers.byggBeløpshistorikk(
             historikk.map { it.resultat },
@@ -750,7 +750,7 @@ class KlageOrkestrator(
         val resultatAldersjustering =
             utførAldersjustering(
                 vedtakFraGrunnlag,
-                aldersjusteresForÅr,
+                aldersjusteresIndeksreguleresForÅr,
                 historikk,
                 klageOrkestratorGrunnlag,
                 beløpshistorikkFørPåklagetVedtak,
@@ -759,7 +759,7 @@ class KlageOrkestrator(
             Grunnlagstype.ALDERSJUSTERING_DETALJER,
         ).first()
         return if (!detaljer.innhold.aldersjustert && !detaljer.innhold.aldersjusteresManuelt) {
-            utførIndeksregulering(stønad, historikk, beløpshistorikkFørPåklagetVedtak)
+            utførIndeksregulering(stønad, historikk, beløpshistorikkFørPåklagetVedtak, aldersjusteresIndeksreguleresForÅr)
         } else {
             resultatAldersjustering
         }
@@ -1065,14 +1065,22 @@ class KlageOrkestrator(
         stønad: Stønadsid,
         historikk: List<BeregnetBarnebidragResultatInternal>,
         beløpshistorikkFørPåklagetVedtak: BeløpshistorikkGrunnlag,
+        nesteIndeksår: Int,
     ): BeregnetBarnebidragResultatInternal? {
-        val (nesteIndeksår, grunnlagsliste) = klageOrkestratorHelpers.byggBeløpshistorikk(
+        val (_, grunnlagsliste, stønadDto) = klageOrkestratorHelpers.byggBeløpshistorikk(
             historikk.map { it.resultat },
             stønad,
             beløpshistorikkFørPåklagetVedtak = beløpshistorikkFørPåklagetVedtak,
         )
-
-        if (nesteIndeksår > Year.now().value) return null
+        val førsteIndeksår = stønadDto.periodeListe.minOf { it.periode.fom.year } + 1
+        if (førsteIndeksår > nesteIndeksår) return null
+        val indeksreguleringsmåned = YearMonth.of(nesteIndeksår, 7)
+        val skalIndeksreguleres =
+            nesteIndeksår < YearMonth.now().year &&
+                stønadDto.periodeListe.filter { it.vedtaksid != vedtaksidAutomatiskJobb }.none {
+                    it.periode.fom == indeksreguleringsmåned
+                }
+        if (!skalIndeksreguleres) return null
         val indeksresultat = beregnIndeksreguleringApi.beregnIndeksregulering(
             BeregnIndeksreguleringGrunnlag(
                 indeksregulerÅr = Year.of(nesteIndeksår),
