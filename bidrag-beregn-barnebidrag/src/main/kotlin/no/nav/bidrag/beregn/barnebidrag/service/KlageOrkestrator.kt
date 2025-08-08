@@ -237,11 +237,10 @@ class KlageOrkestrator(
             ignorerVedtaksid = påklagetVedtakId,
         )
 
-        val etterfølgendeVedtakMedPeriodeFørKlageperiode = vedtaksliste.filter {
-            !listOf(Vedtakstype.ALDERSJUSTERING, Vedtakstype.INDEKSREGULERING).contains(it.type)
-        }.filter {
-            it.virkningstidspunkt!! < klageperiode.fom
-        }
+        val etterfølgendeVedtakMedPeriodeFørKlageperiode = vedtaksliste.filter { !it.type.erIndeksEllerAldersjustering }
+            .filter {
+                it.virkningstidspunkt!! < klageperiode.fom
+            }
         if (etterfølgendeVedtakMedPeriodeFørKlageperiode.isNotEmpty()) {
             finnesEtterfølgendeVedtak(
                 etterfølgendeVedtakMedPeriodeFørKlageperiode.map {
