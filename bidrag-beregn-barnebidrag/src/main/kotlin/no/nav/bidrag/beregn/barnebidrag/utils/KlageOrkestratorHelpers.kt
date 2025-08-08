@@ -100,11 +100,11 @@ class KlageOrkestratorHelpers(private val vedtakService: VedtakService, private 
                     periodeGjortUgyldigAvVedtaksid = null,
                 )
             }
-        val sistePeriode = perioder.maxBy { it.periode.fom }
+        val sistePeriode = perioder.maxByOrNull { it.periode.fom }
         val sisteRelevantePeriode = perioder.sortedBy { it.periode.fom }
             .lastOrNull { it.resultatkode != Resultatkode.INGEN_ENDRING_UNDER_GRENSE.name }
         val nesteIndeksår = when {
-            sisteRelevantePeriode == null -> sistePeriode.periode.til?.year ?: sistePeriode.periode.fom.year
+            sisteRelevantePeriode == null -> sistePeriode?.periode?.til?.year ?: sistePeriode?.periode?.fom?.year ?: YearMonth.now().year
             sisteRelevantePeriode.periode.fom.monthValue < 7 -> sisteRelevantePeriode.periode.fom.year
             else -> sisteRelevantePeriode.periode.fom.year + 1
         }
