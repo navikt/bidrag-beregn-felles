@@ -31,6 +31,7 @@ import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.indeksregulering.BeregnIndeksreguleringApi
+import no.nav.bidrag.indeksregulering.bo.BeregnIndeksreguleringGrunnlag
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.KlageOrkestratorGrunnlag
@@ -46,6 +47,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.PrivatAvtaleGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.ResultatFraVedtakGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningIndeksregulering
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragsmottaker
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragspliktig
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
@@ -55,6 +57,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.søknadsbarn
 import no.nav.bidrag.transport.behandling.vedtak.response.StønadsendringDto
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakDto
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakPeriodeDto
+import no.nav.bidrag.transport.behandling.vedtak.response.erIndeksEllerAldersjustering
 import no.nav.bidrag.transport.behandling.vedtak.response.finnAldersjusteringDetaljerGrunnlag
 import no.nav.bidrag.transport.behandling.vedtak.response.finnStønadsendring
 import no.nav.bidrag.transport.behandling.vedtak.response.virkningstidspunkt
@@ -63,6 +66,7 @@ import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.Year
 import java.time.YearMonth
 
 fun VedtakDto.erAldersjustering() = type == Vedtakstype.ALDERSJUSTERING
@@ -101,10 +105,13 @@ internal data class BeløpshistorikkPeriodeInternal(
     val aldersjusterEllerIndeksreguler: Boolean = false,
 )
 
-fun finnesEtterfølgendeVedtak(vedtaksid: List<Int>): Nothing = throw FinnesEtterfølgendeVedtakMedVirkningstidspunktFørPåklagetVedtak(vedtaksid)
+data class EtterfølgendeVedtakSomOverlapper(val vedtaksid: Int, val virkningstidspunkt: YearMonth)
 
-class FinnesEtterfølgendeVedtakMedVirkningstidspunktFørPåklagetVedtak(val vedtaksid: List<Int>) :
-    RuntimeException("Det finnes etterfølgende vedtak $vedtaksid")
+fun finnesEtterfølgendeVedtak(vedtak: List<EtterfølgendeVedtakSomOverlapper>): Nothing =
+    throw FinnesEtterfølgendeVedtakMedVirkningstidspunktFørPåklagetVedtak(vedtak)
+
+class FinnesEtterfølgendeVedtakMedVirkningstidspunktFørPåklagetVedtak(val vedtak: List<EtterfølgendeVedtakSomOverlapper>) :
+    RuntimeException("Det finnes etterfølgende vedtak $vedtak")
 
 @Service
 @Import(VedtakService::class, AldersjusteringOrchestrator::class, BeregnIndeksreguleringApi::class, IdentUtils::class, KlageOrkestratorHelpers::class)
@@ -233,11 +240,14 @@ class KlageOrkestrator(
         val etterfølgendeVedtakMedPeriodeFørKlageperiode = vedtaksliste.filter {
             !listOf(Vedtakstype.ALDERSJUSTERING, Vedtakstype.INDEKSREGULERING).contains(it.type)
         }.filter {
-            val virkningstidspunkt = it.stønadsendring.periodeListe.minOf { it.periode.fom }
-            virkningstidspunkt < klageperiode.fom
+            it.virkningstidspunkt!! < klageperiode.fom
         }
         if (etterfølgendeVedtakMedPeriodeFørKlageperiode.isNotEmpty()) {
-            finnesEtterfølgendeVedtak(etterfølgendeVedtakMedPeriodeFørKlageperiode.map { it.vedtaksid })
+            finnesEtterfølgendeVedtak(
+                etterfølgendeVedtakMedPeriodeFørKlageperiode.map {
+                    EtterfølgendeVedtakSomOverlapper(it.vedtaksid, it.virkningstidspunkt!!)
+                },
+            )
         }
     }
     private fun byggVedtak(
@@ -721,14 +731,20 @@ class KlageOrkestrator(
 
         val klageVedtakLøpendePeriode = klageVedtak.finnStønadsendring(stønad)!!.periodeListe.hentSisteLøpendePeriode()
         val erKlageVedtakOpphør = klageVedtakLøpendePeriode == null || klageVedtakLøpendePeriode.beløp == null
+        val klagevedtakResultat = historikk.find { it.klagevedtak }
         val vedtakFraGrunnlag = if (erKlagevedtak) {
             BeregnBasertPåVedtak(vedtakDto = klageVedtak)
         } else {
+            val klageBeregnFraDato = klagevedtakResultat?.beregnetFraDato?.toYearMonth()
+            val historikkUtenAutojobb = stønadDto.periodeListe.filter {
+                (it.vedtaksid != vedtaksidBeregnetBeløpshistorikk || it.periode.fom == klageBeregnFraDato) &&
+                    it.vedtaksid != vedtaksidAutomatiskJobb
+            }
+            val sistePeriode = historikkUtenAutojobb.maxByOrNull { it.periode.fom }
+            val erSistePeriodeKlagevedtak = sistePeriode?.periode?.fom == klageBeregnFraDato
             BeregnBasertPåVedtak(
-                stønadDto.periodeListe.filter {
-                    it.vedtaksid != vedtaksidBeregnetBeløpshistorikk &&
-                        it.vedtaksid != vedtaksidAutomatiskJobb
-                }.maxByOrNull { it.periode.fom }?.vedtaksid,
+                if (!erSistePeriodeKlagevedtak) sistePeriode?.vedtaksid else null,
+                if (erSistePeriodeKlagevedtak) klageVedtak else null,
             )
         }
         if (erKlagevedtak && erKlageVedtakOpphør) return null
@@ -744,7 +760,7 @@ class KlageOrkestrator(
             Grunnlagstype.ALDERSJUSTERING_DETALJER,
         ).first()
         return if (!detaljer.innhold.aldersjustert && !detaljer.innhold.aldersjusteresManuelt) {
-            null // utførIndeksregulering(stønad, historikk)
+            utførIndeksregulering(stønad, historikk, beløpshistorikkFørPåklagetVedtak)
         } else {
             resultatAldersjustering
         }
@@ -1050,38 +1066,37 @@ class KlageOrkestrator(
         stønad: Stønadsid,
         historikk: List<BeregnetBarnebidragResultatInternal>,
         beløpshistorikkFørPåklagetVedtak: BeløpshistorikkGrunnlag,
-    ): BeregnetBarnebidragResultatInternal {
+    ): BeregnetBarnebidragResultatInternal? {
         val (nesteIndeksår, grunnlagsliste) = klageOrkestratorHelpers.byggBeløpshistorikk(
             historikk.map { it.resultat },
             stønad,
             beløpshistorikkFørPåklagetVedtak = beløpshistorikkFørPåklagetVedtak,
         )
+
+        if (nesteIndeksår > Year.now().value) return null
         val indeksresultat = beregnIndeksreguleringApi.beregnIndeksregulering(
-            BeregnGrunnlag(
-                periode = ÅrMånedsperiode(
-                    fom = YearMonth.of(nesteIndeksår - 1, 7),
-                    til = null,
-                ),
-                stønadstype = stønad.type,
-                søknadsbarnReferanse = grunnlagsliste.søknadsbarn.hentPersonMedIdent(stønad.kravhaver.verdi)!!.referanse,
-                grunnlagListe = grunnlagsliste,
+            BeregnIndeksreguleringGrunnlag(
+                indeksregulerÅr = Year.of(nesteIndeksår),
+                stønadsid = stønad,
+                personobjektListe = grunnlagsliste,
+                beløpshistorikkListe = grunnlagsliste,
             ),
         )
-        val privatavtale = indeksresultat.filtrerOgKonverterBasertPåEgenReferanse<DelberegningPrivatAvtale>(
-            Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE,
+        val sluttberegning = indeksresultat.filtrerOgKonverterBasertPåEgenReferanse<SluttberegningIndeksregulering>(
+            Grunnlagstype.SLUTTBEREGNING_INDEKSREGULERING,
         ).first()
-        val førstePeriode = privatavtale.innhold.perioder.minBy { it.periode.fom }
         return BeregnetBarnebidragResultatInternal(
             BeregnetBarnebidragResultat(
                 grunnlagListe = (indeksresultat + grunnlagsliste).toSet().toList(),
                 beregnetBarnebidragPeriodeListe = listOf(
                     ResultatPeriode(
-                        periode = førstePeriode.periode,
-                        resultat = ResultatBeregning(førstePeriode.beløp),
-                        grunnlagsreferanseListe = listOf(privatavtale.referanse),
+                        periode = sluttberegning.innhold.periode,
+                        resultat = ResultatBeregning(sluttberegning.innhold.beløp.verdi),
+                        grunnlagsreferanseListe = listOf(sluttberegning.referanse),
                     ),
                 ),
             ),
+            beregnet = true,
             vedtakstype = Vedtakstype.INDEKSREGULERING,
             beregnetFraDato = LocalDate.of(nesteIndeksår, 7, 1),
         )

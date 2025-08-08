@@ -8,7 +8,6 @@ import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.rolle.Rolletype
 import no.nav.bidrag.domene.enums.vedtak.Innkrevingstype
-import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
 import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
@@ -24,11 +23,13 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.finnOgKonverterGrunnla
 import no.nav.bidrag.transport.behandling.felles.grunnlag.hentAllePersoner
 import no.nav.bidrag.transport.behandling.felles.grunnlag.hentPersonMedIdent
 import no.nav.bidrag.transport.behandling.felles.grunnlag.tilGrunnlagstype
+import no.nav.bidrag.transport.behandling.vedtak.response.erIndeksEllerAldersjustering
 import no.nav.bidrag.transport.behandling.vedtak.response.erResultatEndringUnderGrense
 import no.nav.bidrag.transport.behandling.vedtak.response.finnStønadsendring
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.YearMonth
+
 internal val vedtaksidBeregnetBeløpshistorikk = 1
 internal val vedtaksidAutomatiskJobb = 2
 class KlageOrkestratorHelpers(private val vedtakService: VedtakService, private val identUtils: IdentUtils) {
@@ -91,7 +92,7 @@ class KlageOrkestratorHelpers(private val vedtakService: VedtakService, private 
                     stønadsid = 1,
                     valutakode = "NOK",
                     vedtaksid = when {
-                        listOf(Vedtakstype.INDEKSREGULERING, Vedtakstype.ALDERSJUSTERING).contains(vedtak.type) -> vedtaksidAutomatiskJobb
+                        vedtak.type.erIndeksEllerAldersjustering -> vedtaksidAutomatiskJobb
                         else -> it.vedtaksid!!
                     },
                     gyldigFra = LocalDateTime.now(),
@@ -99,12 +100,13 @@ class KlageOrkestratorHelpers(private val vedtakService: VedtakService, private 
                     periodeGjortUgyldigAvVedtaksid = null,
                 )
             }
-        val nesteIndeksår = perioder.fold(LocalDate.now().plusYears(1).year) { acc, dto ->
-            if (dto.resultatkode == Resultatkode.INGEN_ENDRING_UNDER_GRENSE.name) {
-                acc
-            } else {
-                dto.periode.fom.year + 1
-            }
+        val sistePeriode = perioder.maxBy { it.periode.fom }
+        val sisteRelevantePeriode = perioder.sortedBy { it.periode.fom }
+            .lastOrNull { it.resultatkode != Resultatkode.INGEN_ENDRING_UNDER_GRENSE.name }
+        val nesteIndeksår = when {
+            sisteRelevantePeriode == null -> sistePeriode.periode.til?.year ?: sistePeriode.periode.fom.year
+            sisteRelevantePeriode.periode.fom.monthValue < 7 -> sisteRelevantePeriode.periode.fom.year
+            else -> sisteRelevantePeriode.periode.fom.year + 1
         }
         val stønadDto = StønadDto(
             stønadsid = -1,
