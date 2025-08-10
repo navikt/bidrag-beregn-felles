@@ -57,7 +57,7 @@ internal class KlageOrkestratorTest : FellesTest() {
     @BeforeEach
     fun init() {
         val klageOrkestratorHelpers = KlageOrkestratorHelpers(vedtakService, identUtils)
-        orkestrator = KlageOrkestrator(vedtakService, aldersjusteringOrchestrator, beregnIndeksreguleringApi, identUtils, klageOrkestratorHelpers)
+        orkestrator = KlageOrkestrator(vedtakService, aldersjusteringOrchestrator, beregnIndeksreguleringApi, klageOrkestratorHelpers)
         stubSjablonProvider()
     }
 

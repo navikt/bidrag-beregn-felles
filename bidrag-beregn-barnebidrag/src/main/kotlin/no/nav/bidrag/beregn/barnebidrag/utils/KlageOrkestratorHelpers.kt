@@ -3,6 +3,7 @@ package no.nav.bidrag.beregn.barnebidrag.utils
 import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.barnebidrag.service.ByggetBeløpshistorikk
 import no.nav.bidrag.beregn.barnebidrag.service.VedtakService
+import no.nav.bidrag.beregn.core.util.justerVedtakstidspunktVedtak
 import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -22,7 +23,9 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBase
 import no.nav.bidrag.transport.behandling.felles.grunnlag.finnOgKonverterGrunnlagSomErReferertFraGrunnlagsreferanseListe
 import no.nav.bidrag.transport.behandling.felles.grunnlag.hentAllePersoner
 import no.nav.bidrag.transport.behandling.felles.grunnlag.hentPersonMedIdent
+import no.nav.bidrag.transport.behandling.felles.grunnlag.innholdTilObjekt
 import no.nav.bidrag.transport.behandling.felles.grunnlag.tilGrunnlagstype
+import no.nav.bidrag.transport.behandling.vedtak.response.VedtakDto
 import no.nav.bidrag.transport.behandling.vedtak.response.erIndeksEllerAldersjustering
 import no.nav.bidrag.transport.behandling.vedtak.response.erResultatEndringUnderGrense
 import no.nav.bidrag.transport.behandling.vedtak.response.finnStønadsendring
@@ -40,6 +43,14 @@ class KlageOrkestratorHelpers(private val vedtakService: VedtakService, private 
             periode
         }
     }
+
+    fun finnBeløpshistorikk(vedtak: VedtakDto, stønad: Stønadsid, personobjekter: List<GrunnlagDto>? = null): BeløpshistorikkGrunnlag =
+        vedtak.finnBeløpshistorikkGrunnlag(stønad, identUtils)
+            ?: vedtakService.hentBeløpshistorikkTilGrunnlag(
+                stønadsid = stønad,
+                personer = personobjekter ?: vedtak.grunnlagListe.hentAllePersoner() as List<GrunnlagDto>,
+                tidspunkt = vedtak.vedtakstidspunkt!!.minusSeconds(1),
+            ).innholdTilObjekt<BeløpshistorikkGrunnlag>()
 
     internal fun byggBeløpshistorikk(
         historikk: List<BeregnetBarnebidragResultat>,
