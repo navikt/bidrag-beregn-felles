@@ -3,6 +3,7 @@ package no.nav.bidrag.beregn.barnebidrag.utils
 import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.barnebidrag.service.ByggetBeløpshistorikk
 import no.nav.bidrag.beregn.barnebidrag.service.VedtakService
+import no.nav.bidrag.beregn.barnebidrag.service.klageFeilet
 import no.nav.bidrag.beregn.core.util.justerVedtakstidspunktVedtak
 import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
@@ -155,8 +156,8 @@ class KlageOrkestratorHelpers(private val vedtakService: VedtakService, private 
         innhold = POJONode(
             Person(
                 ident = ident,
-                navn = "",
-                fødselsdato = LocalDate.now(),
+                navn = null,
+                fødselsdato = identUtils.hentFødselsdato(ident) ?: klageFeilet("Fant ikke fødselsdato for person $ident med rolle $rolle"),
             ),
         ),
     )
