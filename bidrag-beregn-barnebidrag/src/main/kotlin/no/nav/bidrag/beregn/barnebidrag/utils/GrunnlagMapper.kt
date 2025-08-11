@@ -33,7 +33,7 @@ fun VedtakDto.finnBeløpshistorikkGrunnlag(stønad: Stønadsid, identUtils: Iden
         Stønadstype.FORSKUDD -> Grunnlagstype.BELØPSHISTORIKK_FORSKUDD
         else -> Grunnlagstype.BELØPSHISTORIKK_BIDRAG
     }
-    val søknadsbarn = grunnlagListe.hentPersonForNyesteIdent(identUtils, stønad.kravhaver)!!
+    val søknadsbarn = grunnlagListe.hentPersonForNyesteIdent(identUtils, stønad.kravhaver) ?: return null
     return grunnlagListe.filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(grunnlagType = grunnlagstype)
         .firstOrNull { it.gjelderBarnReferanse == søknadsbarn.referanse }?.innhold
 }

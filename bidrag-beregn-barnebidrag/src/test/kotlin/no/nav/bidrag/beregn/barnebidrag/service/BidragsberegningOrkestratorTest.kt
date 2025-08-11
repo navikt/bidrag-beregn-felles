@@ -80,7 +80,7 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
             vedtakFilter = Vedtaksfiltrering(),
             identUtils = identUtils,
         )
-        klageOrkestrator = KlageOrkestrator(vedtakService, aldersjusteringOrchestrator, beregnIndeksreguleringApi, identUtils, klageOrkestratorHelpers)
+        klageOrkestrator = KlageOrkestrator(vedtakService, aldersjusteringOrchestrator, beregnIndeksreguleringApi, klageOrkestratorHelpers)
         bidragsberegningOrkestrator = BidragsberegningOrkestrator(
             barnebidragApi = barnebidragApi,
             klageOrkestrator = klageOrkestrator,
