@@ -52,6 +52,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningIndeksre
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragsmottaker
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragspliktig
 import no.nav.bidrag.transport.behandling.felles.grunnlag.erResultatEndringUnderGrense
+import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerBasertPåEgenReferanser
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.hentPersonMedIdent
 import no.nav.bidrag.transport.behandling.felles.grunnlag.søknadsbarn
@@ -69,8 +70,6 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.Year
 import java.time.YearMonth
-import kotlin.collections.component1
-import kotlin.collections.component2
 
 fun VedtakDto.erAldersjustering() = type == Vedtakstype.ALDERSJUSTERING
 fun VedtakDto.erIndeksregulering() = type == Vedtakstype.INDEKSREGULERING
@@ -542,31 +541,32 @@ class KlageOrkestrator(
     ): List<BeløpshistorikkPeriodeInternal> {
         if (!beregnForPerioderEtterKlage && this.isEmpty()) return emptyList()
 
-        val beløshistorikkMedKlage = (
-            this + if (beregnForPerioderEtterKlage) {
-                klageberegningResultat.beregnetBarnebidragPeriodeListe.map {
-                    val søknadsbarn = klageberegningResultat.grunnlagListe.hentPersonMedIdent(stønadsid.kravhaver.verdi)!!
-                    val erResultatIngenEndring = klageberegningResultat.grunnlagListe.erResultatEndringUnderGrense(søknadsbarn.referanse)
-                    BeløpshistorikkPeriodeInternal(
-                        it.periode,
-                        it.resultat.beløp,
-                        resultatkode = when {
-                            erResultatIngenEndring -> Resultatkode.INGEN_ENDRING_UNDER_GRENSE.name
-                            else -> Resultatkode.KOSTNADSBEREGNET_BIDRAG.name
-                        },
-                        klagevedtak = true,
-                    )
-                }
-            } else {
-                listOf(
-                    BeløpshistorikkPeriodeInternal(
-                        påklagetVedtakVirkningstidspunkt?.let { ÅrMånedsperiode(påklagetVedtakVirkningstidspunkt, klageperiode.fom) } ?: klageperiode,
-                        BigDecimal.ZERO,
-                        klagevedtak = true,
-                    ),
+        val beløshistorikkKlage = if (beregnForPerioderEtterKlage) {
+            klageberegningResultat.beregnetBarnebidragPeriodeListe.map {
+                val søknadsbarn = klageberegningResultat.grunnlagListe.hentPersonMedIdent(stønadsid.kravhaver.verdi)!!
+                val erResultatIngenEndring = klageberegningResultat.grunnlagListe.erResultatEndringUnderGrense(søknadsbarn.referanse)
+                BeløpshistorikkPeriodeInternal(
+                    it.periode,
+                    it.resultat.beløp,
+                    resultatkode = when {
+                        erResultatIngenEndring -> Resultatkode.INGEN_ENDRING_UNDER_GRENSE.name
+                        else -> Resultatkode.KOSTNADSBEREGNET_BIDRAG.name
+                    },
+                    klagevedtak = true,
                 )
             }
-            ).sortedBy { it.periode.fom }
+        } else {
+            listOf(
+                BeløpshistorikkPeriodeInternal(
+                    påklagetVedtakVirkningstidspunkt?.let { ÅrMånedsperiode(påklagetVedtakVirkningstidspunkt, klageperiode.fom) } ?: klageperiode,
+                    BigDecimal.ZERO,
+                    klagevedtak = true,
+                ),
+            )
+        }
+
+        val beløshistorikkMedKlage = (this + beløshistorikkKlage).sortedBy { it.periode.fom }
+
         val mutableList = beløshistorikkMedKlage.toMutableList()
         val førsteIndeksår = beløshistorikkMedKlage.finnFørsteIndeksår(stønadsid, beløpshistorikkFørPåklagetVedtak)
         val minYear = minOf(førsteIndeksår, beløshistorikkMedKlage.minOf { it.periode.fom.year })
@@ -588,7 +588,10 @@ class KlageOrkestrator(
 
         for (year in minYear..maxYear) {
             val julyFirst = YearMonth.of(year, 7)
-            val hasPeriodStartingInJuly = beløshistorikkMedKlage.any { it.periode.fom == julyFirst }
+            val hasPeriodStartingInJuly = beløshistorikkMedKlage.any {
+                it.periode.fom == julyFirst &&
+                    (!it.klagevedtak || it.resultatkode != Resultatkode.INGEN_ENDRING_UNDER_GRENSE.name)
+            }
 
             if (!hasPeriodStartingInJuly) {
                 val periodBeforeJuly = beløshistorikkMedKlage.filter { it.periode.fom.isBefore(julyFirst) }.maxByOrNull { it.periode.fom }
@@ -788,8 +791,26 @@ class KlageOrkestrator(
             resultatPeriodeListe.addAll(it.resultat.beregnetBarnebidragPeriodeListe)
             grunnlagListe.addAll(it.resultat.grunnlagListe)
         }
+        // Fjern perioder fra klagevedtaket som overlapper med indeksregulering eller aldersjustering som kommer etter
+        val perioderJustertForIndeksOgAldersjustering = resultatPeriodeListe.groupBy { it.periode.fom }.map { (_, periods) ->
+            if (periods.size > 1) {
+                periods.find { p ->
+                    grunnlagListe.filtrerBasertPåEgenReferanser(
+                        Grunnlagstype.SLUTTBEREGNING_INDEKSREGULERING,
+                        p.grunnlagsreferanseListe,
+                    ).ifEmpty {
+                        grunnlagListe.filtrerBasertPåEgenReferanser(
+                            Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG_ALDERSJUSTERING,
+                            p.grunnlagsreferanseListe,
+                        )
+                    }.isNotEmpty()
+                } ?: periods.first()
+            } else {
+                periods.first()
+            }
+        }
         return BeregnetBarnebidragResultat(
-            beregnetBarnebidragPeriodeListe = sorterOgJusterPerioder(resultatPeriodeListe),
+            beregnetBarnebidragPeriodeListe = sorterOgJusterPerioder(perioderJustertForIndeksOgAldersjustering),
             grunnlagListe = grunnlagListe.distinctBy { it.referanse },
         )
     }

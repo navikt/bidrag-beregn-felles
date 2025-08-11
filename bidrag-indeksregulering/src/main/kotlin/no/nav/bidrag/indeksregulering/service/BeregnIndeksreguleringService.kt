@@ -94,6 +94,7 @@ internal class BeregnIndeksreguleringService : BeregnService() {
                 referanse = opprettSluttberegningreferanse(
                     barnreferanse = gjelderBarnReferanse,
                     periode = resultat.periode,
+                    type = Grunnlagstype.SLUTTBEREGNING_INDEKSREGULERING,
                 ),
                 innhold = POJONode(resultat),
                 gjelderBarnReferanse = gjelderBarnReferanse,
