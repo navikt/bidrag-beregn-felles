@@ -542,29 +542,31 @@ class KlageOrkestrator(
     ): List<BeløpshistorikkPeriodeInternal> {
         if (!beregnForPerioderEtterKlage && this.isEmpty()) return emptyList()
 
-        val beløshistorikkMedKlage = if (beregnForPerioderEtterKlage) {
-            klageberegningResultat.beregnetBarnebidragPeriodeListe.map {
-                val søknadsbarn = klageberegningResultat.grunnlagListe.hentPersonMedIdent(stønadsid.kravhaver.verdi)!!
-                val erResultatIngenEndring = klageberegningResultat.grunnlagListe.erResultatEndringUnderGrense(søknadsbarn.referanse)
-                BeløpshistorikkPeriodeInternal(
-                    it.periode,
-                    it.resultat.beløp,
-                    resultatkode = when {
-                        erResultatIngenEndring -> Resultatkode.INGEN_ENDRING_UNDER_GRENSE.name
-                        else -> Resultatkode.KOSTNADSBEREGNET_BIDRAG.name
-                    },
-                    klagevedtak = true,
+        val beløshistorikkMedKlage = (
+            this + if (beregnForPerioderEtterKlage) {
+                klageberegningResultat.beregnetBarnebidragPeriodeListe.map {
+                    val søknadsbarn = klageberegningResultat.grunnlagListe.hentPersonMedIdent(stønadsid.kravhaver.verdi)!!
+                    val erResultatIngenEndring = klageberegningResultat.grunnlagListe.erResultatEndringUnderGrense(søknadsbarn.referanse)
+                    BeløpshistorikkPeriodeInternal(
+                        it.periode,
+                        it.resultat.beløp,
+                        resultatkode = when {
+                            erResultatIngenEndring -> Resultatkode.INGEN_ENDRING_UNDER_GRENSE.name
+                            else -> Resultatkode.KOSTNADSBEREGNET_BIDRAG.name
+                        },
+                        klagevedtak = true,
+                    )
+                }
+            } else {
+                listOf(
+                    BeløpshistorikkPeriodeInternal(
+                        påklagetVedtakVirkningstidspunkt?.let { ÅrMånedsperiode(påklagetVedtakVirkningstidspunkt, klageperiode.fom) } ?: klageperiode,
+                        BigDecimal.ZERO,
+                        klagevedtak = true,
+                    ),
                 )
             }
-        } else {
-            listOf(
-                BeløpshistorikkPeriodeInternal(
-                    påklagetVedtakVirkningstidspunkt?.let { ÅrMånedsperiode(påklagetVedtakVirkningstidspunkt, klageperiode.fom) } ?: klageperiode,
-                    BigDecimal.ZERO,
-                    klagevedtak = true,
-                ),
-            )
-        }.sortedBy { it.periode.fom }
+            ).sortedBy { it.periode.fom }
         val mutableList = beløshistorikkMedKlage.toMutableList()
         val førsteIndeksår = beløshistorikkMedKlage.finnFørsteIndeksår(stønadsid, beløpshistorikkFørPåklagetVedtak)
         val minYear = minOf(førsteIndeksår, beløshistorikkMedKlage.minOf { it.periode.fom.year })
