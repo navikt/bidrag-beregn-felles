@@ -488,6 +488,7 @@ class KlageOrkestrator(
                                         ResultatFraVedtakGrunnlag(
                                             vedtaksid = komplettVedtak.vedtaksid,
                                             beregnet = false,
+                                            vedtakstidspunkt = komplettVedtak.vedtakstidspunkt,
                                         ),
                                     ),
                                 ),
