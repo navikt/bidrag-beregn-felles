@@ -31,7 +31,7 @@ import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.indeksregulering.BeregnIndeksreguleringApi
-import no.nav.bidrag.indeksregulering.bo.BeregnIndeksreguleringGrunnlag
+import no.nav.bidrag.indeksregulering.service.IndeksreguleringOrkestrator
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.KlageOrkestratorGrunnlag
@@ -84,6 +84,7 @@ internal data class BeregningDataInternal(
     val stønad: Stønadsid,
     val vedtakslisteRelatertTilPåklagetVedtak: Set<Int>,
 )
+
 internal data class BeregnetBarnebidragResultatInternal(
     val resultat: BeregnetBarnebidragResultat,
     val vedtakstype: Vedtakstype,
@@ -98,6 +99,7 @@ internal data class ByggetBeløpshistorikk(
     val stønadDto: StønadDto,
     val grunnlagBeløpshistorikk: GrunnlagDto,
 )
+
 internal data class BeløpshistorikkPeriodeInternal(
     val periode: ÅrMånedsperiode,
     val beløp: BigDecimal?,
@@ -118,7 +120,7 @@ class FinnesEtterfølgendeVedtakMedVirkningstidspunktFørPåklagetVedtak(val ved
 class KlageOrkestrator(
     private val vedtakService: VedtakService,
     private val aldersjusteringOrchestrator: AldersjusteringOrchestrator,
-    private val beregnIndeksreguleringApi: BeregnIndeksreguleringApi,
+    private val indeksreguleringOrkestrator: IndeksreguleringOrkestrator,
     private val identUtils: IdentUtils,
     private val klageOrkestratorHelpers: KlageOrkestratorHelpers,
 ) {
@@ -249,6 +251,7 @@ class KlageOrkestrator(
             )
         }
     }
+
     private fun byggVedtak(
         nyVirkningErEtterOpprinneligVirkning: Boolean,
         klageberegningResultat: BeregnetBarnebidragResultat,
@@ -290,7 +293,7 @@ class KlageOrkestrator(
                 stønad = stønad,
                 vedtakslisteRelatertTilPåklagetVedtak = vedtakslisteRelatertTilPåklagetVedtak,
 
-            )
+                )
 
         else -> emptyList()
     }
@@ -413,7 +416,7 @@ class KlageOrkestrator(
                     gjenopprettetBeløpshistorikk = true,
                     vedtakslisteRelatertTilPåklagetVedtak = vedtakslisteRelatertTilPåklagetVedtak,
 
-                )
+                    )
                     .map {
                         ResultatVedtak(
                             resultat = it.resultat,
@@ -532,6 +535,7 @@ class KlageOrkestrator(
                         beløpshistorikkFørPåklagetVedtak,
                         komplettVedtak.vedtakstidspunkt!!.year,
                     )
+
                 komplettVedtak != null -> {
                     val referanse = "resultatFraVedtak_${komplettVedtak.vedtaksid}"
                     val perioder = it.map {
@@ -562,6 +566,7 @@ class KlageOrkestrator(
                         beregnetFraDato = perioder.minOf { it.periode.fom }.atDay(1),
                     )
                 }
+
                 else -> null
             }
             resultat?.let {
@@ -839,8 +844,8 @@ class KlageOrkestrator(
                     stønadstype = stønadstype,
                     søknadsbarnReferanse = søknadsbarnReferanse,
                     grunnlagListe =
-                    klageberegningResultat.grunnlagListe + beløpshistorikkFørPåklagetVedtak +
-                        delberegningIndeksreguleringPrivatAvtalePeriodeResultat,
+                        klageberegningResultat.grunnlagListe + beløpshistorikkFørPåklagetVedtak +
+                            delberegningIndeksreguleringPrivatAvtalePeriodeResultat,
                 ),
                 åpenSluttperiode = åpenSluttperiode,
             )
@@ -1041,7 +1046,7 @@ class KlageOrkestrator(
             fraPeriode = klageperiode.til,
             ignorerVedtaksid = påklagetVedtakId,
 
-        )
+            )
         val vedtakEtterPåklagetVedtak = vedtaksliste.sortedBy {
             it.vedtakstidspunkt
         }.filter {
@@ -1073,13 +1078,10 @@ class KlageOrkestrator(
         )
 
         if (nesteIndeksår > Year.now().value) return null
-        val indeksresultat = beregnIndeksreguleringApi.beregnIndeksregulering(
-            BeregnIndeksreguleringGrunnlag(
-                indeksregulerÅr = Year.of(nesteIndeksår),
-                stønadsid = stønad,
-                personobjektListe = grunnlagsliste,
-                beløpshistorikkListe = grunnlagsliste,
-            ),
+        val indeksresultat = indeksreguleringOrkestrator.utførIndeksreguleringBarnebidrag(
+            stønad = stønad,
+            indeksreguleresForÅr = Year.of(nesteIndeksår),
+            grunnlagListe = grunnlagsliste,
         )
         val sluttberegning = indeksresultat.filtrerOgKonverterBasertPåEgenReferanse<SluttberegningIndeksregulering>(
             Grunnlagstype.SLUTTBEREGNING_INDEKSREGULERING,
@@ -1100,6 +1102,7 @@ class KlageOrkestrator(
             beregnetFraDato = LocalDate.of(nesteIndeksår, 7, 1),
         )
     }
+
     private fun utførAldersjustering(
         beregnBasertPåVedtak: BeregnBasertPåVedtak?,
         aldersjusteresForÅr: Int,
@@ -1204,6 +1207,7 @@ class KlageOrkestrator(
             )
         }
     }
+
     private fun BeregnetBarnebidragResultat.tilVedtakDto(stønad: Stønadsid) = VedtakDto(
         type = Vedtakstype.KLAGE,
         kilde = Vedtakskilde.AUTOMATISK,

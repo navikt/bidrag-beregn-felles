@@ -7,7 +7,7 @@ import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.indeksregulering.BeregnIndeksreguleringApi
-import no.nav.bidrag.indeksregulering.bo.BeregnIndeksreguleringGrunnlag
+import no.nav.bidrag.indeksregulering.service.BeregnIndeksreguleringGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningIndeksregulering
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
@@ -54,7 +54,7 @@ internal class BeregnIndeksreguleringApiTest {
 
     private fun utførBeregningerOgEvaluerResultatIndeksregulering(): List<SluttberegningIndeksregulering> {
         val request = lesFilOgByggRequest(filnavn)
-        val resultat = api.beregnIndeksregulering(request)
+        val resultat = api.beregnIndeksreguleringBarnebidrag(request)
         printJson(resultat)
 
         val alleReferanser = hentAlleReferanser(resultat)
