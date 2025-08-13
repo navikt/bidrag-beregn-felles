@@ -6,6 +6,7 @@ import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningPersonConsumer
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningSakConsumer
 import no.nav.bidrag.beregn.barnebidrag.utils.AldersjusteringUtils
+import no.nav.bidrag.beregn.barnebidrag.utils.AldersjusteringUtils.finnBarnAlder
 import no.nav.bidrag.beregn.barnebidrag.utils.aldersjusteringAldersgrupper
 import no.nav.bidrag.beregn.barnebidrag.utils.hentPersonForNyesteIdent
 import no.nav.bidrag.beregn.barnebidrag.utils.hentSisteLøpendePeriode
@@ -133,7 +134,10 @@ class AldersjusteringOrchestrator(
 
             if (!AldersjusteringUtils.skalAldersjusteres(fødselsdatoBarn, aldersjusteresForÅr)) {
                 log.warn {
-                    "Barn som er født $fødselsdatoBarn skal ikke alderjusteres for år $aldersjusteresForÅr. " +
+                    "Barn som er født $fødselsdatoBarn med alder ${finnBarnAlder(
+                        fødselsdatoBarn,
+                        aldersjusteresForÅr,
+                    )} skal ikke alderjusteres for år $aldersjusteresForÅr. " +
                         "Aldersgruppene for aldersjustering er $aldersjusteringAldersgrupper"
                 }
                 skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.IKKE_ALDERSGRUPPE_FOR_ALDERSJUSTERING)

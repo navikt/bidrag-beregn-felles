@@ -3,6 +3,7 @@ package no.nav.bidrag.beregn.barnebidrag.utils
 import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.barnebidrag.service.ByggetBeløpshistorikk
 import no.nav.bidrag.beregn.barnebidrag.service.VedtakService
+import no.nav.bidrag.beregn.barnebidrag.service.klageFeilet
 import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -18,15 +19,16 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnl
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
+import no.nav.bidrag.transport.behandling.felles.grunnlag.erResultatEndringUnderGrense
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.finnOgKonverterGrunnlagSomErReferertFraGrunnlagsreferanseListe
 import no.nav.bidrag.transport.behandling.felles.grunnlag.hentAllePersoner
 import no.nav.bidrag.transport.behandling.felles.grunnlag.hentPersonMedIdent
+import no.nav.bidrag.transport.behandling.felles.grunnlag.innholdTilObjekt
 import no.nav.bidrag.transport.behandling.felles.grunnlag.tilGrunnlagstype
+import no.nav.bidrag.transport.behandling.vedtak.response.VedtakDto
 import no.nav.bidrag.transport.behandling.vedtak.response.erIndeksEllerAldersjustering
-import no.nav.bidrag.transport.behandling.vedtak.response.erResultatEndringUnderGrense
 import no.nav.bidrag.transport.behandling.vedtak.response.finnStønadsendring
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.YearMonth
 
@@ -40,6 +42,14 @@ class KlageOrkestratorHelpers(private val vedtakService: VedtakService, private 
             periode
         }
     }
+
+    fun finnBeløpshistorikk(vedtak: VedtakDto, stønad: Stønadsid, personobjekter: List<GrunnlagDto>? = null): BeløpshistorikkGrunnlag =
+        vedtak.finnBeløpshistorikkGrunnlag(stønad, identUtils)
+            ?: vedtakService.hentBeløpshistorikkTilGrunnlag(
+                stønadsid = stønad,
+                personer = personobjekter ?: vedtak.grunnlagListe.hentAllePersoner() as List<GrunnlagDto>,
+                tidspunkt = vedtak.vedtakstidspunkt!!.minusSeconds(1),
+            ).innholdTilObjekt<BeløpshistorikkGrunnlag>()
 
     internal fun byggBeløpshistorikk(
         historikk: List<BeregnetBarnebidragResultat>,
@@ -100,12 +110,11 @@ class KlageOrkestratorHelpers(private val vedtakService: VedtakService, private 
                     periodeGjortUgyldigAvVedtaksid = null,
                 )
             }
-        val sistePeriode = perioder.maxBy { it.periode.fom }
+        val sistePeriode = perioder.maxByOrNull { it.periode.fom }
         val sisteRelevantePeriode = perioder.sortedBy { it.periode.fom }
             .lastOrNull { it.resultatkode != Resultatkode.INGEN_ENDRING_UNDER_GRENSE.name }
         val nesteIndeksår = when {
-            sisteRelevantePeriode == null -> sistePeriode.periode.til?.year ?: sistePeriode.periode.fom.year
-            sisteRelevantePeriode.periode.fom.monthValue < 7 -> sisteRelevantePeriode.periode.fom.year
+            sisteRelevantePeriode == null -> sistePeriode?.periode?.til?.year ?: sistePeriode?.periode?.fom?.year ?: YearMonth.now().year
             else -> sisteRelevantePeriode.periode.fom.year + 1
         }
         val stønadDto = StønadDto(
@@ -145,8 +154,8 @@ class KlageOrkestratorHelpers(private val vedtakService: VedtakService, private 
         innhold = POJONode(
             Person(
                 ident = ident,
-                navn = "",
-                fødselsdato = LocalDate.now(),
+                navn = null,
+                fødselsdato = identUtils.hentFødselsdato(ident) ?: klageFeilet("Fant ikke fødselsdato for person $ident med rolle $rolle"),
             ),
         ),
     )

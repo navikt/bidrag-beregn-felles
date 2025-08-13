@@ -8,6 +8,8 @@ import no.nav.bidrag.beregn.core.util.justerVedtakstidspunkt
 import no.nav.bidrag.beregn.vedtak.Vedtaksfiltrering
 import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.commons.util.secureLogger
+import no.nav.bidrag.domene.enums.vedtak.Beslutningstype
+import no.nav.bidrag.domene.enums.vedtak.Innkrevingstype
 import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.transport.behandling.belopshistorikk.request.HentStønadHistoriskRequest
 import no.nav.bidrag.transport.behandling.belopshistorikk.request.HentStønadRequest
@@ -86,7 +88,11 @@ class VedtakService(
                 it.vedtaksid != ignorerVedtaksid &&
                 vedtakslisteJustert.hentOpprinneligPåklagetVedtak(it) != ignorerVedtaksid
         }
-            .filter { it.stønadsendring.periodeListe.isNotEmpty() }
+            .filter {
+                it.stønadsendring.periodeListe.isNotEmpty() &&
+                    it.stønadsendring.beslutning == Beslutningstype.ENDRING &&
+                    it.stønadsendring.innkreving == Innkrevingstype.MED_INNKREVING
+            }
             .groupBy { vedtak ->
                 val perioder = vedtak.stønadsendring.periodeListe
                 perioder.minOf { it.periode.fom } to perioder.maxOf { it.periode.fom }

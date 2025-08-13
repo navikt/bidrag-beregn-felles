@@ -19,10 +19,10 @@
         <jackson.version>2.19.2</jackson.version>
         <kotest.version>5.9.1</kotest.version>
         <swagger.version>2.2.34</swagger.version>
-        <bidrag-felles.version>2025.08.08.074624</bidrag-felles.version>
+        <bidrag-felles.version>2025.08.12.151746</bidrag-felles.version>
         <ktlint.version>1.7.1</ktlint.version>
         <spring-boot.version>3.5.4</spring-boot.version>
-        <kotlin-logging-jvm.version>7.0.7</kotlin-logging-jvm.version>
+        <kotlin-logging-jvm.version>7.0.12</kotlin-logging-jvm.version>
         <mockito-kotlin.version>5.4.0</mockito-kotlin.version>
         <mockk.version>1.14.5</mockk.version>
         <wiremock.version>3.0.1</wiremock.version>

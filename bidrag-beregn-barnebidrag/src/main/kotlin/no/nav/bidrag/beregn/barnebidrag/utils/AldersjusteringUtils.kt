@@ -11,8 +11,10 @@ import java.time.YearMonth
 val aldersjusteringAldersgrupper = listOf(6, 11, 15)
 
 object AldersjusteringUtils {
+
+    fun finnBarnAlder(fødselsdato: LocalDate, aldersjusteresForÅr: Int): Int = aldersjusteresForÅr - fødselsdato.year
     fun skalAldersjusteres(fødselsdato: LocalDate, aldersjusteresForÅr: Int = YearMonth.now().year): Boolean {
-        val alder = aldersjusteresForÅr - fødselsdato.year
+        val alder = finnBarnAlder(fødselsdato, aldersjusteresForÅr)
         return aldersjusteringAldersgrupper.contains(alder)
     }
     fun opprettAldersjusteringDetaljerGrunnlag(
