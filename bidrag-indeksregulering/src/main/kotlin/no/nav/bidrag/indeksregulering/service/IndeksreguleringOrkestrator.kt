@@ -1,16 +1,14 @@
 package no.nav.bidrag.indeksregulering.service
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import no.nav.bidrag.beregn.barnebidrag.service.VedtakService
-import no.nav.bidrag.beregn.barnebidrag.utils.tilDto
 import no.nav.bidrag.beregn.core.bo.SjablonSjablontallBeregningGrunnlag
-import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.beløp.Beløp
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.indeksregulering.BeregnIndeksreguleringApi
+import no.nav.bidrag.transport.behandling.felles.grunnlag.BaseGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
@@ -40,21 +38,23 @@ data class IndeksregulerPeriodeGrunnlag(
     val referanseliste: List<String> = emptyList(),
 )
 
-data class Beløpshistorikk(
-    val referanse: String,
-    val perioder: List<BeløpshistorikkPeriode>,
+fun BaseGrunnlag.tilDto() = GrunnlagDto(
+    referanse,
+    type,
+    innhold,
+    grunnlagsreferanseListe,
+    gjelderReferanse,
+    gjelderBarnReferanse,
 )
+
+data class Beløpshistorikk(val referanse: String, val perioder: List<BeløpshistorikkPeriode>)
 
 @Service
 @Import(BeregnIndeksreguleringApi::class, VedtakService::class)
-class IndeksreguleringOrkestrator(
-    private val identUtils: IdentUtils,
-    private val vedtakService: VedtakService,
-    private val beregnIndeksreguleringApi: BeregnIndeksreguleringApi,
-) {
+class IndeksreguleringOrkestrator(private val vedtakService: VedtakService, private val beregnIndeksreguleringApi: BeregnIndeksreguleringApi) {
     fun utførIndeksreguleringBarnebidrag(
-        stønad: Stønadsid,
         indeksreguleresForÅr: Year = Year.now(),
+        stønad: Stønadsid,
         grunnlagListe: List<GrunnlagDto> = emptyList(),
     ): List<GrunnlagDto> {
         try {
@@ -85,13 +85,11 @@ class IndeksreguleringOrkestrator(
         }
     }
 
-
     private fun byggGrunnlagForBeregning(
         stønad: Stønadsid,
         indeksregulerForÅr: Year,
         grunnlagListe: List<GrunnlagDto> = emptyList(),
     ): BeregnIndeksreguleringGrunnlag {
-
         val personobjektListe = grunnlagListe.hentAllePersoner().map { it.tilDto() }
 
         val beløpshistorikkGrunnlag = grunnlagListe.filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(
@@ -100,7 +98,7 @@ class IndeksreguleringOrkestrator(
             vedtakService.hentBeløpshistorikkTilGrunnlag(
                 stønadsid = stønad,
                 personer = personobjektListe,
-                tidspunkt = LocalDateTime.now().withYear(indeksregulerForÅr.value)
+                tidspunkt = LocalDateTime.now().withYear(indeksregulerForÅr.value),
             )
         }
 

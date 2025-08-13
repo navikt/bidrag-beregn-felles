@@ -31,8 +31,6 @@ import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
 import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
-import no.nav.bidrag.indeksregulering.BeregnIndeksreguleringApi
-import no.nav.bidrag.indeksregulering.service.BeregnIndeksreguleringGrunnlag
 import no.nav.bidrag.indeksregulering.service.IndeksreguleringOrkestrator
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
@@ -129,7 +127,13 @@ class FinnesEtterfølgendeVedtakMedVirkningstidspunktFørPåklagetVedtak(val ved
     RuntimeException("Det finnes etterfølgende vedtak $vedtak")
 
 @Service
-@Import(VedtakService::class, AldersjusteringOrchestrator::class, BeregnIndeksreguleringApi::class, IdentUtils::class, KlageOrkestratorHelpers::class)
+@Import(
+    VedtakService::class,
+    AldersjusteringOrchestrator::class,
+    IndeksreguleringOrkestrator::class,
+    IdentUtils::class,
+    KlageOrkestratorHelpers::class,
+)
 class KlageOrkestrator(
     private val vedtakService: VedtakService,
     private val aldersjusteringOrchestrator: AldersjusteringOrchestrator,
@@ -356,7 +360,7 @@ class KlageOrkestrator(
                     delvedtak = this,
                     gjenopprettetBeløpshistorikk = true,
 
-                    )
+                )
                     .map {
                         ResultatVedtak(
                             resultat = it.resultat,
@@ -678,7 +682,7 @@ class KlageOrkestrator(
                 beløp = it.beløp,
                 vedtaksid = it.vedtaksid,
 
-                )
+            )
         }.distinct()
             .ifEmpty {
                 beløpshistorikkFørPåklagetVedtak.beløpshistorikk
@@ -882,8 +886,8 @@ class KlageOrkestrator(
                     stønadstype = stønadstype,
                     søknadsbarnReferanse = søknadsbarnReferanse,
                     grunnlagListe =
-                        klageberegningResultat.grunnlagListe + beløpshistorikkFørPåklagetVedtak +
-                            delberegningIndeksreguleringPrivatAvtalePeriodeResultat,
+                    klageberegningResultat.grunnlagListe + beløpshistorikkFørPåklagetVedtak +
+                        delberegningIndeksreguleringPrivatAvtalePeriodeResultat,
                 ),
                 åpenSluttperiode = åpenSluttperiode,
             )
@@ -1080,7 +1084,7 @@ class KlageOrkestrator(
             fraPeriode = klageperiode.til,
             ignorerVedtaksid = context.påklagetVedtakId,
 
-            )
+        )
         val vedtakEtterPåklagetVedtak = vedtaksliste.sortedBy {
             it.vedtakstidspunkt
         }.filter {

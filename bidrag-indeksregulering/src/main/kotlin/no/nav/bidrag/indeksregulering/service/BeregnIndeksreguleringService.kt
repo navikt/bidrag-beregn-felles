@@ -256,8 +256,6 @@ internal class BeregnIndeksreguleringService : BeregnService() {
     }
 }
 
-
-
 fun BeregnIndeksreguleringGrunnlag.valider() {
     requireNotNull(indeksregulerForÅr) { "indeksregulerÅr kan ikke være null" }
     requireNotNull(stønadsid) { "stønadsid kan ikke være null" }
