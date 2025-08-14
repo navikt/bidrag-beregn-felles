@@ -1,7 +1,7 @@
 package no.nav.bidrag.beregn.særbidrag.service.mapper
 
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
-import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
+import no.nav.bidrag.beregn.core.mapper.CoreMapper
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.BeregnBPsAndelSærbidragGrunnlagCore
 import no.nav.bidrag.beregn.særbidrag.core.bpsandelsærbidrag.dto.UtgiftPeriodeCore
 import no.nav.bidrag.beregn.særbidrag.core.felles.bo.SjablonListe

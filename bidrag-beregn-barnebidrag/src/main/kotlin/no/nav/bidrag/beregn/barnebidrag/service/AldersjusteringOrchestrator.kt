@@ -8,10 +8,12 @@ import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningSakConsumer
 import no.nav.bidrag.beregn.barnebidrag.utils.AldersjusteringUtils
 import no.nav.bidrag.beregn.barnebidrag.utils.AldersjusteringUtils.finnBarnAlder
 import no.nav.bidrag.beregn.barnebidrag.utils.aldersjusteringAldersgrupper
-import no.nav.bidrag.beregn.barnebidrag.utils.hentPersonForNyesteIdent
-import no.nav.bidrag.beregn.barnebidrag.utils.hentSisteLøpendePeriode
-import no.nav.bidrag.beregn.barnebidrag.utils.tilGrunnlag
 import no.nav.bidrag.beregn.core.exception.AldersjusteringLavereEnnEllerLikLøpendeBidragException
+import no.nav.bidrag.beregn.core.mapper.tilGrunnlag
+import no.nav.bidrag.beregn.core.service.SisteManuelleVedtak
+import no.nav.bidrag.beregn.core.service.VedtakService
+import no.nav.bidrag.beregn.core.util.hentPersonForNyesteIdent
+import no.nav.bidrag.beregn.core.util.hentSisteLøpendePeriode
 import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.beregning.Resultatkode

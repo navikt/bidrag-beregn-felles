@@ -2,6 +2,7 @@ package no.nav.bidrag.indeksregulering.service
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.bidrag.beregn.core.bo.SjablonSjablontallBeregningGrunnlag
+import no.nav.bidrag.beregn.core.service.VedtakService
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.beløp.Beløp
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -24,7 +25,7 @@ import kotlin.Exception
 private val log = KotlinLogging.logger {}
 
 data class BeregnIndeksreguleringGrunnlag(
-    val indeksregulerForÅr: Year,
+    val indeksreguleresForÅr: Year,
     val stønadsid: Stønadsid,
     val personobjektListe: List<GrunnlagDto> = emptyList(),
     val beløpshistorikkListe: List<GrunnlagDto> = emptyList(),
@@ -103,7 +104,7 @@ class IndeksreguleringOrkestrator(private val vedtakService: VedtakService, priv
         }
 
         return BeregnIndeksreguleringGrunnlag(
-            indeksregulerForÅr = indeksregulerForÅr,
+            indeksreguleresForÅr = indeksregulerForÅr,
             stønadsid = stønad,
             personobjektListe = personobjektListe,
             beløpshistorikkListe = listOf(beløpshistorikkGrunnlag),

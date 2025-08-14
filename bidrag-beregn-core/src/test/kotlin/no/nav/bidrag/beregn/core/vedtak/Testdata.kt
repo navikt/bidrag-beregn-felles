@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.vedtak
+package no.nav.bidrag.beregn.core.vedtak
 
 import no.nav.bidrag.domene.enums.rolle.Rolletype
 import no.nav.bidrag.domene.enums.vedtak.BehandlingsrefKilde

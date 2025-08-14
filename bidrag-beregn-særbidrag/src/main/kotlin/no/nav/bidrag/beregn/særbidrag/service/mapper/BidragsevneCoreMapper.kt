@@ -2,7 +2,7 @@ package no.nav.bidrag.beregn.særbidrag.service.mapper
 
 import no.nav.bidrag.beregn.core.BeregnApi
 import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
-import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
+import no.nav.bidrag.beregn.core.mapper.CoreMapper
 import no.nav.bidrag.beregn.særbidrag.core.bidragsevne.dto.BeregnBidragsevneGrunnlagCore
 import no.nav.bidrag.beregn.særbidrag.core.felles.bo.SjablonListe
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype

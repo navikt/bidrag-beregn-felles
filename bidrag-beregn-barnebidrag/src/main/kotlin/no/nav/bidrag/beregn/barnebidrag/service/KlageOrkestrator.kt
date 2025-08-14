@@ -11,11 +11,12 @@ import no.nav.bidrag.beregn.barnebidrag.service.BeregnEndringSjekkGrenseService.
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnIndeksreguleringPrivatAvtaleService.delberegningPrivatAvtalePeriode
 import no.nav.bidrag.beregn.barnebidrag.utils.AldersjusteringUtils.opprettAldersjusteringDetaljerGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.utils.KlageOrkestratorHelpers
-import no.nav.bidrag.beregn.barnebidrag.utils.hentSisteLøpendePeriode
-import no.nav.bidrag.beregn.barnebidrag.utils.tilDto
 import no.nav.bidrag.beregn.barnebidrag.utils.toYearMonth
 import no.nav.bidrag.beregn.barnebidrag.utils.vedtaksidAutomatiskJobb
 import no.nav.bidrag.beregn.barnebidrag.utils.vedtaksidBeregnetBeløpshistorikk
+import no.nav.bidrag.beregn.core.mapper.tilDto
+import no.nav.bidrag.beregn.core.service.VedtakService
+import no.nav.bidrag.beregn.core.util.hentSisteLøpendePeriode
 import no.nav.bidrag.beregn.core.util.justerVedtakstidspunkt
 import no.nav.bidrag.beregn.core.util.justerVedtakstidspunktVedtak
 import no.nav.bidrag.commons.util.IdentUtils

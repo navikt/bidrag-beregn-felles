@@ -12,10 +12,8 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
-import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningBeløpshistorikkConsumer
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningPersonConsumer
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningSakConsumer
-import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningVedtakConsumer
 import no.nav.bidrag.beregn.barnebidrag.testdata.opprettSakRespons
 import no.nav.bidrag.beregn.barnebidrag.testdata.opprettStønadDto
 import no.nav.bidrag.beregn.barnebidrag.testdata.opprettStønadPeriodeDto
@@ -25,7 +23,10 @@ import no.nav.bidrag.beregn.barnebidrag.testdata.personIdentBidragspliktig
 import no.nav.bidrag.beregn.barnebidrag.testdata.personIdentSøknadsbarn1
 import no.nav.bidrag.beregn.barnebidrag.testdata.personIdentSøknadsbarn2
 import no.nav.bidrag.beregn.barnebidrag.testdata.saksnummer
-import no.nav.bidrag.beregn.vedtak.Vedtaksfiltrering
+import no.nav.bidrag.beregn.core.service.VedtakService
+import no.nav.bidrag.beregn.core.service.external.BeregningBeløpshistorikkConsumer
+import no.nav.bidrag.beregn.core.service.external.BeregningVedtakConsumer
+import no.nav.bidrag.beregn.core.vedtak.Vedtaksfiltrering
 import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.commons.web.mock.hentFil
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider

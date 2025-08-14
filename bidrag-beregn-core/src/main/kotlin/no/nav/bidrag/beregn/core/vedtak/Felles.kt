@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.vedtak
+package no.nav.bidrag.beregn.core.vedtak
 
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakForStønad
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakPeriodeDto

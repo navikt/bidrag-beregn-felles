@@ -1,12 +1,12 @@
 {
   "indeksreguleresForÅr": "2025",
-  "stønad": {
+  "stønadsid": {
     "type": "BIDRAG",
     "sak": "0123456",
     "skyldner": "33333333333",
     "kravhaver": "11111111110"
   },
-  "grunnlagListe": [
+  "personobjektListe": [
     {
       "referanse": "Person_Søknadsbarn",
       "type": "PERSON_SØKNADSBARN",
@@ -39,7 +39,15 @@
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": null
-    },
+    }
+  ],
+  "stønadsid": {
+    "type": "BIDRAG",
+    "kravhaver": "Trengende Søknadsbarn",
+    "skyldner": "Skyldneren",
+    "sak": "0123456"
+  },
+  "beløpshistorikkListe": [
     {
       "referanse": "Beløpshistorikk_Grunnlag_Person_Bidragsmottaker_Person_Søknadsbarn_202101",
       "type": "BELØPSHISTORIKK_BIDRAG",
@@ -67,4 +75,5 @@
       "gjelderBarnReferanse": "Person_Søknadsbarn",
       "gjelderReferanse": "Person_Bidragsmottaker"
     }
-    }
+  ]
+}

@@ -9,6 +9,7 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import no.nav.bidrag.beregn.barnebidrag.felles.FellesTest
 import no.nav.bidrag.beregn.barnebidrag.utils.KlageOrkestratorHelpers
+import no.nav.bidrag.beregn.core.service.VedtakService
 import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -17,7 +18,7 @@ import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Saksnummer
 import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
-import no.nav.bidrag.indeksregulering.BeregnIndeksreguleringApi
+import no.nav.bidrag.indeksregulering.service.IndeksreguleringOrkestrator
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.KlageOrkestratorGrunnlag
@@ -49,7 +50,7 @@ internal class KlageOrkestratorTest : FellesTest() {
     private lateinit var aldersjusteringOrchestrator: AldersjusteringOrchestrator
 
     @MockK(relaxed = true)
-    private lateinit var beregnIndeksreguleringApi: BeregnIndeksreguleringApi
+    private lateinit var indeksreguleringOrkestrator: IndeksreguleringOrkestrator
 
     @MockK(relaxed = true)
     private lateinit var identUtils: IdentUtils
@@ -57,7 +58,7 @@ internal class KlageOrkestratorTest : FellesTest() {
     @BeforeEach
     fun init() {
         val klageOrkestratorHelpers = KlageOrkestratorHelpers(vedtakService, identUtils)
-        orkestrator = KlageOrkestrator(vedtakService, aldersjusteringOrchestrator, beregnIndeksreguleringApi, klageOrkestratorHelpers)
+        orkestrator = KlageOrkestrator(vedtakService, aldersjusteringOrchestrator, indeksreguleringOrkestrator, klageOrkestratorHelpers)
         stubSjablonProvider()
     }
 

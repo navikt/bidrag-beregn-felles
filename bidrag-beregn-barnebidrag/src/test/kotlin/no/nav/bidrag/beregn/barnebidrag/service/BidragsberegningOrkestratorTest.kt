@@ -8,10 +8,11 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
 import no.nav.bidrag.beregn.barnebidrag.felles.FellesTest
-import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningBeløpshistorikkConsumer
-import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningVedtakConsumer
 import no.nav.bidrag.beregn.barnebidrag.utils.KlageOrkestratorHelpers
-import no.nav.bidrag.beregn.vedtak.Vedtaksfiltrering
+import no.nav.bidrag.beregn.core.service.VedtakService
+import no.nav.bidrag.beregn.core.service.external.BeregningBeløpshistorikkConsumer
+import no.nav.bidrag.beregn.core.service.external.BeregningVedtakConsumer
+import no.nav.bidrag.beregn.core.vedtak.Vedtaksfiltrering
 import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.beregning.Beregningstype
@@ -20,7 +21,7 @@ import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Saksnummer
 import no.nav.bidrag.domene.sak.Stønadsid
-import no.nav.bidrag.indeksregulering.BeregnIndeksreguleringApi
+import no.nav.bidrag.indeksregulering.service.IndeksreguleringOrkestrator
 import no.nav.bidrag.transport.behandling.belopshistorikk.request.HentStønadHistoriskRequest
 import no.nav.bidrag.transport.behandling.belopshistorikk.request.HentStønadRequest
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
@@ -59,7 +60,7 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
     private lateinit var aldersjusteringOrchestrator: AldersjusteringOrchestrator
 
     @MockK(relaxed = true)
-    private lateinit var beregnIndeksreguleringApi: BeregnIndeksreguleringApi
+    private lateinit var indeksreguleringOrkestrator: IndeksreguleringOrkestrator
 
     private lateinit var barnebidragApi: BeregnBarnebidragApi
     private lateinit var klageOrkestrator: KlageOrkestrator
@@ -80,7 +81,7 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
             vedtakFilter = Vedtaksfiltrering(),
             identUtils = identUtils,
         )
-        klageOrkestrator = KlageOrkestrator(vedtakService, aldersjusteringOrchestrator, beregnIndeksreguleringApi, klageOrkestratorHelpers)
+        klageOrkestrator = KlageOrkestrator(vedtakService, aldersjusteringOrchestrator, indeksreguleringOrkestrator, klageOrkestratorHelpers)
         bidragsberegningOrkestrator = BidragsberegningOrkestrator(
             barnebidragApi = barnebidragApi,
             klageOrkestrator = klageOrkestrator,

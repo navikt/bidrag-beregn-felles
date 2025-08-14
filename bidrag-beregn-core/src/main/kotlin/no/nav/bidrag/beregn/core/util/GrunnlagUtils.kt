@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.barnebidrag.utils
+package no.nav.bidrag.beregn.core.util
 
 import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.domene.ident.Personident

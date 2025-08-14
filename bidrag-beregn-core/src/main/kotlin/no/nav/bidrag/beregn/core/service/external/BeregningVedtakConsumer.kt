@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.barnebidrag.service.external
+package no.nav.bidrag.beregn.core.service.external
 
 import no.nav.bidrag.transport.behandling.vedtak.request.HentVedtakForStønadRequest
 import no.nav.bidrag.transport.behandling.vedtak.response.HentVedtakForStønadResponse

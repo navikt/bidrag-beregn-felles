@@ -1,6 +1,7 @@
-package no.nav.bidrag.beregn.barnebidrag.utils
+package no.nav.bidrag.beregn.core.mapper
 
 import com.fasterxml.jackson.databind.node.POJONode
+import no.nav.bidrag.beregn.core.util.hentPersonForNyesteIdent
 import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.vedtak.Stønadstype
@@ -27,6 +28,7 @@ fun BaseGrunnlag.tilDto() = GrunnlagDto(
     gjelderReferanse,
     gjelderBarnReferanse,
 )
+
 fun VedtakDto.finnBeløpshistorikkGrunnlag(stønad: Stønadsid, identUtils: IdentUtils): BeløpshistorikkGrunnlag? {
     val grunnlagstype = when (stønad.type) {
         Stønadstype.BIDRAG18AAR -> Grunnlagstype.BELØPSHISTORIKK_BIDRAG_18_ÅR
@@ -37,6 +39,7 @@ fun VedtakDto.finnBeløpshistorikkGrunnlag(stønad: Stønadsid, identUtils: Iden
     return grunnlagListe.filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(grunnlagType = grunnlagstype)
         .firstOrNull { it.gjelderBarnReferanse == søknadsbarn.referanse }?.innhold
 }
+
 fun StønadDto?.tilGrunnlag(personer: List<GrunnlagDto>, stønadsid: Stønadsid, identUtils: IdentUtils): GrunnlagDto {
     val grunnlagstype =
         when (stønadsid.type) {

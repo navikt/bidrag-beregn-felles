@@ -1,11 +1,11 @@
-package no.nav.bidrag.beregn.barnebidrag.service
+package no.nav.bidrag.beregn.core.service
 
-import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningBeløpshistorikkConsumer
-import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningVedtakConsumer
-import no.nav.bidrag.beregn.barnebidrag.utils.hentSisteLøpendePeriode
-import no.nav.bidrag.beregn.barnebidrag.utils.tilGrunnlag
+import no.nav.bidrag.beregn.core.mapper.tilGrunnlag
+import no.nav.bidrag.beregn.core.service.external.BeregningBeløpshistorikkConsumer
+import no.nav.bidrag.beregn.core.service.external.BeregningVedtakConsumer
+import no.nav.bidrag.beregn.core.util.hentSisteLøpendePeriode
 import no.nav.bidrag.beregn.core.util.justerVedtakstidspunkt
-import no.nav.bidrag.beregn.vedtak.Vedtaksfiltrering
+import no.nav.bidrag.beregn.core.vedtak.Vedtaksfiltrering
 import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.vedtak.Beslutningstype
@@ -22,6 +22,7 @@ import no.nav.bidrag.transport.behandling.vedtak.response.VedtakForStønad
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.time.YearMonth
+import kotlin.collections.plus
 
 data class SisteManuelleVedtak(val vedtaksId: Int, val vedtak: VedtakDto)
 

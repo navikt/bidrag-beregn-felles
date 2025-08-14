@@ -1,31 +1,16 @@
-package no.nav.bidrag.beregn.vedtak
+package no.nav.bidrag.beregn.core.vedtak
 
 import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import no.nav.bidrag.beregn.vedtak.Beløp.B1000
-import no.nav.bidrag.beregn.vedtak.Beløp.B1070
-import no.nav.bidrag.beregn.vedtak.Beløp.B1200
-import no.nav.bidrag.beregn.vedtak.Beløp.B1300
-import no.nav.bidrag.beregn.vedtak.Beløp.B800
-import no.nav.bidrag.beregn.vedtak.Årstall.R10
-import no.nav.bidrag.beregn.vedtak.Årstall.R12
-import no.nav.bidrag.beregn.vedtak.Årstall.Y2K14
-import no.nav.bidrag.beregn.vedtak.Årstall.Y2K16
-import no.nav.bidrag.beregn.vedtak.Årstall.Y2K18
-import no.nav.bidrag.beregn.vedtak.Årstall.Y2K19
-import no.nav.bidrag.beregn.vedtak.Årstall.Y2K20
-import no.nav.bidrag.beregn.vedtak.Årstall.Y2K22
-import no.nav.bidrag.beregn.vedtak.Årstall.Y2K23
-import no.nav.bidrag.beregn.vedtak.Årstall.Y2K24
 import no.nav.bidrag.domene.enums.vedtak.Beslutningstype
 import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.enums.vedtak.Vedtakskilde
 import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
+import org.junit.Test
 import org.junit.jupiter.api.Disabled
 import java.time.Year
-import kotlin.test.Test
 
 class VedtaksfiltreringTest {
 
@@ -36,10 +21,10 @@ class VedtaksfiltreringTest {
         // gitt
         val vedtakssett = oppretteVedtakssett(
             setOf(
-                OppretteVedtakRequest(Y2K20, Y2K22, B1000, Beslutningsårsak.INDEKSREGULERING),
-                OppretteVedtakRequest(Y2K22, null, B1200, Beslutningsårsak.INDEKSREGULERING),
-                OppretteVedtakRequest(Y2K23, Y2K24, B1200, Beslutningsårsak.INDEKSREGULERING),
-                OppretteVedtakRequest(Y2K24, null, B1200, Beslutningsårsak.INDEKSREGULERING),
+                OppretteVedtakRequest(Årstall.Y2K20, Årstall.Y2K22, Beløp.B1000, Beslutningsårsak.INDEKSREGULERING),
+                OppretteVedtakRequest(Årstall.Y2K22, null, Beløp.B1200, Beslutningsårsak.INDEKSREGULERING),
+                OppretteVedtakRequest(Årstall.Y2K23, Årstall.Y2K24, Beløp.B1200, Beslutningsårsak.INDEKSREGULERING),
+                OppretteVedtakRequest(Årstall.Y2K24, null, Beløp.B1200, Beslutningsårsak.INDEKSREGULERING),
             ),
         )
 
@@ -55,10 +40,10 @@ class VedtaksfiltreringTest {
         // gitt
         val vedtakssett = oppretteVedtakssett(
             setOf(
-                OppretteVedtakRequest(Y2K20, Y2K22, B1000, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
-                OppretteVedtakRequest(Y2K22, null, B1200, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG, Stønadstype.OPPFOSTRINGSBIDRAG),
-                OppretteVedtakRequest(Y2K23, Y2K24, B1200, Beslutningsårsak.INDEKSREGULERING),
-                OppretteVedtakRequest(Y2K24, null, B1200, Beslutningsårsak.INDEKSREGULERING),
+                OppretteVedtakRequest(Årstall.Y2K20, Årstall.Y2K22, Beløp.B1000, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
+                OppretteVedtakRequest(Årstall.Y2K22, null, Beløp.B1200, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG, Stønadstype.OPPFOSTRINGSBIDRAG),
+                OppretteVedtakRequest(Årstall.Y2K23, Årstall.Y2K24, Beløp.B1200, Beslutningsårsak.INDEKSREGULERING),
+                OppretteVedtakRequest(Årstall.Y2K24, null, Beløp.B1200, Beslutningsårsak.INDEKSREGULERING),
             ),
         )
 
@@ -70,8 +55,8 @@ class VedtaksfiltreringTest {
             vedtak.shouldNotBeNull()
             vedtak.stønadsendring.shouldNotBeNull()
             vedtak.stønadsendring.periodeListe.first().delytelseId shouldBe "10001"
-            vedtak.vedtakstidspunkt shouldBe Y2K22.år.atDay(1).atStartOfDay()
-            vedtak.stønadsendring.periodeListe.first().beløp shouldBe B1200.verdi
+            vedtak.vedtakstidspunkt shouldBe Årstall.Y2K22.år.atDay(1).atStartOfDay()
+            vedtak.stønadsendring.periodeListe.first().beløp shouldBe Beløp.B1200.verdi
             vedtak.stønadsendring.type shouldBe Stønadstype.OPPFOSTRINGSBIDRAG
         }
     }
@@ -82,7 +67,7 @@ class VedtaksfiltreringTest {
         // gitt
         val vedtakssett = oppretteVedtakssett(
             setOf(
-                OppretteVedtakRequest(Y2K22, null, B1200, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG, vedtakstype = Vedtakstype.ALDERSJUSTERING),
+                OppretteVedtakRequest(Årstall.Y2K22, null, Beløp.B1200, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG, vedtakstype = Vedtakstype.ALDERSJUSTERING),
             ),
         )
 
@@ -94,8 +79,8 @@ class VedtaksfiltreringTest {
             vedtak.shouldNotBeNull()
             vedtak.stønadsendring.shouldNotBeNull()
             vedtak.stønadsendring.periodeListe.first().delytelseId shouldBe "10000"
-            vedtak.vedtakstidspunkt shouldBe Y2K22.år.atDay(1).atStartOfDay()
-            vedtak.stønadsendring.periodeListe.first().beløp shouldBe B1200.verdi
+            vedtak.vedtakstidspunkt shouldBe Årstall.Y2K22.år.atDay(1).atStartOfDay()
+            vedtak.stønadsendring.periodeListe.first().beløp shouldBe Beløp.B1200.verdi
             vedtak.stønadsendring.type shouldBe Stønadstype.BIDRAG
         }
     }
@@ -105,7 +90,7 @@ class VedtaksfiltreringTest {
         // gitt
         val vedtakssett = oppretteVedtakssett(
             setOf(
-                OppretteVedtakRequest(Y2K22, null, B1200, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG, vedtakstype = Vedtakstype.ALDERSOPPHØR),
+                OppretteVedtakRequest(Årstall.Y2K22, null, Beløp.B1200, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG, vedtakstype = Vedtakstype.ALDERSOPPHØR),
             ),
         )
 
@@ -117,8 +102,8 @@ class VedtaksfiltreringTest {
             vedtak.shouldNotBeNull()
             vedtak.stønadsendring.shouldNotBeNull()
             vedtak.stønadsendring.periodeListe.first().delytelseId shouldBe "10000"
-            vedtak.vedtakstidspunkt shouldBe Y2K22.år.atDay(1).atStartOfDay()
-            vedtak.stønadsendring.periodeListe.first().beløp shouldBe B1200.verdi
+            vedtak.vedtakstidspunkt shouldBe Årstall.Y2K22.år.atDay(1).atStartOfDay()
+            vedtak.stønadsendring.periodeListe.first().beløp shouldBe Beløp.B1200.verdi
             vedtak.stønadsendring.type shouldBe Stønadstype.BIDRAG
         }
     }
@@ -128,7 +113,7 @@ class VedtaksfiltreringTest {
         // gitt
         val vedtakssett = oppretteVedtakssett(
             setOf(
-                OppretteVedtakRequest(Y2K22, null, B1200, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG, vedtakstype = Vedtakstype.OPPHØR),
+                OppretteVedtakRequest(Årstall.Y2K22, null, Beløp.B1200, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG, vedtakstype = Vedtakstype.OPPHØR),
             ),
         )
 
@@ -140,8 +125,8 @@ class VedtaksfiltreringTest {
             vedtak.shouldNotBeNull()
             vedtak.stønadsendring.shouldNotBeNull()
             vedtak.stønadsendring.periodeListe.first().delytelseId shouldBe "10000"
-            vedtak.vedtakstidspunkt shouldBe Y2K22.år.atDay(1).atStartOfDay()
-            vedtak.stønadsendring.periodeListe.first().beløp shouldBe B1200.verdi
+            vedtak.vedtakstidspunkt shouldBe Årstall.Y2K22.år.atDay(1).atStartOfDay()
+            vedtak.stønadsendring.periodeListe.first().beløp shouldBe Beløp.B1200.verdi
             vedtak.stønadsendring.type shouldBe Stønadstype.BIDRAG
         }
     }
@@ -151,10 +136,10 @@ class VedtaksfiltreringTest {
         // gitt
         val vedtakssett = oppretteVedtakssett(
             setOf(
-                OppretteVedtakRequest(Y2K20, Y2K22, B1000, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
-                OppretteVedtakRequest(Y2K22, null, B1200, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG, Stønadstype.OPPFOSTRINGSBIDRAG),
-                OppretteVedtakRequest(Y2K23, Y2K24, B1200, Beslutningsårsak.INDEKSREGULERING),
-                OppretteVedtakRequest(Y2K24, null, B1200, Beslutningsårsak.INDEKSREGULERING),
+                OppretteVedtakRequest(Årstall.Y2K20, Årstall.Y2K22, Beløp.B1000, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
+                OppretteVedtakRequest(Årstall.Y2K22, null, Beløp.B1200, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG, Stønadstype.OPPFOSTRINGSBIDRAG),
+                OppretteVedtakRequest(Årstall.Y2K23, Årstall.Y2K24, Beløp.B1200, Beslutningsårsak.INDEKSREGULERING),
+                OppretteVedtakRequest(Årstall.Y2K24, null, Beløp.B1200, Beslutningsårsak.INDEKSREGULERING),
             ),
         )
 
@@ -166,8 +151,8 @@ class VedtaksfiltreringTest {
             vedtak.shouldNotBeNull()
             vedtak.stønadsendring.shouldNotBeNull()
             vedtak.stønadsendring.periodeListe.first().delytelseId shouldBe "10001"
-            vedtak.vedtakstidspunkt shouldBe Y2K22.år.atDay(1).atStartOfDay()
-            vedtak.stønadsendring.periodeListe.first().beløp shouldBe B1200.verdi
+            vedtak.vedtakstidspunkt shouldBe Årstall.Y2K22.år.atDay(1).atStartOfDay()
+            vedtak.stønadsendring.periodeListe.first().beløp shouldBe Beløp.B1200.verdi
             vedtak.stønadsendring.type shouldBe Stønadstype.OPPFOSTRINGSBIDRAG
         }
     }
@@ -177,16 +162,16 @@ class VedtaksfiltreringTest {
         // gitt
         val vedtakssett = oppretteVedtakssett(
             setOf(
-                OppretteVedtakRequest(Y2K20, Y2K22, B1000, beslutningsårsak = Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
+                OppretteVedtakRequest(Årstall.Y2K20, Årstall.Y2K22, Beløp.B1000, beslutningsårsak = Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
                 OppretteVedtakRequest(
-                    Y2K22,
+                    Årstall.Y2K22,
                     null,
-                    B1200,
+                    Beløp.B1200,
                     beslutningsårsak = Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG,
                     stønadstype = Stønadstype.BIDRAG18AAR,
                 ),
-                OppretteVedtakRequest(Y2K23, Y2K24, B1200, Beslutningsårsak.INDEKSREGULERING),
-                OppretteVedtakRequest(Y2K24, null, B1200, Beslutningsårsak.INDEKSREGULERING),
+                OppretteVedtakRequest(Årstall.Y2K23, Årstall.Y2K24, Beløp.B1200, Beslutningsårsak.INDEKSREGULERING),
+                OppretteVedtakRequest(Årstall.Y2K24, null, Beløp.B1200, Beslutningsårsak.INDEKSREGULERING),
             ),
         )
 
@@ -198,8 +183,8 @@ class VedtaksfiltreringTest {
             vedtak.shouldNotBeNull()
             vedtak.stønadsendring.shouldNotBeNull()
             vedtak.stønadsendring.periodeListe.first().delytelseId shouldBe "10001"
-            vedtak.vedtakstidspunkt shouldBe Y2K22.år.atDay(1).atStartOfDay()
-            vedtak.stønadsendring.periodeListe.first().beløp shouldBe B1200.verdi
+            vedtak.vedtakstidspunkt shouldBe Årstall.Y2K22.år.atDay(1).atStartOfDay()
+            vedtak.stønadsendring.periodeListe.first().beløp shouldBe Beløp.B1200.verdi
             vedtak.stønadsendring.type shouldBe Stønadstype.BIDRAG18AAR
         }
     }
@@ -209,10 +194,10 @@ class VedtaksfiltreringTest {
         // gitt
         val vedtakssett = oppretteVedtakssett(
             setOf(
-                OppretteVedtakRequest(Y2K20, Y2K22, B1000, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
-                OppretteVedtakRequest(Y2K22, null, B1200, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
-                OppretteVedtakRequest(Y2K23, Y2K24, B1200, Beslutningsårsak.INDEKSREGULERING),
-                OppretteVedtakRequest(Y2K24, null, B1200, Beslutningsårsak.INDEKSREGULERING),
+                OppretteVedtakRequest(Årstall.Y2K20, Årstall.Y2K22, Beløp.B1000, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
+                OppretteVedtakRequest(Årstall.Y2K22, null, Beløp.B1200, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
+                OppretteVedtakRequest(Årstall.Y2K23, Årstall.Y2K24, Beløp.B1200, Beslutningsårsak.INDEKSREGULERING),
+                OppretteVedtakRequest(Årstall.Y2K24, null, Beløp.B1200, Beslutningsårsak.INDEKSREGULERING),
             ),
         )
 
@@ -224,8 +209,8 @@ class VedtaksfiltreringTest {
             vedtak.shouldNotBeNull()
             vedtak.stønadsendring.shouldNotBeNull()
             vedtak.stønadsendring.periodeListe.first().delytelseId shouldBe "10001"
-            vedtak.vedtakstidspunkt shouldBe Y2K22.år.atDay(1).atStartOfDay()
-            vedtak.stønadsendring.periodeListe.first().beløp shouldBe B1200.verdi
+            vedtak.vedtakstidspunkt shouldBe Årstall.Y2K22.år.atDay(1).atStartOfDay()
+            vedtak.stønadsendring.periodeListe.first().beløp shouldBe Beløp.B1200.verdi
             vedtak.stønadsendring.type shouldBe Stønadstype.BIDRAG
         }
     }
@@ -235,10 +220,10 @@ class VedtaksfiltreringTest {
         // gitt
         val vedtakssett = oppretteVedtakssett(
             setOf(
-                OppretteVedtakRequest(Y2K20, Y2K22, B1000, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
-                OppretteVedtakRequest(Y2K22, null, B1200, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
-                OppretteVedtakRequest(Y2K23, Y2K24, B1200, Beslutningsårsak.INGEN_ENDRING_12_PROSENT),
-                OppretteVedtakRequest(Y2K24, null, B1200, Beslutningsårsak.INGEN_ENDRING_12_PROSENT),
+                OppretteVedtakRequest(Årstall.Y2K20, Årstall.Y2K22, Beløp.B1000, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
+                OppretteVedtakRequest(Årstall.Y2K22, null, Beløp.B1200, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
+                OppretteVedtakRequest(Årstall.Y2K23, Årstall.Y2K24, Beløp.B1200, Beslutningsårsak.INGEN_ENDRING_12_PROSENT),
+                OppretteVedtakRequest(Årstall.Y2K24, null, Beløp.B1200, Beslutningsårsak.INGEN_ENDRING_12_PROSENT),
             ),
         )
 
@@ -250,8 +235,8 @@ class VedtaksfiltreringTest {
             vedtak.shouldNotBeNull()
             vedtak.stønadsendring.shouldNotBeNull()
             vedtak.stønadsendring.periodeListe.first().delytelseId shouldBe "10003"
-            vedtak.vedtakstidspunkt shouldBe Y2K24.år.atDay(1).atStartOfDay()
-            vedtak.stønadsendring.periodeListe.first().beløp shouldBe B1200.verdi
+            vedtak.vedtakstidspunkt shouldBe Årstall.Y2K24.år.atDay(1).atStartOfDay()
+            vedtak.stønadsendring.periodeListe.first().beløp shouldBe Beløp.B1200.verdi
         }
     }
 
@@ -260,10 +245,10 @@ class VedtaksfiltreringTest {
         // gitt
         val vedtakssett = oppretteVedtakssett(
             setOf(
-                OppretteVedtakRequest(Y2K14, Y2K16, B800, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
-                OppretteVedtakRequest(Y2K16, Y2K18, B1000, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
-                OppretteVedtakRequest(Y2K18, Y2K19, B1070, Beslutningsårsak.INDEKSREGULERING),
-                OppretteVedtakRequest(Y2K19, Y2K20, B800, Beslutningsårsak.INGEN_ENDRING_12_PROSENT, omgjørVedtak = 2),
+                OppretteVedtakRequest(Årstall.Y2K14, Årstall.Y2K16, Beløp.B800, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
+                OppretteVedtakRequest(Årstall.Y2K16, Årstall.Y2K18, Beløp.B1000, Beslutningsårsak.KOSTNADSBEREGNET_BIDRAG),
+                OppretteVedtakRequest(Årstall.Y2K18, Årstall.Y2K19, Beløp.B1070, Beslutningsårsak.INDEKSREGULERING),
+                OppretteVedtakRequest(Årstall.Y2K19, Årstall.Y2K20, Beløp.B800, Beslutningsårsak.INGEN_ENDRING_12_PROSENT, omgjørVedtak = 2),
             ),
         )
 
@@ -275,7 +260,7 @@ class VedtaksfiltreringTest {
             vedtak.shouldNotBeNull()
             vedtak.stønadsendring.shouldNotBeNull()
             vedtak.stønadsendring.periodeListe.first().delytelseId shouldBe "10001"
-            vedtak.vedtakstidspunkt shouldBe Y2K16.år.atDay(1).atStartOfDay()
+            vedtak.vedtakstidspunkt shouldBe Årstall.Y2K16.år.atDay(1).atStartOfDay()
         }
     }
 
@@ -284,7 +269,7 @@ class VedtaksfiltreringTest {
         // gitt
         val vedtakssett = oppretteVedtakssett(
             setOf(
-                OppretteVedtakRequest(Y2K16, Y2K18, B1000, Beslutningsårsak.STADFESTELSE, beslutningstype = Beslutningstype.STADFESTELSE),
+                OppretteVedtakRequest(Årstall.Y2K16, Årstall.Y2K18, Beløp.B1000, Beslutningsårsak.STADFESTELSE, beslutningstype = Beslutningstype.STADFESTELSE),
             ),
         )
 
@@ -300,10 +285,10 @@ class VedtaksfiltreringTest {
         // gitt
         val vedtakssett = oppretteVedtakssett(
             setOf(
-                OppretteVedtakRequest(Y2K14, Y2K16, B800),
-                OppretteVedtakRequest(Y2K16, Y2K18, B1200),
-                OppretteVedtakRequest(Y2K18, Y2K19, B1300),
-                OppretteVedtakRequest(Y2K19, Y2K20, B1200, Beslutningsårsak.RESULTAT_FRA_ANNET_VEDTAK),
+                OppretteVedtakRequest(Årstall.Y2K14, Årstall.Y2K16, Beløp.B800),
+                OppretteVedtakRequest(Årstall.Y2K16, Årstall.Y2K18, Beløp.B1200),
+                OppretteVedtakRequest(Årstall.Y2K18, Årstall.Y2K19, Beløp.B1300),
+                OppretteVedtakRequest(Årstall.Y2K19, Årstall.Y2K20, Beløp.B1200, Beslutningsårsak.RESULTAT_FRA_ANNET_VEDTAK),
             ),
         )
 
@@ -324,8 +309,8 @@ class VedtaksfiltreringTest {
         // gitt
         val vedtakssett = oppretteVedtakssett(
             setOf(
-                OppretteVedtakRequest(R12, R10, B1000, beslutningsårsak = Beslutningsårsak.INNVILGETT_VEDTAK),
-                OppretteVedtakRequest(R10, null, B1200, Beslutningsårsak.INDEKSREGULERING, kilde = Vedtakskilde.AUTOMATISK),
+                OppretteVedtakRequest(Årstall.R12, Årstall.R10, Beløp.B1000, beslutningsårsak = Beslutningsårsak.INNVILGETT_VEDTAK),
+                OppretteVedtakRequest(Årstall.R10, null, Beløp.B1200, Beslutningsårsak.INDEKSREGULERING, kilde = Vedtakskilde.AUTOMATISK),
             ),
         )
 

@@ -6,7 +6,7 @@ import no.nav.bidrag.beregn.core.bo.SjablonInnhold
 import no.nav.bidrag.beregn.core.bo.SjablonNøkkel
 import no.nav.bidrag.beregn.core.bo.SjablonPeriode
 import no.nav.bidrag.beregn.core.dto.SjablonPeriodeCore
-import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
+import no.nav.bidrag.beregn.core.mapper.CoreMapper
 import no.nav.bidrag.beregn.særbidrag.core.bpsberegnedetotalbidrag.dto.LøpendeBidragCore
 import no.nav.bidrag.beregn.særbidrag.core.bpsberegnedetotalbidrag.dto.LøpendeBidragGrunnlagCore
 import no.nav.bidrag.beregn.særbidrag.core.felles.bo.SjablonListe

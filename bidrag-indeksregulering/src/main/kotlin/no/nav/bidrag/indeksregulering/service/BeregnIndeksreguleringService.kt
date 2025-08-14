@@ -58,7 +58,7 @@ internal class BeregnIndeksreguleringService : BeregnService() {
         )
 
         val beregningsperiode = ÅrMånedsperiode(
-            fom = YearMonth.of(grunnlag.indeksregulerForÅr.value, 7),
+            fom = YearMonth.of(grunnlag.indeksreguleresForÅr.value, 7),
             til = null,
         )
 
@@ -138,7 +138,7 @@ internal class BeregnIndeksreguleringService : BeregnService() {
         )
 
         val beregningsperiode = ÅrMånedsperiode(
-            fom = YearMonth.of(grunnlag.indeksregulerForÅr.value, 7),
+            fom = YearMonth.of(grunnlag.indeksreguleresForÅr.value, 7),
             til = null,
         )
 
@@ -257,7 +257,7 @@ internal class BeregnIndeksreguleringService : BeregnService() {
 }
 
 fun BeregnIndeksreguleringGrunnlag.valider() {
-    requireNotNull(indeksregulerForÅr) { "indeksregulerÅr kan ikke være null" }
+    requireNotNull(indeksreguleresForÅr) { "indeksregulerÅr kan ikke være null" }
     requireNotNull(stønadsid) { "stønadsid kan ikke være null" }
     require(personobjektListe.isNotEmpty()) { "personobjektListe kan ikke være tom" }
 //    require(beløpshistorikkListe.isNotEmpty()) { "beløpshistorikkListe kan ikke være tom" }
