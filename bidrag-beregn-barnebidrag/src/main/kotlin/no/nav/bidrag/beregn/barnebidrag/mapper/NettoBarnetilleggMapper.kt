@@ -3,7 +3,7 @@ package no.nav.bidrag.beregn.barnebidrag.mapper
 import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilleggPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilleggSkattesatsDelberegningPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.NettoBarnetilleggPeriodeGrunnlag
-import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
+import no.nav.bidrag.beregn.core.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag

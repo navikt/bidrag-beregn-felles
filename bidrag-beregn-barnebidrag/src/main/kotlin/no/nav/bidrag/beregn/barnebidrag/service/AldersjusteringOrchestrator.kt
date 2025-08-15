@@ -8,10 +8,12 @@ import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningSakConsumer
 import no.nav.bidrag.beregn.barnebidrag.utils.AldersjusteringUtils
 import no.nav.bidrag.beregn.barnebidrag.utils.AldersjusteringUtils.finnBarnAlder
 import no.nav.bidrag.beregn.barnebidrag.utils.aldersjusteringAldersgrupper
-import no.nav.bidrag.beregn.barnebidrag.utils.hentPersonForNyesteIdent
-import no.nav.bidrag.beregn.barnebidrag.utils.hentSisteLøpendePeriode
-import no.nav.bidrag.beregn.barnebidrag.utils.tilGrunnlag
 import no.nav.bidrag.beregn.core.exception.AldersjusteringLavereEnnEllerLikLøpendeBidragException
+import no.nav.bidrag.beregn.core.mapper.tilGrunnlag
+import no.nav.bidrag.beregn.core.service.SisteManuelleVedtak
+import no.nav.bidrag.beregn.core.service.VedtakService
+import no.nav.bidrag.beregn.core.util.hentPersonForNyesteIdent
+import no.nav.bidrag.beregn.core.util.hentSisteLøpendePeriode
 import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
@@ -19,7 +21,6 @@ import no.nav.bidrag.domene.enums.beregning.Resultatkode.Companion.tilBisysResul
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.sak.Sakskategori
 import no.nav.bidrag.domene.enums.vedtak.VirkningstidspunktÅrsakstype
-import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.visningsnavn
@@ -31,7 +32,6 @@ import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlagVedtak
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
-import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.VirkningstidspunktGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragsmottaker

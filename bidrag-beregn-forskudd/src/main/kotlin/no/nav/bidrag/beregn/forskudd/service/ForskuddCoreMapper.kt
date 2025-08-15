@@ -2,7 +2,7 @@ package no.nav.bidrag.beregn.forskudd.service
 
 import no.nav.bidrag.beregn.core.dto.BarnIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
-import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
+import no.nav.bidrag.beregn.core.mapper.CoreMapper
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BostatusPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore

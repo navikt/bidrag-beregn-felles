@@ -3,7 +3,7 @@ package no.nav.bidrag.beregn.barnebidrag.mapper
 import no.nav.bidrag.beregn.barnebidrag.bo.BidragsevnePeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonBidragsevnePeriodeGrunnlag
 import no.nav.bidrag.beregn.core.BeregnApi
-import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
+import no.nav.bidrag.beregn.core.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto

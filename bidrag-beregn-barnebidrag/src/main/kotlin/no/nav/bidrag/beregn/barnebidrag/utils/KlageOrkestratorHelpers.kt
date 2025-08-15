@@ -2,8 +2,12 @@ package no.nav.bidrag.beregn.barnebidrag.utils
 
 import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.barnebidrag.service.ByggetBeløpshistorikk
-import no.nav.bidrag.beregn.barnebidrag.service.VedtakService
 import no.nav.bidrag.beregn.barnebidrag.service.klageFeilet
+import no.nav.bidrag.beregn.core.mapper.finnBeløpshistorikkGrunnlag
+import no.nav.bidrag.beregn.core.mapper.tilDto
+import no.nav.bidrag.beregn.core.mapper.tilGrunnlag
+import no.nav.bidrag.beregn.core.service.VedtakService
+import no.nav.bidrag.beregn.core.util.hentPersonForNyesteIdent
 import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype

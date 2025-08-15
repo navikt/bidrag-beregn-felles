@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.core.service.mapper
+package no.nav.bidrag.beregn.core.mapper
 
 import no.nav.bidrag.beregn.core.bo.Periode
 import no.nav.bidrag.beregn.core.bo.SjablonBarnetilsynPeriodeGrunnlag

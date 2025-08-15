@@ -1,4 +1,4 @@
-package no.nav.bidrag.indeksregulering.api
+package no.nav.bidrag.indeksregulering
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
@@ -6,14 +6,11 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
-import no.nav.bidrag.indeksregulering.BeregnIndeksreguleringApi
-import no.nav.bidrag.indeksregulering.bo.BeregnIndeksreguleringGrunnlag
+import no.nav.bidrag.indeksregulering.service.BeregnIndeksreguleringGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningIndeksregulering
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertAll
-import org.junit.jupiter.api.Assertions.fail
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -42,19 +39,19 @@ internal class BeregnIndeksreguleringApiTest {
     @Test
     @DisplayName("Test indeksregulering")
     fun testIndeksregulering() {
-        filnavn = "src/test/resources/testfiler/indeksregulering.json"
+        filnavn = "src/test/resources/testfiler/indeksreguleringapi.json"
         val resultat = utførBeregningerOgEvaluerResultatIndeksregulering()
 
-        assertAll(
+        Assertions.assertAll(
 
-            { assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2025-07"), null)) },
-            { assertThat(resultat[0].beløp.verdi.compareTo(BigDecimal.valueOf(1230.00))).isEqualTo(0) },
+            { org.assertj.core.api.Assertions.assertThat(resultat[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2025-07"), null)) },
+            { org.assertj.core.api.Assertions.assertThat(resultat[0].beløp.verdi.compareTo(BigDecimal.valueOf(1230.00))).isEqualTo(0) },
         )
     }
 
     private fun utførBeregningerOgEvaluerResultatIndeksregulering(): List<SluttberegningIndeksregulering> {
         val request = lesFilOgByggRequest(filnavn)
-        val resultat = api.beregnIndeksregulering(request)
+        val resultat = api.beregnIndeksreguleringBarnebidrag(request)
         printJson(resultat)
 
         val alleReferanser = hentAlleReferanser(resultat)
@@ -71,9 +68,9 @@ internal class BeregnIndeksreguleringApiTest {
                 )
             }
 
-        assertAll(
-            { assertThat(resultat).isNotNull },
-            { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
+        Assertions.assertAll(
+            { org.assertj.core.api.Assertions.assertThat(resultat).isNotNull },
+            { org.assertj.core.api.Assertions.assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
         )
         return resultatListe
     }
@@ -93,7 +90,7 @@ internal class BeregnIndeksreguleringApiTest {
         try {
             json = Files.readString(Paths.get(filnavn))
         } catch (e: Exception) {
-            fail("Klarte ikke å lese fil: $filnavn")
+            Assertions.fail("Klarte ikke å lese fil: $filnavn")
         }
 
         // Lag request

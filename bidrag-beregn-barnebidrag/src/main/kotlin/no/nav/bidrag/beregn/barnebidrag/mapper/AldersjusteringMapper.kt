@@ -4,7 +4,7 @@ import no.nav.bidrag.beregn.barnebidrag.bo.AldersjusteringBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BeløpshistorikkPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.exception.UgyldigInputException
-import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
+import no.nav.bidrag.beregn.core.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode

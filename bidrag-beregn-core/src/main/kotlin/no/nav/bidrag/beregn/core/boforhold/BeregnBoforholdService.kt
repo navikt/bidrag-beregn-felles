@@ -4,8 +4,8 @@ import no.nav.bidrag.beregn.core.dto.BarnIHusstandenPeriodeCore
 import no.nav.bidrag.beregn.core.dto.BoforholdPeriodeCore
 import no.nav.bidrag.beregn.core.dto.PeriodeCore
 import no.nav.bidrag.beregn.core.dto.VoksneIHusstandenPeriodeCore
+import no.nav.bidrag.beregn.core.mapper.CoreMapper
 import no.nav.bidrag.beregn.core.mapping.tilGrunnlag
-import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.beregn.core.util.justerPeriodeTilOpphørsdato
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.person.Bostatuskode

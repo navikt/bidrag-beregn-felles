@@ -11,11 +11,12 @@ import no.nav.bidrag.beregn.barnebidrag.service.BeregnEndringSjekkGrenseService.
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnIndeksreguleringPrivatAvtaleService.delberegningPrivatAvtalePeriode
 import no.nav.bidrag.beregn.barnebidrag.utils.AldersjusteringUtils.opprettAldersjusteringDetaljerGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.utils.KlageOrkestratorHelpers
-import no.nav.bidrag.beregn.barnebidrag.utils.hentSisteLøpendePeriode
-import no.nav.bidrag.beregn.barnebidrag.utils.tilDto
 import no.nav.bidrag.beregn.barnebidrag.utils.toYearMonth
 import no.nav.bidrag.beregn.barnebidrag.utils.vedtaksidAutomatiskJobb
 import no.nav.bidrag.beregn.barnebidrag.utils.vedtaksidBeregnetBeløpshistorikk
+import no.nav.bidrag.beregn.core.mapper.tilDto
+import no.nav.bidrag.beregn.core.service.VedtakService
+import no.nav.bidrag.beregn.core.util.hentSisteLøpendePeriode
 import no.nav.bidrag.beregn.core.util.justerVedtakstidspunkt
 import no.nav.bidrag.beregn.core.util.justerVedtakstidspunktVedtak
 import no.nav.bidrag.commons.util.IdentUtils
@@ -31,8 +32,7 @@ import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
 import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
-import no.nav.bidrag.indeksregulering.BeregnIndeksreguleringApi
-import no.nav.bidrag.indeksregulering.bo.BeregnIndeksreguleringGrunnlag
+import no.nav.bidrag.indeksregulering.service.IndeksreguleringOrkestrator
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.KlageOrkestratorGrunnlag
@@ -88,6 +88,7 @@ internal data class KlageOrkestratorContext(
 ) {
     val påklagetVedtakId: Int = klageOrkestratorGrunnlag.påklagetVedtakId
 }
+
 internal data class BeregnetBarnebidragResultatInternal(
     val resultat: BeregnetBarnebidragResultat,
     val vedtakstype: Vedtakstype,
@@ -102,6 +103,7 @@ internal data class ByggetBeløpshistorikk(
     val stønadDto: StønadDto,
     val grunnlagBeløpshistorikk: GrunnlagDto,
 )
+
 internal data class BeløpshistorikkPeriodeInternal(
     val periode: ÅrMånedsperiode,
     val beløp: BigDecimal?,
@@ -113,6 +115,7 @@ internal data class BeløpshistorikkPeriodeInternal(
 )
 
 data class EtterfølgendeVedtakSomOverlapper(val vedtaksid: Int, val virkningstidspunkt: YearMonth)
+
 fun klageFeilet(begrunnelse: String): Nothing = throw KlageberegningFeiletFunksjonelt(begrunnelse)
 fun klageFeiletTeknisk(begrunnelse: String, throwable: Throwable): Nothing = throw KlageberegningFeiletTeknisk(begrunnelse, throwable)
 fun finnesEtterfølgendeVedtak(vedtak: List<EtterfølgendeVedtakSomOverlapper>): Nothing =
@@ -125,11 +128,17 @@ class FinnesEtterfølgendeVedtakMedVirkningstidspunktFørPåklagetVedtak(val ved
     RuntimeException("Det finnes etterfølgende vedtak $vedtak")
 
 @Service
-@Import(VedtakService::class, AldersjusteringOrchestrator::class, BeregnIndeksreguleringApi::class, IdentUtils::class, KlageOrkestratorHelpers::class)
+@Import(
+    VedtakService::class,
+    AldersjusteringOrchestrator::class,
+    IndeksreguleringOrkestrator::class,
+    IdentUtils::class,
+    KlageOrkestratorHelpers::class,
+)
 class KlageOrkestrator(
     private val vedtakService: VedtakService,
     private val aldersjusteringOrchestrator: AldersjusteringOrchestrator,
-    private val beregnIndeksreguleringApi: BeregnIndeksreguleringApi,
+    private val indeksreguleringOrkestrator: IndeksreguleringOrkestrator,
     private val klageOrkestratorHelpers: KlageOrkestratorHelpers,
 ) {
 
@@ -468,6 +477,7 @@ class KlageOrkestrator(
                         komplettVedtak.vedtakstidspunkt!!.year,
                         true,
                     )
+
                 komplettVedtak != null -> {
                     val referanse = "resultatFraVedtak_${komplettVedtak.vedtaksid}"
                     val perioder = it.map {
@@ -499,6 +509,7 @@ class KlageOrkestrator(
                         beregnetFraDato = perioder.minOf { it.periode.fom }.atDay(1),
                     )
                 }
+
                 else -> null
             }
             resultat?.let {
@@ -1115,14 +1126,12 @@ class KlageOrkestrator(
         val løpendeBeløp = stønadDto.periodeListe
             .firstOrNull { it.periode.inneholder(YearMonth.of(nesteIndeksår, 7)) }
         if (førsteIndeksår > nesteIndeksår || løpendeBeløp?.beløp == BigDecimal.ZERO) return null
-        val indeksresultat = beregnIndeksreguleringApi.beregnIndeksregulering(
-            BeregnIndeksreguleringGrunnlag(
-                indeksregulerÅr = Year.of(nesteIndeksår),
-                stønadsid = stønad,
-                personobjektListe = grunnlagsliste,
-                beløpshistorikkListe = grunnlagsliste,
-            ),
+        val indeksresultat = indeksreguleringOrkestrator.utførIndeksreguleringBarnebidrag(
+            indeksreguleresForÅr = Year.of(nesteIndeksår),
+            stønad = stønad,
+            grunnlagListe = grunnlagsliste,
         )
+
         val sluttberegning = indeksresultat.filtrerOgKonverterBasertPåEgenReferanse<SluttberegningIndeksregulering>(
             Grunnlagstype.SLUTTBEREGNING_INDEKSREGULERING,
         ).first()
@@ -1142,6 +1151,7 @@ class KlageOrkestrator(
             beregnetFraDato = LocalDate.of(nesteIndeksår, 7, 1),
         )
     }
+
     private fun utførAldersjustering(
         beregnBasertPåVedtak: BeregnBasertPåVedtak?,
         aldersjusteresForÅr: Int,
@@ -1246,6 +1256,7 @@ class KlageOrkestrator(
             )
         }
     }
+
     private fun BeregnetBarnebidragResultat.tilVedtakDto(stønad: Stønadsid) = VedtakDto(
         type = Vedtakstype.KLAGE,
         kilde = Vedtakskilde.AUTOMATISK,

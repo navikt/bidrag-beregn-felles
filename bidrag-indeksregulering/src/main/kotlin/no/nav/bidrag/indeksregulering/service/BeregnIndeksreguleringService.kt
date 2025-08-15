@@ -12,11 +12,8 @@ import no.nav.bidrag.domene.enums.samhandler.Valutakode
 import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.avrundetTilNærmesteTier
-import no.nav.bidrag.indeksregulering.bo.BeregnIndeksreguleringGrunnlag
-import no.nav.bidrag.indeksregulering.bo.IndeksregulerPeriodeGrunnlag
 import no.nav.bidrag.indeksregulering.mapper.IndeksreguleringMapper.finnReferanseTilRolle
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnlag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonSjablontallPeriode
@@ -29,7 +26,86 @@ import java.time.YearMonth
 
 internal class BeregnIndeksreguleringService : BeregnService() {
 
-    fun beregn(grunnlag: BeregnIndeksreguleringGrunnlag): List<GrunnlagDto> {
+    fun beregnIndeksreguleringBarnebidrag(grunnlag: BeregnIndeksreguleringGrunnlag): List<GrunnlagDto> {
+        secureLogger.info { "Beregning av indeksregulering barnebidrag - følgende request mottatt: ${tilJson(grunnlag)}" }
+
+        // Kontroll av inputdata
+        try {
+            grunnlag.valider()
+        } catch (e: IllegalArgumentException) {
+            throw IllegalArgumentException("Ugyldig input ved indeksregulering barnebidrag: " + e.message)
+        }
+
+        if (grunnlag.stønadsid.type != Stønadstype.BIDRAG && grunnlag.stønadsid.type != Stønadstype.BIDRAG18AAR &&
+            grunnlag.stønadsid.type != Stønadstype.OPPFOSTRINGSBIDRAG
+        ) {
+            throw IllegalArgumentException("Feil stønadstype i grunnlaget til indeksregulering")
+        }
+
+        val beløpshistorikk = grunnlag.beløpshistorikkListe.filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(
+            grunnlagType = Grunnlagstype.BELØPSHISTORIKK_BIDRAG,
+        )
+            .map { it ->
+                Beløpshistorikk(
+                    referanse = it.referanse,
+                    perioder = it.innhold.beløpshistorikk,
+                )
+            }.firstOrNull()
+
+        val gjelderBarnReferanse = finnReferanseTilRolle(
+            grunnlagListe = grunnlag.personobjektListe,
+            grunnlagstype = Grunnlagstype.PERSON_SØKNADSBARN,
+        )
+
+        val beregningsperiode = ÅrMånedsperiode(
+            fom = YearMonth.of(grunnlag.indeksreguleresForÅr.value, 7),
+            til = null,
+        )
+
+        val sjablonListe = mapSjablonSjablontallGrunnlag(
+            periode = beregningsperiode,
+            sjablonListe = SjablonProvider.hentSjablontall(),
+        ) { it.indeksregulering }
+
+        val sjablonIndeksreguleringFaktorListe = mapSjablonSjablontall(sjablonListe)
+
+        val resultatliste = mutableListOf<GrunnlagDto>()
+        val grunnlagsliste = mutableSetOf<String>()
+
+        val grunnlagBeregning = lagIndeksreguleringBeregningGrunnlag(
+            beregningsperiode = beregningsperiode,
+            gjelderBarnReferanse = gjelderBarnReferanse,
+            beløpshistorikk = beløpshistorikk!!,
+            sjablonIndeksreguleringFaktorListe = sjablonIndeksreguleringFaktorListe,
+        )
+        grunnlagsliste.addAll(grunnlagBeregning.referanseliste)
+
+        val resultat = beregnPeriode(grunnlagBeregning)
+
+        resultatliste.add(
+            GrunnlagDto(
+                type = Grunnlagstype.SLUTTBEREGNING_INDEKSREGULERING,
+                referanse = opprettSluttberegningreferanse(
+                    barnreferanse = gjelderBarnReferanse,
+                    periode = resultat.periode,
+                ),
+                innhold = POJONode(resultat),
+                gjelderBarnReferanse = gjelderBarnReferanse,
+                grunnlagsreferanseListe = grunnlagBeregning.referanseliste,
+            ),
+        )
+
+        // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
+        val resultatGrunnlagListe = mapDelberegningResultatGrunnlag(
+            grunnlagReferanseListe = resultatliste.map { it.grunnlagsreferanseListe }.flatten().distinct(),
+            mottattGrunnlag = grunnlag.personobjektListe + grunnlag.beløpshistorikkListe,
+            sjablonGrunnlag = sjablonListe,
+        ).toMutableList()
+
+        return resultatliste + resultatGrunnlagListe + grunnlag.personobjektListe
+    }
+
+    fun beregnIndeksreguleringForskudd(grunnlag: BeregnIndeksreguleringGrunnlag): List<GrunnlagDto> {
         secureLogger.info { "Beregning av indeksregulering barnebidrag - følgende request mottatt: ${tilJson(grunnlag)}" }
 
         // Kontroll av inputdata
@@ -52,8 +128,6 @@ internal class BeregnIndeksreguleringService : BeregnService() {
             .map { it ->
                 Beløpshistorikk(
                     referanse = it.referanse,
-                    nesteIndeksreguleringsår = it.innhold.nesteIndeksreguleringsår,
-                    skalIndeksreguleres = it.innhold.beløpshistorikk.any { it.beløp != null },
                     perioder = it.innhold.beløpshistorikk,
                 )
             }.firstOrNull()
@@ -64,7 +138,7 @@ internal class BeregnIndeksreguleringService : BeregnService() {
         )
 
         val beregningsperiode = ÅrMånedsperiode(
-            fom = YearMonth.of(grunnlag.indeksregulerÅr.value, 7),
+            fom = YearMonth.of(grunnlag.indeksreguleresForÅr.value, 7),
             til = null,
         )
 
@@ -182,18 +256,11 @@ internal class BeregnIndeksreguleringService : BeregnService() {
     }
 }
 
-data class Beløpshistorikk(
-    val referanse: String,
-    val nesteIndeksreguleringsår: Int?,
-    val skalIndeksreguleres: Boolean,
-    val perioder: List<BeløpshistorikkPeriode>,
-)
-
 fun BeregnIndeksreguleringGrunnlag.valider() {
-    requireNotNull(indeksregulerÅr) { "indeksregulerÅr kan ikke være null" }
+    requireNotNull(indeksreguleresForÅr) { "indeksregulerÅr kan ikke være null" }
     requireNotNull(stønadsid) { "stønadsid kan ikke være null" }
     require(personobjektListe.isNotEmpty()) { "personobjektListe kan ikke være tom" }
-    require(beløpshistorikkListe.isNotEmpty()) { "beløpshistorikkListe kan ikke være tom" }
+//    require(beløpshistorikkListe.isNotEmpty()) { "beløpshistorikkListe kan ikke være tom" }
     personobjektListe.forEach(GrunnlagDto::valider)
     beløpshistorikkListe.forEach(GrunnlagDto::valider)
 }

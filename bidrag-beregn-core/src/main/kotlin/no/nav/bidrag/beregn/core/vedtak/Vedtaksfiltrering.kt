@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.vedtak
+package no.nav.bidrag.beregn.core.vedtak
 
 import no.nav.bidrag.beregn.core.util.justerVedtakstidspunkt
 import no.nav.bidrag.commons.util.secureLogger
