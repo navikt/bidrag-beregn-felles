@@ -1123,7 +1123,9 @@ class KlageOrkestrator(
             beløpshistorikkFørPåklagetVedtak = beløpshistorikkFørPåklagetVedtak,
         )
         val førsteIndeksår = stønadDto.periodeListe.minOf { it.periode.fom.year } + 1
-        if (førsteIndeksår > nesteIndeksår) return null
+        val løpendeBeløp = stønadDto.periodeListe
+            .firstOrNull { it.periode.inneholder(YearMonth.of(nesteIndeksår, 7)) }
+        if (førsteIndeksår > nesteIndeksår || løpendeBeløp?.beløp == BigDecimal.ZERO) return null
         val indeksresultat = indeksreguleringOrkestrator.utførIndeksreguleringBarnebidrag(
             indeksreguleresForÅr = Year.of(nesteIndeksår),
             stønad = stønad,
