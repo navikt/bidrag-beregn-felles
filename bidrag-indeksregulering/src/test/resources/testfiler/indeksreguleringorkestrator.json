@@ -1,0 +1,71 @@
+{
+  "indeksreguleresForÅr": "2025",
+  "stønadsid": {
+    "type": "BIDRAG",
+    "sak": "0123456",
+    "skyldner": "33333333333",
+    "kravhaver": "11111111110"
+  },
+  "grunnlagListe": [
+    {
+      "referanse": "Person_Søknadsbarn",
+      "type": "PERSON_SØKNADSBARN",
+      "innhold": {
+        "ident": "11111111110",
+        "navn": "Trengende Søknadsbarn",
+        "fødselsdato": "2012-09-13"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Person_Bidragsmottaker",
+      "type": "PERSON_BIDRAGSMOTTAKER",
+      "innhold": {
+        "ident": "22222222222",
+        "navn": "Søkende Bidragsmottaker",
+        "fødselsdato": "1982-05-05"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Person_Bidragspliktig",
+      "type": "PERSON_BIDRAGSPLIKTIG",
+      "innhold": {
+        "ident": "33333333333",
+        "navn": "Motvillig Bidragspliktig",
+        "fødselsdato": "1981-07-13"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Beløpshistorikk_Grunnlag_Person_Bidragsmottaker_Person_Søknadsbarn_202101",
+      "type": "BELØPSHISTORIKK_BIDRAG",
+      "innhold": {
+        "nesteIndeksreguleringsår": 2025,
+        "beløpshistorikk": [
+          {
+            "periode": {
+              "fom": "2023-07",
+              "til": "2024-07"
+            },
+            "beløp": 1000.00,
+            "valutakode": "NOK"
+          },
+          {
+            "periode": {
+              "fom": "2024-07"
+            },
+            "beløp": 1200.00,
+            "valutakode": "NOK"
+          }
+        ]
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    }
+  ]
+}

@@ -72,6 +72,8 @@ class IndeksreguleringOrkestrator(private val vedtakService: VedtakService, priv
                 grunnlagListe,
             )
 
+            secureLogger.info { "orkestrator beregningInput: $beregningInput " }
+
             val resultat =
                 beregnIndeksreguleringApi.beregnIndeksreguleringBarnebidrag(beregningInput)
 
