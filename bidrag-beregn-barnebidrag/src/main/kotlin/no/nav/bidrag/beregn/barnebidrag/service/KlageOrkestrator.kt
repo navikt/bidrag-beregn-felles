@@ -153,11 +153,11 @@ class KlageOrkestrator(
                 ?: klageFeilet("Fant ikke løpende stønad for $stønad")
             val grunnlagsliste = klageberegningGrunnlag.grunnlagListe
 
-            validerEtterfølgendeVedtakIkkeOverlapper(
-                stønad = stønad,
-                påklagetVedtak = påklagetVedtak,
-                klageperiode = klageperiode,
-            )
+//            validerEtterfølgendeVedtakIkkeOverlapper(
+//                stønad = stønad,
+//                påklagetVedtak = påklagetVedtak,
+//                klageperiode = klageperiode,
+//            )
 
             val personobjekter =
                 listOf(
