@@ -153,11 +153,13 @@ class KlageOrkestrator(
                 ?: klageFeilet("Fant ikke løpende stønad for $stønad")
             val grunnlagsliste = klageberegningGrunnlag.grunnlagListe
 
-//            validerEtterfølgendeVedtakIkkeOverlapper(
-//                stønad = stønad,
-//                påklagetVedtak = påklagetVedtak,
-//                klageperiode = klageperiode,
-//            )
+            if (!klageOrkestratorGrunnlag.gjelderParagraf35c) {
+                validerEtterfølgendeVedtakIkkeOverlapper(
+                    stønad = stønad,
+                    påklagetVedtak = påklagetVedtak,
+                    klageperiode = klageperiode,
+                )
+            }
 
             val personobjekter =
                 listOf(
@@ -756,6 +758,8 @@ class KlageOrkestrator(
                 if (erSistePeriodeKlagevedtak) klageVedtak else null,
             )
         }
+        // Skal ikke indeksregulere eller aldersjustere hvis påklaget vedtak er uten innkreving
+        if (klageOrkestratorGrunnlag.innkrevingstype == Innkrevingstype.UTEN_INNKREVING) return null
         if (erKlagevedtak && erKlageVedtakOpphør) return null
         val resultatAldersjustering =
             utførAldersjustering(
