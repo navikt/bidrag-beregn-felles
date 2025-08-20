@@ -11,46 +11,6 @@ import org.springframework.stereotype.Service
 
 @Service
 class Vedtaksfiltrering {
-    fun finneVedtakForEvnevurdering(vedtak: Collection<VedtakForStønad>, personidentSøknadsbarn: Personident): VedtakForStønad? {
-        val iterator = Vedtaksiterator(vedtak.filter { it.filtrereBortIrrelevanteVedtak() }.tilVedtaksdetaljer())
-
-        while (iterator.hasNext()) {
-            val vedtaksdetaljer = iterator.next()
-
-            // Hopp over dersom vedtaket er omgjort.
-            if (vedtaksdetaljer.erOmgjort) {
-                continue
-            }
-
-            // Dersom vedtaket gjelder klage, skal det hoppes til det påklagde vedtaket.
-            if (vedtaksdetaljer.vedtak.erKlage()) {
-                // Hopp til påklaget vedtak
-                vedtaksdetaljer.vedtak.omgjørVedtaksid()?.let { iterator.hoppeTilOmgjortVedtak(it) }
-                    ?: iterator.hoppeTilPåklagetVedtak(vedtaksdetaljer.vedtak.søknadKlageRefId!!)
-                continue
-            } else if (vedtaksdetaljer.vedtak.erOmgjøring()) {
-                // Hopp til omgjort vedtak
-                iterator.hoppeTilOmgjortVedtak(vedtaksdetaljer.vedtak.idTilOmgjortVedtak()!!)
-                continue
-            }
-
-            // Håndtere resultat fra annet vedtak
-            if (vedtaksdetaljer.vedtak.erResultatFraAnnetVedtak()) {
-                iterator.hoppeTilBeløp(vedtaksdetaljer.periode.beløp)
-                if (!iterator.hasNext()) return null
-                continue
-            }
-
-            if (vedtaksdetaljer.vedtak.erOpprettetAvBatchEllerAldersjusteringIndeksregulering()) {
-                continue
-            }
-
-            return vedtaksdetaljer.vedtak
-        }
-
-        secureLogger.warn { "Fant ikke tidligere vedtak for barn med personident $personidentSøknadsbarn" }
-        return null
-    }
 
     /**
      * Finner vedtak som skal benyttes i evnevurdering fra en samling vedtak knyttet til en bestemt stønad. Returnerer null dersom metoden

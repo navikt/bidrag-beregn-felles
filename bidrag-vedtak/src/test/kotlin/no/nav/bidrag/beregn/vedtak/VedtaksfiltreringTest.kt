@@ -44,7 +44,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurderingNy(vedtakssett, ba1.personident)
 
         // så
         vedtak.shouldBeNull()
@@ -63,7 +63,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurderingNy(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -87,7 +87,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurderingNy(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -110,7 +110,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurderingNy(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -133,7 +133,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurderingNy(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -159,7 +159,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurderingNy(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -191,7 +191,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurderingNy(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -217,7 +217,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurderingNy(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -243,7 +243,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurderingNy(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -268,7 +268,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurderingNy(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -289,7 +289,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurderingNy(vedtakssett, ba1.personident)
 
         // så
         vedtak.shouldBeNull()
@@ -308,7 +308,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurderingNy(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {
@@ -330,7 +330,7 @@ class VedtaksfiltreringTest {
         )
 
         // hvis
-        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurdering(vedtakssett, ba1.personident)
+        val vedtak = vedtaksfiltrering.finneVedtakForEvnevurderingNy(vedtakssett, ba1.personident)
 
         // så
         assertSoftly {

@@ -65,7 +65,7 @@ internal class BeregnIndeksreguleringService : BeregnService() {
 
         val beregningsperiode = ÅrMånedsperiode(
             fom = YearMonth.of(grunnlag.indeksregulerÅr.value, 7),
-            til = null,
+            til = grunnlag.opphørsdato,
         )
 
         val sjablonListe = mapSjablonSjablontallGrunnlag(

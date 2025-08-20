@@ -4,6 +4,7 @@ import no.nav.bidrag.commons.service.sjablon.EnableSjablonProvider
 import no.nav.bidrag.indeksregulering.bo.BeregnIndeksreguleringGrunnlag
 import no.nav.bidrag.indeksregulering.service.BeregnIndeksreguleringService
 import org.springframework.stereotype.Service
+import java.time.YearMonth
 
 /**
  * BeregnIndeksreguleringApi eksponerer api for å indeksregulere stønad.
