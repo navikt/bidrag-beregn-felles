@@ -83,7 +83,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
             beregningsperiode = utvidetGrunnlag.periode,
         )
 
-        val endeligBidragBeregningResultatListe = mutableListOf<EndeligBidragPeriodeResultat>()
+        var endeligBidragBeregningResultatListe = mutableListOf<EndeligBidragPeriodeResultat>()
 
         // Løper gjennom hver bruddperiode og beregner endelig bidrag
         bruddPeriodeListe.forEachIndexed { indeks, bruddPeriode ->
@@ -101,6 +101,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
             )
         }
 
+        endeligBidragBeregningResultatListe = slåSammenSammenhengendePerioderMedLikResultat(endeligBidragBeregningResultatListe)
         // Setter til-periode i siste element til null hvis det ikke allerede er det og åpenSluttperiode er true
         if (endeligBidragBeregningResultatListe.isNotEmpty()) {
             val sisteElement = endeligBidragBeregningResultatListe.last()
@@ -197,6 +198,29 @@ internal object BeregnEndeligBidragService : BeregnService() {
         )
         .filter { it.innhold.inntektsrapportering == Inntektsrapportering.BARNETILLEGG }
         .any { it.innhold.gjelderBarn == mottattGrunnlag.søknadsbarnReferanse }
+
+    // Setter sammen perioder som er like. Dette gjelder for feks perioder som er opphør pga barnet er selvforsørget eller ikke bor hos BP
+    fun slåSammenSammenhengendePerioderMedLikResultat(resultList: List<EndeligBidragPeriodeResultat>): MutableList<EndeligBidragPeriodeResultat> {
+        if (resultList.isEmpty()) return mutableListOf()
+        val mergedList = mutableListOf<EndeligBidragPeriodeResultat>()
+        var current = resultList.first()
+
+        for (next in resultList.drop(1)) {
+            if (current.resultat == next.resultat &&
+                current.resultat.resultatBeløp == null &&
+                // Sikre at periodene kommer etterhverandre
+                current.periode.til == next.periode.fom
+            ) {
+                // Slå sammen periodene slik at periode før utvides med periode etter
+                current = current.copy(periode = current.periode.copy(til = next.periode.til))
+            } else {
+                mergedList.add(current)
+                current = next
+            }
+        }
+        mergedList.add(current)
+        return mergedList
+    }
 
     // Lager en liste over alle bruddperioder basert på grunnlag som skal brukes i beregningen
     private fun lagBruddPeriodeListeEndeligBidrag(
