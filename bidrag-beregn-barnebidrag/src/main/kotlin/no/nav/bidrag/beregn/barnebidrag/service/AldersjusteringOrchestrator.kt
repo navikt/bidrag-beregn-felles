@@ -129,7 +129,6 @@ class AldersjusteringOrchestrator(
             secureLogger.info { "Aldersjustering kjøres for stønad $stønad og årstall $aldersjusteresForÅr" }
             // Antar at hvis beregnBasertPåVedtak er satt så er det utført manuell justering. Endre på dette hvis det ikke stemmer lenger
             val erManuellJustering = beregnBasertPåVedtak != null
-            val sak = sakConsumer.hentSak(stønad.sak.verdi)
             val fødselsdatoBarn = personConsumer.hentFødselsdatoForPerson(stønad.kravhaver) ?: skalIkkeAldersjusteres(
                 SkalIkkeAldersjusteresBegrunnelse.BARN_MANGLER_FØDSELSDATO,
             )
@@ -144,6 +143,8 @@ class AldersjusteringOrchestrator(
                 }
                 skalIkkeAldersjusteres(SkalIkkeAldersjusteresBegrunnelse.IKKE_ALDERSGRUPPE_FOR_ALDERSJUSTERING)
             }
+
+            val sak = sakConsumer.hentSak(stønad.sak.verdi)
 
             val beløpshistorikk = beløpshistorikkStønad?.periodeListe?.hentSisteLøpendePeriode() ?: vedtakService
                 .hentBeløpshistorikkSistePeriode(stønad, LocalDateTime.now().withYear(aldersjusteresForÅr))

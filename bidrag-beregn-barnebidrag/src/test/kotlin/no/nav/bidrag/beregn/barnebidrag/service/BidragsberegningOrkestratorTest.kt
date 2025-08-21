@@ -101,7 +101,7 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
         assertSoftly(beregningResultat) {
             resultatVedtakListe shouldHaveSize 1
             resultatVedtakListe[0].delvedtak shouldBe false
-            resultatVedtakListe[0].klagevedtak shouldBe false
+            resultatVedtakListe[0].omgjøringsvedtak shouldBe false
         }
 
         // Sjekk at alle referanser er med i resultatet
@@ -121,7 +121,7 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
         assertSoftly(beregningResultat) {
             resultatVedtakListe shouldHaveSize 1
             resultatVedtakListe[0].delvedtak shouldBe true
-            resultatVedtakListe[0].klagevedtak shouldBe true
+            resultatVedtakListe[0].omgjøringsvedtak shouldBe true
         }
 
         // Sjekk at alle referanser er med i resultatet
@@ -193,11 +193,11 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
         assertSoftly(beregningResultat) {
             resultatVedtakListe shouldHaveSize 3
             resultatVedtakListe[0].delvedtak shouldBe true
-            resultatVedtakListe[0].klagevedtak shouldBe true
+            resultatVedtakListe[0].omgjøringsvedtak shouldBe true
             resultatVedtakListe[1].delvedtak shouldBe true
-            resultatVedtakListe[1].klagevedtak shouldBe false
+            resultatVedtakListe[1].omgjøringsvedtak shouldBe false
             resultatVedtakListe[2].delvedtak shouldBe false
-            resultatVedtakListe[2].klagevedtak shouldBe false
+            resultatVedtakListe[2].omgjøringsvedtak shouldBe false
             resultatVedtakListe[2].resultat.beregnetBarnebidragPeriodeListe shouldHaveSize 4
             resultatVedtakListe[2].resultat.beregnetBarnebidragPeriodeListe[0].resultat.beløp shouldBe BigDecimal.valueOf(4260)
         }
@@ -247,9 +247,9 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
         assertSoftly(beregningResultat) {
             resultatVedtakListe shouldHaveSize 2
             resultatVedtakListe[0].delvedtak shouldBe true
-            resultatVedtakListe[0].klagevedtak shouldBe true
+            resultatVedtakListe[0].omgjøringsvedtak shouldBe true
             resultatVedtakListe[1].delvedtak shouldBe false
-            resultatVedtakListe[1].klagevedtak shouldBe false
+            resultatVedtakListe[1].omgjøringsvedtak shouldBe false
         }
 
         // Sjekk at alle referanser er med i resultatet
@@ -321,11 +321,11 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
         assertSoftly(beregningResultat) {
             resultatVedtakListe shouldHaveSize 3
             resultatVedtakListe[0].delvedtak shouldBe true
-            resultatVedtakListe[0].klagevedtak shouldBe true
+            resultatVedtakListe[0].omgjøringsvedtak shouldBe true
             resultatVedtakListe[1].delvedtak shouldBe true
-            resultatVedtakListe[1].klagevedtak shouldBe false
+            resultatVedtakListe[1].omgjøringsvedtak shouldBe false
             resultatVedtakListe[2].delvedtak shouldBe false
-            resultatVedtakListe[2].klagevedtak shouldBe false
+            resultatVedtakListe[2].omgjøringsvedtak shouldBe false
             resultatVedtakListe[2].resultat.beregnetBarnebidragPeriodeListe shouldHaveSize 4
             resultatVedtakListe[2].resultat.beregnetBarnebidragPeriodeListe[0].resultat.beløp shouldBe BigDecimal.valueOf(4300)
         }

@@ -282,7 +282,7 @@ class KlageOrkestrator(
                     ResultatVedtak(
                         resultat = lagOpphørsvedtak(it),
                         delvedtak = true,
-                        klagevedtak = false,
+                        omgjøringsvedtak = false,
                         beregnet = false,
                         vedtakstype = Vedtakstype.OPPHØR,
                     ),
@@ -294,7 +294,7 @@ class KlageOrkestrator(
                     resultat = klageberegningResultat,
                     delvedtak = true,
                     beregnet = true,
-                    klagevedtak = true,
+                    omgjøringsvedtak = true,
                     vedtakstype = Vedtakstype.KLAGE,
                 ),
             )
@@ -308,7 +308,7 @@ class KlageOrkestrator(
                         ResultatVedtak(
                             resultat = it.resultat,
                             delvedtak = true,
-                            klagevedtak = false,
+                            omgjøringsvedtak = false,
                             vedtakstype = it.vedtakstype,
                             beregnet = it.beregnet,
                             beregnetFraDato = it.beregnetFraDato,
@@ -318,7 +318,7 @@ class KlageOrkestrator(
         }
 
         val sammenslåttVedtak =
-            ResultatVedtak(resultat = slåSammenVedtak(delvedtakListe), delvedtak = false, klagevedtak = false, vedtakstype = Vedtakstype.KLAGE)
+            ResultatVedtak(resultat = slåSammenVedtak(delvedtakListe), delvedtak = false, omgjøringsvedtak = false, vedtakstype = Vedtakstype.KLAGE)
 
         return (delvedtakListe + sammenslåttVedtak).sorterListe()
     }
@@ -340,7 +340,7 @@ class KlageOrkestrator(
                     ResultatVedtak(
                         resultat = lagOpphørsvedtak(periodeSomSkalOpphøres),
                         delvedtak = true,
-                        klagevedtak = false,
+                        omgjøringsvedtak = false,
                         beregnet = false,
                         vedtakstype = Vedtakstype.OPPHØR,
                     ),
@@ -359,7 +359,7 @@ class KlageOrkestrator(
                         ResultatVedtak(
                             resultat = it.resultat,
                             delvedtak = true,
-                            klagevedtak = false,
+                            omgjøringsvedtak = false,
                             beregnet = it.beregnet,
                             vedtakstype = it.vedtakstype,
                             beregnetFraDato = it.beregnetFraDato,
@@ -377,7 +377,7 @@ class KlageOrkestrator(
                     resultat = context.klageresultat,
                     delvedtak = true,
                     beregnet = true,
-                    klagevedtak = true,
+                    omgjøringsvedtak = true,
                     vedtakstype = Vedtakstype.KLAGE,
                 ),
             )
@@ -391,7 +391,7 @@ class KlageOrkestrator(
                         ResultatVedtak(
                             resultat = it.resultat,
                             delvedtak = true,
-                            klagevedtak = false,
+                            omgjøringsvedtak = false,
                             beregnet = it.beregnet,
                             vedtakstype = it.vedtakstype,
                             beregnetFraDato = it.beregnetFraDato,
@@ -400,7 +400,7 @@ class KlageOrkestrator(
             )
         }
         val sammenslåttVedtak =
-            ResultatVedtak(resultat = slåSammenVedtak(delvedtakListe), delvedtak = false, klagevedtak = false, vedtakstype = Vedtakstype.KLAGE)
+            ResultatVedtak(resultat = slåSammenVedtak(delvedtakListe), delvedtak = false, omgjøringsvedtak = false, vedtakstype = Vedtakstype.KLAGE)
 
         return (delvedtakListe + sammenslåttVedtak).sorterListe()
     }
@@ -414,7 +414,7 @@ class KlageOrkestrator(
     ): List<BeregnetBarnebidragResultatInternal> {
         val stønad = context.stønad
         val historikk = delvedtak.map {
-            BeregnetBarnebidragResultatInternal(it.resultat, it.vedtakstype, it.beregnetFraDato, it.klagevedtak)
+            BeregnetBarnebidragResultatInternal(it.resultat, it.vedtakstype, it.beregnetFraDato, it.omgjøringsvedtak)
         }.toMutableList()
         val beregnetBarnebidragResultatListe = mutableListOf<BeregnetBarnebidragResultatInternal>()
         beløpshistorikk.groupBy { it.vedtaksid }.entries.sortedWith(compareBy(nullsLast()) { it.key }).forEach { (vedtaksid, it) ->

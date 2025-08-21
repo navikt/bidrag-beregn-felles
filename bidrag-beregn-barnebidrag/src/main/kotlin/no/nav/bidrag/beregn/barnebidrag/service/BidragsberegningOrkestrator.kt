@@ -22,7 +22,9 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
                     beregnGrunnlag = request.beregnGrunnlag,
                 )
                 val respons = BidragsberegningOrkestratorResponse(
-                    listOf(ResultatVedtak(resultat = beregningResultat, delvedtak = false, klagevedtak = false, vedtakstype = Vedtakstype.ENDRING)),
+                    listOf(
+                        ResultatVedtak(resultat = beregningResultat, delvedtak = false, omgjøringsvedtak = false, vedtakstype = Vedtakstype.ENDRING),
+                    ),
                 )
                 secureLogger.info { "Resultat av bidragsberegning: $respons" }
                 return respons
@@ -34,7 +36,7 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
                 )
                 val respons = BidragsberegningOrkestratorResponse(
                     listOf(
-                        ResultatVedtak(resultat = klageberegningResultat, delvedtak = true, klagevedtak = true, vedtakstype = Vedtakstype.KLAGE),
+                        ResultatVedtak(resultat = klageberegningResultat, delvedtak = true, omgjøringsvedtak = true, vedtakstype = Vedtakstype.KLAGE),
                     ),
                 )
                 secureLogger.info { "Resultat av klageberegning: $respons" }

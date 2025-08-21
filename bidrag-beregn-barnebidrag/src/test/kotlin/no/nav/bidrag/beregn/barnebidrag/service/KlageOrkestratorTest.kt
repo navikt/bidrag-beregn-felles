@@ -94,9 +94,9 @@ internal class KlageOrkestratorTest : FellesTest() {
         assertSoftly(klageResultat) {
             it shouldHaveSize 2
             it[0].delvedtak shouldBe true
-            it[0].klagevedtak shouldBe true
+            it[0].omgjøringsvedtak shouldBe true
             it[1].delvedtak shouldBe false
-            it[1].klagevedtak shouldBe false
+            it[1].omgjøringsvedtak shouldBe false
             it[0].resultat shouldBeEqual it[1].resultat
         }
 
@@ -147,12 +147,12 @@ internal class KlageOrkestratorTest : FellesTest() {
             it shouldHaveSize 4
 
             it[0].delvedtak shouldBe true
-            it[0].klagevedtak shouldBe true
+            it[0].omgjøringsvedtak shouldBe true
             it[0].resultat.beregnetBarnebidragPeriodeListe shouldHaveSize 1
             it[0].resultat.beregnetBarnebidragPeriodeListe[0].periode shouldBe ÅrMånedsperiode(YearMonth.of(2024, 8), null)
 
             it[1].delvedtak shouldBe true
-            it[1].klagevedtak shouldBe false
+            it[1].omgjøringsvedtak shouldBe false
             it[1].resultat.beregnetBarnebidragPeriodeListe shouldHaveSize 1
             it[1].resultat.beregnetBarnebidragPeriodeListe[0].periode shouldBe ÅrMånedsperiode(YearMonth.of(2025, 2), null)
             it[1].resultat.beregnetBarnebidragPeriodeListe[0].grunnlagsreferanseListe shouldHaveSize 1
@@ -160,7 +160,7 @@ internal class KlageOrkestratorTest : FellesTest() {
             it[1].resultat.grunnlagListe[0].type shouldBe Grunnlagstype.RESULTAT_FRA_VEDTAK
 
             it[2].delvedtak shouldBe true
-            it[2].klagevedtak shouldBe false
+            it[2].omgjøringsvedtak shouldBe false
             it[2].resultat.beregnetBarnebidragPeriodeListe shouldHaveSize 1
             it[2].resultat.beregnetBarnebidragPeriodeListe[0].periode shouldBe ÅrMånedsperiode(YearMonth.of(2025, 6), null)
             it[1].resultat.beregnetBarnebidragPeriodeListe[0].grunnlagsreferanseListe shouldHaveSize 1
@@ -168,7 +168,7 @@ internal class KlageOrkestratorTest : FellesTest() {
             it[1].resultat.grunnlagListe[0].type shouldBe Grunnlagstype.RESULTAT_FRA_VEDTAK
 
             it[3].delvedtak shouldBe false
-            it[3].klagevedtak shouldBe false
+            it[3].omgjøringsvedtak shouldBe false
             it[3].resultat.beregnetBarnebidragPeriodeListe shouldHaveSize 3
             it[3].resultat.beregnetBarnebidragPeriodeListe[0].periode shouldBe ÅrMånedsperiode(YearMonth.of(2024, 8), YearMonth.of(2025, 2))
             it[3].resultat.beregnetBarnebidragPeriodeListe[1].periode shouldBe ÅrMånedsperiode(YearMonth.of(2025, 2), YearMonth.of(2025, 6))
@@ -213,17 +213,17 @@ internal class KlageOrkestratorTest : FellesTest() {
             it shouldHaveSize 3
 
             it[0].delvedtak shouldBe true
-            it[0].klagevedtak shouldBe false
+            it[0].omgjøringsvedtak shouldBe false
             it[0].resultat.beregnetBarnebidragPeriodeListe shouldHaveSize 1
             it[0].resultat.beregnetBarnebidragPeriodeListe[0].periode shouldBe ÅrMånedsperiode(YearMonth.of(2024, 8), YearMonth.of(2024, 12))
             it[0].resultat.beregnetBarnebidragPeriodeListe[0].resultat.beløp shouldBe null
             it[0].resultat.grunnlagListe shouldHaveSize 0
 
             it[1].delvedtak shouldBe true
-            it[1].klagevedtak shouldBe true
+            it[1].omgjøringsvedtak shouldBe true
 
             it[2].delvedtak shouldBe false
-            it[2].klagevedtak shouldBe false
+            it[2].omgjøringsvedtak shouldBe false
             it[2].resultat.beregnetBarnebidragPeriodeListe shouldHaveSize 2
             it[2].resultat.beregnetBarnebidragPeriodeListe[0].periode shouldBe ÅrMånedsperiode(YearMonth.of(2024, 8), YearMonth.of(2024, 12))
             it[2].resultat.beregnetBarnebidragPeriodeListe[1].periode shouldBe ÅrMånedsperiode(YearMonth.of(2024, 12), null)
