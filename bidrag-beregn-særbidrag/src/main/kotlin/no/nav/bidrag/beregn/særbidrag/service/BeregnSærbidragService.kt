@@ -70,7 +70,7 @@ internal class BeregnSærbidragService(
     private val særbidragCore: SærbidragCore = SærbidragCore(),
 ) : BeregnService() {
     fun beregn(grunnlag: BeregnGrunnlag, vedtakstype: Vedtakstype): BeregnetSærbidragResultat {
-        secureLogger.info { "Særbidragberegning - følgende request mottatt: ${tilJson(grunnlag)}" }
+        secureLogger.debug { "Særbidragberegning - følgende request mottatt: ${tilJson(grunnlag)}" }
 
         // Kontroll av inputdata
         try {
@@ -254,7 +254,7 @@ internal class BeregnSærbidragService(
                     .sortedWith(compareBy<GrunnlagDto> { it.type.toString() }.thenBy { it.referanse }),
             )
 
-        secureLogger.info { "Særbidragberegning - returnerer følgende respons: ${tilJson(respons)}" }
+        secureLogger.debug { "Særbidragberegning - returnerer følgende respons: ${tilJson(respons)}" }
 
         return respons
     }

@@ -17,7 +17,7 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
     fun utførBidragsberegning(request: BidragsberegningOrkestratorRequest): BidragsberegningOrkestratorResponse {
         when (request.beregningstype) {
             Beregningstype.BIDRAG -> {
-                secureLogger.info { "Utfører bidragsberegning for request: $request" }
+                secureLogger.debug { "Utfører bidragsberegning for request: $request" }
                 val beregningResultat = barnebidragApi.beregn(
                     beregnGrunnlag = request.beregnGrunnlag,
                 )
@@ -26,11 +26,11 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
                         ResultatVedtak(resultat = beregningResultat, delvedtak = false, omgjøringsvedtak = false, vedtakstype = Vedtakstype.ENDRING),
                     ),
                 )
-                secureLogger.info { "Resultat av bidragsberegning: $respons" }
+                secureLogger.debug { "Resultat av bidragsberegning: $respons" }
                 return respons
             }
             Beregningstype.KLAGE -> {
-                secureLogger.info { "Utfører klageberegning for request: $request" }
+                secureLogger.debug { "Utfører klageberegning for request: $request" }
                 val klageberegningResultat = barnebidragApi.beregn(
                     beregnGrunnlag = request.beregnGrunnlag,
                 )
@@ -39,11 +39,11 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
                         ResultatVedtak(resultat = klageberegningResultat, delvedtak = true, omgjøringsvedtak = true, vedtakstype = Vedtakstype.KLAGE),
                     ),
                 )
-                secureLogger.info { "Resultat av klageberegning: $respons" }
+                secureLogger.debug { "Resultat av klageberegning: $respons" }
                 return respons
             }
             Beregningstype.KLAGE_ENDELIG -> {
-                secureLogger.info { "Utfører endelig klageberegning for request: $request" }
+                secureLogger.debug { "Utfører endelig klageberegning for request: $request" }
                 val klageberegningResultat = barnebidragApi.beregn(
                     beregnGrunnlag = request.beregnGrunnlag,
                 )
@@ -54,7 +54,7 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
                     request.klageOrkestratorGrunnlag ?: throw IllegalArgumentException("klageOrkestratorGrunnlag må være angitt"),
                 )
                 val respons = BidragsberegningOrkestratorResponse(endeligKlageberegningResultat)
-                secureLogger.info { "Resultat av endelig klageberegning: $respons" }
+                secureLogger.debug { "Resultat av endelig klageberegning: $respons" }
                 return respons
             }
         }

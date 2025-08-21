@@ -143,7 +143,7 @@ class KlageOrkestrator(
             val påklagetVedtakId = klageOrkestratorGrunnlag.påklagetVedtakId
             val klageperiode = klageberegningGrunnlag.periode
 
-            secureLogger.info { "Komplett klageberegning kjøres for stønad $stønad og påklaget vedtak $påklagetVedtakId" }
+            secureLogger.debug { "Komplett klageberegning kjøres for stønad $stønad og påklaget vedtak $påklagetVedtakId" }
 
             val påklagetVedtak = vedtakService.hentVedtak(påklagetVedtakId)
                 ?: klageFeilet("Fant ikke påklaget vedtak med id $påklagetVedtakId")

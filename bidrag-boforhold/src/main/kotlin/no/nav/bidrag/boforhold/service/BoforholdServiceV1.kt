@@ -9,7 +9,7 @@ import java.time.temporal.ChronoUnit
 
 internal class BoforholdServiceV1 {
     fun beregnEgneBarn(virkningstidspunkt: LocalDate, boforholdGrunnlagListe: List<RelatertPerson>): List<BoforholdBeregnet> {
-        secureLogger.info { "Beregner bostatus for BMs egne barn. Input: $virkningstidspunkt $boforholdGrunnlagListe" }
+        secureLogger.debug { "Beregner bostatus for BMs egne barn. Input: $virkningstidspunkt $boforholdGrunnlagListe" }
 
         val resultat = mutableListOf<BoforholdBeregnet>()
         boforholdGrunnlagListe
@@ -20,7 +20,7 @@ internal class BoforholdServiceV1 {
                 resultat.addAll(beregnPerioderEgneBarn(virkningstidspunkt, barn))
             }
 
-        secureLogger.info { "Resultat av beregning bostatus for BMs egne barn: $resultat" }
+        secureLogger.debug { "Resultat av beregning bostatus for BMs egne barn: $resultat" }
 
         return resultat
     }

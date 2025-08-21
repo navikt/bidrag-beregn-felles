@@ -125,8 +125,7 @@ class AldersjusteringOrchestrator(
         personobjekter: List<GrunnlagDto> = emptyList(),
     ): AldersjusteringResultat {
         try {
-            log.info { "Aldersjustering kjøres for stønadstype ${stønad.type} og sak ${stønad.sak} for årstall $aldersjusteresForÅr" }
-            secureLogger.info { "Aldersjustering kjøres for stønad $stønad og årstall $aldersjusteresForÅr" }
+            secureLogger.debug { "Aldersjustering kjøres for stønad $stønad og årstall $aldersjusteresForÅr" }
             // Antar at hvis beregnBasertPåVedtak er satt så er det utført manuell justering. Endre på dette hvis det ikke stemmer lenger
             val erManuellJustering = beregnBasertPåVedtak != null
             val fødselsdatoBarn = personConsumer.hentFødselsdatoForPerson(stønad.kravhaver) ?: skalIkkeAldersjusteres(
@@ -134,7 +133,7 @@ class AldersjusteringOrchestrator(
             )
 
             if (!AldersjusteringUtils.skalAldersjusteres(fødselsdatoBarn, aldersjusteresForÅr)) {
-                log.warn {
+                secureLogger.warn {
                     "Barn som er født $fødselsdatoBarn med alder ${finnBarnAlder(
                         fødselsdatoBarn,
                         aldersjusteresForÅr,
@@ -221,7 +220,7 @@ class AldersjusteringOrchestrator(
                             ),
                         ),
                     )
-                    secureLogger.info {
+                    secureLogger.debug {
                         "Resultat av beregning av aldersjustering for stønad $stønad og år $aldersjusteresForÅr: ${resultatMedGrunnlag.beregnetBarnebidragPeriodeListe}"
                     }
                     AldersjusteringResultat(

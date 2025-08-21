@@ -30,7 +30,7 @@ import java.time.YearMonth
 internal class BeregnIndeksreguleringService : BeregnService() {
 
     fun beregn(grunnlag: BeregnIndeksreguleringGrunnlag): List<GrunnlagDto> {
-        secureLogger.info { "Beregning av indeksregulering barnebidrag - følgende request mottatt: ${tilJson(grunnlag)}" }
+        secureLogger.debug { "Beregning av indeksregulering barnebidrag - følgende request mottatt: ${tilJson(grunnlag)}" }
 
         // Kontroll av inputdata
         try {

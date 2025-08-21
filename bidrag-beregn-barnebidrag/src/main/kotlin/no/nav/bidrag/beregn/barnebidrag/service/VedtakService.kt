@@ -165,7 +165,7 @@ class VedtakService(
                     kravhaver = stønadsid.kravhaver,
                 ),
             ) ?: run {
-                secureLogger.info { "Fant ingen løpende ${stønadsid.type} for $stønadsid" }
+                secureLogger.debug { "Fant ingen løpende ${stønadsid.type} for $stønadsid" }
                 return null
             }
         return stønad
@@ -182,11 +182,11 @@ class VedtakService(
                     gyldigTidspunkt = tidspunkt,
                 ),
             ) ?: run {
-                secureLogger.info { "Fant ingen løpende historisk ${stønadsid.type} for $stønadsid" }
+                secureLogger.debug { "Fant ingen løpende historisk ${stønadsid.type} for $stønadsid" }
                 return null
             }
         return stønad.periodeListe.hentSisteLøpendePeriode() ?: run {
-            secureLogger.info {
+            secureLogger.debug {
                 "${stønadsid.type} i stønad $$stønadsid har opphørt før dagens dato. Det finnes ingen løpende ${stønadsid.type}"
             }
             null

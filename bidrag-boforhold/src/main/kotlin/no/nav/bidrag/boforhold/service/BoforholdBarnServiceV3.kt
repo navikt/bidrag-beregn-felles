@@ -19,7 +19,7 @@ internal class BoforholdBarnServiceV3 {
         boforholdGrunnlagListe: List<BoforholdBarnRequestV3>,
         opphørsdato: LocalDate? = null,
     ): List<BoforholdResponseV2> {
-        secureLogger.info { "Beregner bostatus for BM/BPs egne barn V3. Input: $virkningstidspunkt $boforholdGrunnlagListe" }
+        secureLogger.debug { "Beregner bostatus for BM/BPs egne barn V3. Input: $virkningstidspunkt $boforholdGrunnlagListe" }
 
         val resultat = mutableListOf<BoforholdResponseV2>()
         boforholdGrunnlagListe
@@ -34,7 +34,7 @@ internal class BoforholdBarnServiceV3 {
                 resultat.addAll(beregnPerioderForBarn(virkningstidspunkt, typeBehandling!!, barn))
             }
 
-        secureLogger.info { "Resultat av beregning bostatus for BM/BPs egne barn V3: $resultat" }
+        secureLogger.debug { "Resultat av beregning bostatus for BM/BPs egne barn V3: $resultat" }
 
         return resultat.justerBoforholdPerioderForOpphørsdato(opphørsdato)
     }
@@ -685,7 +685,7 @@ internal class BoforholdBarnServiceV3 {
             TypeEndring.SLETTET -> {
                 if (originalBostatus == null) {
                     // Hvis det ikke finnes original bostatuskode så skal det ikke være mulig å slette en periode
-                    secureLogger.info {
+                    secureLogger.debug {
                         "Periode som skal slettes må være angitt som originalBostatus i input. endreBostatus: " +
                             "${boforholdRequest.endreBostatus} "
                     }
@@ -696,7 +696,7 @@ internal class BoforholdBarnServiceV3 {
 
                 if (originalBostatus.kilde == Kilde.OFFENTLIG) {
                     // Offentlige perioder skal ikke kunne slettes
-                    secureLogger.info {
+                    secureLogger.debug {
                         "Offentlig periode kan ikke slettes. " +
                             "endreBostatus: " +
                             "$boforholdRequest.endreBostatus "
@@ -732,7 +732,7 @@ internal class BoforholdBarnServiceV3 {
             TypeEndring.NY -> {
                 if (nyBostatus == null) {
                     // Hvis det ikke finnes en ny bostatus så kan det ikke legges til ny periode
-                    secureLogger.info {
+                    secureLogger.debug {
                         "Periode som skal legges til må være angitt som nyBostatus i input. endreBostatus: " +
                             "${boforholdRequest.endreBostatus} "
                     }
@@ -758,7 +758,7 @@ internal class BoforholdBarnServiceV3 {
             TypeEndring.ENDRET -> {
                 if (originalBostatus == null || nyBostatus == null) {
                     // Hvis det ikke finnes original bostatus eller ny bostatus så kan ikke periode endres
-                    secureLogger.info {
+                    secureLogger.debug {
                         "Periode som skal endres må være angitt som originalBostatus og ny verdier må ligge i " +
                             "nyBostatus i input. endreBostatus: ${boforholdRequest.endreBostatus} "
                     }
@@ -980,7 +980,7 @@ internal class BoforholdBarnServiceV3 {
             }
         }
         if (indeksMatch == null) {
-            secureLogger.info {
+            secureLogger.debug {
                 "Feil ved hent av indeks for matchende periode, perioden finnes ikke. Innsendt periode: " +
                     "$periode behandledeOpplysninger: $liste"
             }

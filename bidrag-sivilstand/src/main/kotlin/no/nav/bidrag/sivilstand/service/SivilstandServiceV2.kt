@@ -50,7 +50,7 @@ internal class SivilstandServiceV2 {
         // Beregner offentlige perioder som er hentet inn. Hvis det ikke er hentet inn offentlige opplysninger så returneres en periode med
         // Sivilstandskode = UKJENT og Kilde = OFFENTLIG.
 
-        secureLogger.info { "Beregner sivilstand for BM. Input: $virkningstidspunkt $sivilstandRequest" }
+        secureLogger.debug { "Beregner sivilstand for BM. Input: $virkningstidspunkt $sivilstandRequest" }
 
         val offentligePerioder = behandleOffentligePerioder(virkningstidspunkt, sivilstandRequest)
 
@@ -139,7 +139,7 @@ internal class SivilstandServiceV2 {
                 )
             }
 
-            secureLogger.info { "Beregner sivilstand for BM. Resultat: $resultat" }
+            secureLogger.debug { "Beregner sivilstand for BM. Resultat: $resultat" }
 
             return resultat
         }
@@ -483,7 +483,7 @@ internal class SivilstandServiceV2 {
                         perioderErIdentiske(originalSivilstand, behandletOpplysning)
                     }
                 ) {
-                    secureLogger.info {
+                    secureLogger.debug {
                         "Periode som skal slettes er enten ikke angitt som originalSivilstand eller finnes ikke i behandledeOpplysninger. " +
                             "endreSivilstand: " +
                             "$endreSivilstand "
@@ -503,7 +503,7 @@ internal class SivilstandServiceV2 {
                 }
 
                 if (indeksMatch == 0) {
-                    secureLogger.info {
+                    secureLogger.debug {
                         "Periode som skal slettes er første periode i behandledeOpplysninger, denne kan ikke slettes . " +
                             "endreSivilstand: " +
                             "$endreSivilstand "
@@ -532,7 +532,7 @@ internal class SivilstandServiceV2 {
             TypeEndring.NY -> {
                 if (nySivilstand == null) {
                     // Hvis det ikke finnes en ny sivilstandsperiode så kan det ikke legges til ny periode
-                    secureLogger.info {
+                    secureLogger.debug {
                         "Periode som skal legges til må være angitt som nySivilstand i input. endreSivilstand: " +
                             "$endreSivilstand "
                     }
@@ -552,7 +552,7 @@ internal class SivilstandServiceV2 {
             TypeEndring.ENDRET -> {
                 if (originalSivilstand == null || nySivilstand == null) {
                     // Hvis det ikke er angitt original sivilstand eller ny sivilstand så kan ikke periode endres
-                    secureLogger.info {
+                    secureLogger.debug {
                         "Periode som skal endres må være angitt som originalSivilstand og ny verdier må ligge i " +
                             "nySivilstand i input. endreSivilstand: $endreSivilstand "
                     }

@@ -33,7 +33,7 @@ private val logger = KotlinLogging.logger {}
 
 internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = ForskuddCore()) : BeregnService() {
     fun beregn(grunnlag: BeregnGrunnlag): BeregnetForskuddResultat {
-        secureLogger.info { "Forskuddsberegning - følgende request mottatt: ${tilJson(grunnlag)}" }
+        secureLogger.debug { "Forskuddsberegning - følgende request mottatt: ${tilJson(grunnlag)}" }
 
         // Kontroll av inputdata
         try {
@@ -96,7 +96,7 @@ internal class BeregnForskuddService(private val forskuddCore: ForskuddCore = Fo
                 grunnlagListe = grunnlagsliste.distinctBy { it.referanse },
             )
 
-        secureLogger.info { "Forskuddsberegning - returnerer følgende respons: ${tilJson(respons)}" }
+        secureLogger.debug { "Forskuddsberegning - returnerer følgende respons: ${tilJson(respons)}" }
 
         return respons
     }
