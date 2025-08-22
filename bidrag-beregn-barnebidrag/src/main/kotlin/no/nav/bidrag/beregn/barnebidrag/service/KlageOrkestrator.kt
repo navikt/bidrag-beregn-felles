@@ -251,17 +251,14 @@ class KlageOrkestrator(
         !context.nyVirkningErEtterOpprinneligVirkning ->
             klageScenarioVirkningFørEllerLikOpprinneligVirkning(context)
 
-        // Scenario 2: Fra-perioden i klagevedtaket er flyttet fram ifht. påklaget vedtak. Til-perioden i klagevedtaket er lik inneværende
-        // periode. Det eksisterer ingen vedtak før påklaget vedtak. Perioden fra opprinnelig vedtakstidspunkt til ny fra-periode må nulles
-        // ut.
+        // Scenario 2: Fra-perioden i klagevedtaket er flyttet fram ifht. påklaget vedtak. Perioder mellom forrige og nye virkningstidspunkt må fylles ut med opphør eller gjenopprettet beløpshistorikk
+        // legg til evt etterfølgende vedtak for perioder etter beregningsperioden og kjør evt ny indeksregulering/aldersjustering
         context.nyVirkningErEtterOpprinneligVirkning ->
             klageScenarioVirkningEtterOpprinneligVirkning(context)
 
         else -> emptyList()
     }
 
-    // Scenario 2: Klagevedtak dekker opprinnelig beregningsperiode for det påklagede vedtaket - legg til evt etterfølgende vedtak og kjør
-    // evt ny indeksregulering/aldersjustering
     private fun klageScenarioVirkningFørEllerLikOpprinneligVirkning(context: KlageOrkestratorContext): List<ResultatVedtak> {
         val (
             _,
@@ -480,6 +477,7 @@ class KlageOrkestrator(
                                     innhold = POJONode(
                                         ResultatFraVedtakGrunnlag(
                                             vedtaksid = komplettVedtak.vedtaksid,
+                                            vedtakstype = komplettVedtak.type,
                                             beregnet = false,
                                             vedtakstidspunkt = komplettVedtak.vedtakstidspunkt,
                                         ),
