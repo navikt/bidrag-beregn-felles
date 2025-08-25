@@ -1193,17 +1193,18 @@ class KlageOrkestrator(
                 )
 
         val manuellAldersjustering = klageOrkestratorGrunnlag.manuellAldersjustering.find { it.aldersjusteringForÅr == aldersjusteresForÅr }
+        val beregningBasertPåVedtak = (
+            manuellAldersjustering?.grunnlagFraVedtak?.let {
+                BeregnBasertPåVedtak(
+                    it,
+                )
+            } ?: beregnBasertPåVedtak
+            )?.takeIf { it.vedtaksid != null || it.vedtakDto != null }
         try {
             val aldersjustering = aldersjusteringOrchestrator.utførAldersjustering(
                 stønad,
                 aldersjusteresForÅr,
-                (
-                    manuellAldersjustering?.grunnlagFraVedtak?.let {
-                        BeregnBasertPåVedtak(
-                            it,
-                        )
-                    } ?: beregnBasertPåVedtak
-                    )?.takeIf { it.vedtaksid != null || it.vedtakDto != null },
+                beregningBasertPåVedtak,
                 opphørsdato = opphørsdato,
                 beløpshistorikkStønad = stønadDto,
                 personobjekter = personobjekter,
@@ -1214,6 +1215,7 @@ class KlageOrkestrator(
                 aldersjusteresManuelt = false,
                 aldersjustert = true,
                 stønad = stønad,
+                vedtaksidBeregning = beregningBasertPåVedtak?.vedtaksid,
             )
             return BeregnetBarnebidragResultatInternal(
                 resultat = BeregnetBarnebidragResultat(
@@ -1232,7 +1234,7 @@ class KlageOrkestrator(
                     stønad = stønad,
                     aldersjustert = false,
                     begrunnelser = e.begrunnelser.map { it.name },
-                    vedtaksidBeregning = null,
+                    vedtaksidBeregning = beregningBasertPåVedtak?.vedtaksid,
                 )
             return BeregnetBarnebidragResultatInternal(
                 resultat = BeregnetBarnebidragResultat(
@@ -1251,7 +1253,7 @@ class KlageOrkestrator(
                     stønad = stønad,
                     aldersjustert = false,
                     aldersjusteresManuelt = true,
-                    vedtaksidBeregning = null,
+                    vedtaksidBeregning = beregningBasertPåVedtak?.vedtaksid,
                     begrunnelser = listOf(e.begrunnelse.name),
                 )
             return BeregnetBarnebidragResultatInternal(

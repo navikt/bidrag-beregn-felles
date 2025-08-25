@@ -41,6 +41,7 @@ internal class BeregnBoforholdService : CoreMapper() {
             søknadsbarnReferanse = beregnGrunnlag.søknadsbarnReferanse,
             gjelderReferanse = gjelderReferanse,
             opphørsdato = if (beregnGrunnlag.opphørsdato != null) beregnGrunnlag.opphørsdato else null,
+            åpenSluttperiode = beregnGrunnlag.opphørsdato == null || beregnGrunnlag.periode.til?.isAfter(beregnGrunnlag.opphørsdato) == true,
         )
 
         return BeregnBoforholdPeriodeCoreRespons(
@@ -165,6 +166,7 @@ internal class BeregnBoforholdService : CoreMapper() {
         søknadsbarnReferanse: String,
         gjelderReferanse: String,
         opphørsdato: YearMonth?,
+        åpenSluttperiode: Boolean,
     ): List<BoforholdPeriodeCore> {
         // Lager unik, sortert liste over alle bruddatoer og legger evt. null-forekomst bakerst
         val bruddDatoListe = (
@@ -216,8 +218,14 @@ internal class BeregnBoforholdService : CoreMapper() {
                 borMedAndreVoksne = voksneIHusstanden?.borMedAndreVoksne ?: false,
                 grunnlagsreferanseListe = listOfNotNull(barnIHusstanden?.referanse, voksneIHusstanden?.referanse).distinct(),
             )
+        }.toMutableList()
+        if (perioder.isNotEmpty()) {
+            val sisteElement = perioder.last()
+            if (sisteElement.periode.datoTil != null && åpenSluttperiode) {
+                val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(datoTil = null))
+                perioder[perioder.size - 1] = oppdatertSisteElement
+            }
         }
-
         return justerPerioderForOpphørsdato(perioder, opphørsdato)
     }
 }
