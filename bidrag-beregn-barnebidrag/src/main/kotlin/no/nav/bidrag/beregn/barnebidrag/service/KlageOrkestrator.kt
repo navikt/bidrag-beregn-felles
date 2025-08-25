@@ -315,7 +315,12 @@ class KlageOrkestrator(
         }
 
         val sammenslåttVedtak =
-            ResultatVedtak(resultat = slåSammenVedtak(delvedtakListe), delvedtak = false, omgjøringsvedtak = false, vedtakstype = Vedtakstype.KLAGE)
+            ResultatVedtak(
+                resultat = slåSammenVedtak(delvedtakListe, context.opphørsdato),
+                delvedtak = false,
+                omgjøringsvedtak = false,
+                vedtakstype = Vedtakstype.KLAGE,
+            )
 
         return (delvedtakListe + sammenslåttVedtak).sorterListe()
     }
@@ -397,7 +402,12 @@ class KlageOrkestrator(
             )
         }
         val sammenslåttVedtak =
-            ResultatVedtak(resultat = slåSammenVedtak(delvedtakListe), delvedtak = false, omgjøringsvedtak = false, vedtakstype = Vedtakstype.KLAGE)
+            ResultatVedtak(
+                resultat = slåSammenVedtak(delvedtakListe, context.opphørsdato),
+                delvedtak = false,
+                omgjøringsvedtak = false,
+                vedtakstype = Vedtakstype.KLAGE,
+            )
 
         return (delvedtakListe + sammenslåttVedtak).sorterListe()
     }
@@ -728,7 +738,7 @@ class KlageOrkestrator(
             beløpshistorikkFørPåklagetVedtak = beløpshistorikkFørPåklagetVedtak,
         )
         val periodeBeregning = YearMonth.of(aldersjusteresIndeksreguleresForÅr, 7)
-        val løpendePeriode = stønadDto.periodeListe.hentSisteLøpendePeriode() ?: return null
+        val løpendePeriode = stønadDto.periodeListe.hentSisteLøpendePeriode(periodeBeregning) ?: return null
         val erKlagevedtak = klagevedtak.finnStønadsendring(stønad)!!.periodeListe.any { it.periode.fom == løpendePeriode.periode.fom }
 
         val opphørsdato = finnKlageOpphørsdato(klagevedtak, stønad, context.opphørsdato)
@@ -766,6 +776,9 @@ class KlageOrkestrator(
             Grunnlagstype.ALDERSJUSTERING_DETALJER,
         ).first()
         return if (!detaljer.innhold.aldersjustert && !detaljer.innhold.aldersjusteresManuelt) {
+            secureLogger.warn {
+                "Aldersjustering ble ikke utført for år $aldersjusteresIndeksreguleresForÅr med begrunnelse ${detaljer.innhold.begrunnelserVisningsnavn}"
+            }
             if (indeksreguler) {
                 utførIndeksregulering(
                     stønad,
@@ -791,14 +804,15 @@ class KlageOrkestrator(
     }
 
     // Slår sammen alle vedtak i en liste til ett (teknisk) vedtak
-    private fun slåSammenVedtak(vedtakListe: List<ResultatVedtak>): BeregnetBarnebidragResultat {
+    private fun slåSammenVedtak(vedtakListe: List<ResultatVedtak>, opphørsdato: YearMonth?): BeregnetBarnebidragResultat {
         val resultatPeriodeListe = mutableListOf<ResultatPeriode>()
         val grunnlagListe = mutableListOf<GrunnlagDto>()
         vedtakListe.forEach {
             resultatPeriodeListe.addAll(it.resultat.beregnetBarnebidragPeriodeListe)
             grunnlagListe.addAll(it.resultat.grunnlagListe)
         }
-        // Fjern perioder fra klagevedtaket som overlapper med indeksregulering eller aldersjustering som kommer etter
+        // Fjern perioder fra klagevedtaket som overlapper med indeksregulering eller aldersjustering.
+        // Erstatter identiske perioder (feks periode som starter med 2025-07 med indeks/aldeersjustering
         val perioderJustertForIndeksOgAldersjustering = resultatPeriodeListe.groupBy { it.periode.fom }.map { (_, periods) ->
             if (periods.size > 1) {
                 periods.find { p ->
@@ -817,19 +831,24 @@ class KlageOrkestrator(
             }
         }
         return BeregnetBarnebidragResultat(
-            beregnetBarnebidragPeriodeListe = sorterOgJusterPerioder(perioderJustertForIndeksOgAldersjustering),
+            beregnetBarnebidragPeriodeListe = sorterOgJusterPerioder(perioderJustertForIndeksOgAldersjustering, opphørsdato),
             grunnlagListe = grunnlagListe.distinctBy { it.referanse },
         )
     }
 
     // Sorterer ResultatPeriode basert på periode-fom og erstatter åpen sluttperiode med fom-dato på neste forekomst (hvis den finnes)
-    private fun sorterOgJusterPerioder(perioder: List<ResultatPeriode>): List<ResultatPeriode> {
+    private fun sorterOgJusterPerioder(perioder: List<ResultatPeriode>, opphørsdato: YearMonth?): List<ResultatPeriode> {
         val sortert = perioder.sortedBy { it.periode.fom }
 
         return sortert.mapIndexed { indeks, resultatPeriode ->
-            val nesteFom = if (indeks == sortert.size - 1) null else sortert.getOrNull(indeks + 1)?.periode?.fom
+            val erSistePeriode = indeks == sortert.size - 1
+            val nesteFom = if (!erSistePeriode) sortert.getOrNull(indeks + 1)?.periode?.fom else null
+            val tilDato = when {
+                erSistePeriode && opphørsdato != null -> opphørsdato
+                else -> nesteFom ?: resultatPeriode.periode.til
+            }
             ResultatPeriode(
-                periode = ÅrMånedsperiode(fom = resultatPeriode.periode.fom, til = nesteFom ?: resultatPeriode.periode.til),
+                periode = ÅrMånedsperiode(fom = resultatPeriode.periode.fom, til = tilDato),
                 resultat = resultatPeriode.resultat,
                 grunnlagsreferanseListe = resultatPeriode.grunnlagsreferanseListe,
             )
@@ -866,7 +885,7 @@ class KlageOrkestrator(
         klageberegningGrunnlag: BeregnGrunnlag,
     ): BeregnetBarnebidragResultat {
         val (_, opphørsdato, _, søknadsbarnReferanse) = klageberegningGrunnlag
-        val åpenSluttperiode = opphørsdato == null || opphørsdato!!.isAfter(YearMonth.now())
+        val åpenSluttperiode = opphørsdato == null || opphørsdato.isAfter(klageperiode.til)
         if (klageberegningResultat.erOpphør()) {
             return klageberegningResultat
         }
@@ -1232,9 +1251,6 @@ class KlageOrkestrator(
                     stønad = stønad,
                     aldersjustert = false,
                     aldersjusteresManuelt = true,
-//                    aldersjusteresManuelt = !listOf(
-//                        SkalAldersjusteresManueltBegrunnelse.VEDTAK_GRUNNLAG_HENTES_FRA_HAR_RESULTAT_DELT_BOSTED_MED_BELØP_0,
-//                    ).contains(e.begrunnelse),
                     vedtaksidBeregning = null,
                     begrunnelser = listOf(e.begrunnelse.name),
                 )

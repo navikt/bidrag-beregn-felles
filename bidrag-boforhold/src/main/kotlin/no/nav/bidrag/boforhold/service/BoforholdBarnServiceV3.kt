@@ -18,6 +18,7 @@ internal class BoforholdBarnServiceV3 {
         typeBehandling: TypeBehandling?,
         boforholdGrunnlagListe: List<BoforholdBarnRequestV3>,
         opphørsdato: LocalDate? = null,
+        beregnTilDato: LocalDate? = null,
     ): List<BoforholdResponseV2> {
         secureLogger.debug { "Beregner bostatus for BM/BPs egne barn V3. Input: $virkningstidspunkt $boforholdGrunnlagListe" }
 
@@ -36,7 +37,7 @@ internal class BoforholdBarnServiceV3 {
 
         secureLogger.debug { "Resultat av beregning bostatus for BM/BPs egne barn V3: $resultat" }
 
-        return resultat.justerBoforholdPerioderForOpphørsdato(opphørsdato)
+        return resultat.justerBoforholdPerioderForOpphørsdato(opphørsdato, beregnTilDato)
     }
 
     private fun beregnPerioderForBarn(

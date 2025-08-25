@@ -125,6 +125,7 @@ class AldersjusteringOrchestrator(
         personobjekter: List<GrunnlagDto> = emptyList(),
     ): AldersjusteringResultat {
         try {
+            val aldersjusteringPeriode = YearMonth.of(aldersjusteresForÅr, 7)
             secureLogger.debug { "Aldersjustering kjøres for stønad $stønad og årstall $aldersjusteresForÅr" }
             // Antar at hvis beregnBasertPåVedtak er satt så er det utført manuell justering. Endre på dette hvis det ikke stemmer lenger
             val erManuellJustering = beregnBasertPåVedtak != null
@@ -145,7 +146,7 @@ class AldersjusteringOrchestrator(
 
             val sak = sakConsumer.hentSak(stønad.sak.verdi)
 
-            val beløpshistorikk = beløpshistorikkStønad?.periodeListe?.hentSisteLøpendePeriode() ?: vedtakService
+            val beløpshistorikk = beløpshistorikkStønad?.periodeListe?.hentSisteLøpendePeriode(aldersjusteringPeriode) ?: vedtakService
                 .hentBeløpshistorikkSistePeriode(stønad, LocalDateTime.now().withYear(aldersjusteresForÅr))
 
             beløpshistorikk.validerSkalAldersjusteres(sak)
@@ -173,6 +174,7 @@ class AldersjusteringOrchestrator(
         beløpshistorikkStønad: StønadDto?,
         personobjekter: List<GrunnlagDto> = emptyList(),
     ): AldersjusteringResultat {
+        val aldersjusteringPeriode = YearMonth.of(aldersjusteresForÅr, 7)
         val beregningInput = byggGrunnlagForBeregning(
             stønad,
             aldersjusteresForÅr,
@@ -186,8 +188,8 @@ class AldersjusteringOrchestrator(
                 ?: aldersjusteringFeilet("Fant ikke person ${stønad.kravhaver.verdi} i grunnlaget")
         val stønadsendring = finnStønadsendring(stønad)
         val løpendeStønad = vedtakService
-            .hentBeløpshistorikkSistePeriode(stønad, LocalDateTime.now().withYear(aldersjusteresForÅr))
-        val sistePeriode = stønadsendring.periodeListe.hentSisteLøpendePeriode()!!
+            .hentBeløpshistorikkSistePeriode(stønad, aldersjusteringPeriode.atDay(1).atStartOfDay())
+        val sistePeriode = stønadsendring.periodeListe.hentSisteLøpendePeriode(aldersjusteringPeriode)!!
         val sluttberegningSistePeriode = vedtak.grunnlagListe.finnSluttberegningIReferanser(sistePeriode.grunnlagReferanseListe)
             ?.innholdTilObjekt<SluttberegningBarnebidrag>()
         val resultatSistePeriode = when (Resultatkode.fraKode(sistePeriode.resultatkode) == Resultatkode.INGEN_ENDRING_UNDER_GRENSE) {
@@ -287,7 +289,7 @@ class AldersjusteringOrchestrator(
             )
         }
 
-        val sistePeriode = stønadsendring.periodeListe.hentSisteLøpendePeriode() ?: skalIkkeAldersjusteres(
+        val sistePeriode = stønadsendring.periodeListe.hentSisteLøpendePeriode(aldersjusteringDato) ?: skalIkkeAldersjusteres(
             SkalIkkeAldersjusteresBegrunnelse.INGEN_LØPENDE_PERIODE,
             vedtaksid = vedtaksId,
         )

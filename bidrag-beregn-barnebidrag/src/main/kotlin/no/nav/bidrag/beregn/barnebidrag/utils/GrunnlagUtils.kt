@@ -10,11 +10,11 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.personIdent
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakPeriodeDto
 import java.time.YearMonth
 
-fun List<VedtakPeriodeDto>.hentSisteLøpendePeriode() = maxByOrNull { it.periode.fom }
-    ?.takeIf { it.periode.til == null || it.periode.til!!.isAfter(YearMonth.now()) }
+fun List<VedtakPeriodeDto>.hentSisteLøpendePeriode(periodeEtter: YearMonth = YearMonth.now()) = maxByOrNull { it.periode.fom }
+    ?.takeIf { it.periode.til == null || it.periode.til!!.isAfter(periodeEtter) }
 
-fun List<StønadPeriodeDto>.hentSisteLøpendePeriode() = maxByOrNull { it.periode.fom }
-    ?.takeIf { it.periode.til == null || it.periode.til!!.isAfter(YearMonth.now()) }
+fun List<StønadPeriodeDto>.hentSisteLøpendePeriode(periodeEtter: YearMonth = YearMonth.now()) = maxByOrNull { it.periode.fom }
+    ?.takeIf { it.periode.til == null || it.periode.til!!.isAfter(periodeEtter) }
 
 fun List<GrunnlagDto>.hentPersonForNyesteIdent(identUtils: IdentUtils, identFraVedtak: Personident): BaseGrunnlag? {
     val kravhaverNyesteIdent = identUtils.hentNyesteIdent(identFraVedtak)

@@ -12,13 +12,15 @@ import java.time.LocalDate
 internal class BoforholdAndreVoksneServiceTest {
     private lateinit var boforholdAndreVoksneService: BoforholdAndreVoksneService
 
+    private val beregnTilDato = LocalDate.now().plusMonths(1).withDayOfMonth(1)
+
     // Tester med kun offentlige perioder
     @Test
     fun `Test voksne i husstanden kun offentlige perioder`() {
         boforholdAndreVoksneService = BoforholdAndreVoksneService()
         val mottatteBoforhold = TestUtil.byggBorMedAndreVoksneOffentligePerioder()
         val virkningstidspunkt = LocalDate.of(2020, 9, 1)
-        val resultat = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold, beregnTilDato = beregnTilDato)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -45,9 +47,17 @@ internal class BoforholdAndreVoksneServiceTest {
         boforholdAndreVoksneService = BoforholdAndreVoksneService()
         val mottatteBoforhold = TestUtil.byggBorMedAndreVoksneOffentligNyManuellePeriode()
         val virkningstidspunkt = LocalDate.of(2020, 9, 1)
-        val resultat = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold[0])
-        val resultat2 = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold[1])
-        val resultat3 = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold[2])
+        val resultat = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold[0], beregnTilDato = beregnTilDato)
+        val resultat2 = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(
+            virkningstidspunkt,
+            mottatteBoforhold[1],
+            beregnTilDato = beregnTilDato,
+        )
+        val resultat3 = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(
+            virkningstidspunkt,
+            mottatteBoforhold[2],
+            beregnTilDato = beregnTilDato,
+        )
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -84,9 +94,17 @@ internal class BoforholdAndreVoksneServiceTest {
         boforholdAndreVoksneService = BoforholdAndreVoksneService()
         val mottatteBoforhold = TestUtil.byggBorMedAndreVoksneOffentligeNyManuellePeriodeEndre()
         val virkningstidspunkt = LocalDate.of(2020, 9, 1)
-        val resultat = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold[0])
-        val resultat2 = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold[1])
-        val resultat3 = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold[2])
+        val resultat = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold[0], beregnTilDato = beregnTilDato)
+        val resultat2 = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(
+            virkningstidspunkt,
+            mottatteBoforhold[1],
+            beregnTilDato = beregnTilDato,
+        )
+        val resultat3 = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(
+            virkningstidspunkt,
+            mottatteBoforhold[2],
+            beregnTilDato = beregnTilDato,
+        )
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -128,7 +146,7 @@ internal class BoforholdAndreVoksneServiceTest {
         boforholdAndreVoksneService = BoforholdAndreVoksneService()
         val mottatteBoforhold = TestUtil.byggTestÉnmånedsgrenseHusstandsmedlemskap()
         val virkningstidspunkt = LocalDate.of(2020, 9, 1)
-        val resultat = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold, beregnTilDato = beregnTilDato)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -156,7 +174,7 @@ internal class BoforholdAndreVoksneServiceTest {
         boforholdAndreVoksneService = BoforholdAndreVoksneService()
         val mottatteBoforhold = TestUtil.byggIngenOffentligeOpplysningerNyManuellPeriode()
         val virkningstidspunkt = LocalDate.of(2024, 1, 1)
-        val resultat = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold, beregnTilDato = beregnTilDato)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -174,7 +192,7 @@ internal class BoforholdAndreVoksneServiceTest {
         boforholdAndreVoksneService = BoforholdAndreVoksneService()
         val mottatteBoforhold = TestUtil.byggIngenPerioder()
         val virkningstidspunkt = LocalDate.of(2024, 1, 1)
-        val resultat = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold, beregnTilDato = beregnTilDato)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -192,7 +210,7 @@ internal class BoforholdAndreVoksneServiceTest {
         boforholdAndreVoksneService = BoforholdAndreVoksneService()
         val mottatteBoforhold = TestUtil.byggTestFlereHusstandsmedlemmerPeriodeTomNull()
         val virkningstidspunkt = LocalDate.of(2024, 1, 1)
-        val resultat = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold)
+        val resultat = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold, beregnTilDato = beregnTilDato)
 
         assertSoftly {
             Assertions.assertNotNull(resultat)
@@ -210,11 +228,11 @@ internal class BoforholdAndreVoksneServiceTest {
         boforholdAndreVoksneService = BoforholdAndreVoksneService()
         val grunnlag1 = TestUtil.byggEndreVirkningstidspunktVoksne()[0]
         var virkningstidspunkt = LocalDate.of(2024, 3, 1)
-        val resultat1 = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, grunnlag1)
+        val resultat1 = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, grunnlag1, beregnTilDato = beregnTilDato)
 
         val grunnlag2 = TestUtil.byggEndreVirkningstidspunktVoksne()[0]
         virkningstidspunkt = LocalDate.of(2024, 1, 1)
-        val resultat2 = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, grunnlag2)
+        val resultat2 = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, grunnlag2, beregnTilDato = beregnTilDato)
 
         assertSoftly {
             Assertions.assertNotNull(resultat1)

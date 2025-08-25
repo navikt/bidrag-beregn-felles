@@ -185,7 +185,7 @@ class VedtakService(
                 secureLogger.debug { "Fant ingen løpende historisk ${stønadsid.type} for $stønadsid" }
                 return null
             }
-        return stønad.periodeListe.hentSisteLøpendePeriode() ?: run {
+        return stønad.periodeListe.hentSisteLøpendePeriode(YearMonth.from(tidspunkt)) ?: run {
             secureLogger.debug {
                 "${stønadsid.type} i stønad $$stønadsid har opphørt før dagens dato. Det finnes ingen løpende ${stønadsid.type}"
             }
@@ -205,8 +205,8 @@ class VedtakService(
             )
         val resultat =
             vedtakFilter.finneSisteManuelleVedtak(forskuddVedtakISak.vedtakListe) ?: return null
-        return vedtakConsumer.hentVedtak(resultat.vedtaksid.toInt())?.let {
-            SisteManuelleVedtak(resultat.vedtaksid.toInt(), it)
+        return vedtakConsumer.hentVedtak(resultat.vedtaksid)?.let {
+            SisteManuelleVedtak(resultat.vedtaksid, it)
         }
     }
 

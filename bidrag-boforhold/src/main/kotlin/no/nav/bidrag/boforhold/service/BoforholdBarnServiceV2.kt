@@ -203,6 +203,13 @@ internal class BoforholdBarnServiceV2 {
                     Kilde.MANUELL
                 },
             )
+        }.mapIndexed { index, it ->
+            if (index == 0) {
+                // Sikre at første periode alltid starter fra virkningstidspunkt
+                it.copy(periodeFom = startdatoBeregning)
+            } else {
+                it
+            }
         }
     }
 

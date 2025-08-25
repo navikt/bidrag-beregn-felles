@@ -33,6 +33,7 @@ class BoforholdApi {
         fun beregnBoforholdBarnV3(
             virkningstidspunkt: LocalDate,
             opphørsdato: LocalDate? = null,
+            beregnTilDato: LocalDate? = null,
             // Angir hvilken type behandling som kaller beregningen
             typeBehandling: TypeBehandling? = TypeBehandling.FORSKUDD,
             boforholdBarnRequestV3Liste: List<BoforholdBarnRequestV3>,
@@ -41,6 +42,7 @@ class BoforholdApi {
             typeBehandling,
             boforholdBarnRequestV3Liste,
             opphørsdato,
+            beregnTilDato,
         )
 
         private val boforholdAndreVoksneService = BoforholdAndreVoksneService()
@@ -48,6 +50,8 @@ class BoforholdApi {
             virkningstidspunkt: LocalDate,
             boforholdVoksneRequest: BoforholdVoksneRequest,
             opphørsdato: LocalDate? = null,
-        ): List<Bostatus> = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, boforholdVoksneRequest, opphørsdato)
+            beregnTilDato: LocalDate? = null,
+        ): List<Bostatus> =
+            boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, boforholdVoksneRequest, opphørsdato, beregnTilDato)
     }
 }
