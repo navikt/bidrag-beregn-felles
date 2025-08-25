@@ -8,7 +8,6 @@ import no.nav.bidrag.beregn.barnebidrag.bo.SluttberegningPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnEndringSjekkGrensePeriodeService.delberegningEndringSjekkGrensePeriode
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnEndringSjekkGrensePeriodeService.erOverMinimumsgrenseForEndring
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnEndringSjekkGrenseService.delberegningEndringSjekkGrense
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnIndeksreguleringPrivatAvtaleService.delberegningPrivatAvtalePeriode
 import no.nav.bidrag.beregn.barnebidrag.utils.AldersjusteringUtils.opprettAldersjusteringDetaljerGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.utils.KlageOrkestratorHelpers
 import no.nav.bidrag.beregn.barnebidrag.utils.hentSisteLøpendePeriode
@@ -16,6 +15,7 @@ import no.nav.bidrag.beregn.barnebidrag.utils.tilDto
 import no.nav.bidrag.beregn.barnebidrag.utils.toYearMonth
 import no.nav.bidrag.beregn.barnebidrag.utils.vedtaksidAutomatiskJobb
 import no.nav.bidrag.beregn.barnebidrag.utils.vedtaksidBeregnetBeløpshistorikk
+import no.nav.bidrag.beregn.barnebidrag.utils.vedtaksidPrivatavtale
 import no.nav.bidrag.beregn.core.util.justerVedtakstidspunkt
 import no.nav.bidrag.beregn.core.util.justerVedtakstidspunktVedtak
 import no.nav.bidrag.commons.util.IdentUtils
@@ -45,7 +45,6 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnl
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndringSjekkGrensePeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningPrivatAvtale
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
-import no.nav.bidrag.transport.behandling.felles.grunnlag.PrivatAvtaleGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.ResultatFraVedtakGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningIndeksregulering
@@ -168,7 +167,12 @@ class KlageOrkestrator(
                     klageberegningGrunnlag.grunnlagListe.bidragspliktig ?: klageFeilet("Fant ikke bidragspliktig i grunnlaget"),
                 ) as List<GrunnlagDto>
 
-            val beløpshistorikkFørPåklagetVedtak = klageOrkestratorHelpers.finnBeløpshistorikk(påklagetVedtak, stønad, personobjekter)
+            val beløpshistorikkFørPåklagetVedtak = klageOrkestratorHelpers.finnBeløpshistorikkFørPåklagetVedtak(
+                påklagetVedtak,
+                stønad,
+                personobjekter,
+                klageberegningGrunnlag,
+            )
 
             // TODO Sjekk om nytt virkningstidspunkt kan være tidligere enn originalt virkningstidspunkt
             val nyVirkningErEtterOpprinneligVirkning = klageperiode.fom.isAfter(påklagetVedtakVirkningstidspunkt)
@@ -524,8 +528,10 @@ class KlageOrkestrator(
                 Resultatkode.fraKode(sistePeriode.resultatkode) == Resultatkode.INGEN_ENDRING_UNDER_GRENSE
             if (periodErIngenEndringUnderGrense) {
                 val sistePeriodeFraHistorikk = beløpshistorikkFørPåklagetVedtak.beløpshistorikk.maxBy { it.periode.til?.year ?: it.periode.fom.year }
-                val vedtak = vedtakService.hentVedtak(sistePeriodeFraHistorikk.vedtaksid!!)!!
-                return vedtak.finnStønadsendring(stønadsid)?.førsteIndeksreguleringsår ?: (årstallSistePeriode + 1)
+                val indeksårFraVedtak =
+                    sistePeriodeFraHistorikk.vedtaksid?.let { vedtakService.hentVedtak(it)?.finnStønadsendring(stønadsid)?.førsteIndeksreguleringsår }
+                        ?: beløpshistorikkFørPåklagetVedtak.nesteIndeksreguleringsår
+                return indeksårFraVedtak ?: (årstallSistePeriode + 1)
             }
             return årstallSistePeriode + 1
         }
@@ -752,7 +758,7 @@ class KlageOrkestrator(
             val klageBeregnFraDato = klagevedtakResultat?.beregnetFraDato?.toYearMonth()
             val historikkUtenAutojobb = stønadDto.periodeListe.filter {
                 (it.vedtaksid != vedtaksidBeregnetBeløpshistorikk || it.periode.fom == klageBeregnFraDato) &&
-                    it.vedtaksid != vedtaksidAutomatiskJobb
+                    it.vedtaksid != vedtaksidAutomatiskJobb && it.vedtaksid != vedtaksidPrivatavtale
             }
             val sistePeriode = historikkUtenAutojobb.maxByOrNull { it.periode.fom }
             val erSistePeriodeKlagevedtak = sistePeriode?.periode?.fom == klageBeregnFraDato
@@ -890,7 +896,9 @@ class KlageOrkestrator(
             return klageberegningResultat
         }
 
-        val delberegningIndeksreguleringPrivatAvtalePeriodeResultat = utførDelberegningPrivatAvtalePeriode(klageberegningGrunnlag)
+        val delberegningIndeksreguleringPrivatAvtalePeriodeResultat = klageOrkestratorHelpers.utførDelberegningPrivatAvtalePeriode(
+            klageberegningGrunnlag,
+        )
 
         // Kaller delberegning for å sjekke om endring i bidrag er over grense (pr periode)
         val delberegningEndringSjekkGrensePeriodeResultat =
@@ -942,16 +950,6 @@ class KlageOrkestrator(
                 ).distinctBy { it.referanse }.sortedBy { it.referanse },
         )
     }
-
-    private fun utførDelberegningPrivatAvtalePeriode(klageberegningGrunnlag: BeregnGrunnlag): List<GrunnlagDto> =
-        if (klageberegningGrunnlag.grunnlagListe
-                .filtrerOgKonverterBasertPåEgenReferanse<PrivatAvtaleGrunnlag>(Grunnlagstype.PRIVAT_AVTALE_GRUNNLAG)
-                .none { it.gjelderBarnReferanse == klageberegningGrunnlag.søknadsbarnReferanse }
-        ) {
-            emptyList()
-        } else {
-            delberegningPrivatAvtalePeriode(klageberegningGrunnlag)
-        }
 
     // Lager resultatperioder basert på beløpshistorikk hvis beregnet bidrag ikke er over minimumsgrense for endring
     // TODO Kopiert fra BeregnBarnebidragService. Bør flyttes til et felles sted. BeregnFelles?

@@ -1,6 +1,7 @@
 package no.nav.bidrag.beregn.barnebidrag.utils
 
 import com.fasterxml.jackson.databind.node.POJONode
+import no.nav.bidrag.beregn.barnebidrag.service.BeregnIndeksreguleringPrivatAvtaleService.delberegningPrivatAvtalePeriode
 import no.nav.bidrag.beregn.barnebidrag.service.ByggetBeløpshistorikk
 import no.nav.bidrag.beregn.barnebidrag.service.VedtakService
 import no.nav.bidrag.beregn.barnebidrag.service.klageFeilet
@@ -15,12 +16,17 @@ import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadPeriodeDto
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
+import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningPrivatAvtale
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
+import no.nav.bidrag.transport.behandling.felles.grunnlag.PrivatAvtaleGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.erResultatEndringUnderGrense
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
+import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåFremmedReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.finnOgKonverterGrunnlagSomErReferertFraGrunnlagsreferanseListe
 import no.nav.bidrag.transport.behandling.felles.grunnlag.hentAllePersoner
 import no.nav.bidrag.transport.behandling.felles.grunnlag.hentPersonMedIdent
@@ -34,6 +40,7 @@ import java.time.YearMonth
 
 internal val vedtaksidBeregnetBeløpshistorikk = 1
 internal val vedtaksidAutomatiskJobb = 2
+internal val vedtaksidPrivatavtale = 3
 class KlageOrkestratorHelpers(private val vedtakService: VedtakService, private val identUtils: IdentUtils) {
     internal fun List<StønadPeriodeDto>.justerSistePeriodeTilÅBliLøpende() = mapIndexed { index, periode ->
         if (index == this.size - 1) {
@@ -42,14 +49,66 @@ class KlageOrkestratorHelpers(private val vedtakService: VedtakService, private 
             periode
         }
     }
-
-    fun finnBeløpshistorikk(vedtak: VedtakDto, stønad: Stønadsid, personobjekter: List<GrunnlagDto>? = null): BeløpshistorikkGrunnlag =
-        vedtak.finnBeløpshistorikkGrunnlag(stønad, identUtils)
+    fun utførDelberegningPrivatAvtalePeriode(klageberegningGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = if (klageberegningGrunnlag.grunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<PrivatAvtaleGrunnlag>(Grunnlagstype.PRIVAT_AVTALE_GRUNNLAG)
+            .none { it.gjelderBarnReferanse == klageberegningGrunnlag.søknadsbarnReferanse }
+    ) {
+        emptyList()
+    } else {
+        delberegningPrivatAvtalePeriode(klageberegningGrunnlag)
+    }
+    fun finnBeløpshistorikkFørPåklagetVedtak(
+        vedtak: VedtakDto,
+        stønad: Stønadsid,
+        personobjekter: List<GrunnlagDto>? = null,
+        klageberegningGrunnlag: BeregnGrunnlag,
+    ): BeløpshistorikkGrunnlag {
+        val delberegningIndeksreguleringPrivatAvtalePeriodeResultat = utførDelberegningPrivatAvtalePeriode(klageberegningGrunnlag)
+        val beløpshistorikk = vedtak.finnBeløpshistorikkGrunnlag(stønad, identUtils)
             ?: vedtakService.hentBeløpshistorikkTilGrunnlag(
                 stønadsid = stønad,
                 personer = personobjekter ?: vedtak.grunnlagListe.hentAllePersoner() as List<GrunnlagDto>,
                 tidspunkt = vedtak.vedtakstidspunkt!!.minusSeconds(1),
             ).innholdTilObjekt<BeløpshistorikkGrunnlag>()
+
+        return if (delberegningIndeksreguleringPrivatAvtalePeriodeResultat.isNotEmpty()) {
+            val søknadsbarn = delberegningIndeksreguleringPrivatAvtalePeriodeResultat.hentPersonMedIdent(stønad.kravhaver.verdi)!!
+            val privatavtalePerioder = delberegningIndeksreguleringPrivatAvtalePeriodeResultat
+                .filtrerOgKonverterBasertPåFremmedReferanse<DelberegningPrivatAvtale>(
+                    Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE,
+                    gjelderBarnReferanse = søknadsbarn.referanse,
+                ).first()
+
+            val førstePeriodeFraBeløpshistorikk =
+                beløpshistorikk.beløpshistorikk.minByOrNull { it.periode.fom }?.periode ?: klageberegningGrunnlag.periode
+            val privatAvtalePerioderFiltrert = privatavtalePerioder.innhold.perioder
+                .filter { it.periode.fom.isBefore(førstePeriodeFraBeløpshistorikk.fom) }
+
+            val privatavtalePerioderJustert = privatAvtalePerioderFiltrert
+                .mapIndexed { index, periode ->
+                    val erSistePeriode = index == privatAvtalePerioderFiltrert.size - 1
+                    val tilDato = if (erSistePeriode) førstePeriodeFraBeløpshistorikk.til else periode.periode.til
+                    periode.copy(periode = ÅrMånedsperiode(fom = periode.periode.fom, til = tilDato))
+                }
+            val privatavtaleNesteIndeksår = privatavtalePerioder.innhold.nesteIndeksreguleringsår?.toInt()
+            beløpshistorikk.copy(
+                nesteIndeksreguleringsår = maxOf(
+                    beløpshistorikk.nesteIndeksreguleringsår ?: 0,
+                    privatavtalePerioder.innhold.nesteIndeksreguleringsår?.toInt() ?: 0,
+                ).takeIf { it != 0 },
+                beløpshistorikk = beløpshistorikk.beløpshistorikk + privatavtalePerioderJustert.map {
+                    BeløpshistorikkPeriode(
+                        periode = it.periode,
+                        beløp = it.beløp,
+                        valutakode = "NOK",
+                        vedtaksid = null,
+                    )
+                },
+            )
+        } else {
+            beløpshistorikk
+        }
+    }
 
     internal fun byggBeløpshistorikk(
         historikk: List<BeregnetBarnebidragResultat>,
@@ -87,9 +146,11 @@ class KlageOrkestratorHelpers(private val vedtakService: VedtakService, private 
         val perioderFørFraBeløpshistorikk = beløpshistorikkFørPåklagetVedtak.beløpshistorikk
             .filter { førstePeriode == null || it.periode.fom.isBefore(førstePeriode) }
             .map {
-                val vedtak = vedtakService.hentVedtak(it.vedtaksid!!)!!
-                val periode = vedtak.finnStønadsendring(stønad)!!.periodeListe.find { vp -> vp.periode.fom == it.periode.fom }!!
-                val erResultatIngenEndring = vedtak.grunnlagListe.erResultatUnderGrense(periode.grunnlagReferanseListe)
+                val vedtak = it.vedtaksid?.let { vedtakService.hentVedtak(it) }
+                val erResultatIngenEndring = vedtak?.let { vedtaksid ->
+                    val periode = vedtak.finnStønadsendring(stønad)!!.periodeListe.find { vp -> vp.periode.fom == it.periode.fom }!!
+                    vedtak.grunnlagListe.erResultatUnderGrense(periode.grunnlagReferanseListe)
+                } ?: false
 
                 StønadPeriodeDto(
                     periodeid = 1,
@@ -102,8 +163,8 @@ class KlageOrkestratorHelpers(private val vedtakService: VedtakService, private 
                     stønadsid = 1,
                     valutakode = "NOK",
                     vedtaksid = when {
-                        vedtak.type.erIndeksEllerAldersjustering -> vedtaksidAutomatiskJobb
-                        else -> it.vedtaksid!!
+                        vedtak != null && vedtak.type.erIndeksEllerAldersjustering -> vedtaksidAutomatiskJobb
+                        else -> it.vedtaksid ?: vedtaksidPrivatavtale
                     },
                     gyldigFra = LocalDateTime.now(),
                     gyldigTil = null,
