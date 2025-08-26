@@ -81,16 +81,20 @@ class KlageOrkestratorHelpers(private val vedtakService: VedtakService, private 
 
             val førstePeriodeFraBeløpshistorikk =
                 beløpshistorikk.beløpshistorikk.minByOrNull { it.periode.fom }?.periode ?: klageberegningGrunnlag.periode
+
+            // Bare ta med privat avtale perioder til første periode i historikken
             val privatAvtalePerioderFiltrert = privatavtalePerioder.innhold.perioder
                 .filter { it.periode.fom.isBefore(førstePeriodeFraBeløpshistorikk.fom) }
 
+            // Juster siste periode i privat avtale historikk slik at den slutter samme tidspunkt som neste periode starter
+            // Dette inkluderer også klageberegningen da den er første periode etter
             val privatavtalePerioderJustert = privatAvtalePerioderFiltrert
                 .mapIndexed { index, periode ->
                     val erSistePeriode = index == privatAvtalePerioderFiltrert.size - 1
                     val tilDato = if (erSistePeriode) førstePeriodeFraBeløpshistorikk.til else periode.periode.til
                     periode.copy(periode = ÅrMånedsperiode(fom = periode.periode.fom, til = tilDato))
                 }
-            val privatavtaleNesteIndeksår = privatavtalePerioder.innhold.nesteIndeksreguleringsår?.toInt()
+
             beløpshistorikk.copy(
                 nesteIndeksreguleringsår = maxOf(
                     beløpshistorikk.nesteIndeksreguleringsår ?: 0,

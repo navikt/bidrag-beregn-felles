@@ -57,9 +57,11 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
                 )
             }.sortedBy { it.periode.fom }
 
+        val beregnTil = grunnlag.periode.til
+        val beregnFra = privatAvtalePeriodeListe.first().periode.fom
         val periode = ÅrMånedsperiode(
-            fom = privatAvtalePeriodeListe.first().periode.fom,
-            til = null,
+            fom = beregnFra,
+            til = if (beregnTil != null && beregnTil > beregnFra) beregnTil else beregnFra.plusMonths(1),
         )
 
         val sjablonListe = mapSjablonSjablontallGrunnlag(
@@ -158,16 +160,13 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
     ): Pair<YearMonth, List<Beregningsperiode>> {
         var beregningsperiodeListe = mutableListOf<Beregningsperiode>()
 
-        var indeksregulerPeriode = if (privatAvtale.skalIndeksreguleres) {
-            maxOf(
-                YearMonth.of(privatAvtale.avtaleInngåttDato.year, privatAvtale.avtaleInngåttDato.month.value),
-                privatAvtaleListe.last().periode.fom,
-            ).plusYears(1).withMonth(7)
-        } else {
-            YearMonth.now().plusYears(1).withMonth(7)
-        }
+        val beregnTil = beregningsperiode.til ?: YearMonth.now()
+        var indeksregulerPeriode = maxOf(
+            YearMonth.of(privatAvtale.avtaleInngåttDato.year, privatAvtale.avtaleInngåttDato.month.value),
+            privatAvtaleListe.last().periode.fom,
+        ).plusYears(1).withMonth(7)
 
-        if (privatAvtale.skalIndeksreguleres && indeksregulerPeriode <= YearMonth.now() && privatAvtaleListe.last().periode.til == null) {
+        if (privatAvtale.skalIndeksreguleres && indeksregulerPeriode <= beregnTil && privatAvtaleListe.last().periode.til == null) {
             privatAvtaleListe.forEach {
                 if (it.periode.fom.isBefore(indeksregulerPeriode)) {
                     beregningsperiodeListe.add(
@@ -179,8 +178,8 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
                 }
             }
 
-            while (indeksregulerPeriode <= YearMonth.now()) {
-                if ((beregningsperiode.til != null && indeksregulerPeriode.isBefore(beregningsperiode.til)) || beregningsperiode.til == null) {
+            while (indeksregulerPeriode < beregnTil) {
+                if (indeksregulerPeriode < beregnTil || beregningsperiode.til == null) {
                     beregningsperiodeListe.add(
                         Beregningsperiode(
                             periode = ÅrMånedsperiode(indeksregulerPeriode, indeksregulerPeriode),
@@ -194,9 +193,11 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
             val periodeListe = beregningsperiodeListe.asSequence().map { it.periode }
 
             // Slår sammen og lager periodene som skal beregnes.
-            val sammenslåttePerioder = lagBruddPeriodeListe(periodeListe, beregningsperiode)
+            val sammenslåttePerioder = lagBruddPeriodeListe(periodeListe, beregningsperiode).ifEmpty {
+                listOf(ÅrMånedsperiode(beregningsperiodeListe.firstOrNull()?.periode?.fom ?: privatAvtaleListe.last().periode.fom, null))
+            }
             // Til slutt legges det til en periode med åpen tildato
-            val endeligListe = sammenslåttePerioder.plus(ÅrMånedsperiode(sammenslåttePerioder.last().til!!, null))
+            val endeligListe = sammenslåttePerioder.last().til?.let { sammenslåttePerioder.plus(ÅrMånedsperiode(it, null)) } ?: sammenslåttePerioder
 
             beregningsperiodeListe = endeligListe.map {
                 Beregningsperiode(
@@ -236,7 +237,7 @@ internal object BeregnIndeksreguleringPrivatAvtaleService : BeregnService() {
 
         val sjablonIndeksreguleringFaktor = if (periodeSkalIndeksreguleres) {
             sjablonIndeksreguleringFaktorListe
-                .firstOrNull { it.sjablonSjablontallPeriode.periode.inneholder(beregningsperiode) }
+                .firstOrNull { beregningsperiode.inneholder(it.sjablonSjablontallPeriode.periode) }
                 ?.let {
                     SjablonSjablontallBeregningGrunnlag(
                         referanse = it.referanse,
