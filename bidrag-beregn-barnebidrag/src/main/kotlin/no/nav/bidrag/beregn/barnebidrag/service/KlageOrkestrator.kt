@@ -209,11 +209,22 @@ class KlageOrkestrator(
                 klageberegningGrunnlag = klageberegningGrunnlag,
             )
 
-            return byggVedtak(
+            val resultat = byggVedtak(
                 context.copy(
                     klageresultat = klageberegningResultatEtterSjekkMinGrenseForEndring,
                 ),
             )
+            return resultat.map {
+                if (it.omgjøringsvedtak) {
+                    it.copy(
+                        resultat = it.resultat.copy(
+                            grunnlagListe = (grunnlagsliste + klageberegningResultatEtterSjekkMinGrenseForEndring.grunnlagListe).toSet().toList(),
+                        ),
+                    )
+                } else {
+                    it
+                }
+            }
         } catch (e: Exception) {
             if (e is FinnesEtterfølgendeVedtakMedVirkningstidspunktFørPåklagetVedtak || e is KlageberegningFeiletFunksjonelt) {
                 throw e
@@ -944,7 +955,8 @@ class KlageOrkestrator(
         return BeregnetBarnebidragResultat(
             beregnetBarnebidragPeriodeListe = resultatPeriodeListe,
             grunnlagListe = (
-                klageberegningResultat.grunnlagListe +
+                delberegningIndeksreguleringPrivatAvtalePeriodeResultat +
+                    klageberegningResultat.grunnlagListe +
                     delberegningEndringSjekkGrenseResultat +
                     delberegningEndringSjekkGrensePeriodeResultat
                 ).distinctBy { it.referanse }.sortedBy { it.referanse },
