@@ -124,7 +124,12 @@ internal class BeregnIndeksregulerPrivatAvtaleTest : FellesTest() {
     }
 
     private fun utførBeregningerOgEvaluerResultatIndeksreguleringPrivatAvtale(): DelberegningPrivatAvtale {
-        val request = lesFilOgByggRequest(filnavn)
+        var request = lesFilOgByggRequest(filnavn)
+        request = request.copy(
+            periode = request.periode.copy(
+                til = YearMonth.now().plusMonths(1),
+            ),
+        )
         val resultat = api.beregnIndeksreguleringPrivatAvtale(request)
         printJson(resultat)
 
