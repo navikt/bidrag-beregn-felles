@@ -1246,8 +1246,8 @@ internal class BeregnBarnebidragTest : FellesTest() {
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[1].endringErOverGrense).isTrue() },
 
             // Privat avtale periode
-            { assertThat(delberegningPrivatAvtalePeriodeResultatListe).hasSize(2) },
-            { assertThat(delberegningPrivatAvtalePeriodeResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), YearMonth.parse("2025-07"))) },
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe).hasSize(1) },
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null)) },
             { assertThat(delberegningPrivatAvtalePeriodeResultatListe[0].beløp).isEqualTo(BigDecimal.valueOf(500)) },
 
             // Beløpshistorikk
@@ -1391,8 +1391,8 @@ internal class BeregnBarnebidragTest : FellesTest() {
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[1].endringErOverGrense).isFalse() },
 
             // Privat avtale periode
-            { assertThat(delberegningPrivatAvtalePeriodeResultatListe).hasSize(2) },
-            { assertThat(delberegningPrivatAvtalePeriodeResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), YearMonth.parse("2025-07"))) },
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe).hasSize(1) },
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null)) },
             { assertThat(delberegningPrivatAvtalePeriodeResultatListe[0].beløp).isEqualTo(BigDecimal.valueOf(4800)) },
 
             // Beløpshistorikk
@@ -1536,8 +1536,8 @@ internal class BeregnBarnebidragTest : FellesTest() {
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[1].endringErOverGrense).isFalse() },
 
             // Privat avtale periode
-            { assertThat(delberegningPrivatAvtalePeriodeResultatListe).hasSize(2) },
-            { assertThat(delberegningPrivatAvtalePeriodeResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), YearMonth.parse("2025-07"))) },
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe).hasSize(1) },
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null)) },
             { assertThat(delberegningPrivatAvtalePeriodeResultatListe[0].beløp).isEqualTo(BigDecimal.valueOf(4800)) },
 
             // Beløpshistorikk
@@ -1948,7 +1948,7 @@ internal class BeregnBarnebidragTest : FellesTest() {
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[10].endringErOverGrense).isFalse() },
 
             // Privat avtale periode
-            { assertThat(delberegningPrivatAvtalePeriodeResultatListe).hasSize(5) },
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe).hasSize(4) },
             {
                 assertThat(delberegningPrivatAvtalePeriodeResultatListe[0].periode).isEqualTo(
                     ÅrMånedsperiode(
@@ -1980,7 +1980,7 @@ internal class BeregnBarnebidragTest : FellesTest() {
                 assertThat(delberegningPrivatAvtalePeriodeResultatListe[3].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2024-07"),
-                        YearMonth.parse("2025-07"),
+                        null,
                     ),
                 )
             },
@@ -2414,7 +2414,7 @@ internal class BeregnBarnebidragTest : FellesTest() {
             { assertThat(delberegningEndringSjekkGrensePeriodeResultatListe[10].endringErOverGrense).isFalse() },
 
             // Privat avtale periode
-            { assertThat(delberegningPrivatAvtalePeriodeResultatListe).hasSize(5) },
+            { assertThat(delberegningPrivatAvtalePeriodeResultatListe).hasSize(4) },
             {
                 assertThat(delberegningPrivatAvtalePeriodeResultatListe[0].periode).isEqualTo(
                     ÅrMånedsperiode(
@@ -2446,7 +2446,7 @@ internal class BeregnBarnebidragTest : FellesTest() {
                 assertThat(delberegningPrivatAvtalePeriodeResultatListe[3].periode).isEqualTo(
                     ÅrMånedsperiode(
                         YearMonth.parse("2024-07"),
-                        YearMonth.parse("2025-07"),
+                        null,
                     ),
                 )
             },

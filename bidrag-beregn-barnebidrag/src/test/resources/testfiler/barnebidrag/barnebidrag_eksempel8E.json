@@ -134,7 +134,7 @@
       "innhold": {
         "periode": {
           "fom": "2021-01",
-          "til": "2025-03"
+          "til": null
         },
         "bostatus": "IKKE_MED_FORELDER",
         "manueltRegistrert": false,
@@ -166,7 +166,7 @@
       "innhold": {
         "periode": {
           "fom": "2021-01",
-          "til": "2025-03"
+          "til": null
         },
         "samværsklasse": "SAMVÆRSKLASSE_1",
         "manueltRegistrert": false
