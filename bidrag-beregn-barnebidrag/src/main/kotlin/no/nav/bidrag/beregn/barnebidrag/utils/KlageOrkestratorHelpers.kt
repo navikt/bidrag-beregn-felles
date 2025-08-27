@@ -62,6 +62,7 @@ class KlageOrkestratorHelpers(private val vedtakService: VedtakService, private 
         stønad: Stønadsid,
         personobjekter: List<GrunnlagDto>? = null,
         klageberegningGrunnlag: BeregnGrunnlag,
+        påklagetVedtakVirkningstidspunkt: YearMonth,
     ): BeløpshistorikkGrunnlag {
         val delberegningIndeksreguleringPrivatAvtalePeriodeResultat = utførDelberegningPrivatAvtalePeriode(klageberegningGrunnlag)
         val beløpshistorikk = vedtak.finnBeløpshistorikkGrunnlag(stønad, identUtils)
@@ -80,18 +81,21 @@ class KlageOrkestratorHelpers(private val vedtakService: VedtakService, private 
                 ).first()
 
             val førstePeriodeFraBeløpshistorikk =
-                beløpshistorikk.beløpshistorikk.minByOrNull { it.periode.fom }?.periode ?: klageberegningGrunnlag.periode
+                beløpshistorikk.beløpshistorikk.minByOrNull { it.periode.fom }?.periode
+
+            val periodeStartInnkreving =
+                førstePeriodeFraBeløpshistorikk?.fom?.let { minOf(it, påklagetVedtakVirkningstidspunkt) } ?: påklagetVedtakVirkningstidspunkt
 
             // Bare ta med privat avtale perioder til første periode i historikken
             val privatAvtalePerioderFiltrert = privatavtalePerioder.innhold.perioder
-                .filter { it.periode.fom.isBefore(førstePeriodeFraBeløpshistorikk.fom) }
+                .filter { it.periode.fom.isBefore(periodeStartInnkreving) }
 
             // Juster siste periode i privat avtale historikk slik at den slutter samme tidspunkt som neste periode starter
             // Dette inkluderer også klageberegningen da den er første periode etter
             val privatavtalePerioderJustert = privatAvtalePerioderFiltrert
                 .mapIndexed { index, periode ->
                     val erSistePeriode = index == privatAvtalePerioderFiltrert.size - 1
-                    val tilDato = if (erSistePeriode) førstePeriodeFraBeløpshistorikk.til else periode.periode.til
+                    val tilDato = if (erSistePeriode) periodeStartInnkreving else periode.periode.til
                     periode.copy(periode = ÅrMånedsperiode(fom = periode.periode.fom, til = tilDato))
                 }
 

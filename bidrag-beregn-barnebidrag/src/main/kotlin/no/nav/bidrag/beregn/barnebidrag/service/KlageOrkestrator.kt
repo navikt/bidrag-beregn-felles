@@ -172,6 +172,8 @@ class KlageOrkestrator(
                 stønad,
                 personobjekter,
                 klageberegningGrunnlag,
+                påklagetVedtakVirkningstidspunkt,
+
             )
 
             // TODO Sjekk om nytt virkningstidspunkt kan være tidligere enn originalt virkningstidspunkt
