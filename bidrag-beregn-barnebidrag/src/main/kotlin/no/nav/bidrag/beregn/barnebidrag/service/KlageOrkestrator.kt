@@ -721,7 +721,7 @@ class KlageOrkestrator(
         beløpshistorikkFørPåklagetVedtak: BeløpshistorikkGrunnlag,
     ): ÅrMånedsperiode? {
         val vedtakMellomPåklagetVirkningOgNyVirkning = beløpshistorikkFørPåklagetVedtak.beløpshistorikk.filter {
-            it.periode.fom.isBefore(klageperiode.fom)
+            it.periode.fom.isBefore(klageperiode.fom) && it.vedtaksid != null
         }
 
         val tidligstePeriodeFom = vedtakMellomPåklagetVirkningOgNyVirkning.minOfOrNull { it.periode.fom }
