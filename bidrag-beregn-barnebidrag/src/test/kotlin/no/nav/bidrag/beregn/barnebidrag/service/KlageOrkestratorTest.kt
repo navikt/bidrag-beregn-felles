@@ -20,7 +20,7 @@ import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.indeksregulering.BeregnIndeksreguleringApi
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
-import no.nav.bidrag.transport.behandling.beregning.barnebidrag.KlageOrkestratorGrunnlag
+import no.nav.bidrag.transport.behandling.beregning.barnebidrag.OmgjøringOrkestratorGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakDto
 import org.junit.jupiter.api.BeforeEach
@@ -83,9 +83,9 @@ internal class KlageOrkestratorTest : FellesTest() {
         val klageResultat = orkestrator.utførOmgjøringEndelig(
             omgjøringResultat = klageberegningResultat,
             omgjøringGrunnlag = klageberegningGrunnlag,
-            omgjøringOrkestratorGrunnlag = KlageOrkestratorGrunnlag(
+            omgjøringOrkestratorGrunnlag = OmgjøringOrkestratorGrunnlag(
                 stønad = stønad,
-                påklagetVedtakId = påklagetVedtak.vedtaksid.toInt(),
+                omgjørVedtakId = påklagetVedtak.vedtaksid.toInt(),
             ),
         )
 
@@ -135,9 +135,9 @@ internal class KlageOrkestratorTest : FellesTest() {
         val klageResultat = orkestrator.utførOmgjøringEndelig(
             omgjøringResultat = klageberegningResultat,
             omgjøringGrunnlag = klageberegningGrunnlag,
-            omgjøringOrkestratorGrunnlag = KlageOrkestratorGrunnlag(
+            omgjøringOrkestratorGrunnlag = OmgjøringOrkestratorGrunnlag(
                 stønad = stønad,
-                påklagetVedtakId = påklagetVedtak.vedtaksid.toInt(),
+                omgjørVedtakId = påklagetVedtak.vedtaksid.toInt(),
             ),
         )
 
@@ -201,9 +201,9 @@ internal class KlageOrkestratorTest : FellesTest() {
         val klageResultat = orkestrator.utførOmgjøringEndelig(
             omgjøringResultat = klageberegningResultat,
             omgjøringGrunnlag = klageberegningGrunnlag,
-            omgjøringOrkestratorGrunnlag = KlageOrkestratorGrunnlag(
+            omgjøringOrkestratorGrunnlag = OmgjøringOrkestratorGrunnlag(
                 stønad = stønad,
-                påklagetVedtakId = påklagetVedtak.vedtaksid.toInt(),
+                omgjørVedtakId = påklagetVedtak.vedtaksid.toInt(),
             ),
         )
 

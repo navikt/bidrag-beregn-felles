@@ -25,7 +25,7 @@ import no.nav.bidrag.transport.behandling.belopshistorikk.request.HentStønadHis
 import no.nav.bidrag.transport.behandling.belopshistorikk.request.HentStønadRequest
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BidragsberegningOrkestratorRequest
-import no.nav.bidrag.transport.behandling.beregning.barnebidrag.KlageOrkestratorGrunnlag
+import no.nav.bidrag.transport.behandling.beregning.barnebidrag.OmgjøringOrkestratorGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndringSjekkGrense
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
@@ -113,7 +113,7 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
     fun test02_BeregnKlage() {
         filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/test02_klage_beregning_grunnlag.json"
         val beregnGrunnlag: BeregnGrunnlag = lesFilOgByggRequest(filnavnBeregnGrunnlag)
-        val request = BidragsberegningOrkestratorRequest(beregnGrunnlag = beregnGrunnlag, beregningstype = Beregningstype.KLAGE)
+        val request = BidragsberegningOrkestratorRequest(beregnGrunnlag = beregnGrunnlag, beregningstype = Beregningstype.OMGJØRING)
 
         val beregningResultat = bidragsberegningOrkestrator.utførBidragsberegning(request)
         printJson(beregningResultat)
@@ -170,16 +170,16 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
         every { stønadConsumer.hentLøpendeStønad(hentStønadRequest) } returns beløpshistorikkNå
         every { stønadConsumer.hentHistoriskeStønader(hentStønadHistoriskRequest) } returns beløpshistorikkKlage
 
-        val klageOrkestratorGrunnlag = KlageOrkestratorGrunnlag(
+        val klageOrkestratorGrunnlag = OmgjøringOrkestratorGrunnlag(
             stønad = stønad,
-            påklagetVedtakId = påklagetVedtak.vedtaksid.toInt(),
+            omgjørVedtakId = påklagetVedtak.vedtaksid.toInt(),
         )
 
         val request =
             BidragsberegningOrkestratorRequest(
                 beregnGrunnlag = beregnGrunnlag,
-                klageOrkestratorGrunnlag = klageOrkestratorGrunnlag,
-                beregningstype = Beregningstype.KLAGE_ENDELIG,
+                omgjøringOrkestratorGrunnlag = klageOrkestratorGrunnlag,
+                beregningstype = Beregningstype.OMGJØRING_ENDELIG,
             )
 
         val beregningResultat = bidragsberegningOrkestrator.utførBidragsberegning(request)
@@ -229,16 +229,16 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
         every { vedtakService.hentVedtak(påklagetVedtak.vedtaksid.toInt()) } returns påklagetVedtak
         every { vedtakService.hentLøpendeStønad(stønad) } returns beløpshistorikkNå
 
-        val klageOrkestratorGrunnlag = KlageOrkestratorGrunnlag(
+        val klageOrkestratorGrunnlag = OmgjøringOrkestratorGrunnlag(
             stønad = stønad,
-            påklagetVedtakId = påklagetVedtak.vedtaksid.toInt(),
+            omgjørVedtakId = påklagetVedtak.vedtaksid.toInt(),
         )
 
         val request =
             BidragsberegningOrkestratorRequest(
                 beregnGrunnlag = beregnGrunnlag,
-                klageOrkestratorGrunnlag = klageOrkestratorGrunnlag,
-                beregningstype = Beregningstype.KLAGE_ENDELIG,
+                omgjøringOrkestratorGrunnlag = klageOrkestratorGrunnlag,
+                beregningstype = Beregningstype.OMGJØRING_ENDELIG,
             )
 
         val beregningResultat = bidragsberegningOrkestrator.utførBidragsberegning(request)
@@ -298,16 +298,16 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
         every { stønadConsumer.hentLøpendeStønad(hentStønadRequest) } returns beløpshistorikkNå
         every { stønadConsumer.hentHistoriskeStønader(hentStønadHistoriskRequest) } returns beløpshistorikkKlage
 
-        val klageOrkestratorGrunnlag = KlageOrkestratorGrunnlag(
+        val klageOrkestratorGrunnlag = OmgjøringOrkestratorGrunnlag(
             stønad = stønad,
-            påklagetVedtakId = påklagetVedtak.vedtaksid.toInt(),
+            omgjørVedtakId = påklagetVedtak.vedtaksid.toInt(),
         )
 
         val request =
             BidragsberegningOrkestratorRequest(
                 beregnGrunnlag = beregnGrunnlag,
-                klageOrkestratorGrunnlag = klageOrkestratorGrunnlag,
-                beregningstype = Beregningstype.KLAGE_ENDELIG,
+                omgjøringOrkestratorGrunnlag = klageOrkestratorGrunnlag,
+                beregningstype = Beregningstype.OMGJØRING_ENDELIG,
             )
 
         val beregningResultat = bidragsberegningOrkestrator.utførBidragsberegning(request)
