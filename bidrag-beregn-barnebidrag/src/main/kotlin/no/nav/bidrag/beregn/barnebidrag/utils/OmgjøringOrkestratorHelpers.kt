@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.barnebidrag.service.BeregnIndeksreguleringPrivatAvtaleService.delberegningPrivatAvtalePeriode
 import no.nav.bidrag.beregn.barnebidrag.service.ByggetBeløpshistorikk
 import no.nav.bidrag.beregn.barnebidrag.service.VedtakService
-import no.nav.bidrag.beregn.barnebidrag.service.klageFeilet
+import no.nav.bidrag.beregn.barnebidrag.service.omgjøringFeilet
 import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -41,7 +41,7 @@ import java.time.YearMonth
 internal val vedtaksidBeregnetBeløpshistorikk = 1
 internal val vedtaksidAutomatiskJobb = 2
 internal val vedtaksidPrivatavtale = 3
-class KlageOrkestratorHelpers(private val vedtakService: VedtakService, private val identUtils: IdentUtils) {
+class OmgjøringOrkestratorHelpers(private val vedtakService: VedtakService, private val identUtils: IdentUtils) {
     internal fun List<StønadPeriodeDto>.justerSistePeriodeTilÅBliLøpende() = mapIndexed { index, periode ->
         if (index == this.size - 1) {
             periode.copy(periode = periode.periode.copy(til = null))
@@ -49,22 +49,23 @@ class KlageOrkestratorHelpers(private val vedtakService: VedtakService, private 
             periode
         }
     }
-    fun utførDelberegningPrivatAvtalePeriode(klageberegningGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = if (klageberegningGrunnlag.grunnlagListe
-            .filtrerOgKonverterBasertPåEgenReferanse<PrivatAvtaleGrunnlag>(Grunnlagstype.PRIVAT_AVTALE_GRUNNLAG)
-            .none { it.gjelderBarnReferanse == klageberegningGrunnlag.søknadsbarnReferanse }
-    ) {
-        emptyList()
-    } else {
-        delberegningPrivatAvtalePeriode(klageberegningGrunnlag)
-    }
-    fun finnBeløpshistorikkFørPåklagetVedtak(
+    fun utførDelberegningPrivatAvtalePeriode(omgjøringsberegningGrunnlag: BeregnGrunnlag): List<GrunnlagDto> =
+        if (omgjøringsberegningGrunnlag.grunnlagListe
+                .filtrerOgKonverterBasertPåEgenReferanse<PrivatAvtaleGrunnlag>(Grunnlagstype.PRIVAT_AVTALE_GRUNNLAG)
+                .none { it.gjelderBarnReferanse == omgjøringsberegningGrunnlag.søknadsbarnReferanse }
+        ) {
+            emptyList()
+        } else {
+            delberegningPrivatAvtalePeriode(omgjøringsberegningGrunnlag)
+        }
+    fun finnBeløpshistorikkFørOmgjøringsVedtak(
         vedtak: VedtakDto,
         stønad: Stønadsid,
         personobjekter: List<GrunnlagDto>? = null,
-        klageberegningGrunnlag: BeregnGrunnlag,
-        påklagetVedtakVirkningstidspunkt: YearMonth,
+        omgjøringsberegningGrunnlag: BeregnGrunnlag,
+        omgjortVedtakVirkningstidspunkt: YearMonth,
     ): BeløpshistorikkGrunnlag {
-        val delberegningIndeksreguleringPrivatAvtalePeriodeResultat = utførDelberegningPrivatAvtalePeriode(klageberegningGrunnlag)
+        val delberegningIndeksreguleringPrivatAvtalePeriodeResultat = utførDelberegningPrivatAvtalePeriode(omgjøringsberegningGrunnlag)
         val beløpshistorikk = vedtak.finnBeløpshistorikkGrunnlag(stønad, identUtils)
             ?: vedtakService.hentBeløpshistorikkTilGrunnlag(
                 stønadsid = stønad,
@@ -84,7 +85,7 @@ class KlageOrkestratorHelpers(private val vedtakService: VedtakService, private 
                 beløpshistorikk.beløpshistorikk.minByOrNull { it.periode.fom }?.periode
 
             val periodeStartInnkreving =
-                førstePeriodeFraBeløpshistorikk?.fom?.let { minOf(it, påklagetVedtakVirkningstidspunkt) } ?: påklagetVedtakVirkningstidspunkt
+                førstePeriodeFraBeløpshistorikk?.fom?.let { minOf(it, omgjortVedtakVirkningstidspunkt) } ?: omgjortVedtakVirkningstidspunkt
 
             // Bare ta med privat avtale perioder til første periode i historikken
             val privatAvtalePerioderFiltrert = privatavtalePerioder.innhold.perioder
@@ -122,7 +123,7 @@ class KlageOrkestratorHelpers(private val vedtakService: VedtakService, private 
         historikk: List<BeregnetBarnebidragResultat>,
         stønad: Stønadsid,
         førPeriode: YearMonth? = null,
-        beløpshistorikkFørPåklagetVedtak: BeløpshistorikkGrunnlag,
+        beløpshistorikkFørOmgjortVedtak: BeløpshistorikkGrunnlag,
     ): ByggetBeløpshistorikk {
         val personer = historikk.flatMap { it.grunnlagListe.hentAllePersoner() }.map { it.tilDto() }.toMutableList()
 
@@ -151,7 +152,7 @@ class KlageOrkestratorHelpers(private val vedtakService: VedtakService, private 
             .justerSistePeriodeTilÅBliLøpende()
 
         val førstePeriode = perioder.minOfOrNull { it.periode.fom }
-        val perioderFørFraBeløpshistorikk = beløpshistorikkFørPåklagetVedtak.beløpshistorikk
+        val perioderFørFraBeløpshistorikk = beløpshistorikkFørOmgjortVedtak.beløpshistorikk
             .filter { førstePeriode == null || it.periode.fom.isBefore(førstePeriode) }
             .map {
                 val vedtak = it.vedtaksid?.let { vedtakService.hentVedtak(it) }
@@ -224,7 +225,7 @@ class KlageOrkestratorHelpers(private val vedtakService: VedtakService, private 
             Person(
                 ident = ident,
                 navn = null,
-                fødselsdato = identUtils.hentFødselsdato(ident) ?: klageFeilet("Fant ikke fødselsdato for person $ident med rolle $rolle"),
+                fødselsdato = identUtils.hentFødselsdato(ident) ?: omgjøringFeilet("Fant ikke fødselsdato for person $ident med rolle $rolle"),
             ),
         ),
     )

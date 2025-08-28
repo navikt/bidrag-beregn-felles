@@ -11,8 +11,8 @@ import org.springframework.context.annotation.Import
 import org.springframework.stereotype.Service
 
 @Service
-@Import(BeregnBarnebidragApi::class, KlageOrkestrator::class)
-class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragApi, private val klageOrkestrator: KlageOrkestrator) {
+@Import(BeregnBarnebidragApi::class, OmgjøringOrkestrator::class)
+class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragApi, private val omgjøringOrkestrator: OmgjøringOrkestrator) {
 
     fun utførBidragsberegning(request: BidragsberegningOrkestratorRequest): BidragsberegningOrkestratorResponse {
         when (request.beregningstype) {
@@ -29,8 +29,8 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
                 secureLogger.debug { "Resultat av bidragsberegning: $respons" }
                 return respons
             }
-            Beregningstype.KLAGE -> {
-                secureLogger.debug { "Utfører klageberegning for request: $request" }
+            Beregningstype.OMGJØRING -> {
+                secureLogger.debug { "Utfører omgjøringsberegning for request: $request" }
                 val klageberegningResultat = barnebidragApi.beregn(
                     beregnGrunnlag = request.beregnGrunnlag,
                 )
@@ -39,19 +39,19 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
                         ResultatVedtak(resultat = klageberegningResultat, delvedtak = true, omgjøringsvedtak = true, vedtakstype = Vedtakstype.KLAGE),
                     ),
                 )
-                secureLogger.debug { "Resultat av klageberegning: $respons" }
+                secureLogger.debug { "Resultat av omgjøringsberegning: $respons" }
                 return respons
             }
-            Beregningstype.KLAGE_ENDELIG -> {
-                secureLogger.debug { "Utfører endelig klageberegning for request: $request" }
+            Beregningstype.OMGJØRING_ENDELIG -> {
+                secureLogger.debug { "Utfører endelig omgjøringsberegning for request: $request" }
                 val klageberegningResultat = barnebidragApi.beregn(
                     beregnGrunnlag = request.beregnGrunnlag,
                 )
-                val endeligKlageberegningResultat = klageOrkestrator.utførKlageEndelig(
-                    klageberegningResultat = klageberegningResultat,
-                    klageberegningGrunnlag = request.beregnGrunnlag,
-                    klageOrkestratorGrunnlag =
-                    request.klageOrkestratorGrunnlag ?: throw IllegalArgumentException("klageOrkestratorGrunnlag må være angitt"),
+                val endeligKlageberegningResultat = omgjøringOrkestrator.utførOmgjøringEndelig(
+                    omgjøringResultat = klageberegningResultat,
+                    omgjøringGrunnlag = request.beregnGrunnlag,
+                    omgjøringOrkestratorGrunnlag =
+                    request.omgjøringOrkestratorGrunnlag ?: throw IllegalArgumentException("klageOrkestratorGrunnlag må være angitt"),
                 )
                 val respons = BidragsberegningOrkestratorResponse(endeligKlageberegningResultat)
                 secureLogger.debug { "Resultat av endelig klageberegning: $respons" }

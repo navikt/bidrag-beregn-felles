@@ -50,7 +50,7 @@ class VedtakService(
 
     // Finner alle vedtaksider som er relatert til et påklaget vedtak.
     // Feks hvis det er opprettet klage på en vedtak som er klage på opprinnelig vedtak så vil også det vedtaket inkluderes
-    fun hentAlleVedtaksiderRelatertTilPåklagetVedtak(stønadsid: Stønadsid, påklagetVedtaksid: Int): Set<Int> {
+    fun hentAlleVedtaksiderRelatertTilOmgjortVedtak(stønadsid: Stønadsid, påklagetVedtaksid: Int): Set<Int> {
         val vedtakForStønad =
             vedtakConsumer.hentVedtakForStønad(
                 HentVedtakForStønadRequest(

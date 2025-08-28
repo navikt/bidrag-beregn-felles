@@ -8,7 +8,7 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import no.nav.bidrag.beregn.barnebidrag.felles.FellesTest
-import no.nav.bidrag.beregn.barnebidrag.utils.KlageOrkestratorHelpers
+import no.nav.bidrag.beregn.barnebidrag.utils.OmgjøringOrkestratorHelpers
 import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -40,7 +40,7 @@ internal class KlageOrkestratorTest : FellesTest() {
     private lateinit var filnavnEtterfølgendeVedtak1: String
     private lateinit var filnavnEtterfølgendeVedtak2: String
 
-    private lateinit var orkestrator: KlageOrkestrator
+    private lateinit var orkestrator: OmgjøringOrkestrator
 
     @MockK(relaxed = true)
     private lateinit var vedtakService: VedtakService
@@ -56,8 +56,8 @@ internal class KlageOrkestratorTest : FellesTest() {
 
     @BeforeEach
     fun init() {
-        val klageOrkestratorHelpers = KlageOrkestratorHelpers(vedtakService, identUtils)
-        orkestrator = KlageOrkestrator(vedtakService, aldersjusteringOrchestrator, beregnIndeksreguleringApi, klageOrkestratorHelpers)
+        val omgjøringOrkestratorHelpers = OmgjøringOrkestratorHelpers(vedtakService, identUtils)
+        orkestrator = OmgjøringOrkestrator(vedtakService, aldersjusteringOrchestrator, beregnIndeksreguleringApi, omgjøringOrkestratorHelpers)
         stubSjablonProvider()
     }
 
@@ -80,10 +80,10 @@ internal class KlageOrkestratorTest : FellesTest() {
 
         every { vedtakService.hentVedtak(påklagetVedtak.vedtaksid.toInt()) } returns påklagetVedtak
 
-        val klageResultat = orkestrator.utførKlageEndelig(
-            klageberegningResultat = klageberegningResultat,
-            klageberegningGrunnlag = klageberegningGrunnlag,
-            klageOrkestratorGrunnlag = KlageOrkestratorGrunnlag(
+        val klageResultat = orkestrator.utførOmgjøringEndelig(
+            omgjøringResultat = klageberegningResultat,
+            omgjøringGrunnlag = klageberegningGrunnlag,
+            omgjøringOrkestratorGrunnlag = KlageOrkestratorGrunnlag(
                 stønad = stønad,
                 påklagetVedtakId = påklagetVedtak.vedtaksid.toInt(),
             ),
@@ -132,10 +132,10 @@ internal class KlageOrkestratorTest : FellesTest() {
         every { vedtakService.hentVedtak(4703680) } returns etterfølgendeVedtak2
         every { vedtakService.hentLøpendeStønad(stønad) } returns løpendeStønad
 
-        val klageResultat = orkestrator.utførKlageEndelig(
-            klageberegningResultat = klageberegningResultat,
-            klageberegningGrunnlag = klageberegningGrunnlag,
-            klageOrkestratorGrunnlag = KlageOrkestratorGrunnlag(
+        val klageResultat = orkestrator.utførOmgjøringEndelig(
+            omgjøringResultat = klageberegningResultat,
+            omgjøringGrunnlag = klageberegningGrunnlag,
+            omgjøringOrkestratorGrunnlag = KlageOrkestratorGrunnlag(
                 stønad = stønad,
                 påklagetVedtakId = påklagetVedtak.vedtaksid.toInt(),
             ),
@@ -198,10 +198,10 @@ internal class KlageOrkestratorTest : FellesTest() {
 
         every { vedtakService.hentVedtak(påklagetVedtak.vedtaksid.toInt()) } returns påklagetVedtak
 
-        val klageResultat = orkestrator.utførKlageEndelig(
-            klageberegningResultat = klageberegningResultat,
-            klageberegningGrunnlag = klageberegningGrunnlag,
-            klageOrkestratorGrunnlag = KlageOrkestratorGrunnlag(
+        val klageResultat = orkestrator.utførOmgjøringEndelig(
+            omgjøringResultat = klageberegningResultat,
+            omgjøringGrunnlag = klageberegningGrunnlag,
+            omgjøringOrkestratorGrunnlag = KlageOrkestratorGrunnlag(
                 stønad = stønad,
                 påklagetVedtakId = påklagetVedtak.vedtaksid.toInt(),
             ),
