@@ -393,6 +393,11 @@ supplerendeStoenad:
     sekkepost: NEI
     fom: 2018
     tom: 9999
+supplerendeStoenadTilUfoerFlyktning:
+  - plussMinus: PLUSS
+    sekkepost: NEI
+    fom: 2021
+    tom: 9999
 ufoererenterOgLivrenterUtenforArbeidsforhold:
   - plussMinus: PLUSS
     sekkepost: NEI
