@@ -555,10 +555,16 @@ class OmgjøringOrkestrator(
     private fun List<BeløpshistorikkPeriodeInternal>.finnFørsteIndeksår(
         stønadsid: Stønadsid,
         beløpshistorikkFørOmgjortVedtak: BeløpshistorikkGrunnlag,
+        opphørsdato: YearMonth?,
     ): Int {
         val førsteVedtak = groupBy { it.vedtaksid }.minBy { (_, perioder) -> perioder.minOf { it.periode.fom } }.value
         val sistePeriode = førsteVedtak.maxBy { it.periode.til?.year ?: it.periode.fom.year }
-        val årstallSistePeriode = sistePeriode.periode.til?.year ?: sistePeriode.periode.fom.year
+        val årstallSistePeriode = if (sistePeriode.periode.til != null && opphørsdato == sistePeriode.periode.til) {
+            sistePeriode.periode.fom.year
+        } else {
+            sistePeriode.periode.til?.year ?: sistePeriode.periode.fom.year
+        }
+
         if (sistePeriode.vedtaksid == null && sistePeriode.resultatkode == null ||
             sistePeriode.vedtaksid == null
         ) {
@@ -584,6 +590,7 @@ class OmgjøringOrkestrator(
         omgjøringResultat: BeregnetBarnebidragResultat,
         stønadsid: Stønadsid,
         beløpshistorikkFørOmgjortVedtak: BeløpshistorikkGrunnlag,
+        opphørsdato: YearMonth?,
     ): List<BeløpshistorikkPeriodeInternal> {
         if (!beregnForPerioderEtterKlage && this.isEmpty()) return emptyList()
 
@@ -615,7 +622,7 @@ class OmgjøringOrkestrator(
         val beløshistorikkMedKlage = (this + beløshistorikkKlage).sortedBy { it.periode.fom }
 
         val mutableList = beløshistorikkMedKlage.toMutableList()
-        val førsteIndeksår = beløshistorikkMedKlage.finnFørsteIndeksår(stønadsid, beløpshistorikkFørOmgjortVedtak)
+        val førsteIndeksår = beløshistorikkMedKlage.finnFørsteIndeksår(stønadsid, beløpshistorikkFørOmgjortVedtak, opphørsdato)
         val minYear = minOf(førsteIndeksår, beløshistorikkMedKlage.minOf { it.periode.fom.year })
         val sistePeriode = beløshistorikkMedKlage.maxBy { it.periode.fom }
         val sistePeriodeErOpphør = sistePeriode.beløp == null
@@ -698,6 +705,7 @@ class OmgjøringOrkestrator(
             stønadsid = stønad,
             omgjøringResultat = omgjøringResultat,
             beløpshistorikkFørOmgjortVedtak = beløpshistorikkFørOmgjortVedtak,
+            opphørsdato = context.opphørsdato,
         )
     }
 
@@ -1145,10 +1153,11 @@ class OmgjøringOrkestrator(
             it.vedtakstidspunkt
         }.filter {
             val sistePeriodeFom = it.stønadsendring.periodeListe.maxOf { it.periode.fom }
-            sistePeriodeFom >= omgjøringsperiode.til && (opphørsdato == null || sistePeriodeFom.isBefore(opphørsdato))
+            val førstePeriodeFom = it.stønadsendring.periodeListe.minOf { it.periode.fom }
+            sistePeriodeFom >= omgjøringsperiode.til && (opphørsdato == null || førstePeriodeFom.isBefore(opphørsdato))
         }
             .flatMap { v ->
-                v.stønadsendring.periodeListe.map {
+                v.stønadsendring.periodeListe.filter { opphørsdato == null || it.periode.fom.isBefore(opphørsdato) }.map {
                     BeløpshistorikkPeriodeInternal(
                         periode = it.periode,
                         beløp = it.beløp,
@@ -1162,6 +1171,7 @@ class OmgjøringOrkestrator(
                 stønadsid = stønad,
                 omgjøringResultat = context.omgjøringsresultat,
                 beløpshistorikkFørOmgjortVedtak = context.beløpshistorikkFørOmgjortVedtak,
+                opphørsdato = opphørsdato,
             )
         return vedtakEtterOmgjøringsVedtak
     }

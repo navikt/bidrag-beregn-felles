@@ -156,7 +156,7 @@ class AldersjusteringOrchestrator(
                     ?: vedtakService.finnSisteManuelleVedtak(stønad)
                     ?: aldersjusteresManuelt(SkalAldersjusteresManueltBegrunnelse.FANT_INGEN_MANUELL_VEDTAK)
 
-            sisteManuelleVedtak.validerSkalAldersjusteres(stønad, erManuellJustering = erManuellJustering)
+            sisteManuelleVedtak.validerSkalAldersjusteres(stønad, aldersjusteresForÅr = aldersjusteresForÅr, erManuellJustering = erManuellJustering)
 
             return sisteManuelleVedtak.utførOgBeregn(stønad, aldersjusteresForÅr, opphørsdato, beløpshistorikkStønad, personobjekter)
         } catch (e: Exception) {
