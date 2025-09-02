@@ -187,20 +187,10 @@ class OmgjøringOrkestratorHelpers(private val vedtakService: VedtakService, pri
             sisteRelevantePeriode == null -> sistePeriode?.periode?.til?.year ?: sistePeriode?.periode?.fom?.year ?: YearMonth.now().year
             else -> sisteRelevantePeriode.periode.fom.year + 1
         }
-        val stønadDto = StønadDto(
-            stønadsid = -1,
-            type = stønad.type,
-            kravhaver = stønad.kravhaver,
-            skyldner = stønad.skyldner,
-            sak = stønad.sak,
-            mottaker = Personident(""),
+        val stønadDto = opprettStønad(stønad).copy(
             førsteIndeksreguleringsår = nesteIndeksår,
             nesteIndeksreguleringsår = nesteIndeksår,
             innkreving = Innkrevingstype.MED_INNKREVING,
-            opprettetAv = "",
-            opprettetTidspunkt = LocalDateTime.now(),
-            endretAv = "",
-            endretTidspunkt = LocalDateTime.now(),
             periodeListe = (perioderFørFraBeløpshistorikk + perioder).sorterOgJusterPerioder2(),
         )
         personer.hentPersonMedIdent(stønad.kravhaver.verdi) ?: personer.hentPersonForNyesteIdent(identUtils, stønad.kravhaver) ?: run {

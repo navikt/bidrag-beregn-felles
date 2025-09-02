@@ -11,6 +11,7 @@ import no.nav.bidrag.beregn.barnebidrag.service.BeregnEndringSjekkGrenseService.
 import no.nav.bidrag.beregn.barnebidrag.utils.AldersjusteringUtils.opprettAldersjusteringDetaljerGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.utils.OmgjøringOrkestratorHelpers
 import no.nav.bidrag.beregn.barnebidrag.utils.hentSisteLøpendePeriode
+import no.nav.bidrag.beregn.barnebidrag.utils.opprettStønad
 import no.nav.bidrag.beregn.barnebidrag.utils.tilDto
 import no.nav.bidrag.beregn.barnebidrag.utils.toYearMonth
 import no.nav.bidrag.beregn.barnebidrag.utils.vedtaksidAutomatiskJobb
@@ -155,8 +156,19 @@ class OmgjøringOrkestrator(
                 ?: omgjøringFeilet("Fant ikke omgjort vedtak med id $omgjørVedtakId")
             val omgjørVedtakVirkningstidspunkt = omgjørVedtak.virkningstidspunkt?.toYearMonth()
                 ?: omgjøringFeilet("Omgjort vedtak med id $omgjørVedtakId har ikke virkningstidspunkt")
-            val løpendeStønadGjeldende = vedtakService.hentLøpendeStønad(stønad)
-                ?: omgjøringFeilet("Fant ikke løpende stønad for $stønad")
+            val løpendeStønadGjeldende = vedtakService.hentLøpendeStønad(stønad) ?: run {
+                if (omgjøringOrkestratorGrunnlag.innkrevingstype == Innkrevingstype.UTEN_INNKREVING) {
+                    opprettStønad(stønad).copy(
+                        førsteIndeksreguleringsår = null,
+                        nesteIndeksreguleringsår = null,
+                        innkreving = Innkrevingstype.UTEN_INNKREVING,
+                        periodeListe = emptyList(),
+                    )
+                } else {
+                    omgjøringFeilet("Fant ikke løpende stønad for $stønad")
+                }
+            }
+
             val grunnlagsliste = omgjøringGrunnlag.grunnlagListe
 
             if (!omgjøringOrkestratorGrunnlag.gjelderParagraf35c) {
@@ -295,7 +307,12 @@ class OmgjøringOrkestrator(
         val etterfølgendeVedtakListe =
             hentEtterfølgendeVedtakslisteFraVedtak(context)
         val periodeSomSkalOpphøres =
-            finnPeriodeSomSkalOpphøres(omgjøringperiode, omgjørVedtakVirkningstidspunkt, beløpshistorikkFørOmgjortVedtak)
+            finnPeriodeSomSkalOpphøres(
+                omgjøringperiode,
+                omgjørVedtakVirkningstidspunkt,
+                beløpshistorikkFørOmgjortVedtak,
+                context.omgjøringOrkestratorGrunnlag.innkrevingstype,
+            )
 
         val delvedtakListe = buildList {
             periodeSomSkalOpphøres?.let {
@@ -358,6 +375,7 @@ class OmgjøringOrkestrator(
             context.omgjøringsperiode,
             context.omgjørVedtakVirkningstidspunkt,
             context.beløpshistorikkFørOmgjortVedtak,
+            context.omgjøringOrkestratorGrunnlag.innkrevingstype,
         )
 
         val delvedtakListeFør = buildList {
@@ -727,7 +745,10 @@ class OmgjøringOrkestrator(
         omgjøringsperiode: ÅrMånedsperiode,
         omgjørVedtakVirkningstidspunkt: YearMonth,
         beløpshistorikkFørOmgjortVedtak: BeløpshistorikkGrunnlag,
+        innkrevingstype: Innkrevingstype,
     ): ÅrMånedsperiode? {
+        if (innkrevingstype == Innkrevingstype.UTEN_INNKREVING && beløpshistorikkFørOmgjortVedtak.beløpshistorikk.isEmpty()) return null
+
         val vedtakMellomOmgjortVirkningOgNyVirkning = beløpshistorikkFørOmgjortVedtak.beløpshistorikk.filter {
             it.periode.fom.isBefore(omgjøringsperiode.fom) && it.vedtaksid != null
         }
