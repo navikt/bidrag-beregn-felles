@@ -69,6 +69,9 @@ internal object BeregnEndringSjekkGrensePeriodeService : BeregnService() {
             val sisteElement = beregningResultatListe.last()
             if (sisteElement.periode.til != null && åpenSluttperiode) {
                 beregningResultatListe[beregningResultatListe.size - 1] = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
+            } else if (sisteElement.periode.til != null && mottattGrunnlag.opphørsdato != null) {
+                beregningResultatListe[beregningResultatListe.size - 1] =
+                    sisteElement.copy(periode = sisteElement.periode.copy(til = mottattGrunnlag.opphørsdato))
             }
         }
 

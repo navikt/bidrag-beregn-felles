@@ -933,7 +933,7 @@ class OmgjøringOrkestrator(
         omgjøringGrunnlag: BeregnGrunnlag,
     ): BeregnetBarnebidragResultat {
         val (_, opphørsdato, _, søknadsbarnReferanse) = omgjøringGrunnlag
-        val åpenSluttperiode = opphørsdato == null || opphørsdato.isAfter(omgjøringperiode.til)
+        val åpenSluttperiode = opphørsdato == null
         if (omgjøringResultat.erOpphør()) {
             return omgjøringResultat
         }
