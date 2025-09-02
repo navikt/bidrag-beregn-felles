@@ -206,7 +206,7 @@ class AldersjusteringOrchestratorTest {
 
     @Test
     fun `skal beregne aldersjustering når barnet skal aldersjusteres for år i input`() {
-        val fødselsdatoBarn = LocalDate.parse("2018-03-01")
+        val fødselsdatoBarn = LocalDate.parse("2020-03-01")
         every { personConsumer.hentFødselsdatoForPerson(eq(Personident(personIdentSøknadsbarn1))) } returns fødselsdatoBarn
 
         val (_, _, beregning) = aldersjusteringOrchestrator.utførAldersjustering(
@@ -222,8 +222,8 @@ class AldersjusteringOrchestratorTest {
 
         assertSoftly(beregning) {
             it.beregnetBarnebidragPeriodeListe.shouldHaveSize(1)
-            it.beregnetBarnebidragPeriodeListe.first().resultat.beløp shouldBe BigDecimal(5290)
-            it.beregnetBarnebidragPeriodeListe.first().periode.fom shouldBe YearMonth.parse("2024-07")
+            it.beregnetBarnebidragPeriodeListe.first().resultat.beløp shouldBe BigDecimal(5300)
+            it.beregnetBarnebidragPeriodeListe.first().periode.fom shouldBe YearMonth.parse("2026-07")
             it.beregnetBarnebidragPeriodeListe.first().periode.til shouldBe null
         }
     }
