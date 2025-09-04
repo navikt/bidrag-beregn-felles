@@ -85,6 +85,7 @@ internal data class OmgjøringeOrkestratorContext(
     val opphørsdato: YearMonth?,
     val nyVirkningErEtterOpprinneligVirkning: Boolean,
     val vedtakslisteRelatertTilOmgjortVedtak: Set<Int>,
+    val omgjørVedtak: VedtakDto,
 ) {
     val omgjørVedtakId: Int = omgjøringOrkestratorGrunnlag.omgjørVedtakId
     val omgjøringsvedtakVedtaktstype get() = if (omgjøringOrkestratorGrunnlag.gjelderKlage) Vedtakstype.KLAGE else Vedtakstype.ENDRING
@@ -210,6 +211,7 @@ class OmgjøringOrkestrator(
                 beløpshistorikkFørOmgjortVedtak = beløpshistorikkFørOmgjortVedtak,
                 stønad = stønad,
                 vedtakslisteRelatertTilOmgjortVedtak = vedtakslisteRelatertTilOmgjortVedtak,
+                omgjørVedtak = omgjørVedtak,
             )
 
             val foreløpigVedtak = byggVedtak(context)
@@ -265,8 +267,7 @@ class OmgjøringOrkestrator(
         )
 
         val etterfølgendeVedtakMedPeriodeFørOmgjøringsperiode = vedtaksliste.filter {
-            it.justerVedtakstidspunkt().vedtakstidspunkt >
-                omgjørVedtakVedtakstidspunkt &&
+            it.vedtakstidspunkt > omgjørVedtakVedtakstidspunkt &&
                 !it.type.erIndeksEllerAldersjustering
         }
             .filter {
@@ -1143,13 +1144,14 @@ class OmgjøringOrkestrator(
         val stønad = context.stønad
         val omgjøringsperiode = context.omgjøringsperiode
         val opphørsdato = context.opphørsdato
+        val omgjørVedtakVedtakstidspunkt = context.omgjørVedtak.justerVedtakstidspunktVedtak().vedtakstidspunkt
         val vedtaksliste = vedtakService.hentAlleVedtakForStønad(
             stønadsid = stønad,
             fraPeriode = omgjøringsperiode.til,
             ignorerVedtaksid = context.omgjørVedtakId,
 
         )
-        val vedtakEtterOmgjøringsVedtak = vedtaksliste.sortedBy {
+        val vedtakEtterOmgjøringsVedtak = vedtaksliste.filter { it.vedtakstidspunkt > omgjørVedtakVedtakstidspunkt }.sortedBy {
             it.vedtakstidspunkt
         }.filter {
             val sistePeriodeFom = it.stønadsendring.periodeListe.maxOf { it.periode.fom }
