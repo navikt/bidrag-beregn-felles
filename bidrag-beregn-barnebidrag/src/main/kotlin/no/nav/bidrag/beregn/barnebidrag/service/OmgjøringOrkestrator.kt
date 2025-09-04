@@ -271,7 +271,7 @@ class OmgjøringOrkestrator(
                 !it.type.erIndeksEllerAldersjustering
         }
             .filter {
-                it.virkningstidspunkt!! < omgjøringsperiode.fom
+                it.virkningstidspunkt!! < omgjøringsperiode.fom && (omgjøringsperiode.til == null || omgjøringsperiode.til!! <= it.virkningstidspunkt)
             }
         if (etterfølgendeVedtakMedPeriodeFørOmgjøringsperiode.isNotEmpty()) {
             finnesEtterfølgendeVedtak(
