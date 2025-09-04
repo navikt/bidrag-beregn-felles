@@ -1152,15 +1152,30 @@ class OmgjøringOrkestrator(
             ignorerVedtaksid = context.omgjørVedtakId,
 
         )
-        val vedtakEtterOmgjøringsVedtak = vedtaksliste.filter { it.vedtakstidspunkt > omgjørVedtakVedtakstidspunkt }.sortedBy {
+        val vedtakEtterOmgjøringsVedtakFiltrert = vedtaksliste.filter { it.vedtakstidspunkt > omgjørVedtakVedtakstidspunkt }.sortedBy {
             it.vedtakstidspunkt
         }.filter {
             val sistePeriodeFom = it.stønadsendring.periodeListe.maxOf { it.periode.fom }
             val førstePeriodeFom = it.stønadsendring.periodeListe.minOf { it.periode.fom }
             sistePeriodeFom >= omgjøringsperiode.til && (opphørsdato == null || førstePeriodeFom.isBefore(opphørsdato))
         }
-            .flatMap { v ->
-                v.stønadsendring.periodeListe.filter { opphørsdato == null || it.periode.fom.isBefore(opphørsdato) }.map {
+//            .flatMap { v ->
+//                v.stønadsendring.periodeListe.filter { opphørsdato == null || it.periode.fom.isBefore(opphørsdato) }.map {
+//                    BeløpshistorikkPeriodeInternal(
+//                        periode = it.periode,
+//                        beløp = it.beløp,
+//                        vedtaksid = v.vedtaksid,
+//                        resultatkode = it.resultatkode,
+//                    )
+//                }
+        val vedtakEtterOmgjøringsVedtak = vedtakEtterOmgjøringsVedtakFiltrert.flatMapIndexed { index, v ->
+            val nextVedtak = vedtakEtterOmgjøringsVedtakFiltrert.getOrNull(index + 1)
+            val nextVedtakEarliestPeriod = nextVedtak?.stønadsendring?.periodeListe?.minByOrNull { it.periode.fom }?.periode?.fom
+
+            v.stønadsendring.periodeListe
+                .filter { opphørsdato == null || it.periode.fom.isBefore(opphørsdato) }
+                .filter { nextVedtakEarliestPeriod == null || it.periode.fom.isBefore(nextVedtakEarliestPeriod) }
+                .map {
                     BeløpshistorikkPeriodeInternal(
                         periode = it.periode,
                         beløp = it.beløp,
@@ -1168,14 +1183,14 @@ class OmgjøringOrkestrator(
                         resultatkode = it.resultatkode,
                     )
                 }
-            }.fyllPåPerioderForAldersjusteringEllerIndeksregulering(
-                omgjøringsperiode,
-                beregnForPerioderEtterKlage = true,
-                stønadsid = stønad,
-                omgjøringResultat = context.omgjøringsresultat,
-                beløpshistorikkFørOmgjortVedtak = context.beløpshistorikkFørOmgjortVedtak,
-                opphørsdato = opphørsdato,
-            )
+        }.fyllPåPerioderForAldersjusteringEllerIndeksregulering(
+            omgjøringsperiode,
+            beregnForPerioderEtterKlage = true,
+            stønadsid = stønad,
+            omgjøringResultat = context.omgjøringsresultat,
+            beløpshistorikkFørOmgjortVedtak = context.beløpshistorikkFørOmgjortVedtak,
+            opphørsdato = opphørsdato,
+        )
         return vedtakEtterOmgjøringsVedtak
     }
 
