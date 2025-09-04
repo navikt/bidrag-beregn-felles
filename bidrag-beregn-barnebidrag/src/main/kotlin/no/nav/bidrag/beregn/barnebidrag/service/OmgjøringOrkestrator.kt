@@ -1173,7 +1173,10 @@ class OmgjøringOrkestrator(
             val nextVedtakEarliestPeriod = nextVedtak?.stønadsendring?.periodeListe?.minByOrNull { it.periode.fom }?.periode?.fom
 
             v.stønadsendring.periodeListe
-                .filter { opphørsdato == null || it.periode.fom.isBefore(opphørsdato) }
+                .filter {
+                    (omgjøringsperiode.til == null || it.periode.fom >= omgjøringsperiode.til) &&
+                        (opphørsdato == null || it.periode.fom.isBefore(opphørsdato))
+                }
                 .filter { nextVedtakEarliestPeriod == null || it.periode.fom.isBefore(nextVedtakEarliestPeriod) }
                 .map {
                     BeløpshistorikkPeriodeInternal(
