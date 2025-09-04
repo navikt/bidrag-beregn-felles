@@ -268,10 +268,11 @@ class OmgjøringOrkestrator(
 
         val etterfølgendeVedtakMedPeriodeFørOmgjøringsperiode = vedtaksliste.filter {
             it.vedtakstidspunkt > omgjørVedtakVedtakstidspunkt &&
-                !it.type.erIndeksEllerAldersjustering
+                !it.type.erIndeksEllerAldersjustering && it.stønadsendring.periodeListe.isNotEmpty()
         }
             .filter {
-                it.virkningstidspunkt!! < omgjøringsperiode.fom && (omgjøringsperiode.til == null || omgjøringsperiode.til!! <= it.virkningstidspunkt)
+                val perioderFørOmgjøring = it.stønadsendring.periodeListe.filter { it.periode.fom < omgjøringsperiode.fom }
+                perioderFørOmgjøring.any { it.periode.til == null || it.periode.til!! > omgjøringsperiode.fom }
             }
         if (etterfølgendeVedtakMedPeriodeFørOmgjøringsperiode.isNotEmpty()) {
             finnesEtterfølgendeVedtak(
