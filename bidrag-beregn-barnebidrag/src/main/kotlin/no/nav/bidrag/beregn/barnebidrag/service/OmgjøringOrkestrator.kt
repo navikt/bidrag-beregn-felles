@@ -733,7 +733,10 @@ class OmgjøringOrkestrator(
         }.distinct()
             .ifEmpty {
                 beløpshistorikkFørOmgjortVedtak.beløpshistorikk
-                    .filter { it.periode.fom.isBefore(omgjøringsperiode.fom) }
+                    .filter {
+                        it.periode.fom.isBefore(omgjøringsperiode.fom) &&
+                            (it.periode.til == null || it.periode.til!!.isAfter(omgjørVedtakVirkningstidspunkt))
+                    }
                     .maxByOrNull { it.periode.fom }?.let { listOf(it) }?.map {
                         BeløpshistorikkPeriodeInternal(
                             periode = ÅrMånedsperiode(maxOf(omgjørVedtakVirkningstidspunkt, it.periode.fom), it.periode.til),
