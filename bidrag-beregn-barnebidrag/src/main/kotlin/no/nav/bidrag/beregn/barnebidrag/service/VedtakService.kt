@@ -17,6 +17,7 @@ import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadPeriodeDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.vedtak.request.HentVedtakForStønadRequest
+import no.nav.bidrag.transport.behandling.vedtak.response.StønadsendringDto
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakDto
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakForStønad
 import org.springframework.stereotype.Service
@@ -224,4 +225,12 @@ class VedtakService(
         ?.vedtaksid
 
     fun hentVedtak(vedtaksId: Int) = vedtakConsumer.hentVedtak(vedtaksId)
+    fun oppdaterIdenterStønadsendringer(vedtak: VedtakDto) = vedtak.copy(
+        stønadsendringListe = vedtak.stønadsendringListe.map { oppdaterIdenter(it) },
+    )
+    fun oppdaterIdenter(stønadsendringDto: StønadsendringDto) = stønadsendringDto.copy(
+        mottaker = identUtils.hentNyesteIdent(stønadsendringDto.mottaker),
+        kravhaver = identUtils.hentNyesteIdent(stønadsendringDto.kravhaver),
+        skyldner = identUtils.hentNyesteIdent(stønadsendringDto.skyldner),
+    )
 }

@@ -63,7 +63,6 @@ import no.nav.bidrag.transport.behandling.vedtak.response.erOrkestrertVedtak
 import no.nav.bidrag.transport.behandling.vedtak.response.finnAldersjusteringDetaljerGrunnlag
 import no.nav.bidrag.transport.behandling.vedtak.response.finnResultatFraAnnenVedtak
 import no.nav.bidrag.transport.behandling.vedtak.response.finnStønadsendring
-import no.nav.bidrag.transport.behandling.vedtak.response.referertVedtaksid
 import no.nav.bidrag.transport.behandling.vedtak.response.virkningstidspunkt
 import org.springframework.context.annotation.Import
 import org.springframework.stereotype.Service
@@ -1172,7 +1171,7 @@ class OmgjøringOrkestrator(
                 }
                 .filter { nextVedtakEarliestPeriod == null || it.periode.fom.isBefore(nextVedtakEarliestPeriod) }
                 .map {
-                    hentFaktiskPeriode(v.vedtaksid, it)
+                    hentFaktiskPeriode(v.vedtaksid, it, context.stønad)
                 }
         }.fyllPåPerioderForAldersjusteringEllerIndeksregulering(
             omgjøringsperiode,
@@ -1184,7 +1183,7 @@ class OmgjøringOrkestrator(
         )
         return vedtakEtterOmgjøringsVedtak
     }
-    private fun hentFaktiskPeriode(vedtakId: Int, periode: VedtakPeriodeDto): BeløpshistorikkPeriodeInternal {
+    private fun hentFaktiskPeriode(vedtakId: Int, periode: VedtakPeriodeDto, stønadsid: Stønadsid): BeløpshistorikkPeriodeInternal {
         val periodeInternal = BeløpshistorikkPeriodeInternal(
             periode = periode.periode,
             beløp = periode.beløp,
@@ -1193,9 +1192,14 @@ class OmgjøringOrkestrator(
         )
         val vedtak = vedtakService.hentVedtak(vedtakId) ?: return periodeInternal
         return if (vedtak.erOrkestrertVedtak && vedtak.type == Vedtakstype.INNKREVING) {
-            hentFaktiskPeriode(vedtak.referertVedtaksid!!, periode)
-        } else if (vedtak.erOrkestrertVedtak) {
             val resultatFraAnnenVedtak = vedtak.grunnlagListe.finnResultatFraAnnenVedtak(periode.grunnlagReferanseListe)!!
+            hentFaktiskPeriode(resultatFraAnnenVedtak.vedtaksid!!, periode, stønadsid)
+        } else if (vedtak.erOrkestrertVedtak) {
+            val resultatFraAnnenVedtak = vedtak.grunnlagListe.finnResultatFraAnnenVedtak(periode.grunnlagReferanseListe) ?: run {
+                val periodeFraVedtak = vedtakService.oppdaterIdenterStønadsendringer(vedtak).finnStønadsendring(stønadsid)!!
+                    .periodeListe.find { periode.periode.inneholder(it.periode) }
+                vedtak.grunnlagListe.finnResultatFraAnnenVedtak(periodeFraVedtak!!.grunnlagReferanseListe)!!
+            }
             periodeInternal.copy(
                 vedtaksid = resultatFraAnnenVedtak.vedtaksid,
                 resultatkode = if (resultatFraAnnenVedtak.vedtaksid == null) Resultatkode.OPPHØR.name else periode.resultatkode,
