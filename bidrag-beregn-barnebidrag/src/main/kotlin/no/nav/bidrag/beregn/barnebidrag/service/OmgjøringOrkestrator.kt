@@ -17,7 +17,6 @@ import no.nav.bidrag.beregn.barnebidrag.utils.toYearMonth
 import no.nav.bidrag.beregn.barnebidrag.utils.vedtaksidAutomatiskJobb
 import no.nav.bidrag.beregn.barnebidrag.utils.vedtaksidBeregnetBeløpshistorikk
 import no.nav.bidrag.beregn.barnebidrag.utils.vedtaksidPrivatavtale
-import no.nav.bidrag.beregn.core.util.justerVedtakstidspunkt
 import no.nav.bidrag.beregn.core.util.justerVedtakstidspunktVedtak
 import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.commons.util.secureLogger
@@ -60,8 +59,11 @@ import no.nav.bidrag.transport.behandling.vedtak.response.StønadsendringDto
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakDto
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakPeriodeDto
 import no.nav.bidrag.transport.behandling.vedtak.response.erIndeksEllerAldersjustering
+import no.nav.bidrag.transport.behandling.vedtak.response.erOrkestrertVedtak
 import no.nav.bidrag.transport.behandling.vedtak.response.finnAldersjusteringDetaljerGrunnlag
+import no.nav.bidrag.transport.behandling.vedtak.response.finnResultatFraAnnenVedtak
 import no.nav.bidrag.transport.behandling.vedtak.response.finnStønadsendring
+import no.nav.bidrag.transport.behandling.vedtak.response.referertVedtaksid
 import no.nav.bidrag.transport.behandling.vedtak.response.virkningstidspunkt
 import org.springframework.context.annotation.Import
 import org.springframework.stereotype.Service
@@ -1154,20 +1156,11 @@ class OmgjøringOrkestrator(
         )
         val vedtakEtterOmgjøringsVedtakFiltrert = vedtaksliste.filter { it.vedtakstidspunkt > omgjørVedtakVedtakstidspunkt }.sortedBy {
             it.vedtakstidspunkt
-        }.filter {
+        }.filter { it.stønadsendring.beslutning != Beslutningstype.DELVEDTAK }.filter {
             val sistePeriodeFom = it.stønadsendring.periodeListe.maxOf { it.periode.fom }
             val førstePeriodeFom = it.stønadsendring.periodeListe.minOf { it.periode.fom }
             sistePeriodeFom >= omgjøringsperiode.til && (opphørsdato == null || førstePeriodeFom.isBefore(opphørsdato))
         }
-//            .flatMap { v ->
-//                v.stønadsendring.periodeListe.filter { opphørsdato == null || it.periode.fom.isBefore(opphørsdato) }.map {
-//                    BeløpshistorikkPeriodeInternal(
-//                        periode = it.periode,
-//                        beløp = it.beløp,
-//                        vedtaksid = v.vedtaksid,
-//                        resultatkode = it.resultatkode,
-//                    )
-//                }
         val vedtakEtterOmgjøringsVedtak = vedtakEtterOmgjøringsVedtakFiltrert.flatMapIndexed { index, v ->
             val nextVedtak = vedtakEtterOmgjøringsVedtakFiltrert.getOrNull(index + 1)
             val nextVedtakEarliestPeriod = nextVedtak?.stønadsendring?.periodeListe?.minByOrNull { it.periode.fom }?.periode?.fom
@@ -1179,12 +1172,7 @@ class OmgjøringOrkestrator(
                 }
                 .filter { nextVedtakEarliestPeriod == null || it.periode.fom.isBefore(nextVedtakEarliestPeriod) }
                 .map {
-                    BeløpshistorikkPeriodeInternal(
-                        periode = it.periode,
-                        beløp = it.beløp,
-                        vedtaksid = v.vedtaksid,
-                        resultatkode = it.resultatkode,
-                    )
+                    hentFaktiskPeriode(v.vedtaksid, it)
                 }
         }.fyllPåPerioderForAldersjusteringEllerIndeksregulering(
             omgjøringsperiode,
@@ -1196,7 +1184,26 @@ class OmgjøringOrkestrator(
         )
         return vedtakEtterOmgjøringsVedtak
     }
-
+    private fun hentFaktiskPeriode(vedtakId: Int, periode: VedtakPeriodeDto): BeløpshistorikkPeriodeInternal {
+        val periodeInternal = BeløpshistorikkPeriodeInternal(
+            periode = periode.periode,
+            beløp = periode.beløp,
+            vedtaksid = vedtakId,
+            resultatkode = periode.resultatkode,
+        )
+        val vedtak = vedtakService.hentVedtak(vedtakId) ?: return periodeInternal
+        return if (vedtak.erOrkestrertVedtak && vedtak.type == Vedtakstype.INNKREVING) {
+            hentFaktiskPeriode(vedtak.referertVedtaksid!!, periode)
+        } else if (vedtak.erOrkestrertVedtak) {
+            val resultatFraAnnenVedtak = vedtak.grunnlagListe.finnResultatFraAnnenVedtak(periode.grunnlagReferanseListe)!!
+            periodeInternal.copy(
+                vedtaksid = resultatFraAnnenVedtak.vedtaksid,
+                resultatkode = if (resultatFraAnnenVedtak.vedtaksid == null) Resultatkode.OPPHØR.name else periode.resultatkode,
+            )
+        } else {
+            periodeInternal
+        }
+    }
     private fun utførIndeksregulering(
         stønad: Stønadsid,
         historikk: List<BeregnetBarnebidragResultatInternal>,
