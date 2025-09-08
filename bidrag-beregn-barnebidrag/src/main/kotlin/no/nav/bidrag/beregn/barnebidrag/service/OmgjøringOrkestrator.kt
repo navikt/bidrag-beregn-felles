@@ -820,7 +820,16 @@ class OmgjøringOrkestrator(
         if (opphørsdato != null && opphørsdato <= periodeBeregning) return null
 
         val omgjøringsvedtakResultat = historikk.find { it.omgjøringsvedtak }
-        val vedtakFraGrunnlag = if (erKlagevedtak) {
+        val manuellAldersjustering = omgjøringOrkestratorGrunnlag.manuellAldersjustering.find {
+            it.aldersjusteringForÅr ==
+                aldersjusteresIndeksreguleresForÅr
+        }
+
+        val vedtakFraGrunnlag = if (manuellAldersjustering?.grunnlagFraVedtak != null && !manuellAldersjustering.grunnlagFraOmgjøringsvedtak) {
+            BeregnBasertPåVedtak(
+                manuellAldersjustering.grunnlagFraVedtak,
+            )
+        } else if (erKlagevedtak || manuellAldersjustering != null && manuellAldersjustering.grunnlagFraOmgjøringsvedtak) {
             BeregnBasertPåVedtak(vedtakDto = omgjøringsvedtak)
         } else {
             val omgjøringBeregnFraDato = omgjøringsvedtakResultat?.beregnetFraDato?.toYearMonth()
@@ -849,7 +858,7 @@ class OmgjøringOrkestrator(
         val detaljer = resultatAldersjustering.resultat.grunnlagListe.filtrerOgKonverterBasertPåEgenReferanse<AldersjusteringDetaljerGrunnlag>(
             Grunnlagstype.ALDERSJUSTERING_DETALJER,
         ).first()
-        return if (!detaljer.innhold.aldersjustert && !detaljer.innhold.aldersjusteresManuelt) {
+        return if (!detaljer.innhold.aldersjustert && (manuellAldersjustering != null || !detaljer.innhold.aldersjusteresManuelt)) {
             secureLogger.warn {
                 "Aldersjustering ble ikke utført for år $aldersjusteresIndeksreguleresForÅr med begrunnelse ${detaljer.innhold.begrunnelserVisningsnavn}"
             }
@@ -1290,19 +1299,11 @@ class OmgjøringOrkestrator(
                     Rolletype.BARN,
                 )
 
-        val manuellAldersjustering = omgjøringOrkestratorGrunnlag.manuellAldersjustering.find { it.aldersjusteringForÅr == aldersjusteresForÅr }
-        val beregningBasertPåVedtak = (
-            manuellAldersjustering?.grunnlagFraVedtak?.let {
-                BeregnBasertPåVedtak(
-                    it,
-                )
-            } ?: beregnBasertPåVedtak
-            )?.takeIf { it.vedtaksid != null || it.vedtakDto != null }
         try {
             val aldersjustering = aldersjusteringOrchestrator.utførAldersjustering(
                 stønad,
                 aldersjusteresForÅr,
-                beregningBasertPåVedtak,
+                beregnBasertPåVedtak?.takeIf { it.vedtaksid != null || it.vedtakDto != null },
                 opphørsdato = opphørsdato,
                 beløpshistorikkStønad = stønadDto,
                 personobjekter = personobjekter,
@@ -1313,7 +1314,7 @@ class OmgjøringOrkestrator(
                 aldersjusteresManuelt = false,
                 aldersjustert = true,
                 stønad = stønad,
-                vedtaksidBeregning = beregningBasertPåVedtak?.vedtaksid,
+                vedtaksidBeregning = beregnBasertPåVedtak?.vedtaksid,
             )
             return BeregnetBarnebidragResultatInternal(
                 resultat = BeregnetBarnebidragResultat(
@@ -1332,7 +1333,7 @@ class OmgjøringOrkestrator(
                     stønad = stønad,
                     aldersjustert = false,
                     begrunnelser = e.begrunnelser.map { it.name },
-                    vedtaksidBeregning = beregningBasertPåVedtak?.vedtaksid,
+                    vedtaksidBeregning = beregnBasertPåVedtak?.vedtaksid,
                 )
             return BeregnetBarnebidragResultatInternal(
                 resultat = BeregnetBarnebidragResultat(
@@ -1351,7 +1352,7 @@ class OmgjøringOrkestrator(
                     stønad = stønad,
                     aldersjustert = false,
                     aldersjusteresManuelt = true,
-                    vedtaksidBeregning = beregningBasertPåVedtak?.vedtaksid,
+                    vedtaksidBeregning = beregnBasertPåVedtak?.vedtaksid,
                     begrunnelser = listOf(e.begrunnelse.name),
                 )
             return BeregnetBarnebidragResultatInternal(

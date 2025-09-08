@@ -35,6 +35,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.innholdTilObjekt
 import no.nav.bidrag.transport.behandling.felles.grunnlag.tilGrunnlagstype
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakDto
 import no.nav.bidrag.transport.behandling.vedtak.response.erIndeksEllerAldersjustering
+import no.nav.bidrag.transport.behandling.vedtak.response.finnResultatFraAnnenVedtak
 import no.nav.bidrag.transport.behandling.vedtak.response.finnStønadsendring
 import java.time.LocalDateTime
 import java.time.YearMonth
@@ -132,6 +133,7 @@ class OmgjøringOrkestratorHelpers(private val vedtakService: VedtakService, pri
             val grunnlagsliste = it.grunnlagListe
             it.beregnetBarnebidragPeriodeListe.map {
                 val erResultatIngenEndring = grunnlagsliste.erResultatUnderGrense(it.grunnlagsreferanseListe)
+                val resultatFraVedtak = grunnlagsliste.finnResultatFraAnnenVedtak(it.grunnlagsreferanseListe)
                 StønadPeriodeDto(
                     periodeid = 1,
                     periode = it.periode,
@@ -142,7 +144,11 @@ class OmgjøringOrkestratorHelpers(private val vedtakService: VedtakService, pri
                     beløp = it.resultat.beløp,
                     stønadsid = 1,
                     valutakode = "NOK",
-                    vedtaksid = vedtaksidBeregnetBeløpshistorikk,
+                    vedtaksid = if (resultatFraVedtak?.vedtaksid != null) {
+                        resultatFraVedtak.vedtaksid!!
+                    } else {
+                        vedtaksidBeregnetBeløpshistorikk
+                    },
                     gyldigFra = LocalDateTime.now(),
                     gyldigTil = null,
                     periodeGjortUgyldigAvVedtaksid = null,
