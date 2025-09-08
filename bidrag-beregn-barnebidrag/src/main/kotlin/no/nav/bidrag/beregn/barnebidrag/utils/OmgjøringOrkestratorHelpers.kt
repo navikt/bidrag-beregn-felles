@@ -5,6 +5,7 @@ import no.nav.bidrag.beregn.barnebidrag.service.BeregnIndeksreguleringPrivatAvta
 import no.nav.bidrag.beregn.barnebidrag.service.ByggetBeløpshistorikk
 import no.nav.bidrag.beregn.barnebidrag.service.VedtakService
 import no.nav.bidrag.beregn.barnebidrag.service.omgjøringFeilet
+import no.nav.bidrag.beregn.core.util.justerVedtakstidspunktVedtak
 import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -70,7 +71,7 @@ class OmgjøringOrkestratorHelpers(private val vedtakService: VedtakService, pri
             ?: vedtakService.hentBeløpshistorikkTilGrunnlag(
                 stønadsid = stønad,
                 personer = personobjekter ?: vedtak.grunnlagListe.hentAllePersoner() as List<GrunnlagDto>,
-                tidspunkt = vedtak.vedtakstidspunkt!!.minusSeconds(1),
+                tidspunkt = vedtak.justerVedtakstidspunktVedtak().vedtakstidspunkt!!.minusSeconds(1),
             ).innholdTilObjekt<BeløpshistorikkGrunnlag>()
 
         return if (delberegningIndeksreguleringPrivatAvtalePeriodeResultat.isNotEmpty()) {

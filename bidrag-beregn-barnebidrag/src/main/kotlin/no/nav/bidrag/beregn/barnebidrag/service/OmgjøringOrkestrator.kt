@@ -768,16 +768,28 @@ class OmgjøringOrkestrator(
         }
 
         val tidligstePeriodeFom = vedtakMellomOmgjortVirkningOgNyVirkning.minOfOrNull { it.periode.fom }
+        val sistePeriodeFørVedtak = vedtakMellomOmgjortVirkningOgNyVirkning.maxOfOrNull { it.periode.tilEllerMax() }
+            ?.takeIf { it != YearMonth.from(LocalDate.MAX) }
 
+        // Ingen vedtak før omgjort vedtak
         return if (tidligstePeriodeFom == null && omgjørVedtakVirkningstidspunkt < omgjøringsperiode.fom) {
             ÅrMånedsperiode(
                 fom = YearMonth.of(omgjørVedtakVirkningstidspunkt.year, omgjørVedtakVirkningstidspunkt.monthValue),
                 til = omgjøringsperiode.fom,
             )
+            // Finnes vedtak før omgjort vedtak som kommer i mellom forrige og nye virkningstidspunkt
         } else if (tidligstePeriodeFom != null && tidligstePeriodeFom > omgjørVedtakVirkningstidspunkt) {
             ÅrMånedsperiode(
                 fom = YearMonth.of(omgjørVedtakVirkningstidspunkt.year, omgjørVedtakVirkningstidspunkt.monthValue),
                 til = tidligstePeriodeFom,
+            )
+            // Det finnes beløpshistorikk før omgjort vedtak men at vedtak før er opphør før påklaget vedtak
+        } else if (sistePeriodeFørVedtak != null && sistePeriodeFørVedtak < omgjørVedtakVirkningstidspunkt &&
+            omgjørVedtakVirkningstidspunkt < omgjøringsperiode.fom
+        ) {
+            ÅrMånedsperiode(
+                fom = YearMonth.of(omgjørVedtakVirkningstidspunkt.year, omgjørVedtakVirkningstidspunkt.monthValue),
+                til = omgjøringsperiode.fom,
             )
         } else {
             null
