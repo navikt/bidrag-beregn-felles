@@ -173,6 +173,8 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
         val klageOrkestratorGrunnlag = OmgjøringOrkestratorGrunnlag(
             stønad = stønad,
             omgjørVedtakId = påklagetVedtak.vedtaksid.toInt(),
+            skalInnkreves = false,
+            erBeregningsperiodeLøpende = false,
         )
 
         val request =
@@ -232,6 +234,8 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
         val klageOrkestratorGrunnlag = OmgjøringOrkestratorGrunnlag(
             stønad = stønad,
             omgjørVedtakId = påklagetVedtak.vedtaksid.toInt(),
+            skalInnkreves = false,
+            erBeregningsperiodeLøpende = false,
         )
 
         val request =
@@ -301,6 +305,8 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
         val klageOrkestratorGrunnlag = OmgjøringOrkestratorGrunnlag(
             stønad = stønad,
             omgjørVedtakId = påklagetVedtak.vedtaksid.toInt(),
+            skalInnkreves = false,
+            erBeregningsperiodeLøpende = false,
         )
 
         val request =
