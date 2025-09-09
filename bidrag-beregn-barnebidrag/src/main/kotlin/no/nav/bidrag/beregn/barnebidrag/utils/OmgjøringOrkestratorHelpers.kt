@@ -11,10 +11,10 @@ import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.rolle.Rolletype
 import no.nav.bidrag.domene.enums.vedtak.Innkrevingstype
+import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
 import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
-import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadPeriodeDto
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
@@ -138,6 +138,7 @@ class OmgjøringOrkestratorHelpers(private val vedtakService: VedtakService, pri
                     periodeid = 1,
                     periode = it.periode,
                     resultatkode = when {
+                        resultatFraVedtak?.vedtakstype == Vedtakstype.INDEKSREGULERING -> Resultatkode.INDEKSREGULERING.name
                         erResultatIngenEndring -> Resultatkode.INGEN_ENDRING_UNDER_GRENSE.name
                         else -> Resultatkode.KOSTNADSBEREGNET_BIDRAG.name
                     },
@@ -172,6 +173,7 @@ class OmgjøringOrkestratorHelpers(private val vedtakService: VedtakService, pri
                     periodeid = 1,
                     periode = it.periode,
                     resultatkode = when {
+                        vedtak?.type == Vedtakstype.INDEKSREGULERING -> Resultatkode.INDEKSREGULERING.name
                         erResultatIngenEndring -> Resultatkode.INGEN_ENDRING_UNDER_GRENSE.name
                         else -> Resultatkode.KOSTNADSBEREGNET_BIDRAG.name
                     },
