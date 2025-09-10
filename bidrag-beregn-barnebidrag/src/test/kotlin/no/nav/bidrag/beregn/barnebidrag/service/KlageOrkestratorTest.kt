@@ -86,6 +86,8 @@ internal class KlageOrkestratorTest : FellesTest() {
             omgjøringOrkestratorGrunnlag = OmgjøringOrkestratorGrunnlag(
                 stønad = stønad,
                 omgjørVedtakId = påklagetVedtak.vedtaksid.toInt(),
+                skalInnkreves = false,
+                erBeregningsperiodeLøpende = false,
             ),
         )
 
@@ -138,6 +140,8 @@ internal class KlageOrkestratorTest : FellesTest() {
             omgjøringOrkestratorGrunnlag = OmgjøringOrkestratorGrunnlag(
                 stønad = stønad,
                 omgjørVedtakId = påklagetVedtak.vedtaksid.toInt(),
+                skalInnkreves = false,
+                erBeregningsperiodeLøpende = false,
             ),
         )
 
@@ -204,6 +208,8 @@ internal class KlageOrkestratorTest : FellesTest() {
             omgjøringOrkestratorGrunnlag = OmgjøringOrkestratorGrunnlag(
                 stønad = stønad,
                 omgjørVedtakId = påklagetVedtak.vedtaksid.toInt(),
+                skalInnkreves = false,
+                erBeregningsperiodeLøpende = false,
             ),
         )
 
