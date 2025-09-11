@@ -41,6 +41,7 @@ class BeregnBarnebidragApi {
     fun beregnMånedsbeløpTilleggsstønad(tilleggsstønad: BigDecimal): BigDecimal = service.beregnMånedsbeløpTilleggsstønad(tilleggsstønad)
 
     fun beregn(beregnGrunnlag: BeregnGrunnlag): BeregnetBarnebidragResultat = service.beregnBarnebidrag(beregnGrunnlag)
+    fun opprettAvslag(beregnGrunnlag: BeregnGrunnlag): BeregnetBarnebidragResultat = service.opprettAvslagResultat(beregnGrunnlag)
 
     fun beregnBidragsevne(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnBidragsevne(beregnGrunnlag)
 

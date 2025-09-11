@@ -45,6 +45,20 @@ import java.time.YearMonth
 
 class BeregnBarnebidragService : BeregnService() {
 
+    fun opprettAvslagResultat(mottattGrunnlag: BeregnGrunnlag): BeregnetBarnebidragResultat = BeregnetBarnebidragResultat(
+        beregnetBarnebidragPeriodeListe =
+        listOf(
+            ResultatPeriode(
+                grunnlagsreferanseListe = mottattGrunnlag.grunnlagListe.map { it.referanse },
+                periode = mottattGrunnlag.periode,
+                resultat = ResultatBeregning(
+                    beløp = null,
+                ),
+            ),
+        ),
+        grunnlagListe = mottattGrunnlag.grunnlagListe,
+    )
+
     // Komplett beregning av barnebidrag
     fun beregnBarnebidrag(mottattGrunnlag: BeregnGrunnlag): BeregnetBarnebidragResultat {
         secureLogger.debug { "Beregning av barnebidrag - følgende request mottatt: ${tilJson(mottattGrunnlag)}" }

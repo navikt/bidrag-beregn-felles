@@ -18,9 +18,13 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
         when (request.beregningstype) {
             Beregningstype.BIDRAG -> {
                 secureLogger.debug { "Utfører bidragsberegning for request: $request" }
-                val beregningResultat = barnebidragApi.beregn(
-                    beregnGrunnlag = request.beregnGrunnlag,
-                )
+                val beregningResultat = if (request.erDirekteAvslag) {
+                    barnebidragApi.opprettAvslag(request.beregnGrunnlag)
+                } else {
+                    barnebidragApi.beregn(
+                        beregnGrunnlag = request.beregnGrunnlag,
+                    )
+                }
                 val respons = BidragsberegningOrkestratorResponse(
                     listOf(
                         ResultatVedtak(resultat = beregningResultat, delvedtak = false, omgjøringsvedtak = false, vedtakstype = Vedtakstype.ENDRING),
@@ -31,9 +35,13 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
             }
             Beregningstype.OMGJØRING -> {
                 secureLogger.debug { "Utfører omgjøringsberegning for request: $request" }
-                val klageberegningResultat = barnebidragApi.beregn(
-                    beregnGrunnlag = request.beregnGrunnlag,
-                )
+                val klageberegningResultat = if (request.erDirekteAvslag) {
+                    barnebidragApi.opprettAvslag(request.beregnGrunnlag)
+                } else {
+                    barnebidragApi.beregn(
+                        beregnGrunnlag = request.beregnGrunnlag,
+                    )
+                }
                 val respons = BidragsberegningOrkestratorResponse(
                     listOf(
                         ResultatVedtak(resultat = klageberegningResultat, delvedtak = true, omgjøringsvedtak = true, vedtakstype = Vedtakstype.KLAGE),
@@ -44,9 +52,13 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
             }
             Beregningstype.OMGJØRING_ENDELIG -> {
                 secureLogger.debug { "Utfører endelig omgjøringsberegning for request: $request" }
-                val klageberegningResultat = barnebidragApi.beregn(
-                    beregnGrunnlag = request.beregnGrunnlag,
-                )
+                val klageberegningResultat = if (request.erDirekteAvslag) {
+                    barnebidragApi.opprettAvslag(request.beregnGrunnlag)
+                } else {
+                    barnebidragApi.beregn(
+                        beregnGrunnlag = request.beregnGrunnlag,
+                    )
+                }
                 val endeligKlageberegningResultat = omgjøringOrkestrator.utførOmgjøringEndelig(
                     omgjøringResultat = klageberegningResultat,
                     omgjøringGrunnlag = request.beregnGrunnlag,
