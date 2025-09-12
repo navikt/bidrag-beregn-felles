@@ -88,6 +88,7 @@ internal data class OmgjøringeOrkestratorContext(
     val vedtakslisteRelatertTilOmgjortVedtak: Set<Int>,
     val omgjørVedtak: VedtakDto,
 ) {
+    val erBeregningsperiodeLøpende get() = omgjøringOrkestratorGrunnlag.erBeregningsperiodeLøpende
     val omgjørVedtakId: Int = omgjøringOrkestratorGrunnlag.omgjørVedtakId
     val omgjøringsvedtakVedtaktstype get() = if (omgjøringOrkestratorGrunnlag.gjelderKlage) Vedtakstype.KLAGE else Vedtakstype.ENDRING
 }
@@ -359,7 +360,7 @@ class OmgjøringOrkestrator(
 
         val sammenslåttVedtak =
             ResultatVedtak(
-                resultat = slåSammenVedtak(delvedtakListe, context.opphørsdato),
+                resultat = slåSammenVedtak(delvedtakListe, context.opphørsdato, context.erBeregningsperiodeLøpende),
                 delvedtak = false,
                 omgjøringsvedtak = false,
                 vedtakstype = context.omgjøringsvedtakVedtaktstype,
@@ -447,7 +448,7 @@ class OmgjøringOrkestrator(
         }
         val sammenslåttVedtak =
             ResultatVedtak(
-                resultat = slåSammenVedtak(delvedtakListe, context.opphørsdato),
+                resultat = slåSammenVedtak(delvedtakListe, context.opphørsdato, context.erBeregningsperiodeLøpende),
                 delvedtak = false,
                 omgjøringsvedtak = false,
                 vedtakstype = context.omgjøringsvedtakVedtaktstype,
@@ -908,7 +909,11 @@ class OmgjøringOrkestrator(
     }
 
     // Slår sammen alle vedtak i en liste til ett (teknisk) vedtak
-    private fun slåSammenVedtak(vedtakListe: List<ResultatVedtak>, opphørsdato: YearMonth?): BeregnetBarnebidragResultat {
+    private fun slåSammenVedtak(
+        vedtakListe: List<ResultatVedtak>,
+        opphørsdato: YearMonth?,
+        erBeregningsperiodeLøpende: Boolean,
+    ): BeregnetBarnebidragResultat {
         val resultatPeriodeListe = mutableListOf<ResultatPeriode>()
         val grunnlagListe = mutableListOf<GrunnlagDto>()
         vedtakListe.forEach {
@@ -933,22 +938,48 @@ class OmgjøringOrkestrator(
             } else {
                 periods.first()
             }
-        }
+        }.leggTilOpphørsperiodeMellomOmgjøringOgEtterfølgendeVedtak(opphørsdato)
         return BeregnetBarnebidragResultat(
-            beregnetBarnebidragPeriodeListe = sorterOgJusterPerioder(perioderJustertForIndeksOgAldersjustering, opphørsdato),
+            beregnetBarnebidragPeriodeListe = sorterOgJusterPerioder(
+                perioderJustertForIndeksOgAldersjustering,
+                opphørsdato,
+                erBeregningsperiodeLøpende,
+            ),
             grunnlagListe = grunnlagListe.distinctBy { it.referanse },
         )
     }
+    fun List<ResultatPeriode>.leggTilOpphørsperiodeMellomOmgjøringOgEtterfølgendeVedtak(opphørsdato: YearMonth?): List<ResultatPeriode> {
+        if (opphørsdato == null) return this
+
+        val nestePeriodeEtterOpphør = this.filter { it.periode.fom >= opphørsdato }.minByOrNull { it.periode.fom }
+
+        return if (nestePeriodeEtterOpphør != null) {
+            val opphørsPeriode = ResultatPeriode(
+                periode = ÅrMånedsperiode(fom = opphørsdato, til = nestePeriodeEtterOpphør.periode.fom),
+                resultat = ResultatBeregning(
+                    beløp = null,
+                ),
+                grunnlagsreferanseListe = emptyList(),
+            )
+            (this + opphørsPeriode).sortedBy { it.periode.fom }
+        } else {
+            this
+        }
+    }
 
     // Sorterer ResultatPeriode basert på periode-fom og erstatter åpen sluttperiode med fom-dato på neste forekomst (hvis den finnes)
-    private fun sorterOgJusterPerioder(perioder: List<ResultatPeriode>, opphørsdato: YearMonth?): List<ResultatPeriode> {
+    private fun sorterOgJusterPerioder(
+        perioder: List<ResultatPeriode>,
+        opphørsdato: YearMonth?,
+        erBeregningsperiodeLøpende: Boolean,
+    ): List<ResultatPeriode> {
         val sortert = perioder.sortedBy { it.periode.fom }
 
         return sortert.mapIndexed { indeks, resultatPeriode ->
             val erSistePeriode = indeks == sortert.size - 1
             val nesteFom = if (!erSistePeriode) sortert.getOrNull(indeks + 1)?.periode?.fom else null
             val tilDato = when {
-                erSistePeriode && opphørsdato != null -> opphørsdato
+                erBeregningsperiodeLøpende && erSistePeriode && opphørsdato != null -> opphørsdato
                 else -> nesteFom ?: resultatPeriode.periode.til
             }
             ResultatPeriode(
@@ -1189,8 +1220,9 @@ class OmgjøringOrkestrator(
 
     private fun hentEtterfølgendeVedtakslisteFraVedtak(context: OmgjøringeOrkestratorContext): List<BeløpshistorikkPeriodeInternal> {
         val stønad = context.stønad
+        val erLøpende = context.omgjøringOrkestratorGrunnlag.erBeregningsperiodeLøpende
         val omgjøringsperiode = context.omgjøringsperiode
-        if (context.omgjøringOrkestratorGrunnlag.erBeregningsperiodeLøpende) return emptyList()
+        if (erLøpende) return emptyList()
         // Beregningsperiode er til inneværende måned
         val opphørsdato = context.opphørsdato
         val omgjørVedtakVedtakstidspunkt = context.omgjørVedtak.justerVedtakstidspunktVedtak().vedtakstidspunkt
@@ -1205,7 +1237,8 @@ class OmgjøringOrkestrator(
         }.filter { it.stønadsendring.beslutning != Beslutningstype.DELVEDTAK }.filter {
             val sistePeriodeFom = it.stønadsendring.periodeListe.maxOf { it.periode.fom }
             val førstePeriodeFom = it.stønadsendring.periodeListe.minOf { it.periode.fom }
-            sistePeriodeFom >= omgjøringsperiode.til && (opphørsdato == null || førstePeriodeFom.isBefore(opphørsdato))
+            sistePeriodeFom >= omgjøringsperiode.til // &&
+            // (opphørsdato == null || førstePeriodeFom.isBefore(opphørsdato))
         }
         val vedtakEtterOmgjøringsVedtak = vedtakEtterOmgjøringsVedtakFiltrert.flatMapIndexed { index, v ->
             val nextVedtak = vedtakEtterOmgjøringsVedtakFiltrert.getOrNull(index + 1)
@@ -1213,8 +1246,8 @@ class OmgjøringOrkestrator(
 
             v.stønadsendring.periodeListe
                 .filter {
-                    (omgjøringsperiode.til == null || it.periode.fom >= omgjøringsperiode.til) &&
-                        (opphørsdato == null || it.periode.fom.isBefore(opphørsdato))
+                    (omgjøringsperiode.til == null || it.periode.fom >= omgjøringsperiode.til) // &&
+                    // (opphørsdato == null || it.periode.fom.isBefore(opphørsdato))
                 }
                 .filter { nextVedtakEarliestPeriod == null || it.periode.fom.isBefore(nextVedtakEarliestPeriod) }
                 .map {
