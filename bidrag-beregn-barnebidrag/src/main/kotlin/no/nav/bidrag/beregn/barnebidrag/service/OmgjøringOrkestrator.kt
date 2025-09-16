@@ -249,7 +249,7 @@ class OmgjøringOrkestrator(
                 } else {
                     it
                 }
-            }.gjørOmTilÅpenPeriodeHvisEnesteVedtak()
+            }.gjørOmTilÅpenPeriodeHvisEnesteVedtak(context.opphørsdato != null)
         } catch (e: Exception) {
             if (e is FinnesEtterfølgendeVedtakMedVirkningstidspunktFørOmgjortVedtak || e is OmgjøringsberegningFeiletFunksjonelt) {
                 throw e
@@ -258,29 +258,30 @@ class OmgjøringOrkestrator(
         }
     }
 
-    private fun List<ResultatVedtak>.gjørOmTilÅpenPeriodeHvisEnesteVedtak(): List<ResultatVedtak> = if (omgjøringsvedtaksErEnesteVedtak) {
-        map {
-            if (it.omgjøringsvedtak || it.endeligVedtak) {
-                it.copy(
-                    resultat = it.resultat.copy(
-                        beregnetBarnebidragPeriodeListe = it.resultat.beregnetBarnebidragPeriodeListe.mapIndexed { i, resultatPeriode ->
-                            if (i == it.resultat.beregnetBarnebidragPeriodeListe.size - 1) {
-                                resultatPeriode.copy(
-                                    periode = resultatPeriode.periode.copy(til = null),
-                                )
-                            } else {
-                                resultatPeriode
-                            }
-                        },
-                    ),
-                )
-            } else {
-                it
+    private fun List<ResultatVedtak>.gjørOmTilÅpenPeriodeHvisEnesteVedtak(bidragOpphøres: Boolean): List<ResultatVedtak> =
+        if (omgjøringsvedtaksErEnesteVedtak) {
+            map {
+                if (!bidragOpphøres && (it.omgjøringsvedtak || it.endeligVedtak)) {
+                    it.copy(
+                        resultat = it.resultat.copy(
+                            beregnetBarnebidragPeriodeListe = it.resultat.beregnetBarnebidragPeriodeListe.mapIndexed { i, resultatPeriode ->
+                                if (i == it.resultat.beregnetBarnebidragPeriodeListe.size - 1) {
+                                    resultatPeriode.copy(
+                                        periode = resultatPeriode.periode.copy(til = null),
+                                    )
+                                } else {
+                                    resultatPeriode
+                                }
+                            },
+                        ),
+                    )
+                } else {
+                    it
+                }
             }
+        } else {
+            this
         }
-    } else {
-        this
-    }
 
     private fun validerEtterfølgendeVedtakIkkeOverlapper(stønad: Stønadsid, omgjørVedtak: VedtakDto, omgjøringsperiode: ÅrMånedsperiode) {
         val omgjørVedtakVirkningstidspunkt = omgjørVedtak.virkningstidspunkt?.toYearMonth()
@@ -978,7 +979,7 @@ class OmgjøringOrkestrator(
 
         val nestePeriodeEtterOpphør = this.filter { it.periode.fom >= opphørsdato }.minByOrNull { it.periode.fom }
 
-        return if (nestePeriodeEtterOpphør != null) {
+        return if (nestePeriodeEtterOpphør != null && nestePeriodeEtterOpphør.periode.fom != opphørsdato) {
             val opphørsPeriode = ResultatPeriode(
                 periode = ÅrMånedsperiode(fom = opphørsdato, til = nestePeriodeEtterOpphør.periode.fom),
                 resultat = ResultatBeregning(

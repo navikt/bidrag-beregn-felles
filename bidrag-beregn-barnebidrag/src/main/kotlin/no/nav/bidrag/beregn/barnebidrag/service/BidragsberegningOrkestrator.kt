@@ -19,7 +19,7 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
             Beregningstype.BIDRAG -> {
                 secureLogger.debug { "Utfører bidragsberegning for request: $request" }
                 val beregningResultat = if (request.erDirekteAvslag) {
-                    barnebidragApi.opprettAvslag(request.beregnGrunnlag)
+                    barnebidragApi.opprettAvslag(request.leggTilÅpenSluttperiodeHvisDirekteAvslag())
                 } else {
                     barnebidragApi.beregn(
                         beregnGrunnlag = request.beregnGrunnlag,
@@ -38,12 +38,7 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
                 val klageberegningResultat = if (request.erDirekteAvslag) {
                     // Avslagsperiode skal alltid være løpende hvis det ikke kommer noe periode etter opphøret (feks ved etterfølgende vedtak i orkestrering)
                     barnebidragApi.opprettAvslag(
-                        request.beregnGrunnlag
-                            .copy(
-                                periode = request.beregnGrunnlag.periode.copy(
-                                    til = null,
-                                ),
-                            ),
+                        request.leggTilÅpenSluttperiodeHvisDirekteAvslag(),
                     )
                 } else {
                     barnebidragApi.beregn(
@@ -79,4 +74,10 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
             }
         }
     }
+
+    private fun BidragsberegningOrkestratorRequest.leggTilÅpenSluttperiodeHvisDirekteAvslag() = beregnGrunnlag.copy(
+        periode = beregnGrunnlag.periode.copy(
+            til = null,
+        ),
+    )
 }
