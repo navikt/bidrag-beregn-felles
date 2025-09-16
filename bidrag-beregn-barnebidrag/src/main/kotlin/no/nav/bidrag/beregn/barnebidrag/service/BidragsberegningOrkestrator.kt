@@ -36,7 +36,15 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
             Beregningstype.OMGJØRING -> {
                 secureLogger.debug { "Utfører omgjøringsberegning for request: $request" }
                 val klageberegningResultat = if (request.erDirekteAvslag) {
-                    barnebidragApi.opprettAvslag(request.beregnGrunnlag)
+                    // Avslagsperiode skal alltid være løpende hvis det ikke kommer noe periode etter opphøret (feks ved etterfølgende vedtak i orkestrering)
+                    barnebidragApi.opprettAvslag(
+                        request.beregnGrunnlag
+                            .copy(
+                                periode = request.beregnGrunnlag.periode.copy(
+                                    til = null,
+                                ),
+                            ),
+                    )
                 } else {
                     barnebidragApi.beregn(
                         beregnGrunnlag = request.beregnGrunnlag,

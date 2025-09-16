@@ -74,7 +74,8 @@ import java.time.YearMonth
 
 fun VedtakDto.erAldersjustering() = type == Vedtakstype.ALDERSJUSTERING
 fun VedtakDto.erIndeksregulering() = type == Vedtakstype.INDEKSREGULERING
-
+val List<ResultatVedtak>.omgjøringsvedtaksErEnesteVedtak get() =
+    filter { !it.endeligVedtak }.all { it.omgjøringsvedtak }
 internal data class OmgjøringeOrkestratorContext(
     val stønad: Stønadsid,
     val omgjøringsperiode: ÅrMånedsperiode,
@@ -248,13 +249,37 @@ class OmgjøringOrkestrator(
                 } else {
                     it
                 }
-            }
+            }.gjørOmTilÅpenPeriodeHvisEnesteVedtak()
         } catch (e: Exception) {
             if (e is FinnesEtterfølgendeVedtakMedVirkningstidspunktFørOmgjortVedtak || e is OmgjøringsberegningFeiletFunksjonelt) {
                 throw e
             }
             omgjøringFeiletTeknisk("Feil under omgjøringsberegning: ${e.message}.", e)
         }
+    }
+
+    private fun List<ResultatVedtak>.gjørOmTilÅpenPeriodeHvisEnesteVedtak(): List<ResultatVedtak> = if (omgjøringsvedtaksErEnesteVedtak) {
+        map {
+            if (it.omgjøringsvedtak || it.endeligVedtak) {
+                it.copy(
+                    resultat = it.resultat.copy(
+                        beregnetBarnebidragPeriodeListe = it.resultat.beregnetBarnebidragPeriodeListe.mapIndexed { i, resultatPeriode ->
+                            if (i == it.resultat.beregnetBarnebidragPeriodeListe.size - 1) {
+                                resultatPeriode.copy(
+                                    periode = resultatPeriode.periode.copy(til = null),
+                                )
+                            } else {
+                                resultatPeriode
+                            }
+                        },
+                    ),
+                )
+            } else {
+                it
+            }
+        }
+    } else {
+        this
     }
 
     private fun validerEtterfølgendeVedtakIkkeOverlapper(stønad: Stønadsid, omgjørVedtak: VedtakDto, omgjøringsperiode: ÅrMånedsperiode) {
