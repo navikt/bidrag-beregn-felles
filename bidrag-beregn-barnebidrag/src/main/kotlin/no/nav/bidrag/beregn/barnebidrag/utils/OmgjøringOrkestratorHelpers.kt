@@ -72,8 +72,12 @@ class OmgjøringOrkestratorHelpers(private val vedtakService: VedtakService, pri
             ?: vedtakService.hentBeløpshistorikkTilGrunnlag(
                 stønadsid = stønad,
                 personer = personobjekter ?: vedtak.grunnlagListe.hentAllePersoner() as List<GrunnlagDto>,
-                tidspunkt = vedtak.justerVedtakstidspunktVedtak().vedtakstidspunkt!!.minusSeconds(1),
-            ).innholdTilObjekt<BeløpshistorikkGrunnlag>()
+                tidspunkt = vedtak.vedtakstidspunkt!!.minusSeconds(1),
+            ).innholdTilObjekt<BeløpshistorikkGrunnlag>().let {
+                it.copy(
+                    beløpshistorikk = it.beløpshistorikk.filter { it.vedtaksid != vedtak.vedtaksid },
+                )
+            }
 
         return if (delberegningIndeksreguleringPrivatAvtalePeriodeResultat.isNotEmpty()) {
             val søknadsbarn = delberegningIndeksreguleringPrivatAvtalePeriodeResultat.hentPersonMedIdent(stønad.kravhaver.verdi)!!
