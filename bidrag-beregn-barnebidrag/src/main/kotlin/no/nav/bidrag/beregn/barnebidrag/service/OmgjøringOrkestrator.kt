@@ -634,7 +634,7 @@ class OmgjøringOrkestrator(
         omgjørVedtakVedtakstidspunkt: LocalDateTime,
         skalInnkreves: Boolean,
     ): List<BeløpshistorikkPeriodeInternal> {
-        if (!beregnForPerioderEtterKlage && (this.isEmpty() || !skalInnkreves)) return emptyList()
+        if (!beregnForPerioderEtterKlage && (this.isEmpty() || !skalInnkreves) || !skalInnkreves) return emptyList()
 
         val beløshistorikkKlage = if (beregnForPerioderEtterKlage) {
             omgjøringResultat.beregnetBarnebidragPeriodeListe.map {
