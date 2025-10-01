@@ -195,6 +195,7 @@ class OmgjøringOrkestrator(
                 personobjekter,
                 omgjøringGrunnlag,
                 omgjørVedtakVirkningstidspunkt,
+                omgjøringOrkestratorGrunnlag.gjelderParagraf35c,
 
             )
 

@@ -5,7 +5,6 @@ import no.nav.bidrag.beregn.barnebidrag.service.BeregnIndeksreguleringPrivatAvta
 import no.nav.bidrag.beregn.barnebidrag.service.ByggetBeløpshistorikk
 import no.nav.bidrag.beregn.barnebidrag.service.VedtakService
 import no.nav.bidrag.beregn.barnebidrag.service.omgjøringFeilet
-import no.nav.bidrag.beregn.core.util.justerVedtakstidspunktVedtak
 import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -66,18 +65,38 @@ class OmgjøringOrkestratorHelpers(private val vedtakService: VedtakService, pri
         personobjekter: List<GrunnlagDto>? = null,
         omgjøringsberegningGrunnlag: BeregnGrunnlag,
         omgjortVedtakVirkningstidspunkt: YearMonth,
+        gjelderParagraf35c: Boolean,
     ): BeløpshistorikkGrunnlag {
         val delberegningIndeksreguleringPrivatAvtalePeriodeResultat = utførDelberegningPrivatAvtalePeriode(omgjøringsberegningGrunnlag)
-        val beløpshistorikk = vedtak.finnBeløpshistorikkGrunnlag(stønad, identUtils)
-            ?: vedtakService.hentBeløpshistorikkTilGrunnlag(
+        val beløpshistorikk = if (gjelderParagraf35c) {
+            vedtakService.hentBeløpshistorikkTilGrunnlag(
                 stønadsid = stønad,
                 personer = personobjekter ?: vedtak.grunnlagListe.hentAllePersoner() as List<GrunnlagDto>,
-                tidspunkt = vedtak.vedtakstidspunkt!!.minusSeconds(1),
+                tidspunkt = LocalDateTime.now(),
             ).innholdTilObjekt<BeløpshistorikkGrunnlag>().let {
                 it.copy(
-                    beløpshistorikk = it.beløpshistorikk.filter { it.vedtaksid != vedtak.vedtaksid },
+                    beløpshistorikk = it.beløpshistorikk.filter {
+                        if (it.vedtaksid == null) return@filter true
+                        val resultatFraVedtak = vedtakService.hentVedtak(it.vedtaksid!!)?.let { v ->
+                            val periode = v.finnStønadsendring(stønad)?.periodeListe?.find { p -> p.periode == it.periode } ?: return@filter false
+                            v.grunnlagListe.finnResultatFraAnnenVedtak(periode.grunnlagReferanseListe)
+                        }
+                        it.vedtaksid != vedtak.vedtaksid && vedtak.vedtaksid != resultatFraVedtak?.vedtaksid
+                    },
                 )
             }
+        } else {
+            vedtak.finnBeløpshistorikkGrunnlag(stønad, identUtils)
+                ?: vedtakService.hentBeløpshistorikkTilGrunnlag(
+                    stønadsid = stønad,
+                    personer = personobjekter ?: vedtak.grunnlagListe.hentAllePersoner() as List<GrunnlagDto>,
+                    tidspunkt = vedtak.vedtakstidspunkt!!.minusSeconds(1),
+                ).innholdTilObjekt<BeløpshistorikkGrunnlag>().let {
+                    it.copy(
+                        beløpshistorikk = it.beløpshistorikk.filter { it.vedtaksid != vedtak.vedtaksid },
+                    )
+                }
+        }
 
         return if (delberegningIndeksreguleringPrivatAvtalePeriodeResultat.isNotEmpty()) {
             val søknadsbarn = delberegningIndeksreguleringPrivatAvtalePeriodeResultat.hentPersonMedIdent(stønad.kravhaver.verdi)!!
