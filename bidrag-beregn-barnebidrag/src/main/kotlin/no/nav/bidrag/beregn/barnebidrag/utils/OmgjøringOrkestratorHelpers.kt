@@ -34,6 +34,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.innholdTilObjekt
 import no.nav.bidrag.transport.behandling.felles.grunnlag.tilGrunnlagstype
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakDto
 import no.nav.bidrag.transport.behandling.vedtak.response.erIndeksEllerAldersjustering
+import no.nav.bidrag.transport.behandling.vedtak.response.erOrkestrertVedtak
 import no.nav.bidrag.transport.behandling.vedtak.response.finnResultatFraAnnenVedtak
 import no.nav.bidrag.transport.behandling.vedtak.response.finnStønadsendring
 import java.time.LocalDateTime
@@ -78,8 +79,15 @@ class OmgjøringOrkestratorHelpers(private val vedtakService: VedtakService, pri
                     beløpshistorikk = it.beløpshistorikk.filter {
                         if (it.vedtaksid == null) return@filter true
                         val resultatFraVedtak = vedtakService.hentVedtak(it.vedtaksid!!)?.let { v ->
-                            val periode = v.finnStønadsendring(stønad)?.periodeListe?.find { p -> p.periode == it.periode } ?: return@filter false
-                            v.grunnlagListe.finnResultatFraAnnenVedtak(periode.grunnlagReferanseListe)
+                            val relatertVedtak = if (v.type == Vedtakstype.INNKREVING && v.erOrkestrertVedtak) {
+                                val resultat = v.grunnlagListe.finnResultatFraAnnenVedtak(finnFørsteTreff = true)!!
+                                vedtakService.hentVedtak(resultat.vedtaksid!!)!!
+                            } else {
+                                v
+                            }
+                            val periode =
+                                relatertVedtak.finnStønadsendring(stønad)?.periodeListe?.find { p -> p.periode == it.periode } ?: return@filter false
+                            relatertVedtak.grunnlagListe.finnResultatFraAnnenVedtak(periode.grunnlagReferanseListe)
                         }
                         it.vedtaksid != vedtak.vedtaksid && vedtak.vedtaksid != resultatFraVedtak?.vedtaksid
                     },
