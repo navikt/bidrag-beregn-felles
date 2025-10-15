@@ -160,16 +160,12 @@ class OmgjøringOrkestrator(
             val omgjørVedtakVirkningstidspunkt = omgjørVedtak.virkningstidspunkt?.toYearMonth()
                 ?: omgjøringFeilet("Omgjort vedtak med id $omgjørVedtakId har ikke virkningstidspunkt")
             val løpendeStønadGjeldende = vedtakService.hentLøpendeStønad(stønad) ?: run {
-                if (!omgjøringOrkestratorGrunnlag.skalInnkreves) {
-                    opprettStønad(stønad).copy(
-                        førsteIndeksreguleringsår = null,
-                        nesteIndeksreguleringsår = null,
-                        innkreving = Innkrevingstype.UTEN_INNKREVING,
-                        periodeListe = emptyList(),
-                    )
-                } else {
-                    omgjøringFeilet("Fant ikke løpende stønad for $stønad")
-                }
+                opprettStønad(stønad).copy(
+                    førsteIndeksreguleringsår = null,
+                    nesteIndeksreguleringsår = null,
+                    innkreving = Innkrevingstype.UTEN_INNKREVING,
+                    periodeListe = emptyList(),
+                )
             }
 
             val grunnlagsliste = omgjøringGrunnlag.grunnlagListe
