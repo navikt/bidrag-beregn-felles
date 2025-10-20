@@ -59,6 +59,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBase
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettSluttberegningreferanse
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Collections.emptyList
 
@@ -96,10 +97,11 @@ internal class BeregnSærbidragService(
         vedtakstype: Vedtakstype,
         delberegningUtgift: DelberegningUtgift,
         sjablonListe: SjablonListe = hentSjabloner(),
+        beregningsperiode: ÅrMånedsperiode = ÅrMånedsperiode(LocalDate.now(), LocalDate.now().plusMonths(1)),
     ): Resultatkode? = if (vedtakstype == Vedtakstype.FASTSETTELSE) {
         val forskuddssats = sjablonListe.sjablonSjablontallResponse
             .filter { it.typeSjablon == SjablonTallNavn.FORSKUDDSSATS_BELØP.id }
-            .maxBy { it.datoTom ?: it.datoFom!! }
+            .first { beregningsperiode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
         if (delberegningUtgift.sumGodkjent < forskuddssats.verdi) Resultatkode.GODKJENT_BELØP_ER_LAVERE_ENN_FORSKUDDSSATS else null
     } else {
         null
@@ -138,12 +140,12 @@ internal class BeregnSærbidragService(
                 )
             }.first()
 
-            validerForBeregning(vedtakstype, delberegningUtgift.innhold, sjablonListe).takeIf {
+            validerForBeregning(vedtakstype, delberegningUtgift.innhold, sjablonListe, beregnGrunnlag.periode).takeIf {
                 it == Resultatkode.GODKJENT_BELØP_ER_LAVERE_ENN_FORSKUDDSSATS
             }?.let {
                 val forskuddssats = sjablonListe.sjablonSjablontallResponse
                     .filter { it.typeSjablon == SjablonTallNavn.FORSKUDDSSATS_BELØP.id }
-                    .maxBy { it.datoTom ?: it.datoFom!! }
+                    .first { beregnGrunnlag.periode.overlapper(ÅrMånedsperiode(it.datoFom!!, it.datoTom)) }
                 return lagResponsGodkjentBeløpUnderForskuddssats(beregnGrunnlag, forskuddssats)
             }
         }
