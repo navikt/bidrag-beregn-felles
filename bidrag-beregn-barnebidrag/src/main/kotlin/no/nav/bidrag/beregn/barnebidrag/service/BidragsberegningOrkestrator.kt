@@ -76,7 +76,7 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
                         listOf(
                             ResultatVedtakV2(
                                 periodeListe = klageberegningResultat.beregnetBarnebidragPeriodeListe,
-                                delvedtak = true,
+                                delvedtak = false,
                                 omgjøringsvedtak = true,
                                 vedtakstype = Vedtakstype.KLAGE,
                             ),
@@ -112,12 +112,12 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
                         endeligKlageberegningResultat.map {
                             ResultatVedtakV2(
                                 periodeListe = it.resultat.beregnetBarnebidragPeriodeListe,
-                                delvedtak = true,
-                                omgjøringsvedtak = true,
-                                vedtakstype = Vedtakstype.KLAGE,
+                                delvedtak = it.delvedtak,
+                                omgjøringsvedtak = it.omgjøringsvedtak,
+                                vedtakstype = it.vedtakstype,
                             )
                         },
-                    ) to klageberegningResultat.grunnlagListe
+                    ) to endeligKlageberegningResultat.flatMap { it.resultat.grunnlagListe }
                 }
                 secureLogger.debug { "Resultat av endelig klageberegning: $respons" }
                 return BidragsberegningOrkestratorResponseV2(
