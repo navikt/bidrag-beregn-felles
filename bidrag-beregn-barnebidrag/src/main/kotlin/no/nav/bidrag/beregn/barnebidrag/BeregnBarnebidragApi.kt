@@ -42,6 +42,12 @@ class BeregnBarnebidragApi {
 
     fun beregn(beregnGrunnlag: BeregnGrunnlag): BeregnetBarnebidragResultat = service.beregnBarnebidrag(beregnGrunnlag)
 
+    // TODO Skal beregne til og med BP's andel av U (og ta hensyn til BM's barnetillegg og 25% av inntekt)
+
+    // TODO Skal utføre siste del av beregningen
+    fun beregnMedForholdsmessigFordeling(beregnGrunnlag: BeregnGrunnlag): BeregnetBarnebidragResultat =
+        service.beregnBarnebidrag(mottattGrunnlag = beregnGrunnlag, forholdsmessigFordeling = true)
+
     fun beregnBidragsevne(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnBidragsevne(beregnGrunnlag)
 
     fun beregnNettoTilsynsutgift(beregnGrunnlag: BeregnGrunnlag): List<GrunnlagDto> = service.beregnNettoTilsynsutgift(beregnGrunnlag)

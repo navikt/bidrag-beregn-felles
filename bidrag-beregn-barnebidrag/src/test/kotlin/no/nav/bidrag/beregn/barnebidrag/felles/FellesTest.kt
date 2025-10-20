@@ -88,11 +88,12 @@ internal open class FellesTest {
         } catch (e: Exception) {
             fail("Klarte ikke å lese fil: $filnavn", e)
         }
-        return jacksonObjectMapper().findAndRegisterModules().readValue(json, T::class.java)
+        return jacksonObjectMapper().findAndRegisterModules().readValue(json, object : com.fasterxml.jackson.core.type.TypeReference<T>() {})
     }
 
     // Overload for BeregnGrunnlag
     fun lesFilOgByggRequest(filnavn: String): BeregnGrunnlag = lesFilOgByggRequest<BeregnGrunnlag>(filnavn)
+    fun lesFilOgByggRequestListe(filnavn: String): List<BeregnGrunnlag> = lesFilOgByggRequest<List<BeregnGrunnlag>>(filnavn)
 
     fun <T> printJson(json: T) {
         val objectMapper = ObjectMapper()
@@ -103,6 +104,7 @@ internal open class FellesTest {
         println(objectMapper.writeValueAsString(json))
     }
 }
+
 inline fun <reified T : GrunnlagBeregningPeriode> List<InnholdMedReferanse<T>>.validerSistePeriodeErLikDato(opphørsdato: YearMonth?) {
     maxBy { it.innhold.periode.fom }.innhold.periode.til shouldBe opphørsdato
 }

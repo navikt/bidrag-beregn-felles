@@ -23,6 +23,7 @@ import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.vedtak.Stønadstype
+import no.nav.bidrag.domene.sak.Saksnummer
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
@@ -31,6 +32,7 @@ import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatPeriode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.felles.valider
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.Delberegning
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndringSjekkGrensePeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningPrivatAvtale
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
@@ -46,7 +48,7 @@ import java.time.YearMonth
 class BeregnBarnebidragService : BeregnService() {
 
     // Komplett beregning av barnebidrag
-    fun beregnBarnebidrag(mottattGrunnlag: BeregnGrunnlag): BeregnetBarnebidragResultat {
+    fun beregnBarnebidrag(mottattGrunnlag: BeregnGrunnlag, forholdsmessigFordeling: Boolean = false): BeregnetBarnebidragResultat {
         secureLogger.debug { "Beregning av barnebidrag - følgende request mottatt: ${tilJson(mottattGrunnlag)}" }
 
         val virkningstidspunkt = mottattGrunnlag.grunnlagListe.filtrerOgKonverterBasertPåEgenReferanse<VirkningstidspunktGrunnlag>(
@@ -710,5 +712,49 @@ class BeregnBarnebidragService : BeregnService() {
         val delberegningEndringSjekkGrensePeriodeResultat: List<GrunnlagDto>,
         val delberegningEndringSjekkGrenseResultat: List<GrunnlagDto>,
         val delberegningIndeksreguleringPrivatAvtaleResultat: List<GrunnlagDto>,
+    )
+
+    fun beregnForholdsmessigFordeling(
+        beregnetBarnebidragResultatListe: List<BeregnetBarnebidragResultat>,
+        løpendeBidragListe: List<GrunnlagDto>,
+    ): List<DelberegningForholdsmessigFordeling> {
+        // Finn bruddperioder basert på beregnetBarnebidragResultatListe
+        // For hver periode
+        // - For hvert barn
+        //   - Finn bidragsevne, U og BP's andel av U
+        // - Finn laveste verdi av bidragsevne
+        // - Summer U
+        // - Finn hvert barns andel av U
+        // - Summer BPs andel av U
+        // - Sammenlign laveste verdi av bidragsevne og sum av BP's andel av U og marker de periodene som utløser FF
+        // Hvis det blir forholdsmessig fordeling, men vi ikke har komplette grunnlag
+        // - Kast exception med informasjonen som er beskrevet over
+        // Hvis det blir forholdsmessig fordeling og vi har komplette grunnlag (dvs. løpendeBidragListe er tom)
+        // - For hver periode
+        //   - Beregn prosentandel av U for hvert barn (både for søknadsbarn og for løpende bidrag) (hvis ikke allerede gjort)
+        //   - Fordel BPs andel av U prosentvis for søknadsbarna (gjelder også løpende bidrag)
+        // - Fullfør beregningen (del 3)
+        // Hvis det ikke blir forholdsmessig fordeling
+        // - Fullfør beregningen som normalt
+        return emptyList()
+    }
+}
+
+// TODO Flytte til bidrag-felles
+data class DelberegningForholdsmessigFordeling(
+    override val periode: ÅrMånedsperiode,
+    val bidragsbarnFFListe: List<ForholdsmessigFordelingBidragsbarn>,
+    val minBidragsevne: BigDecimal,
+    val sumUnderholdskostnad: BigDecimal,
+    val sumBPAndelAvU: BigDecimal,
+    val harFullEvne: Boolean = true,
+) : Delberegning {
+    data class ForholdsmessigFordelingBidragsbarn(
+        val barnReferanse: String,
+        val erSøknadsbarn: Boolean = true,
+        val sak: Saksnummer,
+        val bidragsevne: BigDecimal,
+        val bPAndelAvUBeløp: BigDecimal,
+        val barnAndelAvUProsent: BigDecimal,
     )
 }
