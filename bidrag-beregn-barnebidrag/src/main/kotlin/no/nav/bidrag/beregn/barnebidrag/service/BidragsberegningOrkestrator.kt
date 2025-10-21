@@ -17,6 +17,8 @@ import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatVedtak
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatVedtakV2
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
+import no.nav.bidrag.transport.felles.tilVisningsnavn
+import no.nav.bidrag.transport.felles.toYearMonth
 import org.springframework.context.annotation.Import
 import org.springframework.stereotype.Service
 
@@ -30,26 +32,34 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
             Beregningstype.BIDRAG -> {
                 secureLogger.debug { "Utfører bidragsberegning for request: $request" }
                 val respons = request.beregningBarn.map {
-                    val beregningResultat = if (request.erDirekteAvslag) {
-                        barnebidragApi.opprettAvslag(
-                            it.tilBeregnGrunnlagV1(request.grunnlagsliste).leggTilÅpenSluttperiodeHvisDirekteAvslagBeregning(),
-                        )
-                    } else {
-                        barnebidragApi.beregn(
-                            beregnGrunnlag = it.tilBeregnGrunnlagV1(request.grunnlagsliste),
-                        )
-                    }
-                    BidragsberegningResultatBarnV2(
-                        it.søknadsbarnreferanse,
-                        listOf(
-                            ResultatVedtakV2(
-                                periodeListe = beregningResultat.beregnetBarnebidragPeriodeListe,
-                                delvedtak = false,
-                                omgjøringsvedtak = false,
-                                vedtakstype = Vedtakstype.ENDRING,
+                    try {
+                        val beregningResultat = if (request.erDirekteAvslag) {
+                            barnebidragApi.opprettAvslag(
+                                it.tilBeregnGrunnlagV1(request.grunnlagsliste).leggTilÅpenSluttperiodeHvisDirekteAvslagBeregning(),
+                            )
+                        } else {
+                            barnebidragApi.beregn(
+                                beregnGrunnlag = it.tilBeregnGrunnlagV1(request.grunnlagsliste),
+                            )
+                        }
+                        BidragsberegningResultatBarnV2(
+                            it.søknadsbarnreferanse,
+                            listOf(
+                                ResultatVedtakV2(
+                                    periodeListe = beregningResultat.beregnetBarnebidragPeriodeListe,
+                                    delvedtak = false,
+                                    omgjøringsvedtak = false,
+                                    vedtakstype = Vedtakstype.ENDRING,
+                                ),
                             ),
-                        ),
-                    ) to beregningResultat.grunnlagListe
+                        ) to beregningResultat.grunnlagListe
+                    } catch (e: Exception) {
+                        BidragsberegningResultatBarnV2(
+                            it.søknadsbarnreferanse,
+                            emptyList(),
+                            beregningsfeil = e,
+                        ) to request.grunnlagsliste
+                    }
                 }
 
                 secureLogger.debug { "Resultat av bidragsberegning: $respons" }
@@ -61,27 +71,35 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
             Beregningstype.OMGJØRING -> {
                 secureLogger.debug { "Utfører omgjøringsberegning for request: $request" }
                 val respons = request.beregningBarn.map {
-                    val klageberegningResultat = if (request.erDirekteAvslag) {
-                        // Avslagsperiode skal alltid være løpende hvis det ikke kommer noe periode etter opphøret (feks ved etterfølgende vedtak i orkestrering)
-                        barnebidragApi.opprettAvslag(
-                            it.tilBeregnGrunnlagV1(request.grunnlagsliste).leggTilÅpenSluttperiodeHvisDirekteAvslagBeregning(),
-                        )
-                    } else {
-                        barnebidragApi.beregn(
-                            beregnGrunnlag = it.tilBeregnGrunnlagV1(request.grunnlagsliste),
-                        )
-                    }
-                    BidragsberegningResultatBarnV2(
-                        it.søknadsbarnreferanse,
-                        listOf(
-                            ResultatVedtakV2(
-                                periodeListe = klageberegningResultat.beregnetBarnebidragPeriodeListe,
-                                delvedtak = false,
-                                omgjøringsvedtak = true,
-                                vedtakstype = Vedtakstype.KLAGE,
+                    try {
+                        val klageberegningResultat = if (request.erDirekteAvslag) {
+                            // Avslagsperiode skal alltid være løpende hvis det ikke kommer noe periode etter opphøret (feks ved etterfølgende vedtak i orkestrering)
+                            barnebidragApi.opprettAvslag(
+                                it.tilBeregnGrunnlagV1(request.grunnlagsliste).leggTilÅpenSluttperiodeHvisDirekteAvslagBeregning(),
+                            )
+                        } else {
+                            barnebidragApi.beregn(
+                                beregnGrunnlag = it.tilBeregnGrunnlagV1(request.grunnlagsliste),
+                            )
+                        }
+                        BidragsberegningResultatBarnV2(
+                            it.søknadsbarnreferanse,
+                            listOf(
+                                ResultatVedtakV2(
+                                    periodeListe = klageberegningResultat.beregnetBarnebidragPeriodeListe,
+                                    delvedtak = false,
+                                    omgjøringsvedtak = true,
+                                    vedtakstype = Vedtakstype.KLAGE,
+                                ),
                             ),
-                        ),
-                    ) to klageberegningResultat.grunnlagListe
+                        ) to klageberegningResultat.grunnlagListe
+                    } catch (e: Exception) {
+                        BidragsberegningResultatBarnV2(
+                            it.søknadsbarnreferanse,
+                            emptyList(),
+                            beregningsfeil = e,
+                        ) to request.grunnlagsliste
+                    }
                 }
                 secureLogger.debug { "Resultat av omgjøringsberegning: $respons" }
                 return BidragsberegningOrkestratorResponseV2(
@@ -92,32 +110,40 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
             Beregningstype.OMGJØRING_ENDELIG -> {
                 secureLogger.debug { "Utfører endelig omgjøringsberegning for request: $request" }
                 val respons = request.beregningBarn.map {
-                    val klageberegningResultat = if (request.erDirekteAvslag) {
-                        barnebidragApi.opprettAvslag(
-                            it.tilBeregnGrunnlagV1(request.grunnlagsliste).leggTilÅpenSluttperiodeHvisDirekteAvslagBeregning(),
-                        )
-                    } else {
-                        barnebidragApi.beregn(
-                            beregnGrunnlag = it.tilBeregnGrunnlagV1(request.grunnlagsliste),
-                        )
-                    }
-                    val endeligKlageberegningResultat = omgjøringOrkestrator.utførOmgjøringEndelig(
-                        omgjøringResultat = klageberegningResultat,
-                        omgjøringGrunnlag = it.tilBeregnGrunnlagV1(request.grunnlagsliste),
-                        omgjøringOrkestratorGrunnlag =
-                        it.omgjøringOrkestratorGrunnlag ?: throw IllegalArgumentException("klageOrkestratorGrunnlag må være angitt"),
-                    )
-                    BidragsberegningResultatBarnV2(
-                        it.søknadsbarnreferanse,
-                        endeligKlageberegningResultat.map {
-                            ResultatVedtakV2(
-                                periodeListe = it.resultat.beregnetBarnebidragPeriodeListe,
-                                delvedtak = it.delvedtak,
-                                omgjøringsvedtak = it.omgjøringsvedtak,
-                                vedtakstype = it.vedtakstype,
+                    try {
+                        val klageberegningResultat = if (request.erDirekteAvslag) {
+                            barnebidragApi.opprettAvslag(
+                                it.tilBeregnGrunnlagV1(request.grunnlagsliste).leggTilÅpenSluttperiodeHvisDirekteAvslagBeregning(),
                             )
-                        },
-                    ) to endeligKlageberegningResultat.flatMap { it.resultat.grunnlagListe }
+                        } else {
+                            barnebidragApi.beregn(
+                                beregnGrunnlag = it.tilBeregnGrunnlagV1(request.grunnlagsliste),
+                            )
+                        }
+                        val endeligKlageberegningResultat = omgjøringOrkestrator.utførOmgjøringEndelig(
+                            omgjøringResultat = klageberegningResultat,
+                            omgjøringGrunnlag = it.tilBeregnGrunnlagV1(request.grunnlagsliste),
+                            omgjøringOrkestratorGrunnlag =
+                            it.omgjøringOrkestratorGrunnlag ?: throw IllegalArgumentException("klageOrkestratorGrunnlag må være angitt"),
+                        )
+                        BidragsberegningResultatBarnV2(
+                            it.søknadsbarnreferanse,
+                            endeligKlageberegningResultat.map {
+                                ResultatVedtakV2(
+                                    periodeListe = it.resultat.beregnetBarnebidragPeriodeListe,
+                                    delvedtak = it.delvedtak,
+                                    omgjøringsvedtak = it.omgjøringsvedtak,
+                                    vedtakstype = it.vedtakstype,
+                                )
+                            },
+                        ) to endeligKlageberegningResultat.flatMap { it.resultat.grunnlagListe }
+                    } catch (ex: Exception) {
+                        BidragsberegningResultatBarnV2(
+                            it.søknadsbarnreferanse,
+                            emptyList(),
+                            beregningsfeil = ex,
+                        ) to request.grunnlagsliste
+                    }
                 }
                 secureLogger.debug { "Resultat av endelig klageberegning: $respons" }
                 return BidragsberegningOrkestratorResponseV2(
@@ -128,6 +154,7 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
         }
     }
 
+    @Deprecated("Bruk utførBidragsberegningV2 eller utførBidragsberegningV3 istedenfor")
     fun utførBidragsberegning(request: BidragsberegningOrkestratorRequest): BidragsberegningOrkestratorResponse {
         when (request.beregningstype) {
             Beregningstype.BIDRAG -> {
