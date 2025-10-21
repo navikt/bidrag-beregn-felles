@@ -134,10 +134,18 @@ class BidragsberegningOrkestrator(private val barnebidragApi: BeregnBarnebidragA
                                     delvedtak = it.delvedtak,
                                     grunnlagslisteDelvedtak = if (it.delvedtak) it.resultat.grunnlagListe else emptyList(),
                                     omgjøringsvedtak = it.omgjøringsvedtak,
+                                    beregnet = it.beregnet,
                                     vedtakstype = it.vedtakstype,
                                 )
                             },
-                        ) to endeligKlageberegningResultat.flatMap { if (!it.delvedtak) it.resultat.grunnlagListe else emptyList() }
+                        ) to
+                            endeligKlageberegningResultat.flatMap {
+                                if (!it.delvedtak && !it.omgjøringsvedtak) {
+                                    it.resultat.grunnlagListe
+                                } else {
+                                    emptyList()
+                                }
+                            }
                     } catch (ex: Exception) {
                         BidragsberegningResultatBarnV2(
                             it.søknadsbarnreferanse,
