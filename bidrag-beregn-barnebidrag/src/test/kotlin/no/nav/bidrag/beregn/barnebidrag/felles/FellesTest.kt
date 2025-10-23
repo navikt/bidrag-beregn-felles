@@ -103,6 +103,7 @@ internal open class FellesTest {
         println(objectMapper.writeValueAsString(json))
     }
 }
+
 inline fun <reified T : GrunnlagBeregningPeriode> List<InnholdMedReferanse<T>>.validerSistePeriodeErLikDato(opphørsdato: YearMonth?) {
     maxBy { it.innhold.periode.fom }.innhold.periode.til shouldBe opphørsdato
 }
