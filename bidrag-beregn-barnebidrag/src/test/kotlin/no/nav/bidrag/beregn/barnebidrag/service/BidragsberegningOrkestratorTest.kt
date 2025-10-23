@@ -1,6 +1,7 @@
 package no.nav.bidrag.beregn.barnebidrag.service
 
 import io.kotest.assertions.assertSoftly
+import io.kotest.matchers.collections.shouldHaveAtLeastSize
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -11,7 +12,6 @@ import no.nav.bidrag.beregn.barnebidrag.felles.FellesTest
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningBeløpshistorikkConsumer
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningVedtakConsumer
 import no.nav.bidrag.beregn.barnebidrag.utils.OmgjøringOrkestratorHelpers
-import no.nav.bidrag.beregn.vedtak.Vedtaksfiltrering
 import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.beregning.Beregningstype
@@ -25,6 +25,7 @@ import no.nav.bidrag.transport.behandling.belopshistorikk.request.HentStønadHis
 import no.nav.bidrag.transport.behandling.belopshistorikk.request.HentStønadRequest
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BidragsberegningOrkestratorRequest
+import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BidragsberegningOrkestratorRequestV2
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.OmgjøringOrkestratorGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndringSjekkGrense
@@ -52,6 +53,9 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
     @MockK(relaxed = true)
     private lateinit var stønadConsumer: BeregningBeløpshistorikkConsumer
 
+//    @MockK(relaxed = true)
+//    private lateinit var bbmConsumer: BeregningBBMConsumer
+
     @MockK(relaxed = true)
     private lateinit var identUtils: IdentUtils
 
@@ -61,10 +65,12 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
     @MockK(relaxed = true)
     private lateinit var beregnIndeksreguleringApi: BeregnIndeksreguleringApi
 
+    @MockK(relaxed = true)
+    private lateinit var vedtakService: VedtakService
+
     private lateinit var barnebidragApi: BeregnBarnebidragApi
     private lateinit var omgjøringOrkestrator: OmgjøringOrkestrator
     private lateinit var bidragsberegningOrkestrator: BidragsberegningOrkestrator
-    private lateinit var vedtakService: VedtakService
 
     @BeforeEach
     fun init() {
@@ -72,20 +78,37 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
             val ident = firstArg<Personident>()
             ident
         }
-        val omgjøringOrkestratorHelpers = OmgjøringOrkestratorHelpers(vedtakService, identUtils)
         barnebidragApi = BeregnBarnebidragApi()
-        vedtakService = VedtakService(
-            vedtakConsumer = vedtakConsumer,
-            stønadConsumer = stønadConsumer,
-            vedtakFilter = Vedtaksfiltrering(),
-            identUtils = identUtils,
-        )
+//        vedtakService = VedtakService(
+//            vedtakConsumer = vedtakConsumer,
+//            stønadConsumer = stønadConsumer,
+//            bbmConsumer = bbmConsumer,
+//            vedtakFilter = Vedtaksfiltrering(),
+//            identUtils = identUtils,
+//        )
+        val omgjøringOrkestratorHelpers = OmgjøringOrkestratorHelpers(vedtakService, identUtils)
         omgjøringOrkestrator = OmgjøringOrkestrator(vedtakService, aldersjusteringOrchestrator, beregnIndeksreguleringApi, omgjøringOrkestratorHelpers)
         bidragsberegningOrkestrator = BidragsberegningOrkestrator(
             barnebidragApi = barnebidragApi,
             omgjøringOrkestrator = omgjøringOrkestrator,
+            vedtakService = vedtakService,
         )
         stubSjablonProvider()
+    }
+
+    @Test
+    @DisplayName("Beregn bidrag v3 - 1 BM, 2 søknadsbarn")
+    fun test01_v3_BeregnBidrag_EnBM_ToSøknadsbarn() {
+        filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/test01_v3_beregn_bidrag_grunnlag.json"
+        val beregnRequest = lesFilOgByggRequest<BidragsberegningOrkestratorRequestV2>(filnavnBeregnGrunnlag)
+
+        val beregnResponse = bidragsberegningOrkestrator.utførBidragsberegningV3(beregnRequest)
+        printJson(beregnResponse)
+
+        assertSoftly(beregnResponse) {
+            grunnlagListe shouldHaveAtLeastSize 1
+            resultat shouldHaveAtLeastSize 1
+        }
     }
 
     @Test
@@ -165,14 +188,14 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
             gyldigTidspunkt = påklagetVedtak.vedtakstidspunkt!!.minusSeconds(1),
         )
 
-        every { vedtakConsumer.hentVedtak(påklagetVedtak.vedtaksid.toInt()) } returns påklagetVedtak
+        every { vedtakConsumer.hentVedtak(påklagetVedtak.vedtaksid) } returns påklagetVedtak
         every { vedtakConsumer.hentVedtak(4934258) } returns etterfølgendeVedtak
         every { stønadConsumer.hentLøpendeStønad(hentStønadRequest) } returns beløpshistorikkNå
         every { stønadConsumer.hentHistoriskeStønader(hentStønadHistoriskRequest) } returns beløpshistorikkKlage
 
         val klageOrkestratorGrunnlag = OmgjøringOrkestratorGrunnlag(
             stønad = stønad,
-            omgjørVedtakId = påklagetVedtak.vedtaksid.toInt(),
+            omgjørVedtakId = påklagetVedtak.vedtaksid,
             skalInnkreves = false,
             erBeregningsperiodeLøpende = false,
         )
@@ -228,12 +251,12 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
             sak = Saksnummer("2300960"),
         )
 
-        every { vedtakService.hentVedtak(påklagetVedtak.vedtaksid.toInt()) } returns påklagetVedtak
+        every { vedtakService.hentVedtak(påklagetVedtak.vedtaksid) } returns påklagetVedtak
         every { vedtakService.hentLøpendeStønad(stønad) } returns beløpshistorikkNå
 
         val klageOrkestratorGrunnlag = OmgjøringOrkestratorGrunnlag(
             stønad = stønad,
-            omgjørVedtakId = påklagetVedtak.vedtaksid.toInt(),
+            omgjørVedtakId = påklagetVedtak.vedtaksid,
             skalInnkreves = false,
             erBeregningsperiodeLøpende = false,
         )
@@ -297,14 +320,14 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
             gyldigTidspunkt = påklagetVedtak.vedtakstidspunkt!!.minusSeconds(1),
         )
 
-        every { vedtakConsumer.hentVedtak(påklagetVedtak.vedtaksid.toInt()) } returns påklagetVedtak
+        every { vedtakConsumer.hentVedtak(påklagetVedtak.vedtaksid) } returns påklagetVedtak
         every { vedtakConsumer.hentVedtak(4934258) } returns etterfølgendeVedtak
         every { stønadConsumer.hentLøpendeStønad(hentStønadRequest) } returns beløpshistorikkNå
         every { stønadConsumer.hentHistoriskeStønader(hentStønadHistoriskRequest) } returns beløpshistorikkKlage
 
         val klageOrkestratorGrunnlag = OmgjøringOrkestratorGrunnlag(
             stønad = stønad,
-            omgjørVedtakId = påklagetVedtak.vedtaksid.toInt(),
+            omgjørVedtakId = påklagetVedtak.vedtaksid,
             skalInnkreves = false,
             erBeregningsperiodeLøpende = false,
         )

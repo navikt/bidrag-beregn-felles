@@ -1,5 +1,6 @@
 package no.nav.bidrag.beregn.barnebidrag.service
 
+import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningBBMConsumer
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningBeløpshistorikkConsumer
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningVedtakConsumer
 import no.nav.bidrag.beregn.barnebidrag.utils.hentSisteLøpendePeriode
@@ -10,16 +11,22 @@ import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.vedtak.Beslutningstype
 import no.nav.bidrag.domene.enums.vedtak.Innkrevingstype
+import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.transport.behandling.belopshistorikk.request.HentStønadHistoriskRequest
 import no.nav.bidrag.transport.behandling.belopshistorikk.request.HentStønadRequest
+import no.nav.bidrag.transport.behandling.belopshistorikk.request.LøpendeBidragssakerRequest
+import no.nav.bidrag.transport.behandling.belopshistorikk.response.LøpendeBidragssak
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadPeriodeDto
+import no.nav.bidrag.transport.behandling.beregning.felles.BidragBeregningRequestDto
+import no.nav.bidrag.transport.behandling.beregning.felles.BidragBeregningResponsDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.vedtak.request.HentVedtakForStønadRequest
 import no.nav.bidrag.transport.behandling.vedtak.response.StønadsendringDto
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakDto
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakForStønad
+import no.nav.bidrag.transport.behandling.vedtak.response.søknadsid
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.time.YearMonth
@@ -32,6 +39,7 @@ internal data class PåklagetVedtak(val vedtaksid: Int, val vedtakstidspunkt: Lo
 class VedtakService(
     private val vedtakConsumer: BeregningVedtakConsumer,
     private val stønadConsumer: BeregningBeløpshistorikkConsumer,
+    private val bbmConsumer: BeregningBBMConsumer,
     private val vedtakFilter: Vedtaksfiltrering,
     private val identUtils: IdentUtils,
 ) {
@@ -108,10 +116,8 @@ class VedtakService(
                     (acc + vedtak).toMutableList()
                 } else {
                     val nesteVedtakFom = vedtak.stønadsendring.periodeListe.minOf { it.periode.fom }
-                    val nesteVedtakTil = vedtak.stønadsendring.periodeListe.maxOf { it.periode.til ?: YearMonth.of(9999, 12) }
 
                     val sisteVedtakFom = sisteVedtak.stønadsendring.periodeListe.minOf { it.periode.fom }
-                    val sisteVedtakTil = sisteVedtak.stønadsendring.periodeListe.maxOf { it.periode.til ?: YearMonth.of(9999, 12) }
 
                     // Sjekk siste periode til i tilfelle det har blitt fattet opphør men startet vedtak på nytt
                     val nesteVedtakOverskriverSisteVedtak = nesteVedtakFom <= sisteVedtakFom // && nesteVedtakTil <= sisteVedtakTil
@@ -232,5 +238,35 @@ class VedtakService(
         mottaker = identUtils.hentNyesteIdent(stønadsendringDto.mottaker),
         kravhaver = identUtils.hentNyesteIdent(stønadsendringDto.kravhaver),
         skyldner = identUtils.hentNyesteIdent(stønadsendringDto.skyldner),
+    )
+
+    // TODO Kode kopiert fra bidrag-behandling
+    fun hentSisteLøpendeStønader(bpIdent: Personident): List<LøpendeBidragssak> =
+        stønadConsumer.hentLøpendeBidrag(LøpendeBidragssakerRequest(skyldner = bpIdent)).bidragssakerListe
+
+    fun finnSisteManuelleVedtakForEvnevurdering(stønadsid: Stønadsid): VedtakForStønad? {
+        val vedtakISak =
+            vedtakConsumer.hentVedtakForStønad(
+                HentVedtakForStønadRequest(
+                    stønadsid.sak,
+                    stønadsid.type,
+                    stønadsid.skyldner,
+                    stønadsid.kravhaver,
+                ),
+            )
+        return vedtakFilter.finneSisteManuelleVedtak(vedtakISak.vedtakListe)
+    }
+
+    fun hentBeregningFraBBM(vedtakForStønadListe: List<VedtakForStønad>): BidragBeregningResponsDto = bbmConsumer.hentBeregning(
+        BidragBeregningRequestDto(
+            vedtakForStønadListe.map {
+                BidragBeregningRequestDto.HentBidragBeregning(
+                    stønadstype = it.stønadsendring.type,
+                    søknadsid = it.behandlingsreferanser.søknadsid.toString(),
+                    saksnummer = it.stønadsendring.sak.verdi,
+                    personidentBarn = it.stønadsendring.kravhaver,
+                )
+            },
+        ),
     )
 }
