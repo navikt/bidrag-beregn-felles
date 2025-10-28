@@ -1,13 +1,14 @@
-package no.nav.bidrag.beregn.barnebidrag.service
+package no.nav.bidrag.beregn.barnebidrag.service.orkestrering
 
 import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.barnebidrag.bo.BeløpshistorikkPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.EndringSjekkGrensePeriodeDelberegningPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.PrivatAvtaleIndeksregulertPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SluttberegningPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnEndringSjekkGrensePeriodeService.delberegningEndringSjekkGrensePeriode
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnEndringSjekkGrensePeriodeService.erOverMinimumsgrenseForEndring
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnEndringSjekkGrenseService.delberegningEndringSjekkGrense
+import no.nav.bidrag.beregn.barnebidrag.service.beregning.BeregnEndringSjekkGrensePeriodeService.delberegningEndringSjekkGrensePeriode
+import no.nav.bidrag.beregn.barnebidrag.service.beregning.BeregnEndringSjekkGrensePeriodeService.erOverMinimumsgrenseForEndring
+import no.nav.bidrag.beregn.barnebidrag.service.beregning.BeregnEndringSjekkGrenseService.delberegningEndringSjekkGrense
+import no.nav.bidrag.beregn.barnebidrag.service.external.VedtakService
 import no.nav.bidrag.beregn.barnebidrag.utils.AldersjusteringUtils.opprettAldersjusteringDetaljerGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.utils.OmgjøringOrkestratorHelpers
 import no.nav.bidrag.beregn.barnebidrag.utils.hentSisteLøpendePeriode

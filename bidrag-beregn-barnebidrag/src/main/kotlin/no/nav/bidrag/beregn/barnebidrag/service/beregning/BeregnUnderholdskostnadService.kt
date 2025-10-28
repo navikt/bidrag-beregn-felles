@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.barnebidrag.service
+package no.nav.bidrag.beregn.barnebidrag.service.beregning
 
 import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.barnebidrag.beregning.UnderholdskostnadBeregning
@@ -11,8 +11,8 @@ import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadPeriodeResultat
-import no.nav.bidrag.beregn.barnebidrag.mapper.UnderholdskostnadMapper.finnReferanseTilRolle
-import no.nav.bidrag.beregn.barnebidrag.mapper.UnderholdskostnadMapper.mapUnderholdskostnadGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.mapper.AldersjusteringMapper.finnReferanseTilRolle
+import no.nav.bidrag.beregn.barnebidrag.mapper.UnderholdskostnadMapper
 import no.nav.bidrag.beregn.core.bo.SjablonSjablontallBeregningGrunnlag
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
@@ -33,7 +33,8 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
         val sjablonGrunnlag = lagSjablonGrunnlagsobjekter(mottattGrunnlag.periode) { it.underholdskostnad }
 
         // Mapper ut grunnlag som skal brukes for å beregne underholdskostnad
-        val underholdskostnadPeriodeGrunnlag = mapUnderholdskostnadGrunnlag(mottattGrunnlag = mottattGrunnlag, sjablonGrunnlag = sjablonGrunnlag)
+        val underholdskostnadPeriodeGrunnlag =
+            UnderholdskostnadMapper.mapUnderholdskostnadGrunnlag(mottattGrunnlag = mottattGrunnlag, sjablonGrunnlag = sjablonGrunnlag)
 
         val søknadsbarnFødselsdatoÅrMåned =
             YearMonth.of(
@@ -72,7 +73,10 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
             underholdskostnadBeregningResultatListe.add(
                 UnderholdskostnadPeriodeResultat(
                     periode = bruddPeriode,
-                    resultat = UnderholdskostnadBeregning.beregn(grunnlag = underholdskostnadBeregningGrunnlag, barnetrygdType = barnetrygdType),
+                    resultat = UnderholdskostnadBeregning.beregn(
+                        grunnlag = underholdskostnadBeregningGrunnlag,
+                        barnetrygdType = barnetrygdType,
+                    ),
                 ),
             )
         }
@@ -116,9 +120,9 @@ internal object BeregnUnderholdskostnadService : BeregnService() {
 
     // Lager grunnlagsobjekter for sjabloner (ett objekt pr sjablonverdi som er innenfor perioden)
     private fun lagSjablonGrunnlagsobjekter(periode: ÅrMånedsperiode, delberegning: (SjablonTallNavn) -> Boolean): List<GrunnlagDto> =
-        mapSjablonSjablontallGrunnlag(periode = periode, sjablonListe = SjablonProvider.hentSjablontall(), delberegning = delberegning) +
-            mapSjablonBarnetilsynGrunnlag(periode = periode, sjablonListe = SjablonProvider.hentSjablonBarnetilsyn()) +
-            mapSjablonForbruksutgifterGrunnlag(periode = periode, sjablonListe = SjablonProvider.hentSjablonForbruksutgifter())
+        mapSjablonSjablontallGrunnlag(periode = periode, sjablonListe = SjablonProvider.Companion.hentSjablontall(), delberegning = delberegning) +
+            mapSjablonBarnetilsynGrunnlag(periode = periode, sjablonListe = SjablonProvider.Companion.hentSjablonBarnetilsyn()) +
+            mapSjablonForbruksutgifterGrunnlag(periode = periode, sjablonListe = SjablonProvider.Companion.hentSjablonForbruksutgifter())
 
     // Lager en liste over alle bruddperioder basert på grunnlag som skal brukes i beregningen
     private fun lagBruddPeriodeListeUnderholdskostnad(

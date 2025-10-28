@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.barnebidrag.service
+package no.nav.bidrag.beregn.barnebidrag.service.beregning
 
 import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.barnebidrag.beregning.EndringSjekkGrensePeriodeBeregning
@@ -8,7 +8,7 @@ import no.nav.bidrag.beregn.barnebidrag.bo.EndringSjekkGrensePeriodePeriodeGrunn
 import no.nav.bidrag.beregn.barnebidrag.bo.EndringSjekkGrensePeriodePeriodeResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.LøpendeBidragBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.PrivatAvtaleBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.mapper.EndringSjekkGrensePeriodeMapper.mapEndringSjekkGrensePeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.mapper.EndringSjekkGrensePeriodeMapper
 import no.nav.bidrag.beregn.core.bo.SjablonSjablontallBeregningGrunnlag
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
@@ -36,7 +36,7 @@ internal object BeregnEndringSjekkGrensePeriodeService : BeregnService() {
             }
 
         // Mapper ut grunnlag som skal brukes i beregningen
-        val periodeGrunnlag = mapEndringSjekkGrensePeriodeGrunnlag(
+        val periodeGrunnlag = EndringSjekkGrensePeriodeMapper.mapEndringSjekkGrensePeriodeGrunnlag(
             mottattGrunnlag = mottattGrunnlag,
             sjablonGrunnlag = sjablonGrunnlag,
             grunnlagstype = grunnlagstype,
@@ -105,7 +105,7 @@ internal object BeregnEndringSjekkGrensePeriodeService : BeregnService() {
 
     // Lager grunnlagsobjekter for sjabloner (ett objekt pr sjablonverdi som er innenfor perioden)
     private fun lagSjablonGrunnlagsobjekter(periode: ÅrMånedsperiode, delberegning: (SjablonTallNavn) -> Boolean): List<GrunnlagDto> =
-        mapSjablonSjablontallGrunnlag(periode = periode, sjablonListe = SjablonProvider.hentSjablontall(), delberegning = delberegning)
+        mapSjablonSjablontallGrunnlag(periode = periode, sjablonListe = SjablonProvider.Companion.hentSjablontall(), delberegning = delberegning)
 
     // Lager en liste over alle bruddperioder basert på grunnlag som skal brukes i beregningen
     private fun lagBruddPeriodeListeEndringSjekkGrensePeriode(

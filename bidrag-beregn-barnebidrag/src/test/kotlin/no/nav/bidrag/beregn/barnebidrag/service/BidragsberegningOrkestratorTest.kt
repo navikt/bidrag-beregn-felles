@@ -11,6 +11,13 @@ import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
 import no.nav.bidrag.beregn.barnebidrag.felles.FellesTest
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningBeløpshistorikkConsumer
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningVedtakConsumer
+import no.nav.bidrag.beregn.barnebidrag.service.external.VedtakService
+import no.nav.bidrag.beregn.barnebidrag.service.orkestrering.AldersjusteringOrchestrator
+import no.nav.bidrag.beregn.barnebidrag.service.orkestrering.BidragsberegningOrkestrator
+import no.nav.bidrag.beregn.barnebidrag.service.orkestrering.HentLøpendeBidragService
+import no.nav.bidrag.beregn.barnebidrag.service.orkestrering.OmgjøringOrkestrator
+import no.nav.bidrag.beregn.barnebidrag.testdata.opprettVedtakDtoForBidragsberegning
+import no.nav.bidrag.beregn.barnebidrag.testdata.opprettVedtakForStønadBidragsberegning
 import no.nav.bidrag.beregn.barnebidrag.utils.OmgjøringOrkestratorHelpers
 import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
@@ -23,6 +30,7 @@ import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.indeksregulering.BeregnIndeksreguleringApi
 import no.nav.bidrag.transport.behandling.belopshistorikk.request.HentStønadHistoriskRequest
 import no.nav.bidrag.transport.behandling.belopshistorikk.request.HentStønadRequest
+import no.nav.bidrag.transport.behandling.belopshistorikk.response.LøpendeBidragssak
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BidragsberegningOrkestratorRequest
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BidragsberegningOrkestratorRequestV2
@@ -71,6 +79,7 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
     private lateinit var barnebidragApi: BeregnBarnebidragApi
     private lateinit var omgjøringOrkestrator: OmgjøringOrkestrator
     private lateinit var bidragsberegningOrkestrator: BidragsberegningOrkestrator
+    private lateinit var hentLøpendeBidragService: HentLøpendeBidragService
 
     @BeforeEach
     fun init() {
@@ -87,20 +96,66 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
 //            identUtils = identUtils,
 //        )
         val omgjøringOrkestratorHelpers = OmgjøringOrkestratorHelpers(vedtakService, identUtils)
-        omgjøringOrkestrator = OmgjøringOrkestrator(vedtakService, aldersjusteringOrchestrator, beregnIndeksreguleringApi, omgjøringOrkestratorHelpers)
+        omgjøringOrkestrator =
+            OmgjøringOrkestrator(vedtakService, aldersjusteringOrchestrator, beregnIndeksreguleringApi, omgjøringOrkestratorHelpers)
+        hentLøpendeBidragService = HentLøpendeBidragService(vedtakService = vedtakService)
         bidragsberegningOrkestrator = BidragsberegningOrkestrator(
             barnebidragApi = barnebidragApi,
             omgjøringOrkestrator = omgjøringOrkestrator,
-            vedtakService = vedtakService,
+            hentLøpendeBidragService = hentLøpendeBidragService,
         )
         stubSjablonProvider()
     }
 
     @Test
-    @DisplayName("Beregn bidrag v3 - 1 BM, 2 søknadsbarn")
-    fun test01_v3_BeregnBidrag_EnBM_ToSøknadsbarn() {
+    fun `beregn bidrag v3 - 1 BM, 2 søknadsbarn - ingen løpende stønader`() {
         filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/test01_v3_beregn_bidrag_grunnlag.json"
         val beregnRequest = lesFilOgByggRequest<BidragsberegningOrkestratorRequestV2>(filnavnBeregnGrunnlag)
+
+        val beregnResponse = bidragsberegningOrkestrator.utførBidragsberegningV3(beregnRequest)
+        printJson(beregnResponse)
+
+        assertSoftly(beregnResponse) {
+            grunnlagListe shouldHaveAtLeastSize 1
+            resultat shouldHaveAtLeastSize 1
+        }
+    }
+
+    @Test
+    fun `beregn bidrag v3 - 1 BM, 1 søknadsbarn - 1 løpende stønad i bidrag-behandling med annen BM`() {
+        filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/test02_v3_beregn_bidrag_grunnlag.json"
+        val beregnRequest = lesFilOgByggRequest<BidragsberegningOrkestratorRequestV2>(filnavnBeregnGrunnlag)
+
+        every { vedtakService.hentSisteLøpendeStønader(any()) }.answers {
+            listOf(
+                LøpendeBidragssak(
+                    sak = Saksnummer(SAK_LØPENDE_BIDRAG),
+                    type = Stønadstype.BIDRAG,
+                    kravhaver = Personident(KRAVHAVER_LØPENDE_BIDRAG),
+                    løpendeBeløp = LØPENDE_BELØP,
+                ),
+            )
+        }
+
+        every { vedtakService.finnSisteManuelleVedtakForEvnevurdering(any()) }.answers {
+            opprettVedtakForStønadBidragsberegning(
+                skyldner = SKYLDNER,
+                kravhaver = KRAVHAVER_LØPENDE_BIDRAG,
+                mottaker = MOTTAKER,
+                sak = SAK_LØPENDE_BIDRAG,
+                beregnetBeløp = LØPENDE_BELØP,
+            )
+        }
+
+        every { vedtakService.hentVedtak(any()) }.answers {
+            opprettVedtakDtoForBidragsberegning(
+                skyldner = SKYLDNER,
+                kravhaver = KRAVHAVER_LØPENDE_BIDRAG,
+                mottaker = MOTTAKER,
+                sak = SAK_LØPENDE_BIDRAG,
+                beregnetBeløp = LØPENDE_BELØP,
+            )
+        }
 
         val beregnResponse = bidragsberegningOrkestrator.utførBidragsberegningV3(beregnRequest)
         printJson(beregnResponse)
@@ -363,5 +418,13 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
 
         // Sjekk at alle referanser er med i resultatet
         sjekkReferanser(beregningResultat.resultatVedtakListe)
+    }
+
+    companion object {
+        private const val KRAVHAVER_LØPENDE_BIDRAG = "11111111111"
+        private const val MOTTAKER = "22222222221"
+        private const val SKYLDNER = "33333333330"
+        private const val SAK_LØPENDE_BIDRAG = "2"
+        private val LØPENDE_BELØP = BigDecimal.valueOf(5000)
     }
 }

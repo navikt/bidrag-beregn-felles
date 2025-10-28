@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.barnebidrag.service
+package no.nav.bidrag.beregn.barnebidrag.service.beregning
 
 import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.barnebidrag.beregning.NettoBarnetilleggBeregning
@@ -7,8 +7,8 @@ import no.nav.bidrag.beregn.barnebidrag.bo.NettoBarnetilleggBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.NettoBarnetilleggPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.NettoBarnetilleggPeriodeResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.SkattFaktorBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.mapper.NettoBarnetilleggMapper.finnReferanseTilRolle
-import no.nav.bidrag.beregn.barnebidrag.mapper.NettoBarnetilleggMapper.mapNettoBarnetilleggGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.mapper.AldersjusteringMapper.finnReferanseTilRolle
+import no.nav.bidrag.beregn.barnebidrag.mapper.NettoBarnetilleggMapper
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
@@ -26,7 +26,7 @@ internal object BeregnNettoBarnetilleggService : BeregnService() {
         )
 
         // Mapper ut grunnlag som skal brukes for å beregne nettoBarnetillegg
-        val nettoBarnetilleggPeriodeGrunnlag = mapNettoBarnetilleggGrunnlag(mottattGrunnlag, referanseTilRolle)
+        val nettoBarnetilleggPeriodeGrunnlag = NettoBarnetilleggMapper.mapNettoBarnetilleggGrunnlag(mottattGrunnlag, referanseTilRolle)
 
         // Lager liste over bruddperioder
         val bruddPeriodeListe = lagBruddPeriodeListeNettoBarnetillegg(nettoBarnetilleggPeriodeGrunnlag, mottattGrunnlag.periode)

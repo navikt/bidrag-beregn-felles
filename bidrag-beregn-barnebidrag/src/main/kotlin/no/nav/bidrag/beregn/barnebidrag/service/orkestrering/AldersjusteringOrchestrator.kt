@@ -1,10 +1,11 @@
-package no.nav.bidrag.beregn.barnebidrag.service
+package no.nav.bidrag.beregn.barnebidrag.service.orkestrering
 
 import com.fasterxml.jackson.databind.node.POJONode
-import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningPersonConsumer
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningSakConsumer
+import no.nav.bidrag.beregn.barnebidrag.service.external.SisteManuelleVedtak
+import no.nav.bidrag.beregn.barnebidrag.service.external.VedtakService
 import no.nav.bidrag.beregn.barnebidrag.utils.AldersjusteringUtils
 import no.nav.bidrag.beregn.barnebidrag.utils.AldersjusteringUtils.finnBarnAlder
 import no.nav.bidrag.beregn.barnebidrag.utils.aldersjusteringAldersgrupper
@@ -19,7 +20,6 @@ import no.nav.bidrag.domene.enums.beregning.Resultatkode.Companion.tilBisysResul
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.sak.Sakskategori
 import no.nav.bidrag.domene.enums.vedtak.VirkningstidspunktÅrsakstype
-import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.visningsnavn
@@ -31,7 +31,6 @@ import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlagVedtak
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
-import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.VirkningstidspunktGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragsmottaker
@@ -48,8 +47,6 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.YearMonth
-
-private val log = KotlinLogging.logger {}
 
 data class AldersjusteringResultat(
     val vedtaksid: Int,
@@ -152,7 +149,12 @@ class AldersjusteringOrchestrator(
             beløpshistorikk.validerSkalAldersjusteres(sak)
 
             val sisteManuelleVedtak =
-                beregnBasertPåVedtak?.let { SisteManuelleVedtak(it.vedtaksid ?: -1, it.vedtakDto ?: vedtakService.hentVedtak(it.vedtaksid!!)!!) }
+                beregnBasertPåVedtak?.let {
+                    SisteManuelleVedtak(
+                        it.vedtaksid ?: -1,
+                        it.vedtakDto ?: vedtakService.hentVedtak(it.vedtaksid!!)!!,
+                    )
+                }
                     ?: vedtakService.finnSisteManuelleVedtak(stønad)
                     ?: aldersjusteresManuelt(SkalAldersjusteresManueltBegrunnelse.FANT_INGEN_MANUELL_VEDTAK)
 

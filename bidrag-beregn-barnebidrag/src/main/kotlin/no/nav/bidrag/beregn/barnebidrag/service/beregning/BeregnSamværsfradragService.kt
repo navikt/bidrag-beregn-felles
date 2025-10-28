@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.barnebidrag.service
+package no.nav.bidrag.beregn.barnebidrag.service.beregning
 
 import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.barnebidrag.beregning.SamværsfradragBeregning
@@ -9,8 +9,8 @@ import no.nav.bidrag.beregn.barnebidrag.bo.SamværsklasseBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonSamværsfradragBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.mapper.SamværsfradragMapper.finnReferanseTilRolle
-import no.nav.bidrag.beregn.barnebidrag.mapper.SamværsfradragMapper.mapSamværsfradragGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.mapper.AldersjusteringMapper.finnReferanseTilRolle
+import no.nav.bidrag.beregn.barnebidrag.mapper.SamværsfradragMapper
 import no.nav.bidrag.beregn.core.bo.SjablonSamværsfradragPeriodeGrunnlag
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
@@ -35,7 +35,7 @@ internal object BeregnSamværsfradragService : BeregnService() {
         val sjablonGrunnlag = lagSjablonGrunnlagsobjekter(mottattGrunnlag.periode)
 
         // Mapper ut grunnlag som skal brukes for å beregne samværsfradrag
-        val samværsfradragPeriodeGrunnlag = mapSamværsfradragGrunnlag(mottattGrunnlag, sjablonGrunnlag)
+        val samværsfradragPeriodeGrunnlag = SamværsfradragMapper.mapSamværsfradragGrunnlag(mottattGrunnlag, sjablonGrunnlag)
 
         // Lager liste over bruddperioder
         val bruddPeriodeListe = lagBruddPeriodeListeSamværsfradrag(
@@ -99,7 +99,7 @@ internal object BeregnSamværsfradragService : BeregnService() {
 
     // Lager grunnlagsobjekter for sjabloner (ett objekt pr sjablonverdi som er innenfor perioden)
     private fun lagSjablonGrunnlagsobjekter(periode: ÅrMånedsperiode): List<GrunnlagDto> =
-        mapSjablonSamværsfradragGrunnlag(periode, SjablonProvider.hentSjablonSamværsfradrag())
+        mapSjablonSamværsfradragGrunnlag(periode, SjablonProvider.Companion.hentSjablonSamværsfradrag())
 
     // Lager en liste over alle bruddperioder basert på grunnlag som skal brukes i beregningen
     private fun lagBruddPeriodeListeSamværsfradrag(
@@ -160,7 +160,7 @@ internal object BeregnSamværsfradragService : BeregnService() {
                 .map {
                     SjablonSamværsfradragBeregningGrunnlag(
                         referanse = it.referanse,
-                        samværsklasse = Samværsklasse.fromBisysKode(it.sjablonSamværsfradragPeriode.samværsklasse)
+                        samværsklasse = Samværsklasse.Companion.fromBisysKode(it.sjablonSamværsfradragPeriode.samværsklasse)
                             ?: throw IllegalArgumentException("Ugyldig samværsklasse: ${it.sjablonSamværsfradragPeriode.samværsklasse}"),
                         alderTom = it.sjablonSamværsfradragPeriode.alderTom,
                         beløpFradrag = it.sjablonSamværsfradragPeriode.beløpFradrag,

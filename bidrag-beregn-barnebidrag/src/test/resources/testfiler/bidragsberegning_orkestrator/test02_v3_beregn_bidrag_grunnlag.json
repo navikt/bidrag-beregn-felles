@@ -1,0 +1,153 @@
+{
+  "beregningsperiode": {
+    "fom": "2025-01",
+    "til": "2025-10"
+  },
+  "beregningBarn": [
+    {
+      "søknadsbarnreferanse": "Person_Søknadsbarn_01",
+      "periode": {
+        "fom": "2025-01",
+        "til": "2025-10"
+      },
+      "stønadstype": "BIDRAG"
+    }
+  ],
+  "grunnlagsliste": [
+    {
+      "referanse": "Person_Søknadsbarn_01",
+      "type": "PERSON_SØKNADSBARN",
+      "innhold": {
+        "ident": "11111111110",
+        "navn": "Trengende Søknadsbarn",
+        "fødselsdato": "2015-02-01",
+        "bidragsmottaker": "Person_Bidragsmottaker"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Søknadsbarn_01"
+    },
+    {
+      "referanse": "Person_Bidragsmottaker",
+      "type": "PERSON_BIDRAGSMOTTAKER",
+      "innhold": {
+        "ident": "22222222220",
+        "navn": "Søkende Bidragsmottaker",
+        "fødselsdato": "1982-05-05"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "Person_Bidragspliktig",
+      "type": "PERSON_BIDRAGSPLIKTIG",
+      "innhold": {
+        "ident": "33333333330",
+        "navn": "Motvillig Bidragspliktig",
+        "fødselsdato": "1981-07-13"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragspliktig"
+    },
+    {
+      "referanse": "Mottatt_InntektRapportering_Ainntekt_Bidragspliktig_202501",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2025-01",
+          "til": null
+        },
+        "inntektsrapportering": "AINNTEKT",
+        "gjelderBarn": null,
+        "beløp": 500000,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": null,
+      "gjelderReferanse": "Person_Bidragspliktig"
+    },
+    {
+      "referanse": "Mottatt_InntektRapportering_Ainntekt_Bidragsmottaker_202501",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2025-01",
+          "til": null
+        },
+        "inntektsrapportering": "AINNTEKT",
+        "gjelderBarn": null,
+        "beløp": 300000,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": null,
+      "gjelderReferanse": "Person_Bidragsmottaker"
+    },
+    {
+      "referanse": "Mottatt_InntektRapportering_Ainntekt_Søknadsbarn_01_202501",
+      "type": "INNTEKT_RAPPORTERING_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2025-01",
+          "til": null
+        },
+        "inntektsrapportering": "AINNTEKT",
+        "gjelderBarn": null,
+        "beløp": 50000,
+        "manueltRegistrert": false,
+        "valgt": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": null,
+      "gjelderReferanse": "Person_Søknadsbarn_01"
+    },
+    {
+      "referanse": "Bostatus_Søknadsbarn_01_202501",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2025-01",
+          "til": null
+        },
+        "bostatus": "IKKE_MED_FORELDER",
+        "manueltRegistrert": false,
+        "relatertTilPart": "Person_Bidragspliktig"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn_01",
+      "gjelderReferanse": "Person_Bidragspliktig"
+    },
+    {
+      "referanse": "Bostatus_Bidragspliktig_202501",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2025-01",
+          "til": null
+        },
+        "bostatus": "BOR_MED_ANDRE_VOKSNE",
+        "manueltRegistrert": false,
+        "relatertTilPart": "Person_Bidragspliktig"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": null,
+      "gjelderReferanse": "Person_Bidragspliktig"
+    },
+    {
+      "referanse": "Mottatt_Samværsperiode_Søknadsbarn_01_202501",
+      "type": "SAMVÆRSPERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2025-01",
+          "til": null
+        },
+        "samværsklasse": "SAMVÆRSKLASSE_1",
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn_01",
+      "gjelderReferanse": "Person_Bidragspliktig"
+    }
+  ]
+}
