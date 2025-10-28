@@ -1,10 +1,10 @@
 package no.nav.bidrag.beregn.barnebidrag.utils
 
 import com.fasterxml.jackson.databind.node.POJONode
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnIndeksreguleringPrivatAvtaleService.delberegningPrivatAvtalePeriode
-import no.nav.bidrag.beregn.barnebidrag.service.ByggetBeløpshistorikk
-import no.nav.bidrag.beregn.barnebidrag.service.VedtakService
-import no.nav.bidrag.beregn.barnebidrag.service.omgjøringFeilet
+import no.nav.bidrag.beregn.barnebidrag.service.beregning.BeregnIndeksreguleringPrivatAvtaleService.delberegningPrivatAvtalePeriode
+import no.nav.bidrag.beregn.barnebidrag.service.external.VedtakService
+import no.nav.bidrag.beregn.barnebidrag.service.orkestrering.ByggetBeløpshistorikk
+import no.nav.bidrag.beregn.barnebidrag.service.orkestrering.omgjøringFeilet
 import no.nav.bidrag.commons.util.IdentUtils
 import no.nav.bidrag.domene.enums.beregning.Resultatkode
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype

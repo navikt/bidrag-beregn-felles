@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.barnebidrag.service
+package no.nav.bidrag.beregn.barnebidrag.service.beregning
 
 import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.barnebidrag.beregning.EndeligBidragBeregning
@@ -23,9 +23,8 @@ import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadBeregningResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadDelberegningBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.mapper.AldersjusteringMapper.mapAldersjusteringGrunnlagFraVedtak
-import no.nav.bidrag.beregn.barnebidrag.mapper.AldersjusteringMapper.mapSøknadsbarnGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.mapper.UnderholdskostnadMapper.finnReferanseTilRolle
+import no.nav.bidrag.beregn.barnebidrag.mapper.AldersjusteringMapper
+import no.nav.bidrag.beregn.barnebidrag.mapper.AldersjusteringMapper.finnReferanseTilRolle
 import no.nav.bidrag.beregn.core.bo.SjablonSjablontallBeregningGrunnlag
 import no.nav.bidrag.beregn.core.exception.AldersjusteringLavereEnnEllerLikLøpendeBidragException
 import no.nav.bidrag.beregn.core.exception.UgyldigInputException
@@ -52,9 +51,11 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebid
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettDelberegningreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettSluttberegningreferanse
+import org.springframework.stereotype.Service
 import java.time.YearMonth
-import java.util.Collections.emptyList
+import java.util.Collections
 
+@Service
 class BeregnAldersjusteringService : BeregnService() {
 
     // Beregning av aldersjustering barnebidrag
@@ -71,7 +72,7 @@ class BeregnAldersjusteringService : BeregnService() {
         // Lager sjablon grunnlagsobjekter
         val sjablonGrunnlag = lagSjablonGrunnlagsobjekter(periode = mottattGrunnlag.periode) { it.aldersjustering }
 
-        val søknadsbarnGrunnlagListe = mapSøknadsbarnGrunnlag(mottattGrunnlag.personObjektListe)
+        val søknadsbarnGrunnlagListe = AldersjusteringMapper.mapSøknadsbarnGrunnlag(mottattGrunnlag.personObjektListe)
         val bidragsmottakerReferanse = finnReferanseTilRolle(
             grunnlagListe = mottattGrunnlag.personObjektListe,
             grunnlagstype = Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
@@ -81,7 +82,8 @@ class BeregnAldersjusteringService : BeregnService() {
             grunnlagstype = Grunnlagstype.PERSON_BIDRAGSPLIKTIG,
         )
 
-        var beregnetBarnebidragResultat = BeregnetBarnebidragResultat(beregnetBarnebidragPeriodeListe = emptyList(), grunnlagListe = emptyList())
+        var beregnetBarnebidragResultat =
+            BeregnetBarnebidragResultat(beregnetBarnebidragPeriodeListe = Collections.emptyList(), grunnlagListe = Collections.emptyList())
 
         // Utfører aldersjustering for hvert søknadsbarn. Forutsetter at kontroll på om barnet skal aldersjusteres er gjort på utsiden og at alle
         // kriterier er oppfylt. Siste manuelle vedtak (som aldersjusteringen skal bygge på) skal være vedlagt i grunnlaget. Hvis det ikke finnes
@@ -93,7 +95,7 @@ class BeregnAldersjusteringService : BeregnService() {
             val beløpshistorikkGrunnlagListe = mottattGrunnlag.beløpshistorikkListe.filter { it.gjelderBarnReferanse == søknadsbarn.referanse }
 
             // Mapper ut data som skal brukes i beregningene
-            val aldersjusteringGrunnlag = mapAldersjusteringGrunnlagFraVedtak(
+            val aldersjusteringGrunnlag = AldersjusteringMapper.mapAldersjusteringGrunnlagFraVedtak(
                 beregningsperiode = mottattGrunnlag.periode,
                 grunnlagsperiode = ÅrMånedsperiode(
                     fom = mottattGrunnlag.periode.til!!.minusMonths(2),
@@ -188,10 +190,10 @@ class BeregnAldersjusteringService : BeregnService() {
 
     // Lager grunnlagsobjekter for sjabloner (ett objekt pr sjablonverdi som er innenfor perioden)
     private fun lagSjablonGrunnlagsobjekter(periode: ÅrMånedsperiode, delberegning: (SjablonTallNavn) -> Boolean): List<GrunnlagDto> =
-        mapSjablonSjablontallGrunnlag(periode = periode, sjablonListe = SjablonProvider.hentSjablontall(), delberegning = delberegning) +
-            mapSjablonBarnetilsynGrunnlag(periode = periode, sjablonListe = SjablonProvider.hentSjablonBarnetilsyn()) +
-            mapSjablonForbruksutgifterGrunnlag(periode = periode, sjablonListe = SjablonProvider.hentSjablonForbruksutgifter()) +
-            mapSjablonSamværsfradragGrunnlag(periode = periode, sjablonListe = SjablonProvider.hentSjablonSamværsfradrag())
+        mapSjablonSjablontallGrunnlag(periode = periode, sjablonListe = SjablonProvider.Companion.hentSjablontall(), delberegning = delberegning) +
+            mapSjablonBarnetilsynGrunnlag(periode = periode, sjablonListe = SjablonProvider.Companion.hentSjablonBarnetilsyn()) +
+            mapSjablonForbruksutgifterGrunnlag(periode = periode, sjablonListe = SjablonProvider.Companion.hentSjablonForbruksutgifter()) +
+            mapSjablonSamværsfradragGrunnlag(periode = periode, sjablonListe = SjablonProvider.Companion.hentSjablonSamværsfradrag())
 
     // Henter vedtak for et søknadsbarn fra grunnlag. Hvis det ikke finnes noe vedtak eller det er mer enn ett vedtak kastes exception.
     private fun hentVedtakFraGrunnlag(mottattGrunnlag: BeregnGrunnlagAldersjustering, søknadsbarnReferanse: String): BeregnGrunnlagVedtak {
@@ -368,7 +370,7 @@ class BeregnAldersjusteringService : BeregnService() {
                 .map {
                     SjablonSamværsfradragBeregningGrunnlag(
                         referanse = it.referanse,
-                        samværsklasse = Samværsklasse.fromBisysKode(it.sjablonSamværsfradragPeriode.samværsklasse)
+                        samværsklasse = Samværsklasse.Companion.fromBisysKode(it.sjablonSamværsfradragPeriode.samværsklasse)
                             ?: throw IllegalArgumentException("Ugyldig samværsklasse: ${it.sjablonSamværsfradragPeriode.samværsklasse}"),
                         alderTom = it.sjablonSamværsfradragPeriode.alderTom,
                         beløpFradrag = it.sjablonSamværsfradragPeriode.beløpFradrag,
@@ -557,7 +559,7 @@ class BeregnAldersjusteringService : BeregnService() {
                         barnetilsynMedStønad = aldersjusteringGrunnlag.barnetilsynMedStønad,
                     ),
                 ),
-                grunnlagsreferanseListe = emptyList(),
+                grunnlagsreferanseListe = Collections.emptyList(),
                 gjelderReferanse = aldersjusteringGrunnlag.bidragsmottakerReferanse,
                 gjelderBarnReferanse = aldersjusteringGrunnlag.søknadsbarnPeriodeGrunnlag.referanse,
             ),
@@ -579,7 +581,7 @@ class BeregnAldersjusteringService : BeregnService() {
                         endeligAndelFaktor = aldersjusteringGrunnlag.bpAndelFaktor,
                     ),
                 ),
-                grunnlagsreferanseListe = emptyList(),
+                grunnlagsreferanseListe = Collections.emptyList(),
                 gjelderReferanse = aldersjusteringGrunnlag.bidragspliktigReferanse,
                 gjelderBarnReferanse = aldersjusteringGrunnlag.søknadsbarnPeriodeGrunnlag.referanse,
             ),
@@ -601,7 +603,7 @@ class BeregnAldersjusteringService : BeregnService() {
                         samværsklasse = aldersjusteringGrunnlag.samværsklasse,
                     ),
                 ),
-                grunnlagsreferanseListe = emptyList(),
+                grunnlagsreferanseListe = Collections.emptyList(),
                 gjelderReferanse = aldersjusteringGrunnlag.bidragspliktigReferanse,
                 gjelderBarnReferanse = aldersjusteringGrunnlag.søknadsbarnPeriodeGrunnlag.referanse,
             ),

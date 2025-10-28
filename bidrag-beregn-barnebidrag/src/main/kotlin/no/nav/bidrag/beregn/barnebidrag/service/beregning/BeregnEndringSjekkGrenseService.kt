@@ -1,10 +1,10 @@
-package no.nav.bidrag.beregn.barnebidrag.service
+package no.nav.bidrag.beregn.barnebidrag.service.beregning
 
 import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.barnebidrag.beregning.EndringSjekkGrenseBeregning
 import no.nav.bidrag.beregn.barnebidrag.bo.EndringSjekkGrenseBeregningResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.EndringSjekkGrensePeriodeDelberegningBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.mapper.EndringSjekkGrenseMapper.mapEndringSjekkGrenseGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.mapper.EndringSjekkGrenseMapper
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
@@ -18,7 +18,7 @@ internal object BeregnEndringSjekkGrenseService : BeregnService() {
 
     fun delberegningEndringSjekkGrense(mottattGrunnlag: BeregnGrunnlag, åpenSluttperiode: Boolean = true): List<GrunnlagDto> {
         // Mapper ut grunnlag som skal brukes i beregningen
-        val periodeGrunnlag = mapEndringSjekkGrenseGrunnlag(mottattGrunnlag)
+        val periodeGrunnlag = EndringSjekkGrenseMapper.mapEndringSjekkGrenseGrunnlag(mottattGrunnlag)
 
         val beregningGrunnlagListe = mutableListOf<EndringSjekkGrensePeriodeDelberegningBeregningGrunnlag>()
 
@@ -78,7 +78,10 @@ internal object BeregnEndringSjekkGrenseService : BeregnService() {
             type = Grunnlagstype.DELBEREGNING_ENDRING_SJEKK_GRENSE,
             innhold = POJONode(
                 DelberegningEndringSjekkGrense(
-                    periode = ÅrMånedsperiode(fom = mottattGrunnlag.periode.fom, til = if (åpenSluttperiode) null else mottattGrunnlag.periode.til),
+                    periode = ÅrMånedsperiode(
+                        fom = mottattGrunnlag.periode.fom,
+                        til = if (åpenSluttperiode) null else mottattGrunnlag.periode.til,
+                    ),
                     endringErOverGrense = beregningResultat.endringErOverGrense,
                 ),
             ),

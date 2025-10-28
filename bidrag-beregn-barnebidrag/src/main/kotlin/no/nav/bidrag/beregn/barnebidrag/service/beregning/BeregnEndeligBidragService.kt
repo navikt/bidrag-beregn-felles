@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.barnebidrag.service
+package no.nav.bidrag.beregn.barnebidrag.service.beregning
 
 import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.barnebidrag.beregning.EndeligBidragBeregning
@@ -13,10 +13,8 @@ import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragPeriodeResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragDelberegningBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnetBorHosBpGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadDelberegningBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.mapper.EndeligBidragMapper.mapEndeligBidragGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.mapper.NettoBarnetilleggMapper.finnReferanseTilRolle
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnetilleggSkattesatsService.delberegningBarnetilleggSkattesats
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnNettoBarnetilleggService.delberegningNettoBarnetillegg
+import no.nav.bidrag.beregn.barnebidrag.mapper.AldersjusteringMapper.finnReferanseTilRolle
+import no.nav.bidrag.beregn.barnebidrag.mapper.EndeligBidragMapper
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.domene.enums.beregning.Samværsklasse
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -42,8 +40,8 @@ internal object BeregnEndeligBidragService : BeregnService() {
         // Kaller delberegninger for barnetillegg BP
         if (barnetilleggEksisterer(mottattGrunnlag, Grunnlagstype.PERSON_BIDRAGSPLIKTIG)) {
             delberegningBarnetilleggSkattesatsBPResultat =
-                delberegningBarnetilleggSkattesats(mottattGrunnlag, Grunnlagstype.PERSON_BIDRAGSPLIKTIG)
-            delberegningNettoBarnetilleggBPResultat = delberegningNettoBarnetillegg(
+                BeregnBarnetilleggSkattesatsService.delberegningBarnetilleggSkattesats(mottattGrunnlag, Grunnlagstype.PERSON_BIDRAGSPLIKTIG)
+            delberegningNettoBarnetilleggBPResultat = BeregnNettoBarnetilleggService.delberegningNettoBarnetillegg(
                 mottattGrunnlag = (
                     mottattGrunnlag.copy(
                         grunnlagListe = mottattGrunnlag.grunnlagListe + delberegningBarnetilleggSkattesatsBPResultat,
@@ -56,8 +54,11 @@ internal object BeregnEndeligBidragService : BeregnService() {
         // Kaller delberegninger for barnetillegg BM
         if (barnetilleggEksisterer(mottattGrunnlag, Grunnlagstype.PERSON_BIDRAGSMOTTAKER)) {
             delberegningBarnetilleggSkattesatsBMResultat =
-                delberegningBarnetilleggSkattesats(mottattGrunnlag, Grunnlagstype.PERSON_BIDRAGSMOTTAKER)
-            delberegningNettoBarnetilleggBMResultat = delberegningNettoBarnetillegg(
+                BeregnBarnetilleggSkattesatsService.delberegningBarnetilleggSkattesats(
+                    mottattGrunnlag,
+                    Grunnlagstype.PERSON_BIDRAGSMOTTAKER,
+                )
+            delberegningNettoBarnetilleggBMResultat = BeregnNettoBarnetilleggService.delberegningNettoBarnetillegg(
                 mottattGrunnlag = (
                     mottattGrunnlag.copy(
                         grunnlagListe = mottattGrunnlag.grunnlagListe + delberegningBarnetilleggSkattesatsBMResultat,
@@ -75,7 +76,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
         )
 
         // Mapper ut grunnlag som skal brukes for å beregne endelig bidrag
-        val endeligBidragPeriodeGrunnlag = mapEndeligBidragGrunnlag(utvidetGrunnlag)
+        val endeligBidragPeriodeGrunnlag = EndeligBidragMapper.mapEndeligBidragGrunnlag(utvidetGrunnlag)
 
         // Lager liste over bruddperioder
         val bruddPeriodeListe = lagBruddPeriodeListeEndeligBidrag(

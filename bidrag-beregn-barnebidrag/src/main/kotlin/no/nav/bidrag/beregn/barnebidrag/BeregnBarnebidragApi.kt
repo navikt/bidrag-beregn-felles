@@ -1,8 +1,8 @@
 package no.nav.bidrag.beregn.barnebidrag
 
 import no.nav.bidrag.beregn.barnebidrag.bo.BeregnEndeligBidragServiceRespons
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnAldersjusteringService
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnebidragService
+import no.nav.bidrag.beregn.barnebidrag.service.beregning.BeregnAldersjusteringService
+import no.nav.bidrag.beregn.barnebidrag.service.beregning.BeregnBarnebidragService
 import no.nav.bidrag.commons.service.sjablon.EnableSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat

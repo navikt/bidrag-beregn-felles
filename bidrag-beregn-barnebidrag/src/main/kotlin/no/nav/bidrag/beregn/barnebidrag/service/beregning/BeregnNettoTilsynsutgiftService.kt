@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.barnebidrag.service
+package no.nav.bidrag.beregn.barnebidrag.service.beregning
 
 import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.barnebidrag.beregning.NettoTilsynsutgiftBeregning
@@ -10,9 +10,8 @@ import no.nav.bidrag.beregn.barnebidrag.bo.NettoTilsynsutgiftPeriodeResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonMaksFradragsbeløpBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonMaksTilsynsbeløpBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.Tilleggsstønad
-import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.beregnAntallBarnBM
-import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.finnReferanseTilRolle
-import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper.mapNettoTilsynsutgiftPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.mapper.AldersjusteringMapper.finnReferanseTilRolle
+import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper
 import no.nav.bidrag.beregn.core.bo.SjablonSjablontallBeregningGrunnlag
 import no.nav.bidrag.beregn.core.dto.FaktiskUtgiftPeriodeCore
 import no.nav.bidrag.beregn.core.dto.TilleggsstønadPeriodeCore
@@ -43,7 +42,8 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
         val sjablonGrunnlag =
             lagSjablonGrunnlagsobjekter(periode = mottattGrunnlag.periode) { it.nettoBarnetilsyn }
 
-        val nettoTilsynsutgiftPeriodeGrunnlag = mapNettoTilsynsutgiftPeriodeGrunnlag(mottattGrunnlag, sjablonGrunnlag)
+        val nettoTilsynsutgiftPeriodeGrunnlag =
+            NettoTilsynsutgiftMapper.mapNettoTilsynsutgiftPeriodeGrunnlag(mottattGrunnlag, sjablonGrunnlag)
 
         val bruddPeriodeListe = lagBruddPeriodeListeNettoTilsynsutgift(nettoTilsynsutgiftPeriodeGrunnlag, mottattGrunnlag.periode)
 
@@ -122,9 +122,9 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
     }
 
     private fun lagSjablonGrunnlagsobjekter(periode: ÅrMånedsperiode, delberegning: (SjablonTallNavn) -> Boolean): List<GrunnlagDto> =
-        mapSjablonSjablontallGrunnlag(periode = periode, sjablonListe = SjablonProvider.hentSjablontall(), delberegning = delberegning) +
-            mapSjablonMaksTilsynsbeløpGrunnlag(periode = periode, sjablonListe = SjablonProvider.hentSjablonMaksTilsyn()) +
-            mapSjablonMaksFradragGrunnlag(periode = periode, sjablonListe = SjablonProvider.hentSjablonMaksFradrag())
+        mapSjablonSjablontallGrunnlag(periode = periode, sjablonListe = SjablonProvider.Companion.hentSjablontall(), delberegning = delberegning) +
+            mapSjablonMaksTilsynsbeløpGrunnlag(periode = periode, sjablonListe = SjablonProvider.Companion.hentSjablonMaksTilsyn()) +
+            mapSjablonMaksFradragGrunnlag(periode = periode, sjablonListe = SjablonProvider.Companion.hentSjablonMaksFradrag())
 
     // Lager en liste over alle bruddperioder basert på grunnlag som skal brukes i beregningen
     private fun lagBruddPeriodeListeNettoTilsynsutgift(
@@ -158,7 +158,7 @@ internal object BeregnNettoTilsynsutgiftService : BeregnService() {
     ): NettoTilsynsutgiftBeregningGrunnlag {
         val barnBMListeUnderTolvÅr = barnUnderTolvÅr(grunnlag.barnBMListe, bruddPeriode.fom)
         val barnMedUtgifterReferanser = barnMedUtgifterIPerioden.map { it.gjelderBarn }
-        val antallBarnBMBeregnet = beregnAntallBarnBM(barnBMListeUnderTolvÅr, barnMedUtgifterReferanser)
+        val antallBarnBMBeregnet = NettoTilsynsutgiftMapper.beregnAntallBarnBM(barnBMListeUnderTolvÅr, barnMedUtgifterReferanser)
         val antallBarnMedTilsynsutgifter = barnMedUtgifterReferanser.size
 
         val respons = NettoTilsynsutgiftBeregningGrunnlag(

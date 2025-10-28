@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.barnebidrag.service
+package no.nav.bidrag.beregn.barnebidrag.service.beregning
 
 import com.fasterxml.jackson.databind.node.POJONode
 import no.nav.bidrag.beregn.barnebidrag.beregning.BarnetilleggSkattesatsBeregning
@@ -7,8 +7,8 @@ import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilleggSkattesatsPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BarnetilleggSkattesatsPeriodeResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.InntektBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SjablonTrinnvisSkattesatsBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.mapper.BarnetilleggSkattesatsMapper.finnReferanseTilRolle
-import no.nav.bidrag.beregn.barnebidrag.mapper.BarnetilleggSkattesatsMapper.mapBarnetilleggSkattesatsGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.mapper.AldersjusteringMapper.finnReferanseTilRolle
+import no.nav.bidrag.beregn.barnebidrag.mapper.BarnetilleggSkattesatsMapper
 import no.nav.bidrag.beregn.core.bo.SjablonSjablontallBeregningGrunnlag
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.service.sjablon.SjablonProvider
@@ -36,7 +36,7 @@ internal object BeregnBarnetilleggSkattesatsService : BeregnService() {
         val sjablonGrunnlag = lagSjablonGrunnlagsobjekter(periode = mottattGrunnlag.periode) { it.barnetilleggSkattesats }
 
         // Mapper ut grunnlag som skal brukes for å beregne barnetilleggSkattesats
-        val barnetilleggSkattesatsPeriodeGrunnlag = mapBarnetilleggSkattesatsGrunnlag(
+        val barnetilleggSkattesatsPeriodeGrunnlag = BarnetilleggSkattesatsMapper.mapBarnetilleggSkattesatsGrunnlag(
             mottattGrunnlag = mottattGrunnlag,
             sjablonGrunnlag = sjablonGrunnlag,
             referanseTilRolle = referanseTilRolle,
@@ -104,8 +104,8 @@ internal object BeregnBarnetilleggSkattesatsService : BeregnService() {
 
     // Lager grunnlagsobjekter for sjabloner (ett objekt pr sjablonverdi som er innenfor perioden)
     private fun lagSjablonGrunnlagsobjekter(periode: ÅrMånedsperiode, delberegning: (SjablonTallNavn) -> Boolean): List<GrunnlagDto> =
-        mapSjablonSjablontallGrunnlag(periode = periode, sjablonListe = SjablonProvider.hentSjablontall(), delberegning = delberegning) +
-            mapSjablonTrinnvisSkattesatsGrunnlag(periode = periode, sjablonListe = SjablonProvider.hentSjablonTrinnvisSkattesats())
+        mapSjablonSjablontallGrunnlag(periode = periode, sjablonListe = SjablonProvider.Companion.hentSjablontall(), delberegning = delberegning) +
+            mapSjablonTrinnvisSkattesatsGrunnlag(periode = periode, sjablonListe = SjablonProvider.Companion.hentSjablonTrinnvisSkattesats())
 
     // Lager en liste over alle bruddperioder basert på grunnlag som skal brukes i beregningen
     private fun lagBruddPeriodeListeBarnetilleggSkattesats(

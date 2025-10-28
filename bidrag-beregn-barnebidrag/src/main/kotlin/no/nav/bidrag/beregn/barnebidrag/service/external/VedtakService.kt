@@ -1,8 +1,5 @@
-package no.nav.bidrag.beregn.barnebidrag.service
+package no.nav.bidrag.beregn.barnebidrag.service.external
 
-import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningBBMConsumer
-import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningBeløpshistorikkConsumer
-import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningVedtakConsumer
 import no.nav.bidrag.beregn.barnebidrag.utils.hentSisteLøpendePeriode
 import no.nav.bidrag.beregn.barnebidrag.utils.tilGrunnlag
 import no.nav.bidrag.beregn.core.util.justerVedtakstidspunkt

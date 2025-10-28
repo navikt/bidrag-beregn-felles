@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.barnebidrag.service
+package no.nav.bidrag.beregn.barnebidrag.service.beregning
 
 import no.nav.bidrag.beregn.barnebidrag.bo.BeløpshistorikkPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BeregnEndeligBidragServiceRespons
@@ -6,17 +6,6 @@ import no.nav.bidrag.beregn.barnebidrag.bo.EndringSjekkGrensePeriodeDelberegning
 import no.nav.bidrag.beregn.barnebidrag.bo.PrivatAvtaleIndeksregulertPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SluttberegningPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnBarnetilleggSkattesatsService.delberegningBarnetilleggSkattesats
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnBidragsevneService.delberegningBidragsevne
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnBpAndelUnderholdskostnadService.delberegningBpAndelUnderholdskostnad
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnEndeligBidragService.delberegningEndeligBidrag
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnEndringSjekkGrensePeriodeService.delberegningEndringSjekkGrensePeriode
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnEndringSjekkGrenseService.delberegningEndringSjekkGrense
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnIndeksreguleringPrivatAvtaleService.delberegningPrivatAvtalePeriode
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnNettoBarnetilleggService.delberegningNettoBarnetillegg
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnNettoTilsynsutgiftService.delberegningNettoTilsynsutgift
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnSamværsfradragService.delberegningSamværsfradrag
-import no.nav.bidrag.beregn.barnebidrag.service.BeregnUnderholdskostnadService.delberegningUnderholdskostnad
 import no.nav.bidrag.beregn.core.exception.BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException
 import no.nav.bidrag.beregn.core.exception.BegrensetRevurderingLøpendeForskuddManglerException
 import no.nav.bidrag.beregn.core.service.BeregnService
@@ -96,21 +85,24 @@ class BeregnBarnebidragService : BeregnService() {
         val åpenSluttperiode = utvidetGrunnlagJustert.åpenSluttperiode
 
         // Kaller delberegninger
-        val delberegningBidragsevneResultat = delberegningBidragsevne(utvidetGrunnlag, åpenSluttperiode)
+        val delberegningBidragsevneResultat = BeregnBidragsevneService.delberegningBidragsevne(utvidetGrunnlag, åpenSluttperiode)
 
-        val delberegningNettoTilsynsutgiftResultat = delberegningNettoTilsynsutgift(utvidetGrunnlag, åpenSluttperiode)
+        val delberegningNettoTilsynsutgiftResultat =
+            BeregnNettoTilsynsutgiftService.delberegningNettoTilsynsutgift(utvidetGrunnlag, åpenSluttperiode)
 
         utvidetGrunnlag = utvidetGrunnlag.copy(
             grunnlagListe = (utvidetGrunnlag.grunnlagListe + delberegningNettoTilsynsutgiftResultat).distinctBy(GrunnlagDto::referanse),
         )
-        val delberegningUnderholdskostnadResultat = delberegningUnderholdskostnad(utvidetGrunnlag, åpenSluttperiode)
+        val delberegningUnderholdskostnadResultat =
+            BeregnUnderholdskostnadService.delberegningUnderholdskostnad(utvidetGrunnlag, åpenSluttperiode)
 
         utvidetGrunnlag = utvidetGrunnlag.copy(
             grunnlagListe = (utvidetGrunnlag.grunnlagListe + delberegningUnderholdskostnadResultat).distinctBy(GrunnlagDto::referanse),
         )
-        val delberegningBpAndelUnderholdskostnadResultat = delberegningBpAndelUnderholdskostnad(utvidetGrunnlag, åpenSluttperiode)
+        val delberegningBpAndelUnderholdskostnadResultat =
+            BeregnBpAndelUnderholdskostnadService.delberegningBpAndelUnderholdskostnad(utvidetGrunnlag, åpenSluttperiode)
 
-        val delberegningSamværsfradragResultat = delberegningSamværsfradrag(utvidetGrunnlag, åpenSluttperiode)
+        val delberegningSamværsfradragResultat = BeregnSamværsfradragService.delberegningSamværsfradrag(utvidetGrunnlag, åpenSluttperiode)
 
         utvidetGrunnlag = utvidetGrunnlag.copy(
             grunnlagListe = (
@@ -119,7 +111,7 @@ class BeregnBarnebidragService : BeregnService() {
                 )
                 .distinctBy(GrunnlagDto::referanse),
         )
-        val delberegningEndeligBidragResultat = delberegningEndeligBidrag(utvidetGrunnlag, åpenSluttperiode)
+        val delberegningEndeligBidragResultat = BeregnEndeligBidragService.delberegningEndeligBidrag(utvidetGrunnlag, åpenSluttperiode)
 
         val resultatPeriodeListe: List<ResultatPeriode>
         val beløpshistorikkGrunnlag = emptyList<GrunnlagDto>()
@@ -232,7 +224,7 @@ class BeregnBarnebidragService : BeregnService() {
         }
 
         // Kaller delberegninger
-        val delberegningBidragsevneResultat = delberegningBidragsevne(mottattGrunnlag)
+        val delberegningBidragsevneResultat = BeregnBidragsevneService.delberegningBidragsevne(mottattGrunnlag)
 
         return delberegningBidragsevneResultat
     }
@@ -248,7 +240,7 @@ class BeregnBarnebidragService : BeregnService() {
         }
 
         // Kaller delberegninger
-        val delberegningNettoTilsynsutgiftResultat = delberegningNettoTilsynsutgift(mottattGrunnlag)
+        val delberegningNettoTilsynsutgiftResultat = BeregnNettoTilsynsutgiftService.delberegningNettoTilsynsutgift(mottattGrunnlag)
         return delberegningNettoTilsynsutgiftResultat
     }
 
@@ -263,7 +255,7 @@ class BeregnBarnebidragService : BeregnService() {
             throw IllegalArgumentException("Ugyldig input ved beregning av underholdskostnad: " + e.message)
         }
 
-        val delberegningUnderholdskostnadResultat = delberegningUnderholdskostnad(mottattGrunnlag)
+        val delberegningUnderholdskostnadResultat = BeregnUnderholdskostnadService.delberegningUnderholdskostnad(mottattGrunnlag)
 
         secureLogger.debug { "Beregning av underholdskostnad - følgende respons returnert: ${tilJson(delberegningUnderholdskostnadResultat)}" }
         return delberegningUnderholdskostnadResultat
@@ -286,12 +278,12 @@ class BeregnBarnebidragService : BeregnService() {
         val utvidetGrunnlag = utvidetGrunnlagJustert.beregnGrunnlag
         val åpenSluttperiode = utvidetGrunnlagJustert.åpenSluttperiode
 
-        val delberegningNettoTilsynsutgiftResultat = delberegningNettoTilsynsutgift(
+        val delberegningNettoTilsynsutgiftResultat = BeregnNettoTilsynsutgiftService.delberegningNettoTilsynsutgift(
             mottattGrunnlag = utvidetGrunnlag,
             åpenSluttperiode = åpenSluttperiode,
         )
 
-        val delberegningUnderholdskostnadResultat = delberegningUnderholdskostnad(
+        val delberegningUnderholdskostnadResultat = BeregnUnderholdskostnadService.delberegningUnderholdskostnad(
             mottattGrunnlag = BeregnGrunnlag(
                 periode = utvidetGrunnlag.periode,
                 stønadstype = utvidetGrunnlag.stønadstype,
@@ -316,7 +308,8 @@ class BeregnBarnebidragService : BeregnService() {
         }
 
         // Kaller delberegninger
-        val delberegningBpAndelUnderholdskostnadResultat = delberegningBpAndelUnderholdskostnad(mottattGrunnlag)
+        val delberegningBpAndelUnderholdskostnadResultat =
+            BeregnBpAndelUnderholdskostnadService.delberegningBpAndelUnderholdskostnad(mottattGrunnlag)
 
         return delberegningBpAndelUnderholdskostnadResultat
     }
@@ -333,7 +326,7 @@ class BeregnBarnebidragService : BeregnService() {
         }
 
         // Kaller delberegninger
-        val delberegningNettoBarnetilleggResultat = delberegningNettoBarnetillegg(mottattGrunnlag, rolle)
+        val delberegningNettoBarnetilleggResultat = BeregnNettoBarnetilleggService.delberegningNettoBarnetillegg(mottattGrunnlag, rolle)
 
         return delberegningNettoBarnetilleggResultat
     }
@@ -350,7 +343,7 @@ class BeregnBarnebidragService : BeregnService() {
         }
 
         // Kaller delberegninger
-        val delberegningSamværsfradragResultat = delberegningSamværsfradrag(mottattGrunnlag)
+        val delberegningSamværsfradragResultat = BeregnSamværsfradragService.delberegningSamværsfradrag(mottattGrunnlag)
 
         return delberegningSamværsfradragResultat
     }
@@ -367,7 +360,8 @@ class BeregnBarnebidragService : BeregnService() {
         }
 
         // Kaller delberegninger
-        val delberegningBarnetilleggSkattesatsResultat = delberegningBarnetilleggSkattesats(mottattGrunnlag = mottattGrunnlag, rolle = rolle)
+        val delberegningBarnetilleggSkattesatsResultat =
+            BeregnBarnetilleggSkattesatsService.delberegningBarnetilleggSkattesats(mottattGrunnlag = mottattGrunnlag, rolle = rolle)
 
         return delberegningBarnetilleggSkattesatsResultat
     }
@@ -384,7 +378,7 @@ class BeregnBarnebidragService : BeregnService() {
         }
 
         // Kaller delberegninger
-        val delberegningEndeligBidragResultat = delberegningEndeligBidrag(mottattGrunnlag)
+        val delberegningEndeligBidragResultat = BeregnEndeligBidragService.delberegningEndeligBidrag(mottattGrunnlag)
 
         return delberegningEndeligBidragResultat
     }
@@ -404,7 +398,8 @@ class BeregnBarnebidragService : BeregnService() {
         }
 
         // Kaller delberegninger
-        val delberegningEndringSjekkGrensePeriodeResultat = delberegningEndringSjekkGrensePeriode(mottattGrunnlag)
+        val delberegningEndringSjekkGrensePeriodeResultat =
+            BeregnEndringSjekkGrensePeriodeService.delberegningEndringSjekkGrensePeriode(mottattGrunnlag)
 
         return delberegningEndringSjekkGrensePeriodeResultat
     }
@@ -421,7 +416,7 @@ class BeregnBarnebidragService : BeregnService() {
         }
 
         // Kaller delberegninger
-        val delberegningEndringSjekkGrenseResultat = delberegningEndringSjekkGrense(mottattGrunnlag)
+        val delberegningEndringSjekkGrenseResultat = BeregnEndringSjekkGrenseService.delberegningEndringSjekkGrense(mottattGrunnlag)
 
         return delberegningEndringSjekkGrenseResultat
     }
@@ -451,13 +446,16 @@ class BeregnBarnebidragService : BeregnService() {
             delberegningIndeksreguleringPrivatAvtalePeriodeResultat + beløpshistorikkGrunnlag + delberegningEndeligBidragResultat.grunnlagListe,
         )
         val delberegningEndringSjekkGrensePeriodeResultat =
-            delberegningEndringSjekkGrensePeriode(mottattGrunnlag = grunnlagTilEndringSjekkGrense, åpenSluttperiode = åpenSluttperiode)
+            BeregnEndringSjekkGrensePeriodeService.delberegningEndringSjekkGrensePeriode(
+                mottattGrunnlag = grunnlagTilEndringSjekkGrense,
+                åpenSluttperiode = åpenSluttperiode,
+            )
 
         // Kaller delberegning for å sjekke om endring i bidrag er over grense (totalt)
         grunnlagTilEndringSjekkGrense = grunnlagTilEndringSjekkGrense.copy(
             grunnlagListe = (grunnlagTilEndringSjekkGrense.grunnlagListe + delberegningEndringSjekkGrensePeriodeResultat),
         )
-        val delberegningEndringSjekkGrenseResultat = delberegningEndringSjekkGrense(
+        val delberegningEndringSjekkGrenseResultat = BeregnEndringSjekkGrenseService.delberegningEndringSjekkGrense(
             mottattGrunnlag = grunnlagTilEndringSjekkGrense,
             åpenSluttperiode = åpenSluttperiode,
         )
@@ -500,7 +498,7 @@ class BeregnBarnebidragService : BeregnService() {
     ) {
         emptyList()
     } else {
-        delberegningPrivatAvtalePeriode(beregnGrunnlag)
+        BeregnIndeksreguleringPrivatAvtaleService.delberegningPrivatAvtalePeriode(beregnGrunnlag)
     }
 
     // Standardlogikk for å lage resultatperioder

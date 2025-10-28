@@ -17,6 +17,10 @@ import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningBeløpshistori
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningPersonConsumer
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningSakConsumer
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningVedtakConsumer
+import no.nav.bidrag.beregn.barnebidrag.service.external.VedtakService
+import no.nav.bidrag.beregn.barnebidrag.service.orkestrering.AldersjusteringOrchestrator
+import no.nav.bidrag.beregn.barnebidrag.service.orkestrering.SkalIkkeAldersjusteresBegrunnelse
+import no.nav.bidrag.beregn.barnebidrag.service.orkestrering.SkalIkkeAldersjusteresException
 import no.nav.bidrag.beregn.barnebidrag.testdata.opprettSakRespons
 import no.nav.bidrag.beregn.barnebidrag.testdata.opprettStønadDto
 import no.nav.bidrag.beregn.barnebidrag.testdata.opprettStønadPeriodeDto
