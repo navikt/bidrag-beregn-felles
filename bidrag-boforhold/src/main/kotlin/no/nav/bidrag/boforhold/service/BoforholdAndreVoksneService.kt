@@ -35,7 +35,7 @@ internal class BoforholdAndreVoksneService {
             .map {
                 Bostatus(
                     periodeFom = it.periodeFom?.withDayOfMonth(1),
-                    periodeTom = it.periodeTom?.withDayOfMonth(1)?.minusDays(1),
+                    periodeTom = justerPeriodeTom(it.periodeTom),
                     bostatus = it.bostatus,
                     kilde = Kilde.OFFENTLIG,
                 )
@@ -809,5 +809,16 @@ internal class BoforholdAndreVoksneService {
         }
 
         return resultatliste
+    }
+
+    private fun justerPeriodeTom(periodeTom: LocalDate?): LocalDate? = if (periodeTom == null) {
+        periodeTom
+    } else {
+        val erSisteDagIMåneden = periodeTom.dayOfMonth == periodeTom.lengthOfMonth()
+        if (erSisteDagIMåneden) {
+            periodeTom
+        } else {
+            periodeTom.withDayOfMonth(1).minusDays(1)
+        }
     }
 }

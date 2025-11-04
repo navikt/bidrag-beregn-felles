@@ -5002,5 +5002,53 @@ class TestUtil {
                 endreBostatus = null,
             ),
         )
+
+        // Tester for voksne i husstanden
+        fun byggBorMedAndreVoksneOffentligePerioderToHusstander() = BoforholdVoksneRequest(
+            innhentedeOffentligeOpplysninger = listOf(
+                Husstandsmedlemmer(
+                    gjelderPersonId = "98765432109",
+                    fødselsdato = LocalDate.of(1980, 3, 17),
+                    relasjon = Familierelasjon.INGEN,
+                    borISammeHusstandListe = listOf(
+                        Bostatus(
+                            periodeFom = LocalDate.of(2020, 1, 11),
+                            periodeTom = LocalDate.of(2025, 2, 28),
+                            bostatus = null,
+                            kilde = Kilde.OFFENTLIG,
+                        ),
+                    ),
+                ),
+                Husstandsmedlemmer(
+                    gjelderPersonId = "123456789",
+                    fødselsdato = LocalDate.of(1977, 3, 17),
+                    relasjon = Familierelasjon.INGEN,
+                    borISammeHusstandListe = listOf(
+                        Bostatus(
+                            periodeFom = LocalDate.of(2012, 2, 17),
+                            periodeTom = LocalDate.of(2025, 2, 28),
+                            bostatus = null,
+                            kilde = Kilde.OFFENTLIG,
+                        ),
+                    ),
+                ),
+                Husstandsmedlemmer(
+                    gjelderPersonId = "23456789012",
+                    fødselsdato = LocalDate.of(1917, 3, 17),
+                    relasjon = Familierelasjon.INGEN,
+                    borISammeHusstandListe = listOf(
+                        Bostatus(
+                            periodeFom = LocalDate.of(2025, 3, 1),
+                            periodeTom = null,
+                            bostatus = null,
+                            kilde = Kilde.OFFENTLIG,
+                        ),
+                    ),
+                ),
+            ),
+            behandledeBostatusopplysninger = emptyList(),
+            endreBostatus = null,
+
+        )
     }
 }
