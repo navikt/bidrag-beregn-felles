@@ -12,11 +12,14 @@ import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.vedtak.Stønadstype
+import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
+import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BidragsberegningResultatBarnV2
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatBeregning
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatPeriode
+import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatVedtakV2
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.felles.valider
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnlag
@@ -47,6 +50,44 @@ class BeregnBarnebidragService : BeregnService() {
         ),
         grunnlagListe = mottattGrunnlag.grunnlagListe,
     )
+
+    fun beregnBarnebidragAlleSøknadsbarn(beregnGrunnlagListe: List<BeregnGrunnlag>): List<Pair<BidragsberegningResultatBarnV2, List<GrunnlagDto>>> {
+        val beregnetBarnebidragResultatListe = mutableListOf<BeregnetBarnebidragResultat>()
+        // Kaller beregning for ett og ett søknadsbarn
+        val resultatBeregningAlleBarn = beregnGrunnlagListe.map { beregningBarn ->
+            val bidragsmottakerReferanse =
+                beregningBarn.grunnlagListe.filtrerOgKonverterBasertPåEgenReferanse<Person>(Grunnlagstype.PERSON_SØKNADSBARN)
+                    .firstOrNull { it.referanse == beregningBarn.søknadsbarnReferanse }
+                    ?.innhold?.bidragsmottaker
+                    ?: throw IllegalArgumentException(
+                        "Finner ikke bidragsmottaker for søknadsbarn med referanse ${beregningBarn.søknadsbarnReferanse}",
+                    )
+
+            try {
+                val beregningResultat =
+                    beregnBarnebidrag(beregningBarn)
+
+                BidragsberegningResultatBarnV2(
+                    søknadsbarnreferanse = beregningBarn.søknadsbarnReferanse,
+                    resultatVedtakListe = listOf(
+                        ResultatVedtakV2(
+                            periodeListe = beregningResultat.beregnetBarnebidragPeriodeListe,
+                            delvedtak = false,
+                            omgjøringsvedtak = false,
+                            vedtakstype = Vedtakstype.ENDRING,
+                        ),
+                    ),
+                ) to beregningResultat.grunnlagListe
+            } catch (e: Exception) {
+                BidragsberegningResultatBarnV2(
+                    søknadsbarnreferanse = beregningBarn.søknadsbarnReferanse,
+                    resultatVedtakListe = emptyList(),
+                    beregningsfeil = e,
+                ) to beregningBarn.grunnlagListe
+            }
+        }
+        return resultatBeregningAlleBarn
+    }
 
     // Komplett beregning av barnebidrag
     fun beregnBarnebidrag(mottattGrunnlag: BeregnGrunnlag): BeregnetBarnebidragResultat {
