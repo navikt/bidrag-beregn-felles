@@ -70,9 +70,9 @@ internal class KlageOrkestratorTest : FellesTest() {
         filnavnKlageberegningResultat = "src/test/resources/testfiler/klage_orkestrator/test01_klage_beregning_resultat.json"
         filnavnKlageberegningGrunnlag = "src/test/resources/testfiler/klage_orkestrator/test01_klage_beregning_grunnlag.json"
         filnavnPåklagetVedtak = "src/test/resources/testfiler/klage_orkestrator/test01_påklaget_vedtak.json"
-        val klageberegningResultat = lesFilOgByggRequest<BeregnetBarnebidragResultat>(filnavnKlageberegningResultat)
-        val klageberegningGrunnlag = lesFilOgByggRequest<BeregnGrunnlag>(filnavnKlageberegningGrunnlag)
-        val påklagetVedtak = lesFilOgByggRequest<VedtakDto>(filnavnPåklagetVedtak)
+        val klageberegningResultat = lesFilOgByggRequestGenerisk<BeregnetBarnebidragResultat>(filnavnKlageberegningResultat)
+        val klageberegningGrunnlag = lesFilOgByggRequestGenerisk<BeregnGrunnlag>(filnavnKlageberegningGrunnlag)
+        val påklagetVedtak = lesFilOgByggRequestGenerisk<VedtakDto>(filnavnPåklagetVedtak)
 
         val stønad = Stønadsid(
             type = Stønadstype.BIDRAG,
@@ -118,12 +118,12 @@ internal class KlageOrkestratorTest : FellesTest() {
         filnavnLøpendeStønad = "src/test/resources/testfiler/klage_orkestrator/test02_løpende_stønad.json"
         filnavnEtterfølgendeVedtak1 = "src/test/resources/testfiler/klage_orkestrator/test02_etterfølgende_vedtak_1.json"
         filnavnEtterfølgendeVedtak2 = "src/test/resources/testfiler/klage_orkestrator/test02_etterfølgende_vedtak_2.json"
-        val klageberegningResultat = lesFilOgByggRequest<BeregnetBarnebidragResultat>(filnavnKlageberegningResultat)
-        val klageberegningGrunnlag = lesFilOgByggRequest<BeregnGrunnlag>(filnavnKlageberegningGrunnlag)
-        val påklagetVedtak = lesFilOgByggRequest<VedtakDto>(filnavnPåklagetVedtak)
-        val løpendeStønad = lesFilOgByggRequest<StønadDto>(filnavnLøpendeStønad)
-        val etterfølgendeVedtak1 = lesFilOgByggRequest<VedtakDto>(filnavnEtterfølgendeVedtak1)
-        val etterfølgendeVedtak2 = lesFilOgByggRequest<VedtakDto>(filnavnEtterfølgendeVedtak2)
+        val klageberegningResultat = lesFilOgByggRequestGenerisk<BeregnetBarnebidragResultat>(filnavnKlageberegningResultat)
+        val klageberegningGrunnlag = lesFilOgByggRequestGenerisk<BeregnGrunnlag>(filnavnKlageberegningGrunnlag)
+        val påklagetVedtak = lesFilOgByggRequestGenerisk<VedtakDto>(filnavnPåklagetVedtak)
+        val løpendeStønad = lesFilOgByggRequestGenerisk<StønadDto>(filnavnLøpendeStønad)
+        val etterfølgendeVedtak1 = lesFilOgByggRequestGenerisk<VedtakDto>(filnavnEtterfølgendeVedtak1)
+        val etterfølgendeVedtak2 = lesFilOgByggRequestGenerisk<VedtakDto>(filnavnEtterfølgendeVedtak2)
 
         val stønad = Stønadsid(
             type = Stønadstype.BIDRAG,
@@ -192,9 +192,9 @@ internal class KlageOrkestratorTest : FellesTest() {
         filnavnKlageberegningResultat = "src/test/resources/testfiler/klage_orkestrator/test03_klage_beregning_resultat.json"
         filnavnKlageberegningGrunnlag = "src/test/resources/testfiler/klage_orkestrator/test03_klage_beregning_grunnlag.json"
         filnavnPåklagetVedtak = "src/test/resources/testfiler/klage_orkestrator/test03_påklaget_vedtak.json"
-        val klageberegningResultat = lesFilOgByggRequest<BeregnetBarnebidragResultat>(filnavnKlageberegningResultat)
-        val klageberegningGrunnlag = lesFilOgByggRequest<BeregnGrunnlag>(filnavnKlageberegningGrunnlag)
-        val påklagetVedtak = lesFilOgByggRequest<VedtakDto>(filnavnPåklagetVedtak)
+        val klageberegningResultat = lesFilOgByggRequestGenerisk<BeregnetBarnebidragResultat>(filnavnKlageberegningResultat)
+        val klageberegningGrunnlag = lesFilOgByggRequestGenerisk<BeregnGrunnlag>(filnavnKlageberegningGrunnlag)
+        val påklagetVedtak = lesFilOgByggRequestGenerisk<VedtakDto>(filnavnPåklagetVedtak)
 
         val stønad = Stønadsid(
             type = Stønadstype.BIDRAG,

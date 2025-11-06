@@ -82,17 +82,18 @@ internal open class FellesTest {
         }
     }
 
-    inline fun <reified T> lesFilOgByggRequest(filnavn: String): T {
+    inline fun <reified T> lesFilOgByggRequestGenerisk(filnavn: String): T {
         val json = try {
             Files.readString(Paths.get(filnavn))
         } catch (e: Exception) {
             fail("Klarte ikke å lese fil: $filnavn", e)
         }
-        return jacksonObjectMapper().findAndRegisterModules().readValue(json, T::class.java)
+        val mapper = jacksonObjectMapper().findAndRegisterModules()
+        return mapper.readValue(json, object : com.fasterxml.jackson.core.type.TypeReference<T>() {})
     }
 
     // Overload for BeregnGrunnlag
-    fun lesFilOgByggRequest(filnavn: String): BeregnGrunnlag = lesFilOgByggRequest<BeregnGrunnlag>(filnavn)
+    fun lesFilOgByggRequest(filnavn: String): BeregnGrunnlag = lesFilOgByggRequestGenerisk<BeregnGrunnlag>(filnavn)
 
     fun <T> printJson(json: T) {
         val objectMapper = ObjectMapper()
