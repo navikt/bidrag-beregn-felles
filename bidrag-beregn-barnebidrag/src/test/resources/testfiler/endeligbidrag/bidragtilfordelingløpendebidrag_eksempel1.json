@@ -1,0 +1,80 @@
+{
+  "periode": {
+    "fom": "2024-08",
+    "til": "2024-09"
+  },
+  "søknadsbarnReferanse": "Person_BarnBidragspliktig_01",
+  "grunnlagListe": [
+    {
+      "referanse": "Person_BarnBidragspliktig_01",
+      "type": "PERSON_BARN_BIDRAGSPLIKTIG",
+      "innhold": {
+        "ident": "11111111111",
+        "navn": "Barn Bidragspliktig",
+        "fødselsdato": "2017-12-11"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Person_Bidragsmottaker",
+      "type": "PERSON_BIDRAGSMOTTAKER",
+      "innhold": {
+        "ident": "22222222222",
+        "navn": "Søkende Bidragsmottaker",
+        "fødselsdato": "1982-05-05"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Person_Bidragspliktig",
+      "type": "PERSON_BIDRAGSPLIKTIG",
+      "innhold": {
+        "ident": "33333333333",
+        "navn": "Motvillig Bidragspliktig",
+        "fødselsdato": "1981-07-13"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "løpende_bidrag_grunnlag_bidragspliktig",
+      "type": "LØPENDE_BIDRAG",
+      "innhold": {
+        "løpendeBidragListe": [
+          {
+            "periode": {
+              "fom": "2024-08",
+              "til": null
+            },
+            "saksnummer": "1234567",
+            "stønadstype": "BIDRAG",
+            "løpendeBeløp": 9000,
+            "samværsklasse": "SAMVÆRSKLASSE_1",
+            "beregnetBeløp": 10000,
+            "faktiskBeløp": 8000,
+            "gjelderBarn": "Person_BarnBidragspliktig_01"
+          }
+        ]
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragspliktig"
+    },
+    {
+      "referanse": "Delberegning_Samværsfradrag_202408",
+      "type": "DELBEREGNING_SAMVÆRSFRADRAG",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": null
+        },
+        "beløp": 1000,
+        "manueltRegistrert": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_BarnBidragspliktig_01",
+      "gjelderReferanse": "Person_Bidragspliktig"
+    }
+  ]
+}
