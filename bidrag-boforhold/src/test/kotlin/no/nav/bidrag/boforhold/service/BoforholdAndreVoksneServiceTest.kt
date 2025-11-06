@@ -249,4 +249,22 @@ internal class BoforholdAndreVoksneServiceTest {
             resultat2[0].kilde shouldBe Kilde.OFFENTLIG
         }
     }
+
+    // Tester med kun offentlige perioder
+    @Test
+    fun `Test voksne i husstanden kun offentlige perioder to husstander`() {
+        boforholdAndreVoksneService = BoforholdAndreVoksneService()
+        val mottatteBoforhold = TestUtil.byggBorMedAndreVoksneOffentligePerioderToHusstander()
+        val virkningstidspunkt = LocalDate.of(2025, 1, 1)
+        val resultat = boforholdAndreVoksneService.beregnBoforholdAndreVoksne(virkningstidspunkt, mottatteBoforhold, beregnTilDato = beregnTilDato)
+
+        assertSoftly {
+            Assertions.assertNotNull(resultat)
+            resultat.size shouldBe 1
+            resultat[0].periodeFom shouldBe LocalDate.of(2025, 1, 1)
+            resultat[0].periodeTom shouldBe null
+            resultat[0].bostatus shouldBe Bostatuskode.BOR_MED_ANDRE_VOKSNE
+            resultat[0].kilde shouldBe Kilde.OFFENTLIG
+        }
+    }
 }
