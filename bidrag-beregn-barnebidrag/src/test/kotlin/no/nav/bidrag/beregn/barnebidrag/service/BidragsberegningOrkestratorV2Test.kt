@@ -84,7 +84,7 @@ internal class BidragsberegningOrkestratorV2Test : FellesTest() {
     @Test
     fun `beregn bidrag v3 - 1 BM, 2 søknadsbarn - ingen løpende stønader`() {
         filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/test01_v3_beregn_bidrag_grunnlag.json"
-        val beregnRequest = lesFilOgByggRequest<BidragsberegningOrkestratorRequestV2>(filnavnBeregnGrunnlag)
+        val beregnRequest = lesFilOgByggRequestGenerisk<BidragsberegningOrkestratorRequestV2>(filnavnBeregnGrunnlag)
 
         val beregnResponse = bidragsberegningOrkestratorV2.utførBidragsberegningV3(beregnRequest)
         printJson(beregnResponse)
@@ -98,7 +98,7 @@ internal class BidragsberegningOrkestratorV2Test : FellesTest() {
     @Test
     fun `gi direkte avslag`() {
         filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/test01_v3_direkte_avslag_bidrag_grunnlag.json"
-        val beregnRequest = lesFilOgByggRequest<BidragsberegningOrkestratorRequestV2>(filnavnBeregnGrunnlag)
+        val beregnRequest = lesFilOgByggRequestGenerisk<BidragsberegningOrkestratorRequestV2>(filnavnBeregnGrunnlag)
 
         val beregnResponse = bidragsberegningOrkestratorV2.utførBidragsberegningV3(beregnRequest)
         printJson(beregnResponse)
