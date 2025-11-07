@@ -17,7 +17,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsfr
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSumBidragTilFordeling
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
-import no.nav.bidrag.transport.behandling.felles.grunnlag.LøpendeBidrag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.LøpendeBidragPeriode
 import java.math.BigDecimal
 import java.util.Collections.emptyList
 
@@ -202,7 +202,7 @@ data class SumBidragTilFordelingDelberegningPeriodeGrunnlag(
 
 data class SumBidragTilFordelingDelberegningBeregningGrunnlag(val referanse: String, val sumBidragTilFordeling: BigDecimal)
 
-data class LøpendeBidragPeriodeGrunnlag(val referanse: String, val løpendeBidragPeriode: LøpendeBidrag)
+data class LøpendeBidragPeriodeGrunnlag(val referanse: String, val løpendeBidragPeriode: LøpendeBidragPeriode)
 
 data class Evne25ProsentAvInntektPeriodeGrunnlag(
     val beregningsperiode: ÅrMånedsperiode,
@@ -282,7 +282,7 @@ data class BidragTilFordelingLøpendeBidragDelberegningPeriodeGrunnlag(
 
 data class BidragTilFordelingLøpendeBidragDelberegningBeregningGrunnlag(val referanse: String, val bidragTilFordeling: BigDecimal)
 
-data class LøpendeBidragTilFordelingBeregningGrunnlag(val referanse: String, val løpendeBidrag: LøpendeBidrag)
+data class LøpendeBidragTilFordelingBeregningGrunnlag(val referanse: String, val løpendeBidrag: LøpendeBidragPeriode)
 
 data class BidragJustertForBPBarnetilleggPeriodeGrunnlag(
     val beregningsperiode: ÅrMånedsperiode,

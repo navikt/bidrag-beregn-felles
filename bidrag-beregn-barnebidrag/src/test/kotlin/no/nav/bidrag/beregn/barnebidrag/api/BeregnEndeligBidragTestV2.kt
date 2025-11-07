@@ -372,7 +372,7 @@ internal class BeregnEndeligBidragTestV2 : FellesTest() {
             }
 
         val antallLøpendeBidrag = resultat
-            .filter { it.type == Grunnlagstype.LØPENDE_BIDRAG }
+            .filter { it.type == Grunnlagstype.LØPENDE_BIDRAG_PERIODE }
             .size
 
         val antallDelberegningSamværsfradrag = resultat

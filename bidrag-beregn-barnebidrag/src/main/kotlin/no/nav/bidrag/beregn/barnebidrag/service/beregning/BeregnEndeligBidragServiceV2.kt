@@ -120,8 +120,6 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
         return resultatGrunnlagListe.distinctBy { it.referanse }.sortedBy { it.referanse }
     }
 
-    // mottattGrunnlagListe: Inneholder ett element pr søknadsbarn
-    // løpendeBidragGrunnlagListe: Inneholder alle løpende bidrag grunnlag
     fun delberegningSumBidragTilFordeling(mottattGrunnlagListe: List<BeregnGrunnlag>, åpenSluttperiode: Boolean = true): List<GrunnlagDto> {
         // Mapper ut grunnlag som skal brukes for å beregne sum bidrag til fordeling
         val sumBidragTilFordelingPeriodeGrunnlag = EndeligBidragMapperV2.mapSumBidragTilFordelingGrunnlag(
@@ -321,10 +319,6 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
     }
 
     fun delberegningBidragTilFordelingLøpendeBidrag(mottattGrunnlag: BeregnGrunnlag, åpenSluttperiode: Boolean = true): List<GrunnlagDto> {
-        // Mapper ut grunnlag som skal brukes for å beregne evne løpende bidrag
-        // Forutsetning: løpendeBidragGrunnlagListe og samværsfradragGrunnlagListe inneholder grunnlag for ett barn.
-        // Innhenting av samværsfradrag for løpende bidrag-barn må gjøres på utsiden av denne funksjonen.
-        // TODO Sjekk om det skal løses på denne måten eller om alle grunnlag skal legges inn i BeregnGrunnlag
         val bidragTilFordelingLøpendeBidragPeriodeGrunnlag = EndeligBidragMapperV2.mapBidragTilFordelingLøpendeBidragGrunnlag(
             mottattGrunnlag = mottattGrunnlag,
         )
@@ -844,7 +838,7 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
         beregningsperiode: ÅrMånedsperiode,
     ): List<ÅrMånedsperiode> {
         val periodeListe = sequenceOf(grunnlagListe.beregningsperiode)
-            .plus(grunnlagListe.løpendeBidragPeriodeGrunnlagListe.asSequence().map { it.løpendeBidragPeriode.periode!! })
+            .plus(grunnlagListe.løpendeBidragPeriodeGrunnlagListe.asSequence().map { it.løpendeBidragPeriode.periode })
             .plus(grunnlagListe.samværsfradragDelberegningPeriodeGrunnlagListe.asSequence().map { it.samværsfradragPeriode.periode })
 
         return lagBruddPeriodeListe(periodeListe, beregningsperiode)
@@ -856,7 +850,7 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
         bruddPeriode: ÅrMånedsperiode,
     ): BidragTilFordelingLøpendeBidragBeregningGrunnlag {
         val løpendeBidragBeregningGrunnlag = bidragTilFordelingLøpendeBidragPeriodeGrunnlag.løpendeBidragPeriodeGrunnlagListe
-            .firstOrNull { it.løpendeBidragPeriode.periode!!.inneholder(bruddPeriode) }
+            .firstOrNull { it.løpendeBidragPeriode.periode.inneholder(bruddPeriode) }
             ?.let { LøpendeBidragTilFordelingBeregningGrunnlag(referanse = it.referanse, løpendeBidrag = it.løpendeBidragPeriode) }
             ?: throw IllegalArgumentException("Løpende bidrag grunnlag mangler for periode $bruddPeriode")
         val samværsfradragBeregningGrunnlag = bidragTilFordelingLøpendeBidragPeriodeGrunnlag.samværsfradragDelberegningPeriodeGrunnlagListe
