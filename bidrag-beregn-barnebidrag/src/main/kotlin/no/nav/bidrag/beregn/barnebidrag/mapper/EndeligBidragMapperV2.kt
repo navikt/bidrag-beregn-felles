@@ -34,7 +34,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsfr
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSumBidragTilFordeling
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningUnderholdskostnad
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
-import no.nav.bidrag.transport.behandling.felles.grunnlag.LøpendeBidragGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.LøpendeBidragPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåFremmedReferanse
 
@@ -214,29 +214,19 @@ internal object EndeligBidragMapperV2 : CoreMapper() {
         }
     }
 
-    private fun mapLøpendeBidrag(mottattGrunnlag: BeregnGrunnlag): List<LøpendeBidragPeriodeGrunnlag> {
-        // Det skal finnes ett grunnlag av typen LØPENDE_BIDRAG
-        // Forutsetter også her at det ligger kun ett barn i gjelderBarn i listen av løpende bidrag
-        val løpendeBidragGrunnlag = mottattGrunnlag.grunnlagListe
-            .filtrerOgKonverterBasertPåEgenReferanse<LøpendeBidragGrunnlag>(Grunnlagstype.LØPENDE_BIDRAG)
-            .firstOrNull()
-            ?: throw IllegalArgumentException(
-                "Ugyldig input ved beregning av barnebidrag. Grunnlag av typen LØPENDE_BIDRAG mangler.",
-            )
-
+    private fun mapLøpendeBidrag(beregnGrunnlag: BeregnGrunnlag): List<LøpendeBidragPeriodeGrunnlag> {
         try {
-            return løpendeBidragGrunnlag.innhold.løpendeBidragListe
-                .filter { it.gjelderBarn == mottattGrunnlag.søknadsbarnReferanse }
-                .map { løpendeBidrag ->
+            return beregnGrunnlag.grunnlagListe
+                .filtrerOgKonverterBasertPåEgenReferanse<LøpendeBidragPeriode>(Grunnlagstype.LØPENDE_BIDRAG_PERIODE)
+                .map {
                     LøpendeBidragPeriodeGrunnlag(
-                        referanse = løpendeBidragGrunnlag.referanse,
-                        løpendeBidragPeriode = løpendeBidrag,
+                        referanse = it.referanse,
+                        løpendeBidragPeriode = it.innhold,
                     )
                 }
         } catch (e: Exception) {
             throw IllegalArgumentException(
-                "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.LØPENDE_BIDRAG er ikke gyldig: " +
-                    e.message,
+                "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.LØPENDE_BIDRAG_PERIODE er ikke gyldig: " + e.message,
             )
         }
     }

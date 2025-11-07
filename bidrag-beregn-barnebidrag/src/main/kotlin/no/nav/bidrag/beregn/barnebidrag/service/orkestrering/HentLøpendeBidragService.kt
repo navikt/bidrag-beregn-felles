@@ -17,8 +17,7 @@ import no.nav.bidrag.domene.util.avrundetTilNærmesteTier
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.LøpendeBidragssak
 import no.nav.bidrag.transport.behandling.beregning.felles.BidragBeregningResponsDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
-import no.nav.bidrag.transport.behandling.felles.grunnlag.LøpendeBidrag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.LøpendeBidragGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.LøpendeBidragPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SamværsperiodeGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
@@ -192,30 +191,28 @@ class HentLøpendeBidragService(private val vedtakService: VedtakService) {
 
 data class EvnevurderingBeregningResultat(val beregnetBeløpListe: BidragBeregningResponsDto, val løpendeBidragsaker: List<LøpendeBidragssak>)
 
+// TODO Gå gjennom denne
 fun EvnevurderingBeregningResultat.tilGrunnlagDto(bpReferanse: String): List<GrunnlagDto> {
     val grunnlag =
         GrunnlagDto(
             referanse = "XXX", // TODO
             gjelderReferanse = bpReferanse,
+            gjelderBarnReferanse = "XXX", // TODO
             type = Grunnlagstype.LØPENDE_BIDRAG,
             innhold = POJONode(
-                LøpendeBidragGrunnlag(
-                    løpendeBidragListe =
-                    løpendeBidragsaker.map { løpendeStønad ->
-                        val beregning = beregnetBeløpListe.beregningListe.find { it.personidentBarn == løpendeStønad.kravhaver }
-                        LøpendeBidrag(
-                            periode = beregning?.periode,
-                            saksnummer = Saksnummer(løpendeStønad.sak.verdi),
-                            stønadstype = løpendeStønad.type,
-                            løpendeBeløp = løpendeStønad.løpendeBeløp,
-                            valutakode = løpendeStønad.valutakode,
-                            samværsklasse = beregning?.samværsklasse ?: Samværsklasse.SAMVÆRSKLASSE_0,
-                            beregnetBeløp = beregning?.beregnetBeløp ?: BigDecimal.ZERO,
-                            faktiskBeløp = beregning?.faktiskBeløp ?: BigDecimal.ZERO,
-                            gjelderBarn = "XXX", // TODO
-                        )
-                    },
-                ),
+                løpendeBidragsaker.map { løpendeStønad ->
+                    val beregning = beregnetBeløpListe.beregningListe.find { it.personidentBarn == løpendeStønad.kravhaver }
+                    LøpendeBidragPeriode(
+                        periode = beregning?.periode!!,
+                        saksnummer = Saksnummer(løpendeStønad.sak.verdi),
+                        stønadstype = løpendeStønad.type,
+                        løpendeBeløp = løpendeStønad.løpendeBeløp,
+                        valutakode = løpendeStønad.valutakode,
+                        samværsklasse = beregning.samværsklasse ?: Samværsklasse.SAMVÆRSKLASSE_0,
+                        beregnetBeløp = beregning.beregnetBeløp,
+                        faktiskBeløp = beregning.faktiskBeløp,
+                    )
+                },
             ),
         )
     return mutableListOf(grunnlag)

@@ -40,25 +40,21 @@
     },
     {
       "referanse": "løpende_bidrag_grunnlag_bidragspliktig",
-      "type": "LØPENDE_BIDRAG",
+      "type": "LØPENDE_BIDRAG_PERIODE",
       "innhold": {
-        "løpendeBidragListe": [
-          {
-            "periode": {
-              "fom": "2024-08",
-              "til": null
-            },
-            "saksnummer": "1234567",
-            "stønadstype": "BIDRAG",
-            "løpendeBeløp": 9000,
-            "samværsklasse": "SAMVÆRSKLASSE_1",
-            "beregnetBeløp": 10000,
-            "faktiskBeløp": 8000,
-            "gjelderBarn": "Person_BarnBidragspliktig_01"
-          }
-        ]
+        "periode": {
+          "fom": "2024-08",
+          "til": null
+        },
+        "saksnummer": "1234567",
+        "stønadstype": "BIDRAG",
+        "løpendeBeløp": 9000,
+        "samværsklasse": "SAMVÆRSKLASSE_1",
+        "beregnetBeløp": 10000,
+        "faktiskBeløp": 8000
       },
       "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_BarnBidragspliktig_01",
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
