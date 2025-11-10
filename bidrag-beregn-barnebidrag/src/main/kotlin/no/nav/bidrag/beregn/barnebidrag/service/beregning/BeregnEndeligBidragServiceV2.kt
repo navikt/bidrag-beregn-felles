@@ -54,6 +54,65 @@ import no.nav.bidrag.transport.felles.toCompactString
 
 internal object BeregnEndeligBidragServiceV2 : BeregnService() {
 
+    fun delberegningEndeligBidragV2(
+        grunnlagSøknadsbarnListe: List<BeregnGrunnlag>,
+        grunnlagLøpendeBidragListe: List<BeregnGrunnlag>,
+        åpenSluttperiode: Boolean = true,
+    ): List<BeregnGrunnlag> {
+        // Søknadsbarn: Kaller delberegning Bidrag til fordeling
+        var utvidetGrunnlagSøknadsbarnListe = grunnlagSøknadsbarnListe.map { beregnGrunnlag ->
+            val utvidetGrunnlag = delberegningBidragTilFordeling(mottattGrunnlag = beregnGrunnlag, åpenSluttperiode = åpenSluttperiode)
+            beregnGrunnlag.copy(grunnlagListe = (beregnGrunnlag.grunnlagListe + utvidetGrunnlag).distinctBy { it.referanse })
+        }
+
+        // Løpende bidrag: Kaller delberegning Bidrag til fordeling løpende bidrag
+        val utvidetGrunnlagLøpendeBidragListe = grunnlagLøpendeBidragListe.map { beregnGrunnlag ->
+            val utvidetGrunnlag =
+                delberegningBidragTilFordelingLøpendeBidrag(mottattGrunnlag = beregnGrunnlag, åpenSluttperiode = åpenSluttperiode)
+            beregnGrunnlag.copy(grunnlagListe = (beregnGrunnlag.grunnlagListe + utvidetGrunnlag).distinctBy { it.referanse })
+        }
+
+        // Søknadsbarn og løpende bidrag: Kaller delberegning Sum bidrag til fordeling
+        val sumBidragTilFordelingGrunnlagListe = delberegningSumBidragTilFordeling(
+            mottattGrunnlagListe = utvidetGrunnlagSøknadsbarnListe + utvidetGrunnlagLøpendeBidragListe,
+            åpenSluttperiode = åpenSluttperiode,
+        )
+
+        // Søknadsbarn: Kaller delberegning Evne 25 prosent av inntekt
+        utvidetGrunnlagSøknadsbarnListe = utvidetGrunnlagSøknadsbarnListe.map { beregnGrunnlag ->
+            val utvidetGrunnlag = delberegningEvne25ProsentAvInntekt(mottattGrunnlag = beregnGrunnlag, åpenSluttperiode = åpenSluttperiode)
+            beregnGrunnlag.copy(grunnlagListe = (beregnGrunnlag.grunnlagListe + utvidetGrunnlag).distinctBy { it.referanse })
+        }
+
+        // Søknadsbarn: Kaller delberegning Andel av bidragsevne
+        utvidetGrunnlagSøknadsbarnListe = utvidetGrunnlagSøknadsbarnListe.map { beregnGrunnlag ->
+            val utvidetGrunnlag = delberegningAndelAvBidragsevne(
+                mottattGrunnlag = beregnGrunnlag.copy(
+                    grunnlagListe = (beregnGrunnlag.grunnlagListe + sumBidragTilFordelingGrunnlagListe).distinctBy {
+                        it.referanse
+                    },
+                ),
+                åpenSluttperiode = åpenSluttperiode,
+            )
+            beregnGrunnlag.copy(grunnlagListe = (beregnGrunnlag.grunnlagListe + utvidetGrunnlag).distinctBy { it.referanse })
+        }
+
+        // Søknadsbarn: Kaller delberegning Bidrag justert for BP barnetillegg
+        utvidetGrunnlagSøknadsbarnListe = utvidetGrunnlagSøknadsbarnListe.map { beregnGrunnlag ->
+            val utvidetGrunnlag =
+                delberegningBidragJustertForBPBarnetillegg(mottattGrunnlag = beregnGrunnlag, åpenSluttperiode = åpenSluttperiode)
+            beregnGrunnlag.copy(grunnlagListe = (beregnGrunnlag.grunnlagListe + utvidetGrunnlag).distinctBy { it.referanse })
+        }
+
+        // Søknadsbarn: Kaller delberegning Endelig bidrag beregnet
+        utvidetGrunnlagSøknadsbarnListe = utvidetGrunnlagSøknadsbarnListe.map { beregnGrunnlag ->
+            val utvidetGrunnlag = delberegningEndeligBidragBeregnet(mottattGrunnlag = beregnGrunnlag, åpenSluttperiode = åpenSluttperiode)
+            beregnGrunnlag.copy(grunnlagListe = (beregnGrunnlag.grunnlagListe + utvidetGrunnlag).distinctBy { it.referanse })
+        }
+
+        return utvidetGrunnlagSøknadsbarnListe
+    }
+
     fun delberegningBidragTilFordeling(mottattGrunnlag: BeregnGrunnlag, åpenSluttperiode: Boolean = true): List<GrunnlagDto> {
         // Mapper ut grunnlag som skal brukes for å beregne bidrag til fordeling
         val bidragTilFordelingPeriodeGrunnlag = EndeligBidragMapperV2.mapBidragTilFordelingGrunnlag(
@@ -730,6 +789,7 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
                 referanse = opprettDelberegningreferanse(
                     type = Grunnlagstype.DELBEREGNING_EVNE_25PROSENTAVINNTEKT,
                     periode = ÅrMånedsperiode(fom = it.periode.fom, til = null),
+                    søknadsbarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
                     gjelderReferanse = mottattGrunnlag.grunnlagListe.bidragspliktig?.referanse ?: "bidragspliktig",
                 ),
                 type = Grunnlagstype.DELBEREGNING_EVNE_25PROSENTAVINNTEKT,
@@ -1022,7 +1082,8 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
                 innhold = POJONode(
                     DelberegningEndeligBidragBeregnet(
                         periode = it.periode,
-                        endeligBidrag = it.resultat.endeligBidragBeregnet,
+                        beregnetBeløp = it.resultat.beregnetBeløp,
+                        resultatBeløp = it.resultat.resultatBeløp,
                     ),
                 ),
                 grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe.sorted(),

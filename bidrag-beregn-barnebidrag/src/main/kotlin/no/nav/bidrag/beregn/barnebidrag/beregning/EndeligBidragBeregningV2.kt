@@ -16,6 +16,7 @@ import no.nav.bidrag.beregn.barnebidrag.bo.SumBidragTilFordelingBeregningGrunnla
 import no.nav.bidrag.beregn.barnebidrag.bo.SumBidragTilFordelingBeregningResultat
 import no.nav.bidrag.domene.util.avrundetMedTiDesimaler
 import no.nav.bidrag.domene.util.avrundetMedToDesimaler
+import no.nav.bidrag.domene.util.avrundetTilNærmesteTier
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -137,17 +138,19 @@ internal object EndeligBidragBeregningV2 {
         )
     }
 
-    fun beregnEndeligBidragBeregnet(grunnlag: EndeligBidragBeregnetBeregningGrunnlag) = EndeligBidragBeregnetBeregningResultat(
-        endeligBidragBeregnet = maxOf(
-            (
-                grunnlag.bidragJustertForBPBarnetilleggBeregningGrunnlag.bidragJustertForNettoBarnetilleggBP -
-                    grunnlag.samværsfradragBeregningGrunnlag.beløp
-                ),
-            BigDecimal.ZERO,
-        ).avrundetMedToDesimaler,
-        grunnlagsreferanseListe = listOfNotNull(
-            grunnlag.bidragJustertForBPBarnetilleggBeregningGrunnlag.referanse,
-            grunnlag.samværsfradragBeregningGrunnlag.referanse,
-        ),
-    )
+    fun beregnEndeligBidragBeregnet(grunnlag: EndeligBidragBeregnetBeregningGrunnlag): EndeligBidragBeregnetBeregningResultat {
+        val bidragJustertForNettoBarnetilleggBP =
+            grunnlag.bidragJustertForBPBarnetilleggBeregningGrunnlag.bidragJustertForNettoBarnetilleggBP
+        val samværsfradrag = grunnlag.samværsfradragBeregningGrunnlag.beløp
+        val beregnetBeløp = maxOf((bidragJustertForNettoBarnetilleggBP - samværsfradrag), BigDecimal.ZERO)
+
+        return EndeligBidragBeregnetBeregningResultat(
+            beregnetBeløp = beregnetBeløp.avrundetMedToDesimaler,
+            resultatBeløp = beregnetBeløp.avrundetTilNærmesteTier,
+            grunnlagsreferanseListe = listOfNotNull(
+                grunnlag.bidragJustertForBPBarnetilleggBeregningGrunnlag.referanse,
+                grunnlag.samværsfradragBeregningGrunnlag.referanse,
+            ),
+        )
+    }
 }
