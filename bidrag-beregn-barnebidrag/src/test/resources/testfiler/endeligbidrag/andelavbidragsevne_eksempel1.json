@@ -1,0 +1,89 @@
+{
+  "periode": {
+    "fom": "2024-08",
+    "til": "2024-09"
+  },
+  "søknadsbarnReferanse": "Person_Søknadsbarn",
+  "grunnlagListe": [
+    {
+      "referanse": "Person_Søknadsbarn",
+      "type": "PERSON_SØKNADSBARN",
+      "innhold": {
+        "ident": "11111111110",
+        "navn": "Trengende Søknadsbarn",
+        "fødselsdato": "2012-09-13"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Person_Bidragsmottaker",
+      "type": "PERSON_BIDRAGSMOTTAKER",
+      "innhold": {
+        "ident": "22222222222",
+        "navn": "Søkende Bidragsmottaker",
+        "fødselsdato": "1982-05-05"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "Person_Bidragspliktig",
+      "type": "PERSON_BIDRAGSPLIKTIG",
+      "innhold": {
+        "ident": "33333333333",
+        "navn": "Motvillig Bidragspliktig",
+        "fødselsdato": "1981-07-13"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": null
+    },
+    {
+      "referanse": "delberegning_DELBEREGNING_EVNE_25PROSENTAVINNTEKT_Person_Bidragspliktig_Person_Søknadsbarn_202408",
+      "type": "DELBEREGNING_EVNE_25PROSENTAVINNTEKT",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": null
+        },
+        "evneJustertFor25ProsentAvInntekt": 6000.00,
+        "erEvneJustertNedTil25ProsentAvInntekt": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragspliktig",
+      "gjelderBarnReferanse": "Person_Søknadsbarn"
+    },
+    {
+      "referanse": "delberegning_DELBEREGNING_SUM_BIDRAG_TIL_FORDELING_Person_Bidragspliktig_202408",
+      "type": "DELBEREGNING_SUM_BIDRAG_TIL_FORDELING",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": null
+        },
+        "sumBidragTilFordeling": 7500.00,
+        "sumPrioriterteBidragTilFordeling": 0.00,
+        "erKompletteGrunnlagForAlleLøpendeBidrag": true
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragspliktig",
+      "gjelderBarnReferanse": null
+    },
+    {
+      "referanse": "delberegning_DELBEREGNING_BIDRAG_TIL_FORDELING_Person_Bidragspliktig_Person_Søknadsbarn_202408",
+      "type": "DELBEREGNING_BIDRAG_TIL_FORDELING",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": null
+        },
+        "bidragTilFordeling": 4000.00,
+        "bpAndelAvUMinusSamværsfradrag": 3500.00,
+        "uminusNettoBarnetilleggBM": 4000.00
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderReferanse": "Person_Bidragspliktig",
+      "gjelderBarnReferanse": "Person_Søknadsbarn"
+    }
+  ]
+}

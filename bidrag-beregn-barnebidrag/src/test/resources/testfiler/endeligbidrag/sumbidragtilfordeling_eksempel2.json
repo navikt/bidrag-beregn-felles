@@ -1,0 +1,117 @@
+[
+  {
+    "periode": {
+      "fom": "2024-08",
+      "til": "2024-09"
+    },
+    "søknadsbarnReferanse": "Person_Søknadsbarn_01",
+    "grunnlagListe": [
+      {
+        "referanse": "Person_Søknadsbarn_01",
+        "type": "PERSON_SØKNADSBARN",
+        "innhold": {
+          "ident": "11111111110",
+          "navn": "Trengende Søknadsbarn",
+          "fødselsdato": "2012-09-13"
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderReferanse": null
+      },
+      {
+        "referanse": "Person_Bidragsmottaker_01",
+        "type": "PERSON_BIDRAGSMOTTAKER",
+        "innhold": {
+          "ident": "22222222222",
+          "navn": "Søkende Bidragsmottaker",
+          "fødselsdato": "1982-05-05"
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderReferanse": null
+      },
+      {
+        "referanse": "Person_Bidragspliktig",
+        "type": "PERSON_BIDRAGSPLIKTIG",
+        "innhold": {
+          "ident": "33333333333",
+          "navn": "Motvillig Bidragspliktig",
+          "fødselsdato": "1981-07-13"
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderReferanse": null
+      },
+      {
+        "referanse": "delberegning_DELBEREGNING_BIDRAG_TIL_FORDELING_Person_Bidragspliktig_Person_Søknadsbarn_01_202408",
+        "type": "DELBEREGNING_BIDRAG_TIL_FORDELING",
+        "innhold": {
+          "periode": {
+            "fom": "2024-08",
+            "til": null
+          },
+          "bidragTilFordeling": 12000.00,
+          "bpAndelAvUMinusSamværsfradrag": 11000.00,
+          "uMinusNettoBarnetilleggBM": 17000.00
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderReferanse": "Person_Bidragspliktig",
+        "gjelderBarnReferanse": "Person_Søknadsbarn_01"
+      }
+    ]
+  },
+  {
+    "periode": {
+      "fom": "2024-08",
+      "til": "2024-09"
+    },
+    "søknadsbarnReferanse": "Person_BarnBidragspliktig_01",
+    "grunnlagListe": [
+      {
+        "referanse": "Person_BarnBidragspliktig_01",
+        "type": "PERSON_BARN_BIDRAGSPLIKTIG",
+        "innhold": {
+          "ident": "11111111111",
+          "navn": "Barn Bidragspliktig",
+          "fødselsdato": "2017-12-11"
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderReferanse": null
+      },
+      {
+        "referanse": "Person_Bidragsmottaker_02",
+        "type": "PERSON_BIDRAGSMOTTAKER",
+        "innhold": {
+          "ident": "22222222222",
+          "navn": "Oppsøkende Bidragsmottaker",
+          "fødselsdato": "1994-07-25"
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderReferanse": null
+      },
+      {
+        "referanse": "Person_Bidragspliktig",
+        "type": "PERSON_BIDRAGSPLIKTIG",
+        "innhold": {
+          "ident": "33333333333",
+          "navn": "Motvillig Bidragspliktig",
+          "fødselsdato": "1981-07-13"
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderReferanse": null
+      },
+      {
+        "referanse": "delberegning_DELBEREGNING_BIDRAG_TIL_FORDELING_LØPENDE_BIDRAG_Person_Bidragspliktig_Person_BarnBidragspliktig_01_202408",
+        "type": "DELBEREGNING_BIDRAG_TIL_FORDELING_LØPENDE_BIDRAG",
+        "innhold": {
+          "periode": {
+            "fom": "2024-08",
+            "til": null
+          },
+          "bidragTilFordeling": 10000.00,
+          "reduksjonUnderholdskostnad": 1000.00
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderReferanse": "Person_Bidragspliktig",
+        "gjelderBarnReferanse": "Person_BarnBidragspliktig_01"
+      }
+    ]
+  }
+]

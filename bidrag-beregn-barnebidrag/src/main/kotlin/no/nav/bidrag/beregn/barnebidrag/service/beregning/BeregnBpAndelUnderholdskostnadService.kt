@@ -42,7 +42,7 @@ internal object BeregnBpAndelUnderholdskostnadService : BeregnService() {
         // Henter sjablonverdi for kapitalinntekt
         val innslagKapitalinntektSjablon = finnInnslagKapitalinntektFraGrunnlag(sjablonGrunnlag)
 
-        // Mapper ut grunnlag som skal brukes for å beregne bidragsevne
+        // Mapper ut grunnlag som skal brukes for å beregne BP's andel av underholdskostnad
         val bpAndelUnderholdskostnadPeriodeGrunnlag = BpAndelUnderholdskostnadMapper.mapBpAndelUnderholdskostnadGrunnlag(
             mottattGrunnlag = mottattGrunnlag,
             sjablonGrunnlag = sjablonGrunnlag,

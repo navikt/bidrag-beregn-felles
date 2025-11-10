@@ -110,7 +110,7 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
     @Test
     fun `beregn bidrag v3 - 1 BM, 2 søknadsbarn - ingen løpende stønader`() {
         filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/test01_v3_beregn_bidrag_grunnlag.json"
-        val beregnRequest = lesFilOgByggRequest<BidragsberegningOrkestratorRequestV2>(filnavnBeregnGrunnlag)
+        val beregnRequest = lesFilOgByggRequestGenerisk<BidragsberegningOrkestratorRequestV2>(filnavnBeregnGrunnlag)
 
         val beregnResponse = bidragsberegningOrkestrator.utførBidragsberegningV3(beregnRequest)
         printJson(beregnResponse)
@@ -124,7 +124,7 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
     @Test
     fun `beregn bidrag v3 - 1 BM, 1 søknadsbarn - 1 løpende stønad i bidrag-behandling med annen BM`() {
         filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/test02_v3_beregn_bidrag_grunnlag.json"
-        val beregnRequest = lesFilOgByggRequest<BidragsberegningOrkestratorRequestV2>(filnavnBeregnGrunnlag)
+        val beregnRequest = lesFilOgByggRequestGenerisk<BidragsberegningOrkestratorRequestV2>(filnavnBeregnGrunnlag)
 
         every { vedtakService.hentSisteLøpendeStønader(any()) }.answers {
             listOf(
@@ -216,10 +216,10 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
         filnavnBeløpshistorikkKlage = "src/test/resources/testfiler/bidragsberegning_orkestrator/test03A_beløpshistorikk_klage.json"
         filnavnEtterfølgendeVedtak = "src/test/resources/testfiler/bidragsberegning_orkestrator/test03A_etterfølgende_vedtak.json"
         val beregnGrunnlag: BeregnGrunnlag = lesFilOgByggRequest(filnavnBeregnGrunnlag)
-        val påklagetVedtak = lesFilOgByggRequest<VedtakDto>(filnavnPåklagetVedtak)
-        val beløpshistorikkNå = lesFilOgByggRequest<StønadDto>(filnavnBeløpshistorikkNå)
-        val beløpshistorikkKlage = lesFilOgByggRequest<StønadDto>(filnavnBeløpshistorikkKlage)
-        val etterfølgendeVedtak = lesFilOgByggRequest<VedtakDto>(filnavnEtterfølgendeVedtak)
+        val påklagetVedtak = lesFilOgByggRequestGenerisk<VedtakDto>(filnavnPåklagetVedtak)
+        val beløpshistorikkNå = lesFilOgByggRequestGenerisk<StønadDto>(filnavnBeløpshistorikkNå)
+        val beløpshistorikkKlage = lesFilOgByggRequestGenerisk<StønadDto>(filnavnBeløpshistorikkKlage)
+        val etterfølgendeVedtak = lesFilOgByggRequestGenerisk<VedtakDto>(filnavnEtterfølgendeVedtak)
 
         val stønad = Stønadsid(
             type = Stønadstype.BIDRAG,
@@ -296,8 +296,8 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
         filnavnPåklagetVedtak = "src/test/resources/testfiler/bidragsberegning_orkestrator/test03B_påklaget_vedtak.json"
         filnavnBeløpshistorikkNå = "src/test/resources/testfiler/bidragsberegning_orkestrator/test03B_beløpshistorikk_nå.json"
         val beregnGrunnlag: BeregnGrunnlag = lesFilOgByggRequest(filnavnBeregnGrunnlag)
-        val påklagetVedtak = lesFilOgByggRequest<VedtakDto>(filnavnPåklagetVedtak)
-        val beløpshistorikkNå = lesFilOgByggRequest<StønadDto>(filnavnBeløpshistorikkNå)
+        val påklagetVedtak = lesFilOgByggRequestGenerisk<VedtakDto>(filnavnPåklagetVedtak)
+        val beløpshistorikkNå = lesFilOgByggRequestGenerisk<StønadDto>(filnavnBeløpshistorikkNå)
 
         val stønad = Stønadsid(
             type = Stønadstype.BIDRAG,
@@ -348,10 +348,10 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
         filnavnBeløpshistorikkKlage = "src/test/resources/testfiler/bidragsberegning_orkestrator/test03C_beløpshistorikk_klage.json"
         filnavnEtterfølgendeVedtak = "src/test/resources/testfiler/bidragsberegning_orkestrator/test03A_etterfølgende_vedtak.json"
         val beregnGrunnlag: BeregnGrunnlag = lesFilOgByggRequest(filnavnBeregnGrunnlag)
-        val påklagetVedtak = lesFilOgByggRequest<VedtakDto>(filnavnPåklagetVedtak)
-        val beløpshistorikkNå = lesFilOgByggRequest<StønadDto>(filnavnBeløpshistorikkNå)
-        val beløpshistorikkKlage = lesFilOgByggRequest<StønadDto>(filnavnBeløpshistorikkKlage)
-        val etterfølgendeVedtak = lesFilOgByggRequest<VedtakDto>(filnavnEtterfølgendeVedtak)
+        val påklagetVedtak = lesFilOgByggRequestGenerisk<VedtakDto>(filnavnPåklagetVedtak)
+        val beløpshistorikkNå = lesFilOgByggRequestGenerisk<StønadDto>(filnavnBeløpshistorikkNå)
+        val beløpshistorikkKlage = lesFilOgByggRequestGenerisk<StønadDto>(filnavnBeløpshistorikkKlage)
+        val etterfølgendeVedtak = lesFilOgByggRequestGenerisk<VedtakDto>(filnavnEtterfølgendeVedtak)
 
         val stønad = Stønadsid(
             type = Stønadstype.BIDRAG,
