@@ -1,0 +1,101 @@
+[
+  {
+    "periode": {
+      "fom": "2025-03",
+      "til": "2025-11"
+    },
+    "søknadsbarnReferanse": "Person_Løpende_Søknadsbarn",
+    "grunnlagListe": [
+      {
+        "referanse": "Person_Løpende_Søknadsbarn",
+        "type": "PERSON_SØKNADSBARN",
+        "innhold": {
+          "ident": "11111111113",
+          "navn": "Løpende Søknadsbarn",
+          "fødselsdato": "2019-02-23"
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderReferanse": null
+      },
+      {
+        "referanse": "Person_Bidragspliktig",
+        "type": "PERSON_BIDRAGSPLIKTIG",
+        "innhold": {
+          "ident": "33333333333",
+          "navn": "Motvillig Bidragspliktig",
+          "fødselsdato": "1981-07-13"
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderReferanse": null
+      },
+      {
+        "referanse": "Delberegning_Samværsfradrag_Person_Løpende_Søknadsbarn_202503_202506",
+        "type": "DELBEREGNING_SAMVÆRSFRADRAG",
+        "innhold": {
+          "periode": {
+            "fom": "2025-03",
+            "til": "2025-06"
+          },
+          "beløp": 1000,
+          "manueltRegistrert": false
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderBarnReferanse": "Person_Løpende_Søknadsbarn",
+        "gjelderReferanse": "Person_Bidragspliktig"
+      },
+      {
+        "referanse": "Delberegning_Samværsfradrag_Person_Løpende_Søknadsbarn_202506",
+        "type": "DELBEREGNING_SAMVÆRSFRADRAG",
+        "innhold": {
+          "periode": {
+            "fom": "2025-06",
+            "til": null
+          },
+          "beløp": 500,
+          "manueltRegistrert": false
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderBarnReferanse": "Person_Løpende_Søknadsbarn",
+        "gjelderReferanse": "Person_Bidragspliktig"
+      },
+      {
+        "referanse": "løpende_bidrag_grunnlag_bidragspliktig_Person_Løpende_Søknadsbarn_202503_202506",
+        "type": "LØPENDE_BIDRAG_PERIODE",
+        "innhold": {
+          "periode": {
+            "fom": "2025-03",
+            "til": "2025-06"
+          },
+          "saksnummer": "1111111",
+          "stønadstype": "BIDRAG",
+          "løpendeBeløp": 2500,
+          "samværsklasse": "SAMVÆRSKLASSE_1",
+          "beregnetBeløp": 5000,
+          "faktiskBeløp": 4000
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderBarnReferanse": "Person_Løpende_Søknadsbarn",
+        "gjelderReferanse": "Person_Bidragspliktig"
+      },
+      {
+        "referanse": "løpende_bidrag_grunnlag_bidragspliktig_Person_Løpende_Søknadsbarn_202506",
+        "type": "LØPENDE_BIDRAG_PERIODE",
+        "innhold": {
+          "periode": {
+            "fom": "2025-06",
+            "til": null
+          },
+          "saksnummer": "1111111",
+          "stønadstype": "BIDRAG",
+          "løpendeBeløp": 500,
+          "samværsklasse": "SAMVÆRSKLASSE_1",
+          "beregnetBeløp": 1000,
+          "faktiskBeløp": 1000
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderBarnReferanse": "Person_Løpende_Søknadsbarn",
+        "gjelderReferanse": "Person_Bidragspliktig"
+      }
+    ]
+  }
+]
