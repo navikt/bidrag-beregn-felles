@@ -1,6 +1,7 @@
 package no.nav.bidrag.beregn.barnebidrag.service.orkestrering
 
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
+import no.nav.bidrag.beregn.barnebidrag.service.beregning.BeregnetBarnebidragResultatV2
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.beregning.Beregningstype
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -19,7 +20,6 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragspliktig
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
-import no.nav.bidrag.transport.behandling.felles.grunnlag.finnGyldigeGrunnlagForBarn
 import no.nav.bidrag.transport.behandling.felles.grunnlag.personIdent
 import org.springframework.context.annotation.Import
 import org.springframework.stereotype.Service
@@ -47,59 +47,86 @@ class BidragsberegningOrkestrator(
                 )
                 val løpendeBidragListe = evnevurderingBeregningResultat.tilGrunnlagDto(bidragspliktig.referanse)
 
-                // Kaller beregning for ett og ett søknadsbarn
-                val respons = request.beregningBarn.map { beregningBarn ->
-                    val bidragsmottakerReferanse =
-                        request.grunnlagsliste.filtrerOgKonverterBasertPåEgenReferanse<Person>(Grunnlagstype.PERSON_SØKNADSBARN)
-                            .firstOrNull { it.referanse == beregningBarn.søknadsbarnreferanse }
-                            ?.innhold?.bidragsmottaker
-                            ?: throw IllegalArgumentException(
-                                "Finner ikke bidragsmottaker for søknadsbarn med referanse ${beregningBarn.søknadsbarnreferanse}",
-                            )
-
-                    try {
-                        val beregningResultat = if (request.erDirekteAvslag) {
-                            barnebidragApi.opprettAvslag(
-                                beregnGrunnlag = beregningBarn.tilBeregnGrunnlagV1(
-                                    request.grunnlagsliste,
-                                ).leggTilÅpenSluttperiodeHvisDirekteAvslagBeregning(),
-                            )
-                        } else {
-                            barnebidragApi.beregn(
-                                beregnGrunnlag = beregningBarn.tilBeregnGrunnlagV1(
-                                    request.grunnlagsliste.finnGyldigeGrunnlagForBarn(
-                                        bmRef = bidragsmottakerReferanse,
-                                        bpRef = bidragspliktig.referanse,
-                                        barnRef = beregningBarn.søknadsbarnreferanse,
+                // Sjekk om det skal gis direkte avslag for alle barn
+                if (request.erDirekteAvslag) {
+                    // Kaller beregning for ett og ett søknadsbarn
+                    val respons = request.beregningBarn.map { beregningBarn ->
+                        try {
+                            val beregningResultat =
+                                barnebidragApi.opprettAvslag(
+                                    beregnGrunnlag = beregningBarn.tilBeregnGrunnlagV1(
+                                        request.grunnlagsliste,
+                                    ).leggTilÅpenSluttperiodeHvisDirekteAvslagBeregning(),
+                                )
+                            BidragsberegningResultatBarnV2(
+                                søknadsbarnreferanse = beregningBarn.søknadsbarnreferanse,
+                                resultatVedtakListe = listOf(
+                                    ResultatVedtakV2(
+                                        periodeListe = beregningResultat.beregnetBarnebidragPeriodeListe,
+                                        delvedtak = false,
+                                        omgjøringsvedtak = false,
+                                        vedtakstype = Vedtakstype.ENDRING,
                                     ),
                                 ),
-                            )
+                            ) to beregningResultat.grunnlagListe
+                        } catch (e: Exception) {
+                            BidragsberegningResultatBarnV2(
+                                søknadsbarnreferanse = beregningBarn.søknadsbarnreferanse,
+                                resultatVedtakListe = emptyList(),
+                                beregningsfeil = e,
+                            ) to request.grunnlagsliste
                         }
-                        BidragsberegningResultatBarnV2(
-                            søknadsbarnreferanse = beregningBarn.søknadsbarnreferanse,
-                            resultatVedtakListe = listOf(
-                                ResultatVedtakV2(
-                                    periodeListe = beregningResultat.beregnetBarnebidragPeriodeListe,
-                                    delvedtak = false,
-                                    omgjøringsvedtak = false,
-                                    vedtakstype = Vedtakstype.ENDRING,
-                                ),
-                            ),
-                        ) to beregningResultat.grunnlagListe
+                    }
+                    secureLogger.debug { "Direkte avslag, respons fra beregning: $respons" }
+
+                    return BidragsberegningOrkestratorResponseV2(
+                        grunnlagListe = respons.flatMap { it.second }.distinct(),
+                        resultat = respons.map { it.first },
+                    )
+                } else {
+                    // Kaller beregning for alle barn samlet
+                    val grunnlagSøknadsbarnListe = request.tilListeBeregnGrunnlagV1(
+                        grunnlagListe = request.grunnlagsliste,
+                    )
+                    return try {
+                        val beregningResultatListe: List<BeregnetBarnebidragResultatV2> =
+                            barnebidragApi.beregnV2(
+                                beregningsperiode = request.beregningsperiode,
+                                grunnlagSøknadsbarnListe = grunnlagSøknadsbarnListe,
+                                grunnlagLøpendeBidragListe = emptyList(), // TODO
+                            )
+
+                        secureLogger.debug { "Resultat av bidragsberegning: $beregningResultatListe" }
+                        BidragsberegningOrkestratorResponseV2(
+                            grunnlagListe = beregningResultatListe
+                                .flatMap { it.beregnetBarnebidragResultat.grunnlagListe }
+                                .distinctBy { it.referanse },
+                            resultat = beregningResultatListe.map {
+                                BidragsberegningResultatBarnV2(
+                                    søknadsbarnreferanse = it.søknadsbarnreferanse,
+                                    resultatVedtakListe = listOf(
+                                        ResultatVedtakV2(
+                                            periodeListe = it.beregnetBarnebidragResultat.beregnetBarnebidragPeriodeListe,
+                                            vedtakstype = Vedtakstype.ENDRING,
+                                        ),
+                                    ),
+                                )
+                            },
+                        )
                     } catch (e: Exception) {
-                        BidragsberegningResultatBarnV2(
-                            søknadsbarnreferanse = beregningBarn.søknadsbarnreferanse,
-                            resultatVedtakListe = emptyList(),
-                            beregningsfeil = e,
-                        ) to request.grunnlagsliste
+                        secureLogger.error(e) { "Feil ved beregning for flere barn i bidragsberegningorkestrator" }
+                        BidragsberegningOrkestratorResponseV2(
+                            grunnlagListe = request.grunnlagsliste,
+                            resultat = request.beregningBarn.map {
+                                BidragsberegningResultatBarnV2(
+                                    søknadsbarnreferanse = it.søknadsbarnreferanse,
+                                    resultatVedtakListe = emptyList(),
+                                    beregningsfeil = e,
+                                )
+                            },
+                        )
                     }
                 }
-
-                secureLogger.debug { "Resultat av bidragsberegning: $respons" }
-                return BidragsberegningOrkestratorResponseV2(
-                    grunnlagListe = respons.flatMap { it.second }.distinct(),
-                    resultat = respons.map { it.first },
-                )
             }
 
             Beregningstype.OMGJØRING -> {
@@ -109,7 +136,8 @@ class BidragsberegningOrkestrator(
                         val klageberegningResultat = if (request.erDirekteAvslag) {
                             // Avslagsperiode skal alltid være løpende hvis det ikke kommer noe periode etter opphøret (feks ved etterfølgende vedtak i orkestrering)
                             barnebidragApi.opprettAvslag(
-                                beregnGrunnlag = it.tilBeregnGrunnlagV1(request.grunnlagsliste).leggTilÅpenSluttperiodeHvisDirekteAvslagBeregning(),
+                                beregnGrunnlag = it.tilBeregnGrunnlagV1(request.grunnlagsliste)
+                                    .leggTilÅpenSluttperiodeHvisDirekteAvslagBeregning(),
                             )
                         } else {
                             barnebidragApi.beregn(
@@ -148,7 +176,8 @@ class BidragsberegningOrkestrator(
                     try {
                         val klageberegningResultat = if (request.erDirekteAvslag) {
                             barnebidragApi.opprettAvslag(
-                                beregnGrunnlag = barn.tilBeregnGrunnlagV1(request.grunnlagsliste).leggTilÅpenSluttperiodeHvisDirekteAvslagBeregning(),
+                                beregnGrunnlag = barn.tilBeregnGrunnlagV1(request.grunnlagsliste)
+                                    .leggTilÅpenSluttperiodeHvisDirekteAvslagBeregning(),
                             )
                         } else {
                             barnebidragApi.beregn(
@@ -420,6 +449,11 @@ class BidragsberegningOrkestrator(
         søknadsbarnReferanse = søknadsbarnreferanse,
         grunnlagListe = grunnlagListe,
     )
+
+    private fun BidragsberegningOrkestratorRequestV2.tilListeBeregnGrunnlagV1(grunnlagListe: List<GrunnlagDto>): List<BeregnGrunnlag> =
+        beregningBarn.map { beregningBarn ->
+            beregningBarn.tilBeregnGrunnlagV1(grunnlagListe)
+        }
 
     // Henter alle søknadsbarn og deres referanser og personidenter fra grunnlagslista
     private fun hentAlleSøknadsbarn(beregningBarnListe: List<BeregningGrunnlagV2>, grunnlagsliste: List<GrunnlagDto>): Map<Personident, String> {

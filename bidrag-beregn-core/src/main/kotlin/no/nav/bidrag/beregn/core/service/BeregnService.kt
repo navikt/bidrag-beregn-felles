@@ -33,6 +33,7 @@ import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
 import no.nav.bidrag.domene.enums.inntekt.Inntektstype
 import no.nav.bidrag.domene.enums.inntekt.Inntektstype.Companion.inngårIInntektRapporteringer
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndringSjekkGrense
@@ -40,6 +41,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSumInntekt
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonTrinnvisSkattesats
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettSjablonreferanse
@@ -397,4 +399,41 @@ abstract class BeregnService {
         objectMapper.dateFormat = SimpleDateFormat("yyyy-MM-dd")
         return objectMapper.writeValueAsString(json)
     }
+
+    // Sjekker om søknadsbarnet fyller 18 år i beregningsperioden. Justerer i så fall til-periode. Hvis stønadstype er BIDRAG18AAR skal det ikke
+    // sjekkes om barnet blir 18 år i perioden,
+    protected fun justerTilPeriodeHvisBarnetBlir18ÅrIBeregningsperioden(mottattGrunnlag: BeregnGrunnlag): BeregnGrunnlagJustert {
+        if (mottattGrunnlag.stønadstype == Stønadstype.BIDRAG18AAR) {
+            return BeregnGrunnlagJustert(
+                beregnGrunnlag = mottattGrunnlag,
+                åpenSluttperiode =
+                mottattGrunnlag.opphørsdato == null || mottattGrunnlag.opphørsdato!!.isAfter(YearMonth.now()),
+            )
+        }
+
+        val periodeSøknadsbarnetFyller18År = mottattGrunnlag.grunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<Person>(Grunnlagstype.PERSON_SØKNADSBARN)
+            .map { YearMonth.from(it.innhold.fødselsdato.plusYears(18)) }
+            .first()
+
+        return if (periodeSøknadsbarnetFyller18År.isBefore(mottattGrunnlag.periode.til)) {
+            BeregnGrunnlagJustert(
+                beregnGrunnlag = mottattGrunnlag.copy(
+                    periode = mottattGrunnlag.periode.copy(til = periodeSøknadsbarnetFyller18År.plusMonths(1)),
+                ),
+                åpenSluttperiode = false,
+            )
+        } else {
+            BeregnGrunnlagJustert(
+                beregnGrunnlag = mottattGrunnlag,
+                åpenSluttperiode =
+                mottattGrunnlag.opphørsdato == null || mottattGrunnlag.opphørsdato!!.isAfter(YearMonth.now()),
+            )
+        }
+    }
+
+    protected fun BeregnGrunnlagJustert.utvidMedNyeGrunnlag(nyeGrunnlag: List<GrunnlagDto>) =
+        copy(beregnGrunnlag = beregnGrunnlag.copy(grunnlagListe = (beregnGrunnlag.grunnlagListe + nyeGrunnlag).distinctBy { it.referanse }))
+
+    data class BeregnGrunnlagJustert(val beregnGrunnlag: BeregnGrunnlag, val åpenSluttperiode: Boolean)
 }
