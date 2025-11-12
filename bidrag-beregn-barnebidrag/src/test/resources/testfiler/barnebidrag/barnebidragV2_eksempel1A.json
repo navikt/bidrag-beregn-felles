@@ -1,0 +1,288 @@
+[
+  {
+    "periode": {
+      "fom": "2020-08",
+      "til": "2021-01"
+    },
+    "søknadsbarnReferanse": "Person_Søknadsbarn_01",
+    "grunnlagListe": [
+      {
+        "referanse": "Person_Søknadsbarn_01",
+        "type": "PERSON_SØKNADSBARN",
+        "innhold": {
+          "ident": "11111111111",
+          "navn": "Trengende Søknadsbarn",
+          "fødselsdato": "2012-09-13"
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderReferanse": null
+      },
+      {
+        "referanse": "Person_Bidragsmottaker_01",
+        "type": "PERSON_BIDRAGSMOTTAKER",
+        "innhold": {
+          "ident": "22222222221",
+          "navn": "Søkende Bidragsmottaker",
+          "fødselsdato": "1982-05-05"
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderReferanse": null
+      },
+      {
+        "referanse": "Person_Bidragspliktig",
+        "type": "PERSON_BIDRAGSPLIKTIG",
+        "innhold": {
+          "ident": "33333333331",
+          "navn": "Motvillig Bidragspliktig",
+          "fødselsdato": "1981-07-13"
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderReferanse": null
+      },
+      {
+        "referanse": "Mottatt_InntektRapportering_Ainntekt_Bidragspliktig_202008",
+        "type": "INNTEKT_RAPPORTERING_PERIODE",
+        "innhold": {
+          "periode": {
+            "fom": "2020-08",
+            "til": null
+          },
+          "inntektsrapportering": "AINNTEKT",
+          "gjelderBarn": null,
+          "beløp": 500000,
+          "manueltRegistrert": false,
+          "valgt": true
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderBarnReferanse": null,
+        "gjelderReferanse": "Person_Bidragspliktig"
+      },
+      {
+        "referanse": "Mottatt_InntektRapportering_Ainntekt_Bidragsmottaker_01_202008",
+        "type": "INNTEKT_RAPPORTERING_PERIODE",
+        "innhold": {
+          "periode": {
+            "fom": "2020-08",
+            "til": null
+          },
+          "inntektsrapportering": "AINNTEKT",
+          "gjelderBarn": null,
+          "beløp": 300000,
+          "manueltRegistrert": false,
+          "valgt": true
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderBarnReferanse": null,
+        "gjelderReferanse": "Person_Bidragsmottaker_01"
+      },
+      {
+        "referanse": "Mottatt_InntektRapportering_Ainntekt_Søknadsbarn_01_202008",
+        "type": "INNTEKT_RAPPORTERING_PERIODE",
+        "innhold": {
+          "periode": {
+            "fom": "2020-08",
+            "til": null
+          },
+          "inntektsrapportering": "AINNTEKT",
+          "gjelderBarn": null,
+          "beløp": 0,
+          "manueltRegistrert": false,
+          "valgt": true
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderBarnReferanse": null,
+        "gjelderReferanse": "Person_Søknadsbarn_01"
+      },
+      {
+        "referanse": "Bostatus_Søknadsbarn_01_202008",
+        "type": "BOSTATUS_PERIODE",
+        "innhold": {
+          "periode": {
+            "fom": "2020-08",
+            "til": null
+          },
+          "bostatus": "IKKE_MED_FORELDER",
+          "manueltRegistrert": false,
+          "relatertTilPart": "Person_Bidragspliktig"
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderBarnReferanse": "Person_Søknadsbarn_01",
+        "gjelderReferanse": "Person_Bidragspliktig"
+      },
+      {
+        "referanse": "Bostatus_Bidragspliktig_202008",
+        "type": "BOSTATUS_PERIODE",
+        "innhold": {
+          "periode": {
+            "fom": "2020-08",
+            "til": null
+          },
+          "bostatus": "BOR_MED_ANDRE_VOKSNE",
+          "manueltRegistrert": false,
+          "relatertTilPart": "Person_Bidragspliktig"
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderBarnReferanse": null,
+        "gjelderReferanse": "Person_Bidragspliktig"
+      },
+      {
+        "referanse": "Mottatt_Samværsperiode_Søknadsbarn_01_202008",
+        "type": "SAMVÆRSPERIODE",
+        "innhold": {
+          "periode": {
+            "fom": "2020-08",
+            "til": null
+          },
+          "samværsklasse": "SAMVÆRSKLASSE_1",
+          "manueltRegistrert": false
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderBarnReferanse": "Person_Søknadsbarn_01",
+        "gjelderReferanse": "Person_Bidragspliktig"
+      }
+    ]
+  },
+  {
+    "periode": {
+      "fom": "2020-08",
+      "til": "2021-01"
+    },
+    "søknadsbarnReferanse": "Person_Søknadsbarn_02",
+    "grunnlagListe": [
+      {
+        "referanse": "Person_Søknadsbarn_02",
+        "type": "PERSON_SØKNADSBARN",
+        "innhold": {
+          "ident": "11111111112",
+          "navn": "Masete Søknadsbarn",
+          "fødselsdato": "2017-08-23"
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderReferanse": null
+      },
+      {
+        "referanse": "Person_Bidragsmottaker_02",
+        "type": "PERSON_BIDRAGSMOTTAKER",
+        "innhold": {
+          "ident": "22222222222",
+          "navn": "Krevende Bidragsmottaker",
+          "fødselsdato": "1982-05-05"
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderReferanse": null
+      },
+      {
+        "referanse": "Person_Bidragspliktig",
+        "type": "PERSON_BIDRAGSPLIKTIG",
+        "innhold": {
+          "ident": "33333333331",
+          "navn": "Motvillig Bidragspliktig",
+          "fødselsdato": "1981-07-13"
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderReferanse": null
+      },
+      {
+        "referanse": "Mottatt_InntektRapportering_Ainntekt_Bidragspliktig_202008",
+        "type": "INNTEKT_RAPPORTERING_PERIODE",
+        "innhold": {
+          "periode": {
+            "fom": "2020-08",
+            "til": null
+          },
+          "inntektsrapportering": "AINNTEKT",
+          "gjelderBarn": null,
+          "beløp": 400000,
+          "manueltRegistrert": false,
+          "valgt": true
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderBarnReferanse": null,
+        "gjelderReferanse": "Person_Bidragspliktig"
+      },
+      {
+        "referanse": "Mottatt_InntektRapportering_Ainntekt_Bidragsmottaker_02_202008",
+        "type": "INNTEKT_RAPPORTERING_PERIODE",
+        "innhold": {
+          "periode": {
+            "fom": "2020-08",
+            "til": null
+          },
+          "inntektsrapportering": "AINNTEKT",
+          "gjelderBarn": null,
+          "beløp": 500000,
+          "manueltRegistrert": false,
+          "valgt": true
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderBarnReferanse": null,
+        "gjelderReferanse": "Person_Bidragsmottaker_02"
+      },
+      {
+        "referanse": "Mottatt_InntektRapportering_Ainntekt_Søknadsbarn_02_202008",
+        "type": "INNTEKT_RAPPORTERING_PERIODE",
+        "innhold": {
+          "periode": {
+            "fom": "2020-08",
+            "til": null
+          },
+          "inntektsrapportering": "AINNTEKT",
+          "gjelderBarn": null,
+          "beløp": 1000,
+          "manueltRegistrert": false,
+          "valgt": true
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderBarnReferanse": null,
+        "gjelderReferanse": "Person_Søknadsbarn_02"
+      },
+      {
+        "referanse": "Bostatus_Søknadsbarn_02_202008",
+        "type": "BOSTATUS_PERIODE",
+        "innhold": {
+          "periode": {
+            "fom": "2020-08",
+            "til": null
+          },
+          "bostatus": "MED_FORELDER",
+          "manueltRegistrert": false,
+          "relatertTilPart": "Person_Bidragspliktig"
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderBarnReferanse": "Person_Søknadsbarn_02",
+        "gjelderReferanse": "Person_Bidragspliktig"
+      },
+      {
+        "referanse": "Bostatus_Bidragspliktig_202008",
+        "type": "BOSTATUS_PERIODE",
+        "innhold": {
+          "periode": {
+            "fom": "2020-08",
+            "til": null
+          },
+          "bostatus": "BOR_MED_ANDRE_VOKSNE",
+          "manueltRegistrert": false,
+          "relatertTilPart": "Person_Bidragspliktig"
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderBarnReferanse": null,
+        "gjelderReferanse": "Person_Bidragspliktig"
+      },
+      {
+        "referanse": "Mottatt_Samværsperiode_Søknadsbarn_02_202008",
+        "type": "SAMVÆRSPERIODE",
+        "innhold": {
+          "periode": {
+            "fom": "2020-08",
+            "til": null
+          },
+          "samværsklasse": "SAMVÆRSKLASSE_0",
+          "manueltRegistrert": false
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderBarnReferanse": "Person_Søknadsbarn_02",
+        "gjelderReferanse": "Person_Bidragspliktig"
+      }
+    ]
+  }
+]

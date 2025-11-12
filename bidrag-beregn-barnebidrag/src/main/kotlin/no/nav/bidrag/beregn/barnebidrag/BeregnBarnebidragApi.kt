@@ -3,8 +3,10 @@ package no.nav.bidrag.beregn.barnebidrag
 import no.nav.bidrag.beregn.barnebidrag.bo.BeregnEndeligBidragServiceRespons
 import no.nav.bidrag.beregn.barnebidrag.service.beregning.BeregnAldersjusteringService
 import no.nav.bidrag.beregn.barnebidrag.service.beregning.BeregnBarnebidragService
+import no.nav.bidrag.beregn.barnebidrag.service.beregning.BeregnetBarnebidragResultatV2
 import no.nav.bidrag.commons.service.sjablon.EnableSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
+import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BidragsberegningResultatBarnV2
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
@@ -43,7 +45,17 @@ class BeregnBarnebidragApi {
 
     fun beregn(beregnGrunnlag: BeregnGrunnlag): BeregnetBarnebidragResultat = service.beregnBarnebidrag(beregnGrunnlag)
 
-    fun beregnV2(beregnGrunnlagListe: List<BeregnGrunnlag>): List<Pair<BidragsberegningResultatBarnV2, List<GrunnlagDto>>> =
+    fun beregnV2(
+        beregningsperiode: ÅrMånedsperiode,
+        grunnlagSøknadsbarnListe: List<BeregnGrunnlag>,
+        grunnlagLøpendeBidragListe: List<BeregnGrunnlag>,
+    ): List<BeregnetBarnebidragResultatV2> = service.beregnBarnebidragV2(
+        beregningsperiode = beregningsperiode,
+        grunnlagSøknadsbarnListe = grunnlagSøknadsbarnListe,
+        grunnlagLøpendeBidragListe = grunnlagLøpendeBidragListe,
+    )
+
+    fun beregnAlleSøknadsbarn(beregnGrunnlagListe: List<BeregnGrunnlag>): List<Pair<BidragsberegningResultatBarnV2, List<GrunnlagDto>>> =
         service.beregnBarnebidragAlleSøknadsbarn(beregnGrunnlagListe)
 
     fun opprettAvslag(beregnGrunnlag: BeregnGrunnlag): BeregnetBarnebidragResultat = service.opprettAvslagResultat(beregnGrunnlag)

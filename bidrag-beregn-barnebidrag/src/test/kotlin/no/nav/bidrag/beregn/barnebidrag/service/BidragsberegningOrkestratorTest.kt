@@ -108,6 +108,26 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
     }
 
     @Test
+    fun `gi direkte avslag`() {
+        filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/test01_v3_direkte_avslag_bidrag_grunnlag.json"
+        val beregnRequest = lesFilOgByggRequestGenerisk<BidragsberegningOrkestratorRequestV2>(filnavnBeregnGrunnlag)
+
+        val beregnResponse = bidragsberegningOrkestrator.utførBidragsberegningV3(beregnRequest)
+        printJson(beregnResponse)
+
+        assertSoftly(beregnResponse) {
+            grunnlagListe shouldHaveAtLeastSize 1
+            resultat shouldHaveSize 2
+            resultat.all { resultatVedtak ->
+                resultatVedtak.resultatVedtakListe.all { vedtak ->
+                    vedtak.periodeListe.shouldHaveSize(1)
+                    vedtak.periodeListe.all { periode -> periode.resultat.beløp == null }
+                }
+            } shouldBe true
+        }
+    }
+
+    @Test
     fun `beregn bidrag v3 - 1 BM, 2 søknadsbarn - ingen løpende stønader`() {
         filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/test01_v3_beregn_bidrag_grunnlag.json"
         val beregnRequest = lesFilOgByggRequestGenerisk<BidragsberegningOrkestratorRequestV2>(filnavnBeregnGrunnlag)
