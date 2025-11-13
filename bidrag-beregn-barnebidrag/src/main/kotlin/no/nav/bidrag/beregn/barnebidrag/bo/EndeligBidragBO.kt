@@ -323,4 +323,8 @@ data class EndeligBidragBeregnetBeregningGrunnlag(
     val samværsfradragBeregningGrunnlag: SamværsfradragDelberegningBeregningGrunnlag,
 )
 
-data class EndeligBidragBeregnetBeregningResultat(val endeligBidragBeregnet: BigDecimal, val grunnlagsreferanseListe: List<String> = emptyList())
+data class EndeligBidragBeregnetBeregningResultat(
+    val beregnetBeløp: BigDecimal,
+    val resultatBeløp: BigDecimal,
+    val grunnlagsreferanseListe: List<String> = emptyList(),
+)

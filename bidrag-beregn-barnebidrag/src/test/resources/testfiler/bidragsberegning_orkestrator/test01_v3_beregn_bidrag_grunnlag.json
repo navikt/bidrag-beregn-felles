@@ -1,22 +1,22 @@
 {
   "beregningsperiode": {
-    "fom": "2025-01",
-    "til": "2025-10"
+    "fom": "2024-01",
+    "til": "2024-10"
   },
   "beregningBarn": [
     {
       "søknadsbarnreferanse": "Person_Søknadsbarn_01",
       "periode": {
-        "fom": "2025-01",
-        "til": "2025-10"
+        "fom": "2024-01",
+        "til": "2024-10"
       },
       "stønadstype": "BIDRAG"
     },
     {
       "søknadsbarnreferanse": "Person_Søknadsbarn_02",
       "periode": {
-        "fom": "2025-01",
-        "til": "2025-10"
+        "fom": "2024-01",
+        "til": "2024-10"
       },
       "stønadstype": "BIDRAG"
     }
@@ -69,11 +69,11 @@
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
-      "referanse": "Mottatt_InntektRapportering_Ainntekt_Bidragspliktig_202501",
+      "referanse": "Mottatt_InntektRapportering_Ainntekt_Bidragspliktig_202401",
       "type": "INNTEKT_RAPPORTERING_PERIODE",
       "innhold": {
         "periode": {
-          "fom": "2025-01",
+          "fom": "2024-01",
           "til": null
         },
         "inntektsrapportering": "AINNTEKT",
@@ -87,11 +87,11 @@
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
-      "referanse": "Mottatt_InntektRapportering_Ainntekt_Bidragsmottaker_202501",
+      "referanse": "Mottatt_InntektRapportering_Ainntekt_Bidragsmottaker_202401",
       "type": "INNTEKT_RAPPORTERING_PERIODE",
       "innhold": {
         "periode": {
-          "fom": "2025-01",
+          "fom": "2024-01",
           "til": null
         },
         "inntektsrapportering": "AINNTEKT",
@@ -105,11 +105,11 @@
       "gjelderReferanse": "Person_Bidragsmottaker"
     },
     {
-      "referanse": "Mottatt_InntektRapportering_Ainntekt_Søknadsbarn_01_202501",
+      "referanse": "Mottatt_InntektRapportering_Ainntekt_Søknadsbarn_01_202401",
       "type": "INNTEKT_RAPPORTERING_PERIODE",
       "innhold": {
         "periode": {
-          "fom": "2025-01",
+          "fom": "2024-01",
           "til": null
         },
         "inntektsrapportering": "AINNTEKT",
@@ -123,11 +123,11 @@
       "gjelderReferanse": "Person_Søknadsbarn_01"
     },
     {
-      "referanse": "Bostatus_Søknadsbarn_01_202501",
+      "referanse": "Bostatus_Søknadsbarn_01_202401",
       "type": "BOSTATUS_PERIODE",
       "innhold": {
         "periode": {
-          "fom": "2025-01",
+          "fom": "2024-01",
           "til": null
         },
         "bostatus": "IKKE_MED_FORELDER",
@@ -139,11 +139,11 @@
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
-      "referanse": "Bostatus_Søknadsbarn_02_202501",
+      "referanse": "Bostatus_Søknadsbarn_02_202401",
       "type": "BOSTATUS_PERIODE",
       "innhold": {
         "periode": {
-          "fom": "2025-01",
+          "fom": "2024-01",
           "til": null
         },
         "bostatus": "MED_FORELDER",
@@ -155,11 +155,11 @@
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
-      "referanse": "Bostatus_Bidragspliktig_202501",
+      "referanse": "Bostatus_Bidragspliktig_202401",
       "type": "BOSTATUS_PERIODE",
       "innhold": {
         "periode": {
-          "fom": "2025-01",
+          "fom": "2024-01",
           "til": null
         },
         "bostatus": "BOR_MED_ANDRE_VOKSNE",
@@ -171,11 +171,11 @@
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
-      "referanse": "Mottatt_Samværsperiode_Søknadsbarn_01_202501",
+      "referanse": "Mottatt_Samværsperiode_Søknadsbarn_01_202401",
       "type": "SAMVÆRSPERIODE",
       "innhold": {
         "periode": {
-          "fom": "2025-01",
+          "fom": "2024-01",
           "til": null
         },
         "samværsklasse": "SAMVÆRSKLASSE_1",
@@ -186,11 +186,11 @@
       "gjelderReferanse": "Person_Bidragspliktig"
     },
     {
-      "referanse": "Mottatt_Samværsperiode_Søknadsbarn_02_202501",
+      "referanse": "Mottatt_Samværsperiode_Søknadsbarn_02_202401",
       "type": "SAMVÆRSPERIODE",
       "innhold": {
         "periode": {
-          "fom": "2025-01",
+          "fom": "2024-01",
           "til": null
         },
         "samværsklasse": "SAMVÆRSKLASSE_2",

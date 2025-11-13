@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.barnebidrag.api
 
 import no.nav.bidrag.beregn.barnebidrag.felles.FellesTest
 import no.nav.bidrag.beregn.barnebidrag.service.beregning.BeregnEndeligBidragServiceV2
+import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.web.mock.stubSjablonProvider
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
@@ -29,6 +30,7 @@ import java.time.YearMonth
 @ExtendWith(MockitoExtension::class)
 internal class BeregnEndeligBidragTestV2 : FellesTest() {
     private lateinit var filnavn: String
+    private lateinit var filnavnLøpendeBidrag: String
 
     // BidragTilFordeling
     private lateinit var forventetUMinusNettoBarnetilleggBM: BigDecimal
@@ -63,7 +65,8 @@ internal class BeregnEndeligBidragTestV2 : FellesTest() {
     private var forventetAntallDelberegningNettoBarnetilleggBP: Int = 1
 
     // EndeligBidragBeregnet
-    private lateinit var forventetEndeligBidragBeregnet: BigDecimal
+    private lateinit var forventetBeregnetBeløp: BigDecimal
+    private lateinit var forventetResultatBeløp: BigDecimal
 
     @BeforeEach
     fun initMock() {
@@ -207,11 +210,19 @@ internal class BeregnEndeligBidragTestV2 : FellesTest() {
             { assertThat(resultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null)) },
             { assertThat(resultatListe[0].sumBidragTilFordeling).isEqualTo(forventetSumBidragTilFordeling) },
             { assertThat(resultatListe[0].sumPrioriterteBidragTilFordeling).isEqualTo(forventetSumPrioriterteBidragTilFordeling) },
-            { assertThat(resultatListe[0].erKompletteGrunnlagForAlleLøpendeBidrag).isEqualTo(forventetErKompletteGrunnlagForAlleLøpendeBidrag) },
+            {
+                assertThat(resultatListe[0].erKompletteGrunnlagForAlleLøpendeBidrag).isEqualTo(
+                    forventetErKompletteGrunnlagForAlleLøpendeBidrag,
+                )
+            },
 
             // Grunnlag
             { assertThat(antallDelberegningBidragTilFordeling).isEqualTo(forventetAntallDelberegningBidragTilFordeling) },
-            { assertThat(antallDelberegningBidragTilFordelingLøpendeBidrag).isEqualTo(forventetAntallDelberegningBidragTilFordelingLøpendeBidrag) },
+            {
+                assertThat(antallDelberegningBidragTilFordelingLøpendeBidrag).isEqualTo(
+                    forventetAntallDelberegningBidragTilFordelingLøpendeBidrag,
+                )
+            },
 
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
@@ -329,7 +340,11 @@ internal class BeregnEndeligBidragTestV2 : FellesTest() {
 
             // Resultat
             { assertThat(andelAvBidragsevneResultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null)) },
-            { assertThat(andelAvBidragsevneResultatListe[0].andelAvSumBidragTilFordelingFaktor).isEqualTo(forventetAndelAvSumBidragTilFordelingFaktor) },
+            {
+                assertThat(andelAvBidragsevneResultatListe[0].andelAvSumBidragTilFordelingFaktor).isEqualTo(
+                    forventetAndelAvSumBidragTilFordelingFaktor,
+                )
+            },
             { assertThat(andelAvBidragsevneResultatListe[0].andelAvEvneBeløp).isEqualTo(forventetAndelAvEvneBeløp) },
             { assertThat(andelAvBidragsevneResultatListe[0].bidragEtterFordeling).isEqualTo(forventetBidragEtterFordeling) },
             { assertThat(andelAvBidragsevneResultatListe[0].harBPFullEvne).isEqualTo(forventetHarBPFullEvne) },
@@ -485,7 +500,8 @@ internal class BeregnEndeligBidragTestV2 : FellesTest() {
     @DisplayName("Endelig bidrag beregnet - eksempel 1 - beregnet bidrag > 0")
     fun testEndeligBidragBeregnet_Eksempel1() {
         filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidragberegnet_eksempel1.json"
-        forventetEndeligBidragBeregnet = BigDecimal.valueOf(2200).setScale(2)
+        forventetBeregnetBeløp = BigDecimal.valueOf(2200).setScale(2)
+        forventetResultatBeløp = BigDecimal.valueOf(2200).setScale(0)
         utførBeregningerOgEvaluerResultatEndeligBidragBeregnet()
     }
 
@@ -493,7 +509,8 @@ internal class BeregnEndeligBidragTestV2 : FellesTest() {
     @DisplayName("Endelig bidrag beregnet - eksempel 2 - beregnet bidrag < 0")
     fun testEndeligBidragBeregnet_Eksempel2() {
         filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidragberegnet_eksempel2.json"
-        forventetEndeligBidragBeregnet = BigDecimal.ZERO.setScale(2)
+        forventetBeregnetBeløp = BigDecimal.ZERO.setScale(2)
+        forventetResultatBeløp = BigDecimal.ZERO.setScale(0)
         utførBeregningerOgEvaluerResultatEndeligBidragBeregnet()
     }
 
@@ -510,7 +527,8 @@ internal class BeregnEndeligBidragTestV2 : FellesTest() {
             .map {
                 DelberegningEndeligBidragBeregnet(
                     periode = it.innhold.periode,
-                    endeligBidrag = it.innhold.endeligBidrag,
+                    beregnetBeløp = it.innhold.beregnetBeløp,
+                    resultatBeløp = it.innhold.resultatBeløp,
                 )
             }
 
@@ -529,7 +547,8 @@ internal class BeregnEndeligBidragTestV2 : FellesTest() {
 
             // Resultat
             { assertThat(resultatListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2024-08"), null)) },
-            { assertThat(resultatListe[0].endeligBidrag).isEqualTo(forventetEndeligBidragBeregnet) },
+            { assertThat(resultatListe[0].beregnetBeløp).isEqualTo(forventetBeregnetBeløp) },
+            { assertThat(resultatListe[0].resultatBeløp).isEqualTo(forventetResultatBeløp) },
 
             // Grunnlag
             { assertThat(antallDelberegningBidragJustertForBPBarnetillegg).isEqualTo(1) },
@@ -538,5 +557,344 @@ internal class BeregnEndeligBidragTestV2 : FellesTest() {
             // Referanser
             { assertThat(alleReferanser).containsAll(alleRefererteReferanser) },
         )
+    }
+
+    @Test
+    @DisplayName("Endelig bidrag - eksempel 1 - kaller alle delberegninger som inngår i endelig bidrag")
+    fun testEndeligBidrag_Eksempel1() {
+        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidragv2_søknadsbarn_eksempel1.json"
+        filnavnLøpendeBidrag = "src/test/resources/testfiler/endeligbidrag/endeligbidragv2_løpendebidrag_eksempel1.json"
+        utførBeregningerOgEvaluerResultatEndeligBidrag()
+    }
+
+    private fun utførBeregningerOgEvaluerResultatEndeligBidrag() {
+        val requestSøknadsbarnGrunnlag: List<BeregnGrunnlag> = lesFilOgByggRequestGenerisk(filnavn)
+        val requestLøpendeBidragGrunnlag: List<BeregnGrunnlag> = lesFilOgByggRequestGenerisk(filnavnLøpendeBidrag)
+        val resultat = BeregnEndeligBidragServiceV2.delberegningEndeligBidrag(
+            grunnlagSøknadsbarnListe = requestSøknadsbarnGrunnlag.map { BeregnService.BeregnGrunnlagJustert(it, true) },
+            grunnlagLøpendeBidragListe = requestLøpendeBidragGrunnlag,
+        )
+        printJson(resultat)
+
+        var teller = 0
+
+        resultat.map { beregnGrunnlag ->
+            teller++
+            val alleReferanser = hentAlleReferanser(beregnGrunnlag.beregnGrunnlag.grunnlagListe)
+
+            // TODO Denne er litt dirty
+            val alleRefererteReferanser = hentAlleRefererteReferanser(beregnGrunnlag.beregnGrunnlag.grunnlagListe)
+                .filterNot { it.contains("LØPENDE_BIDRAG") }
+                .filterNot { it.contains("Søknadsbarn_0${teller + 1}") }
+                .filterNot { it.contains("Søknadsbarn_0${teller - 1}") }
+
+            val delberegningBidragTilFordelingListe = beregnGrunnlag.beregnGrunnlag.grunnlagListe
+                .filtrerOgKonverterBasertPåEgenReferanse<DelberegningBidragTilFordeling>(Grunnlagstype.DELBEREGNING_BIDRAG_TIL_FORDELING)
+                .map {
+                    DelberegningBidragTilFordeling(
+                        periode = it.innhold.periode,
+                        bidragTilFordeling = it.innhold.bidragTilFordeling,
+                        uMinusNettoBarnetilleggBM = it.innhold.uMinusNettoBarnetilleggBM,
+                        bpAndelAvUMinusSamværsfradrag = it.innhold.bpAndelAvUMinusSamværsfradrag,
+                    )
+                }
+
+            val delberegningSumBidragTilFordelingListe = beregnGrunnlag.beregnGrunnlag.grunnlagListe
+                .filtrerOgKonverterBasertPåEgenReferanse<DelberegningSumBidragTilFordeling>(Grunnlagstype.DELBEREGNING_SUM_BIDRAG_TIL_FORDELING)
+                .map {
+                    DelberegningSumBidragTilFordeling(
+                        periode = it.innhold.periode,
+                        sumBidragTilFordeling = it.innhold.sumBidragTilFordeling,
+                        sumPrioriterteBidragTilFordeling = it.innhold.sumPrioriterteBidragTilFordeling,
+                        erKompletteGrunnlagForAlleLøpendeBidrag = it.innhold.erKompletteGrunnlagForAlleLøpendeBidrag,
+                    )
+                }
+
+            val delberegningEvne25ProsentAvInntektListe = beregnGrunnlag.beregnGrunnlag.grunnlagListe
+                .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEvne25ProsentAvInntekt>(Grunnlagstype.DELBEREGNING_EVNE_25PROSENTAVINNTEKT)
+                .map {
+                    DelberegningEvne25ProsentAvInntekt(
+                        periode = it.innhold.periode,
+                        evneJustertFor25ProsentAvInntekt = it.innhold.evneJustertFor25ProsentAvInntekt,
+                        erEvneJustertNedTil25ProsentAvInntekt = it.innhold.erEvneJustertNedTil25ProsentAvInntekt,
+                    )
+                }
+
+            val delberegningAndelAvBidragsevneListe = beregnGrunnlag.beregnGrunnlag.grunnlagListe
+                .filtrerOgKonverterBasertPåEgenReferanse<DelberegningAndelAvBidragsevne>(Grunnlagstype.DELBEREGNING_ANDEL_AV_BIDRAGSEVNE)
+                .map {
+                    DelberegningAndelAvBidragsevne(
+                        periode = it.innhold.periode,
+                        andelAvSumBidragTilFordelingFaktor = it.innhold.andelAvSumBidragTilFordelingFaktor,
+                        andelAvEvneBeløp = it.innhold.andelAvEvneBeløp,
+                        bidragEtterFordeling = it.innhold.bidragEtterFordeling,
+                        harBPFullEvne = it.innhold.harBPFullEvne,
+                    )
+                }
+
+            val delberegningBidragJustertForBPBarnetillegg = beregnGrunnlag.beregnGrunnlag.grunnlagListe
+                .filtrerOgKonverterBasertPåEgenReferanse<DelberegningBidragJustertForBPBarnetillegg>(Grunnlagstype.DELBEREGNING_BIDRAG_JUSTERT_FOR_BP_BARNETILLEGG)
+                .map {
+                    DelberegningBidragJustertForBPBarnetillegg(
+                        periode = it.innhold.periode,
+                        bidragJustertForNettoBarnetilleggBP = it.innhold.bidragJustertForNettoBarnetilleggBP,
+                        erBidragJustertTilNettoBarnetilleggBP = it.innhold.erBidragJustertTilNettoBarnetilleggBP,
+                    )
+                }
+
+            val delberegningEndeligBidragBeregnet = beregnGrunnlag.beregnGrunnlag.grunnlagListe
+                .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndeligBidragBeregnet>(Grunnlagstype.DELBEREGNING_ENDELIG_BIDRAG_BEREGNET)
+                .map {
+                    DelberegningEndeligBidragBeregnet(
+                        periode = it.innhold.periode,
+                        beregnetBeløp = it.innhold.beregnetBeløp,
+                        resultatBeløp = it.innhold.resultatBeløp,
+                    )
+                }
+
+            // Delberegning Bidrag til fordeling
+            if (teller == 1) {
+                assertAll(
+                    { assertThat(delberegningBidragTilFordelingListe).hasSize(1) },
+                    { assertThat(delberegningBidragTilFordelingListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2025-03"), null)) },
+                    { assertThat(delberegningBidragTilFordelingListe[0].bidragTilFordeling).isEqualTo(BigDecimal.valueOf(4000).setScale(2)) },
+                    { assertThat(delberegningBidragTilFordelingListe[0].uMinusNettoBarnetilleggBM).isEqualTo(BigDecimal.valueOf(4000).setScale(2)) },
+                    {
+                        assertThat(delberegningBidragTilFordelingListe[0].bpAndelAvUMinusSamværsfradrag).isEqualTo(
+                            BigDecimal.valueOf(3500).setScale(2),
+                        )
+                    },
+                )
+            } else if (teller == 2) {
+                assertAll(
+                    { assertThat(delberegningBidragTilFordelingListe).hasSize(1) },
+                    { assertThat(delberegningBidragTilFordelingListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2025-03"), null)) },
+                    { assertThat(delberegningBidragTilFordelingListe[0].bidragTilFordeling).isEqualTo(BigDecimal.valueOf(2400).setScale(2)) },
+                    { assertThat(delberegningBidragTilFordelingListe[0].uMinusNettoBarnetilleggBM).isEqualTo(BigDecimal.valueOf(3000).setScale(2)) },
+                    {
+                        assertThat(delberegningBidragTilFordelingListe[0].bpAndelAvUMinusSamværsfradrag).isEqualTo(
+                            BigDecimal.valueOf(2000).setScale(2),
+                        )
+                    },
+                )
+            }
+
+            // Delberegning Sum bidrag til fordeling (samme resultat for begge søknadsbarn)
+            assertAll(
+                { assertThat(delberegningSumBidragTilFordelingListe).hasSize(2) },
+                {
+                    assertThat(delberegningSumBidragTilFordelingListe[0].periode).isEqualTo(
+                        ÅrMånedsperiode(
+                            YearMonth.parse("2025-03"),
+                            YearMonth.parse("2025-06"),
+                        ),
+                    )
+                },
+                { assertThat(delberegningSumBidragTilFordelingListe[0].sumBidragTilFordeling).isEqualTo(BigDecimal.valueOf(10900).setScale(2)) },
+                { assertThat(delberegningSumBidragTilFordelingListe[0].sumPrioriterteBidragTilFordeling).isEqualTo(BigDecimal.ZERO.setScale(2)) },
+                { assertThat(delberegningSumBidragTilFordelingListe[0].erKompletteGrunnlagForAlleLøpendeBidrag).isEqualTo(false) },
+                { assertThat(delberegningSumBidragTilFordelingListe[1].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2025-06"), null)) },
+                { assertThat(delberegningSumBidragTilFordelingListe[1].sumBidragTilFordeling).isEqualTo(BigDecimal.valueOf(7400).setScale(2)) },
+                { assertThat(delberegningSumBidragTilFordelingListe[1].sumPrioriterteBidragTilFordeling).isEqualTo(BigDecimal.ZERO.setScale(2)) },
+                { assertThat(delberegningSumBidragTilFordelingListe[1].erKompletteGrunnlagForAlleLøpendeBidrag).isFalse },
+            )
+
+            // Delberegning Evne 25 prosent av inntekt
+            if (teller == 1) {
+                assertAll(
+                    { assertThat(delberegningEvne25ProsentAvInntektListe).hasSize(1) },
+                    { assertThat(delberegningEvne25ProsentAvInntektListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2025-03"), null)) },
+                    {
+                        assertThat(delberegningEvne25ProsentAvInntektListe[0].evneJustertFor25ProsentAvInntekt).isEqualTo(
+                            BigDecimal.valueOf(8000).setScale(2),
+                        )
+                    },
+                    { assertThat(delberegningEvne25ProsentAvInntektListe[0].erEvneJustertNedTil25ProsentAvInntekt).isFalse },
+                )
+            } else if (teller == 2) {
+                assertAll(
+                    { assertThat(delberegningEvne25ProsentAvInntektListe).hasSize(1) },
+                    { assertThat(delberegningEvne25ProsentAvInntektListe[0].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2025-03"), null)) },
+                    {
+                        assertThat(delberegningEvne25ProsentAvInntektListe[0].evneJustertFor25ProsentAvInntekt).isEqualTo(
+                            BigDecimal.valueOf(8000).setScale(2),
+                        )
+                    },
+                    { assertThat(delberegningEvne25ProsentAvInntektListe[0].erEvneJustertNedTil25ProsentAvInntekt).isTrue },
+                )
+            }
+
+            // Delberegning Andel av bidragsevne
+            if (teller == 1) {
+                assertAll(
+                    { assertThat(delberegningAndelAvBidragsevneListe).hasSize(2) },
+                    {
+                        assertThat(delberegningAndelAvBidragsevneListe[0].periode).isEqualTo(
+                            ÅrMånedsperiode(
+                                YearMonth.parse("2025-03"),
+                                YearMonth.parse("2025-06"),
+                            ),
+                        )
+                    },
+                    { assertThat(delberegningAndelAvBidragsevneListe[0].bidragEtterFordeling).isEqualTo(BigDecimal.valueOf(2935.78).setScale(2)) },
+                    {
+                        assertThat(delberegningAndelAvBidragsevneListe[0].andelAvSumBidragTilFordelingFaktor).isEqualTo(
+                            BigDecimal.valueOf(0.3669724771).setScale(10),
+                        )
+                    },
+                    { assertThat(delberegningAndelAvBidragsevneListe[0].andelAvEvneBeløp).isEqualTo(BigDecimal.valueOf(2935.78).setScale(2)) },
+                    { assertThat(delberegningAndelAvBidragsevneListe[0].harBPFullEvne).isFalse },
+                    { assertThat(delberegningAndelAvBidragsevneListe[1].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2025-06"), null)) },
+                    { assertThat(delberegningAndelAvBidragsevneListe[1].bidragEtterFordeling).isEqualTo(BigDecimal.valueOf(4000).setScale(2)) },
+                    {
+                        assertThat(delberegningAndelAvBidragsevneListe[1].andelAvSumBidragTilFordelingFaktor).isEqualTo(
+                            BigDecimal.valueOf(0.5405405405).setScale(10),
+                        )
+                    },
+                    { assertThat(delberegningAndelAvBidragsevneListe[1].andelAvEvneBeløp).isEqualTo(BigDecimal.valueOf(4324.32).setScale(2)) },
+                    { assertThat(delberegningAndelAvBidragsevneListe[1].harBPFullEvne).isTrue },
+                )
+            } else if (teller == 2) {
+                assertAll(
+                    { assertThat(delberegningAndelAvBidragsevneListe).hasSize(2) },
+                    {
+                        assertThat(delberegningAndelAvBidragsevneListe[0].periode).isEqualTo(
+                            ÅrMånedsperiode(
+                                YearMonth.parse("2025-03"),
+                                YearMonth.parse("2025-06"),
+                            ),
+                        )
+                    },
+                    { assertThat(delberegningAndelAvBidragsevneListe[0].bidragEtterFordeling).isEqualTo(BigDecimal.valueOf(1761.47).setScale(2)) },
+                    {
+                        assertThat(delberegningAndelAvBidragsevneListe[0].andelAvSumBidragTilFordelingFaktor).isEqualTo(
+                            BigDecimal.valueOf(0.2201834862).setScale(10),
+                        )
+                    },
+                    { assertThat(delberegningAndelAvBidragsevneListe[0].andelAvEvneBeløp).isEqualTo(BigDecimal.valueOf(1761.47).setScale(2)) },
+                    { assertThat(delberegningAndelAvBidragsevneListe[0].harBPFullEvne).isFalse },
+                    { assertThat(delberegningAndelAvBidragsevneListe[1].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2025-06"), null)) },
+                    { assertThat(delberegningAndelAvBidragsevneListe[1].bidragEtterFordeling).isEqualTo(BigDecimal.valueOf(2400).setScale(2)) },
+                    {
+                        assertThat(delberegningAndelAvBidragsevneListe[1].andelAvSumBidragTilFordelingFaktor).isEqualTo(
+                            BigDecimal.valueOf(0.3243243243).setScale(10),
+                        )
+                    },
+                    { assertThat(delberegningAndelAvBidragsevneListe[1].andelAvEvneBeløp).isEqualTo(BigDecimal.valueOf(2594.59).setScale(2)) },
+                    { assertThat(delberegningAndelAvBidragsevneListe[1].harBPFullEvne).isTrue },
+                )
+            }
+
+            // Delberegning Bidrag justert for BP barnetillegg
+            if (teller == 1) {
+                assertAll(
+                    { assertThat(delberegningBidragJustertForBPBarnetillegg).hasSize(2) },
+                    {
+                        assertThat(delberegningBidragJustertForBPBarnetillegg[0].periode).isEqualTo(
+                            ÅrMånedsperiode(
+                                YearMonth.parse("2025-03"),
+                                YearMonth.parse("2025-06"),
+                            ),
+                        )
+                    },
+                    {
+                        assertThat(delberegningBidragJustertForBPBarnetillegg[0].bidragJustertForNettoBarnetilleggBP).isEqualTo(
+                            BigDecimal.valueOf(
+                                2935.78,
+                            ).setScale(2),
+                        )
+                    },
+                    { assertThat(delberegningBidragJustertForBPBarnetillegg[0].erBidragJustertTilNettoBarnetilleggBP).isFalse },
+                    {
+                        assertThat(delberegningBidragJustertForBPBarnetillegg[1].periode).isEqualTo(
+                            ÅrMånedsperiode(
+                                YearMonth.parse("2025-06"),
+                                null,
+                            ),
+                        )
+                    },
+                    {
+                        assertThat(delberegningBidragJustertForBPBarnetillegg[1].bidragJustertForNettoBarnetilleggBP).isEqualTo(
+                            BigDecimal.valueOf(4000).setScale(2),
+                        )
+                    },
+                    { assertThat(delberegningBidragJustertForBPBarnetillegg[1].erBidragJustertTilNettoBarnetilleggBP).isFalse },
+                )
+            } else if (teller == 2) {
+                assertAll(
+                    {
+                        assertThat(delberegningBidragJustertForBPBarnetillegg[0].periode).isEqualTo(
+                            ÅrMånedsperiode(
+                                YearMonth.parse("2025-03"),
+                                YearMonth.parse("2025-06"),
+                            ),
+                        )
+                    },
+                    {
+                        assertThat(delberegningBidragJustertForBPBarnetillegg[0].bidragJustertForNettoBarnetilleggBP).isEqualTo(
+                            BigDecimal.valueOf(2000).setScale(2),
+                        )
+                    },
+                    { assertThat(delberegningBidragJustertForBPBarnetillegg[0].erBidragJustertTilNettoBarnetilleggBP).isTrue },
+                    {
+                        assertThat(delberegningBidragJustertForBPBarnetillegg[1].periode).isEqualTo(
+                            ÅrMånedsperiode(
+                                YearMonth.parse("2025-06"),
+                                null,
+                            ),
+                        )
+                    },
+                    {
+                        assertThat(delberegningBidragJustertForBPBarnetillegg[1].bidragJustertForNettoBarnetilleggBP).isEqualTo(
+                            BigDecimal.valueOf(2400).setScale(2),
+                        )
+                    },
+                    { assertThat(delberegningBidragJustertForBPBarnetillegg[1].erBidragJustertTilNettoBarnetilleggBP).isFalse },
+                )
+            }
+
+            // Referanser
+            assertThat(alleReferanser).containsAll(alleRefererteReferanser)
+
+            // Delberegning Endelig bidrag beregnet
+            if (teller == 1) {
+                assertAll(
+                    { assertThat(delberegningEndeligBidragBeregnet).hasSize(2) },
+                    {
+                        assertThat(delberegningEndeligBidragBeregnet[0].periode).isEqualTo(
+                            ÅrMånedsperiode(
+                                YearMonth.parse("2025-03"),
+                                YearMonth.parse("2025-06"),
+                            ),
+                        )
+                    },
+                    { assertThat(delberegningEndeligBidragBeregnet[0].beregnetBeløp).isEqualTo(BigDecimal.valueOf(2435.78).setScale(2)) },
+                    { assertThat(delberegningEndeligBidragBeregnet[0].resultatBeløp).isEqualTo(BigDecimal.valueOf(2440).setScale(0)) },
+                    { assertThat(delberegningEndeligBidragBeregnet[1].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2025-06"), null)) },
+                    { assertThat(delberegningEndeligBidragBeregnet[1].beregnetBeløp).isEqualTo(BigDecimal.valueOf(3500).setScale(2)) },
+                    { assertThat(delberegningEndeligBidragBeregnet[1].resultatBeløp).isEqualTo(BigDecimal.valueOf(3500).setScale(0)) },
+                )
+            } else if (teller == 2) {
+                assertAll(
+                    { assertThat(delberegningEndeligBidragBeregnet).hasSize(2) },
+                    {
+                        assertThat(delberegningEndeligBidragBeregnet[0].periode).isEqualTo(
+                            ÅrMånedsperiode(
+                                YearMonth.parse("2025-03"),
+                                YearMonth.parse("2025-06"),
+                            ),
+                        )
+                    },
+                    { assertThat(delberegningEndeligBidragBeregnet[0].beregnetBeløp).isEqualTo(BigDecimal.valueOf(1600).setScale(2)) },
+                    { assertThat(delberegningEndeligBidragBeregnet[0].resultatBeløp).isEqualTo(BigDecimal.valueOf(1600).setScale(0)) },
+                    { assertThat(delberegningEndeligBidragBeregnet[1].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2025-06"), null)) },
+                    { assertThat(delberegningEndeligBidragBeregnet[1].beregnetBeløp).isEqualTo(BigDecimal.valueOf(2000).setScale(2)) },
+                    { assertThat(delberegningEndeligBidragBeregnet[1].resultatBeløp).isEqualTo(BigDecimal.valueOf(2000).setScale(0)) },
+                )
+            }
+
+            // Referanser
+            assertThat(alleReferanser).containsAll(alleRefererteReferanser)
+        }
     }
 }

@@ -54,6 +54,89 @@ import no.nav.bidrag.transport.felles.toCompactString
 
 internal object BeregnEndeligBidragServiceV2 : BeregnService() {
 
+    fun delberegningEndeligBidrag(
+        grunnlagSøknadsbarnListe: List<BeregnGrunnlagJustert>,
+        grunnlagLøpendeBidragListe: List<BeregnGrunnlag>,
+    ): List<BeregnGrunnlagJustert> {
+        // Søknadsbarn: Kaller delberegning Bidrag til fordeling
+        var utvidetGrunnlagSøknadsbarnListe = grunnlagSøknadsbarnListe.map { beregnGrunnlag ->
+            val delberegningBidragTilFordeling = delberegningBidragTilFordeling(
+                mottattGrunnlag = beregnGrunnlag.beregnGrunnlag,
+                åpenSluttperiode = beregnGrunnlag.åpenSluttperiode,
+            )
+            beregnGrunnlag.utvidMedNyeGrunnlag(delberegningBidragTilFordeling)
+        }
+
+        // Løpende bidrag: Kaller delberegning Bidrag til fordeling løpende bidrag
+        val utvidetGrunnlagLøpendeBidragListe = grunnlagLøpendeBidragListe.map { beregnGrunnlag ->
+            val delberegningBidragTilFordelingLøpendeBidrag = delberegningBidragTilFordelingLøpendeBidrag(
+                mottattGrunnlag = beregnGrunnlag,
+                åpenSluttperiode = false, // TODO Sjekk åpenSluttperiode
+            )
+            beregnGrunnlag.copy(
+                grunnlagListe = (beregnGrunnlag.grunnlagListe + delberegningBidragTilFordelingLøpendeBidrag).distinctBy {
+                    it.referanse
+                },
+            )
+        }
+
+        // Søknadsbarn og løpende bidrag: Kaller delberegning Sum bidrag til fordeling
+        val sumBidragTilFordelingGrunnlagListe = delberegningSumBidragTilFordeling(
+            mottattGrunnlagListe = utvidetGrunnlagSøknadsbarnListe.map { it.beregnGrunnlag } + utvidetGrunnlagLøpendeBidragListe,
+            åpenSluttperiode = true, // TODO Sjekk åpenSluttperiode
+        )
+
+        // Søknadsbarn: Kaller delberegning Evne 25 prosent av inntekt
+        utvidetGrunnlagSøknadsbarnListe = utvidetGrunnlagSøknadsbarnListe.map { beregnGrunnlag ->
+            val delberegningEvne25ProsentAvInntekt = delberegningEvne25ProsentAvInntekt(
+                mottattGrunnlag = beregnGrunnlag.beregnGrunnlag,
+                åpenSluttperiode = beregnGrunnlag.åpenSluttperiode,
+            )
+            beregnGrunnlag.utvidMedNyeGrunnlag(delberegningEvne25ProsentAvInntekt + sumBidragTilFordelingGrunnlagListe)
+        }
+
+        // Søknadsbarn: Kaller delberegning Andel av bidragsevne
+        utvidetGrunnlagSøknadsbarnListe = utvidetGrunnlagSøknadsbarnListe.map { beregnGrunnlag ->
+            val delberegningAndelAvBidragsevne = delberegningAndelAvBidragsevne(
+                mottattGrunnlag = beregnGrunnlag.beregnGrunnlag,
+                åpenSluttperiode = beregnGrunnlag.åpenSluttperiode,
+            )
+            beregnGrunnlag.utvidMedNyeGrunnlag(delberegningAndelAvBidragsevne)
+        }
+
+        // Søknadsbarn: Kaller delberegning Bidrag justert for BP barnetillegg
+        utvidetGrunnlagSøknadsbarnListe = utvidetGrunnlagSøknadsbarnListe.map { beregnGrunnlag ->
+            val delberegningBidragJustertForBPBarnetillegg = delberegningBidragJustertForBPBarnetillegg(
+                mottattGrunnlag = beregnGrunnlag.beregnGrunnlag,
+                åpenSluttperiode = beregnGrunnlag.åpenSluttperiode,
+            )
+            beregnGrunnlag.utvidMedNyeGrunnlag(delberegningBidragJustertForBPBarnetillegg)
+        }
+
+        // Søknadsbarn: Kaller delberegning Endelig bidrag beregnet
+        utvidetGrunnlagSøknadsbarnListe = utvidetGrunnlagSøknadsbarnListe.map { beregnGrunnlag ->
+            val delberegningEndeligBidragBeregnet = delberegningEndeligBidragBeregnet(
+                mottattGrunnlag = beregnGrunnlag.beregnGrunnlag,
+                åpenSluttperiode = beregnGrunnlag.åpenSluttperiode,
+            )
+            beregnGrunnlag.utvidMedNyeGrunnlag(delberegningEndeligBidragBeregnet)
+        }
+
+        // Filtrerer bort grunnlag som tilhører andra barn (som refereres av delberegning Sum bidrag til fordeling)
+        utvidetGrunnlagSøknadsbarnListe = utvidetGrunnlagSøknadsbarnListe.map { beregnGrunnlag ->
+            val søknadsbarnReferanse = beregnGrunnlag.beregnGrunnlag.søknadsbarnReferanse
+            beregnGrunnlag.copy(
+                beregnGrunnlag = beregnGrunnlag.beregnGrunnlag.copy(
+                    grunnlagListe = beregnGrunnlag.beregnGrunnlag.grunnlagListe
+                        .filter { it.gjelderBarnReferanse == søknadsbarnReferanse || it.gjelderBarnReferanse == null },
+                ),
+            )
+        }
+
+        return utvidetGrunnlagSøknadsbarnListe
+        // TODO Bør også returnere løpende bidrag?
+    }
+
     fun delberegningBidragTilFordeling(mottattGrunnlag: BeregnGrunnlag, åpenSluttperiode: Boolean = true): List<GrunnlagDto> {
         // Mapper ut grunnlag som skal brukes for å beregne bidrag til fordeling
         val bidragTilFordelingPeriodeGrunnlag = EndeligBidragMapperV2.mapBidragTilFordelingGrunnlag(
@@ -730,6 +813,7 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
                 referanse = opprettDelberegningreferanse(
                     type = Grunnlagstype.DELBEREGNING_EVNE_25PROSENTAVINNTEKT,
                     periode = ÅrMånedsperiode(fom = it.periode.fom, til = null),
+                    søknadsbarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
                     gjelderReferanse = mottattGrunnlag.grunnlagListe.bidragspliktig?.referanse ?: "bidragspliktig",
                 ),
                 type = Grunnlagstype.DELBEREGNING_EVNE_25PROSENTAVINNTEKT,
@@ -1022,7 +1106,8 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
                 innhold = POJONode(
                     DelberegningEndeligBidragBeregnet(
                         periode = it.periode,
-                        endeligBidrag = it.resultat.endeligBidragBeregnet,
+                        beregnetBeløp = it.resultat.beregnetBeløp,
+                        resultatBeløp = it.resultat.resultatBeløp,
                     ),
                 ),
                 grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe.sorted(),
