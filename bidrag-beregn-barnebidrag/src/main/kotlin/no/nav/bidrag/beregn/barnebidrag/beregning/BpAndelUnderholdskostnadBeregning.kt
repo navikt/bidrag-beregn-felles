@@ -14,11 +14,10 @@ internal object BpAndelUnderholdskostnadBeregning {
     private val bigDecimal100 = BigDecimal.valueOf(100)
     private val bigDecimal30 = BigDecimal.valueOf(30)
     private val bigDecimalFemSjettedeler = BigDecimal.valueOf(0.833333333333)
-    private var sjablonverdiForskuddssatsBeløp = BigDecimal.ZERO
 
     fun beregn(grunnlag: BpAndelUnderholdskostnadBeregningGrunnlag): BpAndelUnderholdskostnadBeregningResultat {
         // Henter sjablonverdier
-        hentSjablonverdier(grunnlag)
+        val sjablonverdier = hentSjablonverdier(grunnlag)
 
         var endeligAndelFaktor = BigDecimal.ZERO.setScale(10)
         var andelBeløp = BigDecimal.ZERO.setScale(2)
@@ -31,11 +30,11 @@ internal object BpAndelUnderholdskostnadBeregning {
         var barnEndeligInntekt = inntektSB
 
         // Tester om barnets inntekt er høyere enn 100 ganger sats for forhøyet forskudd. I så fall skal ikke BPs andel regnes ut.
-        val barnetErSelvforsørget = (inntektSB >= (sjablonverdiForskuddssatsBeløp * bigDecimal100))
+        val barnetErSelvforsørget = (inntektSB >= (sjablonverdier.forskuddssatsBeløp * bigDecimal100))
 
         if (!barnetErSelvforsørget) {
             // Barnets inntekt reduseres med 30 ganger sats for forhøyet forskudd
-            barnEndeligInntekt = (inntektSB - sjablonverdiForskuddssatsBeløp * bigDecimal30).coerceAtLeast(BigDecimal.ZERO)
+            barnEndeligInntekt = (inntektSB - sjablonverdier.forskuddssatsBeløp * bigDecimal30).coerceAtLeast(BigDecimal.ZERO)
 
             val sumInntekt = inntektBP + inntektBM + barnEndeligInntekt
             beregnetAndelFaktor = if (sumInntekt.avrundetMedNullDesimaler != BigDecimal.ZERO) {
@@ -66,13 +65,17 @@ internal object BpAndelUnderholdskostnadBeregning {
         )
     }
 
-    private fun hentSjablonverdier(grunnlag: BpAndelUnderholdskostnadBeregningGrunnlag) {
-        sjablonverdiForskuddssatsBeløp = (
+    private fun hentSjablonverdier(grunnlag: BpAndelUnderholdskostnadBeregningGrunnlag): Sjablonverdier {
+        val forskuddssatsBeløp = (
             grunnlag.sjablonSjablontallBeregningGrunnlagListe
                 .filter { it.type == SjablonTallNavn.FORSKUDDSSATS_BELØP.navn }
                 .map { it.verdi }
                 .firstOrNull() ?: 0.0
             )
             .toBigDecimal()
+
+        return Sjablonverdier(forskuddssatsBeløp = forskuddssatsBeløp)
     }
+
+    private data class Sjablonverdier(val forskuddssatsBeløp: BigDecimal)
 }

@@ -14,31 +14,23 @@ internal object BidragsevneBeregning {
     private val bigDecimal100 = BigDecimal.valueOf(100)
     private val bigDecimal12 = BigDecimal.valueOf(12)
     private val bigDecimal025 = BigDecimal.valueOf(0.25).setScale(2)
-    private var sjablonverdiTrygdeavgiftProsent = BigDecimal.ZERO
-    private var sjablonverdiUnderholdEgneBarnIHusstandBeløp = BigDecimal.ZERO
-    private var sjablonverdiMinstefradragInntektBeløp = BigDecimal.ZERO
-    private var sjablonverdiMinstefradragInntektProsent = BigDecimal.ZERO
-    private var sjablonverdiPersonfradragKlasse1Beløp = BigDecimal.ZERO
-    private var sjablonverdiSkattesatsAlminneligInntektProsent = BigDecimal.ZERO
-    private var sjablonverdiBoutgiftBeløp = BigDecimal.ZERO
-    private var sjablonverdiEgetUnderholdBeløp = BigDecimal.ZERO
 
     fun beregn(grunnlag: BidragsevneBeregningGrunnlag): BidragsevneBeregningResultat {
         // Henter sjablonverdier
-        hentSjablonverdier(grunnlag)
+        val sjablonverdier = hentSjablonverdier(grunnlag)
 
         val sumInntekt = grunnlag.inntektBPBeregningGrunnlag.sumInntekt
 
-        val minstefradrag = (sumInntekt * (sjablonverdiMinstefradragInntektProsent.divide(bigDecimal100, 10, RoundingMode.HALF_UP)))
-            .min(sjablonverdiMinstefradragInntektBeløp)
+        val minstefradrag = (sumInntekt * (sjablonverdier.minstefradragInntektProsent.divide(bigDecimal100, 10, RoundingMode.HALF_UP)))
+            .min(sjablonverdier.minstefradragInntektBeløp)
 
         val skattAlminneligInntekt = (
-            (sumInntekt - minstefradrag - sjablonverdiPersonfradragKlasse1Beløp) *
-                (sjablonverdiSkattesatsAlminneligInntektProsent.divide(bigDecimal100, 10, RoundingMode.HALF_UP))
+            (sumInntekt - minstefradrag - sjablonverdier.personfradragKlasse1Beløp) *
+                (sjablonverdier.skattesatsAlminneligInntektProsent.divide(bigDecimal100, 10, RoundingMode.HALF_UP))
             )
             .coerceAtLeast(BigDecimal.ZERO)
 
-        val trygdeavgift = sumInntekt * (sjablonverdiTrygdeavgiftProsent.divide(bigDecimal100, 10, RoundingMode.HALF_UP))
+        val trygdeavgift = sumInntekt * (sjablonverdier.trygdeavgiftProsent.divide(bigDecimal100, 10, RoundingMode.HALF_UP))
 
         val trinnskatt = beregnTrinnskatt(grunnlag = grunnlag, inntekt = sumInntekt)
 
@@ -47,11 +39,11 @@ internal object BidragsevneBeregning {
         val sumSkattFaktor =
             if (sumInntekt.avrundetMedNullDesimaler == BigDecimal.ZERO) BigDecimal.ZERO else sumSkatt.divide(sumInntekt, 10, RoundingMode.HALF_UP)
 
-        val boutgift = sjablonverdiBoutgiftBeløp * bigDecimal12
+        val boutgift = sjablonverdier.boutgiftBeløp * bigDecimal12
 
-        val egetUnderhold = sjablonverdiEgetUnderholdBeløp * bigDecimal12
+        val egetUnderhold = sjablonverdier.egetUnderholdBeløp * bigDecimal12
 
-        val underholdBarnEgenHusstand = sjablonverdiUnderholdEgneBarnIHusstandBeløp * bigDecimal12 *
+        val underholdBarnEgenHusstand = sjablonverdier.underholdEgneBarnIHusstandBeløp * bigDecimal12 *
             grunnlag.barnIHusstandenBeregningGrunnlag.antallBarn.toBigDecimal()
 
         val sumInntekt25Prosent = (sumInntekt * bigDecimal025).divide(bigDecimal12, 10, RoundingMode.HALF_UP)
@@ -100,43 +92,43 @@ internal object BidragsevneBeregning {
         return trinnskatt
     }
 
-    private fun hentSjablonverdier(grunnlag: BidragsevneBeregningGrunnlag) {
-        sjablonverdiTrygdeavgiftProsent = (
+    private fun hentSjablonverdier(grunnlag: BidragsevneBeregningGrunnlag): Sjablonverdier {
+        val trygdeavgiftProsent = (
             grunnlag.sjablonSjablontallBeregningGrunnlagListe
                 .filter { it.type == SjablonTallNavn.TRYGDEAVGIFT_PROSENT.navn }
                 .map { it.verdi }
                 .firstOrNull() ?: 0.0
             )
             .toBigDecimal()
-        sjablonverdiUnderholdEgneBarnIHusstandBeløp = (
+        val underholdEgneBarnIHusstandBeløp = (
             grunnlag.sjablonSjablontallBeregningGrunnlagListe
                 .filter { it.type == SjablonTallNavn.UNDERHOLD_EGNE_BARN_I_HUSSTAND_BELØP.navn }
                 .map { it.verdi }
                 .firstOrNull() ?: 0.0
             )
             .toBigDecimal()
-        sjablonverdiMinstefradragInntektBeløp = (
+        val minstefradragInntektBeløp = (
             grunnlag.sjablonSjablontallBeregningGrunnlagListe
                 .filter { it.type == SjablonTallNavn.MINSTEFRADRAG_INNTEKT_BELØP.navn }
                 .map { it.verdi }
                 .firstOrNull() ?: 0.0
             )
             .toBigDecimal()
-        sjablonverdiMinstefradragInntektProsent = (
+        val minstefradragInntektProsent = (
             grunnlag.sjablonSjablontallBeregningGrunnlagListe
                 .filter { it.type == SjablonTallNavn.MINSTEFRADRAG_INNTEKT_PROSENT.navn }
                 .map { it.verdi }
                 .firstOrNull() ?: 0.0
             )
             .toBigDecimal()
-        sjablonverdiPersonfradragKlasse1Beløp = (
+        val personfradragKlasse1Beløp = (
             grunnlag.sjablonSjablontallBeregningGrunnlagListe
                 .filter { it.type == SjablonTallNavn.PERSONFRADRAG_KLASSE1_BELØP.navn }
                 .map { it.verdi }
                 .firstOrNull() ?: 0.0
             )
             .toBigDecimal()
-        sjablonverdiSkattesatsAlminneligInntektProsent = (
+        val skattesatsAlminneligInntektProsent = (
             grunnlag.sjablonSjablontallBeregningGrunnlagListe
                 .filter { it.type == SjablonTallNavn.SKATTESATS_ALMINNELIG_INNTEKT_PROSENT.navn }
                 .map { it.verdi }
@@ -144,11 +136,33 @@ internal object BidragsevneBeregning {
             )
             .toBigDecimal()
 
-        sjablonverdiBoutgiftBeløp = grunnlag.sjablonBidragsevneBeregningGrunnlagListe
+        val boutgiftBeløp = grunnlag.sjablonBidragsevneBeregningGrunnlagListe
             .map { it.boutgift }
             .firstOrNull() ?: BigDecimal.ZERO
-        sjablonverdiEgetUnderholdBeløp = grunnlag.sjablonBidragsevneBeregningGrunnlagListe
+        val egetUnderholdBeløp = grunnlag.sjablonBidragsevneBeregningGrunnlagListe
             .map { it.underhold }
             .firstOrNull() ?: BigDecimal.ZERO
+
+        return Sjablonverdier(
+            trygdeavgiftProsent = trygdeavgiftProsent,
+            underholdEgneBarnIHusstandBeløp = underholdEgneBarnIHusstandBeløp,
+            minstefradragInntektBeløp = minstefradragInntektBeløp,
+            minstefradragInntektProsent = minstefradragInntektProsent,
+            personfradragKlasse1Beløp = personfradragKlasse1Beløp,
+            skattesatsAlminneligInntektProsent = skattesatsAlminneligInntektProsent,
+            boutgiftBeløp = boutgiftBeløp,
+            egetUnderholdBeløp = egetUnderholdBeløp,
+        )
     }
+
+    private data class Sjablonverdier(
+        val trygdeavgiftProsent: BigDecimal,
+        val underholdEgneBarnIHusstandBeløp: BigDecimal,
+        val minstefradragInntektBeløp: BigDecimal,
+        val minstefradragInntektProsent: BigDecimal,
+        val personfradragKlasse1Beløp: BigDecimal,
+        val skattesatsAlminneligInntektProsent: BigDecimal,
+        val boutgiftBeløp: BigDecimal,
+        val egetUnderholdBeløp: BigDecimal,
+    )
 }
