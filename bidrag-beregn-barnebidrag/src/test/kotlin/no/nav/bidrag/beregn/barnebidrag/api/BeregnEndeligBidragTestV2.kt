@@ -11,10 +11,10 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningAndelAvBid
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragJustertForBPBarnetillegg
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragTilFordeling
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragTilFordelingLøpendeBidrag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndeligBidragBeregnet
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEvne25ProsentAvInntekt
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningNettoBarnetillegg
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSumBidragTilFordeling
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidragV2
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåFremmedReferanse
 import org.assertj.core.api.Assertions.assertThat
@@ -64,7 +64,7 @@ internal class BeregnEndeligBidragTestV2 : FellesTest() {
     private var forventetErBidragJustertTilNettoBarnetilleggBP: Boolean = false
     private var forventetAntallDelberegningNettoBarnetilleggBP: Int = 1
 
-    // EndeligBidragBeregnet
+    // SluttberegningBarnebidrag
     private lateinit var forventetBeregnetBeløp: BigDecimal
     private lateinit var forventetResultatBeløp: BigDecimal
 
@@ -175,6 +175,7 @@ internal class BeregnEndeligBidragTestV2 : FellesTest() {
     private fun utførBeregningerOgEvaluerResultatSumBidragTilFordeling() {
         val request: List<BeregnGrunnlag> = lesFilOgByggRequestGenerisk(filnavn)
         val resultat = BeregnEndeligBidragServiceV2.delberegningSumBidragTilFordeling(
+            beregningsperiode = ÅrMånedsperiode(YearMonth.parse("2024-08"), YearMonth.parse("2024-09")),
             mottattGrunnlagListe = request,
         )
         printJson(resultat)
@@ -497,35 +498,35 @@ internal class BeregnEndeligBidragTestV2 : FellesTest() {
     }
 
     @Test
-    @DisplayName("Endelig bidrag beregnet - eksempel 1 - beregnet bidrag > 0")
-    fun testEndeligBidragBeregnet_Eksempel1() {
-        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidragberegnet_eksempel1.json"
+    @DisplayName("Sluttberegning barnebidrag - eksempel 1 - beregnet bidrag > 0")
+    fun testSluttberegningBarnebidrag_Eksempel1() {
+        filnavn = "src/test/resources/testfiler/endeligbidrag/sluttberegningbarnebidrag_eksempel1.json"
         forventetBeregnetBeløp = BigDecimal.valueOf(2200).setScale(2)
         forventetResultatBeløp = BigDecimal.valueOf(2200).setScale(0)
-        utførBeregningerOgEvaluerResultatEndeligBidragBeregnet()
+        utførBeregningerOgEvaluerResultatSluttberegningBarnebidrag()
     }
 
     @Test
-    @DisplayName("Endelig bidrag beregnet - eksempel 2 - beregnet bidrag < 0")
-    fun testEndeligBidragBeregnet_Eksempel2() {
-        filnavn = "src/test/resources/testfiler/endeligbidrag/endeligbidragberegnet_eksempel2.json"
+    @DisplayName("Sluttberegning barnebidrag - eksempel 2 - beregnet bidrag < 0")
+    fun testSluttberegningBarnebidrag_Eksempel2() {
+        filnavn = "src/test/resources/testfiler/endeligbidrag/sluttberegningbarnebidrag_eksempel2.json"
         forventetBeregnetBeløp = BigDecimal.ZERO.setScale(2)
         forventetResultatBeløp = BigDecimal.ZERO.setScale(0)
-        utførBeregningerOgEvaluerResultatEndeligBidragBeregnet()
+        utførBeregningerOgEvaluerResultatSluttberegningBarnebidrag()
     }
 
-    private fun utførBeregningerOgEvaluerResultatEndeligBidragBeregnet() {
+    private fun utførBeregningerOgEvaluerResultatSluttberegningBarnebidrag() {
         val request = lesFilOgByggRequest(filnavn)
-        val resultat = BeregnEndeligBidragServiceV2.delberegningEndeligBidragBeregnet(request)
+        val resultat = BeregnEndeligBidragServiceV2.sluttberegningBarnebidrag(request)
         printJson(resultat)
 
         val alleReferanser = hentAlleReferanser(resultat)
         val alleRefererteReferanser = hentAlleRefererteReferanser(resultat)
 
         val resultatListe = resultat
-            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndeligBidragBeregnet>(Grunnlagstype.DELBEREGNING_ENDELIG_BIDRAG_BEREGNET)
+            .filtrerOgKonverterBasertPåEgenReferanse<SluttberegningBarnebidragV2>(Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG)
             .map {
-                DelberegningEndeligBidragBeregnet(
+                SluttberegningBarnebidragV2(
                     periode = it.innhold.periode,
                     beregnetBeløp = it.innhold.beregnetBeløp,
                     resultatBeløp = it.innhold.resultatBeløp,
@@ -571,6 +572,7 @@ internal class BeregnEndeligBidragTestV2 : FellesTest() {
         val requestSøknadsbarnGrunnlag: List<BeregnGrunnlag> = lesFilOgByggRequestGenerisk(filnavn)
         val requestLøpendeBidragGrunnlag: List<BeregnGrunnlag> = lesFilOgByggRequestGenerisk(filnavnLøpendeBidrag)
         val resultat = BeregnEndeligBidragServiceV2.delberegningEndeligBidrag(
+            beregningsperiode = ÅrMånedsperiode(YearMonth.parse("2025-03"), YearMonth.parse("2025-11")),
             grunnlagSøknadsbarnListe = requestSøknadsbarnGrunnlag.map { BeregnService.BeregnGrunnlagJustert(it, true) },
             grunnlagLøpendeBidragListe = requestLøpendeBidragGrunnlag,
         )
@@ -642,10 +644,10 @@ internal class BeregnEndeligBidragTestV2 : FellesTest() {
                     )
                 }
 
-            val delberegningEndeligBidragBeregnet = beregnGrunnlag.beregnGrunnlag.grunnlagListe
-                .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndeligBidragBeregnet>(Grunnlagstype.DELBEREGNING_ENDELIG_BIDRAG_BEREGNET)
+            val delberegningSluttberegningBarnebidrag = beregnGrunnlag.beregnGrunnlag.grunnlagListe
+                .filtrerOgKonverterBasertPåEgenReferanse<SluttberegningBarnebidragV2>(Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG)
                 .map {
-                    DelberegningEndeligBidragBeregnet(
+                    SluttberegningBarnebidragV2(
                         periode = it.innhold.periode,
                         beregnetBeløp = it.innhold.beregnetBeløp,
                         resultatBeløp = it.innhold.resultatBeløp,
@@ -856,40 +858,40 @@ internal class BeregnEndeligBidragTestV2 : FellesTest() {
             // Referanser
             assertThat(alleReferanser).containsAll(alleRefererteReferanser)
 
-            // Delberegning Endelig bidrag beregnet
+            // Sluttberegning barnebidrag
             if (teller == 1) {
                 assertAll(
-                    { assertThat(delberegningEndeligBidragBeregnet).hasSize(2) },
+                    { assertThat(delberegningSluttberegningBarnebidrag).hasSize(2) },
                     {
-                        assertThat(delberegningEndeligBidragBeregnet[0].periode).isEqualTo(
+                        assertThat(delberegningSluttberegningBarnebidrag[0].periode).isEqualTo(
                             ÅrMånedsperiode(
                                 YearMonth.parse("2025-03"),
                                 YearMonth.parse("2025-06"),
                             ),
                         )
                     },
-                    { assertThat(delberegningEndeligBidragBeregnet[0].beregnetBeløp).isEqualTo(BigDecimal.valueOf(2435.78).setScale(2)) },
-                    { assertThat(delberegningEndeligBidragBeregnet[0].resultatBeløp).isEqualTo(BigDecimal.valueOf(2440).setScale(0)) },
-                    { assertThat(delberegningEndeligBidragBeregnet[1].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2025-06"), null)) },
-                    { assertThat(delberegningEndeligBidragBeregnet[1].beregnetBeløp).isEqualTo(BigDecimal.valueOf(3500).setScale(2)) },
-                    { assertThat(delberegningEndeligBidragBeregnet[1].resultatBeløp).isEqualTo(BigDecimal.valueOf(3500).setScale(0)) },
+                    { assertThat(delberegningSluttberegningBarnebidrag[0].beregnetBeløp).isEqualTo(BigDecimal.valueOf(2435.78).setScale(2)) },
+                    { assertThat(delberegningSluttberegningBarnebidrag[0].resultatBeløp).isEqualTo(BigDecimal.valueOf(2440).setScale(0)) },
+                    { assertThat(delberegningSluttberegningBarnebidrag[1].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2025-06"), null)) },
+                    { assertThat(delberegningSluttberegningBarnebidrag[1].beregnetBeløp).isEqualTo(BigDecimal.valueOf(3500).setScale(2)) },
+                    { assertThat(delberegningSluttberegningBarnebidrag[1].resultatBeløp).isEqualTo(BigDecimal.valueOf(3500).setScale(0)) },
                 )
             } else if (teller == 2) {
                 assertAll(
-                    { assertThat(delberegningEndeligBidragBeregnet).hasSize(2) },
+                    { assertThat(delberegningSluttberegningBarnebidrag).hasSize(2) },
                     {
-                        assertThat(delberegningEndeligBidragBeregnet[0].periode).isEqualTo(
+                        assertThat(delberegningSluttberegningBarnebidrag[0].periode).isEqualTo(
                             ÅrMånedsperiode(
                                 YearMonth.parse("2025-03"),
                                 YearMonth.parse("2025-06"),
                             ),
                         )
                     },
-                    { assertThat(delberegningEndeligBidragBeregnet[0].beregnetBeløp).isEqualTo(BigDecimal.valueOf(1600).setScale(2)) },
-                    { assertThat(delberegningEndeligBidragBeregnet[0].resultatBeløp).isEqualTo(BigDecimal.valueOf(1600).setScale(0)) },
-                    { assertThat(delberegningEndeligBidragBeregnet[1].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2025-06"), null)) },
-                    { assertThat(delberegningEndeligBidragBeregnet[1].beregnetBeløp).isEqualTo(BigDecimal.valueOf(2000).setScale(2)) },
-                    { assertThat(delberegningEndeligBidragBeregnet[1].resultatBeløp).isEqualTo(BigDecimal.valueOf(2000).setScale(0)) },
+                    { assertThat(delberegningSluttberegningBarnebidrag[0].beregnetBeløp).isEqualTo(BigDecimal.valueOf(1600).setScale(2)) },
+                    { assertThat(delberegningSluttberegningBarnebidrag[0].resultatBeløp).isEqualTo(BigDecimal.valueOf(1600).setScale(0)) },
+                    { assertThat(delberegningSluttberegningBarnebidrag[1].periode).isEqualTo(ÅrMånedsperiode(YearMonth.parse("2025-06"), null)) },
+                    { assertThat(delberegningSluttberegningBarnebidrag[1].beregnetBeløp).isEqualTo(BigDecimal.valueOf(2000).setScale(2)) },
+                    { assertThat(delberegningSluttberegningBarnebidrag[1].resultatBeløp).isEqualTo(BigDecimal.valueOf(2000).setScale(0)) },
                 )
             }
 
