@@ -13,14 +13,18 @@ import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Saksnummer
 import no.nav.bidrag.domene.sak.Stønadsid
+import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.avrundetTilNærmesteTier
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.LøpendeBidragssak
 import no.nav.bidrag.transport.behandling.beregning.felles.BidragBeregningResponsDto
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndeligBidragBeregnet
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
+import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.LøpendeBidragPeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.SamværsperiodeGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
+import no.nav.bidrag.transport.behandling.felles.grunnlag.finnBidragJustertForBarnetilleggBP
+import no.nav.bidrag.transport.behandling.felles.grunnlag.finnBidragTilFordeling
+import no.nav.bidrag.transport.behandling.felles.grunnlag.finnSamværsklasse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.finnSluttberegningIReferanser
 import no.nav.bidrag.transport.behandling.felles.grunnlag.innholdTilObjekt
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakForStønad
@@ -132,49 +136,38 @@ class HentLøpendeBidragService(private val vedtakService: VedtakService) {
             }
 
         // Finner sluttberegning-grunnlaget
-        val sluttberegningReferanse =
-            sistePeriode.grunnlagReferanseListe.firstOrNull { grunnlagsReferanse ->
-                grunnlagsReferanse.lowercase().contains("sluttberegning")
-            } ?: ""
         val sluttberegningGrunnlag =
-            vedtakDto.grunnlagListe.finnSluttberegningIReferanser(listOf(sluttberegningReferanse)) ?: run {
+            vedtakDto.grunnlagListe.finnSluttberegningIReferanser(sistePeriode.grunnlagReferanseListe) ?: run {
                 secureLogger.warn {
                     "Fant ikke sluttberegning i siste periode i grunnlag for vedtak ${vedtakForStønad.vedtaksid} og " +
                         "stønadsendring $stønadsendringDto i bidrag-vedtak."
                 }
                 return null
             }
-        secureLogger.info { "Fant sluttberegning-grunnlag: $sluttberegningGrunnlag" }
-        val sluttberegningObjekt = sluttberegningGrunnlag.innholdTilObjekt<SluttberegningBarnebidrag>()
-
-        // Henter ut alle grunnlag som refereres av sluttberegning
-        val grunnlagListeSluttberegningSistePeriode =
-            vedtakDto.grunnlagListe.filter { grunnlag -> grunnlag.referanse in sluttberegningGrunnlag.grunnlagsreferanseListe }
-
         // Finner samværsklasse
-        val samværsklasse =
-            (
-                grunnlagListeSluttberegningSistePeriode
-                    .filtrerOgKonverterBasertPåEgenReferanse<SamværsperiodeGrunnlag>(Grunnlagstype.SAMVÆRSPERIODE)
-                    .firstOrNull()
-                    ?: run {
-                        secureLogger.warn { "Fant ikke tilhørende samværsklasse i sluttberegning med referanse $sluttberegningReferanse." }
-                        return null
-                    }
-                ).innhold.samværsklasse
+        val samværsklasse = vedtakDto.grunnlagListe.finnSamværsklasse(sluttberegningGrunnlag)
         secureLogger.info { "Samværsklasse: $samværsklasse" }
 
         return BidragBeregningResponsDto.BidragBeregning(
-            periode = sluttberegningObjekt.periode, // TODO
+            periode = finnPeriode(sluttberegningGrunnlag),
             saksnummer = vedtakForStønad.stønadsendring.sak.verdi,
             personidentBarn = vedtakForStønad.stønadsendring.kravhaver,
             datoSøknad = LocalDate.now(), // Brukes ikke
-            beregnetBeløp = sluttberegningObjekt.bruttoBidragEtterBarnetilleggBM.avrundetTilNærmesteTier,
-            faktiskBeløp = sluttberegningObjekt.bruttoBidragEtterBarnetilleggBP.avrundetTilNærmesteTier,
+            beregnetBeløp = vedtakDto.grunnlagListe.finnBidragTilFordeling(sluttberegningGrunnlag).avrundetTilNærmesteTier,
+            faktiskBeløp = vedtakDto.grunnlagListe.finnBidragJustertForBarnetilleggBP(sluttberegningGrunnlag).avrundetTilNærmesteTier,
             beløpSamvær = BigDecimal.ZERO, // Brukes ikke
             stønadstype = Stønadstype.BIDRAG,
             samværsklasse = samværsklasse,
         )
+    }
+
+    private fun finnPeriode(sluttberegningGrunnlag: GrunnlagDto): ÅrMånedsperiode {
+        if (sluttberegningGrunnlag.type == Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG) {
+            val sluttberegningObjekt = sluttberegningGrunnlag.innholdTilObjekt<SluttberegningBarnebidrag>()
+            return sluttberegningObjekt.periode
+        }
+        val sluttberegningObjekt = sluttberegningGrunnlag.innholdTilObjekt<DelberegningEndeligBidragBeregnet>()
+        return sluttberegningObjekt.periode
     }
 
     private fun List<LøpendeBidragssak>.hentLøpendeVedtak(bidragspliktigIdent: Personident): List<VedtakForStønad> = mapNotNull {
