@@ -17,11 +17,10 @@ import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.avrundetTilNærmesteTier
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.LøpendeBidragssak
 import no.nav.bidrag.transport.behandling.beregning.felles.BidragBeregningResponsDto
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndeligBidragBeregnet
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
-import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.LøpendeBidragPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidragV2
 import no.nav.bidrag.transport.behandling.felles.grunnlag.finnBidragJustertForBarnetilleggBP
 import no.nav.bidrag.transport.behandling.felles.grunnlag.finnBidragTilFordeling
 import no.nav.bidrag.transport.behandling.felles.grunnlag.finnSamværsklasse
@@ -166,7 +165,7 @@ class HentLøpendeBidragService(private val vedtakService: VedtakService) {
             val sluttberegningObjekt = sluttberegningGrunnlag.innholdTilObjekt<SluttberegningBarnebidrag>()
             return sluttberegningObjekt.periode
         }
-        val sluttberegningObjekt = sluttberegningGrunnlag.innholdTilObjekt<DelberegningEndeligBidragBeregnet>()
+        val sluttberegningObjekt = sluttberegningGrunnlag.innholdTilObjekt<SluttberegningBarnebidragV2>()
         return sluttberegningObjekt.periode
     }
 

@@ -24,7 +24,6 @@ import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatVedtakV2
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.felles.valider
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnlag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndeligBidragBeregnet
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndringSjekkGrensePeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningPrivatAvtale
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
@@ -32,6 +31,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.PrivatAvtaleGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidragV2
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SøknadGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.VirkningstidspunktGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragsmottaker
@@ -371,6 +371,7 @@ class BeregnBarnebidragService : BeregnService() {
         val endeligBidragBeregningListe: List<BeregnGrunnlagJustert>
         try {
             endeligBidragBeregningListe = BeregnEndeligBidragServiceV2.delberegningEndeligBidrag(
+                beregningsperiode = beregningsperiode,
                 grunnlagSøknadsbarnListe = utvidetGrunnlagSøknadsbarnListe,
                 grunnlagLøpendeBidragListe = grunnlagLøpendeBidragListe,
             )
@@ -865,7 +866,7 @@ class BeregnBarnebidragService : BeregnService() {
 
     // Standardlogikk for å lage resultatperioder
     private fun lagResultatPerioderV2(grunnlagListe: List<GrunnlagDto>): List<ResultatPeriode> = grunnlagListe
-        .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndeligBidragBeregnet>(Grunnlagstype.DELBEREGNING_ENDELIG_BIDRAG_BEREGNET)
+        .filtrerOgKonverterBasertPåEgenReferanse<SluttberegningBarnebidragV2>(Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG)
         .map {
             ResultatPeriode(
                 periode = it.innhold.periode,

@@ -8,10 +8,10 @@ import no.nav.bidrag.beregn.barnebidrag.bo.BidragTilFordelingBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BidragTilFordelingBeregningResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.BidragTilFordelingLøpendeBidragBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BidragTilFordelingLøpendeBidragBeregningResultat
-import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragBeregnetBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragBeregnetBeregningResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.Evne25ProsentAvInntektBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.Evne25ProsentAvInntektBeregningResultat
+import no.nav.bidrag.beregn.barnebidrag.bo.SluttberegningBarnebidragV2BeregningGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SluttberegningBarnebidragV2BeregningResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.SumBidragTilFordelingBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SumBidragTilFordelingBeregningResultat
 import no.nav.bidrag.domene.util.avrundetMedTiDesimaler
@@ -31,11 +31,16 @@ internal object EndeligBidragBeregningV2 {
         val uMinusNettoBarnetilleggBM = maxOf(underholdskostnad - nettoBarnetilleggBM, BigDecimal.ZERO)
         val bpAndelAvUMinusSamværsfradrag = maxOf(bpAndelBeløp - samværsfradrag, BigDecimal.ZERO)
         val bidragTilFordeling = minOf(uMinusNettoBarnetilleggBM, bpAndelAvUMinusSamværsfradrag) + samværsfradrag
+        val nettoBidragEtterBarnetilleggBM = maxOf(bidragTilFordeling - samværsfradrag, BigDecimal.ZERO)
+        val erBidragJustertForNettoBarnetilleggBM = uMinusNettoBarnetilleggBM == bidragTilFordeling - samværsfradrag
 
         return BidragTilFordelingBeregningResultat(
             uMinusNettoBarnetilleggBM = uMinusNettoBarnetilleggBM.avrundetMedToDesimaler,
             bpAndelAvUMinusSamværsfradrag = bpAndelAvUMinusSamværsfradrag.avrundetMedToDesimaler,
             bidragTilFordeling = bidragTilFordeling.avrundetMedToDesimaler,
+            nettoBidragEtterBarnetilleggBM = nettoBidragEtterBarnetilleggBM.avrundetMedToDesimaler,
+            bruttoBidragEtterBarnetilleggBM = bidragTilFordeling.avrundetMedToDesimaler,
+            erBidragJustertForNettoBarnetilleggBM = erBidragJustertForNettoBarnetilleggBM,
             grunnlagsreferanseListe = listOfNotNull(
                 grunnlag.underholdskostnadBeregningGrunnlag.referanse,
                 grunnlag.bpAndelUnderholdskostnadBeregningGrunnlag.referanse,
@@ -138,13 +143,13 @@ internal object EndeligBidragBeregningV2 {
         )
     }
 
-    fun beregnEndeligBidragBeregnet(grunnlag: EndeligBidragBeregnetBeregningGrunnlag): EndeligBidragBeregnetBeregningResultat {
+    fun beregnSluttberegningBarnebidrag(grunnlag: SluttberegningBarnebidragV2BeregningGrunnlag): SluttberegningBarnebidragV2BeregningResultat {
         val bidragJustertForNettoBarnetilleggBP =
             grunnlag.bidragJustertForBPBarnetilleggBeregningGrunnlag.bidragJustertForNettoBarnetilleggBP
         val samværsfradrag = grunnlag.samværsfradragBeregningGrunnlag.beløp
         val beregnetBeløp = maxOf((bidragJustertForNettoBarnetilleggBP - samværsfradrag), BigDecimal.ZERO)
 
-        return EndeligBidragBeregnetBeregningResultat(
+        return SluttberegningBarnebidragV2BeregningResultat(
             beregnetBeløp = beregnetBeløp.avrundetMedToDesimaler,
             resultatBeløp = beregnetBeløp.avrundetTilNærmesteTier,
             grunnlagsreferanseListe = listOfNotNull(

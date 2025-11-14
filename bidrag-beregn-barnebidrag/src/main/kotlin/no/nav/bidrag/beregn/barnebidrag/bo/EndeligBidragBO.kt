@@ -168,6 +168,9 @@ data class BidragTilFordelingBeregningResultat(
     val uMinusNettoBarnetilleggBM: BigDecimal,
     val bpAndelAvUMinusSamværsfradrag: BigDecimal,
     val bidragTilFordeling: BigDecimal,
+    val nettoBidragEtterBarnetilleggBM: BigDecimal,
+    val bruttoBidragEtterBarnetilleggBM: BigDecimal,
+    val erBidragJustertForNettoBarnetilleggBM: Boolean,
     val grunnlagsreferanseListe: List<String> = emptyList(),
 )
 
@@ -310,20 +313,20 @@ data class BidragJustertForBPBarnetilleggDelberegningPeriodeGrunnlag(
 
 data class BidragJustertForBPBarnetilleggDelberegningBeregningGrunnlag(val referanse: String, val bidragJustertForNettoBarnetilleggBP: BigDecimal)
 
-data class EndeligBidragBeregnetPeriodeGrunnlag(
+data class SluttberegningBarnebidragV2PeriodeGrunnlag(
     val beregningsperiode: ÅrMånedsperiode,
     val bidragJustertForBPBarnetilleggDelberegningPeriodeGrunnlagListe: List<BidragJustertForBPBarnetilleggDelberegningPeriodeGrunnlag>,
     val samværsfradragDelberegningPeriodeGrunnlagListe: List<SamværsfradragDelberegningPeriodeGrunnlag>,
 )
 
-data class EndeligBidragBeregnetPeriodeResultat(val periode: ÅrMånedsperiode, val resultat: EndeligBidragBeregnetBeregningResultat)
+data class SluttberegningBarnebidragV2PeriodeResultat(val periode: ÅrMånedsperiode, val resultat: SluttberegningBarnebidragV2BeregningResultat)
 
-data class EndeligBidragBeregnetBeregningGrunnlag(
+data class SluttberegningBarnebidragV2BeregningGrunnlag(
     val bidragJustertForBPBarnetilleggBeregningGrunnlag: BidragJustertForBPBarnetilleggDelberegningBeregningGrunnlag,
     val samværsfradragBeregningGrunnlag: SamværsfradragDelberegningBeregningGrunnlag,
 )
 
-data class EndeligBidragBeregnetBeregningResultat(
+data class SluttberegningBarnebidragV2BeregningResultat(
     val beregnetBeløp: BigDecimal,
     val resultatBeløp: BigDecimal,
     val grunnlagsreferanseListe: List<String> = emptyList(),
