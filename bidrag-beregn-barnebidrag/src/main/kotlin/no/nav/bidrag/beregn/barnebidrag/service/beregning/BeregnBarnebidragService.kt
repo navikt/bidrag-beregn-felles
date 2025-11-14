@@ -312,6 +312,7 @@ class BeregnBarnebidragService : BeregnService() {
                 )
                 utvidetGrunnlag = utvidetGrunnlag.utvidMedNyeGrunnlag(delberegningSamværsfradragResultat)
 
+                // Barnetillegg BP
                 if (barnetilleggEksisterer(
                         utvidetGrunnlag.beregnGrunnlag,
                         utvidetGrunnlag.beregnGrunnlag.grunnlagListe.bidragspliktig?.referanse!!,
@@ -335,6 +336,7 @@ class BeregnBarnebidragService : BeregnService() {
                     utvidetGrunnlag = utvidetGrunnlag.utvidMedNyeGrunnlag(delberegningNettoBarnetilleggBPResultat)
                 }
 
+                // Barnetillegg BM
                 if (barnetilleggEksisterer(
                         utvidetGrunnlag.beregnGrunnlag,
                         utvidetGrunnlag.beregnGrunnlag.grunnlagListe.bidragsmottaker?.referanse!!,

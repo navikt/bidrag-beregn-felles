@@ -8,15 +8,10 @@ import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import java.math.BigDecimal
 
 internal object UnderholdskostnadBeregning {
-    private var sjablonverdiBoutgifterBidragsbarn = BigDecimal.ZERO
-    private var sjablonverdiOrdinærBarnetrygd = BigDecimal.ZERO
-    private var sjablonverdiForhøyetBarnetrygd = BigDecimal.ZERO
-    private var sjablonverdiBarnetilsynBeløp: BigDecimal? = BigDecimal.ZERO
-    private var sjablonverdiForbruksutgifterBeløp = BigDecimal.ZERO
 
     fun beregn(grunnlag: UnderholdskostnadBeregningGrunnlag, barnetrygdType: BarnetrygdType): UnderholdskostnadBeregningResultat {
         // Henter sjablonverdier
-        hentSjablonverdier(grunnlag)
+        val sjablonverdier = hentSjablonverdier(grunnlag)
 
         val barnetrygdBeløp: BigDecimal
 
@@ -29,26 +24,27 @@ internal object UnderholdskostnadBeregning {
             }
 
             BarnetrygdType.ORDINÆR -> {
-                barnetrygdBeløp = sjablonverdiOrdinærBarnetrygd
+                barnetrygdBeløp = sjablonverdier.ordinærBarnetrygd
                 grunnlag.sjablonSjablontallBeregningGrunnlagListe.removeIf { it.type == SjablonTallNavn.FORHØYET_BARNETRYGD_BELØP.navn }
             }
 
             BarnetrygdType.FORHØYET -> {
-                barnetrygdBeløp = sjablonverdiForhøyetBarnetrygd
+                barnetrygdBeløp = sjablonverdier.forhøyetBarnetrygd
                 grunnlag.sjablonSjablontallBeregningGrunnlagListe.removeIf { it.type == SjablonTallNavn.ORDINÆR_BARNETRYGD_BELØP.navn }
             }
         }
 
         val beregnetUnderholdskostnad = (
-            sjablonverdiForbruksutgifterBeløp.add(sjablonverdiBoutgifterBidragsbarn).add(sjablonverdiBarnetilsynBeløp ?: BigDecimal.ZERO).add(
-                grunnlag.nettoTilsynsutgiftBeregningGrunnlag?.nettoTilsynsutgift ?: BigDecimal.ZERO,
-            ).subtract(barnetrygdBeløp)
+            sjablonverdier.forbruksutgifterBeløp.add(sjablonverdier.boutgifterBidragsbarn).add(sjablonverdier.barnetilsynBeløp ?: BigDecimal.ZERO)
+                .add(
+                    grunnlag.nettoTilsynsutgiftBeregningGrunnlag?.nettoTilsynsutgift ?: BigDecimal.ZERO,
+                ).subtract(barnetrygdBeløp)
             ).coerceAtLeast(BigDecimal.ZERO)
 
         val underholdskostnadBeregningResultat = UnderholdskostnadBeregningResultat(
-            forbruksutgift = sjablonverdiForbruksutgifterBeløp.avrundetMedToDesimaler,
-            boutgift = sjablonverdiBoutgifterBidragsbarn.avrundetMedToDesimaler,
-            barnetilsynMedStønad = sjablonverdiBarnetilsynBeløp?.avrundetMedToDesimaler,
+            forbruksutgift = sjablonverdier.forbruksutgifterBeløp.avrundetMedToDesimaler,
+            boutgift = sjablonverdier.boutgifterBidragsbarn.avrundetMedToDesimaler,
+            barnetilsynMedStønad = sjablonverdier.barnetilsynBeløp?.avrundetMedToDesimaler,
             nettoTilsynsutgift = grunnlag.nettoTilsynsutgiftBeregningGrunnlag?.nettoTilsynsutgift?.avrundetMedToDesimaler,
             barnetrygd = barnetrygdBeløp.avrundetMedToDesimaler,
             underholdskostnad = beregnetUnderholdskostnad.avrundetMedToDesimaler,
@@ -65,34 +61,47 @@ internal object UnderholdskostnadBeregning {
         return underholdskostnadBeregningResultat
     }
 
-    private fun hentSjablonverdier(grunnlag: UnderholdskostnadBeregningGrunnlag) {
-        sjablonverdiBoutgifterBidragsbarn = (
+    private fun hentSjablonverdier(grunnlag: UnderholdskostnadBeregningGrunnlag): Sjablonverdier {
+        val boutgifterBidragsbarn = (
             grunnlag.sjablonSjablontallBeregningGrunnlagListe
                 .filter { it.type == SjablonTallNavn.BOUTGIFTER_BIDRAGSBARN_BELØP.navn }
                 .map { it.verdi }
                 .firstOrNull() ?: 0.0
-            )
-            .toBigDecimal()
+            ).toBigDecimal()
 
-        sjablonverdiOrdinærBarnetrygd = (
+        val ordinærBarnetrygd = (
             grunnlag.sjablonSjablontallBeregningGrunnlagListe
                 .filter { it.type == SjablonTallNavn.ORDINÆR_BARNETRYGD_BELØP.navn }
                 .map { it.verdi }
                 .firstOrNull() ?: 0.0
-            )
-            .toBigDecimal()
+            ).toBigDecimal()
 
-        sjablonverdiForhøyetBarnetrygd = (
+        val forhøyetBarnetrygd = (
             grunnlag.sjablonSjablontallBeregningGrunnlagListe
                 .filter { it.type == SjablonTallNavn.FORHØYET_BARNETRYGD_BELØP.navn }
                 .map { it.verdi }
                 .firstOrNull() ?: 0.0
-            )
-            .toBigDecimal()
+            ).toBigDecimal()
 
         // Hvis alderjustering hentes beløp fra siste vedtak og ikke fra sjablon
-        sjablonverdiBarnetilsynBeløp = grunnlag.barnetilsynMedStønad?.beløp ?: grunnlag.sjablonBarnetilsynBeregningGrunnlag?.beløpBarnetilsyn
+        val barnetilsynBeløp = grunnlag.barnetilsynMedStønad?.beløp ?: grunnlag.sjablonBarnetilsynBeregningGrunnlag?.beløpBarnetilsyn
 
-        sjablonverdiForbruksutgifterBeløp = grunnlag.sjablonForbruksutgifterBeregningGrunnlag.beløpForbrukTotalt
+        val forbruksutgifterBeløp = grunnlag.sjablonForbruksutgifterBeregningGrunnlag.beløpForbrukTotalt
+
+        return Sjablonverdier(
+            boutgifterBidragsbarn = boutgifterBidragsbarn,
+            ordinærBarnetrygd = ordinærBarnetrygd,
+            forhøyetBarnetrygd = forhøyetBarnetrygd,
+            barnetilsynBeløp = barnetilsynBeløp,
+            forbruksutgifterBeløp = forbruksutgifterBeløp,
+        )
     }
+
+    private data class Sjablonverdier(
+        val boutgifterBidragsbarn: BigDecimal,
+        val ordinærBarnetrygd: BigDecimal,
+        val forhøyetBarnetrygd: BigDecimal,
+        val barnetilsynBeløp: BigDecimal?,
+        val forbruksutgifterBeløp: BigDecimal,
+    )
 }
