@@ -20,6 +20,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragspliktig
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
+import no.nav.bidrag.transport.behandling.felles.grunnlag.finnGyldigeGrunnlagForBarn
 import no.nav.bidrag.transport.behandling.felles.grunnlag.personIdent
 import org.springframework.context.annotation.Import
 import org.springframework.stereotype.Service
@@ -450,9 +451,19 @@ class BidragsberegningOrkestrator(
         grunnlagListe = grunnlagListe,
     )
 
+    // Filtrerer og konverterer grunnlag for hvert søknadsbarn
     private fun BidragsberegningOrkestratorRequestV2.tilListeBeregnGrunnlagV1(grunnlagListe: List<GrunnlagDto>): List<BeregnGrunnlag> =
         beregningBarn.map { beregningBarn ->
-            beregningBarn.tilBeregnGrunnlagV1(grunnlagListe)
+            val bidragspliktigRef =
+                grunnlagListe.bidragspliktig?.referanse ?: throw IllegalArgumentException("Finner ikke bidragspliktig i grunnlagsliste")
+            val søknadsbarnRef = beregningBarn.søknadsbarnreferanse
+            val bidragsmottakerRef = finnBidragsmottakerForBarn(søknadsbarnRef)
+            val gyldigeGrunnlagForBarn = grunnlagListe.finnGyldigeGrunnlagForBarn(
+                bmRef = bidragsmottakerRef,
+                bpRef = bidragspliktigRef,
+                barnRef = søknadsbarnRef,
+            )
+            beregningBarn.tilBeregnGrunnlagV1(gyldigeGrunnlagForBarn)
         }
 
     // Henter alle søknadsbarn og deres referanser og personidenter fra grunnlagslista
@@ -469,4 +480,10 @@ class BidragsberegningOrkestrator(
         }
         return søknadsbarnIdentMap
     }
+
+    private fun BidragsberegningOrkestratorRequestV2.finnBidragsmottakerForBarn(søknadsbarnreferanse: String): String = grunnlagsliste
+        .filtrerOgKonverterBasertPåEgenReferanse<Person>(Grunnlagstype.PERSON_SØKNADSBARN)
+        .firstOrNull { it.referanse == søknadsbarnreferanse }
+        ?.innhold?.bidragsmottaker
+        ?: throw IllegalArgumentException("Fant ikke bidragsmottaker for barn med referanse $søknadsbarnreferanse")
 }
