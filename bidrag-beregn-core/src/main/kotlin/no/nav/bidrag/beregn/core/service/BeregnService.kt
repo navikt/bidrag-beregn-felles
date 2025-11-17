@@ -45,6 +45,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonTrinnvisSkattes
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.hentPersonMedReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettSjablonreferanse
+import no.nav.bidrag.transport.behandling.felles.grunnlag.personObjekt
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.time.LocalDate
