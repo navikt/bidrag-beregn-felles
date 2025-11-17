@@ -13,7 +13,11 @@ import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Saksnummer
 import no.nav.bidrag.domene.sak.Stønadsid
+import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.avrundetTilNærmesteTier
+import no.nav.bidrag.transport.behandling.belopshistorikk.request.LøpendeBidragPeriodeRequest
+import no.nav.bidrag.transport.behandling.belopshistorikk.response.LøpendeBidrag
+import no.nav.bidrag.transport.behandling.belopshistorikk.response.LøpendeBidragPeriodeResponse
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.LøpendeBidragssak
 import no.nav.bidrag.transport.behandling.beregning.felles.BidragBeregningResponsDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
@@ -38,8 +42,13 @@ class HentLøpendeBidragService(private val vedtakService: VedtakService) {
     fun hentLøpendeBidragForBehandling(
         bidragspliktigIdent: Personident,
         søknadsbarnidentMap: Map<Personident, String>,
+        beregningsperiode: ÅrMånedsperiode
     ): EvnevurderingBeregningResultat {
         try {
+            // Henter alle stønader tilknyttet BP som er eller har vært løpende i beregningsperioden
+            val løpendeStønaderIPerioden = vedtakService.hentAlleStønaderForBidragspliktig(
+                LøpendeBidragPeriodeRequest(bidragspliktigIdent, beregningsperiode)
+            ).bidragListe.filterNot { it.kravhaver in søknadsbarnidentMap }
             // Henter løpende stønader, men filtrerer bort kravhavere som er søknadsbarn
             val løpendeStønader = vedtakService.hentSisteLøpendeStønader(bidragspliktigIdent).filterNot { it.kravhaver in søknadsbarnidentMap }
             secureLogger.info { "Hentet løpende stønader $løpendeStønader for BP ${bidragspliktigIdent.verdi}" }
@@ -178,6 +187,17 @@ class HentLøpendeBidragService(private val vedtakService: VedtakService) {
     }
 
     private fun List<LøpendeBidragssak>.hentLøpendeVedtak(bidragspliktigIdent: Personident): List<VedtakForStønad> = mapNotNull {
+        vedtakService.finnSisteManuelleVedtakForEvnevurdering(
+            Stønadsid(
+                type = it.type,
+                kravhaver = it.kravhaver,
+                skyldner = bidragspliktigIdent,
+                sak = it.sak,
+            ),
+        )
+    }
+
+    private fun List<LøpendeBidrag>.hentManuelleVedtak(bidragspliktigIdent: Personident): List<VedtakForStønad> = mapNotNull {
         vedtakService.finnSisteManuelleVedtakForEvnevurdering(
             Stønadsid(
                 type = it.type,

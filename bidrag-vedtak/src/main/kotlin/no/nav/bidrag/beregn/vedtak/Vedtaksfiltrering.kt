@@ -58,7 +58,51 @@ class Vedtaksfiltrering {
         return null
     }
 
+    /**
+     * Finner alle manuelle vedtak for en stønad
+     * @param vedtak samling vedtak for stønad som sendes inn til metoden
+     * @return Alle manuelle vedtak
+     */
+    fun finneAlleManuelleVedtak(vedtak: Collection<VedtakForStønad>): List<VedtakForStønad> {
+        val iterator =
+            Vedtaksiterator(
+                vedtak.filter { it.filtrereBortIrrelevanteVedtak() }
+                    .map(VedtakForStønad::justerVedtakstidspunkt)
+                    .sortedByDescending { it.vedtakstidspunkt }.tilVedtaksdetaljer(),
+            )
+
+        val vedtaksdetaljerListe = mutableListOf<VedtakForStønad>()
+
+        while (iterator.hasNext()) {
+            val vedtaksdetaljer = iterator.next()
+
+            // Håndtere resultat fra annet vedtak
+            if (vedtaksdetaljer.vedtak.erResultatFraAnnetVedtak()) {
+                iterator.hoppeTilBeløp(vedtaksdetaljer.periode.beløp)
+                if (!iterator.hasNext()) return emptyList()
+                continue
+            }
+
+            // Hopp over indeksregulering
+            if (vedtaksdetaljer.vedtak.erOpprettetAvBatchEllerAldersjusteringIndeksregulering()) {
+                continue
+            }
+
+            vedtaksdetaljerListe.add(vedtaksdetaljer.vedtak)
+        }
+
+        if (vedtaksdetaljerListe.isEmpty()) {
+            secureLogger.warn { "Fant ingen tidligere vedtak for barn med personident ${vedtak.firstOrNull()?.stønadsendring?.kravhaver?.verdi}" }
+        }
+
+
+        return vedtaksdetaljerListe
+
+
+    }
+
     private fun VedtakForStønad.erOpprettetAvBatchEllerAldersjusteringIndeksregulering(): Boolean =
         kilde == Vedtakskilde.AUTOMATISK || type == Vedtakstype.INDEKSREGULERING || type == Vedtakstype.ALDERSJUSTERING
+
     private fun VedtakForStønad.filtrereBortIrrelevanteVedtak(): Boolean = erInnkreving() && !erIkkeRelevant()
 }

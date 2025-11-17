@@ -10,10 +10,14 @@ import no.nav.bidrag.domene.enums.vedtak.Beslutningstype
 import no.nav.bidrag.domene.enums.vedtak.Innkrevingstype
 import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Stønadsid
+import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.belopshistorikk.request.HentStønadHistoriskRequest
 import no.nav.bidrag.transport.behandling.belopshistorikk.request.HentStønadRequest
+import no.nav.bidrag.transport.behandling.belopshistorikk.request.LøpendeBidragPeriodeRequest
 import no.nav.bidrag.transport.behandling.belopshistorikk.request.LøpendeBidragssakerRequest
+import no.nav.bidrag.transport.behandling.belopshistorikk.response.LøpendeBidragPeriodeResponse
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.LøpendeBidragssak
+import no.nav.bidrag.transport.behandling.belopshistorikk.response.SkyldnerStønaderResponse
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadPeriodeDto
 import no.nav.bidrag.transport.behandling.beregning.felles.BidragBeregningRequestDto
@@ -147,6 +151,7 @@ class VedtakService(
     private fun List<VedtakForStønad>.hentOpprinneligPåklagetVedtak(vedtak: VedtakForStønad): Int? = hentPåklagetVedtakListe(vedtak).minBy {
         it.vedtakstidspunkt
     }.vedtaksid
+
     private fun List<VedtakForStønad>.hentPåklagetVedtakListe(vedtak: VedtakForStønad): Set<PåklagetVedtak> {
         val refererTilVedtakId = setOfNotNull(vedtak.stønadsendring.omgjørVedtakId)
         if (refererTilVedtakId.isNotEmpty()) {
@@ -231,6 +236,7 @@ class VedtakService(
     fun oppdaterIdenterStønadsendringer(vedtak: VedtakDto) = vedtak.copy(
         stønadsendringListe = vedtak.stønadsendringListe.map { oppdaterIdenter(it) },
     )
+
     fun oppdaterIdenter(stønadsendringDto: StønadsendringDto) = stønadsendringDto.copy(
         mottaker = identUtils.hentNyesteIdent(stønadsendringDto.mottaker),
         kravhaver = identUtils.hentNyesteIdent(stønadsendringDto.kravhaver),
@@ -266,4 +272,7 @@ class VedtakService(
             },
         ),
     )
+
+    fun hentAlleStønaderForBidragspliktig(request: LøpendeBidragPeriodeRequest): LøpendeBidragPeriodeResponse =
+        stønadConsumer.hentAlleLøpendeStønaderForPeriode(request)
 }
