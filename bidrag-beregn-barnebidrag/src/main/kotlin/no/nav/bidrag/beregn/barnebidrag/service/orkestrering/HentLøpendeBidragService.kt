@@ -21,6 +21,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.LøpendeBidragPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidragV2
+import no.nav.bidrag.transport.behandling.felles.grunnlag.erSluttberegningGammelStruktur
 import no.nav.bidrag.transport.behandling.felles.grunnlag.finnBidragJustertForBarnetilleggBP
 import no.nav.bidrag.transport.behandling.felles.grunnlag.finnBidragTilFordeling
 import no.nav.bidrag.transport.behandling.felles.grunnlag.finnSamværsklasse
@@ -161,7 +162,7 @@ class HentLøpendeBidragService(private val vedtakService: VedtakService) {
     }
 
     private fun finnPeriode(sluttberegningGrunnlag: GrunnlagDto): ÅrMånedsperiode {
-        if (sluttberegningGrunnlag.type == Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG) {
+        if (sluttberegningGrunnlag.erSluttberegningGammelStruktur()) {
             val sluttberegningObjekt = sluttberegningGrunnlag.innholdTilObjekt<SluttberegningBarnebidrag>()
             return sluttberegningObjekt.periode
         }

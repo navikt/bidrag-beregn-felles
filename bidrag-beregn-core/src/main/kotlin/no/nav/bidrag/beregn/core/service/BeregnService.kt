@@ -45,7 +45,6 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.SjablonTrinnvisSkattes
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.hentPersonMedReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettSjablonreferanse
-import no.nav.bidrag.transport.behandling.felles.grunnlag.personObjekt
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -411,6 +410,7 @@ abstract class BeregnService {
                 mottattGrunnlag.opphørsdato == null || mottattGrunnlag.opphørsdato!!.isAfter(YearMonth.now()),
             )
         }
+
         val periodeSøknadsbarnetFyller18År = mottattGrunnlag.grunnlagListe
             .hentPersonMedReferanse(mottattGrunnlag.søknadsbarnReferanse)
             .let { YearMonth.from(it!!.personObjekt.fødselsdato.plusYears(18)) }
