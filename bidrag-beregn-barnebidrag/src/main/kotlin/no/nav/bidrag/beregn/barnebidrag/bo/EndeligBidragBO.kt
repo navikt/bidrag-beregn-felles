@@ -317,6 +317,8 @@ data class SluttberegningBarnebidragV2PeriodeGrunnlag(
     val beregningsperiode: ÅrMånedsperiode,
     val bidragJustertForBPBarnetilleggDelberegningPeriodeGrunnlagListe: List<BidragJustertForBPBarnetilleggDelberegningPeriodeGrunnlag>,
     val samværsfradragDelberegningPeriodeGrunnlagListe: List<SamværsfradragDelberegningPeriodeGrunnlag>,
+    val bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe: List<BpAndelUnderholdskostnadDelberegningPeriodeGrunnlag>,
+    val bostatusPeriodeGrunnlagListe: List<BostatusPeriodeGrunnlag>,
 )
 
 data class SluttberegningBarnebidragV2PeriodeResultat(val periode: ÅrMånedsperiode, val resultat: SluttberegningBarnebidragV2BeregningResultat)
@@ -324,10 +326,14 @@ data class SluttberegningBarnebidragV2PeriodeResultat(val periode: ÅrMånedsper
 data class SluttberegningBarnebidragV2BeregningGrunnlag(
     val bidragJustertForBPBarnetilleggBeregningGrunnlag: BidragJustertForBPBarnetilleggDelberegningBeregningGrunnlag,
     val samværsfradragBeregningGrunnlag: SamværsfradragDelberegningBeregningGrunnlag,
+    val bpAndelUnderholdskostnadBeregningGrunnlag: BpAndelUnderholdskostnadDelberegningBeregningGrunnlag,
+    val søknadsbarnetBorHosBpGrunnlag: SøknadsbarnetBorHosBpGrunnlag,
 )
 
 data class SluttberegningBarnebidragV2BeregningResultat(
-    val beregnetBeløp: BigDecimal,
-    val resultatBeløp: BigDecimal,
+    val beregnetBeløp: BigDecimal?,
+    val resultatBeløp: BigDecimal?,
+    val barnetErSelvforsørget: Boolean = false,
+    val ikkeOmsorgForBarnet: Boolean = false,
     val grunnlagsreferanseListe: List<String> = emptyList(),
 )

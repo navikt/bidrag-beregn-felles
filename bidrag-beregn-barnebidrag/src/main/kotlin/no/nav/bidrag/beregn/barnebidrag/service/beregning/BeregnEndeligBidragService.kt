@@ -102,7 +102,8 @@ internal object BeregnEndeligBidragService : BeregnService() {
             )
         }
 
-        endeligBidragBeregningResultatListe = slåSammenSammenhengendePerioderMedLikResultat(endeligBidragBeregningResultatListe)
+        endeligBidragBeregningResultatListe = slåSammenSammenhengendePerioderMedLiktResultat(endeligBidragBeregningResultatListe)
+
         // Setter til-periode i siste element til null hvis det ikke allerede er det og åpenSluttperiode er true
         if (endeligBidragBeregningResultatListe.isNotEmpty()) {
             val sisteElement = endeligBidragBeregningResultatListe.last()
@@ -201,7 +202,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
         .any { it.innhold.gjelderBarn == mottattGrunnlag.søknadsbarnReferanse }
 
     // Setter sammen perioder som er like. Dette gjelder for feks perioder som er opphør pga barnet er selvforsørget eller ikke bor hos BP
-    fun slåSammenSammenhengendePerioderMedLikResultat(resultList: List<EndeligBidragPeriodeResultat>): MutableList<EndeligBidragPeriodeResultat> {
+    fun slåSammenSammenhengendePerioderMedLiktResultat(resultList: List<EndeligBidragPeriodeResultat>): MutableList<EndeligBidragPeriodeResultat> {
         if (resultList.isEmpty()) return mutableListOf()
         val mergedList = mutableListOf<EndeligBidragPeriodeResultat>()
         var current = resultList.first()
@@ -209,7 +210,7 @@ internal object BeregnEndeligBidragService : BeregnService() {
         for (next in resultList.drop(1)) {
             if (current.resultat == next.resultat &&
                 current.resultat.resultatBeløp == null &&
-                // Sikre at periodene kommer etterhverandre
+                // Sikre at periodene kommer etter hverandre
                 current.periode.til == next.periode.fom
             ) {
                 // Slå sammen periodene slik at periode før utvides med periode etter

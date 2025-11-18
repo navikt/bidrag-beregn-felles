@@ -34,10 +34,12 @@ import no.nav.bidrag.beregn.barnebidrag.bo.SumBidragTilFordelingBeregningGrunnla
 import no.nav.bidrag.beregn.barnebidrag.bo.SumBidragTilFordelingDelberegningBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SumBidragTilFordelingPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SumBidragTilFordelingPeriodeResultat
+import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnetBorHosBpGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadDelberegningBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.mapper.EndeligBidragMapperV2
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
+import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningAndelAvBidragsevne
@@ -125,7 +127,7 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
             beregnGrunnlag.utvidMedNyeGrunnlag(sluttberegningBarnebidrag)
         }
 
-        // Filtrerer bort grunnlag som tilhører andra barn (som refereres av delberegning Sum bidrag til fordeling)
+        // Filtrerer bort grunnlag som tilhører andre barn (som refereres av delberegning Sum bidrag til fordeling)
         utvidetGrunnlagSøknadsbarnListe = utvidetGrunnlagSøknadsbarnListe.map { beregnGrunnlag ->
             val søknadsbarnReferanse = beregnGrunnlag.beregnGrunnlag.søknadsbarnReferanse
             beregnGrunnlag.copy(
@@ -554,7 +556,7 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
             beregningsperiode = mottattGrunnlag.periode,
         )
 
-        val sluttberegningBarnebidragBeregningResultatListe = mutableListOf<SluttberegningBarnebidragV2PeriodeResultat>()
+        var sluttberegningBarnebidragBeregningResultatListe = mutableListOf<SluttberegningBarnebidragV2PeriodeResultat>()
 
         // Løper gjennom hver bruddperiode og beregner sluttberegning barnebidrag
         bruddPeriodeListe.forEach { bruddPeriode ->
@@ -570,6 +572,10 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
                 ),
             )
         }
+
+        // TODO Litt usikker på denne
+        sluttberegningBarnebidragBeregningResultatListe =
+            slåSammenSammenhengendePerioderMedLiktResultat(sluttberegningBarnebidragBeregningResultatListe)
 
         // Setter til-periode i siste element til null hvis det ikke allerede er det og åpenSluttperiode er true
         if (sluttberegningBarnebidragBeregningResultatListe.isNotEmpty()) {
@@ -1070,6 +1076,11 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
                 },
             )
             .plus(grunnlagListe.samværsfradragDelberegningPeriodeGrunnlagListe.asSequence().map { it.samværsfradragPeriode.periode })
+            .plus(
+                grunnlagListe.bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe.asSequence()
+                    .map { it.bpAndelUnderholdskostnadPeriode.periode },
+            )
+            .plus(grunnlagListe.bostatusPeriodeGrunnlagListe.asSequence().map { it.bostatusPeriode.periode })
 
         return lagBruddPeriodeListe(periodeListe, beregningsperiode)
     }
@@ -1093,10 +1104,33 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
             .firstOrNull { it.samværsfradragPeriode.periode.inneholder(bruddPeriode) }
             ?.let { SamværsfradragDelberegningBeregningGrunnlag(referanse = it.referanse, beløp = it.samværsfradragPeriode.beløp) }
             ?: throw IllegalArgumentException("Samværsfradrag grunnlag mangler for periode $bruddPeriode")
+        val bpAndelUnderholdskostnadBeregningGrunnlag =
+            sluttberegningBarnebidragBeregnetPeriodeGrunnlag.bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe
+                .firstOrNull { it.bpAndelUnderholdskostnadPeriode.periode.inneholder(bruddPeriode) }
+                ?.let {
+                    BpAndelUnderholdskostnadDelberegningBeregningGrunnlag(
+                        referanse = it.referanse,
+                        andelBeløp = it.bpAndelUnderholdskostnadPeriode.andelBeløp,
+                        andelFaktor = it.bpAndelUnderholdskostnadPeriode.endeligAndelFaktor,
+                        barnetErSelvforsørget = it.bpAndelUnderholdskostnadPeriode.barnetErSelvforsørget,
+                    )
+                }
+                ?: throw IllegalArgumentException("BP andel underholdskostnad grunnlag mangler for periode $bruddPeriode")
+        val søknadsbarnetBorHosBpGrunnlag = sluttberegningBarnebidragBeregnetPeriodeGrunnlag.bostatusPeriodeGrunnlagListe
+            .firstOrNull { it.bostatusPeriode.periode.inneholder(bruddPeriode) }
+            ?.let {
+                SøknadsbarnetBorHosBpGrunnlag(
+                    referanse = it.referanse,
+                    søknadsbarnetBorHosBp = it.bostatusPeriode.bostatus == Bostatuskode.MED_FORELDER,
+                )
+            }
+            ?: throw IllegalArgumentException("Bostatus grunnlag mangler for periode $bruddPeriode")
 
         return SluttberegningBarnebidragV2BeregningGrunnlag(
             bidragJustertForBPBarnetilleggBeregningGrunnlag = bidragJustertForBPBarnetilleggBeregningGrunnlag,
             samværsfradragBeregningGrunnlag = samværsfradragBeregningGrunnlag,
+            bpAndelUnderholdskostnadBeregningGrunnlag = bpAndelUnderholdskostnadBeregningGrunnlag,
+            søknadsbarnetBorHosBpGrunnlag = søknadsbarnetBorHosBpGrunnlag,
         )
     }
 
@@ -1118,6 +1152,8 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
                         periode = it.periode,
                         beregnetBeløp = it.resultat.beregnetBeløp,
                         resultatBeløp = it.resultat.resultatBeløp,
+                        barnetErSelvforsørget = it.resultat.barnetErSelvforsørget,
+                        ikkeOmsorgForBarnet = it.resultat.ikkeOmsorgForBarnet,
                     ),
                 ),
                 grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe.sorted(),
@@ -1125,6 +1161,31 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
                 gjelderBarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
             )
         }
+
+    // Setter sammen perioder som er like. Dette gjelder for feks perioder som er opphør pga barnet er selvforsørget eller ikke bor hos BP
+    private fun slåSammenSammenhengendePerioderMedLiktResultat(
+        resultList: List<SluttberegningBarnebidragV2PeriodeResultat>,
+    ): MutableList<SluttberegningBarnebidragV2PeriodeResultat> {
+        if (resultList.isEmpty()) return mutableListOf()
+        val mergedList = mutableListOf<SluttberegningBarnebidragV2PeriodeResultat>()
+        var current = resultList.first()
+
+        for (next in resultList.drop(1)) {
+            if (current.resultat == next.resultat &&
+                current.resultat.resultatBeløp == null &&
+                // Sikre at periodene kommer etter hverandre
+                current.periode.til == next.periode.fom
+            ) {
+                // Slå sammen periodene slik at periode før utvides med periode etter
+                current = current.copy(periode = current.periode.copy(til = next.periode.til))
+            } else {
+                mergedList.add(current)
+                current = next
+            }
+        }
+        mergedList.add(current)
+        return mergedList
+    }
 
     // TODO Flytte til bidrag-felles
     private fun opprettDelberegningreferanse(
