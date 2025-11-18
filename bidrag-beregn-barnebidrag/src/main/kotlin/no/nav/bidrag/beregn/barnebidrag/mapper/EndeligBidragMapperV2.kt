@@ -9,6 +9,7 @@ import no.nav.bidrag.beregn.barnebidrag.bo.BidragTilFordelingLøpendeBidragDelbe
 import no.nav.bidrag.beregn.barnebidrag.bo.BidragTilFordelingLøpendeBidragPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BidragTilFordelingPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BidragsevneDelberegningPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.BostatusPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BpAndelUnderholdskostnadDelberegningPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.Evne25ProsentAvInntektDelberegningPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.Evne25ProsentAvInntektPeriodeGrunnlag
@@ -23,6 +24,7 @@ import no.nav.bidrag.beregn.core.service.mapper.CoreMapper
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.BostatusPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningAndelAvBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragJustertForBPBarnetillegg
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragTilFordeling
@@ -98,6 +100,8 @@ internal object EndeligBidragMapperV2 : CoreMapper() {
         beregningsperiode = mottattGrunnlag.periode,
         bidragJustertForBPBarnetilleggDelberegningPeriodeGrunnlagListe = mapBidragJustertForBPBarnetillegg(mottattGrunnlag),
         samværsfradragDelberegningPeriodeGrunnlagListe = mapSamværsfradrag(mottattGrunnlag.grunnlagListe),
+        bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe = mapBpAndelUnderholdskostnad(mottattGrunnlag),
+        bostatusPeriodeGrunnlagListe = mapBostatus(mottattGrunnlag),
     )
 
     private fun mapUnderholdskostnad(beregnGrunnlag: BeregnGrunnlag): List<UnderholdskostnadDelberegningPeriodeGrunnlag> {
@@ -321,6 +325,23 @@ internal object EndeligBidragMapperV2 : CoreMapper() {
             throw IllegalArgumentException(
                 "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.DELBEREGNING_BIDRAG_JUSTERT_FOR_BP_BARNETILLEGG er ikke " +
                     "gyldig: " + e.message,
+            )
+        }
+    }
+
+    private fun mapBostatus(beregnGrunnlag: BeregnGrunnlag): List<BostatusPeriodeGrunnlag> {
+        try {
+            return beregnGrunnlag.grunnlagListe
+                .filtrerOgKonverterBasertPåEgenReferanse<BostatusPeriode>(Grunnlagstype.BOSTATUS_PERIODE)
+                .map {
+                    BostatusPeriodeGrunnlag(
+                        referanse = it.referanse,
+                        bostatusPeriode = it.innhold,
+                    )
+                }
+        } catch (e: Exception) {
+            throw IllegalArgumentException(
+                "Ugyldig input ved beregning av barnebidrag. Innhold i Grunnlagstype.BOSTATUS_PERIODE er ikke gyldig: " + e.message,
             )
         }
     }

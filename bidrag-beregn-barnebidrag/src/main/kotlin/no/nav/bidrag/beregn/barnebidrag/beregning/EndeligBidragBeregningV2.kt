@@ -144,6 +144,26 @@ internal object EndeligBidragBeregningV2 {
     }
 
     fun beregnSluttberegningBarnebidrag(grunnlag: SluttberegningBarnebidragV2BeregningGrunnlag): SluttberegningBarnebidragV2BeregningResultat {
+        // Hvis søknadsbarnet bor hos BP skal det resultere i avslag og bidragsbeløp settes til null
+        if (grunnlag.søknadsbarnetBorHosBpGrunnlag.søknadsbarnetBorHosBp) {
+            return SluttberegningBarnebidragV2BeregningResultat(
+                ikkeOmsorgForBarnet = true,
+                beregnetBeløp = null,
+                resultatBeløp = null,
+                grunnlagsreferanseListe = listOf(grunnlag.søknadsbarnetBorHosBpGrunnlag.referanse),
+            )
+        }
+
+        // Hvis søknadsbarnet er selvforsørget skal det resultere i avslag og bidragsbeløp settes til null
+        if (grunnlag.bpAndelUnderholdskostnadBeregningGrunnlag.barnetErSelvforsørget) {
+            return SluttberegningBarnebidragV2BeregningResultat(
+                barnetErSelvforsørget = true,
+                beregnetBeløp = null,
+                resultatBeløp = null,
+                grunnlagsreferanseListe = listOf(grunnlag.bpAndelUnderholdskostnadBeregningGrunnlag.referanse),
+            )
+        }
+
         val bidragJustertForNettoBarnetilleggBP =
             grunnlag.bidragJustertForBPBarnetilleggBeregningGrunnlag.bidragJustertForNettoBarnetilleggBP
         val samværsfradrag = grunnlag.samværsfradragBeregningGrunnlag.beløp
