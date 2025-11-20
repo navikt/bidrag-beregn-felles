@@ -5,6 +5,7 @@ import no.nav.bidrag.beregn.barnebidrag.bo.BeregnEndeligBidragServiceRespons
 import no.nav.bidrag.beregn.barnebidrag.bo.EndringSjekkGrensePeriodeDelberegningPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.PrivatAvtaleIndeksregulertPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SluttberegningPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SluttberegningPeriodeGrunnlagV2
 import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper
 import no.nav.bidrag.beregn.core.exception.BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException
 import no.nav.bidrag.beregn.core.exception.BegrensetRevurderingLøpendeForskuddManglerException
@@ -382,29 +383,25 @@ class BeregnBarnebidragService : BeregnService() {
 
         val beregnetBarnebidragResultatListe = endeligBidragBeregningListe.map { beregningBarn ->
             val resultatPeriodeListe: List<ResultatPeriode>
-            val beløpshistorikkGrunnlag = emptyList<GrunnlagDto>()
-            val delberegningEndringSjekkGrensePeriodeResultat = emptyList<GrunnlagDto>()
-            val delberegningEndringSjekkGrenseResultat = emptyList<GrunnlagDto>()
-            val delberegningIndeksreguleringPrivatAvtaleResultat = emptyList<GrunnlagDto>()
+            var delberegningEndringSjekkGrensePeriodeResultat = emptyList<GrunnlagDto>()
+            var delberegningEndringSjekkGrenseResultat = emptyList<GrunnlagDto>()
+            var delberegningIndeksreguleringPrivatAvtaleResultat = emptyList<GrunnlagDto>()
 
             try {
                 // Skal sjekke mot minimumsgrense for endring ("12%-regelen") hvis egetTiltak er false og det ikke er klageberegning
-//                if (skalSjekkeMotMinimumsgrenseForEndring(beregningBarn.beregnGrunnlag)) {
-//                    val sjekkMotMinimumsgrenseForEndringResultat = sjekkMotMinimumsgrenseForEndringV2(
-//                        grunnlag = beregningBarn,
-//                        delberegningEndeligBidragResultat = delberegningEndeligBidragResultat, //TODO
-//                    )
-//                    resultatPeriodeListe = sjekkMotMinimumsgrenseForEndringResultat.resultatPeriodeListe
-//                    delberegningEndringSjekkGrensePeriodeResultat =
-//                        sjekkMotMinimumsgrenseForEndringResultat.delberegningEndringSjekkGrensePeriodeResultat
-//                    delberegningEndringSjekkGrenseResultat = sjekkMotMinimumsgrenseForEndringResultat.delberegningEndringSjekkGrenseResultat
-//                    delberegningIndeksreguleringPrivatAvtaleResultat =
-//                        sjekkMotMinimumsgrenseForEndringResultat.delberegningIndeksreguleringPrivatAvtaleResultat
-//                } else {
-//                    resultatPeriodeListe = lagResultatPerioder(delberegningEndeligBidragResultat.grunnlagListe)
-//                }
-
-                resultatPeriodeListe = lagResultatPerioderV2(beregningBarn.beregnGrunnlag.grunnlagListe)
+                if (skalSjekkeMotMinimumsgrenseForEndring(beregningBarn.beregnGrunnlag)) {
+                    val sjekkMotMinimumsgrenseForEndringResultat = sjekkMotMinimumsgrenseForEndringV2(
+                        grunnlag = beregningBarn,
+                    )
+                    resultatPeriodeListe = sjekkMotMinimumsgrenseForEndringResultat.resultatPeriodeListe
+                    delberegningEndringSjekkGrensePeriodeResultat =
+                        sjekkMotMinimumsgrenseForEndringResultat.delberegningEndringSjekkGrensePeriodeResultat
+                    delberegningEndringSjekkGrenseResultat = sjekkMotMinimumsgrenseForEndringResultat.delberegningEndringSjekkGrenseResultat
+                    delberegningIndeksreguleringPrivatAvtaleResultat =
+                        sjekkMotMinimumsgrenseForEndringResultat.delberegningIndeksreguleringPrivatAvtaleResultat
+                } else {
+                    resultatPeriodeListe = lagResultatPerioderV2(beregningBarn.beregnGrunnlag.grunnlagListe)
+                }
 
                 // Slår sammen grunnlag fra alle delberegninger
                 val foreløpigResultatGrunnlagListe = beregningBarn.beregnGrunnlag.grunnlagListe
@@ -765,69 +762,52 @@ class BeregnBarnebidragService : BeregnService() {
     }
 
     // Sjekk mot minimumsgrense for endring ("12%-regelen")
-    private fun sjekkMotMinimumsgrenseForEndringV2(
-        utvidetGrunnlag: BeregnGrunnlagJustert,
-//        delberegningEndeligBidragResultat: BeregnEndeligBidragServiceRespons, //TODO
-    ): SjekkMotMinimumsgrenseForEndringResultat {
-        return SjekkMotMinimumsgrenseForEndringResultat(
-            resultatPeriodeListe = emptyList(),
-            delberegningEndringSjekkGrensePeriodeResultat = emptyList(),
-            delberegningEndringSjekkGrenseResultat = emptyList(),
-            delberegningIndeksreguleringPrivatAvtaleResultat = emptyList(),
+    private fun sjekkMotMinimumsgrenseForEndringV2(grunnlag: BeregnGrunnlagJustert): SjekkMotMinimumsgrenseForEndringResultat {
+        val er18ÅrsBidrag = grunnlag.beregnGrunnlag.stønadstype == Stønadstype.BIDRAG18AAR
+
+        // Filtrerer ut beløpshistorikk. Hvis det er 18-års-bidrag benyttes egen beløpshistorikk.
+        val beløpshistorikkGrunnlag = if (er18ÅrsBidrag) {
+            filtrerBeløpshistorikk18ÅrGrunnlag(grunnlag.beregnGrunnlag)
+        } else {
+            filtrerBeløpshistorikkGrunnlag(grunnlag.beregnGrunnlag)
+        }
+
+        // Kaller delberegning for indeksregulering av privat avtale
+        val delberegningIndeksreguleringPrivatAvtalePeriodeResultat = utførDelberegningPrivatAvtalePeriode(grunnlag.beregnGrunnlag)
+        var utvidetGrunnlag = grunnlag.utvidMedNyeGrunnlag(delberegningIndeksreguleringPrivatAvtalePeriodeResultat + beløpshistorikkGrunnlag)
+
+        // Kaller delberegning for å sjekke om endring i bidrag er over grense (pr periode)
+        val delberegningEndringSjekkGrensePeriodeResultat =
+            BeregnEndringSjekkGrensePeriodeService.delberegningEndringSjekkGrensePeriodeV2(
+                mottattGrunnlag = utvidetGrunnlag.beregnGrunnlag,
+                åpenSluttperiode = grunnlag.åpenSluttperiode,
+            )
+        utvidetGrunnlag = grunnlag.utvidMedNyeGrunnlag(delberegningEndringSjekkGrensePeriodeResultat)
+
+        // Kaller delberegning for å sjekke om endring i bidrag er over grense (totalt)
+        val delberegningEndringSjekkGrenseResultat = BeregnEndringSjekkGrenseService.delberegningEndringSjekkGrense(
+            mottattGrunnlag = utvidetGrunnlag.beregnGrunnlag,
+            åpenSluttperiode = grunnlag.åpenSluttperiode,
         )
 
-//        val er18ÅrsBidrag = utvidetGrunnlag.beregnGrunnlag.stønadstype == Stønadstype.BIDRAG18AAR
-//
-//        // Filtrerer ut beløpshistorikk. Hvis det er 18-års-bidrag benyttes egen beløpshistorikk.
-//        val beløpshistorikkGrunnlag = if (er18ÅrsBidrag) {
-//            filtrerBeløpshistorikk18ÅrGrunnlag(utvidetGrunnlag.beregnGrunnlag)
-//        } else {
-//            filtrerBeløpshistorikkGrunnlag(utvidetGrunnlag.beregnGrunnlag)
-//        }
-//
-//        // Kaller delberegning for indeksregulering av privat avtale
-//        val delberegningIndeksreguleringPrivatAvtaleResultat = BeregnIndeksreguleringPrivatAvtaleService.delberegningPrivatAvtalePeriode(
-//            grunnlag = utvidetGrunnlag.beregnGrunnlag,
-//        )
-//
-//        // Kaller delberegning for å sjekke om endring i bidrag er over grense (pr periode)
-//        var grunnlagTilEndringSjekkGrense = utvidetGrunnlag.beregnGrunnlag.copy(
-//            grunnlagListe =
-//            delberegningIndeksreguleringPrivatAvtaleResultat + beløpshistorikkGrunnlag + delberegningEndeligBidragResultat.grunnlagListe,
-//        )
-//        val delberegningEndringSjekkGrensePeriodeResultat =
-//            BeregnEndringSjekkGrensePeriodeService.delberegningEndringSjekkGrensePeriode(
-//                mottattGrunnlag = grunnlagTilEndringSjekkGrense,
-//                åpenSluttperiode = åpenSluttperiode,
-//            )
-//
-//        // Kaller delberegning for å sjekke om endring i bidrag er over grense (totalt)
-//        grunnlagTilEndringSjekkGrense = grunnlagTilEndringSjekkGrense.copy(
-//            grunnlagListe = (grunnlagTilEndringSjekkGrense.grunnlagListe + delberegningEndringSjekkGrensePeriodeResultat),
-//        )
-//        val delberegningEndringSjekkGrenseResultat = BeregnEndringSjekkGrenseService.delberegningEndringSjekkGrense(
-//            mottattGrunnlag = grunnlagTilEndringSjekkGrense,
-//            åpenSluttperiode = åpenSluttperiode,
-//        )
-//
-//        val beregnetBidragErOverMinimumsgrenseForEndring = erOverMinimumsgrenseForEndring(delberegningEndringSjekkGrenseResultat)
-//        val grunnlagstype = if (er18ÅrsBidrag) Grunnlagstype.BELØPSHISTORIKK_BIDRAG_18_ÅR else Grunnlagstype.BELØPSHISTORIKK_BIDRAG
-//
-//        val resultatPeriodeListe = lagResultatPerioder(
-//            delberegningEndeligBidragPeriodeResultat = delberegningEndeligBidragResultat.grunnlagListe,
-//            beregnetBidragErOverMinimumsgrenseForEndring = beregnetBidragErOverMinimumsgrenseForEndring,
-//            beløpshistorikkGrunnlag = beløpshistorikkGrunnlag,
-//            beløpshistorikkGrunnlagstype = grunnlagstype,
-//            delberegningEndringSjekkGrensePeriodeResultat = delberegningEndringSjekkGrensePeriodeResultat,
-//            delberegningIndeksreguleringPrivatAvtalePeriodeResultat = delberegningIndeksreguleringPrivatAvtalePeriodeResultat,
-//        )
-//
-//        return SjekkMotMinimumsgrenseForEndringResultat(
-//            resultatPeriodeListe = resultatPeriodeListe,
-//            delberegningEndringSjekkGrensePeriodeResultat = delberegningEndringSjekkGrensePeriodeResultat,
-//            delberegningEndringSjekkGrenseResultat = delberegningEndringSjekkGrenseResultat,
-//            delberegningIndeksreguleringPrivatAvtaleResultat = delberegningIndeksreguleringPrivatAvtalePeriodeResultat,
-//        )
+        val beregnetBidragErOverMinimumsgrenseForEndring = erOverMinimumsgrenseForEndring(delberegningEndringSjekkGrenseResultat)
+        val grunnlagstype = if (er18ÅrsBidrag) Grunnlagstype.BELØPSHISTORIKK_BIDRAG_18_ÅR else Grunnlagstype.BELØPSHISTORIKK_BIDRAG
+
+        val resultatPeriodeListe = lagResultatPerioderV2(
+            sluttberegningPeriodeResultat = grunnlag.beregnGrunnlag.grunnlagListe,
+            beregnetBidragErOverMinimumsgrenseForEndring = beregnetBidragErOverMinimumsgrenseForEndring,
+            beløpshistorikkGrunnlag = beløpshistorikkGrunnlag,
+            beløpshistorikkGrunnlagstype = grunnlagstype,
+            delberegningEndringSjekkGrensePeriodeResultat = delberegningEndringSjekkGrensePeriodeResultat,
+            delberegningIndeksreguleringPrivatAvtalePeriodeResultat = delberegningIndeksreguleringPrivatAvtalePeriodeResultat,
+        )
+
+        return SjekkMotMinimumsgrenseForEndringResultat(
+            resultatPeriodeListe = resultatPeriodeListe,
+            delberegningEndringSjekkGrensePeriodeResultat = delberegningEndringSjekkGrensePeriodeResultat,
+            delberegningEndringSjekkGrenseResultat = delberegningEndringSjekkGrenseResultat,
+            delberegningIndeksreguleringPrivatAvtaleResultat = delberegningIndeksreguleringPrivatAvtalePeriodeResultat,
+        )
     }
 
     // Sjekk mot minimumsgrense for endring ("12%-regelen") skal bare utføres hvis det ikke er eget tiltak og det ikke er klage
@@ -955,13 +935,122 @@ class BeregnBarnebidragService : BeregnService() {
             }
     }
 
+    // Lager resultatperioder basert på beløpshistorikk hvis beregnet bidrag ikke er over minimumsgrense for endring
+    private fun lagResultatPerioderV2(
+        sluttberegningPeriodeResultat: List<GrunnlagDto>,
+        beregnetBidragErOverMinimumsgrenseForEndring: Boolean,
+        beløpshistorikkGrunnlag: List<GrunnlagDto>,
+        beløpshistorikkGrunnlagstype: Grunnlagstype,
+        delberegningEndringSjekkGrensePeriodeResultat: List<GrunnlagDto>,
+        delberegningIndeksreguleringPrivatAvtalePeriodeResultat: List<GrunnlagDto>,
+    ): List<ResultatPeriode> {
+        // Henter beløpshistorikk (det finnes kun en forekomst, som dekker hele perioden)
+        val beløpshistorikkPeriodeGrunnlag = beløpshistorikkGrunnlag
+            .filtrerOgKonverterBasertPåEgenReferanse<BeløpshistorikkGrunnlag>(beløpshistorikkGrunnlagstype)
+            .map {
+                BeløpshistorikkPeriodeGrunnlag(
+                    referanse = it.referanse,
+                    beløpshistorikkPeriode = it.innhold,
+                )
+            }
+            .firstOrNull()
+
+        // Henter resultat av sluttberegning
+        val sluttberegningPeriodeGrunnlagListe = sluttberegningPeriodeResultat
+            .filtrerOgKonverterBasertPåEgenReferanse<SluttberegningBarnebidragV2>(Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG)
+            .map {
+                SluttberegningPeriodeGrunnlagV2(
+                    referanse = it.referanse,
+                    sluttberegningPeriode = it.innhold,
+                )
+            }
+
+        // Henter resultat av delberegning endring-sjekk-grense-periode
+        val delberegningEndringSjekkGrensePeriodeGrunnlagListe = delberegningEndringSjekkGrensePeriodeResultat
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningEndringSjekkGrensePeriode>(Grunnlagstype.DELBEREGNING_ENDRING_SJEKK_GRENSE_PERIODE)
+            .map {
+                EndringSjekkGrensePeriodeDelberegningPeriodeGrunnlag(
+                    referanse = it.referanse,
+                    endringSjekkGrensePeriodePeriode = it.innhold,
+                    referanseListe = it.grunnlag.grunnlagsreferanseListe,
+                )
+            }
+
+        // Henter resultat av delberegning privat-avtale-periode
+        val delberegningIndeksreguleringPrivatAvtalePeriodeGrunnlagListe = delberegningIndeksreguleringPrivatAvtalePeriodeResultat
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningPrivatAvtale>(Grunnlagstype.DELBEREGNING_PRIVAT_AVTALE)
+            .firstOrNull()?.let { dpa ->
+                dpa.innhold.perioder.map {
+                    PrivatAvtaleIndeksregulertPeriodeGrunnlag(
+                        referanse = dpa.referanse,
+                        privatAvtaleIndeksregulertPeriode = it,
+                    )
+                }
+            } ?: emptyList()
+
+        // Bruker grunnlagslisten fra delberegning endring-sjekk-grense-periode som utgangspunkt for å lage resultatperioder
+        return delberegningEndringSjekkGrensePeriodeGrunnlagListe
+            .map {
+                ResultatPeriode(
+                    periode = it.endringSjekkGrensePeriodePeriode.periode,
+                    resultat = ResultatBeregning(
+                        beløp = hentEndeligBeløpV2(
+                            beregnetBidragErOverMinimumsgrenseForEndring = beregnetBidragErOverMinimumsgrenseForEndring,
+                            referanseListe = it.referanseListe,
+                            periode = it.endringSjekkGrensePeriodePeriode.periode,
+                            sluttberegningPeriodeGrunnlagListe = sluttberegningPeriodeGrunnlagListe,
+                            beløpshistorikkPeriodeGrunnlag = beløpshistorikkPeriodeGrunnlag,
+                            delberegningIndeksregPrivatAvtalePeriodeGrunnlagListe = delberegningIndeksreguleringPrivatAvtalePeriodeGrunnlagListe,
+                        ),
+                    ),
+                    grunnlagsreferanseListe = lagReferanseliste(
+                        referanseListe = it.referanseListe,
+                        periode = it.endringSjekkGrensePeriodePeriode.periode,
+                        beløpshistorikkPeriodeGrunnlag = beløpshistorikkPeriodeGrunnlag,
+                        delberegningIndeksreguleringPrivatAvtalePeriodeGrunnlagListe = delberegningIndeksreguleringPrivatAvtalePeriodeGrunnlagListe,
+                    ),
+                )
+            }
+    }
+
     // Hvis beregnet bidrag er over minimumsgrense for endring skal beløp hentes fra sluttberegning (matcher på referanse); hvis ikke skal beløp
-// hentes fra privat avtale (matcher på referanse) eller beløpshistorikk (matcher på periode)
+    // hentes fra privat avtale (matcher på referanse) eller beløpshistorikk (matcher på periode)
     private fun hentEndeligBeløp(
         beregnetBidragErOverMinimumsgrenseForEndring: Boolean,
         referanseListe: List<String>,
         periode: ÅrMånedsperiode,
         sluttberegningPeriodeGrunnlagListe: List<SluttberegningPeriodeGrunnlag>,
+        beløpshistorikkPeriodeGrunnlag: BeløpshistorikkPeriodeGrunnlag?,
+        delberegningIndeksregPrivatAvtalePeriodeGrunnlagListe: List<PrivatAvtaleIndeksregulertPeriodeGrunnlag>,
+    ): BigDecimal? {
+        val privatAvtaleBeløp = delberegningIndeksregPrivatAvtalePeriodeGrunnlagListe
+            .filter {
+                (periode.til == null || it.privatAvtaleIndeksregulertPeriode.periode.fom < periode.til) &&
+                    (it.privatAvtaleIndeksregulertPeriode.periode.til == null || it.privatAvtaleIndeksregulertPeriode.periode.til!! > periode.fom)
+            }
+            .map { it.privatAvtaleIndeksregulertPeriode.beløp }
+            .firstOrNull()
+        val beløpshistorikkBeløp = beløpshistorikkPeriodeGrunnlag?.beløpshistorikkPeriode?.beløpshistorikk
+            ?.filter { (periode.til == null || it.periode.fom < periode.til) && (it.periode.til == null || it.periode.til!! > periode.fom) }
+            ?.map { it.beløp }
+            ?.firstOrNull()
+        return if (beregnetBidragErOverMinimumsgrenseForEndring) {
+            sluttberegningPeriodeGrunnlagListe
+                .filter { it.referanse in referanseListe }
+                .map { it.sluttberegningPeriode.resultatBeløp }
+                .firstOrNull()
+        } else {
+            beløpshistorikkBeløp ?: privatAvtaleBeløp
+        }
+    }
+
+    // Hvis beregnet bidrag er over minimumsgrense for endring skal beløp hentes fra sluttberegning (matcher på referanse); hvis ikke skal beløp
+    // hentes fra privat avtale (matcher på referanse) eller beløpshistorikk (matcher på periode)
+    private fun hentEndeligBeløpV2(
+        beregnetBidragErOverMinimumsgrenseForEndring: Boolean,
+        referanseListe: List<String>,
+        periode: ÅrMånedsperiode,
+        sluttberegningPeriodeGrunnlagListe: List<SluttberegningPeriodeGrunnlagV2>,
         beløpshistorikkPeriodeGrunnlag: BeløpshistorikkPeriodeGrunnlag?,
         delberegningIndeksregPrivatAvtalePeriodeGrunnlagListe: List<PrivatAvtaleIndeksregulertPeriodeGrunnlag>,
     ): BigDecimal? {

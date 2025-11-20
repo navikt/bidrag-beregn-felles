@@ -129,7 +129,7 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
 
     @Test
     fun `beregn bidrag v3 - 1 BM, 2 søknadsbarn - ingen løpende stønader`() {
-        filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/test_Ugur_flere_barn_2.json"
+        filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/test01_v3_beregn_bidrag_grunnlag.json"
         val beregnRequest = lesFilOgByggRequestGenerisk<BidragsberegningOrkestratorRequestV2>(filnavnBeregnGrunnlag)
 
         val beregnResponse = bidragsberegningOrkestrator.utførBidragsberegningV3(beregnRequest)
