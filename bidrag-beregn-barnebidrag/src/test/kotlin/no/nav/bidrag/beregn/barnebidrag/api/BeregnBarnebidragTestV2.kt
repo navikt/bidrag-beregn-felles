@@ -65,6 +65,9 @@ internal class BeregnBarnebidragTestV2 : FellesTest() {
                 .filterNot { it.contains("innhentet_husstandsmedlem") }
                 .filterNot { it.contains("innhentet_andre_barn") }
                 .filterNot { it.contains("DELBEREGNING_BIDRAG_TIL_FORDELING") && !it.contains(beregningResultat.søknadsbarnreferanse) }
+                .filterNot { it.contains("DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL") && !it.contains(beregningResultat.søknadsbarnreferanse) }
+                .filterNot { it.contains("DELBEREGNING_SAMVÆRSFRADRAG") && !it.contains(beregningResultat.søknadsbarnreferanse) }
+                .filterNot { it.contains("DELBEREGNING_UNDERHOLDSKOSTNAD") && !it.contains(beregningResultat.søknadsbarnreferanse) }
 
             assertAll(
                 { assertThat(alleReferanser).containsAll(alleRefererteReferanserFiltrert) },

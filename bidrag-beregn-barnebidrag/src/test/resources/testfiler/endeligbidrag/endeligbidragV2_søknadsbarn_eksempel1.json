@@ -160,6 +160,22 @@
         "grunnlagsreferanseListe": [],
         "gjelderBarnReferanse": "Person_Søknadsbarn_01",
         "gjelderReferanse": "Person_Bidragspliktig"
+      },
+      {
+        "referanse": "Bostatus_Person_Søknadsbarn_01_202503",
+        "type": "BOSTATUS_PERIODE",
+        "innhold": {
+          "periode": {
+            "fom": "2025-03",
+            "til": null
+          },
+          "bostatus": "IKKE_MED_FORELDER",
+          "manueltRegistrert": false,
+          "relatertTilPart": "Person_Bidragspliktig"
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderBarnReferanse": "Person_Søknadsbarn_01",
+        "gjelderReferanse": "Person_Bidragspliktig"
       }
     ]
   },
@@ -320,6 +336,22 @@
           "underholdBarnEgenHusstand": 0,
           "sumInntekt25Prosent": 8000,
           "manueltRegistrert": false
+        },
+        "grunnlagsreferanseListe": [],
+        "gjelderBarnReferanse": "Person_Søknadsbarn_02",
+        "gjelderReferanse": "Person_Bidragspliktig"
+      },
+      {
+        "referanse": "Bostatus_Person_Søknadsbarn_02_202503",
+        "type": "BOSTATUS_PERIODE",
+        "innhold": {
+          "periode": {
+            "fom": "2025-03",
+            "til": null
+          },
+          "bostatus": "IKKE_MED_FORELDER",
+          "manueltRegistrert": false,
+          "relatertTilPart": "Person_Bidragspliktig"
         },
         "grunnlagsreferanseListe": [],
         "gjelderBarnReferanse": "Person_Søknadsbarn_02",

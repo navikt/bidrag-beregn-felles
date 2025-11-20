@@ -911,6 +911,7 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
                         andelAvSumBidragTilFordelingFaktor = it.resultat.andelAvSumBidragTilFordelingFaktor,
                         andelAvEvneBeløp = it.resultat.andelAvEvneBeløp,
                         bidragEtterFordeling = it.resultat.bidragEtterFordeling,
+                        bruttoBidragJustertForEvneOg25Prosent = it.resultat.bruttoBidragJustertForEvneOg25Prosent,
                         harBPFullEvne = it.resultat.harBPFullEvne,
                     ),
                 ),

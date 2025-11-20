@@ -248,6 +248,7 @@ data class AndelAvBidragsevneBeregningResultat(
     val andelAvSumBidragTilFordelingFaktor: BigDecimal,
     val andelAvEvneBeløp: BigDecimal,
     val bidragEtterFordeling: BigDecimal,
+    val bruttoBidragJustertForEvneOg25Prosent: BigDecimal,
     val harBPFullEvne: Boolean,
     val grunnlagsreferanseListe: List<String> = emptyList(),
 )
