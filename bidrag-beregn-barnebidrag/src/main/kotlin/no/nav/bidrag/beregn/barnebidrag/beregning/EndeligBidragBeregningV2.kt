@@ -78,16 +78,17 @@ internal object EndeligBidragBeregningV2 {
             RoundingMode.HALF_UP,
         )
 
-        // En (men ikke begge) av følgende grunnlag må være satt for å kunne beregne andel av bidragsevne
         val bidragsevne = grunnlag.evne25ProsentAvInntektBeregningGrunnlag.evneJustertFor25ProsentAvInntekt
         val andelAvEvneBeløp = bidragsevne * andelAvSumBidragTilFordeling
         val bidragEtterFordeling = minOf(bidragTilFordeling, andelAvEvneBeløp)
         val harBPFullEvne = andelAvEvneBeløp >= bidragTilFordeling
+        val bruttoBidragJustertForEvneOg25Prosent = minOf(bidragTilFordeling, bidragsevne)
 
         return AndelAvBidragsevneBeregningResultat(
             andelAvSumBidragTilFordelingFaktor = andelAvSumBidragTilFordeling.avrundetMedTiDesimaler,
             andelAvEvneBeløp = andelAvEvneBeløp.avrundetMedToDesimaler,
             bidragEtterFordeling = bidragEtterFordeling.avrundetMedToDesimaler,
+            bruttoBidragJustertForEvneOg25Prosent = bruttoBidragJustertForEvneOg25Prosent.avrundetMedToDesimaler,
             harBPFullEvne = harBPFullEvne,
             grunnlagsreferanseListe = listOfNotNull(
                 grunnlag.evne25ProsentAvInntektBeregningGrunnlag.referanse,
