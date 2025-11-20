@@ -5,6 +5,7 @@ import no.nav.bidrag.beregn.barnebidrag.beregning.EndringSjekkGrensePeriodeBereg
 import no.nav.bidrag.beregn.barnebidrag.bo.BeregnetBidragBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.EndringSjekkGrensePeriodeBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.EndringSjekkGrensePeriodePeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.EndringSjekkGrensePeriodePeriodeGrunnlagV2
 import no.nav.bidrag.beregn.barnebidrag.bo.EndringSjekkGrensePeriodePeriodeResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.LøpendeBidragBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.PrivatAvtaleBeregningGrunnlag
@@ -103,6 +104,86 @@ internal object BeregnEndringSjekkGrensePeriodeService : BeregnService() {
         return resultatGrunnlagListe.distinctBy { it.referanse }.sortedBy { it.referanse }
     }
 
+    fun delberegningEndringSjekkGrensePeriodeV2(mottattGrunnlag: BeregnGrunnlag, åpenSluttperiode: Boolean = true): List<GrunnlagDto> {
+        // Lager sjablon grunnlagsobjekter
+        val sjablonGrunnlag = lagSjablonGrunnlagsobjekter(periode = mottattGrunnlag.periode) { it.endringSjekkGrense }
+
+        // Hvis det er 18-års-bidrag skal BELØPSHISTORIKK_BIDRAG_18_ÅR benyttes
+        val grunnlagstype =
+            if (mottattGrunnlag.stønadstype == Stønadstype.BIDRAG18AAR) {
+                Grunnlagstype.BELØPSHISTORIKK_BIDRAG_18_ÅR
+            } else {
+                Grunnlagstype.BELØPSHISTORIKK_BIDRAG
+            }
+
+        // Mapper ut grunnlag som skal brukes i beregningen
+        val periodeGrunnlag = EndringSjekkGrensePeriodeMapper.mapEndringSjekkGrensePeriodeGrunnlagV2(
+            mottattGrunnlag = mottattGrunnlag,
+            sjablonGrunnlag = sjablonGrunnlag,
+            grunnlagstype = grunnlagstype,
+        )
+
+        // Lager liste over bruddperioder
+        val bruddPeriodeListe = lagBruddPeriodeListeEndringSjekkGrensePeriodeV2(
+            grunnlagListe = periodeGrunnlag,
+            beregningsperiode = mottattGrunnlag.periode,
+        )
+
+        val beregningResultatListe = mutableListOf<EndringSjekkGrensePeriodePeriodeResultat>()
+
+        // Løper gjennom hver bruddperiode og sjekker om endring er under/over grense
+        bruddPeriodeListe.forEach { bruddPeriode ->
+            val beregningGrunnlag = lagBeregningGrunnlagV2(
+                periodeGrunnlag = periodeGrunnlag,
+                bruddPeriode = bruddPeriode,
+            )
+            beregningResultatListe.add(
+                EndringSjekkGrensePeriodePeriodeResultat(
+                    periode = bruddPeriode,
+                    resultat = EndringSjekkGrensePeriodeBeregning.beregn(beregningGrunnlag),
+                ),
+            )
+        }
+
+        // Setter til-periode i siste element til null hvis det ikke allerede er det og åpenSluttperiode er true
+        if (beregningResultatListe.isNotEmpty()) {
+            val sisteElement = beregningResultatListe.last()
+            if (sisteElement.periode.til != null && åpenSluttperiode) {
+                beregningResultatListe[beregningResultatListe.size - 1] = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
+            } else if (sisteElement.periode.til != null && mottattGrunnlag.opphørsdato != null) {
+                beregningResultatListe[beregningResultatListe.size - 1] =
+                    sisteElement.copy(periode = sisteElement.periode.copy(til = mottattGrunnlag.opphørsdato))
+            }
+        }
+
+        // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
+        val resultatGrunnlagListe = mapDelberegningResultatGrunnlag(
+            grunnlagReferanseListe = beregningResultatListe
+                .flatMap { it.resultat.grunnlagsreferanseListe }
+                .distinct(),
+            mottattGrunnlag = mottattGrunnlag,
+            sjablonGrunnlag = sjablonGrunnlag,
+        )
+
+        // Mapper ut grunnlag for delberegning endring sjekk grense periode
+        resultatGrunnlagListe.addAll(
+            mapDelberegningEndringSjekkGrensePeriode(
+                periodeResultatListe = beregningResultatListe,
+                mottattGrunnlag = mottattGrunnlag,
+            ),
+        )
+
+        // Mapper ut grunnlag for Person-objekter som er brukt
+        resultatGrunnlagListe.addAll(
+            mapPersonobjektGrunnlag(
+                resultatGrunnlagListe = resultatGrunnlagListe,
+                personobjektGrunnlagListe = mottattGrunnlag.grunnlagListe,
+            ),
+        )
+
+        return resultatGrunnlagListe.distinctBy { it.referanse }.sortedBy { it.referanse }
+    }
+
     // Lager grunnlagsobjekter for sjabloner (ett objekt pr sjablonverdi som er innenfor perioden)
     private fun lagSjablonGrunnlagsobjekter(periode: ÅrMånedsperiode, delberegning: (SjablonTallNavn) -> Boolean): List<GrunnlagDto> =
         mapSjablonSjablontallGrunnlag(periode = periode, sjablonListe = SjablonProvider.Companion.hentSjablontall(), delberegning = delberegning)
@@ -124,9 +205,54 @@ internal object BeregnEndringSjekkGrensePeriodeService : BeregnService() {
         return lagBruddPeriodeListe(periodeListe, beregningsperiode)
     }
 
+    // Lager en liste over alle bruddperioder basert på grunnlag som skal brukes i beregningen
+    private fun lagBruddPeriodeListeEndringSjekkGrensePeriodeV2(
+        grunnlagListe: EndringSjekkGrensePeriodePeriodeGrunnlagV2,
+        beregningsperiode: ÅrMånedsperiode,
+    ): List<ÅrMånedsperiode> {
+        val periodeListe = sequenceOf(grunnlagListe.beregningsperiode)
+            .plus(grunnlagListe.sluttberegningPeriodeGrunnlagListe.asSequence().map { it.sluttberegningPeriode.periode })
+            .plus(
+                grunnlagListe.beløpshistorikkBidragPeriodeGrunnlag?.beløpshistorikkPeriode?.beløpshistorikk
+                    ?.asSequence()?.map { it.periode } ?: emptySequence(),
+            )
+            .plus(grunnlagListe.privatAvtaleIndeksregulertPeriodeGrunnlagListe.asSequence().map { it.privatAvtaleIndeksregulertPeriode.periode })
+            .plus(grunnlagListe.sjablonSjablontallPeriodeGrunnlagListe.asSequence().map { it.sjablonSjablontallPeriode.periode })
+
+        return lagBruddPeriodeListe(periodeListe, beregningsperiode)
+    }
+
     // Lager grunnlag for beregning som ligger innenfor bruddPeriode
     private fun lagBeregningGrunnlag(
         periodeGrunnlag: EndringSjekkGrensePeriodePeriodeGrunnlag,
+        bruddPeriode: ÅrMånedsperiode,
+    ): EndringSjekkGrensePeriodeBeregningGrunnlag = EndringSjekkGrensePeriodeBeregningGrunnlag(
+        beregnetBidragBeregningGrunnlag = periodeGrunnlag.sluttberegningPeriodeGrunnlagListe
+            .firstOrNull { it.sluttberegningPeriode.periode.inneholder(bruddPeriode) }
+            ?.let { BeregnetBidragBeregningGrunnlag(referanse = it.referanse, beløp = it.sluttberegningPeriode.beregnetBeløp) }
+            ?: throw IllegalArgumentException("Sluttberegning grunnlag mangler for periode $bruddPeriode"),
+        // Hvis perioden mangler, bruk null i beløp, slik at beløpshistorikk-objektet blir referert av delberegningen
+        løpendeBidragBeregningGrunnlag = periodeGrunnlag.beløpshistorikkBidragPeriodeGrunnlag?.run {
+            val periode = beløpshistorikkPeriode.beløpshistorikk.firstOrNull { it.periode.inneholder(bruddPeriode) }
+            LøpendeBidragBeregningGrunnlag(referanse = referanse, beløp = periode?.beløp)
+        },
+        privatAvtaleBeregningGrunnlag = periodeGrunnlag.privatAvtaleIndeksregulertPeriodeGrunnlagListe
+            .firstOrNull { it.privatAvtaleIndeksregulertPeriode.periode.inneholder(bruddPeriode) }
+            ?.let { PrivatAvtaleBeregningGrunnlag(referanse = it.referanse, beløp = it.privatAvtaleIndeksregulertPeriode.beløp) },
+        sjablonSjablontallBeregningGrunnlagListe = periodeGrunnlag.sjablonSjablontallPeriodeGrunnlagListe
+            .filter { it.sjablonSjablontallPeriode.periode.inneholder(bruddPeriode) }
+            .map {
+                SjablonSjablontallBeregningGrunnlag(
+                    referanse = it.referanse,
+                    type = it.sjablonSjablontallPeriode.sjablon.navn,
+                    verdi = it.sjablonSjablontallPeriode.verdi.toDouble(),
+                )
+            },
+    )
+
+    // Lager grunnlag for beregning som ligger innenfor bruddPeriode
+    private fun lagBeregningGrunnlagV2(
+        periodeGrunnlag: EndringSjekkGrensePeriodePeriodeGrunnlagV2,
         bruddPeriode: ÅrMånedsperiode,
     ): EndringSjekkGrensePeriodeBeregningGrunnlag = EndringSjekkGrensePeriodeBeregningGrunnlag(
         beregnetBidragBeregningGrunnlag = periodeGrunnlag.sluttberegningPeriodeGrunnlagListe

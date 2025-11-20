@@ -127,17 +127,6 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
             beregnGrunnlag.utvidMedNyeGrunnlag(sluttberegningBarnebidrag)
         }
 
-        // Filtrerer bort grunnlag som tilhører andre barn (som refereres av delberegning Sum bidrag til fordeling)
-        utvidetGrunnlagSøknadsbarnListe = utvidetGrunnlagSøknadsbarnListe.map { beregnGrunnlag ->
-            val søknadsbarnReferanse = beregnGrunnlag.beregnGrunnlag.søknadsbarnReferanse
-            beregnGrunnlag.copy(
-                beregnGrunnlag = beregnGrunnlag.beregnGrunnlag.copy(
-                    grunnlagListe = beregnGrunnlag.beregnGrunnlag.grunnlagListe
-                        .filter { it.gjelderBarnReferanse == søknadsbarnReferanse || it.gjelderBarnReferanse == null },
-                ),
-            )
-        }
-
         return utvidetGrunnlagSøknadsbarnListe
         // TODO Bør også returnere løpende bidrag?
     }
