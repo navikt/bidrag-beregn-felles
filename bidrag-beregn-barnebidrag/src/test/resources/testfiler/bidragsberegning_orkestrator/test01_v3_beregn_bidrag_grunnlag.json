@@ -10,6 +10,11 @@
         "fom": "2024-01",
         "til": "2024-10"
       },
+      "beregningsperiode": {
+        "fom": "2024-01",
+        "til": "2024-10"
+      },
+      "virkningstidspunkt": "2024-01",
       "stønadstype": "BIDRAG"
     },
     {
@@ -18,6 +23,11 @@
         "fom": "2024-01",
         "til": "2024-10"
       },
+      "beregningsperiode": {
+        "fom": "2024-01",
+        "til": "2024-10"
+      },
+      "virkningstidspunkt": "2024-01",
       "stønadstype": "BIDRAG"
     }
   ],

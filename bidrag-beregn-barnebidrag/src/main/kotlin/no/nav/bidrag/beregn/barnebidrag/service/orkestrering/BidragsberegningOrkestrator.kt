@@ -7,6 +7,7 @@ import no.nav.bidrag.domene.enums.beregning.Beregningstype
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
 import no.nav.bidrag.domene.ident.Personident
+import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregningGrunnlagV2
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BidragsberegningOrkestratorRequest
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BidragsberegningOrkestratorRequestV2
@@ -92,7 +93,7 @@ class BidragsberegningOrkestrator(
                     return try {
                         val beregningResultatListe: List<BeregnetBarnebidragResultatV2> =
                             barnebidragApi.beregnV2(
-                                beregningsperiode = request.beregningsperiode,
+                                beregningsperiode = finnTotalBeregningsperiode(request),
                                 grunnlagSøknadsbarnListe = grunnlagSøknadsbarnListe,
                                 grunnlagLøpendeBidragListe = emptyList(), // TODO
                             )
@@ -444,7 +445,7 @@ class BidragsberegningOrkestrator(
     )
 
     private fun BeregningGrunnlagV2.tilBeregnGrunnlagV1(grunnlagListe: List<GrunnlagDto>) = BeregnGrunnlag(
-        periode = periode,
+        periode = beregningsperiode,
         opphørsdato = opphørsdato,
         stønadstype = stønadstype,
         søknadsbarnReferanse = søknadsbarnreferanse,
@@ -486,4 +487,10 @@ class BidragsberegningOrkestrator(
         .firstOrNull { it.referanse == søknadsbarnreferanse }
         ?.innhold?.bidragsmottaker
         ?: throw IllegalArgumentException("Fant ikke bidragsmottaker for barn med referanse $søknadsbarnreferanse")
+
+    private fun finnTotalBeregningsperiode(request: BidragsberegningOrkestratorRequestV2): ÅrMånedsperiode {
+        val fom = request.beregningBarn.minOf { it.beregningsperiode.fom }
+        val til = request.beregningBarn.maxOf { it.beregningsperiode.til ?: throw IllegalArgumentException("beregningsperiode.til mangler") }
+        return ÅrMånedsperiode(fom, til)
+    }
 }

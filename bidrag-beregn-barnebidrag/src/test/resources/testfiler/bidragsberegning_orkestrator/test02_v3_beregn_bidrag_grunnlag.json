@@ -10,6 +10,11 @@
         "fom": "2025-01",
         "til": "2025-10"
       },
+      "beregningsperiode": {
+        "fom": "2025-01",
+        "til": "2025-10"
+      },
+      "virkningstidspunkt": "2025-01",
       "stønadstype": "BIDRAG"
     }
   ],
