@@ -47,7 +47,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import java.math.BigDecimal
 
 @ExtendWith(MockKExtension::class)
-@Disabled
 internal class BidragsberegningOrkestratorTest : FellesTest() {
     private lateinit var filnavnBeregnGrunnlag: String
     private lateinit var filnavnPåklagetVedtak: String
@@ -107,6 +106,7 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
         stubSjablonProvider()
     }
 
+    @Disabled
     @Test
     fun `gi direkte avslag`() {
         filnavnBeregnGrunnlag = "src/test/resources/testfiler/bidragsberegning_orkestrator/test01_v3_direkte_avslag_bidrag_grunnlag.json"
@@ -186,6 +186,7 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
         }
     }
 
+    @Disabled
     @Test
     @DisplayName("Beregn bidrag")
     fun test01_BeregnBidrag() {
@@ -206,6 +207,7 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
         sjekkReferanser(beregningResultat.resultatVedtakListe)
     }
 
+    @Disabled
     @Test
     @DisplayName("Beregn klage")
     fun test02_BeregnKlage() {
@@ -227,6 +229,7 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
     }
 
     // Stønad 77353 i Q1
+    @Disabled
     @Test
     @DisplayName("Beregn klage endelig A")
     fun test03A_BeregnKlageEndeligOver12Prosent() {
@@ -309,6 +312,7 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
     }
 
     // Stønad 217310 i Q1
+    @Disabled
     @Test
     @DisplayName("Beregn klage endelig B")
     fun test03B_BeregnKlageEndeligOver12Prosent() {
@@ -359,6 +363,7 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
     }
 
     // Stønad 77353 i Q1 modifisert
+    @Disabled
     @Test
     @DisplayName("Beregn klage endelig C")
     fun test03C_BeregnKlageEndeligUnder12Prosent() {

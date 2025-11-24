@@ -135,6 +135,7 @@ internal object EndeligBidragBeregning {
             (sumInntekt25Prosent <= bidragsevne)
         foreløpigBeregnetBeløp = bruttoBidragJustertForEvneOg25Prosent
 
+        // TODO : Logikk for begrenset revuurdering er pt ikke i bruk (disse rutes til gammel løsning) i påvente av diverse avklaringer
         // Sjekker om det er begrenset revurdering
         // Hvis beregnet beløp er større enn løpende forskudd settes beregnet beløp = løpende forskudd
         if (grunnlag.utførBegrensetRevurdering && foreløpigBeregnetBeløp > (grunnlag.løpendeForskuddBeløp!! + samværsfradrag)) {

@@ -7,6 +7,7 @@ import no.nav.bidrag.domene.enums.beregning.Beregningstype
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
 import no.nav.bidrag.domene.ident.Personident
+import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregningGrunnlagV2
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BidragsberegningOrkestratorRequest
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BidragsberegningOrkestratorRequestV2
@@ -20,6 +21,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragspliktig
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
+import no.nav.bidrag.transport.behandling.felles.grunnlag.finnGyldigeGrunnlagForBarn
 import no.nav.bidrag.transport.behandling.felles.grunnlag.personIdent
 import org.springframework.context.annotation.Import
 import org.springframework.stereotype.Service
@@ -92,7 +94,7 @@ class BidragsberegningOrkestrator(
                     return try {
                         val beregningResultatListe: List<BeregnetBarnebidragResultatV2> =
                             barnebidragApi.beregnV2(
-                                beregningsperiode = request.beregningsperiode,
+                                beregningsperiode = finnTotalBeregningsperiode(request),
                                 grunnlagSøknadsbarnListe = grunnlagSøknadsbarnListe,
                                 grunnlagLøpendeBidragListe = emptyList(), // TODO
                             )
@@ -444,16 +446,26 @@ class BidragsberegningOrkestrator(
     )
 
     private fun BeregningGrunnlagV2.tilBeregnGrunnlagV1(grunnlagListe: List<GrunnlagDto>) = BeregnGrunnlag(
-        periode = periode,
+        periode = beregningsperiode,
         opphørsdato = opphørsdato,
         stønadstype = stønadstype,
         søknadsbarnReferanse = søknadsbarnreferanse,
         grunnlagListe = grunnlagListe,
     )
 
+    // Filtrerer og konverterer grunnlag for hvert søknadsbarn
     private fun BidragsberegningOrkestratorRequestV2.tilListeBeregnGrunnlagV1(grunnlagListe: List<GrunnlagDto>): List<BeregnGrunnlag> =
         beregningBarn.map { beregningBarn ->
-            beregningBarn.tilBeregnGrunnlagV1(grunnlagListe)
+            val bidragspliktigRef =
+                grunnlagListe.bidragspliktig?.referanse ?: throw IllegalArgumentException("Finner ikke bidragspliktig i grunnlagsliste")
+            val søknadsbarnRef = beregningBarn.søknadsbarnreferanse
+            val bidragsmottakerRef = finnBidragsmottakerForBarn(søknadsbarnRef)
+            val gyldigeGrunnlagForBarn = grunnlagListe.finnGyldigeGrunnlagForBarn(
+                bmRef = bidragsmottakerRef,
+                bpRef = bidragspliktigRef,
+                barnRef = søknadsbarnRef,
+            )
+            beregningBarn.tilBeregnGrunnlagV1(gyldigeGrunnlagForBarn)
         }
 
     // Henter alle søknadsbarn og deres referanser og personidenter fra grunnlagslista
@@ -469,5 +481,17 @@ class BidragsberegningOrkestrator(
             søknadsbarnIdentMap[barnGrunnlag.innhold.ident!!] = beregningsbarn.søknadsbarnreferanse
         }
         return søknadsbarnIdentMap
+    }
+
+    private fun BidragsberegningOrkestratorRequestV2.finnBidragsmottakerForBarn(søknadsbarnreferanse: String): String = grunnlagsliste
+        .filtrerOgKonverterBasertPåEgenReferanse<Person>(Grunnlagstype.PERSON_SØKNADSBARN)
+        .firstOrNull { it.referanse == søknadsbarnreferanse }
+        ?.innhold?.bidragsmottaker
+        ?: throw IllegalArgumentException("Fant ikke bidragsmottaker for barn med referanse $søknadsbarnreferanse")
+
+    private fun finnTotalBeregningsperiode(request: BidragsberegningOrkestratorRequestV2): ÅrMånedsperiode {
+        val fom = request.beregningBarn.minOf { it.beregningsperiode.fom }
+        val til = request.beregningBarn.maxOf { it.beregningsperiode.til ?: throw IllegalArgumentException("beregningsperiode.til mangler") }
+        return ÅrMånedsperiode(fom, til)
     }
 }

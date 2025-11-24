@@ -39,6 +39,24 @@
       "gjelderReferanse": null
     },
     {
+      "referanse": "Delberegning_BidragspliktigesAndel_202408",
+      "type": "DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": null
+        },
+        "endeligAndelFaktor": 0,
+        "andelBeløp": 0,
+        "beregnetAndelFaktor": 0,
+        "barnEndeligInntekt": 0,
+        "barnetErSelvforsørget": false
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragspliktig"
+    },
+    {
       "referanse": "delberegning_DELBEREGNING_BIDRAG_JUSTERT_FOR_BP_BARNETILLEGG_Person_Bidragspliktig_Person_Søknadsbarn_202408",
       "type": "DELBEREGNING_BIDRAG_JUSTERT_FOR_BP_BARNETILLEGG",
       "innhold": {
@@ -61,12 +79,28 @@
           "fom": "2024-08",
           "til": null
         },
-        "beløp": 3500,
+        "beløp": 1000,
         "manueltRegistrert": false
       },
       "grunnlagsreferanseListe": [],
       "gjelderReferanse": "Person_Bidragspliktig",
       "gjelderBarnReferanse": "Person_Søknadsbarn"
+    },
+    {
+      "referanse": "Bostatus_Søknadsbarn_202408",
+      "type": "BOSTATUS_PERIODE",
+      "innhold": {
+        "periode": {
+          "fom": "2024-08",
+          "til": null
+        },
+        "bostatus": "IKKE_MED_FORELDER",
+        "manueltRegistrert": false,
+        "relatertTilPart": "Person_Bidragspliktig"
+      },
+      "grunnlagsreferanseListe": [],
+      "gjelderBarnReferanse": "Person_Søknadsbarn",
+      "gjelderReferanse": "Person_Bidragspliktig"
     }
   ]
 }

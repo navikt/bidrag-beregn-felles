@@ -20,46 +20,66 @@ import no.nav.bidrag.beregn.barnebidrag.bo.BidragTilFordelingLøpendeBidragPerio
 import no.nav.bidrag.beregn.barnebidrag.bo.BidragTilFordelingPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.BidragTilFordelingPeriodeResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.BidragsevneDelberegningBeregningGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.BidragspliktigesAndelDeltBostedBeregningGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.BidragspliktigesAndelDeltBostedDelberegningBeregningGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.BidragspliktigesAndelDeltBostedPeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.BidragspliktigesAndelDeltBostedPeriodeResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.BpAndelUnderholdskostnadDelberegningBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragBeregnetBeregningGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragBeregnetPeriodeGrunnlag
-import no.nav.bidrag.beregn.barnebidrag.bo.EndeligBidragBeregnetPeriodeResultat
+import no.nav.bidrag.beregn.barnebidrag.bo.DeltBostedBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.Evne25ProsentAvInntektBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.Evne25ProsentAvInntektDelberegningBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.Evne25ProsentAvInntektPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.Evne25ProsentAvInntektPeriodeResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.LøpendeBidragTilFordelingBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SamværsfradragDelberegningBeregningGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SluttberegningBarnebidragV2BeregningGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SluttberegningBarnebidragV2PeriodeGrunnlag
+import no.nav.bidrag.beregn.barnebidrag.bo.SluttberegningBarnebidragV2PeriodeResultat
 import no.nav.bidrag.beregn.barnebidrag.bo.SumBidragTilFordelingBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SumBidragTilFordelingDelberegningBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SumBidragTilFordelingPeriodeGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.SumBidragTilFordelingPeriodeResultat
+import no.nav.bidrag.beregn.barnebidrag.bo.SøknadsbarnetBorHosBpGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.bo.UnderholdskostnadDelberegningBeregningGrunnlag
 import no.nav.bidrag.beregn.barnebidrag.mapper.EndeligBidragMapperV2
 import no.nav.bidrag.beregn.core.service.BeregnService
+import no.nav.bidrag.domene.enums.beregning.Samværsklasse
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
+import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningAndelAvBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragJustertForBPBarnetillegg
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragTilFordeling
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragTilFordelingLøpendeBidrag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndeligBidragBeregnet
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndelDeltBosted
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEvne25ProsentAvInntekt
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSumBidragTilFordeling
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidragV2
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragspliktig
+import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettSluttberegningreferanse
 import no.nav.bidrag.transport.felles.toCompactString
 
 internal object BeregnEndeligBidragServiceV2 : BeregnService() {
 
     fun delberegningEndeligBidrag(
+        beregningsperiode: ÅrMånedsperiode,
         grunnlagSøknadsbarnListe: List<BeregnGrunnlagJustert>,
         grunnlagLøpendeBidragListe: List<BeregnGrunnlag>,
     ): List<BeregnGrunnlagJustert> {
-        // Søknadsbarn: Kaller delberegning Bidrag til fordeling
+        // Søknadsbarn: Kaller delberegning Bidragspliktiges andel delt bosted
         var utvidetGrunnlagSøknadsbarnListe = grunnlagSøknadsbarnListe.map { beregnGrunnlag ->
+            val delberegningBidragspliktigesAndelDeltBosted = delberegningBidragspliktigesAndelDeltBosted(
+                mottattGrunnlag = beregnGrunnlag.beregnGrunnlag,
+                åpenSluttperiode = beregnGrunnlag.åpenSluttperiode,
+            )
+            beregnGrunnlag.utvidMedNyeGrunnlag(delberegningBidragspliktigesAndelDeltBosted)
+        }
+
+        // Søknadsbarn: Kaller delberegning Bidrag til fordeling
+        utvidetGrunnlagSøknadsbarnListe = utvidetGrunnlagSøknadsbarnListe.map { beregnGrunnlag ->
             val delberegningBidragTilFordeling = delberegningBidragTilFordeling(
                 mottattGrunnlag = beregnGrunnlag.beregnGrunnlag,
                 åpenSluttperiode = beregnGrunnlag.åpenSluttperiode,
@@ -82,6 +102,7 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
 
         // Søknadsbarn og løpende bidrag: Kaller delberegning Sum bidrag til fordeling
         val sumBidragTilFordelingGrunnlagListe = delberegningSumBidragTilFordeling(
+            beregningsperiode = beregningsperiode,
             mottattGrunnlagListe = utvidetGrunnlagSøknadsbarnListe.map { it.beregnGrunnlag } + utvidetGrunnlagLøpendeBidragListe,
             åpenSluttperiode = true, // TODO Sjekk åpenSluttperiode
         )
@@ -113,28 +134,87 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
             beregnGrunnlag.utvidMedNyeGrunnlag(delberegningBidragJustertForBPBarnetillegg)
         }
 
-        // Søknadsbarn: Kaller delberegning Endelig bidrag beregnet
+        // Søknadsbarn: Kaller sluttberegning barnebidrag
         utvidetGrunnlagSøknadsbarnListe = utvidetGrunnlagSøknadsbarnListe.map { beregnGrunnlag ->
-            val delberegningEndeligBidragBeregnet = delberegningEndeligBidragBeregnet(
+            val sluttberegningBarnebidrag = sluttberegningBarnebidrag(
                 mottattGrunnlag = beregnGrunnlag.beregnGrunnlag,
                 åpenSluttperiode = beregnGrunnlag.åpenSluttperiode,
             )
-            beregnGrunnlag.utvidMedNyeGrunnlag(delberegningEndeligBidragBeregnet)
-        }
-
-        // Filtrerer bort grunnlag som tilhører andra barn (som refereres av delberegning Sum bidrag til fordeling)
-        utvidetGrunnlagSøknadsbarnListe = utvidetGrunnlagSøknadsbarnListe.map { beregnGrunnlag ->
-            val søknadsbarnReferanse = beregnGrunnlag.beregnGrunnlag.søknadsbarnReferanse
-            beregnGrunnlag.copy(
-                beregnGrunnlag = beregnGrunnlag.beregnGrunnlag.copy(
-                    grunnlagListe = beregnGrunnlag.beregnGrunnlag.grunnlagListe
-                        .filter { it.gjelderBarnReferanse == søknadsbarnReferanse || it.gjelderBarnReferanse == null },
-                ),
-            )
+            beregnGrunnlag.utvidMedNyeGrunnlag(sluttberegningBarnebidrag)
         }
 
         return utvidetGrunnlagSøknadsbarnListe
         // TODO Bør også returnere løpende bidrag?
+    }
+
+    fun delberegningBidragspliktigesAndelDeltBosted(mottattGrunnlag: BeregnGrunnlag, åpenSluttperiode: Boolean = true): List<GrunnlagDto> {
+        // Mapper ut grunnlag som skal brukes for å beregne bidragspliktiges andel delt bosted
+        val bidragspliktigesAndelDeltBostedPeriodeGrunnlag = EndeligBidragMapperV2.mapBidragspliktigesAndelDeltBostedGrunnlag(
+            mottattGrunnlag = mottattGrunnlag,
+        )
+
+        // Lager liste over bruddperioder
+        val bruddPeriodeListe = lagBruddPeriodeListeBidragspliktigesAndelDeltBosted(
+            grunnlagListe = bidragspliktigesAndelDeltBostedPeriodeGrunnlag,
+            beregningsperiode = mottattGrunnlag.periode,
+        )
+
+        val bidragspliktigesAndelDeltBostedBeregningResultatListe = mutableListOf<BidragspliktigesAndelDeltBostedPeriodeResultat>()
+
+        // Løper gjennom hver bruddperiode og beregner bidragspliktiges andel delt bosted
+        bruddPeriodeListe.forEach { bruddPeriode ->
+            val bidragspliktigesAndelDeltBostedBeregningGrunnlag =
+                lagBidragspliktigesAndelDeltBostedBeregningGrunnlag(
+                    bidragspliktigesAndelDeltBostedPeriodeGrunnlag = bidragspliktigesAndelDeltBostedPeriodeGrunnlag,
+                    bruddPeriode = bruddPeriode,
+                )
+            val resultat = EndeligBidragBeregningV2.beregnBidragspliktigesAndelDeltBosted(bidragspliktigesAndelDeltBostedBeregningGrunnlag)
+            if (resultat.bpAndelAvUVedDeltBostedFaktor != null) {
+                bidragspliktigesAndelDeltBostedBeregningResultatListe.add(
+                    BidragspliktigesAndelDeltBostedPeriodeResultat(
+                        periode = bruddPeriode,
+                        resultat = resultat,
+                    ),
+                )
+            }
+        }
+
+        // Setter til-periode i siste element til null hvis det ikke allerede er det og åpenSluttperiode er true
+        if (bidragspliktigesAndelDeltBostedBeregningResultatListe.isNotEmpty()) {
+            val sisteElement = bidragspliktigesAndelDeltBostedBeregningResultatListe.last()
+            if (sisteElement.periode.til != null && åpenSluttperiode) {
+                val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
+                bidragspliktigesAndelDeltBostedBeregningResultatListe[bidragspliktigesAndelDeltBostedBeregningResultatListe.size - 1] =
+                    oppdatertSisteElement
+            }
+        }
+
+        // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
+        val resultatGrunnlagListe = mapDelberegningResultatGrunnlag(
+            grunnlagReferanseListe = bidragspliktigesAndelDeltBostedBeregningResultatListe
+                .flatMap { it.resultat.grunnlagsreferanseListe }
+                .distinct(),
+            mottattGrunnlag = mottattGrunnlag,
+            sjablonGrunnlag = emptyList(),
+        )
+
+        // Mapper ut grunnlag for delberegning bidragspliktiges andel delt bosted
+        resultatGrunnlagListe.addAll(
+            mapDelberegningBidragspliktigesAndelDeltBosted(
+                bidragspliktigesAndelDeltBostedPeriodeResultatListe = bidragspliktigesAndelDeltBostedBeregningResultatListe,
+                mottattGrunnlag = mottattGrunnlag,
+            ),
+        )
+
+        // Mapper ut grunnlag for Person-objekter som er brukt
+        resultatGrunnlagListe.addAll(
+            mapPersonobjektGrunnlag(
+                resultatGrunnlagListe = resultatGrunnlagListe,
+                personobjektGrunnlagListe = mottattGrunnlag.grunnlagListe,
+            ),
+        )
+
+        return resultatGrunnlagListe.distinctBy { it.referanse }.sortedBy { it.referanse }
     }
 
     fun delberegningBidragTilFordeling(mottattGrunnlag: BeregnGrunnlag, åpenSluttperiode: Boolean = true): List<GrunnlagDto> {
@@ -203,16 +283,21 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
         return resultatGrunnlagListe.distinctBy { it.referanse }.sortedBy { it.referanse }
     }
 
-    fun delberegningSumBidragTilFordeling(mottattGrunnlagListe: List<BeregnGrunnlag>, åpenSluttperiode: Boolean = true): List<GrunnlagDto> {
+    fun delberegningSumBidragTilFordeling(
+        beregningsperiode: ÅrMånedsperiode,
+        mottattGrunnlagListe: List<BeregnGrunnlag>,
+        åpenSluttperiode: Boolean = true,
+    ): List<GrunnlagDto> {
         // Mapper ut grunnlag som skal brukes for å beregne sum bidrag til fordeling
         val sumBidragTilFordelingPeriodeGrunnlag = EndeligBidragMapperV2.mapSumBidragTilFordelingGrunnlag(
+            beregningsperiode = beregningsperiode,
             mottattGrunnlagListe = mottattGrunnlagListe,
         )
 
         // Lager liste over bruddperioder
         val bruddPeriodeListe = lagBruddPeriodeListeSumBidragTilFordeling(
+            beregningsperiode = beregningsperiode,
             grunnlagListe = sumBidragTilFordelingPeriodeGrunnlag,
-            beregningsperiode = mottattGrunnlagListe[0].periode,
         )
 
         val sumBidragTilFordelingBeregningResultatListe = mutableListOf<SumBidragTilFordelingPeriodeResultat>()
@@ -534,57 +619,61 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
         return resultatGrunnlagListe.distinctBy { it.referanse }.sortedBy { it.referanse }
     }
 
-    fun delberegningEndeligBidragBeregnet(mottattGrunnlag: BeregnGrunnlag, åpenSluttperiode: Boolean = true): List<GrunnlagDto> {
-        // Mapper ut grunnlag som skal brukes for å beregne endelig bidrag beregnet
-        val endeligBidragBeregnetPeriodeGrunnlag = EndeligBidragMapperV2.mapEndeligBidragBeregnetGrunnlag(
+    fun sluttberegningBarnebidrag(mottattGrunnlag: BeregnGrunnlag, åpenSluttperiode: Boolean = true): List<GrunnlagDto> {
+        // Mapper ut grunnlag som skal brukes for sluttberegning barnebidrag
+        val sluttberegningBarnebidragPeriodeGrunnlag = EndeligBidragMapperV2.mapSluttberegningBarnebidragGrunnlag(
             mottattGrunnlag = mottattGrunnlag,
         )
 
         // Lager liste over bruddperioder
-        val bruddPeriodeListe = lagBruddPeriodeListeEndeligBidragBeregnet(
-            grunnlagListe = endeligBidragBeregnetPeriodeGrunnlag,
+        val bruddPeriodeListe = lagBruddPeriodeListeSluttberegningBarnebidrag(
+            grunnlagListe = sluttberegningBarnebidragPeriodeGrunnlag,
             beregningsperiode = mottattGrunnlag.periode,
         )
 
-        val endeligBidragBeregnetBeregningResultatListe = mutableListOf<EndeligBidragBeregnetPeriodeResultat>()
+        var sluttberegningBarnebidragBeregningResultatListe = mutableListOf<SluttberegningBarnebidragV2PeriodeResultat>()
 
-        // Løper gjennom hver bruddperiode og beregner endelig bidrag beregnet
+        // Løper gjennom hver bruddperiode og beregner sluttberegning barnebidrag
         bruddPeriodeListe.forEach { bruddPeriode ->
-            val endeligBidragBeregnetBeregningGrunnlag =
-                lagEndeligBidragBeregnetBeregningGrunnlag(
-                    endeligBidragBeregnetPeriodeGrunnlag = endeligBidragBeregnetPeriodeGrunnlag,
+            val sluttberegningBarnebidragBeregningGrunnlag =
+                lagSluttberegningBarnebidragBeregningGrunnlag(
+                    sluttberegningBarnebidragBeregnetPeriodeGrunnlag = sluttberegningBarnebidragPeriodeGrunnlag,
                     bruddPeriode = bruddPeriode,
                 )
-            endeligBidragBeregnetBeregningResultatListe.add(
-                EndeligBidragBeregnetPeriodeResultat(
+            sluttberegningBarnebidragBeregningResultatListe.add(
+                SluttberegningBarnebidragV2PeriodeResultat(
                     periode = bruddPeriode,
-                    resultat = EndeligBidragBeregningV2.beregnEndeligBidragBeregnet(endeligBidragBeregnetBeregningGrunnlag),
+                    resultat = EndeligBidragBeregningV2.beregnSluttberegningBarnebidrag(sluttberegningBarnebidragBeregningGrunnlag),
                 ),
             )
         }
 
+        // TODO Litt usikker på denne
+        sluttberegningBarnebidragBeregningResultatListe =
+            slåSammenSammenhengendePerioderMedLiktResultat(sluttberegningBarnebidragBeregningResultatListe)
+
         // Setter til-periode i siste element til null hvis det ikke allerede er det og åpenSluttperiode er true
-        if (endeligBidragBeregnetBeregningResultatListe.isNotEmpty()) {
-            val sisteElement = endeligBidragBeregnetBeregningResultatListe.last()
+        if (sluttberegningBarnebidragBeregningResultatListe.isNotEmpty()) {
+            val sisteElement = sluttberegningBarnebidragBeregningResultatListe.last()
             if (sisteElement.periode.til != null && åpenSluttperiode) {
                 val oppdatertSisteElement = sisteElement.copy(periode = sisteElement.periode.copy(til = null))
-                endeligBidragBeregnetBeregningResultatListe[endeligBidragBeregnetBeregningResultatListe.size - 1] = oppdatertSisteElement
+                sluttberegningBarnebidragBeregningResultatListe[sluttberegningBarnebidragBeregningResultatListe.size - 1] = oppdatertSisteElement
             }
         }
 
         // Mapper ut grunnlag som er brukt i beregningen (mottatte grunnlag og sjabloner)
         val resultatGrunnlagListe = mapDelberegningResultatGrunnlag(
-            grunnlagReferanseListe = endeligBidragBeregnetBeregningResultatListe
+            grunnlagReferanseListe = sluttberegningBarnebidragBeregningResultatListe
                 .flatMap { it.resultat.grunnlagsreferanseListe }
                 .distinct(),
             mottattGrunnlag = mottattGrunnlag,
             sjablonGrunnlag = emptyList(),
         )
 
-        // Mapper ut grunnlag for delberegning endelig bidrag beregnet
+        // Mapper ut grunnlag for sluttberegning barnebidrag
         resultatGrunnlagListe.addAll(
-            mapDelberegningEndeligBidragBeregnet(
-                endeligBidragBeregnetPeriodeResultatListe = endeligBidragBeregnetBeregningResultatListe,
+            mapSluttberegningBarnebidrag(
+                sluttberegningBarnebidragPeriodeResultatListe = sluttberegningBarnebidragBeregningResultatListe,
                 mottattGrunnlag = mottattGrunnlag,
             ),
         )
@@ -599,6 +688,92 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
 
         return resultatGrunnlagListe.distinctBy { it.referanse }.sortedBy { it.referanse }
     }
+
+    // DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL_DELT_BOSTED
+
+    // Lager en liste over alle bruddperioder basert på grunnlag som skal brukes i beregningen
+    private fun lagBruddPeriodeListeBidragspliktigesAndelDeltBosted(
+        grunnlagListe: BidragspliktigesAndelDeltBostedPeriodeGrunnlag,
+        beregningsperiode: ÅrMånedsperiode,
+    ): List<ÅrMånedsperiode> {
+        val periodeListe = sequenceOf(grunnlagListe.beregningsperiode)
+            .plus(grunnlagListe.underholdskostnadDelberegningPeriodeGrunnlagListe.asSequence().map { it.underholdskostnadPeriode.periode })
+            .plus(
+                grunnlagListe.bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe.asSequence()
+                    .map { it.bpAndelUnderholdskostnadPeriode.periode },
+            )
+
+        return lagBruddPeriodeListe(periodeListe, beregningsperiode)
+    }
+
+    // Lager grunnlag for bidragspliktiges andel delt bosted som ligger innenfor bruddPeriode
+    private fun lagBidragspliktigesAndelDeltBostedBeregningGrunnlag(
+        bidragspliktigesAndelDeltBostedPeriodeGrunnlag: BidragspliktigesAndelDeltBostedPeriodeGrunnlag,
+        bruddPeriode: ÅrMånedsperiode,
+    ): BidragspliktigesAndelDeltBostedBeregningGrunnlag {
+        val underholdskostnadBeregningGrunnlag = bidragspliktigesAndelDeltBostedPeriodeGrunnlag.underholdskostnadDelberegningPeriodeGrunnlagListe
+            .firstOrNull { it.underholdskostnadPeriode.periode.inneholder(bruddPeriode) }
+            ?.let {
+                UnderholdskostnadDelberegningBeregningGrunnlag(
+                    referanse = it.referanse,
+                    beløp = it.underholdskostnadPeriode.underholdskostnad,
+                )
+            }
+            ?: throw IllegalArgumentException("Underholdskostnad grunnlag mangler for periode $bruddPeriode")
+        val bpAndelUnderholdskostnadBeregningGrunnlag =
+            bidragspliktigesAndelDeltBostedPeriodeGrunnlag.bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe
+                .firstOrNull { it.bpAndelUnderholdskostnadPeriode.periode.inneholder(bruddPeriode) }
+                ?.let {
+                    BpAndelUnderholdskostnadDelberegningBeregningGrunnlag(
+                        referanse = it.referanse,
+                        andelBeløp = it.bpAndelUnderholdskostnadPeriode.andelBeløp,
+                        andelFaktor = it.bpAndelUnderholdskostnadPeriode.endeligAndelFaktor,
+                        barnetErSelvforsørget = it.bpAndelUnderholdskostnadPeriode.barnetErSelvforsørget,
+                    )
+                }
+                ?: throw IllegalArgumentException("BP andel underholdskostnad grunnlag mangler for periode $bruddPeriode")
+        val deltBostedBeregningGrunnlag = bidragspliktigesAndelDeltBostedPeriodeGrunnlag.samværsklassePeriodeGrunnlagListe
+            .firstOrNull { it.samværsklassePeriode.periode.inneholder(bruddPeriode) }
+            ?.let {
+                DeltBostedBeregningGrunnlag(
+                    referanse = it.referanse,
+                    deltBosted = it.samværsklassePeriode.samværsklasse == Samværsklasse.DELT_BOSTED,
+                )
+            }
+
+        return BidragspliktigesAndelDeltBostedBeregningGrunnlag(
+            underholdskostnadBeregningGrunnlag = underholdskostnadBeregningGrunnlag,
+            bpAndelUnderholdskostnadBeregningGrunnlag = bpAndelUnderholdskostnadBeregningGrunnlag,
+            deltBostedBeregningGrunnlag = deltBostedBeregningGrunnlag,
+        )
+    }
+
+    // Mapper ut DelberegningBidragspliktigesAndelDeltBosted
+    private fun mapDelberegningBidragspliktigesAndelDeltBosted(
+        bidragspliktigesAndelDeltBostedPeriodeResultatListe: List<BidragspliktigesAndelDeltBostedPeriodeResultat>,
+        mottattGrunnlag: BeregnGrunnlag,
+    ): List<GrunnlagDto> = bidragspliktigesAndelDeltBostedPeriodeResultatListe
+        .map {
+            GrunnlagDto(
+                referanse = opprettDelberegningreferanse(
+                    type = Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL_DELT_BOSTED,
+                    periode = ÅrMånedsperiode(fom = it.periode.fom, til = null),
+                    søknadsbarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
+                    gjelderReferanse = mottattGrunnlag.grunnlagListe.bidragspliktig?.referanse ?: "bidragspliktig",
+                ),
+                type = Grunnlagstype.DELBEREGNING_BIDRAGSPLIKTIGES_ANDEL_DELT_BOSTED,
+                innhold = POJONode(
+                    DelberegningBidragspliktigesAndelDeltBosted(
+                        periode = it.periode,
+                        bpAndelAvUVedDeltBostedFaktor = it.resultat.bpAndelAvUVedDeltBostedFaktor!!,
+                        bpAndelAvUVedDeltBostedBeløp = it.resultat.bpAndelAvUVedDeltBostedBeløp!!,
+                    ),
+                ),
+                grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe.sorted(),
+                gjelderReferanse = mottattGrunnlag.grunnlagListe.bidragspliktig?.referanse,
+                gjelderBarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
+            )
+        }
 
     // DELBEREGNING_BIDRAG_TIL_FORDELING
 
@@ -615,6 +790,10 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
             )
             .plus(grunnlagListe.nettoBarnetilleggBMDelberegningPeriodeGrunnlagListe.asSequence().map { it.nettoBarnetilleggPeriode.periode })
             .plus(grunnlagListe.samværsfradragDelberegningPeriodeGrunnlagListe.asSequence().map { it.samværsfradragPeriode.periode })
+            .plus(
+                grunnlagListe.bidragspliktigesAndelDeltBostedDelberegningPeriodeGrunnlagListe.asSequence()
+                    .map { it.bidragspliktigesAndelDeltBostedPeriode.periode },
+            )
 
         return lagBruddPeriodeListe(periodeListe, beregningsperiode)
     }
@@ -656,12 +835,22 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
             .firstOrNull { it.samværsfradragPeriode.periode.inneholder(bruddPeriode) }
             ?.let { SamværsfradragDelberegningBeregningGrunnlag(referanse = it.referanse, beløp = it.samværsfradragPeriode.beløp) }
             ?: throw IllegalArgumentException("Samværsfradrag grunnlag mangler for periode $bruddPeriode")
+        val bidragspliktigesAndelDeltBostedBeregningGrunnlag =
+            bidragTilFordelingPeriodeGrunnlag.bidragspliktigesAndelDeltBostedDelberegningPeriodeGrunnlagListe
+                .firstOrNull { it.bidragspliktigesAndelDeltBostedPeriode.periode.inneholder(bruddPeriode) }
+                ?.let {
+                    BidragspliktigesAndelDeltBostedDelberegningBeregningGrunnlag(
+                        referanse = it.referanse,
+                        bpAndelAvUVedDeltBostedBeløp = it.bidragspliktigesAndelDeltBostedPeriode.bpAndelAvUVedDeltBostedBeløp,
+                    )
+                }
 
         return BidragTilFordelingBeregningGrunnlag(
             underholdskostnadBeregningGrunnlag = underholdskostnadBeregningGrunnlag,
             bpAndelUnderholdskostnadBeregningGrunnlag = bpAndelUnderholdskostnadBeregningGrunnlag,
             barnetilleggBMBeregningGrunnlag = barnetilleggBMBeregningGrunnlag,
             samværsfradragBeregningGrunnlag = samværsfradragBeregningGrunnlag,
+            bidragspliktigesAndelDeltBostedBeregningGrunnlag = bidragspliktigesAndelDeltBostedBeregningGrunnlag,
         )
     }
 
@@ -685,6 +874,9 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
                         bidragTilFordeling = it.resultat.bidragTilFordeling,
                         uMinusNettoBarnetilleggBM = it.resultat.uMinusNettoBarnetilleggBM,
                         bpAndelAvUMinusSamværsfradrag = it.resultat.bpAndelAvUMinusSamværsfradrag,
+                        nettoBidragEtterBarnetilleggBM = it.resultat.nettoBidragEtterBarnetilleggBM,
+                        bruttoBidragEtterBarnetilleggBM = it.resultat.bruttoBidragEtterBarnetilleggBM,
+                        erBidragJustertForNettoBarnetilleggBM = it.resultat.erBidragJustertForNettoBarnetilleggBM,
                     ),
                 ),
                 grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe.sorted(),
@@ -697,8 +889,8 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
 
     // Lager en liste over alle bruddperioder basert på grunnlag som skal brukes i beregningen
     private fun lagBruddPeriodeListeSumBidragTilFordeling(
-        grunnlagListe: SumBidragTilFordelingPeriodeGrunnlag,
         beregningsperiode: ÅrMånedsperiode,
+        grunnlagListe: SumBidragTilFordelingPeriodeGrunnlag,
     ): List<ÅrMånedsperiode> {
         val periodeListe = sequenceOf(grunnlagListe.beregningsperiode)
             .plus(grunnlagListe.bidragTilFordelingDelberegningPeriodeGrunnlagListe.asSequence().map { it.bidragTilFordelingPeriode.periode })
@@ -905,6 +1097,7 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
                         andelAvSumBidragTilFordelingFaktor = it.resultat.andelAvSumBidragTilFordelingFaktor,
                         andelAvEvneBeløp = it.resultat.andelAvEvneBeløp,
                         bidragEtterFordeling = it.resultat.bidragEtterFordeling,
+                        bruttoBidragJustertForEvneOg25Prosent = it.resultat.bruttoBidragJustertForEvneOg25Prosent,
                         harBPFullEvne = it.resultat.harBPFullEvne,
                     ),
                 ),
@@ -985,6 +1178,10 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
         val periodeListe = sequenceOf(grunnlagListe.beregningsperiode)
             .plus(grunnlagListe.andelAvBidragsevneDelberegningPeriodeGrunnlagListe.asSequence().map { it.andelAvBidragsevnePeriode.periode })
             .plus(grunnlagListe.nettoBarnetilleggBPDelberegningPeriodeGrunnlagListe.asSequence().map { it.nettoBarnetilleggPeriode.periode })
+            .plus(
+                grunnlagListe.bidragspliktigesAndelDeltBostedDelberegningPeriodeGrunnlagListe.asSequence()
+                    .map { it.bidragspliktigesAndelDeltBostedPeriode.periode },
+            )
 
         return lagBruddPeriodeListe(periodeListe, beregningsperiode)
     }
@@ -1011,10 +1208,20 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
                     beløp = it.nettoBarnetilleggPeriode.summertNettoBarnetillegg,
                 )
             }
+        val bidragspliktigesAndelDeltBostedBeregningGrunnlag =
+            bidragJustertForBPBarnetilleggPeriodeGrunnlag.bidragspliktigesAndelDeltBostedDelberegningPeriodeGrunnlagListe
+                .firstOrNull { it.bidragspliktigesAndelDeltBostedPeriode.periode.inneholder(bruddPeriode) }
+                ?.let {
+                    BidragspliktigesAndelDeltBostedDelberegningBeregningGrunnlag(
+                        referanse = it.referanse,
+                        bpAndelAvUVedDeltBostedBeløp = it.bidragspliktigesAndelDeltBostedPeriode.bpAndelAvUVedDeltBostedBeløp,
+                    )
+                }
 
         return BidragJustertForBPBarnetilleggBeregningGrunnlag(
             andelAvBidragsevneBeregningGrunnlag = andelAvBidragsevneBeregningGrunnlag,
             barnetilleggBPBeregningGrunnlag = barnetilleggBPBeregningGrunnlag,
+            bidragspliktigesAndelDeltBostedBeregningGrunnlag = bidragspliktigesAndelDeltBostedBeregningGrunnlag,
         )
     }
 
@@ -1045,11 +1252,11 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
             )
         }
 
-    // DELBEREGNING_ENDELIG_BIDRAG_BEREGNET
+    // SLUTTBEREGNING_BARNEBIDRAG
 
     // Lager en liste over alle bruddperioder basert på grunnlag som skal brukes i beregningen
-    private fun lagBruddPeriodeListeEndeligBidragBeregnet(
-        grunnlagListe: EndeligBidragBeregnetPeriodeGrunnlag,
+    private fun lagBruddPeriodeListeSluttberegningBarnebidrag(
+        grunnlagListe: SluttberegningBarnebidragV2PeriodeGrunnlag,
         beregningsperiode: ÅrMånedsperiode,
     ): List<ÅrMånedsperiode> {
         val periodeListe = sequenceOf(grunnlagListe.beregningsperiode)
@@ -1059,17 +1266,26 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
                 },
             )
             .plus(grunnlagListe.samværsfradragDelberegningPeriodeGrunnlagListe.asSequence().map { it.samværsfradragPeriode.periode })
+            .plus(
+                grunnlagListe.bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe.asSequence()
+                    .map { it.bpAndelUnderholdskostnadPeriode.periode },
+            )
+            .plus(grunnlagListe.bostatusPeriodeGrunnlagListe.asSequence().map { it.bostatusPeriode.periode })
+            .plus(
+                grunnlagListe.bidragspliktigesAndelDeltBostedDelberegningPeriodeGrunnlagListe.asSequence()
+                    .map { it.bidragspliktigesAndelDeltBostedPeriode.periode },
+            )
 
         return lagBruddPeriodeListe(periodeListe, beregningsperiode)
     }
 
-    // Lager grunnlag for endelig bidrag beregnet som ligger innenfor bruddPeriode
-    private fun lagEndeligBidragBeregnetBeregningGrunnlag(
-        endeligBidragBeregnetPeriodeGrunnlag: EndeligBidragBeregnetPeriodeGrunnlag,
+    // Lager grunnlag for sluttberegning barnebidrag som ligger innenfor bruddPeriode
+    private fun lagSluttberegningBarnebidragBeregningGrunnlag(
+        sluttberegningBarnebidragBeregnetPeriodeGrunnlag: SluttberegningBarnebidragV2PeriodeGrunnlag,
         bruddPeriode: ÅrMånedsperiode,
-    ): EndeligBidragBeregnetBeregningGrunnlag {
+    ): SluttberegningBarnebidragV2BeregningGrunnlag {
         val bidragJustertForBPBarnetilleggBeregningGrunnlag =
-            endeligBidragBeregnetPeriodeGrunnlag.bidragJustertForBPBarnetilleggDelberegningPeriodeGrunnlagListe
+            sluttberegningBarnebidragBeregnetPeriodeGrunnlag.bidragJustertForBPBarnetilleggDelberegningPeriodeGrunnlagListe
                 .firstOrNull { it.bidragJustertForBPBarnetilleggPeriode.periode.inneholder(bruddPeriode) }
                 ?.let {
                     BidragJustertForBPBarnetilleggDelberegningBeregningGrunnlag(
@@ -1078,36 +1294,70 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
                     )
                 }
                 ?: throw IllegalArgumentException("Bidrag justert for netto barnetillegg BP grunnlag mangler for periode $bruddPeriode")
-        val samværsfradragBeregningGrunnlag = endeligBidragBeregnetPeriodeGrunnlag.samværsfradragDelberegningPeriodeGrunnlagListe
+        val samværsfradragBeregningGrunnlag = sluttberegningBarnebidragBeregnetPeriodeGrunnlag.samværsfradragDelberegningPeriodeGrunnlagListe
             .firstOrNull { it.samværsfradragPeriode.periode.inneholder(bruddPeriode) }
             ?.let { SamværsfradragDelberegningBeregningGrunnlag(referanse = it.referanse, beløp = it.samværsfradragPeriode.beløp) }
             ?: throw IllegalArgumentException("Samværsfradrag grunnlag mangler for periode $bruddPeriode")
+        val bpAndelUnderholdskostnadBeregningGrunnlag =
+            sluttberegningBarnebidragBeregnetPeriodeGrunnlag.bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe
+                .firstOrNull { it.bpAndelUnderholdskostnadPeriode.periode.inneholder(bruddPeriode) }
+                ?.let {
+                    BpAndelUnderholdskostnadDelberegningBeregningGrunnlag(
+                        referanse = it.referanse,
+                        andelBeløp = it.bpAndelUnderholdskostnadPeriode.andelBeløp,
+                        andelFaktor = it.bpAndelUnderholdskostnadPeriode.endeligAndelFaktor,
+                        barnetErSelvforsørget = it.bpAndelUnderholdskostnadPeriode.barnetErSelvforsørget,
+                    )
+                }
+                ?: throw IllegalArgumentException("BP andel underholdskostnad grunnlag mangler for periode $bruddPeriode")
+        val søknadsbarnetBorHosBpGrunnlag = sluttberegningBarnebidragBeregnetPeriodeGrunnlag.bostatusPeriodeGrunnlagListe
+            .firstOrNull { it.bostatusPeriode.periode.inneholder(bruddPeriode) }
+            ?.let {
+                SøknadsbarnetBorHosBpGrunnlag(
+                    referanse = it.referanse,
+                    søknadsbarnetBorHosBp = it.bostatusPeriode.bostatus == Bostatuskode.MED_FORELDER,
+                )
+            }
+            ?: throw IllegalArgumentException("Bostatus grunnlag mangler for periode $bruddPeriode")
+        val bidragspliktigesAndelDeltBostedBeregningGrunnlag =
+            sluttberegningBarnebidragBeregnetPeriodeGrunnlag.bidragspliktigesAndelDeltBostedDelberegningPeriodeGrunnlagListe
+                .firstOrNull { it.bidragspliktigesAndelDeltBostedPeriode.periode.inneholder(bruddPeriode) }
+                ?.let {
+                    BidragspliktigesAndelDeltBostedDelberegningBeregningGrunnlag(
+                        referanse = it.referanse,
+                        bpAndelAvUVedDeltBostedBeløp = it.bidragspliktigesAndelDeltBostedPeriode.bpAndelAvUVedDeltBostedBeløp,
+                    )
+                }
 
-        return EndeligBidragBeregnetBeregningGrunnlag(
+        return SluttberegningBarnebidragV2BeregningGrunnlag(
             bidragJustertForBPBarnetilleggBeregningGrunnlag = bidragJustertForBPBarnetilleggBeregningGrunnlag,
             samværsfradragBeregningGrunnlag = samværsfradragBeregningGrunnlag,
+            bpAndelUnderholdskostnadBeregningGrunnlag = bpAndelUnderholdskostnadBeregningGrunnlag,
+            søknadsbarnetBorHosBpGrunnlag = søknadsbarnetBorHosBpGrunnlag,
+            bidragspliktigesAndelDeltBostedBeregningGrunnlag = bidragspliktigesAndelDeltBostedBeregningGrunnlag,
         )
     }
 
-    // Mapper ut DelberegningEndeligBidragBeregnet
-    private fun mapDelberegningEndeligBidragBeregnet(
-        endeligBidragBeregnetPeriodeResultatListe: List<EndeligBidragBeregnetPeriodeResultat>,
+    // Mapper ut SluttberegningBarnebidragV2
+    private fun mapSluttberegningBarnebidrag(
+        sluttberegningBarnebidragPeriodeResultatListe: List<SluttberegningBarnebidragV2PeriodeResultat>,
         mottattGrunnlag: BeregnGrunnlag,
-    ): List<GrunnlagDto> = endeligBidragBeregnetPeriodeResultatListe
+    ): List<GrunnlagDto> = sluttberegningBarnebidragPeriodeResultatListe
         .map {
             GrunnlagDto(
-                referanse = opprettDelberegningreferanse(
-                    type = Grunnlagstype.DELBEREGNING_ENDELIG_BIDRAG_BEREGNET,
+                referanse = opprettSluttberegningreferanse(
+                    barnreferanse = mottattGrunnlag.søknadsbarnReferanse,
+                    type = Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG,
                     periode = ÅrMånedsperiode(fom = it.periode.fom, til = null),
-                    søknadsbarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
-                    gjelderReferanse = mottattGrunnlag.grunnlagListe.bidragspliktig?.referanse ?: "bidragspliktig",
                 ),
-                type = Grunnlagstype.DELBEREGNING_ENDELIG_BIDRAG_BEREGNET,
+                type = Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG,
                 innhold = POJONode(
-                    DelberegningEndeligBidragBeregnet(
+                    SluttberegningBarnebidragV2(
                         periode = it.periode,
                         beregnetBeløp = it.resultat.beregnetBeløp,
                         resultatBeløp = it.resultat.resultatBeløp,
+                        barnetErSelvforsørget = it.resultat.barnetErSelvforsørget,
+                        ikkeOmsorgForBarnet = it.resultat.ikkeOmsorgForBarnet,
                     ),
                 ),
                 grunnlagsreferanseListe = it.resultat.grunnlagsreferanseListe.sorted(),
@@ -1115,6 +1365,31 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
                 gjelderBarnReferanse = mottattGrunnlag.søknadsbarnReferanse,
             )
         }
+
+    // Setter sammen perioder som er like. Dette gjelder for f.eks. perioder som er opphørt pga. at barnet er selvforsørget eller ikke bor hos BP
+    private fun slåSammenSammenhengendePerioderMedLiktResultat(
+        resultList: List<SluttberegningBarnebidragV2PeriodeResultat>,
+    ): MutableList<SluttberegningBarnebidragV2PeriodeResultat> {
+        if (resultList.isEmpty()) return mutableListOf()
+        val mergedList = mutableListOf<SluttberegningBarnebidragV2PeriodeResultat>()
+        var current = resultList.first()
+
+        for (next in resultList.drop(1)) {
+            if ((current.resultat == next.resultat) &&
+                (current.resultat.resultatBeløp == null) &&
+                // Sikre at periodene kommer etter hverandre
+                current.periode.til?.equals(next.periode.fom) == true
+            ) {
+                // Slå sammen periodene slik at periode før utvides med periode etter
+                current = current.copy(periode = current.periode.copy(til = next.periode.til))
+            } else {
+                mergedList.add(current)
+                current = next
+            }
+        }
+        mergedList.add(current)
+        return mergedList
+    }
 
     // TODO Flytte til bidrag-felles
     private fun opprettDelberegningreferanse(
