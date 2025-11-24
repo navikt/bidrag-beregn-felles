@@ -5,4 +5,7 @@ import no.nav.bidrag.transport.behandling.beregning.felles.BidragBeregningRespon
 
 interface BeregningBBMConsumer {
     fun hentBeregning(request: BidragBeregningRequestDto): BidragBeregningResponsDto
+
+    fun hentAlleBeregninger(request: BidragBeregningRequestDto): BidragBeregningResponsDto
+
 }

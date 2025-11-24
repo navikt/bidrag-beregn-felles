@@ -17,7 +17,6 @@ import no.nav.bidrag.transport.behandling.belopshistorikk.request.LøpendeBidrag
 import no.nav.bidrag.transport.behandling.belopshistorikk.request.LøpendeBidragssakerRequest
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.LøpendeBidragPeriodeResponse
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.LøpendeBidragssak
-import no.nav.bidrag.transport.behandling.belopshistorikk.response.SkyldnerStønaderResponse
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadPeriodeDto
 import no.nav.bidrag.transport.behandling.beregning.felles.BidragBeregningRequestDto
@@ -260,6 +259,19 @@ class VedtakService(
         return vedtakFilter.finneSisteManuelleVedtak(vedtakISak.vedtakListe)
     }
 
+    fun finnAlleManuelleVedtakForEvnevurdering(stønadsid: Stønadsid): List<VedtakForStønad> {
+        val vedtakISak =
+            vedtakConsumer.hentVedtakForStønad(
+                HentVedtakForStønadRequest(
+                    stønadsid.sak,
+                    stønadsid.type,
+                    stønadsid.skyldner,
+                    stønadsid.kravhaver,
+                ),
+            )
+        return vedtakFilter.finneAlleManuelleVedtak(vedtakISak.vedtakListe)
+    }
+
     fun hentBeregningFraBBM(vedtakForStønadListe: List<VedtakForStønad>): BidragBeregningResponsDto = bbmConsumer.hentBeregning(
         BidragBeregningRequestDto(
             vedtakForStønadListe.map {
@@ -273,6 +285,21 @@ class VedtakService(
         ),
     )
 
+    fun hentAlleBeregningerFraBBM(vedtakForStønadListe: List<VedtakForStønad>): BidragBeregningResponsDto = bbmConsumer.hentAlleBeregninger(
+        BidragBeregningRequestDto(
+            vedtakForStønadListe.map {
+                BidragBeregningRequestDto.HentBidragBeregning(
+                    stønadstype = it.stønadsendring.type,
+                    søknadsid = it.behandlingsreferanser.søknadsid.toString(),
+                    saksnummer = it.stønadsendring.sak.verdi,
+                    personidentBarn = it.stønadsendring.kravhaver,
+                )
+            },
+        ),
+    )
+
+
+
     fun hentAlleStønaderForBidragspliktig(request: LøpendeBidragPeriodeRequest): LøpendeBidragPeriodeResponse =
-        stønadConsumer.hentAlleLøpendeStønaderForPeriode(request)
+        stønadConsumer.hentAlleLøpendeStønaderIPeriode(request)
 }

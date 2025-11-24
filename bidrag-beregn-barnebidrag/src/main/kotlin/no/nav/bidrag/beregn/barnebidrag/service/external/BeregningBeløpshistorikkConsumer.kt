@@ -12,5 +12,5 @@ interface BeregningBeløpshistorikkConsumer {
     fun hentHistoriskeStønader(hentStønadHistoriskRequest: HentStønadHistoriskRequest): StønadDto?
     fun hentLøpendeStønad(hentStønadRequest: HentStønadRequest): StønadDto?
     fun hentLøpendeBidrag(request: LøpendeBidragssakerRequest): LøpendeBidragssakerResponse
-    fun hentAlleLøpendeStønaderForPeriode(request: LøpendeBidragPeriodeRequest): LøpendeBidragPeriodeResponse
+    fun hentAlleLøpendeStønaderIPeriode(request: LøpendeBidragPeriodeRequest): LøpendeBidragPeriodeResponse
 }
