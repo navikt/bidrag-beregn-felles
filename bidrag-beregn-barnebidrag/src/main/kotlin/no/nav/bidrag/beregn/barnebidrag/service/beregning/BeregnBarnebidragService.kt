@@ -112,6 +112,7 @@ class BeregnBarnebidragService : BeregnService() {
                 grunnlagListe = listOf(virkningstidspunkt.grunnlag as GrunnlagDto),
             )
         }
+
         // Kontroll av inputdata
         try {
             mottattGrunnlag.valider()
@@ -248,27 +249,31 @@ class BeregnBarnebidragService : BeregnService() {
         val utvidetGrunnlagSøknadsbarnListe = grunnlagSøknadsbarnListe.map { beregningBarn ->
 
             try {
-                // TODO
-//                val virkningstidspunkt = beregningBarn.grunnlagListe.filtrerOgKonverterBasertPåEgenReferanse<VirkningstidspunktGrunnlag>(
-//                    Grunnlagstype.VIRKNINGSTIDSPUNKT,
-//                ).firstOrNull()
-//
-//                if (virkningstidspunkt != null && virkningstidspunkt.innhold.avslag != null) {
-//                    return BeregnetBarnebidragResultat(
-//                        beregnetBarnebidragPeriodeListe =
-//                        listOf(
-//                            ResultatPeriode(
-//                                grunnlagsreferanseListe = listOf(virkningstidspunkt.referanse),
-//                                periode = ÅrMånedsperiode(mottattGrunnlag.periode.fom, null),
-//                                resultat =
-//                                ResultatBeregning(
-//                                    beløp = null,
-//                                ),
-//                            ),
-//                        ),
-//                        grunnlagListe = listOf(virkningstidspunkt.grunnlag as GrunnlagDto),
-//                    )
-//                }
+                // Brukes ifbm opphør / direkte avslag?
+                // TODO Sjekke om denne koden er i bruk eller kan fjernes
+                val virkningstidspunkt = beregningBarn.grunnlagListe.filtrerOgKonverterBasertPåEgenReferanse<VirkningstidspunktGrunnlag>(
+                    Grunnlagstype.VIRKNINGSTIDSPUNKT,
+                ).firstOrNull()
+
+                if (virkningstidspunkt != null && virkningstidspunkt.innhold.avslag != null) {
+                    BeregnetBarnebidragResultatV2(
+                        søknadsbarnreferanse = beregningBarn.søknadsbarnReferanse,
+                        beregnetBarnebidragResultat = BeregnetBarnebidragResultat(
+                            beregnetBarnebidragPeriodeListe =
+                            listOf(
+                                ResultatPeriode(
+                                    grunnlagsreferanseListe = listOf(virkningstidspunkt.referanse),
+                                    periode = ÅrMånedsperiode(beregningBarn.periode.fom, null),
+                                    resultat =
+                                    ResultatBeregning(
+                                        beløp = null,
+                                    ),
+                                ),
+                            ),
+                            grunnlagListe = listOf(virkningstidspunkt.grunnlag as GrunnlagDto),
+                        ),
+                    )
+                }
 
                 // Kontroll av inputdata
                 beregningBarn.valider()
@@ -439,6 +444,9 @@ class BeregnBarnebidragService : BeregnService() {
 
                 // Kaster exception hvis det er utført begrenset revurdering og det er minst ett tilfelle hvor beregnet bidrag er lavere enn løpende bidrag
                 // eller hvis løpende forskudd mangler i første beregningsperiode
+                // TODO Logikk for begrenset revurdering er pt ikke i bruk i ny løsning (avventer avklaringer). Hvis den skal tas i bruk må logikken
+                // TODO under her aktiveres. Det må også legges inn logikk i BeregnEndeligBidragServiceV2 tilsvarende BeregnEndeligBidragService.
+                // TODO Bidraget skal IKKE sjekkes for reduksjon til forskuddssats hvis forholdsmessig fordeling slår ut.
 //                if (delberegningEndeligBidragResultat.skalKasteBegrensetRevurderingException) {
 //                    if (delberegningEndeligBidragResultat.feilmelding.contains("løpende forskudd mangler")) {
 //                        throw BegrensetRevurderingLøpendeForskuddManglerException(
@@ -454,6 +462,7 @@ class BeregnBarnebidragService : BeregnService() {
 //                        )
 //                    }
 //                }
+
                 BeregnetBarnebidragResultatV2(beregningBarn.beregnGrunnlag.søknadsbarnReferanse, beregnetBarnebidragResultat)
             } catch (e: Exception) {
                 // TODO

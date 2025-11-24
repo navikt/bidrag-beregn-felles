@@ -11,6 +11,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragTilF
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragTilFordelingLøpendeBidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndel
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningBidragspliktigesAndelDeltBosted
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEvne25ProsentAvInntekt
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningNettoBarnetillegg
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningSamværsfradrag
@@ -147,12 +148,44 @@ data class BeregnEndeligBidragServiceRespons(
 
 // Nytt ifbm forholdsmessig fordeling
 
+data class BidragspliktigesAndelDeltBostedPeriodeGrunnlag(
+    val beregningsperiode: ÅrMånedsperiode,
+    val underholdskostnadDelberegningPeriodeGrunnlagListe: List<UnderholdskostnadDelberegningPeriodeGrunnlag>,
+    val bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe: List<BpAndelUnderholdskostnadDelberegningPeriodeGrunnlag>,
+    val samværsklassePeriodeGrunnlagListe: List<SamværsklassePeriodeGrunnlag>,
+)
+
+data class BidragspliktigesAndelDeltBostedPeriodeResultat(
+    val periode: ÅrMånedsperiode,
+    val resultat: BidragspliktigesAndelDeltBostedBeregningResultat,
+)
+
+data class BidragspliktigesAndelDeltBostedBeregningGrunnlag(
+    val underholdskostnadBeregningGrunnlag: UnderholdskostnadDelberegningBeregningGrunnlag,
+    val bpAndelUnderholdskostnadBeregningGrunnlag: BpAndelUnderholdskostnadDelberegningBeregningGrunnlag,
+    val deltBostedBeregningGrunnlag: DeltBostedBeregningGrunnlag?,
+)
+
+data class BidragspliktigesAndelDeltBostedBeregningResultat(
+    val bpAndelAvUVedDeltBostedFaktor: BigDecimal?,
+    val bpAndelAvUVedDeltBostedBeløp: BigDecimal?,
+    val grunnlagsreferanseListe: List<String> = emptyList(),
+)
+
+data class BidragspliktigesAndelDeltBostedDelberegningPeriodeGrunnlag(
+    val referanse: String,
+    val bidragspliktigesAndelDeltBostedPeriode: DelberegningBidragspliktigesAndelDeltBosted,
+)
+
+data class BidragspliktigesAndelDeltBostedDelberegningBeregningGrunnlag(val referanse: String, val bpAndelAvUVedDeltBostedBeløp: BigDecimal)
+
 data class BidragTilFordelingPeriodeGrunnlag(
     val beregningsperiode: ÅrMånedsperiode,
     val underholdskostnadDelberegningPeriodeGrunnlagListe: List<UnderholdskostnadDelberegningPeriodeGrunnlag>,
     val bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe: List<BpAndelUnderholdskostnadDelberegningPeriodeGrunnlag>,
     val nettoBarnetilleggBMDelberegningPeriodeGrunnlagListe: List<NettoBarnetilleggDelberegningPeriodeGrunnlag>,
     val samværsfradragDelberegningPeriodeGrunnlagListe: List<SamværsfradragDelberegningPeriodeGrunnlag>,
+    val bidragspliktigesAndelDeltBostedDelberegningPeriodeGrunnlagListe: List<BidragspliktigesAndelDeltBostedDelberegningPeriodeGrunnlag>,
 )
 
 data class BidragTilFordelingPeriodeResultat(val periode: ÅrMånedsperiode, val resultat: BidragTilFordelingBeregningResultat)
@@ -162,6 +195,7 @@ data class BidragTilFordelingBeregningGrunnlag(
     val bpAndelUnderholdskostnadBeregningGrunnlag: BpAndelUnderholdskostnadDelberegningBeregningGrunnlag,
     val barnetilleggBMBeregningGrunnlag: BarnetilleggDelberegningBeregningGrunnlag?,
     val samværsfradragBeregningGrunnlag: SamværsfradragDelberegningBeregningGrunnlag,
+    val bidragspliktigesAndelDeltBostedBeregningGrunnlag: BidragspliktigesAndelDeltBostedDelberegningBeregningGrunnlag?,
 )
 
 data class BidragTilFordelingBeregningResultat(
@@ -292,6 +326,7 @@ data class BidragJustertForBPBarnetilleggPeriodeGrunnlag(
     val beregningsperiode: ÅrMånedsperiode,
     val andelAvBidragsevneDelberegningPeriodeGrunnlagListe: List<AndelAvBidragsevneDelberegningPeriodeGrunnlag>,
     val nettoBarnetilleggBPDelberegningPeriodeGrunnlagListe: List<NettoBarnetilleggDelberegningPeriodeGrunnlag>,
+    val bidragspliktigesAndelDeltBostedDelberegningPeriodeGrunnlagListe: List<BidragspliktigesAndelDeltBostedDelberegningPeriodeGrunnlag>,
 )
 
 data class BidragJustertForBPBarnetilleggPeriodeResultat(val periode: ÅrMånedsperiode, val resultat: BidragJustertForBPBarnetilleggBeregningResultat)
@@ -299,6 +334,7 @@ data class BidragJustertForBPBarnetilleggPeriodeResultat(val periode: ÅrMåneds
 data class BidragJustertForBPBarnetilleggBeregningGrunnlag(
     val andelAvBidragsevneBeregningGrunnlag: AndelAvBidragsevneDelberegningBeregningGrunnlag,
     val barnetilleggBPBeregningGrunnlag: BarnetilleggDelberegningBeregningGrunnlag?,
+    val bidragspliktigesAndelDeltBostedBeregningGrunnlag: BidragspliktigesAndelDeltBostedDelberegningBeregningGrunnlag?,
 )
 
 data class BidragJustertForBPBarnetilleggBeregningResultat(
@@ -320,6 +356,7 @@ data class SluttberegningBarnebidragV2PeriodeGrunnlag(
     val samværsfradragDelberegningPeriodeGrunnlagListe: List<SamværsfradragDelberegningPeriodeGrunnlag>,
     val bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe: List<BpAndelUnderholdskostnadDelberegningPeriodeGrunnlag>,
     val bostatusPeriodeGrunnlagListe: List<BostatusPeriodeGrunnlag>,
+    val bidragspliktigesAndelDeltBostedDelberegningPeriodeGrunnlagListe: List<BidragspliktigesAndelDeltBostedDelberegningPeriodeGrunnlag>,
 )
 
 data class SluttberegningBarnebidragV2PeriodeResultat(val periode: ÅrMånedsperiode, val resultat: SluttberegningBarnebidragV2BeregningResultat)
@@ -329,6 +366,7 @@ data class SluttberegningBarnebidragV2BeregningGrunnlag(
     val samværsfradragBeregningGrunnlag: SamværsfradragDelberegningBeregningGrunnlag,
     val bpAndelUnderholdskostnadBeregningGrunnlag: BpAndelUnderholdskostnadDelberegningBeregningGrunnlag,
     val søknadsbarnetBorHosBpGrunnlag: SøknadsbarnetBorHosBpGrunnlag,
+    val bidragspliktigesAndelDeltBostedBeregningGrunnlag: BidragspliktigesAndelDeltBostedDelberegningBeregningGrunnlag?,
 )
 
 data class SluttberegningBarnebidragV2BeregningResultat(
