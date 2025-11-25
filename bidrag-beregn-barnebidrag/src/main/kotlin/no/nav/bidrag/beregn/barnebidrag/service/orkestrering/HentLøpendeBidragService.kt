@@ -37,15 +37,10 @@ private val log = KotlinLogging.logger {}
 @Import(Vedtaksfiltrering::class)
 class HentLøpendeBidragService(private val vedtakService: VedtakService) {
     @Timed
-    fun hentLøpendeBidragForBehandling(
-        bidragspliktigIdent: Personident,
-        søknadsbarnidentMap: Map<Personident, String>,
-        beregningsperiode: ÅrMånedsperiode,
-    ): LøpendeBidragOgBeregninger {
+    fun hentLøpendeBidragForBehandling(bidragspliktigIdent: Personident, beregningsperiode: ÅrMånedsperiode): LøpendeBidragOgBeregninger {
         try {
             // Henter alle bidrag tilknyttet BP som er eller har vært løpende i beregningsperioden. Filtrerer først
             // bort perioder som er utenfor beregningsperioden. Stønader som har ingen perioder innenfor beregningsperioden fjernes.
-            // Filterer så bort kravhavere som er søknadsbarn.
             val løpendeBidragIPerioden = vedtakService.hentAlleStønaderForBidragspliktig(
                 LøpendeBidragPeriodeRequest(bidragspliktigIdent, beregningsperiode),
             ).filtrerForPeriode(beregningsperiode)
@@ -55,15 +50,15 @@ class HentLøpendeBidragService(private val vedtakService: VedtakService) {
                     "for BP: ${bidragspliktigIdent.verdi}"
             }
 
-//            Henter manuelle vedtak som har perioder som overlapper beregningsperioden
+//          Henter manuelle vedtak som har perioder som overlapper beregningsperioden
             val manuelleVedtak = løpendeBidragIPerioden.hentManuelleVedtak(bidragspliktigIdent).sortedByDescending { it.vedtakstidspunkt }
                 .filtrerVedtakMotBeregningsperiode(beregningsperiode)
 
-            secureLogger.info { "Hentet manuelle vedtak: ${manuelleVedtak.joinToString { it.toString() }} for BP: ${bidragspliktigIdent.verdi}" }
+            secureLogger.info { "Hentede manuelle vedtak: ${manuelleVedtak.joinToString { it.toString() }} for BP: ${bidragspliktigIdent.verdi}" }
             val beregningsdataIManuelleVedtak = manuelleVedtak.hentBeregning()
             secureLogger.info {
-                "Hentet beregningsdata i manuelle vedtak: " +
-                    "${beregningsdataIManuelleVedtak.beregningListe}.joinToString { it.toString() } "
+                "Hentede beregningsdata i manuelle vedtak: " +
+                    "${beregningsdataIManuelleVedtak.beregningListe.joinToString { it.toString() }} } "
             }
 
             return LøpendeBidragOgBeregninger(
@@ -92,7 +87,7 @@ class HentLøpendeBidragService(private val vedtakService: VedtakService) {
         // Henter beregningsgrunnlag fra BBM
         var bidragBeregningResponsDtoFraBBM = BidragBeregningResponsDto(emptyList())
         if (hentBeregningFraBBMListe.isNotEmpty()) {
-            secureLogger.info { "Følgende beregninger skal hentes fra BBM: $hentBeregningFraBBMListe" }
+            secureLogger.info { "Følgende beregninger skal hentes fra BBM: ${hentBeregningFraBBMListe.joinToString { it.toString() }}" }
             bidragBeregningResponsDtoFraBBM =
                 vedtakService.hentAlleBeregningerFraBBM(hentBeregningFraBBMListe)
             secureLogger.info { "Respons fra BBM: $bidragBeregningResponsDtoFraBBM" }
@@ -101,7 +96,10 @@ class HentLøpendeBidragService(private val vedtakService: VedtakService) {
         // Henter beregningsgrunnlag fra bidrag-vedtak
         var bidragBeregningResponsDtoFraBidragVedtak = BidragBeregningResponsDto(emptyList())
         if (hentBeregningFraBidragVedtakListe.isNotEmpty()) {
-            secureLogger.info { "Følgende beregninger skal hentes fra bidrag-vedtak: $hentBeregningFraBidragVedtakListe" }
+            secureLogger.info {
+                "Følgende beregninger skal hentes fra bidrag-vedtak: " +
+                    hentBeregningFraBidragVedtakListe.joinToString { it.toString() }
+            }
             val beregningListe = mutableListOf<BidragBeregningResponsDto.BidragBeregning>()
 
             map {

@@ -45,7 +45,6 @@ class HentLøpendeBidragServiceTest {
     fun `skal hente løpende bidrag for behandling uten manuelle vedtak`() {
         val beregningsperiode = ÅrMånedsperiode(YearMonth.of(2024, 1), YearMonth.of(2024, 12))
         val bidragspliktigIdent = Personident(personIdentBidragspliktig)
-        val søknadsbarnidentMap = mapOf(Personident(personIdentSøknadsbarn1) to "referanse1")
 
         val bidragPeriode = BidragPeriode(
             periode = ÅrMånedsperiode(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 1)),
@@ -70,7 +69,6 @@ class HentLøpendeBidragServiceTest {
 
         val resultat = hentLøpendeBidragService.hentLøpendeBidragForBehandling(
             bidragspliktigIdent,
-            søknadsbarnidentMap,
             beregningsperiode,
         )
 
@@ -89,7 +87,6 @@ class HentLøpendeBidragServiceTest {
     fun `skal hente løpende bidrag med manuelle vedtak fra BBM`() {
         val beregningsperiode = ÅrMånedsperiode(YearMonth.of(2024, 7), YearMonth.of(2025, 6))
         val bidragspliktigIdent = Personident(personIdentBidragspliktig)
-        val søknadsbarnidentMap = mapOf(Personident(personIdentSøknadsbarn1) to "referanse1")
 
         val bidragPeriode = BidragPeriode(
             periode = ÅrMånedsperiode(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 12, 1)),
@@ -129,7 +126,6 @@ class HentLøpendeBidragServiceTest {
 
         val resultat = hentLøpendeBidragService.hentLøpendeBidragForBehandling(
             bidragspliktigIdent,
-            søknadsbarnidentMap,
             beregningsperiode,
         )
 
@@ -148,7 +144,6 @@ class HentLøpendeBidragServiceTest {
     fun `skal hente løpende bidrag med manuelle vedtak fra bidrag-vedtak`() {
         val beregningsperiode = ÅrMånedsperiode(YearMonth.of(2024, 7), YearMonth.of(2025, 6))
         val bidragspliktigIdent = Personident(personIdentBidragspliktig)
-        val søknadsbarnidentMap = mapOf(Personident(personIdentSøknadsbarn1) to "referanse1")
         val beregnetBeløp = BigDecimal.valueOf(5160)
         val resultatBeløp = BigDecimal.valueOf(5000)
 
@@ -196,7 +191,6 @@ class HentLøpendeBidragServiceTest {
 
         val resultat = hentLøpendeBidragService.hentLøpendeBidragForBehandling(
             bidragspliktigIdent,
-            søknadsbarnidentMap,
             beregningsperiode,
         )
 
@@ -217,7 +211,6 @@ class HentLøpendeBidragServiceTest {
     fun `skal filtrere bort perioder utenfor beregningsperioden`() {
         val beregningsperiode = ÅrMånedsperiode(YearMonth.of(2024, 6), YearMonth.of(2024, 12))
         val bidragspliktigIdent = Personident(personIdentBidragspliktig)
-        val søknadsbarnidentMap = mapOf(Personident(personIdentSøknadsbarn1) to "referanse1")
 
         val løpendeBidrag = LøpendeBidrag(
             sak = Saksnummer(saksnummer),
@@ -252,7 +245,6 @@ class HentLøpendeBidragServiceTest {
 
         val resultat = hentLøpendeBidragService.hentLøpendeBidragForBehandling(
             bidragspliktigIdent,
-            søknadsbarnidentMap,
             beregningsperiode,
         )
 
@@ -269,7 +261,6 @@ class HentLøpendeBidragServiceTest {
     fun `skal returnere tom liste når ingen stønader finnes`() {
         val beregningsperiode = ÅrMånedsperiode(YearMonth.of(2024, 1), YearMonth.of(2024, 12))
         val bidragspliktigIdent = Personident(personIdentBidragspliktig)
-        val søknadsbarnidentMap = mapOf(Personident(personIdentSøknadsbarn1) to "referanse1")
 
         every {
             vedtakService.hentAlleStønaderForBidragspliktig(any())
@@ -277,7 +268,6 @@ class HentLøpendeBidragServiceTest {
 
         val resultat = hentLøpendeBidragService.hentLøpendeBidragForBehandling(
             bidragspliktigIdent,
-            søknadsbarnidentMap,
             beregningsperiode,
         )
 
@@ -293,10 +283,6 @@ class HentLøpendeBidragServiceTest {
     fun `skal håndtere flere kravhavere med forskjellige vedtak`() {
         val beregningsperiode = ÅrMånedsperiode(YearMonth.of(2024, 7), YearMonth.of(2025, 6))
         val bidragspliktigIdent = Personident(personIdentBidragspliktig)
-        val søknadsbarnidentMap = mapOf(
-            Personident(personIdentSøknadsbarn1) to "referanse1",
-            Personident(personIdentSøknadsbarn2) to "referanse2",
-        )
 
         val løpendeBidragListe = listOf(
             LøpendeBidrag(
@@ -335,7 +321,6 @@ class HentLøpendeBidragServiceTest {
 
         val resultat = hentLøpendeBidragService.hentLøpendeBidragForBehandling(
             bidragspliktigIdent,
-            søknadsbarnidentMap,
             beregningsperiode,
         )
 
