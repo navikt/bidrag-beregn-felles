@@ -48,12 +48,10 @@ class BidragsberegningOrkestrator(
                 )
 
                 // Henter grunnlag for løpende bidrag
-                val løpendeBidragOgBeregningerListe = hentLøpendeBidragService.hentLøpendeBidragForBehandling(
+                val løpendeBidragOgBeregningerGrunnlag = hentLøpendeBidragService.hentLøpendeBidragForBehandling(
                     bidragspliktigIdent = Personident(bidragspliktig.personIdent!!),
-                    søknadsbarnidentMap = søknadsbarnIdentMap,
                     beregningsperiode,
-                )
-                val løpendeBidragListe = løpendeBidragOgBeregningerListe.tilGrunnlagDto(bidragspliktig.referanse)
+                ).tilGrunnlagDto(bidragspliktig.referanse)
 
                 // Sjekk om det skal gis direkte avslag for alle barn
                 if (request.erDirekteAvslag) {
