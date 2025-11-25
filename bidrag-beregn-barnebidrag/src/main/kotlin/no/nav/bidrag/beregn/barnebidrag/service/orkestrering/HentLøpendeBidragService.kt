@@ -14,25 +14,17 @@ import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Saksnummer
 import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
-import no.nav.bidrag.domene.util.avrundetTilNærmesteTier
 import no.nav.bidrag.transport.behandling.belopshistorikk.request.LøpendeBidragPeriodeRequest
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.LøpendeBidrag
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.LøpendeBidragPeriodeResponse
-import no.nav.bidrag.transport.behandling.belopshistorikk.response.LøpendeBidragssak
 import no.nav.bidrag.transport.behandling.beregning.felles.BidragBeregningResponsDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.LøpendeBidragPeriode
-import no.nav.bidrag.transport.behandling.felles.grunnlag.SamværsperiodeGrunnlag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
-import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.finnSamværsklasse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.finnSluttberegningIReferanser
 import no.nav.bidrag.transport.behandling.felles.grunnlag.hentBeregnetBeløp
 import no.nav.bidrag.transport.behandling.felles.grunnlag.hentResultatBeløp
-import no.nav.bidrag.transport.behandling.felles.grunnlag.innholdTilObjekt
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakForStønad
-import no.nav.bidrag.transport.behandling.vedtak.response.finnSluttberegningBarnebidragGrunnlagIPeriode
-import no.nav.bidrag.transport.behandling.vedtak.response.finnSluttberegningBarnebidragIPeriode
 import no.nav.bidrag.transport.felles.toCompactString
 import org.springframework.context.annotation.Import
 import org.springframework.stereotype.Service
@@ -49,7 +41,7 @@ class HentLøpendeBidragService(private val vedtakService: VedtakService) {
         bidragspliktigIdent: Personident,
         søknadsbarnidentMap: Map<Personident, String>,
         beregningsperiode: ÅrMånedsperiode,
-    ): EvnevurderingBeregningResultat {
+    ): LøpendeBidragOgBeregninger {
         try {
             // Henter alle bidrag tilknyttet BP som er eller har vært løpende i beregningsperioden. Filtrerer først
             // bort perioder som er utenfor beregningsperioden. Stønader som har ingen perioder innenfor beregningsperioden fjernes.
@@ -74,7 +66,7 @@ class HentLøpendeBidragService(private val vedtakService: VedtakService) {
                     "${beregningsdataIManuelleVedtak.beregningListe}.joinToString { it.toString() } "
             }
 
-            return EvnevurderingBeregningResultat(
+            return LøpendeBidragOgBeregninger(
                 beregnetBeløpListe = beregningsdataIManuelleVedtak,
                 løpendeBidragListe = løpendeBidragIPerioden,
             )
@@ -209,7 +201,7 @@ class HentLøpendeBidragService(private val vedtakService: VedtakService) {
         }
 }
 
-data class EvnevurderingBeregningResultat(val beregnetBeløpListe: BidragBeregningResponsDto, val løpendeBidragListe: List<LøpendeBidrag>)
+data class LøpendeBidragOgBeregninger(val beregnetBeløpListe: BidragBeregningResponsDto, val løpendeBidragListe: List<LøpendeBidrag>)
 
 // Skal returnere alle vedtak som overlapper med beregningsperioden. Listen med vedtak er sortert på vedtakstidspunkt descending slik at
 // nyeste kommer først.
@@ -226,7 +218,7 @@ fun List<VedtakForStønad>.filtrerVedtakMotBeregningsperiode(beregningsperiode: 
     return relevanteVedtakListe
 }
 
-fun EvnevurderingBeregningResultat.tilGrunnlagDto(bpReferanse: String): List<GrunnlagDto> {
+fun LøpendeBidragOgBeregninger.tilGrunnlagDto(bpReferanse: String): List<GrunnlagDto> {
     val resultat = mutableListOf<GrunnlagDto>()
     this.løpendeBidragListe.forEach { løpendeBidrag ->
         løpendeBidrag.periodeListe.forEach { periode ->
