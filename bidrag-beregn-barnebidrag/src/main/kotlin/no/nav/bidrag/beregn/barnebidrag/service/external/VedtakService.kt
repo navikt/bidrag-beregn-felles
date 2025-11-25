@@ -10,9 +10,12 @@ import no.nav.bidrag.domene.enums.vedtak.Beslutningstype
 import no.nav.bidrag.domene.enums.vedtak.Innkrevingstype
 import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.sak.Stønadsid
+import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.belopshistorikk.request.HentStønadHistoriskRequest
 import no.nav.bidrag.transport.behandling.belopshistorikk.request.HentStønadRequest
+import no.nav.bidrag.transport.behandling.belopshistorikk.request.LøpendeBidragPeriodeRequest
 import no.nav.bidrag.transport.behandling.belopshistorikk.request.LøpendeBidragssakerRequest
+import no.nav.bidrag.transport.behandling.belopshistorikk.response.LøpendeBidragPeriodeResponse
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.LøpendeBidragssak
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadPeriodeDto
@@ -147,6 +150,7 @@ class VedtakService(
     private fun List<VedtakForStønad>.hentOpprinneligPåklagetVedtak(vedtak: VedtakForStønad): Int? = hentPåklagetVedtakListe(vedtak).minBy {
         it.vedtakstidspunkt
     }.vedtaksid
+
     private fun List<VedtakForStønad>.hentPåklagetVedtakListe(vedtak: VedtakForStønad): Set<PåklagetVedtak> {
         val refererTilVedtakId = setOfNotNull(vedtak.stønadsendring.omgjørVedtakId)
         if (refererTilVedtakId.isNotEmpty()) {
@@ -231,6 +235,7 @@ class VedtakService(
     fun oppdaterIdenterStønadsendringer(vedtak: VedtakDto) = vedtak.copy(
         stønadsendringListe = vedtak.stønadsendringListe.map { oppdaterIdenter(it) },
     )
+
     fun oppdaterIdenter(stønadsendringDto: StønadsendringDto) = stønadsendringDto.copy(
         mottaker = identUtils.hentNyesteIdent(stønadsendringDto.mottaker),
         kravhaver = identUtils.hentNyesteIdent(stønadsendringDto.kravhaver),
@@ -254,6 +259,19 @@ class VedtakService(
         return vedtakFilter.finneSisteManuelleVedtak(vedtakISak.vedtakListe)
     }
 
+    fun finnAlleManuelleVedtakForEvnevurdering(stønadsid: Stønadsid): List<VedtakForStønad> {
+        val vedtakISak =
+            vedtakConsumer.hentVedtakForStønad(
+                HentVedtakForStønadRequest(
+                    stønadsid.sak,
+                    stønadsid.type,
+                    stønadsid.skyldner,
+                    stønadsid.kravhaver,
+                ),
+            )
+        return vedtakFilter.finneAlleManuelleVedtak(vedtakISak.vedtakListe)
+    }
+
     fun hentBeregningFraBBM(vedtakForStønadListe: List<VedtakForStønad>): BidragBeregningResponsDto = bbmConsumer.hentBeregning(
         BidragBeregningRequestDto(
             vedtakForStønadListe.map {
@@ -266,4 +284,20 @@ class VedtakService(
             },
         ),
     )
+
+    fun hentAlleBeregningerFraBBM(vedtakForStønadListe: List<VedtakForStønad>): BidragBeregningResponsDto = bbmConsumer.hentAlleBeregninger(
+        BidragBeregningRequestDto(
+            vedtakForStønadListe.map {
+                BidragBeregningRequestDto.HentBidragBeregning(
+                    stønadstype = it.stønadsendring.type,
+                    søknadsid = it.behandlingsreferanser.søknadsid.toString(),
+                    saksnummer = it.stønadsendring.sak.verdi,
+                    personidentBarn = it.stønadsendring.kravhaver,
+                )
+            },
+        ),
+    )
+
+    fun hentAlleStønaderForBidragspliktig(request: LøpendeBidragPeriodeRequest): LøpendeBidragPeriodeResponse =
+        stønadConsumer.hentAlleLøpendeStønaderIPeriode(request)
 }
