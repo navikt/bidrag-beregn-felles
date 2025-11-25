@@ -7,5 +7,4 @@ interface BeregningBBMConsumer {
     fun hentBeregning(request: BidragBeregningRequestDto): BidragBeregningResponsDto
 
     fun hentAlleBeregninger(request: BidragBeregningRequestDto): BidragBeregningResponsDto
-
 }

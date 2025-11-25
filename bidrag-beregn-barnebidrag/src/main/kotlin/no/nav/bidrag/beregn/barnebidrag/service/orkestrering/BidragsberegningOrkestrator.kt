@@ -46,7 +46,7 @@ class BidragsberegningOrkestrator(
                 val evnevurderingBeregningResultat = hentLøpendeBidragService.hentLøpendeBidragForBehandling(
                     bidragspliktigIdent = Personident(bidragspliktig.personIdent!!),
                     søknadsbarnidentMap = søknadsbarnIdentMap,
-                    request.beregningsperiode
+                    request.beregningsperiode,
                 )
                 val løpendeBidragListe = evnevurderingBeregningResultat.tilGrunnlagDto(bidragspliktig.referanse)
 

@@ -24,6 +24,7 @@ import no.nav.bidrag.transport.behandling.beregning.felles.BidragBeregningRespon
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SamværsperiodeGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidragV2
 import no.nav.bidrag.transport.behandling.vedtak.response.BehandlingsreferanseDto
 import no.nav.bidrag.transport.behandling.vedtak.response.StønadsendringDto
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakDto
@@ -294,6 +295,87 @@ fun opprettVedtakDtoForBidragsberegning(
                     nettoBidragEtterSamværsfradrag = beregnetBeløp,
                     bpAndelAvUVedDeltBostedFaktor = BigDecimal.ZERO,
                     bpAndelAvUVedDeltBostedBeløp = BigDecimal.ZERO,
+                ),
+            ),
+            grunnlagsreferanseListe = listOf("samværsperiode_20240701"),
+        ),
+        GrunnlagDto(
+            referanse = "samværsperiode_20240701",
+            type = Grunnlagstype.SAMVÆRSPERIODE,
+            innhold = POJONode(
+                SamværsperiodeGrunnlag(
+                    periode = ÅrMånedsperiode(LocalDate.parse("2024-07-01"), null),
+                    samværsklasse = Samværsklasse.SAMVÆRSKLASSE_0,
+                ),
+            ),
+        ),
+    ),
+    unikReferanse = "",
+    stønadsendringListe = listOf(
+        StønadsendringDto(
+            type = stønadstype,
+            sak = Saksnummer(sak),
+            skyldner = Personident(skyldner),
+            kravhaver = Personident(kravhaver),
+            mottaker = Personident(mottaker),
+            førsteIndeksreguleringsår = 0,
+            innkreving = Innkrevingstype.MED_INNKREVING,
+            beslutning = Beslutningstype.ENDRING,
+            omgjørVedtakId = null,
+            eksternReferanse = "123456",
+            grunnlagReferanseListe = listOf("sluttberegning_20240701"),
+            sisteVedtaksid = null,
+            periodeListe =
+            listOf(
+                VedtakPeriodeDto(
+                    periode = ÅrMånedsperiode(LocalDate.parse("2024-07-01"), null),
+                    beløp = beregnetBeløp,
+                    valutakode = "NOK",
+                    resultatkode = "KBB",
+                    delytelseId = null,
+                    grunnlagReferanseListe = listOf("sluttberegning_20240701"),
+                ),
+            ),
+        ),
+    ),
+)
+
+fun opprettVedtakDtoForLøpendeBidrag(
+    skyldner: String,
+    kravhaver: String,
+    mottaker: String,
+    sak: String,
+    stønadstype: Stønadstype = Stønadstype.BIDRAG,
+    beregnetBeløp: BigDecimal,
+    resultatBeløp: BigDecimal,
+) = VedtakDto(
+    kilde = Vedtakskilde.MANUELT,
+    fastsattILand = "",
+    type = Vedtakstype.ENDRING,
+    opprettetAv = "",
+    opprettetAvNavn = "",
+    kildeapplikasjon = "bidrag-behandling",
+    vedtakstidspunkt = LocalDateTime.parse("2024-01-01T00:00:00"),
+    enhetsnummer = Enhetsnummer("4444"),
+    innkrevingUtsattTilDato = null,
+    opprettetTidspunkt = LocalDateTime.parse("2024-01-01T00:00:00"),
+    engangsbeløpListe = emptyList(),
+    behandlingsreferanseListe =
+    listOf(
+        BehandlingsreferanseDto(
+            kilde = BehandlingsrefKilde.BEHANDLING_ID,
+            referanse = "BEHANDLINGSREF",
+        ),
+    ),
+    grunnlagListe = listOf(
+        GrunnlagDto(
+            referanse = "sluttberegning_20240701",
+            type = Grunnlagstype.SLUTTBEREGNING_BARNEBIDRAG,
+            innhold = POJONode(
+                SluttberegningBarnebidragV2(
+                    periode = ÅrMånedsperiode(LocalDate.parse("2024-07-01"), null),
+                    beregnetBeløp = beregnetBeløp,
+                    resultatBeløp = resultatBeløp,
                 ),
             ),
             grunnlagsreferanseListe = listOf("samværsperiode_20240701"),

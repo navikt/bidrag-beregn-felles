@@ -298,8 +298,6 @@ class VedtakService(
         ),
     )
 
-
-
     fun hentAlleStønaderForBidragspliktig(request: LøpendeBidragPeriodeRequest): LøpendeBidragPeriodeResponse =
         stønadConsumer.hentAlleLøpendeStønaderIPeriode(request)
 }

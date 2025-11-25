@@ -95,10 +95,7 @@ class Vedtaksfiltrering {
             secureLogger.warn { "Fant ingen tidligere vedtak for barn med personident ${vedtak.firstOrNull()?.stønadsendring?.kravhaver?.verdi}" }
         }
 
-
         return vedtaksdetaljerListe
-
-
     }
 
     private fun VedtakForStønad.erOpprettetAvBatchEllerAldersjusteringIndeksregulering(): Boolean =

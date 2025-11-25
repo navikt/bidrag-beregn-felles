@@ -21,13 +21,13 @@ import no.nav.bidrag.transport.behandling.belopshistorikk.response.LøpendeBidra
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.LøpendeBidragssak
 import no.nav.bidrag.transport.behandling.beregning.felles.BidragBeregningResponsDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
-import no.nav.bidrag.transport.behandling.felles.grunnlag.hentBeregnetBeløp
 import no.nav.bidrag.transport.behandling.felles.grunnlag.LøpendeBidragPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SamværsperiodeGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.finnSamværsklasse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.finnSluttberegningIReferanser
+import no.nav.bidrag.transport.behandling.felles.grunnlag.hentBeregnetBeløp
 import no.nav.bidrag.transport.behandling.felles.grunnlag.hentResultatBeløp
 import no.nav.bidrag.transport.behandling.felles.grunnlag.innholdTilObjekt
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakForStønad
@@ -48,14 +48,14 @@ class HentLøpendeBidragService(private val vedtakService: VedtakService) {
     fun hentLøpendeBidragForBehandling(
         bidragspliktigIdent: Personident,
         søknadsbarnidentMap: Map<Personident, String>,
-        beregningsperiode: ÅrMånedsperiode
+        beregningsperiode: ÅrMånedsperiode,
     ): EvnevurderingBeregningResultat {
         try {
             // Henter alle bidrag tilknyttet BP som er eller har vært løpende i beregningsperioden. Filtrerer først
             // bort perioder som er utenfor beregningsperioden. Stønader som har ingen perioder innenfor beregningsperioden fjernes.
             // Filterer så bort kravhavere som er søknadsbarn.
             val løpendeBidragIPerioden = vedtakService.hentAlleStønaderForBidragspliktig(
-                LøpendeBidragPeriodeRequest(bidragspliktigIdent, beregningsperiode)
+                LøpendeBidragPeriodeRequest(bidragspliktigIdent, beregningsperiode),
             ).filtrerForPeriode(beregningsperiode)
 
             secureLogger.info {
@@ -69,14 +69,15 @@ class HentLøpendeBidragService(private val vedtakService: VedtakService) {
 
             secureLogger.info { "Hentet manuelle vedtak: ${manuelleVedtak.joinToString { it.toString() }} for BP: ${bidragspliktigIdent.verdi}" }
             val beregningsdataIManuelleVedtak = manuelleVedtak.hentBeregning()
-            secureLogger.info { "Hentet beregningsdata i manuelle vedtak: " +
-                "${beregningsdataIManuelleVedtak.beregningListe}.joinToString { it.toString() } " }
+            secureLogger.info {
+                "Hentet beregningsdata i manuelle vedtak: " +
+                    "${beregningsdataIManuelleVedtak.beregningListe}.joinToString { it.toString() } "
+            }
 
             return EvnevurderingBeregningResultat(
                 beregnetBeløpListe = beregningsdataIManuelleVedtak,
-                løpendeBidragListe = løpendeBidragIPerioden
+                løpendeBidragListe = løpendeBidragIPerioden,
             )
-
         } catch (e: Exception) {
             log.error(e) { "Det skjedde en feil ved opprettelse av grunnlag for løpende bidrag for BP evnevurdering: ${e.message}" }
             throw e
@@ -164,7 +165,6 @@ class HentLøpendeBidragService(private val vedtakService: VedtakService) {
             val faktiskBeløp = sluttberegningGrunnlag.hentResultatBeløp()
             val samværsklasse = vedtakDto.grunnlagListe.finnSamværsklasse(sluttberegningGrunnlag)
 
-
             bidragBeregningListe.add(
                 BidragBeregningResponsDto.BidragBeregning(
                     periode = periode.periode,
@@ -176,13 +176,11 @@ class HentLøpendeBidragService(private val vedtakService: VedtakService) {
                     beløpSamvær = BigDecimal.ZERO, // Brukes ikke
                     stønadstype = Stønadstype.BIDRAG,
                     samværsklasse = samværsklasse,
-                )
+                ),
             )
-
         }
         return bidragBeregningListe
     }
-
 
     private fun List<LøpendeBidrag>.hentManuelleVedtak(bidragspliktigIdent: Personident): List<VedtakForStønad> = flatMap {
         vedtakService.finnAlleManuelleVedtakForEvnevurdering(
@@ -195,20 +193,20 @@ class HentLøpendeBidragService(private val vedtakService: VedtakService) {
         )
     }
 
-
-    private fun LøpendeBidragPeriodeResponse.filtrerForPeriode(beregningsperiode: ÅrMånedsperiode): List<LøpendeBidrag> {
-        return bidragListe.mapNotNull { bidrag ->
+    private fun LøpendeBidragPeriodeResponse.filtrerForPeriode(beregningsperiode: ÅrMånedsperiode): List<LøpendeBidrag> =
+        bidragListe.mapNotNull { bidrag ->
             val periodeListe = bidrag.periodeListe.filter { it.periode.overlapper(beregningsperiode) }
             if (periodeListe.isNotEmpty()) {
                 LøpendeBidrag(
                     sak = bidrag.sak,
                     type = bidrag.type,
                     kravhaver = bidrag.kravhaver,
-                    periodeListe = periodeListe
+                    periodeListe = periodeListe,
                 )
-            } else null
+            } else {
+                null
+            }
         }
-    }
 }
 
 data class EvnevurderingBeregningResultat(val beregnetBeløpListe: BidragBeregningResponsDto, val løpendeBidragListe: List<LøpendeBidrag>)
