@@ -397,7 +397,7 @@ class HentLøpendeBidragServiceTest {
             samværsklasse = Samværsklasse.SAMVÆRSKLASSE_0,
         )
 
-        val evnevurderingResultat = EvnevurderingBeregningResultat(
+        val evnevurderingResultat = LøpendeBidragOgBeregninger(
             beregnetBeløpListe = BidragBeregningResponsDto(listOf(beregning)),
             løpendeBidragListe = listOf(løpendeBidrag),
         )

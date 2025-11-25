@@ -42,13 +42,18 @@ class BidragsberegningOrkestrator(
                 val søknadsbarnIdentMap = hentAlleSøknadsbarn(request.beregningBarn, request.grunnlagsliste)
                 val bidragspliktig = request.grunnlagsliste.bidragspliktig!!
 
-                // Henter grunnlag for løpende bidrag (som ikke er en del av søknadsgrunnlagene)
-                val evnevurderingBeregningResultat = hentLøpendeBidragService.hentLøpendeBidragForBehandling(
+                val beregningsperiode = ÅrMånedsperiode(
+                    fom = request.beregningBarn.minOf { it.beregningsperiode.fom },
+                    til = request.beregningBarn.mapNotNull { it.beregningsperiode.til }.maxOrNull(),
+                )
+
+                // Henter grunnlag for løpende bidrag
+                val løpendeBidragOgBeregningerListe = hentLøpendeBidragService.hentLøpendeBidragForBehandling(
                     bidragspliktigIdent = Personident(bidragspliktig.personIdent!!),
                     søknadsbarnidentMap = søknadsbarnIdentMap,
-                    request.beregningsperiode,
+                    beregningsperiode,
                 )
-                val løpendeBidragListe = evnevurderingBeregningResultat.tilGrunnlagDto(bidragspliktig.referanse)
+                val løpendeBidragListe = løpendeBidragOgBeregningerListe.tilGrunnlagDto(bidragspliktig.referanse)
 
                 // Sjekk om det skal gis direkte avslag for alle barn
                 if (request.erDirekteAvslag) {
