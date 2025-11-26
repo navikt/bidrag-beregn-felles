@@ -738,7 +738,7 @@ internal class BeregnEndeligBidragTestV2 : FellesTest() {
         val resultat = BeregnEndeligBidragServiceV2.delberegningEndeligBidrag(
             beregningsperiode = ÅrMånedsperiode(YearMonth.parse("2025-03"), YearMonth.parse("2025-11")),
             grunnlagSøknadsbarnListe = requestSøknadsbarnGrunnlag.map { BeregnService.BeregnGrunnlagJustert(it, true) },
-            grunnlagLøpendeBidragListe = requestLøpendeBidragGrunnlag,
+            grunnlagLøpendeBidragListe = requestLøpendeBidragGrunnlag.map { BeregnService.BeregnGrunnlagJustert(it, true) },
         )
         printJson(resultat)
 

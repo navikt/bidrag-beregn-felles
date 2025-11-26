@@ -30,6 +30,8 @@ import no.nav.bidrag.domene.sak.Stønadsid
 import no.nav.bidrag.indeksregulering.BeregnIndeksreguleringApi
 import no.nav.bidrag.transport.behandling.belopshistorikk.request.HentStønadHistoriskRequest
 import no.nav.bidrag.transport.behandling.belopshistorikk.request.HentStønadRequest
+import no.nav.bidrag.transport.behandling.belopshistorikk.response.LøpendeBidrag
+import no.nav.bidrag.transport.behandling.belopshistorikk.response.LøpendeBidragPeriodeResponse
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.LøpendeBidragssak
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.StønadDto
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BidragsberegningOrkestratorRequest
@@ -153,6 +155,19 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
                     type = Stønadstype.BIDRAG,
                     kravhaver = Personident(KRAVHAVER_LØPENDE_BIDRAG),
                     løpendeBeløp = LØPENDE_BELØP,
+                ),
+            )
+        }
+
+        every { vedtakService.hentAlleStønaderForBidragspliktig(any()) }.answers {
+            LøpendeBidragPeriodeResponse(
+                listOf(
+                    LøpendeBidrag(
+                        sak = Saksnummer(SAK_LØPENDE_BIDRAG),
+                        type = Stønadstype.BIDRAG,
+                        kravhaver = Personident(KRAVHAVER_LØPENDE_BIDRAG),
+                        periodeListe = emptyList(),
+                    ),
                 ),
             )
         }

@@ -103,11 +103,12 @@ internal object EndeligBidragBeregningV2 {
 
     fun beregnAndelAvBidragsevne(grunnlag: AndelAvBidragsevneBeregningGrunnlag): AndelAvBidragsevneBeregningResultat {
         val bidragTilFordeling = grunnlag.bidragTilFordelingBeregningGrunnlag.bidragTilFordeling
-        val andelAvSumBidragTilFordeling = bidragTilFordeling.divide(
-            grunnlag.sumBidragTilFordelingBeregningGrunnlag.sumBidragTilFordeling,
-            10,
-            RoundingMode.HALF_UP,
-        )
+        val andelAvSumBidragTilFordeling =
+            if (grunnlag.sumBidragTilFordelingBeregningGrunnlag.sumBidragTilFordeling.compareTo(BigDecimal.ZERO) == 0) {
+                BigDecimal.ZERO
+            } else {
+                bidragTilFordeling.divide(grunnlag.sumBidragTilFordelingBeregningGrunnlag.sumBidragTilFordeling, 10, RoundingMode.HALF_UP)
+            }
 
         val bidragsevne = grunnlag.evne25ProsentAvInntektBeregningGrunnlag.evneJustertFor25ProsentAvInntekt
         val andelAvEvneBeløp = bidragsevne * andelAvSumBidragTilFordeling

@@ -39,7 +39,6 @@ class BidragsberegningOrkestrator(
             Beregningstype.BIDRAG -> {
                 secureLogger.debug { "Utfører bidragsberegning for request: $request" }
 
-                val søknadsbarnIdentMap = hentAlleSøknadsbarn(request.beregningBarn, request.grunnlagsliste)
                 val bidragspliktig = request.grunnlagsliste.bidragspliktig!!
 
                 val beregningsperiode = ÅrMånedsperiode(
@@ -91,9 +90,7 @@ class BidragsberegningOrkestrator(
                     )
                 } else {
                     // Kaller beregning for alle barn samlet
-                    val grunnlagSøknadsbarnListe = request.tilListeBeregnGrunnlagV1(
-                        grunnlagListe = request.grunnlagsliste,
-                    )
+                    val grunnlagSøknadsbarnListe = request.tilListeBeregnGrunnlagV1()
                     return try {
                         val beregningResultatListe: List<BeregnetBarnebidragResultatV2> =
                             barnebidragApi.beregnV2(
@@ -457,19 +454,18 @@ class BidragsberegningOrkestrator(
     )
 
     // Filtrerer og konverterer grunnlag for hvert søknadsbarn
-    private fun BidragsberegningOrkestratorRequestV2.tilListeBeregnGrunnlagV1(grunnlagListe: List<GrunnlagDto>): List<BeregnGrunnlag> =
-        beregningBarn.map { beregningBarn ->
-            val bidragspliktigRef =
-                grunnlagListe.bidragspliktig?.referanse ?: throw IllegalArgumentException("Finner ikke bidragspliktig i grunnlagsliste")
-            val søknadsbarnRef = beregningBarn.søknadsbarnreferanse
-            val bidragsmottakerRef = finnBidragsmottakerForBarn(søknadsbarnRef)
-            val gyldigeGrunnlagForBarn = grunnlagListe.finnGyldigeGrunnlagForBarn(
-                bmRef = bidragsmottakerRef,
-                bpRef = bidragspliktigRef,
-                barnRef = søknadsbarnRef,
-            )
-            beregningBarn.tilBeregnGrunnlagV1(gyldigeGrunnlagForBarn)
-        }
+    private fun BidragsberegningOrkestratorRequestV2.tilListeBeregnGrunnlagV1(): List<BeregnGrunnlag> = beregningBarn.map { beregningBarn ->
+        val bidragspliktigRef =
+            this.grunnlagsliste.bidragspliktig?.referanse ?: throw IllegalArgumentException("Finner ikke bidragspliktig i grunnlagsliste")
+        val søknadsbarnRef = beregningBarn.søknadsbarnreferanse
+        val bidragsmottakerRef = finnBidragsmottakerForBarn(søknadsbarnRef)
+        val gyldigeGrunnlagForBarn = this.grunnlagsliste.finnGyldigeGrunnlagForBarn(
+            bmRef = bidragsmottakerRef,
+            bpRef = bidragspliktigRef,
+            barnRef = søknadsbarnRef,
+        )
+        beregningBarn.tilBeregnGrunnlagV1(gyldigeGrunnlagForBarn)
+    }
 
     // Henter alle søknadsbarn og deres referanser og personidenter fra grunnlagslista
     private fun hentAlleSøknadsbarn(beregningBarnListe: List<BeregningGrunnlagV2>, grunnlagsliste: List<GrunnlagDto>): Map<Personident, String> {
