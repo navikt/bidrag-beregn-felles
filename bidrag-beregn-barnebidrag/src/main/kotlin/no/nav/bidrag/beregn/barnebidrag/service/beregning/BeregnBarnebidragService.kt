@@ -25,6 +25,7 @@ import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatVedtakV2
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.felles.valider
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BeløpshistorikkGrunnlag
+import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningAndelAvBidragsevne
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndringSjekkGrensePeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningPrivatAvtale
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
@@ -373,17 +374,54 @@ class BeregnBarnebidragService : BeregnService() {
             }
         }
 
+        // TODO Løpende bidrag
+        // TODO Hva skal skje hvis et barn både er en del av ny søknad og samtidig har løpende bidrag?
+
+        val utvidetGrunnlagLøpendeBidragListe = grunnlagLøpendeBidragListe.map { beregningBarn ->
+
+            try {
+                // Kontroll av inputdata
+                beregningBarn.valider()
+
+                // Sjekker om søknadsbarnet fyller 18 år i beregningsperioden
+                // TODO Hva hvis det både er vanlig bidrag og 18-årsbidrag i beregningsperioden (for samme kravhaver)?
+                var utvidetGrunnlag = justerTilPeriodeHvisBarnetBlir18ÅrIBeregningsperioden(beregningBarn)
+
+                // Kaller delberegninger
+
+                // Samværsfradrag
+                // TODO Må hente samværsklasse fra LøpendeBidragPeriode
+                val delberegningSamværsfradragResultat = BeregnSamværsfradragService.delberegningSamværsfradrag(
+                    mottattGrunnlag = utvidetGrunnlag.beregnGrunnlag,
+                    åpenSluttperiode = utvidetGrunnlag.åpenSluttperiode,
+                )
+                utvidetGrunnlag = utvidetGrunnlag.utvidMedNyeGrunnlag(delberegningSamværsfradragResultat)
+
+                utvidetGrunnlag
+            } catch (e: Exception) {
+                // TODO
+                throw e
+            }
+        }
+
         // Endelig bidrag: Kaller en samlemetode for endelig beregning. Denne tar alle barn som input
         val endeligBidragBeregningListe: List<BeregnGrunnlagJustert>
         try {
             endeligBidragBeregningListe = BeregnEndeligBidragServiceV2.delberegningEndeligBidrag(
                 beregningsperiode = beregningsperiode,
                 grunnlagSøknadsbarnListe = utvidetGrunnlagSøknadsbarnListe,
-                grunnlagLøpendeBidragListe = grunnlagLøpendeBidragListe,
+                grunnlagLøpendeBidragListe = utvidetGrunnlagLøpendeBidragListe,
             )
         } catch (e: Exception) {
             // TODO
             throw e
+        }
+
+        // Sjekker om det finnes perioder hvor det ikke er full evne. I så fall skal det kastes exception hvis det er løpende bidrag.
+        if (utvidetGrunnlagLøpendeBidragListe.isNotEmpty()) {
+            if (erDetEvnesprekkINoenPerioder(utvidetGrunnlagSøknadsbarnListe)) {
+                // TODO Løpende bidrag: Håndtere evnesprekk
+            }
         }
 
         val beregnetBarnebidragResultatListe = endeligBidragBeregningListe.map { beregningBarn ->
@@ -472,6 +510,13 @@ class BeregnBarnebidragService : BeregnService() {
 
         secureLogger.debug { "Beregning av barnebidrag - følgende respons returnert: ${tilJson(beregnetBarnebidragResultatListe)}" }
         return beregnetBarnebidragResultatListe
+    }
+
+    private fun erDetEvnesprekkINoenPerioder(beregnGrunnlagListe: List<BeregnGrunnlagJustert>): Boolean {
+        val grunnlagListe = beregnGrunnlagListe.flatMap { it.beregnGrunnlag.grunnlagListe }
+        return grunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningAndelAvBidragsevne>(Grunnlagstype.DELBEREGNING_ANDEL_AV_BIDRAGSEVNE)
+            .any { !it.innhold.harBPFullEvne }
     }
 
     // Sjekker om barnetillegg eksisterer for en gitt rolle

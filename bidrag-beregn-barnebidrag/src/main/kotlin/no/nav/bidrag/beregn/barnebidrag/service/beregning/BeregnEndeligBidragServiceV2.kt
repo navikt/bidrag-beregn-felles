@@ -59,6 +59,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidragV2
 import no.nav.bidrag.transport.behandling.felles.grunnlag.bidragspliktig
+import no.nav.bidrag.transport.behandling.felles.grunnlag.filtrerOgKonverterBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.opprettSluttberegningreferanse
 import no.nav.bidrag.transport.felles.toCompactString
 
@@ -67,7 +68,7 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
     fun delberegningEndeligBidrag(
         beregningsperiode: ÅrMånedsperiode,
         grunnlagSøknadsbarnListe: List<BeregnGrunnlagJustert>,
-        grunnlagLøpendeBidragListe: List<BeregnGrunnlag>,
+        grunnlagLøpendeBidragListe: List<BeregnGrunnlagJustert>,
     ): List<BeregnGrunnlagJustert> {
         // Søknadsbarn: Kaller delberegning Bidragspliktiges andel delt bosted
         var utvidetGrunnlagSøknadsbarnListe = grunnlagSøknadsbarnListe.map { beregnGrunnlag ->
@@ -90,20 +91,17 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
         // Løpende bidrag: Kaller delberegning Bidrag til fordeling løpende bidrag
         val utvidetGrunnlagLøpendeBidragListe = grunnlagLøpendeBidragListe.map { beregnGrunnlag ->
             val delberegningBidragTilFordelingLøpendeBidrag = delberegningBidragTilFordelingLøpendeBidrag(
-                mottattGrunnlag = beregnGrunnlag,
+                mottattGrunnlag = beregnGrunnlag.beregnGrunnlag,
                 åpenSluttperiode = false, // TODO Sjekk åpenSluttperiode
             )
-            beregnGrunnlag.copy(
-                grunnlagListe = (beregnGrunnlag.grunnlagListe + delberegningBidragTilFordelingLøpendeBidrag).distinctBy {
-                    it.referanse
-                },
-            )
+            beregnGrunnlag.utvidMedNyeGrunnlag(delberegningBidragTilFordelingLøpendeBidrag)
         }
 
         // Søknadsbarn og løpende bidrag: Kaller delberegning Sum bidrag til fordeling
         val sumBidragTilFordelingGrunnlagListe = delberegningSumBidragTilFordeling(
             beregningsperiode = beregningsperiode,
-            mottattGrunnlagListe = utvidetGrunnlagSøknadsbarnListe.map { it.beregnGrunnlag } + utvidetGrunnlagLøpendeBidragListe,
+            mottattGrunnlagListe =
+            utvidetGrunnlagSøknadsbarnListe.map { it.beregnGrunnlag } + utvidetGrunnlagLøpendeBidragListe.map { it.beregnGrunnlag },
             åpenSluttperiode = true, // TODO Sjekk åpenSluttperiode
         )
 
@@ -124,6 +122,24 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
             )
             beregnGrunnlag.utvidMedNyeGrunnlag(delberegningAndelAvBidragsevne)
         }
+
+        // TODO Løpende bidrag runde 1: Sjekke om det blir FF for noen av søknadsbarna.
+        // TODO Hvis DelberegningAndelAvBidragsevne.harBpFullEvne er false for noen av barna i noen av periodene og grunnlagLøpendeBidragListe
+        // TODO ikke er tom skal det kastes exception eller alternativt settes et flagg i responsen. Saksbehandler må da varsle andre BM'er
+        // TODO og det må hentes inn nye grunnlag.
+        // TODO Må finne ut om det bare skal settes et flagg og beregningen skal fortsette eller om den skal avsluttes her.
+        // TODO NB! Det er ikke sikkert at grunnlagLøpendeBidragListe er tom selv om vi har alle grunnlag vi trenger for å beregne FF.
+
+        // TODO Løpende bidrag runde 2: Sjekke om det blir FF og om det i så fall skal fattes vedtak for revurderingssøknaden(e).
+        // TODO Hvis DelberegningAndelAvBidragsevne.harBpFullEvne er false for noen av søknadsbarna i periodene etter virknigstidspunkt for
+        // TODO revurderingssøknaden(e) skal det fattes vedtak for revurderingssøknaden(e). Denne sjekken må gjøres pr revurderingssøknad.
+        // TODO Det blir heller ikke FF hvis det er bare i revurderingssøknaden(e) BP ikke har full evne. Da skal det ikke fattes vedtak i
+        // TODO revurderingssøknaden og de nye søknadene skal beregnes som normalt (uten FF).
+        // TODO Hvis det ikke blir FF likevel: Kjøre DelberegningSumBidragTilFordeling og DelberegningAndelAvBidrasevne på nytt (uten
+        // TODO revurderingsbarn)?
+        // TODO Må finne ut hvordan det skal identifiseres om det er en revurderingssøknad eller en ordinær søknad.
+        // TODO Hvis det ikke blir FF for noen av søknadsbarna etter virkningstidspunktet for revurderingssøknaden, skal revurderingssøknaden
+        // TODO trekkes. Den skal likevel beregnes "som normalt"(?), men inneholde tomme resultatperioder.
 
         // Søknadsbarn: Kaller delberegning Bidrag justert for BP barnetillegg
         utvidetGrunnlagSøknadsbarnListe = utvidetGrunnlagSøknadsbarnListe.map { beregnGrunnlag ->
@@ -1389,6 +1405,13 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
         }
         mergedList.add(current)
         return mergedList
+    }
+
+    private fun erDetEvnesprekkINoenPerioder(beregnGrunnlagListe: List<BeregnGrunnlagJustert>): Boolean {
+        val grunnlagListe = beregnGrunnlagListe.flatMap { it.beregnGrunnlag.grunnlagListe }
+        return grunnlagListe
+            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningAndelAvBidragsevne>(Grunnlagstype.DELBEREGNING_ANDEL_AV_BIDRAGSEVNE)
+            .any { !it.innhold.harBPFullEvne }
     }
 
     // TODO Flytte til bidrag-felles
