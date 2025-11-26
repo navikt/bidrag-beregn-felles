@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.barnebidrag.service.orkestrering
 
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
 import no.nav.bidrag.beregn.barnebidrag.service.beregning.BeregnetBarnebidragResultatV2
+import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningPersonConsumer
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.beregning.Beregningstype
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -25,6 +26,7 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.finnGyldigeGrunnlagFor
 import no.nav.bidrag.transport.behandling.felles.grunnlag.personIdent
 import org.springframework.context.annotation.Import
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 
 @Service
 @Import(BeregnBarnebidragApi::class, OmgjøringOrkestrator::class)
@@ -32,6 +34,7 @@ class BidragsberegningOrkestrator(
     private val barnebidragApi: BeregnBarnebidragApi,
     private val omgjøringOrkestrator: OmgjøringOrkestrator,
     private val hentLøpendeBidragService: HentLøpendeBidragService,
+    private val personConsumer: BeregningPersonConsumer,
 ) {
 
     fun utførBidragsberegningV3(request: BidragsberegningOrkestratorRequestV2): BidragsberegningOrkestratorResponseV2 {
@@ -39,6 +42,7 @@ class BidragsberegningOrkestrator(
             Beregningstype.BIDRAG -> {
                 secureLogger.debug { "Utfører bidragsberegning for request: $request" }
 
+                val søknadsbarnIdentMap = hentAlleSøknadsbarn(request.beregningBarn, request.grunnlagsliste)
                 val bidragspliktig = request.grunnlagsliste.bidragspliktig!!
 
                 val beregningsperiode = ÅrMånedsperiode(
@@ -47,10 +51,25 @@ class BidragsberegningOrkestrator(
                 )
 
                 // Henter grunnlag for løpende bidrag
-                val løpendeBidragOgBeregningerGrunnlag = hentLøpendeBidragService.hentLøpendeBidragForBehandling(
-                    bidragspliktigIdent = Personident(bidragspliktig.personIdent!!),
-                    beregningsperiode,
-                ).tilGrunnlagDto(bidragspliktig.referanse)
+                val løpendeBidragOgBeregninger = hentLøpendeBidragService.hentLøpendeBidragForBehandling(
+                    bpIdent = Personident(bidragspliktig.personIdent!!),
+                    beregningsperiode = beregningsperiode,
+                )
+
+                val løpendeBarnFødselsdatoMap = mutableMapOf<Personident, LocalDate?>()
+
+                løpendeBidragOgBeregninger.løpendeBidragListe.filterNot { it.kravhaver == søknadsbarnIdentMap.keys }
+                    .forEach { løpendeBidrag ->
+                        val fødselsdato = personConsumer.hentFødselsdatoForPerson(løpendeBidrag.kravhaver)
+                        løpendeBarnFødselsdatoMap[løpendeBidrag.kravhaver] = fødselsdato
+                    }
+
+                val løpendeBidragOgBeregningerBeregnGrunnlag =
+                    løpendeBidragOgBeregninger.tilBeregnGrunnlag(
+                        bidragspliktig.referanse,
+                        søknadsbarnIdentMap = søknadsbarnIdentMap,
+                        løpendeBarnFødselsdatoMap = løpendeBarnFødselsdatoMap,
+                    )
 
                 // Sjekk om det skal gis direkte avslag for alle barn
                 if (request.erDirekteAvslag) {

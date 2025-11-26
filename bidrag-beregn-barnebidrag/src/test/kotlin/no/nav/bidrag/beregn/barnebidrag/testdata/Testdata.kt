@@ -39,8 +39,10 @@ import java.time.YearMonth
 
 val SOKNAD_ID = 12412421414L
 val saksnummer = "21321312321"
+val saksnummer2 = "1234567"
 val personIdentSøknadsbarn1 = "213213213213"
 val personIdentSøknadsbarn2 = "213213333213213"
+val personIdentAnnetbarn = "12345678901"
 val personIdentBidragsmottaker = "123213333"
 val personIdentBidragspliktig = "1345235325325"
 

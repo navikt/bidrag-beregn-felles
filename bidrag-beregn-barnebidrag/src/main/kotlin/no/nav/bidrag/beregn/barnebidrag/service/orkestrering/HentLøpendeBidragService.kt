@@ -17,6 +17,7 @@ import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.belopshistorikk.request.LøpendeBidragPeriodeRequest
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.LøpendeBidrag
 import no.nav.bidrag.transport.behandling.belopshistorikk.response.LøpendeBidragPeriodeResponse
+import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.felles.BidragBeregningResponsDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
 import no.nav.bidrag.transport.behandling.felles.grunnlag.LøpendeBidragPeriode
@@ -24,12 +25,14 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.finnSamværsklasse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.finnSluttberegningIReferanser
 import no.nav.bidrag.transport.behandling.felles.grunnlag.hentBeregnetBeløp
 import no.nav.bidrag.transport.behandling.felles.grunnlag.hentResultatBeløp
+import no.nav.bidrag.transport.behandling.felles.grunnlag.tilPersonreferanse
 import no.nav.bidrag.transport.behandling.vedtak.response.VedtakForStønad
 import no.nav.bidrag.transport.felles.toCompactString
 import org.springframework.context.annotation.Import
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.time.LocalDate
+import kotlin.collections.mapNotNull
 
 private val log = KotlinLogging.logger {}
 
@@ -37,24 +40,24 @@ private val log = KotlinLogging.logger {}
 @Import(Vedtaksfiltrering::class)
 class HentLøpendeBidragService(private val vedtakService: VedtakService) {
     @Timed
-    fun hentLøpendeBidragForBehandling(bidragspliktigIdent: Personident, beregningsperiode: ÅrMånedsperiode): LøpendeBidragOgBeregninger {
+    fun hentLøpendeBidragForBehandling(bpIdent: Personident, beregningsperiode: ÅrMånedsperiode): LøpendeBidragOgBeregninger {
         try {
             // Henter alle bidrag tilknyttet BP som er eller har vært løpende i beregningsperioden. Filtrerer først
             // bort perioder som er utenfor beregningsperioden. Stønader som har ingen perioder innenfor beregningsperioden fjernes.
             val løpendeBidragIPerioden = vedtakService.hentAlleStønaderForBidragspliktig(
-                LøpendeBidragPeriodeRequest(bidragspliktigIdent, beregningsperiode),
+                LøpendeBidragPeriodeRequest(bpIdent, beregningsperiode),
             ).filtrerForPeriode(beregningsperiode)
 
             secureLogger.info {
                 "Hentet løpende bidrag i perioden:  ${løpendeBidragIPerioden.joinToString { it.toString() }} " +
-                    "for BP: ${bidragspliktigIdent.verdi}"
+                    "for BP: ${bpIdent.verdi}"
             }
 
 //          Henter manuelle vedtak som har perioder som overlapper beregningsperioden
-            val manuelleVedtak = løpendeBidragIPerioden.hentManuelleVedtak(bidragspliktigIdent).sortedByDescending { it.vedtakstidspunkt }
+            val manuelleVedtak = løpendeBidragIPerioden.hentManuelleVedtak(bpIdent).sortedByDescending { it.vedtakstidspunkt }
                 .filtrerVedtakMotBeregningsperiode(beregningsperiode)
 
-            secureLogger.info { "Hentede manuelle vedtak: ${manuelleVedtak.joinToString { it.toString() }} for BP: ${bidragspliktigIdent.verdi}" }
+            secureLogger.info { "Hentede manuelle vedtak: ${manuelleVedtak.joinToString { it.toString() }} for BP: ${bpIdent.verdi}" }
             val beregningsdataIManuelleVedtak = manuelleVedtak.hentBeregning()
             secureLogger.info {
                 "Hentede beregningsdata i manuelle vedtak: " +
@@ -216,39 +219,79 @@ fun List<VedtakForStønad>.filtrerVedtakMotBeregningsperiode(beregningsperiode: 
     return relevanteVedtakListe
 }
 
-fun LøpendeBidragOgBeregninger.tilGrunnlagDto(bpReferanse: String): List<GrunnlagDto> {
-    val resultat = mutableListOf<GrunnlagDto>()
-    this.løpendeBidragListe.forEach { løpendeBidrag ->
-        løpendeBidrag.periodeListe.forEach { periode ->
-            val beregning = this.beregnetBeløpListe.beregningListe.find {
-                it.personidentBarn == løpendeBidrag.kravhaver &&
-                    it.periode?.fom?.equals(periode.periode.fom) == true
+fun LøpendeBidragOgBeregninger.tilBeregnGrunnlag(
+    bpReferanse: String,
+    søknadsbarnIdentMap: Map<Personident, String>,
+    løpendeBarnFødselsdatoMap: Map<Personident, LocalDate?>,
+): List<BeregnGrunnlag> {
+    val beregnGrunnlagListe = mutableListOf<BeregnGrunnlag>()
+    var forrigeKravhaver: Personident? = null
+
+    this.løpendeBidragListe.sortedBy { it.kravhaver }.forEach { løpendeBidrag ->
+        val grunnlagListe = mutableListOf<GrunnlagDto>()
+        val fom = løpendeBidrag.periodeListe.minOf { it.periode.fom }
+        val til = løpendeBidrag.periodeListe.mapNotNull { it.periode.til }.maxOrNull()
+
+        val barnReferanse = søknadsbarnIdentMap[løpendeBidrag.kravhaver]
+            ?: // barnet er ikke søknadsbarn, hent fødselsdato fra løpendeBarnFødselsdatoMap
+            run {
+                val fødselsdato = løpendeBarnFødselsdatoMap.filter { it.key == løpendeBidrag.kravhaver }
+                    .values
+                    .firstOrNull().toCompactString()
+                val generertReferanse = Grunnlagstype.PERSON_BARN_BIDRAGSPLIKTIG.tilPersonreferanse(
+                    (fødselsdato + "_innhentet"),
+                    (løpendeBidrag.kravhaver.verdi + 1).hashCode(),
+                )
+                generertReferanse
             }
-            if (beregning != null) {
-                val søknadsbarnReferanse = "person_PERSON_SØKNADSBARN_${løpendeBidrag.kravhaver.verdi}"
-                resultat.add(
-                    GrunnlagDto(
-                        referanse = "innhentet_løpende_bidrag_${bpReferanse.let { "_$it" }}_$søknadsbarnReferanse" +
-                            "_${periode.periode.fom.toCompactString()}${periode.periode.til?.let { "_${it.toCompactString()}" } ?: ""}",
-                        gjelderReferanse = bpReferanse,
-                        gjelderBarnReferanse = søknadsbarnReferanse,
-                        type = Grunnlagstype.LØPENDE_BIDRAG_PERIODE,
-                        innhold = POJONode(
-                            LøpendeBidragPeriode(
-                                periode = beregning.periode!!,
-                                saksnummer = Saksnummer(løpendeBidrag.sak.verdi),
-                                stønadstype = løpendeBidrag.type,
-                                løpendeBeløp = periode.løpendeBeløp,
-                                valutakode = periode.valutakode,
-                                samværsklasse = beregning.samværsklasse ?: Samværsklasse.SAMVÆRSKLASSE_0,
-                                beregnetBeløp = beregning.beregnetBeløp,
-                                faktiskBeløp = beregning.faktiskBeløp,
-                            ),
+
+        løpendeBidrag.periodeListe.forEach { løpendeBidragPeriode ->
+            val beregning = this.beregnetBeløpListe.beregningListe
+                .sortedBy { it.periode?.fom }
+                .find {
+                    it.personidentBarn == løpendeBidrag.kravhaver &&
+                        it.periode?.fom?.equals(løpendeBidragPeriode.periode.fom) == true
+                } ?: this.beregnetBeløpListe.beregningListe.last()
+            // hvis manuelt vedtak ikke har matchende periode så må seneste periode brukes
+            BidragBeregningResponsDto(emptyList())
+
+            val søknadsbarnReferanse = barnReferanse
+            grunnlagListe.add(
+                GrunnlagDto(
+                    referanse = "innhentet_løpende_bidrag_${bpReferanse.let { "_$it" }}_$søknadsbarnReferanse" +
+                        "_${løpendeBidragPeriode.periode.fom.toCompactString()}${løpendeBidragPeriode.periode.til?.let {
+                            "_${it.toCompactString()}"
+                        } ?: ""}",
+                    gjelderReferanse = bpReferanse,
+                    gjelderBarnReferanse = barnReferanse,
+                    type = Grunnlagstype.LØPENDE_BIDRAG_PERIODE,
+                    innhold = POJONode(
+                        LøpendeBidragPeriode(
+                            periode = beregning.periode!!,
+                            saksnummer = Saksnummer(løpendeBidrag.sak.verdi),
+                            stønadstype = løpendeBidrag.type,
+                            løpendeBeløp = løpendeBidragPeriode.løpendeBeløp,
+                            valutakode = løpendeBidragPeriode.valutakode,
+                            samværsklasse = beregning.samværsklasse ?: Samværsklasse.SAMVÆRSKLASSE_0,
+                            beregnetBeløp = beregning.beregnetBeløp,
+                            faktiskBeløp = beregning.faktiskBeløp,
                         ),
                     ),
-                )
-            }
+                ),
+            )
         }
+        beregnGrunnlagListe.add(
+            BeregnGrunnlag(
+                periode = ÅrMånedsperiode(
+                    fom = fom,
+                    til = til,
+                ),
+                opphørsdato = null,
+                stønadstype = løpendeBidrag.type,
+                søknadsbarnReferanse = barnReferanse,
+                grunnlagListe = grunnlagListe,
+            ),
+        )
     }
-    return resultat
+    return beregnGrunnlagListe
 }
