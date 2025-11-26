@@ -10,6 +10,7 @@ import io.mockk.junit5.MockKExtension
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
 import no.nav.bidrag.beregn.barnebidrag.felles.FellesTest
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningBeløpshistorikkConsumer
+import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningPersonConsumer
 import no.nav.bidrag.beregn.barnebidrag.service.external.BeregningVedtakConsumer
 import no.nav.bidrag.beregn.barnebidrag.service.external.VedtakService
 import no.nav.bidrag.beregn.barnebidrag.service.orkestrering.AldersjusteringOrchestrator
@@ -82,6 +83,9 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
     private lateinit var bidragsberegningOrkestrator: BidragsberegningOrkestrator
     private lateinit var hentLøpendeBidragService: HentLøpendeBidragService
 
+    @MockK(relaxed = true)
+    private lateinit var personConsumer: BeregningPersonConsumer
+
     @BeforeEach
     fun init() {
         every { identUtils.hentNyesteIdent(any()) }.answers {
@@ -104,6 +108,7 @@ internal class BidragsberegningOrkestratorTest : FellesTest() {
             barnebidragApi = barnebidragApi,
             omgjøringOrkestrator = omgjøringOrkestrator,
             hentLøpendeBidragService = hentLøpendeBidragService,
+            personConsumer = personConsumer,
         )
         stubSjablonProvider()
     }

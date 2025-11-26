@@ -1,5 +1,9 @@
 package no.nav.bidrag.beregn.barnebidrag.service.orkestrering
 
+import io.kotest.assertions.assertSoftly
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -8,11 +12,13 @@ import no.nav.bidrag.beregn.barnebidrag.testdata.opprettBidragBeregningResponsDt
 import no.nav.bidrag.beregn.barnebidrag.testdata.opprettVedtakDtoForLøpendeBidrag
 import no.nav.bidrag.beregn.barnebidrag.testdata.opprettVedtakForStønad
 import no.nav.bidrag.beregn.barnebidrag.testdata.opprettVedtakForStønadBidragsberegning
+import no.nav.bidrag.beregn.barnebidrag.testdata.personIdentAnnetbarn
 import no.nav.bidrag.beregn.barnebidrag.testdata.personIdentBidragsmottaker
 import no.nav.bidrag.beregn.barnebidrag.testdata.personIdentBidragspliktig
 import no.nav.bidrag.beregn.barnebidrag.testdata.personIdentSøknadsbarn1
 import no.nav.bidrag.beregn.barnebidrag.testdata.personIdentSøknadsbarn2
 import no.nav.bidrag.beregn.barnebidrag.testdata.saksnummer
+import no.nav.bidrag.beregn.barnebidrag.testdata.saksnummer2
 import no.nav.bidrag.domene.enums.beregning.Samværsklasse
 import no.nav.bidrag.domene.enums.vedtak.Stønadstype
 import no.nav.bidrag.domene.ident.Personident
@@ -29,6 +35,8 @@ import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.YearMonth
+import kotlin.collections.get
+import kotlin.text.contains
 
 class HentLøpendeBidragServiceTest {
     private lateinit var vedtakService: VedtakService
@@ -356,14 +364,20 @@ class HentLøpendeBidragServiceTest {
 
     @Test
     @Suppress("NonAsciiCharacters")
-    fun `tilGrunnlagDto skal konvertere beregningsresultat til grunnlag`() {
+    fun `skal konvertere løpende bidrag til beregngrunnlag for søknadsbarn`() {
+        val bpReferanse = "person_PERSON_BIDRAGSPLIKTIG_12345"
+        val søknadsbarnIdent = Personident(personIdentSøknadsbarn1)
+        val søknadsbarnReferanse = "person_PERSON_SØKNADSBARN_${søknadsbarnIdent.verdi}"
+        val søknadsbarnIdentMap = mapOf(søknadsbarnIdent to søknadsbarnReferanse)
+        val løpendeBarnFødselsdatoMap = emptyMap<Personident, LocalDate?>()
+
         val løpendeBidrag = LøpendeBidrag(
             sak = Saksnummer(saksnummer),
             type = Stønadstype.BIDRAG,
-            kravhaver = Personident(personIdentSøknadsbarn1),
+            kravhaver = søknadsbarnIdent,
             periodeListe = listOf(
                 BidragPeriode(
-                    periode = ÅrMånedsperiode(LocalDate.of(2024, 7, 1), null),
+                    periode = ÅrMånedsperiode(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 1)),
                     løpendeBeløp = BigDecimal.valueOf(5000),
                     valutakode = "NOK",
                 ),
@@ -371,27 +385,325 @@ class HentLøpendeBidragServiceTest {
         )
 
         val beregning = BidragBeregningResponsDto.BidragBeregning(
-            periode = ÅrMånedsperiode(LocalDate.of(2024, 7, 1), null),
+            periode = ÅrMånedsperiode(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 1)),
             saksnummer = saksnummer,
-            personidentBarn = Personident(personIdentSøknadsbarn1),
+            personidentBarn = søknadsbarnIdent,
             datoSøknad = LocalDate.now(),
             beregnetBeløp = BigDecimal.valueOf(5160),
             faktiskBeløp = BigDecimal.valueOf(5000),
             beløpSamvær = BigDecimal.ZERO,
             stønadstype = Stønadstype.BIDRAG,
-            samværsklasse = Samværsklasse.SAMVÆRSKLASSE_0,
+            samværsklasse = Samværsklasse.SAMVÆRSKLASSE_1,
         )
 
-        val evnevurderingResultat = LøpendeBidragOgBeregninger(
+        val løpendeBidragOgBeregninger = LøpendeBidragOgBeregninger(
             beregnetBeløpListe = BidragBeregningResponsDto(listOf(beregning)),
             løpendeBidragListe = listOf(løpendeBidrag),
         )
 
-        val grunnlagListe = evnevurderingResultat.tilGrunnlagDto("bp_ref")
+        val resultat = løpendeBidragOgBeregninger.tilBeregnGrunnlag(
+            bpReferanse,
+            søknadsbarnIdentMap,
+            løpendeBarnFødselsdatoMap,
+        )
 
         assertAll(
-            { assertThat(grunnlagListe).isNotEmpty() },
-            { assertThat(grunnlagListe[0].gjelderReferanse).isEqualTo("bp_ref") },
+            { assertThat(resultat).hasSize(1) },
+            { assertThat(resultat[0].søknadsbarnReferanse).isEqualTo(søknadsbarnReferanse) },
+            { assertThat(resultat[0].stønadstype).isEqualTo(Stønadstype.BIDRAG) },
+            { assertThat(resultat[0].grunnlagListe).hasSize(1) },
+            { assertThat(resultat[0].periode.fom).isEqualTo(YearMonth.of(2024, 1)) },
+            { assertThat(resultat[0].periode.til).isEqualTo(YearMonth.of(2024, 12)) },
+        )
+    }
+
+    @Test
+    @Suppress("NonAsciiCharacters")
+    fun `skal konvertere løpende bidrag til beregngrunnlag for barn som ikke er søknadsbarn`() {
+        val bpReferanse = "person_PERSON_BIDRAGSPLIKTIG_12345"
+        val løpendeBarnIdent = Personident(personIdentSøknadsbarn2)
+        val søknadsbarnIdentMap = emptyMap<Personident, String>()
+        val løpendeBarnFødselsdatoMap = mapOf(løpendeBarnIdent to LocalDate.of(2010, 5, 15))
+
+        val løpendeBidrag = LøpendeBidrag(
+            sak = Saksnummer(saksnummer),
+            type = Stønadstype.BIDRAG,
+            kravhaver = løpendeBarnIdent,
+            periodeListe = listOf(
+                BidragPeriode(
+                    periode = ÅrMånedsperiode(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 1)),
+                    løpendeBeløp = BigDecimal.valueOf(3000),
+                    valutakode = "NOK",
+                ),
+            ),
+        )
+
+        val beregning = BidragBeregningResponsDto.BidragBeregning(
+            periode = ÅrMånedsperiode(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 1)),
+            saksnummer = saksnummer,
+            personidentBarn = løpendeBarnIdent,
+            datoSøknad = LocalDate.now(),
+            beregnetBeløp = BigDecimal.valueOf(3200),
+            faktiskBeløp = BigDecimal.valueOf(3000),
+            beløpSamvær = BigDecimal.ZERO,
+            stønadstype = Stønadstype.BIDRAG,
+            samværsklasse = Samværsklasse.SAMVÆRSKLASSE_0,
+        )
+
+        val løpendeBidragOgBeregninger = LøpendeBidragOgBeregninger(
+            beregnetBeløpListe = BidragBeregningResponsDto(listOf(beregning)),
+            løpendeBidragListe = listOf(løpendeBidrag),
+        )
+
+        val resultat = løpendeBidragOgBeregninger.tilBeregnGrunnlag(
+            bpReferanse,
+            søknadsbarnIdentMap,
+            løpendeBarnFødselsdatoMap,
+        )
+
+        assertAll(
+            { assertThat(resultat).hasSize(1) },
+            { assertThat(resultat[0].søknadsbarnReferanse).contains("20100515_innhentet") },
+            { assertThat(resultat[0].stønadstype).isEqualTo(Stønadstype.BIDRAG) },
+            { assertThat(resultat[0].grunnlagListe).hasSize(1) },
+        )
+    }
+
+    @Test
+    @Suppress("NonAsciiCharacters")
+    fun `skal håndtere flere perioder for samme kravhaver`() {
+        val bpReferanse = "person_PERSON_BIDRAGSPLIKTIG_12345"
+        val søknadsbarnIdent = Personident(personIdentSøknadsbarn1)
+        val søknadsbarnReferanse = "person_PERSON_SØKNADSBARN_${søknadsbarnIdent.verdi}"
+        val søknadsbarnIdentMap = mapOf(søknadsbarnIdent to søknadsbarnReferanse)
+        val løpendeBarnFødselsdatoMap = emptyMap<Personident, LocalDate?>()
+
+        val løpendeBidrag = LøpendeBidrag(
+            sak = Saksnummer(saksnummer),
+            type = Stønadstype.BIDRAG,
+            kravhaver = søknadsbarnIdent,
+            periodeListe = listOf(
+                BidragPeriode(
+                    periode = ÅrMånedsperiode(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 6, 1)),
+                    løpendeBeløp = BigDecimal.valueOf(5000),
+                    valutakode = "NOK",
+                ),
+                BidragPeriode(
+                    periode = ÅrMånedsperiode(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 12, 1)),
+                    løpendeBeløp = BigDecimal.valueOf(5500),
+                    valutakode = "NOK",
+                ),
+            ),
+        )
+
+        val beregninger = listOf(
+            BidragBeregningResponsDto.BidragBeregning(
+                periode = ÅrMånedsperiode(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 6, 1)),
+                saksnummer = saksnummer,
+                personidentBarn = søknadsbarnIdent,
+                datoSøknad = LocalDate.now(),
+                beregnetBeløp = BigDecimal.valueOf(5160),
+                faktiskBeløp = BigDecimal.valueOf(5000),
+                beløpSamvær = BigDecimal.ZERO,
+                stønadstype = Stønadstype.BIDRAG,
+                samværsklasse = Samværsklasse.SAMVÆRSKLASSE_1,
+            ),
+            BidragBeregningResponsDto.BidragBeregning(
+                periode = ÅrMånedsperiode(LocalDate.of(2024, 7, 1), LocalDate.of(2024, 12, 1)),
+                saksnummer = saksnummer,
+                personidentBarn = søknadsbarnIdent,
+                datoSøknad = LocalDate.now(),
+                beregnetBeløp = BigDecimal.valueOf(5660),
+                faktiskBeløp = BigDecimal.valueOf(5500),
+                beløpSamvær = BigDecimal.ZERO,
+                stønadstype = Stønadstype.BIDRAG,
+                samværsklasse = Samværsklasse.SAMVÆRSKLASSE_1,
+            ),
+        )
+
+        val løpendeBidragOgBeregninger = LøpendeBidragOgBeregninger(
+            beregnetBeløpListe = BidragBeregningResponsDto(beregninger),
+            løpendeBidragListe = listOf(løpendeBidrag),
+        )
+
+        val resultat = løpendeBidragOgBeregninger.tilBeregnGrunnlag(
+            bpReferanse,
+            søknadsbarnIdentMap,
+            løpendeBarnFødselsdatoMap,
+        )
+
+        assertAll(
+            { assertThat(resultat).hasSize(1) },
+            { assertThat(resultat[0].grunnlagListe).hasSize(2) },
+            { assertThat(resultat[0].periode.fom).isEqualTo(YearMonth.of(2024, 1)) },
+            { assertThat(resultat[0].periode.til).isEqualTo(YearMonth.of(2024, 12)) },
+        )
+    }
+
+    @Test
+    @Suppress("NonAsciiCharacters")
+    fun `skal håndtere flere kravhavere`() {
+        val bpReferanse = "person_PERSON_BIDRAGSPLIKTIG_12345"
+        val søknadsbarn1Ident = Personident(personIdentSøknadsbarn1)
+        val søknadsbarn2Ident = Personident(personIdentSøknadsbarn2)
+        val annetBarnIdent = Personident(personIdentAnnetbarn)
+        val søknadsbarnIdentMap = mapOf(
+            søknadsbarn1Ident to "person_PERSON_SØKNADSBARN_${søknadsbarn1Ident.verdi}",
+            søknadsbarn2Ident to "person_PERSON_SØKNADSBARN_${søknadsbarn2Ident.verdi}",
+        )
+        val løpendeBarnFødselsdatoMap = emptyMap<Personident, LocalDate?>()
+
+        val løpendeBidragListe = listOf(
+            LøpendeBidrag(
+                sak = Saksnummer(saksnummer),
+                type = Stønadstype.BIDRAG,
+                kravhaver = søknadsbarn1Ident,
+                periodeListe = listOf(
+                    BidragPeriode(
+                        periode = ÅrMånedsperiode(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 1)),
+                        løpendeBeløp = BigDecimal.valueOf(5000),
+                        valutakode = "NOK",
+                    ),
+                ),
+            ),
+            LøpendeBidrag(
+                sak = Saksnummer(saksnummer),
+                type = Stønadstype.BIDRAG,
+                kravhaver = søknadsbarn2Ident,
+                periodeListe = listOf(
+                    BidragPeriode(
+                        periode = ÅrMånedsperiode(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 1)),
+                        løpendeBeløp = BigDecimal.valueOf(3000),
+                        valutakode = "NOK",
+                    ),
+                ),
+            ),
+            LøpendeBidrag(
+                sak = Saksnummer(saksnummer2),
+                type = Stønadstype.BIDRAG18AAR,
+                kravhaver = annetBarnIdent,
+                periodeListe = listOf(
+                    BidragPeriode(
+                        periode = ÅrMånedsperiode(LocalDate.of(2023, 1, 1), null),
+                        løpendeBeløp = BigDecimal.valueOf(1700),
+                        valutakode = "NOK",
+                    ),
+                ),
+            ),
+        )
+
+        val beregninger = listOf(
+            BidragBeregningResponsDto.BidragBeregning(
+                periode = ÅrMånedsperiode(LocalDate.of(2024, 1, 1), null),
+                saksnummer = saksnummer,
+                personidentBarn = søknadsbarn1Ident,
+                datoSøknad = LocalDate.now(),
+                beregnetBeløp = BigDecimal.valueOf(5160),
+                faktiskBeløp = BigDecimal.valueOf(5000),
+                beløpSamvær = BigDecimal.ZERO,
+                stønadstype = Stønadstype.BIDRAG,
+                samværsklasse = Samværsklasse.SAMVÆRSKLASSE_1,
+            ),
+            BidragBeregningResponsDto.BidragBeregning(
+                periode = ÅrMånedsperiode(LocalDate.of(2024, 1, 1), null),
+                saksnummer = saksnummer,
+                personidentBarn = søknadsbarn2Ident,
+                datoSøknad = LocalDate.now(),
+                beregnetBeløp = BigDecimal.valueOf(3200),
+                faktiskBeløp = BigDecimal.valueOf(3000),
+                beløpSamvær = BigDecimal.ZERO,
+                stønadstype = Stønadstype.BIDRAG,
+                samværsklasse = Samværsklasse.SAMVÆRSKLASSE_0,
+            ),
+            BidragBeregningResponsDto.BidragBeregning(
+                periode = ÅrMånedsperiode(LocalDate.of(2022, 6, 1), null),
+                saksnummer = saksnummer,
+                personidentBarn = annetBarnIdent,
+                datoSøknad = LocalDate.now(),
+                beregnetBeløp = BigDecimal.valueOf(1500),
+                faktiskBeløp = BigDecimal.valueOf(1600),
+                beløpSamvær = BigDecimal.valueOf(1000),
+                stønadstype = Stønadstype.BIDRAG18AAR,
+                samværsklasse = Samværsklasse.SAMVÆRSKLASSE_2,
+            ),
+        )
+
+        val løpendeBidragOgBeregninger = LøpendeBidragOgBeregninger(
+            beregnetBeløpListe = BidragBeregningResponsDto(beregninger),
+            løpendeBidragListe = løpendeBidragListe,
+        )
+
+        val resultat = løpendeBidragOgBeregninger.tilBeregnGrunnlag(
+            bpReferanse,
+            søknadsbarnIdentMap,
+            løpendeBarnFødselsdatoMap,
+        )
+
+        assertSoftly {
+            resultat shouldHaveSize 3
+//            resultat[0].søknadsbarnReferanse shouldContain annetBarnIdent.verdi
+            resultat[1].søknadsbarnReferanse shouldContain søknadsbarn1Ident.verdi
+            resultat[2].søknadsbarnReferanse shouldContain søknadsbarn2Ident.verdi
+
+            resultat[0].stønadstype shouldBe Stønadstype.BIDRAG18AAR
+            resultat[1].stønadstype shouldBe Stønadstype.BIDRAG
+            resultat[2].stønadstype shouldBe Stønadstype.BIDRAG
+
+            resultat[0].grunnlagListe shouldHaveSize 1
+            resultat[1].grunnlagListe shouldHaveSize 1
+            resultat[2].grunnlagListe shouldHaveSize 1
+        }
+    }
+
+    @Test
+    @Suppress("NonAsciiCharacters")
+    fun `skal håndtere periode uten til-dato`() {
+        val bpReferanse = "person_PERSON_BIDRAGSPLIKTIG_12345"
+        val søknadsbarnIdent = Personident(personIdentSøknadsbarn1)
+        val søknadsbarnReferanse = "person_PERSON_SØKNADSBARN_${søknadsbarnIdent.verdi}"
+        val søknadsbarnIdentMap = mapOf(søknadsbarnIdent to søknadsbarnReferanse)
+        val løpendeBarnFødselsdatoMap = emptyMap<Personident, LocalDate?>()
+
+        val løpendeBidrag = LøpendeBidrag(
+            sak = Saksnummer(saksnummer),
+            type = Stønadstype.BIDRAG,
+            kravhaver = søknadsbarnIdent,
+            periodeListe = listOf(
+                BidragPeriode(
+                    periode = ÅrMånedsperiode(LocalDate.of(2024, 1, 1), null),
+                    løpendeBeløp = BigDecimal.valueOf(5000),
+                    valutakode = "NOK",
+                ),
+            ),
+        )
+
+        val beregning = BidragBeregningResponsDto.BidragBeregning(
+            periode = ÅrMånedsperiode(LocalDate.of(2024, 1, 1), null),
+            saksnummer = saksnummer,
+            personidentBarn = søknadsbarnIdent,
+            datoSøknad = LocalDate.now(),
+            beregnetBeløp = BigDecimal.valueOf(5160),
+            faktiskBeløp = BigDecimal.valueOf(5000),
+            beløpSamvær = BigDecimal.ZERO,
+            stønadstype = Stønadstype.BIDRAG,
+            samværsklasse = Samværsklasse.SAMVÆRSKLASSE_1,
+        )
+
+        val løpendeBidragOgBeregninger = LøpendeBidragOgBeregninger(
+            beregnetBeløpListe = BidragBeregningResponsDto(listOf(beregning)),
+            løpendeBidragListe = listOf(løpendeBidrag),
+        )
+
+        val resultat = løpendeBidragOgBeregninger.tilBeregnGrunnlag(
+            bpReferanse,
+            søknadsbarnIdentMap,
+            løpendeBarnFødselsdatoMap,
+        )
+
+        assertAll(
+            { assertThat(resultat).hasSize(1) },
+            { assertThat(resultat[0].periode.til).isNull() },
+            { assertThat(resultat[0].grunnlagListe).hasSize(1) },
         )
     }
 }
