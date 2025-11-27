@@ -699,6 +699,7 @@ internal object BeregnEndeligBidragServiceV2 : BeregnService() {
                 grunnlagListe.bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe.asSequence()
                     .map { it.bpAndelUnderholdskostnadPeriode.periode },
             )
+            .plus(grunnlagListe.samværsklassePeriodeGrunnlagListe.asSequence().map { it.samværsklassePeriode.periode })
 
         return lagBruddPeriodeListe(periodeListe, beregningsperiode)
     }
