@@ -41,6 +41,17 @@ class ExceptionHandlerAdvice {
             ),
         )
 
+    @ExceptionHandler(IkkeFullBidragsevneOgUfullstendigeGrunnlagException::class)
+    fun handleIkkeFullBidragsevneOgUfullstendigeGrunnlagException(
+        exception: IkkeFullBidragsevneOgUfullstendigeGrunnlagException,
+    ): ResponseEntity<Map<String, Any>> = ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+        .body(
+            mapOf(
+                "melding" to exception.melding,
+                "data" to exception.data,
+            ),
+        )
+
     private fun errorMsg(runtimeException: RuntimeException): String =
         String.format("%s: %s", runtimeException.javaClass.getSimpleName(), runtimeException.message)
 }

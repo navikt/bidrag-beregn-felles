@@ -35,8 +35,6 @@ import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.YearMonth
-import kotlin.collections.get
-import kotlin.text.contains
 
 class HentLøpendeBidragServiceTest {
     private lateinit var vedtakService: VedtakService
