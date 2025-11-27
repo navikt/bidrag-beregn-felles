@@ -3,7 +3,7 @@ package no.nav.bidrag.boforhold.service
 import no.nav.bidrag.boforhold.dto.BoforholdVoksneRequest
 import no.nav.bidrag.boforhold.dto.Bostatus
 import no.nav.bidrag.boforhold.dto.EndreBostatus
-import no.nav.bidrag.boforhold.utils.justerBostatusPerioderForOpphørsdato
+import no.nav.bidrag.boforhold.utils.justerBostatusPerioderForOpphørsdatoOgBeregnTilDato
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.diverse.Kilde
 import no.nav.bidrag.domene.enums.diverse.TypeEndring
@@ -122,7 +122,7 @@ internal class BoforholdAndreVoksneService {
                 // Slår sammen sammenhengende perioder med lik Bostatuskode
                 val sammenslåttListe = slåSammenPerioderOgJusterPeriodeTom(sammenslåtteBehandledeOgOffentligePerioder)
 
-                return sammenslåttListe.justerBostatusPerioderForOpphørsdato(opphørsdato, beregnTilDato).map {
+                return sammenslåttListe.justerBostatusPerioderForOpphørsdatoOgBeregnTilDato(opphørsdato, beregnTilDato).map {
                     Bostatus(
                         periodeFom = it.periodeFom,
                         periodeTom = it.periodeTom,
@@ -144,7 +144,9 @@ internal class BoforholdAndreVoksneService {
                 }
             }
             // Førstegangs beregning av boforhold for BP. Beregn fra innhentede offentlige opplysninger.
-            return slåSammenPerioderOgJusterPeriodeTom(komplettOffentligTidslinje).justerBostatusPerioderForOpphørsdato(opphørsdato, beregnTilDato)
+            return slåSammenPerioderOgJusterPeriodeTom(
+                komplettOffentligTidslinje,
+            ).justerBostatusPerioderForOpphørsdatoOgBeregnTilDato(opphørsdato, beregnTilDato)
         }
 
         val oppdaterteBehandledeOpplysninger = behandleEndringer(virkningstidspunkt, endreBostatus, behandledeOpplysninger)
@@ -157,13 +159,13 @@ internal class BoforholdAndreVoksneService {
                 // Feilsituasjon. Må alltid være ny hvis det ikke finnes perioder fra før.
                 return slåSammenPerioderOgJusterPeriodeTom(
                     komplettOffentligTidslinje,
-                ).justerBostatusPerioderForOpphørsdato(opphørsdato, beregnTilDato)
+                ).justerBostatusPerioderForOpphørsdatoOgBeregnTilDato(opphørsdato, beregnTilDato)
             }
 
             return slåSammenPrimærOgSekundærperioder(
                 oppdaterteBehandledeOpplysninger,
                 komplettOffentligTidslinje,
-            ).justerBostatusPerioderForOpphørsdato(opphørsdato, beregnTilDato).map {
+            ).justerBostatusPerioderForOpphørsdatoOgBeregnTilDato(opphørsdato, beregnTilDato).map {
                 Bostatus(
                     periodeFom = it.periodeFom,
                     periodeTom = it.periodeTom,
@@ -186,7 +188,7 @@ internal class BoforholdAndreVoksneService {
         }
 
         // Det finnes både behandlede og endrede perioder
-        return oppdaterteBehandledeOpplysninger.justerBostatusPerioderForOpphørsdato(opphørsdato, beregnTilDato).map {
+        return oppdaterteBehandledeOpplysninger.justerBostatusPerioderForOpphørsdatoOgBeregnTilDato(opphørsdato, beregnTilDato).map {
             Bostatus(
                 periodeFom = it.periodeFom,
                 periodeTom = it.periodeTom,

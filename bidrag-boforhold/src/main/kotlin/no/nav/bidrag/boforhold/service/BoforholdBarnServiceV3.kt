@@ -3,7 +3,7 @@ package no.nav.bidrag.boforhold.service
 import no.nav.bidrag.boforhold.dto.BoforholdBarnRequestV3
 import no.nav.bidrag.boforhold.dto.BoforholdResponseV2
 import no.nav.bidrag.boforhold.dto.Bostatus
-import no.nav.bidrag.boforhold.utils.justerBoforholdPerioderForOpphørsdato
+import no.nav.bidrag.boforhold.utils.justerBoforholdPerioderForOpphørsdatoOgBeregnTilDato
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.behandling.TypeBehandling
 import no.nav.bidrag.domene.enums.diverse.Kilde
@@ -37,7 +37,7 @@ internal class BoforholdBarnServiceV3 {
 
         secureLogger.debug { "Resultat av beregning bostatus for BM/BPs egne barn V3: $resultat" }
 
-        return resultat.justerBoforholdPerioderForOpphørsdato(opphørsdato, beregnTilDato)
+        return resultat.justerBoforholdPerioderForOpphørsdatoOgBeregnTilDato(opphørsdato, beregnTilDato)
     }
 
     private fun beregnPerioderForBarn(
