@@ -1,8 +1,11 @@
 package no.nav.bidrag.boforhold.service
 
 import io.kotest.assertions.assertSoftly
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import no.nav.bidrag.boforhold.TestUtil
+import no.nav.bidrag.boforhold.dto.BoforholdResponseV2
+import no.nav.bidrag.boforhold.utils.justerBoforholdPerioderForOpphørsdatoOgBeregnTilDato
 import no.nav.bidrag.domene.enums.diverse.Kilde
 import no.nav.bidrag.domene.enums.person.Bostatuskode
 import org.junit.jupiter.api.Assertions
@@ -266,5 +269,153 @@ internal class BoforholdAndreVoksneServiceTest {
             resultat[0].bostatus shouldBe Bostatuskode.BOR_MED_ANDRE_VOKSNE
             resultat[0].kilde shouldBe Kilde.OFFENTLIG
         }
+    }
+
+    @Test
+    fun `skal ikke justere perioder når opphørsdato og beregnTilDato er null`() {
+        val perioder = listOf(
+            BoforholdResponseV2(
+                gjelderPersonId = "12345678901",
+                fødselsdato = LocalDate.of(2020, 1, 1),
+                periodeFom = LocalDate.of(2023, 1, 1),
+                periodeTom = LocalDate.of(2023, 12, 31),
+                bostatus = Bostatuskode.MED_FORELDER,
+                kilde = Kilde.OFFENTLIG,
+            ),
+        )
+
+        val resultat = perioder.justerBoforholdPerioderForOpphørsdatoOgBeregnTilDato(null, null)
+
+        resultat shouldHaveSize 1
+        resultat[0].periodeFom shouldBe LocalDate.of(2023, 1, 1)
+        resultat[0].periodeTom shouldBe LocalDate.of(2023, 12, 31)
+    }
+
+    @Test
+    fun `skal justere periodeTom til opphørsdato minus 1 dag når opphørsdato er satt`() {
+        val opphørsdato = LocalDate.of(2023, 6, 1)
+        val perioder = listOf(
+            BoforholdResponseV2(
+                gjelderPersonId = "12345678901",
+                fødselsdato = LocalDate.of(2020, 1, 1),
+                periodeFom = LocalDate.of(2023, 1, 1),
+                periodeTom = null,
+                bostatus = Bostatuskode.MED_FORELDER,
+                kilde = Kilde.OFFENTLIG,
+            ),
+        )
+
+        val resultat = perioder.justerBoforholdPerioderForOpphørsdatoOgBeregnTilDato(opphørsdato, null)
+
+        resultat shouldHaveSize 1
+        resultat[0].periodeTom shouldBe LocalDate.of(2023, 5, 31)
+    }
+
+    @Test
+    fun `skal justere periodeTom til null beregnTilDato er satt og periodeTom løper utover beregnTilDato`() {
+        val beregnTilDato = LocalDate.of(2024, 1, 1)
+        val perioder = listOf(
+            BoforholdResponseV2(
+                gjelderPersonId = "12345678901",
+                fødselsdato = LocalDate.of(2020, 1, 1),
+                periodeFom = LocalDate.of(2023, 1, 1),
+                periodeTom = LocalDate.of(2025, 1, 31),
+                bostatus = Bostatuskode.MED_FORELDER,
+                kilde = Kilde.OFFENTLIG,
+            ),
+        )
+
+        val resultat = perioder.justerBoforholdPerioderForOpphørsdatoOgBeregnTilDato(null, beregnTilDato)
+
+        resultat shouldHaveSize 1
+        resultat[0].periodeTom shouldBe null
+    }
+
+    @Test
+    fun `skal filtrere bort perioder som starter etter opphørsdato`() {
+        val opphørsdato = LocalDate.of(2023, 6, 1)
+        val beregnTilDato = LocalDate.of(2023, 6, 1)
+        val perioder = listOf(
+            BoforholdResponseV2(
+                gjelderPersonId = "12345678901",
+                fødselsdato = LocalDate.of(2020, 1, 1),
+                periodeFom = LocalDate.of(2023, 1, 1),
+                periodeTom = LocalDate.of(2023, 5, 31),
+                bostatus = Bostatuskode.MED_FORELDER,
+                kilde = Kilde.OFFENTLIG,
+            ),
+            BoforholdResponseV2(
+                gjelderPersonId = "12345678901",
+                fødselsdato = LocalDate.of(2020, 1, 1),
+                periodeFom = LocalDate.of(2023, 7, 1),
+                periodeTom = null,
+                bostatus = Bostatuskode.MED_FORELDER,
+                kilde = Kilde.OFFENTLIG,
+            ),
+        )
+
+        val resultat = perioder.justerBoforholdPerioderForOpphørsdatoOgBeregnTilDato(opphørsdato, beregnTilDato)
+
+        resultat shouldHaveSize 1
+        resultat[0].periodeFom shouldBe LocalDate.of(2023, 1, 1)
+    }
+
+    @Test
+    fun `skal prioritere opphørsdato over beregnTilDato når begge er satt`() {
+        val opphørsdato = LocalDate.of(2023, 6, 1)
+        val beregnTilDato = LocalDate.of(2023, 12, 31)
+        val perioder = listOf(
+            BoforholdResponseV2(
+                gjelderPersonId = "12345678901",
+                fødselsdato = LocalDate.of(2020, 1, 1),
+                periodeFom = LocalDate.of(2023, 1, 1),
+                periodeTom = null,
+                bostatus = Bostatuskode.MED_FORELDER,
+                kilde = Kilde.OFFENTLIG,
+            ),
+        )
+
+        val resultat = perioder.justerBoforholdPerioderForOpphørsdatoOgBeregnTilDato(opphørsdato, beregnTilDato)
+
+        resultat shouldHaveSize 1
+        resultat[0].periodeTom shouldBe LocalDate.of(2023, 5, 31)
+    }
+
+    @Test
+    fun `skal håndtere flere perioder med ulike justeringer`() {
+        val opphørsdato = LocalDate.of(2023, 9, 1)
+        val beregnTilDato = LocalDate.of(2023, 9, 1)
+        val perioder = listOf(
+            BoforholdResponseV2(
+                gjelderPersonId = "12345678901",
+                fødselsdato = LocalDate.of(2020, 1, 1),
+                periodeFom = LocalDate.of(2023, 1, 1),
+                periodeTom = LocalDate.of(2023, 6, 30),
+                bostatus = Bostatuskode.MED_FORELDER,
+                kilde = Kilde.OFFENTLIG,
+            ),
+            BoforholdResponseV2(
+                gjelderPersonId = "12345678901",
+                fødselsdato = LocalDate.of(2020, 1, 1),
+                periodeFom = LocalDate.of(2023, 7, 1),
+                periodeTom = null,
+                bostatus = Bostatuskode.IKKE_MED_FORELDER,
+                kilde = Kilde.MANUELL,
+            ),
+            BoforholdResponseV2(
+                gjelderPersonId = "12345678901",
+                fødselsdato = LocalDate.of(2020, 1, 1),
+                periodeFom = LocalDate.of(2023, 10, 1),
+                periodeTom = null,
+                bostatus = Bostatuskode.MED_FORELDER,
+                kilde = Kilde.OFFENTLIG,
+            ),
+        )
+
+        val resultat = perioder.justerBoforholdPerioderForOpphørsdatoOgBeregnTilDato(opphørsdato, beregnTilDato)
+
+        resultat shouldHaveSize 2
+        resultat[0].periodeTom shouldBe LocalDate.of(2023, 6, 30)
+        resultat[1].periodeTom shouldBe LocalDate.of(2023, 8, 31)
     }
 }
