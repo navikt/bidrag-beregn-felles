@@ -402,7 +402,7 @@ abstract class BeregnService {
     }
 
     // Sjekker om søknadsbarnet fyller 18 år i beregningsperioden. Justerer i så fall til-periode. Hvis stønadstype er BIDRAG18AAR skal det ikke
-    // sjekkes om barnet blir 18 år i perioden,
+    // sjekkes om barnet blir 18 år i perioden.
     protected fun justerTilPeriodeHvisBarnetBlir18ÅrIBeregningsperioden(mottattGrunnlag: BeregnGrunnlag): BeregnGrunnlagJustert {
         if (mottattGrunnlag.stønadstype == Stønadstype.BIDRAG18AAR) {
             return BeregnGrunnlagJustert(
@@ -435,5 +435,9 @@ abstract class BeregnService {
     protected fun BeregnGrunnlagJustert.utvidMedNyeGrunnlag(nyeGrunnlag: List<GrunnlagDto>) =
         copy(beregnGrunnlag = beregnGrunnlag.copy(grunnlagListe = (beregnGrunnlag.grunnlagListe + nyeGrunnlag).distinctBy { it.referanse }))
 
-    data class BeregnGrunnlagJustert(val beregnGrunnlag: BeregnGrunnlag, val åpenSluttperiode: Boolean)
+    data class BeregnGrunnlagJustert(
+        val beregnGrunnlag: BeregnGrunnlag,
+        val åpenSluttperiode: Boolean,
+        val erDelAvOpprinneligBehandling: Boolean = true,
+    )
 }

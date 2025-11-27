@@ -115,7 +115,7 @@ internal object EndeligBidragMapperV2 : CoreMapper() {
         bidragJustertForBPBarnetilleggDelberegningPeriodeGrunnlagListe = mapBidragJustertForBPBarnetillegg(mottattGrunnlag),
         samværsfradragDelberegningPeriodeGrunnlagListe = mapSamværsfradrag(mottattGrunnlag.grunnlagListe),
         bpAndelUnderholdskostnadDelberegningPeriodeGrunnlagListe = mapBpAndelUnderholdskostnad(mottattGrunnlag),
-        bostatusPeriodeGrunnlagListe = mapBostatus(mottattGrunnlag),
+        bostatusPeriodeGrunnlagListe = mapBostatus(mottattGrunnlag, søknadsbarnReferanse = mottattGrunnlag.søknadsbarnReferanse),
         bidragspliktigesAndelDeltBostedDelberegningPeriodeGrunnlagListe = mapBidragspliktigesAndelDeltBosted(mottattGrunnlag.grunnlagListe),
     )
 
@@ -366,10 +366,11 @@ internal object EndeligBidragMapperV2 : CoreMapper() {
         }
     }
 
-    private fun mapBostatus(beregnGrunnlag: BeregnGrunnlag): List<BostatusPeriodeGrunnlag> {
+    private fun mapBostatus(beregnGrunnlag: BeregnGrunnlag, søknadsbarnReferanse: String): List<BostatusPeriodeGrunnlag> {
         try {
             return beregnGrunnlag.grunnlagListe
                 .filtrerOgKonverterBasertPåEgenReferanse<BostatusPeriode>(Grunnlagstype.BOSTATUS_PERIODE)
+                .filter { it.gjelderBarnReferanse == søknadsbarnReferanse }
                 .map {
                     BostatusPeriodeGrunnlag(
                         referanse = it.referanse,
