@@ -35,7 +35,7 @@
         <maven-failsafe.version>3.5.4</maven-failsafe.version>
         <maven-resources.version>3.3.1</maven-resources.version>
         <maven-release.version>3.1.1</maven-release.version>
-        <maven-antrun.version>3.1.0</maven-antrun.version>
+        <maven-antrun.version>3.2.0</maven-antrun.version>
         <maven-jar.version>3.4.2</maven-jar.version>
         <flatten-maven.version>1.7.3</flatten-maven.version>
         <build-helper-maven.version>3.6.1</build-helper-maven.version>
