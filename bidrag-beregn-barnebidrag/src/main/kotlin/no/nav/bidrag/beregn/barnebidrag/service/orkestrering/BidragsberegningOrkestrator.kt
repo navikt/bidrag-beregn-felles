@@ -1,13 +1,15 @@
 package no.nav.bidrag.beregn.barnebidrag.service.orkestrering
 
 import no.nav.bidrag.beregn.barnebidrag.BeregnBarnebidragApi
-import no.nav.bidrag.beregn.barnebidrag.service.beregning.BeregnetBarnebidragResultatV2
+import no.nav.bidrag.beregn.core.exception.IkkeFullBidragsevneOgUfullstendigeGrunnlagBeregningException
+import no.nav.bidrag.beregn.core.exception.IkkeFullBidragsevneOgUfullstendigeGrunnlagException
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.beregning.Beregningstype
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
 import no.nav.bidrag.domene.ident.Personident
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
+import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultatV2
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregningGrunnlagV2
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BidragsberegningOrkestratorRequest
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BidragsberegningOrkestratorRequestV2
@@ -115,6 +117,30 @@ class BidragsberegningOrkestrator(
                                     ),
                                 )
                             },
+                        )
+                    } catch (e: IkkeFullBidragsevneOgUfullstendigeGrunnlagBeregningException) {
+                        secureLogger.error(e) {
+                            "Det finnes perioder med evnesprekk. Nye grunnlag må hentes inn for løpende bidrag før vedtak kan fattes."
+                        }
+                        throw IkkeFullBidragsevneOgUfullstendigeGrunnlagException(
+                            melding = e.message
+                                ?: "Det finnes perioder med evnesprekk. Nye grunnlag må hentes inn for løpende bidrag før vedtak kan fattes.",
+                            data = BidragsberegningOrkestratorResponseV2(
+                                grunnlagListe = e.data
+                                    .flatMap { it.beregnetBarnebidragResultat.grunnlagListe }
+                                    .distinctBy { it.referanse },
+                                resultat = e.data.map {
+                                    BidragsberegningResultatBarnV2(
+                                        søknadsbarnreferanse = it.søknadsbarnreferanse,
+                                        resultatVedtakListe = listOf(
+                                            ResultatVedtakV2(
+                                                periodeListe = it.beregnetBarnebidragResultat.beregnetBarnebidragPeriodeListe,
+                                                vedtakstype = Vedtakstype.ENDRING,
+                                            ),
+                                        ),
+                                    )
+                                },
+                            ),
                         )
                     } catch (e: Exception) {
                         secureLogger.error(e) { "Feil ved beregning for flere barn i bidragsberegningorkestrator" }

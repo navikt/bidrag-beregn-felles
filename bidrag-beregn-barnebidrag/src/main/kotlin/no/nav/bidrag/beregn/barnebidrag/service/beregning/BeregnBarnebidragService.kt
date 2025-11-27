@@ -9,6 +9,7 @@ import no.nav.bidrag.beregn.barnebidrag.bo.SluttberegningPeriodeGrunnlagV2
 import no.nav.bidrag.beregn.barnebidrag.mapper.NettoTilsynsutgiftMapper
 import no.nav.bidrag.beregn.core.exception.BegrensetRevurderingLikEllerLavereEnnLøpendeBidragException
 import no.nav.bidrag.beregn.core.exception.BegrensetRevurderingLøpendeForskuddManglerException
+import no.nav.bidrag.beregn.core.exception.IkkeFullBidragsevneOgUfullstendigeGrunnlagBeregningException
 import no.nav.bidrag.beregn.core.service.BeregnService
 import no.nav.bidrag.commons.util.secureLogger
 import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
@@ -18,6 +19,7 @@ import no.nav.bidrag.domene.enums.vedtak.Vedtakstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.domene.util.avrundetMedToDesimaler
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultat
+import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BeregnetBarnebidragResultatV2
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.BidragsberegningResultatBarnV2
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatBeregning
 import no.nav.bidrag.transport.behandling.beregning.barnebidrag.ResultatPeriode
@@ -29,7 +31,6 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningAndelAvBid
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningEndringSjekkGrensePeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.DelberegningPrivatAvtale
 import no.nav.bidrag.transport.behandling.felles.grunnlag.GrunnlagDto
-import no.nav.bidrag.transport.behandling.felles.grunnlag.Grunnlagsreferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.InntektsrapporteringPeriode
 import no.nav.bidrag.transport.behandling.felles.grunnlag.PrivatAvtaleGrunnlag
 import no.nav.bidrag.transport.behandling.felles.grunnlag.SluttberegningBarnebidrag
@@ -418,11 +419,8 @@ class BeregnBarnebidragService : BeregnService() {
         }
 
         // Sjekker om det finnes perioder hvor det ikke er full evne. I så fall skal det kastes exception hvis det er løpende bidrag.
-        if (utvidetGrunnlagLøpendeBidragListe.isNotEmpty()) {
-            if (erDetEvnesprekkINoenPerioder(utvidetGrunnlagSøknadsbarnListe)) {
-                // TODO Løpende bidrag: Håndtere evnesprekk
-            }
-        }
+        val ikkeFullBidragsevneOgUfullstendigeGrunnlag =
+            utvidetGrunnlagLøpendeBidragListe.isNotEmpty() && utvidetGrunnlagSøknadsbarnListe.harPerioderMedEvnesprekk()
 
         val beregnetBarnebidragResultatListe = endeligBidragBeregningListe.map { beregningBarn ->
             val resultatPeriodeListe: List<ResultatPeriode>
@@ -432,7 +430,8 @@ class BeregnBarnebidragService : BeregnService() {
 
             try {
                 // Skal sjekke mot minimumsgrense for endring ("12%-regelen") hvis egetTiltak er false og det ikke er klageberegning
-                if (skalSjekkeMotMinimumsgrenseForEndring(beregningBarn.beregnGrunnlag)) {
+                // Gjør ikke 12%-sjekk hvis det finnes perioder med evnesprekk og ufullstendige grunnlag
+                if (skalSjekkeMotMinimumsgrenseForEndring(beregningBarn.beregnGrunnlag) && !ikkeFullBidragsevneOgUfullstendigeGrunnlag) {
                     val sjekkMotMinimumsgrenseForEndringResultat = sjekkMotMinimumsgrenseForEndringV2(
                         grunnlag = beregningBarn,
                     )
@@ -508,16 +507,24 @@ class BeregnBarnebidragService : BeregnService() {
             }
         }
 
+        // Kaster exception hvis det finnes perioder hvor det ikke er full evne og ufullstendig grunnlag
+        if (ikkeFullBidragsevneOgUfullstendigeGrunnlag) {
+            throw IkkeFullBidragsevneOgUfullstendigeGrunnlagBeregningException(
+                melding = "Det finnes perioder med evnesprekk. Nye grunnlag må hentes inn for løpende bidrag før vedtak kan fattes.",
+                data = beregnetBarnebidragResultatListe,
+            )
+        }
+
         secureLogger.debug { "Beregning av barnebidrag - følgende respons returnert: ${tilJson(beregnetBarnebidragResultatListe)}" }
         return beregnetBarnebidragResultatListe
     }
 
-    private fun erDetEvnesprekkINoenPerioder(beregnGrunnlagListe: List<BeregnGrunnlagJustert>): Boolean {
-        val grunnlagListe = beregnGrunnlagListe.flatMap { it.beregnGrunnlag.grunnlagListe }
-        return grunnlagListe
-            .filtrerOgKonverterBasertPåEgenReferanse<DelberegningAndelAvBidragsevne>(Grunnlagstype.DELBEREGNING_ANDEL_AV_BIDRAGSEVNE)
-            .any { !it.innhold.harBPFullEvne }
-    }
+    fun List<BeregnGrunnlagJustert>.harPerioderMedEvnesprekk(): Boolean = this
+        .flatMap { it.beregnGrunnlag.grunnlagListe }
+        .filtrerOgKonverterBasertPåEgenReferanse<DelberegningAndelAvBidragsevne>(
+            Grunnlagstype.DELBEREGNING_ANDEL_AV_BIDRAGSEVNE,
+        )
+        .any { !it.innhold.harBPFullEvne }
 
     // Sjekker om barnetillegg eksisterer for en gitt rolle
     private fun barnetilleggEksisterer(grunnlag: BeregnGrunnlag, referanse: String): Boolean = grunnlag.grunnlagListe
@@ -1196,6 +1203,3 @@ class BeregnBarnebidragService : BeregnService() {
         val delberegningIndeksreguleringPrivatAvtaleResultat: List<GrunnlagDto>,
     )
 }
-
-// TODO Flytte til bidrag-felles
-data class BeregnetBarnebidragResultatV2(val søknadsbarnreferanse: Grunnlagsreferanse, val beregnetBarnebidragResultat: BeregnetBarnebidragResultat)
